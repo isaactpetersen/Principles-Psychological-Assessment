@@ -1,0 +1,145 @@
+# Computers and Adaptive Testing {#cat}
+
+[**Granziol et al, in press citation Assessment**; **Lee Meeuw Kjoe et al, in press citation**]
+
+## Getting Started
+
+### Load Libraries
+
+```{r, message = FALSE, warning = FALSE}
+library("mirtCAT")
+library("tinytex")
+```
+
+## Example of Uni-dimensional CAT
+
+The computerized adaptive test (CAT) was fit using the `mirtCAT` package [@R-mirtCAT]. The example of a CAT with uni-dimensional data is adapted from `mirtCAT` documentation: http://philchalmers.github.io/mirtCAT/html/unidim-exampleGUI.html
+
+### Define population IRT parameters
+
+For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed.
+
+```{r irtParameters, cache = TRUE, cache.comments = FALSE}
+set.seed(52242)
+nitems <- 100
+itemnames <- paste("Item.", 1:nitems, sep = "")
+a <- matrix(rlnorm(nitems, meanlog = .2, sdlog = .3))
+d <- matrix(rnorm(nitems, mean = 0, sd = 1))
+pars <- data.frame(a1 = a, d = d, g = 0.2)
+```
+
+### Fit IRT model
+
+```{r irtModel, cache = TRUE, cache.extra = list(getRversion(), packageVersion("mirt"), packageVersion("mirtCAT")), cache.comments = FALSE, dependson = "irtParameters"}
+mod <- generate.mirt_object(pars, "3PL")
+```
+
+### Model Summary
+
+```{r}
+summary(mod)
+coef(mod, simplify = TRUE, IRTpars = TRUE)
+modItemParameters <- coef(mod, simplify = TRUE, IRTpars = TRUE)$items
+```
+
+### Model Plots
+
+The test appears to measure theta ($\theta$) with $SE < .4$ within -2 to 2 range
+
+```{r, out.width = "100%", fig.cap = "Test characteristic curve"}
+plot(mod)
+```
+
+```{r, out.width = "100%", fig.cap = "Test information and standard error of measurement"}
+plot(mod, type = "infoSE", theta_lim = c(-3, 3))
+```
+
+### Item Plots
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves"}
+plot(mod, type = "trace", theta_lim = c(-3, 3))
+```
+
+```{r, out.width = "100%", fig.cap = "Item information functions"}
+plot(mod, type = "infotrace", theta_lim = c(-3, 3))
+```
+
+- Item 30 would be a good starting item; it has the difficulty closest to the 50th percentile ($b = `r round(modItemParameters["Item.30","b"], 3)`$) and a high discrimination ($a = `r round(modItemParameters["Item.30","a"], 3)`$)
+- Item 70 would be a good starting item; it has a difficulty closest to the 50th percentile ($b = `r round(modItemParameters["Item.70","b"], 3)`$) and a high discrimination ($a = `r round(modItemParameters["Item.70","a"], 3)`$)
+- Item 86 is an easy item ($b = `r round(modItemParameters["Item.86","b"], 3)`$)
+- Item 16 is a difficult item ($b = `r round(modItemParameters["Item.16","b"], 3)`$)
+- Item 53 has a low discrimination ($a = `r round(modItemParameters["Item.53","a"], 3)`$)
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves and information functions"}
+itemplot(object = mod, item = "Item.30", "infotrace")
+itemplot(object = mod, item = "Item.70", "infotrace")
+itemplot(object = mod, item = "Item.86", "infotrace")
+itemplot(object = mod, item = "Item.16", "infotrace")
+itemplot(object = mod, item = "Item.53", "infotrace")
+```
+
+### Create math items
+
+```{r mathItems, cache = TRUE, cache.comments = FALSE, dependson = "irtParameters"}
+questions <- answers <- character(nitems)
+choices <- matrix("a", nitems, 5)
+spacing <- floor(d - min(d)) + 1 #easier items have more variation
+
+for(i in 1:nitems){
+  n1 <- sample(1:100, 1)
+  n2 <- sample(101:200, 1)
+  ans <- n1 + n2
+  questions[i] <- paste(n1, " + ", n2, " = ?", sep = "")
+  answers[i] <- as.character(ans)
+  ch <- ans + sample(c(-5:-1, 1:5) * spacing[i,], 5)
+  ch[sample(1:5, 1)] <- ans
+  choices[i,] <- as.character(ch)
+}
+
+df <- data.frame(Questions = questions, Answer = answers, Option = choices, Type = "radio")
+```
+
+### Run computerized adaptive test (CAT)
+
+Set the minimum standard error of measurement for the latent trait (theta; $\theta$) that must be reached before stopping the CAT. You can lengthen the CAT by lowering the minimum standard error of measurement, or can shorten the CAT by raising the minimum standard error of measurement.
+
+```{r minimumSEM, cache = TRUE, cache.comments = FALSE}
+minimum_SEM <- .6
+```
+
+Run the CAT and stop once the standard error of measurement for the latent trait (theta; $\theta$) becomes `r minimum_SEM` or lower. 
+
+```{r catModel, cache = TRUE, cache.extra = list(getRversion(), packageVersion("mirt"), packageVersion("mirtCAT")), cache.comments = FALSE, dependson = c("mathItems","irtModel","minimumSEM")}
+result <- mirtCAT(df, mod, start_item = "MI", method = "EAP", criteria = "MI", design = list(min_SEM = minimum_SEM))
+```
+
+### CAT results
+
+```{r}
+print(result)
+summary(result)
+```
+
+#### CAT Standard Errors
+
+```{r, out.width = "100%", fig.cap = "Standard errors of measurement around theta in a computerized adaptive test"}
+plot(result, SE = 1)
+```
+
+#### CAT 95% Confidence Interval
+
+```{r, out.width = "100%", fig.cap = "95% confidence interval of theta in a computerized adaptive test"}
+plot(result, SE = qnorm(.975))
+```
+
+## Conclusion
+
+## Exercises
+
+```{r, include = FALSE}
+library("MOTE")
+```
+
+### Questions
+
+### Answers

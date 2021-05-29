@@ -1,0 +1,1646 @@
+# Item Response Theory {#irt}
+
+In the chapter on [reliability](#reliability), we introduced [classical test theory](#ctt). Classical test theory is a measurement theory of how test scores relate to a construct. Classical test theory provides a way to estimate the relation between the measure (or item) and the construct. For instance, with a classical test theory approach, to estimate the relation between an item and the construct, you would compute an item–total correlation. An item–total correlation is the correlation of an item with the total score on the measure (e.g., sum score). The item–total correlation approximates the relation between the item and the construct. However, it is a crude estimate. And there are many other ways to characterize the relation between an item and a construct. On such way is with item response theory (IRT).
+
+## Overview of IRT
+
+Unlike classical test theory, which is a measurement theory that of how test scores relate to a construct, IRT is a measurement theory that describes how an *item* is related to a construct. For instance, given a particular person’s level on the construct, what is their chance of answering "TRUE" on a particular item?
+
+In IRT, we estimate a person’s construct score (i.e., level on the construct) based on their item responses. The construct is estimated as a latent factor that represents the common variance among all items as in [structural equation modeling](#sem) or [confirmatory factor analysis](#cfa). The person's level on the construct is called theta ($\theta$). When dealing with performance-based tests, theta is sometimes called "ability".
+
+### Item Characteristic Curve
+
+We IRT, we can plot an *item characteristic curve* (ICC). The ICC is a plot of the model-derived probability of a symptom being present (or a correct response) as a function of a person's standing on a latent continuum. For instance, we can create empirical ICCs that can take any shape (see Figure \@ref(fig:empiricalICC)).
+
+```{r, include = FALSE}
+empiricalICCdata <- data.frame(
+  item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
+  item2 =  c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
+  item3 =  c(.10, .28, .39, .58, .75, .82, .88, .94, .99),
+  item4 =  c(.05, .24, .30, .50, .68, .73, .84, .92, .99),
+  item5 =  c(.03, .19, .27, .38, .49, .53, .79, .97, .99),
+  item6 =  c(.02, .15, .25, .43, .57, .65, .75, .85, .95),
+  item7 =  c(.01, .07, .15, .29, .42, .59, .70, .82, .90),
+  item8 =  c(.01, .05, .10, .26, .35, .46, .60, .80, .85),
+  item9 =  c(.01, .02, .05, .16, .23, .35, .46, .55, .70),
+  item10 = c(.01, .02, .03, .05, .06, .07, .10, .14, .20),
+  itemSum = 1:9
+)
+```
+
+```{r empiricalICC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 8, fig.cap = "Empirical item characteristic curves of the probability of endorsement of a given item as a function of the person's sum score."}
+plot(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item1, type = "b", pch = "1")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item2, type = "b", pch = "2")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item3, type = "b", pch = "3")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item4, type = "b", pch = "4")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item5, type = "b", pch = "5")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item6, type = "b", pch = "6")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item7, type = "b", pch = "7")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item8, type = "b", pch = "8")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item9, type = "b", pch = "9")
+lines(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "l")
+points(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "p", pch = 19, col = "white", cex = 3)
+text(empiricalICCdata$itemSum, empiricalICCdata$item10, labels = "10")
+axis(1, at = 1:9, labels = 1:9)
+```
+
+In a model-implied ICC, we fit a logistic (sigmoid) curve to each item's probability of a symptoms being present as a function of a person's level on the latent construct. The model-implied ICCs for the same 10 items are depicted in Figure \@ref(fig:modelImpliedICC).
+
+```{r, include = FALSE}
+#https://www.statforbiology.com/nonlinearregression/usefulequations#logistic_curve
+#https://github.com/OnofriAndreaPG/aomisc/blob/1eb698b3bc5f55a718c37bfd2028b9ac73a6fbbe/R/SSL.R
+
+library("viridis")
+
+#Log-Logistic Function nlsL.2 (similar to L.3 from drc package)
+L2.fun <- function(predictor, a, b) {
+  x <- predictor
+  1/(1 + exp( - a* (x - b)))
+}
+
+L2.Init <- function(mCall, LHS, data) {
+  xy <- sortedXyData(mCall[["predictor"]], LHS, data)
+  x <-  xy[, "x"]; y <- xy[, "y"]
+  d <- 1              
+  ## Linear regression on pseudo y values
+  pseudoY <- log((d - y)/(y+0.00001))
+  coefs <- coef( lm(pseudoY ~ x))
+  k <- coefs[1]; a <- - coefs[2]
+  b <- k/a
+  value <- c(a, b)
+  names(value) <- mCall[c("a", "b")]
+  value
+}
+
+NLS.L2 <- selfStart(L2.fun, L2.Init, parameters = c("a", "b"))
+
+twoPLitem1 <- nls(item1 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem2 <- nls(item2 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem3 <- nls(item3 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem4 <- nls(item4 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem5 <- nls(item5 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem6 <- nls(item6 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem7 <- nls(item7 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem8 <- nls(item8 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem9 <- nls(item9 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem10 <- nls(item10 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+
+newdata <- data.frame(itemSum = seq(from = 1, to = 9, length.out = 1000))
+newdata$item1 <- predict(twoPLitem1, newdata = newdata)
+newdata$item2 <- predict(twoPLitem2, newdata = newdata)
+newdata$item3 <- predict(twoPLitem3, newdata = newdata)
+newdata$item4 <- predict(twoPLitem4, newdata = newdata)
+newdata$item5 <- predict(twoPLitem5, newdata = newdata)
+newdata$item6 <- predict(twoPLitem6, newdata = newdata)
+newdata$item7 <- predict(twoPLitem7, newdata = newdata)
+newdata$item8 <- predict(twoPLitem8, newdata = newdata)
+newdata$item9 <- predict(twoPLitem9, newdata = newdata)
+newdata$item10 <- predict(twoPLitem10, newdata = newdata)
+```
+
+```{r modelImpliedICC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of the probability of endorsement of a given item as a function of the person's level on the latent construct."}
+plot(newdata$itemSum, newdata$item1, type = "n", ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+lines(newdata$itemSum, newdata$item1, type = "l", lwd = 2, col = viridis(10)[1])
+lines(newdata$itemSum, newdata$item2, type = "l", lwd = 2, col = viridis(10)[2])
+lines(newdata$itemSum, newdata$item3, type = "l", lwd = 2, col = viridis(10)[3])
+lines(newdata$itemSum, newdata$item4, type = "l", lwd = 2, col = viridis(10)[4])
+lines(newdata$itemSum, newdata$item5, type = "l", lwd = 2, col = viridis(10)[5])
+lines(newdata$itemSum, newdata$item6, type = "l", lwd = 2, col = viridis(10)[6])
+lines(newdata$itemSum, newdata$item7, type = "l", lwd = 2, col = viridis(10)[7])
+lines(newdata$itemSum, newdata$item8, type = "l", lwd = 2, col = viridis(10)[8])
+lines(newdata$itemSum, newdata$item9, type = "l", lwd = 2, col = viridis(10)[9])
+lines(newdata$itemSum, newdata$item10, type = "l", lwd = 2, col = viridis(10)[10])
+axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
+legend("topleft",  legend = paste("item", 1:10, sep = " "), col = viridis(10), lwd = 2, cex = 0.6)
+```
+
+An ICC provides more information than an item–total correlation. Visually, we can see the utility of various items by looking at the items' ICC plots. For instance, consider what might be a useless item for diagnostic purposes. For a particular item, among those with a low total score (level on the construct), 90% respond with "TRUE" to the item, whereas among everyone else, 100% response with "TRUE" (see Figure \@ref(fig:iccCeilingEffect)). This item has a ceiling effect and provides only a little information about who would be considered above clinical threshold for a disorder. So, the item is not very clinically useful.
+
+```{r, include = FALSE}
+library("drc")
+
+empiricalICCdata$ceilingEffect <- c(.90, .95, .98, 1, 1, 1, 1, 1, 1)
+empiricalICCdata$diagnosticallyUseful <- c(0, 0, 0, .28, .29, .30, .30, .30, .30)
+
+threePL_ceilingeffect <- drm(ceilingEffect ~ itemSum, data = empiricalICCdata, fct = LL.3u(), type = "continuous") #fix upper asymptote at 1
+threePL_diagnosticallyUseful <- drm(diagnosticallyUseful ~ itemSum, data = empiricalICCdata, fct = LL.3(), type = "continuous") #fix lower asymptote at 0
+
+newdata$ceilingEffect <- predict(threePL_ceilingeffect, newdata = newdata)
+newdata$diagnosticallyUseful <- predict(threePL_diagnosticallyUseful, newdata = newdata)
+```
+
+```{r iccCeilingEffect, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item with a ceiling effect that is not diagnostically useful."}
+plot(newdata$itemSum, newdata$ceilingEffect, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
+```
+
+Now, consider a different item. For those with a low level on the construct, 0% respond with "TRUE", so it has a floor effect and tells us nothing about the lower end of the construct. But, for those with a higher level on the construct, 30% respond true (see Figure \@ref(fig:iccDiagnosticallyUseful)). So, the item tells us something about the higher end of the distribution. Thus, an ICC allows us to immediately tell the utility of items.
+
+```{r iccDiagnosticallyUseful, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item a floor effect that is diagnostically useful."}
+plot(newdata$itemSum, newdata$diagnosticallyUseful, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
+```
+
+### Parameters
+
+We can estimate up to four parameters in an IRT model and can glean up to four key pieces of information from an item's ICC:
+
+1. difficulty (severity)
+2. discrimination
+3. guessing
+4. inattention/careless errors
+
+#### Difficulty (Severity) {#itemDifficulty}
+
+The item's *difficulty* parameter is the item's location on the latent construct. It is quantified by the intercept, i.e., the location on the x-axis of the inflection point of the ICC. In a 1- or 2-parameter model, the inflection point is where 50% of the sample endorses the item (or gets the item correct), that is, the point on the x-axis where the ICC crosses .5. Some items are more useful at the higher levels of the construct, whereas other items are more useful at the lower levels of the construct. See Figure \@ref(fig:iccDifficulty) for an example of an item with a low difficulty and an item with a high difficulty.
+
+```{r, include = FALSE}
+library("tidyverse")
+library("psych")
+
+difficultyData <- data.frame(itemSum = 1:length(-4:4))
+
+difficultyData$lowDifficulty <- psych::logistic(-4:4, d = -0.8)
+difficultyData$highDifficulty <- psych::logistic(-4:4, d = 0.8)
+
+L1.fun <- function(predictor, b) {
+  x <- predictor
+  1/(1 + exp( -(x - b)))
+}
+
+L1.Init <- function(mCall, LHS, data) {
+  xy <- sortedXyData(mCall[["predictor"]], LHS, data)
+  x <-  xy[, "x"]; y <- xy[, "y"]
+  d <- 1              
+  ## Linear regression on pseudo y values
+  pseudoY <- log((d - y)/(y+0.00001))
+  coefs <- coef( lm(pseudoY ~ x))
+  k <- coefs[1]
+  b <- coefs[2]
+  value <- c(b)
+  names(value) <- mCall[c("b")]
+  value
+}
+
+NLS.L1 <- selfStart(L1.fun, L1.Init, parameters = c("b"))
+
+onePL_lowDifficulty <- nls(lowDifficulty ~ NLS.L1(itemSum, b), data = difficultyData, control = list(warnOnly = TRUE))
+onePL_highDifficulty <- nls(highDifficulty ~ NLS.L1(itemSum, b), data = difficultyData, control = list(warnOnly = TRUE))
+
+newdata$lowDifficulty <- predict(onePL_lowDifficulty, newdata = newdata)
+newdata$highDifficulty <- predict(onePL_highDifficulty, newdata = newdata)
+
+newdata$theta <- seq(from = -4, to = 4, length.out = 1000)
+
+midpoint_lowDifficulty <- newdata$theta[which.min(abs(newdata$lowDifficulty - 0.5))]
+midpoint_highDifficulty <- newdata$theta[which.min(abs(newdata$highDifficulty - 0.5))]
+
+difficulty_long <- pivot_longer(newdata, cols = lowDifficulty:highDifficulty) %>% 
+  rename(item = name)
+
+difficulty_long$Difficulty <- NA
+difficulty_long$Difficulty[which(difficulty_long$item == "lowDifficulty")] <- "Low"
+difficulty_long$Difficulty[which(difficulty_long$item == "highDifficulty")] <- "High"
+```
+
+```{r iccDifficulty, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of an item with low difficulty versus high difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."}
+ggplot(difficulty_long, aes(theta, value, group = Difficulty, color = Difficulty)) + 
+  geom_line(size = 1.5) +
+  scale_color_viridis_d() +
+  geom_hline(yintercept = 0.5, linetype = "dashed") +
+  geom_segment(aes(x = midpoint_lowDifficulty, xend = midpoint_lowDifficulty, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_highDifficulty, xend = midpoint_highDifficulty, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+When dealing with a measure of clinical symptoms (e.g., depression), the difficulty parameter is sometimes called severity, because symptoms that are endorsed less frequently tend to be more severe [e.g., suicidal behavior; @Krueger2004]. One way of thinking about the severity parameter of an item is: "How severe does your psychopathology have to be for half of people to endorse the symptom?"
+
+When dealing with a measure of performance, aptitude, or intelligence, the parameter would be more likely to be called difficulty: "How high does your ability have to be for half of people to pass the item?" An item with a low difficulty would be considered easy, because even people with a low ability tend to pass the item. An item with a high difficulty would be considered difficult, because only people with a high ability tend to pass the item.
+
+#### Discrimination {#itemDiscrimination}
+
+The item's *discrimination* parameter is how well the item can distinguish between those who ware higher versus lower on the construct, that is, how strongly the item is correlated with the construct (i.e., the latent factor) . It is quantified by the slope of the ICC, i.e., the steepness of the line at its steepest point. The slope reflects the inverse of how much range of construct levels it would take to flip 50/50 whether a person is likely to pass or fail an item.
+
+Some items have ICCs that go up fast (have a steep slope). These items provide a fine distinction between people with lower versus higher levels on the construct and therefore have high discrimination. Some items go up gradually (less steep slope), so it provides less precision and information, and has a low discrimination. See Figure \@ref(fig:iccDiscrimination) for an example of an item with a low discrimination and an item with a high discrimination.
+
+```{r, include = FALSE}
+discriminationData <- data.frame(itemSum = 1:length(-4:4))
+
+discriminationData$lowDiscrimination <- psych::logistic(-4:4, d = 0, a = 0.7)
+discriminationData$highDiscrimination <- psych::logistic(-4:4, d = 0, a = 2)
+
+twoPL_lowDiscrimination <- nls(lowDiscrimination ~ NLS.L2(itemSum, a, b), data = discriminationData, control = list(warnOnly = TRUE))
+twoPL_highDiscrimination <- nls(highDiscrimination ~ NLS.L2(itemSum, a, b), data = discriminationData, control = list(warnOnly = TRUE))
+
+newdata$lowDiscrimination <- predict(twoPL_lowDiscrimination, newdata = newdata)
+newdata$highDiscrimination <- predict(twoPL_highDiscrimination, newdata = newdata)
+
+newdata$theta <- seq(from = -4, to = 4, length.out = 1000)
+
+discrimination_long <- pivot_longer(newdata, cols = lowDiscrimination:highDiscrimination) %>% 
+  rename(item = name)
+
+discrimination_long$Discrimination <- NA
+discrimination_long$Discrimination[which(discrimination_long$item == "lowDiscrimination")] <- "Low"
+discrimination_long$Discrimination[which(discrimination_long$item == "highDiscrimination")] <- "High"
+```
+
+```{r iccDiscrimination, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of an item with low discrimination versus high discrimination. The discrimination of an item is the slope of the line at its inflection point."}
+ggplot(discrimination_long, aes(theta, value, group = Discrimination, color = Discrimination)) +
+  geom_line(size = 1.5) +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+#### Guessing
+
+The item's *guessing* parameter is reflected by the lower asymptote of the ICC. If the item has a lower asymptote above zero, it suggests that the probability of getting the item correct (or endorsing the item) never reaches zero, for any level of the construct. On an educational test, this could correspond to the person's likelihood of being able to answer the item correctly by chance just by guessing. For example, for a 4-option multiple choice test, a respondent would be expected to get a given item correct 25% of the time just by guessing. See Figure \@ref(fig:iccGuessingTF) for an example of an item from a true/false exam and Figure \@ref(fig:iccGuessingMC) for an example of an item from a 4-option multiple choice exam.
+
+```{r, include = FALSE}
+empiricalICCdata$guessingTF <- psych::logistic(-4:4, c = 0.5)
+empiricalICCdata$guessingMC <- psych::logistic(-4:4, c = 0.25)
+
+threePL_guessingTF <- drm(guessingTF ~ itemSum, data = empiricalICCdata, fct = LL.3u(), type = "continuous") #fix upper asymptote at 1
+threePL_guessingMC <- drm(guessingMC ~ itemSum, data = empiricalICCdata, fct = LL.3u(), type = "continuous") #fix upper asymptote at 1
+
+newdata$guessingTF <- predict(threePL_guessingTF, newdata = newdata)
+newdata$guessingMC <- predict(threePL_guessingMC, newdata = newdata)
+```
+
+```{r iccGuessingTF, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item from a true/false exam, where test takers get the item correct at least 50% of the time."}
+plot(newdata$itemSum, newdata$guessingTF, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
+axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
+axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
+```
+
+```{r iccGuessingMC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item from a 4-option multiple choice exam, where test takers get the item correct at least 25% of the time."}
+plot(newdata$itemSum, newdata$guessingMC, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
+axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
+axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
+```
+
+#### Inattention/Careless Errors
+
+The item's *inattention* (or *careless error*) parameter is the reflected by the upper asymptote of the ICC. If the item has an upper asymptote below one, it suggests that the probability of getting the item correct (or endorsing the item) never reaches one, for any level on the construct. See Figure \@ref(fig:iccInattention) for an example of an item whose probability of endorsement (or getting it correct) next exceeds .85.
+
+```{r, include = FALSE}
+empiricalICCdata$inattention <- psych::logistic(-4:4, z = 0.85, a = 2)
+
+threePL_inattention <- drm(inattention ~ itemSum, data = empiricalICCdata, fct = LL.3(), type = "continuous") #fix lower asymptote at 0
+
+newdata$inattention <- predict(threePL_inattention, newdata = newdata)
+```
+
+```{r iccInattention, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item where the probability of getting an item correct never exceeds .85."}
+plot(newdata$itemSum, newdata$inattention, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
+```
+
+### Models
+
+IRT models can be fit that estimate one or more of these four item parameters.
+
+#### 1-Parameter (Rasch)
+
+A 1-parameter logistic IRT model, also called a Rasch model, estimates the item difficult parameter, and holds everything else fixed across items (see Figure \@ref(fig:irt1PL)). One-parameter models are common and are the easiest to fit. However, they make fairly strict assumptions. They assume that items have the same discrimination.
+
+```{r, include = FALSE}
+library("tidyverse")
+
+onePLitems <- data.frame(theta = -4:4,
+                         item1 = psych::logistic(-4:4, d = -2),
+                         item2 = psych::logistic(-4:4, d = -1),
+                         item3 = psych::logistic(-4:4, d = 0),
+                         item4 = psych::logistic(-4:4, d = 1),
+                         item5 = psych::logistic(-4:4, d = 2))
+
+onePL_item1 <- nls(item1 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
+onePL_item2 <- nls(item2 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
+onePL_item3 <- nls(item3 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
+onePL_item4 <- nls(item4 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
+onePL_item5 <- nls(item5 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
+
+onePLitems_newdata <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+
+onePLitems_newdata$item1 <- predict(onePL_item1, newdata = onePLitems_newdata)
+onePLitems_newdata$item2 <- predict(onePL_item2, newdata = onePLitems_newdata)
+onePLitems_newdata$item3 <- predict(onePL_item3, newdata = onePLitems_newdata)
+onePLitems_newdata$item4 <- predict(onePL_item4, newdata = onePLitems_newdata)
+onePLitems_newdata$item5 <- predict(onePL_item5, newdata = onePLitems_newdata)
+
+onePLitems_long <- pivot_longer(onePLitems_newdata, cols = item1:item5) %>% 
+  rename(item = name)
+
+onePLitems_long$Item <- NA
+onePLitems_long$Item[which(onePLitems_long$item == "item1")] <- 1
+onePLitems_long$Item[which(onePLitems_long$item == "item2")] <- 2
+onePLitems_long$Item[which(onePLitems_long$item == "item3")] <- 3
+onePLitems_long$Item[which(onePLitems_long$item == "item4")] <- 4
+onePLitems_long$Item[which(onePLitems_long$item == "item5")] <- 5
+```
+
+```{r irt1PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "One-parameter logistic model in item response theory."}
+ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+A 1-parameter logistic model is only valid if there are not crossing of lines in empirical ICCs (see Figure \@ref(fig:empiricalICCnoCrossing)).
+
+```{r, include = FALSE}
+empiricalICCdata_noCrossing <- data.frame(
+  item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
+  item2 =  c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
+  item3 =  c(.10, .28, .39, .58, .75, .82, .88, .94, .99),
+  item4 =  c(.05, .24, .30, .50, .68, .73, .84, .92, .99),
+  item5 =  c(.03, .19, .27, .48, .57, .65, .79, .89, .99),
+  item6 =  c(.02, .15, .25, .38, .48, .59, .75, .85, .95),
+  item7 =  c(.01, .07, .15, .29, .42, .53, .70, .82, .90),
+  item8 =  c(.01, .05, .10, .26, .35, .46, .60, .80, .85),
+  item9 =  c(.01, .02, .05, .16, .23, .35, .46, .55, .70),
+  item10 = c(.01, .02, .03, .05, .06, .07, .10, .14, .20),
+  itemSum = 1:9
+)
+```
+
+```{r empiricalICCnoCrossing, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 8, fig.cap = "Empirical item characteristic curves of the probability of endorsement of a given item as a function of the person's sum score. The empirical item characteristic curves of these items do not cross each other."}
+plot(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item1, type = "b", pch = "1")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item2, type = "b", pch = "2")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item3, type = "b", pch = "3")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item4, type = "b", pch = "4")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item5, type = "b", pch = "5")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item6, type = "b", pch = "6")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item7, type = "b", pch = "7")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item8, type = "b", pch = "8")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item9, type = "b", pch = "9")
+lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "l")
+points(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "p", pch = 19, col = "white", cex = 3)
+text(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, labels = "10")
+axis(1, at = 1:9, labels = 1:9)
+```
+
+#### 2-Parameter
+
+A 2-parameter logistic IRT model estimates item difficulty and discrimination, and it holds the asymptotes fixed across items (see Figure \@ref(fig:irt2PL)). Two-parameter models are also common.
+
+```{r, include = FALSE}
+twoPLitems <- data.frame(theta = -6:6,
+                         item1 = psych::logistic(-6:6, d = -2, a = 1.3),
+                         item2 = psych::logistic(-6:6, d = -1, a = 0.8),
+                         item3 = psych::logistic(-6:6, d = 0, a = 0.6),
+                         item4 = psych::logistic(-6:6, d = 1, a = 1.5),
+                         item5 = psych::logistic(-6:6, d = 2, a = 2.3))
+
+twoPL_item1 <- nls(item1 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
+twoPL_item2 <- nls(item2 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
+twoPL_item3 <- nls(item3 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
+twoPL_item4 <- nls(item4 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
+twoPL_item5 <- nls(item5 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
+
+twoPLitems_newdata <- data.frame(theta = seq(from = -6, to = 6, length.out = 1000))
+
+twoPLitems_newdata$item1 <- predict(twoPL_item1, newdata = twoPLitems_newdata)
+twoPLitems_newdata$item2 <- predict(twoPL_item2, newdata = twoPLitems_newdata)
+twoPLitems_newdata$item3 <- predict(twoPL_item3, newdata = twoPLitems_newdata)
+twoPLitems_newdata$item4 <- predict(twoPL_item4, newdata = twoPLitems_newdata)
+twoPLitems_newdata$item5 <- predict(twoPL_item5, newdata = twoPLitems_newdata)
+
+twoPLitems_long <- pivot_longer(twoPLitems_newdata, cols = item1:item5) %>% 
+  rename(item = name)
+
+twoPLitems_long$Item <- NA
+twoPLitems_long$Item[which(twoPLitems_long$item == "item1")] <- 1
+twoPLitems_long$Item[which(twoPLitems_long$item == "item2")] <- 2
+twoPLitems_long$Item[which(twoPLitems_long$item == "item3")] <- 3
+twoPLitems_long$Item[which(twoPLitems_long$item == "item4")] <- 4
+twoPLitems_long$Item[which(twoPLitems_long$item == "item5")] <- 5
+```
+
+```{r irt2PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Two-parameter logistic model in item response theory."}
+ggplot(twoPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+#### 3-Parameter
+
+A 3-parameter logistic IRT model estimates item difficulty, discrimination, and guessing (lower asymptote), and it holds the upper asymptote fixed across items (see Figure \@ref(fig:irt3PL)). This model would provide information about where an item drops out. Three-parameter models are less common to estimate because it adds considerable computational complexity and requires a large sample size, and the guessing parameter is often not as important as difficulty and discrimination. Nevertheless, 3-parameter models are sometimes estimated in the education literature to account for getting items correct by random guessing.
+
+```{r, include = FALSE}
+threePLitems <- data.frame(theta = 1:13,
+                           item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0),
+                           item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25),
+                           item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3),
+                           item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15),
+                           item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0))
+
+threePL_item1 <- drm(item1 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
+threePL_item2 <- drm(item2 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
+threePL_item3 <- drm(item3 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
+threePL_item4 <- drm(item4 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
+threePL_item5 <- drm(item5 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
+
+threePLitems_newdata <- data.frame(theta = seq(from = 1, to = 13, length.out = 1000))
+
+threePLitems_newdata$item1 <- predict(threePL_item1, newdata = threePLitems_newdata)
+threePLitems_newdata$item2 <- predict(threePL_item2, newdata = threePLitems_newdata)
+threePLitems_newdata$item3 <- predict(threePL_item3, newdata = threePLitems_newdata)
+threePLitems_newdata$item4 <- predict(threePL_item4, newdata = threePLitems_newdata)
+threePLitems_newdata$item5 <- predict(threePL_item5, newdata = threePLitems_newdata)
+
+threePLitems_newdata$theta <- seq(from = -6, to = 6, length.out = 1000)
+
+threePLitems_long <- pivot_longer(threePLitems_newdata, cols = item1:item5) %>% 
+  rename(item = name)
+
+threePLitems_long$Item <- NA
+threePLitems_long$Item[which(threePLitems_long$item == "item1")] <- 1
+threePLitems_long$Item[which(threePLitems_long$item == "item2")] <- 2
+threePLitems_long$Item[which(threePLitems_long$item == "item3")] <- 3
+threePLitems_long$Item[which(threePLitems_long$item == "item4")] <- 4
+threePLitems_long$Item[which(threePLitems_long$item == "item5")] <- 5
+```
+
+```{r irt3PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Three-parameter logistic model in item response theory."}
+ggplot(threePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+#### 4-Parameter
+
+A 4-parameter logistic IRT model estimates item difficulty, discrimination, guessing, and careless errors (see Figure \@ref(fig:irt4PL)). The fourth parameter adds considerable computational complexity and is rare to estimate.
+
+```{r, include = FALSE}
+fourPLitems <- data.frame(theta = 1:13,
+                           item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0, z = 1),
+                           item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25, z = 0.9),
+                           item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3, z = 0.95),
+                           item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15, z = 0.85),
+                           item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0, z = 0.98))
+
+fourPL_item1 <- drm(item1 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
+fourPL_item2 <- drm(item2 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
+fourPL_item3 <- drm(item3 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
+fourPL_item4 <- drm(item4 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
+fourPL_item5 <- drm(item5 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
+
+fourPLitems_newdata <- data.frame(theta = seq(from = 1, to = 13, length.out = 1000))
+
+fourPLitems_newdata$item1 <- predict(fourPL_item1, newdata = fourPLitems_newdata)
+fourPLitems_newdata$item2 <- predict(fourPL_item2, newdata = fourPLitems_newdata)
+fourPLitems_newdata$item3 <- predict(fourPL_item3, newdata = fourPLitems_newdata)
+fourPLitems_newdata$item4 <- predict(fourPL_item4, newdata = fourPLitems_newdata)
+fourPLitems_newdata$item5 <- predict(fourPL_item5, newdata = fourPLitems_newdata)
+
+fourPLitems_newdata$theta <- seq(from = -6, to = 6, length.out = 1000)
+
+fourPLitems_long <- pivot_longer(fourPLitems_newdata, cols = item1:item5) %>% 
+  rename(item = name)
+
+fourPLitems_long$Item <- NA
+fourPLitems_long$Item[which(fourPLitems_long$item == "item1")] <- 1
+fourPLitems_long$Item[which(fourPLitems_long$item == "item2")] <- 2
+fourPLitems_long$Item[which(fourPLitems_long$item == "item3")] <- 3
+fourPLitems_long$Item[which(fourPLitems_long$item == "item4")] <- 4
+fourPLitems_long$Item[which(fourPLitems_long$item == "item5")] <- 5
+```
+
+```{r irt4PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Four-parameter logistic model in item response theory."}
+ggplot(fourPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+#### Graded Response Model
+
+*Graded response models* and *generalized partial credit models* can be estimated with one, two, three, or four parameters. However, they use polytomous data, as described in the section below.
+
+### Type of Data
+
+IRT model are most commonly estimated with binary or dichotomous data. For example, the measures have questions or items that can be considered collapsed into two groups (e.g., true/false, correct/incorrect, endorsed/not endorsed). IRT models can also be estimated with polytomous data (e.g., likert scale), which adds computational complexity. IRT models with polytomous data can be fit with a graded response model or generalized partial credit model.
+
+For example, see Figure \@ref(fig:polytomousItemBoundaryCurves) for an example of an item boundary characteristic curve for an item from a 5-level likert scale (based on a cumulative distribution). If an item has $k$ response categories, it has $k - 1$ thresholds. For example, an item with 5-level likert scale (1 = strongly disagree; 2 = disagree; 3 = neither agree nor disagree; 4 = agree; 5 = strongly agree) has 4 thresholds: one from 1–2, one from 2–3, one from 3–4, and one from 4–5. The item boundary characteristic curve is the probability that a person selects a response category higher than $k$ of a polytomous item. As depicted, one likert scale item does equivalent work as 4 binary items. See Figure \@ref(fig:polytomousItemResponseCategoryCurves) for the same 5-level likert scale item plotted with an item response category characteristic curve (based on a static, non-cumulative distribution).
+
+```{r, include = FALSE}
+polytomousItemBoundary <- data.frame(theta = seq(from = -4, to = 4, length.out= 1000),
+                                     itemBoundary1 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = -2),
+                                     itemBoundary2 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = -0.6667),
+                                     itemBoundary3 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = 0.6667),
+                                     itemBoundary4 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = 2))
+
+polytomousItemResponseCategory <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+polytomousItemResponseCategory$itemResponseCategory1 <- 1 - polytomousItemBoundary$itemBoundary1
+polytomousItemResponseCategory$itemResponseCategory5 <- polytomousItemBoundary$itemBoundary4
+polytomousItemResponseCategory$itemResponseCategory4 <- polytomousItemBoundary$itemBoundary3 - polytomousItemResponseCategory$itemResponseCategory5
+polytomousItemResponseCategory$itemResponseCategory3 <- polytomousItemBoundary$itemBoundary2 - rowSums(polytomousItemResponseCategory[,c("itemResponseCategory4","itemResponseCategory5")])
+polytomousItemResponseCategory$itemResponseCategory2 <- polytomousItemBoundary$itemBoundary1 - rowSums(polytomousItemResponseCategory[,c("itemResponseCategory3","itemResponseCategory4","itemResponseCategory5")])
+
+polytomousItemResponseCategory <- polytomousItemResponseCategory %>%
+  dplyr::select(theta, itemResponseCategory1, itemResponseCategory2, itemResponseCategory3, itemResponseCategory4, itemResponseCategory5)
+
+polytomousItemBoundary_long <- pivot_longer(polytomousItemBoundary, cols = itemBoundary1:itemBoundary4) %>% 
+  rename(item = name)
+
+polytomousItemBoundary_long$boundary <- NA
+polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary1")] <- 1
+polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary2")] <- 2
+polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary3")] <- 3
+polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary4")] <- 4
+
+polytomousItemResponseCategory_long <- pivot_longer(polytomousItemResponseCategory, cols = itemResponseCategory1:itemResponseCategory5) %>% 
+  rename(item = name)
+
+polytomousItemResponseCategory_long$responseCategory <- NA
+polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory1")] <- 1
+polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory2")] <- 2
+polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory3")] <- 3
+polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory4")] <- 4
+polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory5")] <- 5
+```
+
+```{r polytomousItemBoundaryCurves, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item boundary characteristic curves from two-parameter graded response model in item response theory."}
+ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), color = factor(boundary))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Boundary") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
+  theme_bw() +
+  theme(axis.title.y = element_text(size = 9))
+```
+
+```{r polytomousItemResponseCategoryCurves, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item response category characteristic curves from two-parameter graded response model in item response theory."}
+ggplot(polytomousItemResponseCategory_long, aes(theta, value, group = factor(responseCategory), color = factor(responseCategory))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Response Category") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Response Category Endorsement") +
+  theme_bw()
+```
+
+IRT does not handle continuous data well, with some exceptions [@Chen2019] such as in a Bayesian framework [@Buerkner2019]. If you want to use continuous data, you might consider moving to a [factor analysis](#factorAnalysis) framework.
+
+### Sample Size
+
+Sample size requirement depend on the complexity of the model. A 1-parameter model often requires ~100 participants. A 2-parameter model often requires ~1,000 participants. A 3-parameter model often requires ~10,000 participants.
+
+### Reliability
+
+IRT conceptualizes reliability in a different way than [classical test theory](#ctt) does. Both IRT and classical test theory conceptualize reliability as involving the *precision* of a measure's scores. In classical test theory, (im)precision—as operationalized by the standard error of measurement—is estimated with a single index across the whole range of the construct. That is, in classical test theory, the same standard error of measurement applies to all scores in the population [@Embretson1996]. However, IRT estimates how much measurement precision (information) or imprecision (standard error of measurement) each item, and the test as a whole, have at different construct levels. This allows IRT to conceptualize reliability in such a way that precision/reliability can *differ* at different construct levels, unlike in classical test theory [@Embretson1996]. Thus, IRT does not have one index of reliability; rather, its estimate of reliability differs at different levels on the construct.
+
+Based on an item's difficulty and discrimination, we can calculate how much information each item provides. In IRT, *information* is how much measurement precision or consistency an item (or the measure) provides. In other words, information is the degree to which an item (or measure) reduces the standard error of measurement, that is, how much it reduces uncertainty of a person's level on the construct. As a reminder (from Equation \@ref(eq:standardErrorOfMeasurement)), the [standard error of measurement](#standardErrorofMeasurement) is calculated as:
+
+$$
+\text{standard error of measurement (SEM)} = \sigma_x \sqrt{1 - r_{xx}}
+$$
+
+where $\sigma_x = \text{standard deviation of observed scores on the item } x$ and $r_{xx} = \text{reliability of the item } x$. The standard error of measurement is used to generate confidence intervals for people's scores. In IRT, the standard error of measurement (at a given construct level) can be calculated as the inverse of the square root of the amount of test information at that construct level:
+
+$$
+\text{SEM}(\theta) = \frac{1}{\sqrt{\text{information}(\theta)}}
+(\#eq:semIRT)
+$$
+
+The standard error of measurement tends to be higher (i.e., reliability/information tends to be lower) at the extreme levels of the construct where there are fewer items.
+
+Consider some hypothetical items depicted with ICCs in Figure \@ref(fig:reliabilityIRTicc).
+
+```{r, include = FALSE}
+#https://journals.sagepub.com/doi/full/10.1177/0146621613475471
+fourPL <- function(a = 1, b, c = 0, d = 1, theta){
+  c + (d - c) * (exp(a * (theta - b))) / (1 + exp(a * (theta - b)))
+}
+
+information_fourPL <- function(b, a = 1, c = 0, d = 1, theta = seq(-4, 4, length.out = 1000)){
+  P <- NULL
+  Ii <- NULL
+  
+  for(i in 1:1000){
+    P[i] <- fourPL(b = b, a = a, c = c, d = d, theta = theta[i])
+    Ii[i] <- ((a^2) * (P[i] - c)^2 * (d - P[i])^2) / ((d - c)^2 * P[i] * (1 - P[i]))
+  }
+  
+  return(Ii)
+}
+
+standardErrorIRT <- function(information){
+  1/sqrt(information)
+}
+
+irtReliability <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+
+irtReliability$item1 <- fourPL(b = -1, a = 1, theta = irtReliability$theta)
+irtReliability$item2 <- fourPL(b = 0, a = 0.6, theta = irtReliability$theta)
+irtReliability$item3 <- fourPL(b = 1, a = 1.5, theta = irtReliability$theta)
+irtReliability$item4 <- fourPL(b = 2, a = 2, theta = irtReliability$theta)
+
+irtInformation <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+
+irtInformation$information1 <- information_fourPL(b = -1, a = 1, theta = irtInformation$theta)
+irtInformation$information2 <- information_fourPL(b = 0, a = 0.6, theta = irtInformation$theta)
+irtInformation$information3 <- information_fourPL(b = 1, a = 1.5, theta = irtInformation$theta)
+irtInformation$information4 <- information_fourPL(b = 2, a = 2, theta = irtInformation$theta)
+
+midpoint_item1 <- irtReliability$theta[which.min(abs(irtReliability$item1 - 0.5))]
+midpoint_item2 <- irtReliability$theta[which.min(abs(irtReliability$item2 - 0.5))]
+midpoint_item3 <- irtReliability$theta[which.min(abs(irtReliability$item3 - 0.5))]
+midpoint_item4 <- irtReliability$theta[which.min(abs(irtReliability$item4 - 0.5))]
+
+irtInformation$testInformation <- rowSums(irtInformation[,c("information1","information2","information3","information4")])
+irtInformation$standardError <- standardErrorIRT(irtInformation$testInformation)
+
+irtReliability_long <- pivot_longer(irtReliability, cols = item1:item4) %>% 
+  rename(item = name)
+
+irtInformation_long <- pivot_longer(irtInformation, cols = information1:information4) %>% 
+  rename(item = name)
+
+irtReliability_long$Item <- NA
+irtReliability_long$Item[which(irtReliability_long$item == "item1")] <- 1
+irtReliability_long$Item[which(irtReliability_long$item == "item2")] <- 2
+irtReliability_long$Item[which(irtReliability_long$item == "item3")] <- 3
+irtReliability_long$Item[which(irtReliability_long$item == "item4")] <- 4
+
+irtInformation_long$Item <- NA
+irtInformation_long$Item[which(irtInformation_long$item == "information1")] <- 1
+irtInformation_long$Item[which(irtInformation_long$item == "information2")] <- 2
+irtInformation_long$Item[which(irtInformation_long$item == "information3")] <- 3
+irtInformation_long$Item[which(irtInformation_long$item == "information4")] <- 4
+```
+
+```{r reliabilityIRTicc, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves from two-parameter logistic model in item response theory. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."}
+ggplot(irtReliability_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  geom_hline(yintercept = 0.5, linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item1, xend = midpoint_item1, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item2, xend = midpoint_item2, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item3, xend = midpoint_item3, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item4, xend = midpoint_item4, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+We can present the ICC in terms of an item information function (see Figure \@ref(fig:reliabilityIRTitemInformation)). The information peak is located at the severity of the item. The higher the discrimination, the higher the information peak.
+
+```{r reliabilityIRTitemInformation, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item information from two-parameter logistic model in item response theory. The dashed vertical line is the item difficulty, which is located at the peak of the item information curve."}
+ggplot(irtInformation_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  geom_vline(xintercept = midpoint_item1, linetype = "dashed") +
+  geom_vline(xintercept = midpoint_item2, linetype = "dashed") +
+  geom_vline(xintercept = midpoint_item3, linetype = "dashed") +
+  geom_vline(xintercept = midpoint_item4, linetype = "dashed") +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Item Information") +
+  theme_bw()
+```
+
+We can aggregate information across items to determine how much information the measure as a whole provides. This is called the test information function (see Figure \@ref(fig:reliabilityIRTtestInformation)). Note that we get more information from likert/multiple response items compared to binary/dichotomous items. Having 10 items with a 5-level response scale yields as much information as 40 dichotomous items.
+
+```{r reliabilityIRTtestInformation, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Test information curve from two-parameter logistic model in item response theory."}
+ggplot(irtInformation, aes(theta, testInformation)) + 
+  geom_line(size = 1.5) +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Test Information") +
+  theme_bw()
+```
+
+Based on test information, we can calculate the standard error of measurement (see Figure \@ref(fig:reliabilityIRTtestSE)). Notice how the degree of (un)reliability differs at different construct levels.
+
+```{r reliabilityIRTtestSE, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Test standard error of measurement from two-parameter logistic model in item response theory."}
+ggplot(irtInformation, aes(theta, standardError)) + 
+  geom_line(size = 1.5) +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Standard Error of Measurement", limits = c(0,3)) +
+  theme_bw()
+```
+
+### Efficient Assessment
+
+One of the benefits of IRT is for item selection to develop brief assessments. For instance, you could use two items to tell you where the person is on the construct: low, middle, or high (see Figure \@ref(fig:efficientAssessment)). If the responses to the two items do not meet expectations, for instance, the person passes the difficult item but fails the easy item, we would keep assessing additional items to determine their level on the construct. If two items perform similarly, that is, they have the same difficulty and discrimination, they are redundant, and we can sacrifice one of them. This leads to greater efficiency and better measurement in terms of reliability and validity. For more information on designing and evaluating short forms compared to their full-scale counterparts, see @Smith2000.
+
+```{r, include = FALSE}
+efficientAssessment <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+
+efficientAssessment$item1 <- fourPL(b = -1.5, a = 2, theta = efficientAssessment$theta)
+efficientAssessment$item2 <- fourPL(b = 1.5, a = 2, theta = efficientAssessment$theta)
+
+efficientAssessment_long <- pivot_longer(efficientAssessment, cols = item1:item2) %>% 
+  rename(item = name)
+
+efficientAssessment_long$Item <- NA
+efficientAssessment_long$Item[which(efficientAssessment_long$item == "item1")] <- 1
+efficientAssessment_long$Item[which(efficientAssessment_long$item == "item2")] <- 2
+```
+
+```{r efficientAssessment, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves from two-parameter logistic model in item response theory."}
+ggplot(efficientAssessment_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+IRT forms the basis of adaptive testing, which is discussed in Chapter \@ref(cat). As discussed earlier, briefer measures can increase reliability and validity of measurement if the items are tailored to the ability level of the participant. The idea of adaptive testing is that, instead of having a standard scale for all participants, the items adapt to each person. An example of a measure that has used computerized adaptive testing is the Graduate Record Examination (GRE).
+
+With adaptive testing, it is important to develop a comprehensive item bank that spans the difficulty range of interest. The starting construct level is the 50th percentile. If the respondennt gets the first item correct, it moves moves to the next item that would provide the most information, based on a split of the remaining sample (e.g., 75th percentile). And so on... The goal of adaptive testing is to find the construct level where the respondent keep getting items right and wrong 50% of the time. It is a promising approach that saves time because it tailors which items are administered to which person (based on their construct level) to get the most reliable estimate in the shortest time possible. However, it assumes that if you get a more difficult item correct, that you would have gotten easier items correct, which might not be true in all contexts.
+
+Although most uses of IRT have been in cognitive and educational testing, IRT may also benefit other domains of assessment including clinical assessment [@Gibbons2016; @Reise2009; @Thomas2019].
+
+#### A Good Measure
+
+According to IRT a good measure should:
+
+1. fit your goals of the assessment, in terms of the range of interest regarding levels on the construct
+2. have good items that yield lots of information
+3. have a good set of items that densely cover the construct within the range of interest, without redundancy
+
+First, a good measure should fit your goals of the assessment, in terms of the "range of interest" or the "target range" of levels on the construct. For instance, if your goal is to perform diagnosis, you would only care about the high end of the construct—there is no use discriminating between "nothing", "almost nothing", and "a little bit." For secondary prevention, i.e., early identification of risk to prevent something from getting worse, you would be interested in finding people with elevated risk—e.g., you would need to know who is 1 or more standard deviations above the mean, but you would not need to discriminate beyond that. For assessing individual differences, you would want items that discriminate across the full range, including at the lower end. The items' difficulty should span the range of interest.
+
+Second, a good measure should have good items that yield lots of information. For example, the items should have strong discrimination, that is, the items are strongly related to the construct. The items should have sufficient variability in responses. This can be achieved by having likert/multiple response items, as opposed to binary items.
+
+Third, a good measure should have a good set of items that densely cover the construct within the range of interest, without redundancy. The items should not have the same difficulty, or they would be considered redundant. The items' difficulty should densely cover the construct within the range of interest. For instance, if the construct range of interest is 1–2 standard deviations above the mean, the items should have difficulty that densely cover this range (e.g., 1.0, 1.05, 1.10, 1.15, 1.20, 1.25, 1.30, ..., 2.0).
+
+With items that (1) span the range of interest, (2) have high discrimination and information, and (3) densely cover the range of interest without redundancy, the measure should have a high information in the range of interest. This would allow it to efficiently and accurately assess the construct for the intended purpose.
+
+## Getting Started
+
+### Load Libraries
+
+```{r, message = FALSE, warning = FALSE}
+library("mirt")
+library("tidyverse")
+library("tinytex")
+```
+
+### Load Data
+
+```{r}
+mydataIRT <- expand.table(LSAT7)
+```
+
+## Comparison of Scoring Approaches
+
+A measure that is a raw symptom count (i.e., a count of how many symptoms a person endorses) is low in precision and has a high standard error of measurement. Some diagnostic measures provide an ordinal response scale for each symptom. For example, the Structured Clinical Interview of Mental Disorders (SCID) provides a response scale from 0–2, where 0 = the symptom is absent, 1 = the symptom is sub-threshold, and 2 = the symptom is present. If your measure was a raw symptom sum, as opposed to a count of how many symptoms were present, the measure would be slightly more precise and have a somewhat smaller standard error of measurement.
+
+A weighted symptom sum is the classical test theory analog of IRT. In classical test theory, proportion correct (or endorsed) would correspond to item difficulty and the item–total correlation (i.e., a point-biserial correlation) would correspond to item discrimination. If we were to compute a weighted sum of each item according to its strenght of association with the construct (i.e., the item–total correlation), this measure would be somewhat more precise than the raw symptom sum, but it is not a latent variable method.
+
+In IRT analysis, the weight for each item influences the estimate of a person's level on the construct. IRT down-weights the poorly discriminating items and up-weights the strongly discriminating items. This leads to greater precision and a lower standard error of measurement than non-latent scoring approaches.
+
+According to @Embretson1996, many perspectives have changed because of IRT. First, according to classical test theory, longer tests are more reliable than shorter tests, as described in Section \@ref(splitHalf-reliability) in the chapter on reliability. However, according to IRT, shorter tests (i.e., tests with fewer items) can be more reliable than longer tests. Item selection using IRT can lead to briefer assessments that have greater reliability than longer scales. For example, adaptive tests that tailor the difficulty of the items to the ability level of the participant.
+
+Second, in classical test theory, a score's meaning is tied to its location in a distribution (i.e., the norm-referenced standard). In IRT, however, the people and items are calibrated on a common scale. Based on a child's IRT-estimated ability level (i.e., level on the construct), we can have a better sense of what the child knows and does not know, because it indicates the difficulty level at which they would tend to get items correct 50% of the time; the person would likely fail items with a higher difficulty from this level, whereas the person would likely  pass items with a lower difficulty compared to this level. Consider Binet's distribution of ability that arranges the items from easiest to most difficult. Based on the item difficulty and content of the items and the child's performance, we can have a better indication that a child can perform items successfully in a particular range (e.g., count to 10) but might not be able to perform more difficult items (e.g., tie their shoes). From an intervention perspective, this would allow working in the "window of opportunity" or the zone of proximal development. Thus, IRT can provide more meaningful understanding of a person's ability compared to traditional classical test theory such as the child being at the "63rd percentile" for a child of their age, which lacks conceptual meaning.
+
+According to @Cooper2009, our current diagnostic system relies heavily on how many symptoms a person endorses as an index of severity, but this assumes that all that all symptom endorsements have the same overall weight (severity).	Using IRT, we can determine the relative severity of each item (symptom)—and it is clear that some symptoms indicate more severity than others. From this analysis, a respondent can endorse fewer, more severe items, and have overall more severe psychopathology than an individual who endorses more, less severe items. Basically, not all items are equally severe—know your items!
+
+## Relation between IRT, SEM, and CFA
+
+IRT, like [structural equation modeling](#sem) (SEM) or [confirmatory factor analysis](#cfa) (CFA), is an approach to latent variable modeling. IRT is essentially a form of CFA with categorical, binary, or ordinal data. As we discussed in Chapter \@ref(sem), SEM is CFA with regression paths that specify hypothesized causal relations between the latent variables (the structural component of the model).
+
+## Rasch Model (1-Parameter Logistic)
+
+A one-parameter logistic (1PL) item response theory (IRT) model is a model fit to dichotomous data, which estimates a different difficulty ($b$) parameter for each item. Discrimination ($a$) is not estimated (i.e., it is fixed at the same value—one—across items). Rasch models were fit using the `mirt` package [@R-mirt].
+
+### Fit Model
+
+```{r, results = "hide"}
+raschModel <- mirt(data = mydataIRT,
+                   model = 1,
+                   itemtype = "Rasch",
+                   technical = list(removeEmptyRows = TRUE))
+```
+
+### Model Summary
+
+```{r}
+summary(raschModel)
+coef(raschModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Plots
+
+#### Test Curves
+
+##### Test Characteristic Curve
+
+Plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test characteristic curve from Rasch item response theory model"}
+plot(raschModel, type = "score")
+```
+
+##### Test Information Function
+
+Plot of test information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function from Rasch item response theory model"}
+plot(raschModel, type = "info")
+```
+
+##### Test Reliability
+
+Plot of test reliability as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test reliability from Rasch item response theory model"}
+plot(raschModel, type = "rxx")
+```
+
+##### Test Standard Error of Measurement
+
+Plot of test standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test standard error of measurement from Rasch item response theory model"}
+plot(raschModel, type = "SE")
+```
+
+##### Test Information Function and Test Standard Error of Measurement
+
+Plot of test information and standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function and standard error of measurement from Rasch item response theory model"}
+plot(raschModel, type = "infoSE")
+```
+
+#### Item Curves
+
+##### Item Characteristic Curves
+
+Plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves from Rasch item response theory model"}
+plot(raschModel, type = "itemscore", facet_items = FALSE)
+plot(raschModel, type = "itemscore", facet_items = TRUE)
+```
+
+##### Item Information Functions
+
+Plot of item information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item information functions from Rasch item response theory model"}
+plot(raschModel, type = "infotrace", facet_items = FALSE)
+plot(raschModel, type = "infotrace", facet_items = TRUE)
+```
+
+## Two-Parameter Logistic Model
+
+A two-parameter logistic (2PL) IRT model is a model fit to dichotomous data, which estimates a different difficulty ($b$) and discrimination ($a$) parameter for each item. 2PL models were fit using the `mirt` package [@R-mirt].
+
+### Fit Model
+
+```{r, results = "hide"}
+twoPLModel <- mirt(data = mydataIRT,
+                   model = 1,
+                   itemtype = "2PL",
+                   technical = list(removeEmptyRows = TRUE))
+```
+
+### Model Summary
+
+```{r}
+summary(twoPLModel)
+coef(twoPLModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Plots
+
+#### Test Curves
+
+##### Test Characteristic Curve
+
+Plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test characteristic curve from two-parameter logistic item response theory model"}
+plot(twoPLModel, type = "score")
+```
+
+##### Test Information Function
+
+Plot of test information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function from two-parameter logistic item response theory model"}
+plot(twoPLModel, type = "info")
+```
+
+##### Test Reliability
+
+Plot of test reliability as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test reliability from two-parameter logistic item response theory model"}
+plot(twoPLModel, type = "rxx")
+```
+
+##### Test Standard Error of Measurement
+
+Plot of test standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test standard error of measurement from two-parameter logistic item response theory model"}
+plot(twoPLModel, type = "SE")
+```
+
+##### Test Information Function and Standard Errors
+
+Plot of test information and standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function and standard error of measurement from two-parameter logistic item response theory model"}
+plot(twoPLModel, type = "infoSE")
+```
+
+#### Item Curves
+
+##### Item Characteristic Curves
+
+Plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves from two-parameter logistic item response theory model"}
+plot(twoPLModel, type = "itemscore", facet_items = FALSE)
+plot(twoPLModel, type = "itemscore", facet_items = TRUE)
+```
+
+##### Item Information Functions
+
+Plot of item information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item information functions from two-parameter logistic item response theory model"}
+plot(twoPLModel, type = "infotrace", facet_items = FALSE)
+plot(twoPLModel, type = "infotrace", facet_items = TRUE)
+```
+
+## Two-Parameter Multi-Dimensional Logistic Model
+
+A 2PL multi-dimensional IRT model is a model that allows multiple dimensions (latent factors) and is fit to dichotomous data, which estimates a different difficulty ($b$) and discrimination ($a$) parameter for each item. Multi-dimensional IRT models were fit using the `mirt` package [@R-mirt]. In this example, I estimate a 2PL multi-dimensional IRT model by estimating two factors.
+
+### Fit Model
+
+```{r, results = "hide"}
+twoPL2FactorModel <- mirt(data = mydataIRT,
+                          model = 2,
+                          itemtype = "2PL",
+                          technical = list(removeEmptyRows = TRUE))
+```
+
+### Model Summary
+
+```{r}
+summary(twoPL2FactorModel)
+coef(twoPL2FactorModel, simplify = TRUE)
+```
+
+### Compare model fit
+
+The modified model with two factors and the original one-factor model are considered “nested” models. The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms. Model fit of nested models can be compared with a chi-square difference test.
+
+```{r}
+anova(twoPLModel, twoPL2FactorModel)
+```
+
+Using a chi-square difference test to compare two nested models, the two-factor model fits significantly better than the one-factor model.
+
+### Plots
+
+#### Test Curves
+
+##### Test Characteristic Curve
+
+Plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test characteristic curve from two-parameter multi-dimensional item response theory model"}
+plot(twoPL2FactorModel, type = "score")
+```
+
+##### Test Information Function
+
+Plot of test information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function from two-parameter multi-dimensional item response theory model"}
+plot(twoPL2FactorModel, type = "info")
+```
+
+##### Test Standard Error of Measurement
+
+Plot of test standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test standard error of measurement from two-parameter multi-dimensional item response theory model"}
+plot(twoPL2FactorModel, type = "SE")
+```
+
+#### Item Curves
+
+##### Item Characteristic Curves
+
+Plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves from two-parameter multi-dimensional item response theory model"}
+plot(twoPL2FactorModel, type = "itemscore", facet_items = FALSE)
+plot(twoPL2FactorModel, type = "itemscore", facet_items = TRUE)
+```
+
+##### Item Information Functions
+
+Plot of item information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item information functions from two-parameter multi-dimensional item response theory model"}
+plot(twoPL2FactorModel, type = "infotrace", facet_items = FALSE)
+plot(twoPL2FactorModel, type = "infotrace", facet_items = TRUE)
+```
+
+## Three-Parameter Logistic Model
+
+A three-parameter logistic (2PL) IRT model is a model fit to dichotomous data, which estimates a different difficulty ($b$), discrimination ($a$), and guessing parameter for each item. 3PL models were fit using the `mirt` package [@R-mirt].
+
+### Fit Model
+
+```{r, results = "hide"}
+threePLModel <- mirt(data = mydataIRT,
+                     model = 1,
+                     itemtype = "3PL",
+                     technical = list(removeEmptyRows = TRUE))
+```
+
+### Model Summary
+
+```{r}
+summary(threePLModel)
+coef(threePLModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Plots
+
+#### Test Curves
+
+##### Test Characteristic Curve
+
+Plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test characteristic curve from three-parameter logistic item response theory model"}
+plot(threePLModel, type = "score")
+```
+
+##### Test Information Function
+
+Plot of test information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function from three-parameter logistic item response theory model"}
+plot(threePLModel, type = "info")
+```
+
+##### Test Reliability
+
+Plot of test reliability as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test reliability from three-parameter logistic item response theory model"}
+plot(threePLModel, type = "rxx")
+```
+
+##### Test Standard Error of Measurement
+
+Plot of test standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test standard error of measurement from three-parameter logistic item response theory model"}
+plot(threePLModel, type = "SE")
+```
+
+##### Test Information Function and Standard Errors
+
+Plot of test information and standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function and standard error of measurement from three-parameter logistic item response theory model"}
+plot(threePLModel, type = "infoSE")
+```
+
+#### Item Curves
+
+##### Item Characteristic Curves
+
+Plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves from three-parameter logistic item response theory model"}
+plot(threePLModel, type = "itemscore", facet_items = FALSE)
+plot(threePLModel, type = "itemscore", facet_items = TRUE)
+```
+
+##### Item Information Functions
+
+Plot of item information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item information functions from three-parameter logistic item response theory model"}
+plot(threePLModel, type = "infotrace", facet_items = FALSE)
+plot(threePLModel, type = "infotrace", facet_items = TRUE)
+```
+
+## Four-Parameter Logistic Model
+
+A four-parameter logistic (2PL) IRT model is a model fit to dichotomous data, which estimates a different difficulty ($b$), discrimination ($a$), guessing, and careless errors parameter for each item. 4PL models were fit using the `mirt` package [@R-mirt].
+
+### Fit Model
+
+```{r, results = "hide"}
+fourPLModel <- mirt(data = mydataIRT,
+                    model = 1,
+                    itemtype = "4PL",
+                    technical = list(removeEmptyRows = TRUE,
+                                     NCYCLES = 2000))
+```
+
+### Model Summary
+
+```{r}
+summary(fourPLModel)
+coef(fourPLModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Plots
+
+#### Test Curves
+
+##### Test Characteristic Curve
+
+Plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test characteristic curve from four-parameter logistic item response theory model"}
+plot(fourPLModel, type = "score")
+```
+
+##### Test Information Function
+
+Plot of test information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function from four-parameter logistic item response theory model"}
+plot(fourPLModel, type = "info")
+```
+
+##### Test Reliability
+
+Plot of test reliability as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test reliability from four-parameter logistic item response theory model"}
+plot(fourPLModel, type = "rxx")
+```
+
+##### Test Standard Error of Measurement
+
+Plot of test standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test standard error of measurement from four-parameter logistic item response theory model"}
+plot(fourPLModel, type = "SE")
+```
+
+##### Test Information Function and Standard Errors
+
+Plot of test information and standard error of measurement ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function and standard error of measurement from four-parameter logistic item response theory model"}
+plot(fourPLModel, type = "infoSE")
+```
+
+#### Item Curves
+
+##### Item Characteristic Curves
+
+Plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves from four-parameter logistic item response theory model"}
+plot(fourPLModel, type = "itemscore", facet_items = FALSE)
+plot(fourPLModel, type = "itemscore", facet_items = TRUE)
+```
+
+##### Item Information Functions
+
+Plot of item information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item information functions from four-parameter logistic item response theory model"}
+plot(fourPLModel, type = "infotrace", facet_items = FALSE)
+plot(fourPLModel, type = "infotrace", facet_items = TRUE)
+```
+
+## Graded Response Model
+
+A graded response model (GRM) is a 2PL IRT model fit to polytomous data (in this case, 1–4), which estimates a different difficulty ($b$) and discrimination ($a$) parameter for each item. It estimates four parameters for each item: difficulty [for each of three threshold transitions: 1–2 ($b_1$), 2–3 ($b_2$), and 3–4 ($b_3$)] and discrimination ($a$). GRM models were fit using the `mirt` package [@R-mirt].
+
+### Fit Model
+
+```{r, results = "hide"}
+gradedResponseModel <- mirt(data = Science,
+                            model = 1,
+                            itemtype = "graded",
+                            technical = list(removeEmptyRows = TRUE))
+```
+
+### Model Summary
+
+```{r}
+summary(gradedResponseModel)
+coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Plots
+
+#### Test Curves
+
+##### Test Characteristic Curve
+
+Plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test characteristic curve from graded response model"}
+plot(gradedResponseModel, type = "score")
+```
+
+##### Test Information Function
+
+Plot of test information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function from graded response model"}
+plot(gradedResponseModel, type = "info")
+```
+
+##### Test Reliability
+
+Plot of test reliability as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test reliability from graded response model"}
+plot(gradedResponseModel, type = "rxx")
+```
+
+##### Test Standard Error of Measurement
+
+Plot of test standard error of measurement as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test standard error of measurement from graded response model"}
+plot(gradedResponseModel, type = "SE")
+```
+
+##### Test Information Function and Standard Errors
+
+Plot of test information and standard error of measurement as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Test information function and standard error of measurement from graded response model"}
+plot(gradedResponseModel, type = "infoSE")
+```
+
+#### Item Curves
+
+##### Item Characteristic Curves
+
+Plot of expected item score as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item characteristic curves from graded response model"}
+plot(gradedResponseModel, type = "itemscore", facet_items = FALSE)
+plot(gradedResponseModel, type = "itemscore", facet_items = TRUE)
+```
+
+##### Item Information Functions
+
+Plot of item information as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item information functions from graded response model"}
+plot(gradedResponseModel, type = "infotrace", facet_items = FALSE)
+plot(gradedResponseModel, type = "infotrace", facet_items = TRUE)
+```
+
+##### Item Response Category Characteristic Curves
+
+Plot of probability of item threshold endorsement as a function of a person's level on the latent construct (theta; $\theta$).
+
+```{r, out.width = "100%", fig.cap = "Item response category characteristic curves from graded response model"}
+plot(gradedResponseModel, type = "trace")
+```
+
+##### Item Boundary Characteristic Curves (aka Item Operation Characteristic Curves)
+
+This plot of item boundary characteristic curves was adapted from an example by Aiden Loe: https://aidenloe.github.io/irtplots.html
+
+```{r, out.width = "100%", fig.cap = "Item boundary category characteristic curves from graded response model"}
+modelCoefficients <- coef(gradedResponseModel, IRTpars = TRUE, simplify = TRUE)$items
+
+twopl <- function(a, b, theta){ # 2pl function
+  1 / (1 + exp(-(a * (theta - b))))}
+
+theta <- seq(from = -6, to = 6, by = .1)
+
+difficultyThresholds <- grep("b", dimnames(modelCoefficients)[[2]], value = TRUE)
+numberDifficultyThresholds <- length(difficultyThresholds)
+items <- dimnames(modelCoefficients)[[1]]
+numberOfItems <- length(items)
+
+lst <- lapply(1:numberOfItems, function(x) data.frame(matrix(ncol = numberDifficultyThresholds + 1, nrow = length(theta), dimnames = list(NULL, c("theta", difficultyThresholds)))))
+
+for(i in 1:numberOfItems){
+  for(j in 1:numberDifficultyThresholds){
+    lst[[i]][,1] <- theta
+    lst[[i]][,j + 1] <- twopl(a = modelCoefficients[i,1], b = modelCoefficients[i,j + 1], theta = theta)
+  }
+}
+
+names(lst) <- items
+dat <- bind_rows(lst, .id = "item")
+longer_data <- pivot_longer(dat, cols = all_of(difficultyThresholds))
+
+ggplot(longer_data, aes(theta, value, group = interaction(item, name), color = item)) +
+  geom_line() +
+  ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
+  theme_bw()
+```
+
+## Conclusion
+
+Item response theory is a measurement theory and advanced modeling approach that allows estimating latent variables as the common variance from multiple items, and how the items relate to the construct (latent variable). IRT holds promise to enable the development of briefer assessments, including short forms and adaptive assessments, that have strong reliability and validity. If you are interested in learning more about IRT, I highly recommend the book by @Embretson2000.
+
+## Exercises
+
+```{r, include = FALSE}
+library("MOTE")
+```
+
+```{r, include = FALSE}
+# Load Data ---------------------------------------------------------------
+
+cnlsy <- read_csv(file.path(path, "/GitHub/AssessmentCourse/Data/cnlsy.csv"))
+```
+
+```{r, include = FALSE}
+# Rasch Model (1-parameter logistic)
+
+## Fit Model
+raschModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
+                   model = 1,
+                   itemtype = "Rasch",
+                   technical = list(removeEmptyRows = TRUE))
+```
+
+```{r, include = FALSE}
+## Model Summary
+
+summary(raschModel_ex)
+coef(raschModel_ex, simplify = TRUE, IRTpars = TRUE)
+
+raschModelCoefficients_ex <- coef(raschModel_ex, simplify = TRUE, IRTpars = TRUE)$items
+raschModelSmallestB1_ex <- min(raschModelCoefficients_ex[,"b1"], na.rm = TRUE)
+raschModelLargestB2_ex <- max(raschModelCoefficients_ex[,"b2"], na.rm = TRUE)
+```
+
+```{r, include = FALSE}
+## Plots
+
+### Test Curves
+
+#### Test Characteristic Curve
+#plot(raschModel_ex, type = "score")
+
+#### Test Information Function
+#plot(raschModel_ex, type = "info")
+
+#### Test Reliability
+#plot(raschModel_ex, type = "rxx")
+
+#### Test Standard Error of Measurement
+#plot(raschModel_ex, type = "SE")
+
+#### Test Information Function and Test Standard Error of Measurement
+#plot(raschModel_ex, type = "infoSE")
+
+### Item Curves
+
+#### Item Characteristic Curves
+#plot(raschModel_ex, type = "itemscore", facet_items = FALSE)
+#plot(raschModel_ex, type = "itemscore", facet_items = TRUE)
+
+#### Item Information Functions
+#plot(raschModel_ex, type = "infotrace", facet_items = FALSE)
+#plot(raschModel_ex, type = "infotrace", facet_items = TRUE)
+```
+
+```{r, include = FALSE}
+# Graded Response Model
+
+## Fit Model
+gradedResponseModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
+                            model = 1,
+                            itemtype = "graded",
+                            technical = list(removeEmptyRows = TRUE))
+```
+
+```{r, include = FALSE}
+## Model Summary
+
+summary(gradedResponseModel_ex)
+coef(gradedResponseModel_ex, simplify = TRUE, IRTpars = TRUE)
+
+gradedResponseModelCoefficients_ex <- coef(gradedResponseModel_ex, simplify = TRUE, IRTpars = TRUE)$items
+gradedResponseModelSmallestA_ex <- min(gradedResponseModelCoefficients_ex[,"a"], na.rm = TRUE)
+gradedResponseModelLargestA_ex <- max(gradedResponseModelCoefficients_ex[,"a"], na.rm = TRUE)
+```
+
+```{r, include = FALSE}
+## Plots
+
+#### Test Characteristic Curve
+#plot(gradedResponseModel_ex, type = "score")
+
+#### Test Information Function
+#plot(gradedResponseModel_ex, type = "info")
+
+#### Test Reliability
+#plot(gradedResponseModel_ex, type = "rxx")
+
+#### Test Standard Error of Measurement
+#plot(gradedResponseModel_ex, type = "SE")
+
+#### Test Information Function and Standard Errors
+#plot(gradedResponseModel_ex, type = "infoSE")
+
+### Item Curves
+
+#### Item Characteristic Curves
+#plot(gradedResponseModel_ex, type = "itemscore", facet_items = FALSE)
+#plot(gradedResponseModel_ex, type = "itemscore", facet_items = TRUE)
+
+#### Item Information Functions
+#plot(gradedResponseModel_ex, type = "infotrace", facet_items = FALSE)
+#plot(gradedResponseModel_ex, type = "infotrace", facet_items = TRUE)
+
+#### Item Information Functions Category Characteristic Curves
+#plot(gradedResponseModel_ex, type = "trace")
+```
+
+```{r, include = FALSE}
+#### Item Boundary Characteristic Curves (aka Item Operation Characteristic Curves)
+
+difficultyThresholds_ex <- grep("b", dimnames(gradedResponseModelCoefficients_ex)[[2]], value = TRUE)
+numberDifficultyThresholds_ex <- length(difficultyThresholds_ex)
+items_ex <- dimnames(gradedResponseModelCoefficients_ex)[[1]]
+numberOfItems_ex <- length(items_ex)
+
+lst_ex <- lapply(1:numberOfItems_ex, function(x) data.frame(matrix(ncol = numberDifficultyThresholds_ex + 1, nrow = length(theta), dimnames = list(NULL, c("theta", difficultyThresholds_ex)))))
+
+for(i in 1:numberOfItems_ex){
+  for(j in 1:numberDifficultyThresholds_ex){
+    lst_ex[[i]][,1] <- theta
+    lst_ex[[i]][,j+1] <- twopl(a = gradedResponseModelCoefficients_ex[i,1], b = gradedResponseModelCoefficients_ex[i,j+1], theta = theta)
+  }
+}
+
+names(lst_ex) <- items_ex
+dat_ex <- bind_rows(lst_ex, .id = "item")
+longerData_ex <- pivot_longer(dat_ex, cols = all_of(difficultyThresholds_ex))
+```
+
+```{r, include = FALSE}
+ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color = item)) +
+  geom_line() +
+  ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary")
+```
+
+```{r, include = FALSE}
+# Multi-dimensional graded response model ---------------------------------
+
+multidimensionalModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
+                              model = 2,
+                              itemtype = "graded",
+                              technical = list(removeEmptyRows = TRUE))
+```
+
+```{r, include = FALSE}
+## Model Summary
+
+summary(multidimensionalModel_ex)
+coef(multidimensionalModel_ex, simplify = TRUE)
+```
+
+```{r, include = FALSE}
+anova(gradedResponseModel_ex, multidimensionalModel_ex)
+
+multidimensionalModelDiffTest <- anova(gradedResponseModel_ex, multidimensionalModel_ex)
+multidimensionalModelChiSquareDiff <- multidimensionalModelDiffTest$"X2"[2]
+multidimensionalModelDFDiff <- multidimensionalModelDiffTest$"df"[2]
+```
+
+```{r, include = FALSE}
+## Plots
+
+#### Test Characteristic Curve
+#plot(multidimensionalModel_ex, type = "score")
+
+#### Test Information Function
+#plot(multidimensionalModel_ex, type = "info")
+
+#### Test Reliability
+#plot(multidimensionalModel_ex, type = "rxx")
+
+#### Test Standard Error of Measurement
+#plot(multidimensionalModel_ex, type = "SE")
+
+#### Test Information Function and Standard Errors
+#plot(multidimensionalModel_ex, type = "infoSE")
+
+### Item Curves
+
+#### Item Characteristic Curves
+#plot(multidimensionalModel_ex, type = "itemscore", facet_items = FALSE)
+#plot(multidimensionalModel_ex, type = "itemscore", facet_items = TRUE)
+
+#### Item Information Functions
+#plot(multidimensionalModel_ex, type = "infotrace", facet_items = FALSE)
+#plot(multidimensionalModel_ex, type = "infotrace", facet_items = TRUE)
+
+#### Item Information Functions Category Characteristic Curves
+#plot(multidimensionalModel_ex, type = "trace")
+```
+
+### Questions
+
+Note: several of the following questions use data from the Children of the National Longitudinal Survey of Youth Survey (CNLSY). The CNLSY is a publicly available longitudinal dataset provided by the Bureau of Labor Statistics (https://www.bls.gov/nls/nlsy79-children.htm#topical-guide). The CNLSY data file for these exercises is located on the course’s page of the Open Science Framework (https://osf.io/3pwza). Children’s behavior problems were rated in 1988 (time 1: T1) and then again in 1990 (time 2: T2) on the Behavior Problems Index (BPI). Below are the items corresponding to the Antisocial subscale of the BPI:
+1) cheats or tells lies
+2) bullies or is cruel/mean to others
+3) does not seem to feel sorry after misbehaving
+4) breaks things deliberately
+5) is disobedient at school
+6) has trouble getting along with teachers
+7) has sudden changes in mood or feeling
+
+1. Fit a one-parameter (Rasch) model to the seven items of the Antisocial subscale of the BPI at T1. This will estimate the difficulty for each item threshold (one threshold from 0 to 1, and one threshold from 1 to 2), while constraining the discrimination for each item to be the same.
+    a. Which item has the lowest difficulty (i.e., severity) in terms of endorsing a score of one (i.e., "sometimes true") as opposed to zero (i.e., "not true")? Which item has the highest difficulty in terms of endorsing a score of 2 (i.e., "often true")? What do these estimates of item difficulty indicate?
+2. Fit a graded response model to the seven items of the Antisocial subscale of the BPI at T1. This will estimate the difficulty for each item threshold (one threshold from 0 to 1, and one threshold from 1 to 2), while allowing each item to have a different discrimination.
+    a. Provide a figure of the item characteristic curves.
+    b. Provide a figure of the item boundary characteristic curves.
+    c. Which item has the lowest discrimination? Which item has the highest discrimination? What do these estimates of item discrimination indicate?
+    d. Provide a figure of the item information functions.
+    e. Examining the item information functions, which item provides the most information at upper construct levels (2–4 standard deviations above the mean)? Which item provides the most information at lower construct levels (2–4 standard deviations below the mean)?
+    f. Provide a figure of the test information function.
+    g. Examining the test information function, where (at what construct levels) does the measure do the best job of assessing? Based on its information function, describe what purposes the test would be better- or worse-suited for.
+3. Fit a multi-dimensional graded response model to the seven items of the Antisocial subscale of the BPI at T1, by estimating two latent factors.
+    a. Which items loaded onto Factor 1? Which items loaded onto Factor 2? Provide a possible explanation as two why some of the items "broke off" (from Factor 1) and loaded onto a separate factor (Factor 2).
+    b. The one-factor graded response model (in #2) and the two-factor graded response model are considered "nested" models. The one-factor model is nested within the two-factor model because the two-factor model includes all of the terms of the one-factor model along with additional terms. Model fit of nested models can be directly compared with a chi-square difference test. Did the two-factor model fit better than the one-factor model?
+
+### Answers
+
+1.
+    a. Item 7 (“sudden changes in mood or feeling”) has the lowest difficulty in terms of endorsing a score of one ($b_1 = `r apa(raschModelSmallestB1_ex, decimals = 2)`$). Item 5 (“disobedient at school”) has the highest difficulty in terms of endorsing a score of two ($b_2 = `r apa(raschModelLargestB2_ex, decimals = 2)`$). The difficulty parameter indicates the construct-level at the inflection point of the item characteristic curve. In a one- or two-parameter model, the inflection point occurs where 50% of respondents endorse the item. Thus, in this model, the difficulty parameter indicates the construct-level at which 50% of respondents endorse the item. It takes a very high level of antisocial behavior for a child to be endorsed as being often disobedient at school, whereas it does not take a high construct-level for a child to be endorsed as sometimes showing sudden changes in mood.
+2.
+    a. Below is a figure of item characteristic curves:
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = c("Exercise 1a: Item characteristic curves")}
+plot(gradedResponseModel_ex, type = "itemscore", facet_items = FALSE, main = "Item Characteristic Curves")
+```
+
+2.
+    b. Below is a figure of item boundary characteristic curves:
+    
+```{r, echo = FALSE, out.width = "100%", fig.cap = c("Exercise 2b: Item boundary characteristic curves")}
+ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color = item)) +
+  geom_line() +
+  ylab("Probability of Item Boundary Endorsement") +
+  theme_bw()
+```
+
+2.
+    c. Item 7 ("sudden changes in mood or feeling") has the lowest discrimination ($a = `r apa(gradedResponseModelSmallestA_ex, decimals = 2)`$). Item 6 ("has trouble getting along with teachers") has the highest discrimination ($a = `r apa(gradedResponseModelLargestA_ex, decimals = 2)`$). The discrimination parameter represents the steepness of the slope of the item characteristic curve. It indicates how strongly endorsing an item discriminates (differentiates) between lower versus higher construct levels. In other words, it indicates how strongly the item is associated with the construct. Item 7 shows the weakest association with the construct, whereas item 6 shows the strongest association with the construct. That suggests that "trouble getting along with teachers" is more core to the construct of antisocial behavior than "sudden changes in mood."
+    d. Below is a figure of item information functions:
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = c("Exercise 2c: Item information functions")}
+plot(gradedResponseModel_ex, type = "infotrace", facet_items = FALSE, main = "Item Information Functions")
+```
+
+2.
+    e. Item 6 ("has trouble getting along with teachers") provides the most information at upper construct levels (2–4 standard deviations above the mean). Item 7 ("has trouble getting along with teachers") provides the most information at lower construct levels (2–4 standard deviations below the mean). Item 1 ("cheats or tells lies") provides the most information at somewhat low construct levels (0–2 standard deviations below the mean).
+    f.
+    
+```{r, echo = FALSE, out.width = "100%", fig.cap = c("Exercise 2e: Test information function")}
+plot(gradedResponseModel_ex, type = "info", main = "Test Information Function")
+```
+
+2.
+    g. The measure does the best job of assessing (i.e., provides the most information) at construct levels from 1–3 standard deviations above the mean. Because the measure provides the most information at upper construct levels and provides little information at lower construct levels, the measure would be best used for assessing clinical vs. sub-clinical levels of antisocial behavior rather than assessing individual differences in antisocial behavior across a community sample.
+3.
+    a. Items 1, 2, 3, 4, and 7 loaded onto Factor 1. Items 5 and 6 loaded onto Factor 2. Items 5 ("disobedient at school") and 6 ("trouble getting along with teachers") both deal with school-related antisocial behavior. Thus, the items assessing school-related antisocial behavior may share variance owing to the shared context of the behavior (school).
+    b. Yes, the two-factor model fit significantly better than the one-factor model according to a chi-square difference test ($\Delta\chi^2[df = `r apa(multidimensionalModelDFDiff, decimals = 2)`] = `r apa(multidimensionalModelChiSquareDiff, decimals = 2)`, p < .001$). Thus, antisocial behavior may not be a monolithic construct, but may depend on the context in which the behavior occurs.
