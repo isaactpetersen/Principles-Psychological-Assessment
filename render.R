@@ -42,6 +42,17 @@ render_book(input = "index.Rmd",
 render_book(input = "index.Rmd",
             output_format = "all")
 
+# Render All Formats (HTML, PDF, and E-Book) and Publish Book -------------
+
+render_book(input = "index.Rmd",
+            output_format = "all")
+
+options(rsconnect.force.update.apps = TRUE)
+
+bookdown::publish_book(name = "psychological_assessment",
+                       account = "isaactpetersen",
+                       render = "none")
+
 # Book Access -------------------------------------------------------------
 
 #https://bookdown.org/connect/#/apps/6234/access
