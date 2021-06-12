@@ -151,13 +151,13 @@ $$
 
 Measurement error is the difference between the measured (observed) value and the true value. All measurements come with uncertainty and measurement error. Even a measure of something as simple as whether someone is dead has error.
 
-There are two main types of measurement error: systematic (nonrandom) errors and unsystematic (random) errors.
+There are two main types of measurement error: systematic (nonrandom) errors and unsystematic (random) errors. In addition, measurement error can be within-person, between-person, or both.
 
-### Systematic (nonrandom) error {#systematicError}
+### Systematic (Nonrandom) Error {#systematicError}
 
-*Systematic errors* are depicted in Figure \@ref(fig:systematicError). Systematic errors are errors than influence across the sample. They are errors that always occur, with the same value, when using the measure in the same way and in the same case. An example of a systematic error is a measure that consistently assesses constructs other than the construct the measure was designed to assess. For instance, if a test written in English to assess math skills is administered in a non-native English-speaking country, some portion of the scores will reflect variance attributable to English reading skills rather than the construct of interest (math skills). Other examples of systematic errors include response styles or subjective, idiosyncratic judgments by a rater—for instance, if the rater's judgments are systematically harsh or lenient. Systematic errors affect the average score (i.e., they result in bias) which makes the group-level estimates less accurate, and they make the measurements for an individual less accurate.
+*Systematic errors* are depicted in Figure \@ref(fig:systematicError). Systematic errors are errors than influence consistently for a person or across the sample. They are errors that always occur, with the same value, when using the measure in the same way and in the same case. An example of a systematic error is a measure that consistently assesses constructs other than the construct the measure was designed to assess. For instance, if a test written in English to assess math skills is administered in a non-native English-speaking country, some portion of the scores will reflect variance attributable to English reading skills rather than the construct of interest (math skills). Other examples of systematic errors include response styles or subjective, idiosyncratic judgments by a rater—for instance, if the rater's judgments are systematically harsh or lenient. Systematic errors affect the average score (i.e., they result in bias) which makes the group-level estimates less accurate, and they make the measurements for an individual less accurate.
 
-As depicted in Figure \@ref(fig:systematicError), systematic error does not affect the variability of the scores but it does affect the mean of the scores, so the group-level mean is less accurate. In other words, the systematic errors leads to a biased estimate of the average.
+As depicted in Figure \@ref(fig:systematicError), systematic error does not affect the variability of the scores but it does affect the mean of the scores, so the person-level or group-level mean is less accurate. In other words, the systematic errors leads to a biased estimate of the average. However, multiple systematic errors may simultaneously co-exist and can operate in the same direction (exacerbating the magnitude of bias) or in opposite directions (suppressing the magnitude of bias).
 
 ```{r systematicError, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Correlation coefficients"}
 library("tidyverse")
@@ -182,9 +182,9 @@ ggplot(errorData %>% filter(measure != "addRandomError"), aes(x = score, fill = 
   theme(legend.position = "top")
 ```
 
-### Unsytematic (random) error {#unsystematicError}
+### Unsytematic (Random) Error {#unsystematicError}
 
-*Unsystematic (random) errors* are depicted in Figure \@ref(fig:systematicError). Random errors occur due to chance. For instance, they could arise from a participant being fatigued on a particular testing day, or from a participant getting luck in guessing the correct answer. Random errors do not have consistent effects across the sample, and they may vary from one observation to another. Random errors do not have the average, i.e., the group-level estimate—they only affect the variability around the average (noise). However, random errors make measurements for an individual less accurate. A large number of observations of the same construct cancels out random errors, but does not cancel out systematic errors.
+*Unsystematic (random) errors* are depicted in Figure \@ref(fig:systematicError). Random errors occur due to chance. For instance, they could arise from a participant being fatigued on a particular testing day, or from a participant getting luck in guessing the correct answer. Random errors do not have consistent effects for a person or across the sample, and they may vary from one observation to another. Random errors do not affect the average, i.e., the group-level estimate—they only affect the variability around the average (noise). However, random errors make measurements for an individual less accurate. A large number of observations of the same construct cancels out random errors, but does not cancel out systematic errors.
 
 As depicted in Figure \@ref(fig:unsystematicError), random error does not affect the mean of the scores but it does increase the variability of the scores. In other words, the group-level mean is still accurate, but individuals' scores are less precise.
 
@@ -198,11 +198,61 @@ ggplot(errorData %>% filter(measure != "addSystematicError"), aes(x = score, fil
   theme(legend.position = "top")
 ```
 
+### Within-Person Error
+
+Let us consider two data columns, one column for participants' scores at time 1 and another column for participants' scores at time 2. Adding within-person error would mean adding noise ($e$) within the given row (or rows) for the relevant participant(s). Adding between-person error would mean adding noise ($e$) across the rows within the column. 
+
+Within-person errors occurs within a particular person. For instance, you could add within-person error to a dataset by adding error to the given row (or rows) for the relevant participant(s).
+
+### Between-Person Error
+
+Between-person error occurs across the sample. You could add between-person random error to a variable by adding adding error across the rows, within a column.
+
+### Types of Measurement Error
+
+There are four non-mutually exclusive types of measurement error: within-person random error, within-person random error, between-person random error, and between-person systematic error. The four types of measurement error are depicted in Figure \@ref(fig:measurementErrorTypes).
+
+```{r measurementErrorTypes, out.width = "100%", fig.align = "center", fig.cap = "Types of measurement error.", echo = FALSE}
+knitr::include_graphics("./Images/MeasurementErrorTypes.png")
+```
+
+#### Within-Person Random Error
+
+Adding within-person random error would involve adding random noise ($e$) to the given row (or rows) for the relevant participant(s). This could reflect momentary fluctuations in the assessment for a specific person. When adding within-person random error, the person’s and group’s measurements show no bias, i.e., there is no consistent increase or decrease in the scores from time 1 to time 2 (at least with a sample size large enough to cancel out the random error, according to the law of large numbers).	A person’s average approximates their true score if many repeated measurements are taken. A group’s average approximates the sample mean’s true score, especially when averaging the repeated measures across time. The influence of within-person random error is depicted in Figure \@ref(fig:withinPersonRandomError).
+
+```{r withinPersonRandomError, out.width = "100%", fig.align = "center", fig.cap = "Within-person random error.", echo = FALSE}
+knitr::include_graphics("./Images/Error_Within-PersonRandom.png")
+```
+
+#### Within-Person Systematic Error
+
+Adding within-person systematic error would involve adding systematic noise ($e$) (the same variance across columns) to the given row (or rows), reflecting the relevant participant(s). These are within-person effects that are consistent across time. For example, social desirability bias is high for some people and low for others. Another instance in which within-person systematic error could have is of one or more people consistently misinterpret a particular question. Within-person systematic error increases person-level bias because the person’s mean shows a greater difference from their true score. The influence of within-person systematic error is depicted in Figure \@ref(fig:withinPersonSystematicError).
+
+```{r withinPersonSystematicError, out.width = "100%", fig.align = "center", fig.cap = "Within-person systematic error.", echo = FALSE}
+knitr::include_graphics("./Images/Error_Within-PersonSystematic.png")
+```
+
+#### Between-Person Random Error
+
+Adding between-person random error at time 2 would involve adding random noise ($e$) across the rows, within the column.	Between-person random error would result in bias at the person-level but not at the group-level. It results in over-estimates of the person's true score for some people and under-estimates for other people, i.e., there is no consistent pattern across the sample. Thus, the group average approximates the sample’s mean true score (at least with a sample size large enough to cancel out the random error, according to the law of large numbers). However, the group’s variance is inflated. The influence of between-person random error is depicted in Figure \@ref(fig:betweenPersonRandomError).
+
+```{r betweenPersonRandomError, out.width = "100%", fig.align = "center", fig.cap = "Between-person random error.", echo = FALSE}
+knitr::include_graphics("./Images/Error_Between-PersonRandom.png")
+```
+
+#### Between-Person Systematic Error
+
+Adding between-person systematic error at time 2 would involve adding systematic noise ($e$) across the rows, within the column. Between person systematic errors result from within-person errors that tend to be negative or positive across participants. For instance, this could reflect an influence with a shared effect across subjects. For example, social desirability leads to a positive group-level bias for rating their socially desirable attributes. Another example would be when a research assistant enters values wrong at time 2 (e.g., adding 10 to all participants’ scores). Between-person systematic error increases bias because it results in a greater group mean difference from the group’s mean true score. The influence of between-person systematic error is depicted in Figure \@ref(fig:betweenPersonSystematicError).
+
+```{r betweenPersonSystematicError, out.width = "100%", fig.align = "center", fig.cap = "Between-person systematic error.", echo = FALSE}
+knitr::include_graphics("./Images/Error_Between-PersonSystematic.png")
+```
+
 ### Summary
 
-In sum, all measurement error (whether systematic or random) leads to less accurate scores for an individual. However, systematic and random error have different effects on accuracy at the group-level.
+In sum, all types of measurement error (whether systematic or random) lead to less accurate scores for an individual. But, different kinds of errors have different implications. Systematic and random error have different effects on accuracy at the group-level. Systematic error leads to less accurate estimates at the group-level whereas random error does not.
 
-CTT assumes that all errors are random. According to CTT, as the number of measurements approaches infinity, the mean of the measurements gets closer to the true score. With more measurements, we reduce our uncertainty and increase our precision. According to CTT, if we take many measurements and the average of the measurements is 10, we have some confidence that $T \approx 10$.
+CTT assumes that all errors are random. According to CTT, as the number of measurements approaches infinity, the mean of the measurements gets closer to the true score, becuase the random errors cancel each other out. With more measurements, we reduce our uncertainty and increase our precision. According to CTT, if we take many measurements and the average of the measurements is 10, we have some confidence that $T \approx 10$. In reality, however, error for a given measure likely includes both systematic and random error.
 
 ## Overview of Reliability
 
@@ -1145,17 +1195,7 @@ The 95% CI is: $[`r round(lower95CI, 2)`, `r round(upper95CI, 2)`]$.
 
 ## Influences of Measurement Error on Test–Retest Reliability
 
-This section describes the influence of measurement error on reliability, specifically test–retest reliability. There are different types of measurement error, and each can have different impacts on reliability and, ultimately, your findings. As discussed in Section \@ref(measurementError), errors can be either systematic or random. In addition, error can be within-person, between-person, or both. Let us consider two data columns, one column for participants' scores at time 1 and another column for participants' scores at time 2. Adding within-person error would mean adding noise ($e$) within the given row (or rows) for the relevant participant(s). Adding between-person error would mean adding noise ($e$) across the rows within the column. All types of error make each individual measurement for a person less accurate. But, different kinds of errors have different implications.
-
-Types of measurement error
-
-[Show Figure from Willett et al. (2012)]
-
-Figure \@ref(fig:measurementErrorTypes)
-
-```{r measurementErrorTypes, out.width = "100%", fig.align = "center", fig.cap = "Types of measurement error.", echo = FALSE}
-knitr::include_graphics("./Images/MeasurementErrorTypes.png")
-```
+This section describes the influence of measurement error on reliability, specifically test–retest reliability. There are different types of measurement error, and each can have different impacts on reliability and, ultimately, your findings. As discussed in Section \@ref(measurementError), errors can be either systematic or random. In addition, error can be within-person, between-person, or both.
 
 ### No Error
 
@@ -1200,14 +1240,6 @@ blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
 ```
 
 ### Add within-person random error
-
-Adding within-person random error would involve adding random noise ($e$) to the given row (or rows) for the relevant participant(s). This could reflect momentary fluctuations in the assessment for a specific person. When adding within-person random error, the person’s and group’s measurements show no bias, i.e., there is no consistent increase or decrease in the scores from time 1 to time 2 (at least with a sample size large enough to cancel out the random error, according to the law of large numbers).	A person’s average approximates their true score if many repeated measurements are taken. A group’s average approximates the sample mean’s true score, especially when averaging the repeated measures across time.
-
-Figure \@ref(fig:withinPersonRandomError)
-
-```{r withinPersonRandomError, out.width = "100%", fig.align = "center", fig.cap = "Within-person random error.", echo = FALSE}
-knitr::include_graphics("./Images/Error_Within-PersonRandom.png")
-```
 
 In the example below, I added within-person random error. Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at all timepoints.
 
@@ -1264,79 +1296,7 @@ Adding within-person random error led to:
 - weaker (lower) stability coefficient
 - weaker (higher) repeatability coefficient
 
-### Add between-person random error at T2
-
-Adding between-person random error at time 2 would involve adding random noise ($e$) across the rows, within the column.	Between-person random error would result in bias at the person-level but not at the group-level. It results in over-estimates of the person's true score for some people and under-estimates for other people, i.e., there is no consistent pattern across the sample. Thus, the group average approximates the sample’s mean true score (at least with a sample size large enough to cancel out the random error, according to the law of large numbers). However, the group’s variance is inflated.
-
-Figure \@ref(fig:betweenPersonRandomError)
-
-```{r betweenPersonRandomError, out.width = "100%", fig.align = "center", fig.cap = "Between-person random error.", echo = FALSE}
-knitr::include_graphics("./Images/Error_Between-PersonRandom.png")
-```
-
-In the example below, I added between-person random error. Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at time 2:
-
-For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed.
-
-```{r}
-#Simulate Data
-set.seed(52242)
-
-time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
-time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
-
-#Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
-time3[c(10)] <- NA
-
-#Combine data into data frame
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
-
-#Add error
-set.seed(12345)
-mydata$time2 <- mydata$time2 + rnorm(sampleSize, mean = 0, sd = 3)
-```
-
-#### Coefficient of stability
-
-```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
-```
-
-#### Coefficient of repeatability
-
-```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
-```
-
-#### Bias {#bpRandomErrorBias}
-
-```{r}
-blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
-```
-
-#### Findings
-
-Adding between-person random error led to:
-
-- weaker (lower) stability coefficient
-- weaker (higher) repeatability coefficient
-- bias at the person-level, but this bias would go undetected by the estimate of group-level bias in the Bland-Altman plot
-
 ### Add within-person systematic error
-
-Adding within-person systematic error would involve adding systematic noise ($e$) (the same variance across columns) to the given row (or rows), reflecting the relevant participant(s). These are within-person effects that are consistent across time. For example, social desirability bias is high for some people and low for others. Another instance in which within-person systematic error could have is of one or more people consistently misinterpret a particular question. Within-person systematic error increases person-level bias because the person’s mean shows a greater difference from their true score.
-
-Figure \@ref(fig:withinPersonSystematicError)
-
-```{r withinPersonSystematicError, out.width = "100%", fig.align = "center", fig.cap = "Within-person systematic error.", echo = FALSE}
-knitr::include_graphics("./Images/Error_Within-PersonSystematic.png")
-```
 
 In the example below, I added within-person systematic error. Specifically, to all participants, I added error that is consistent across time for a given participant: pulled from a distribution with a mean of 5 and a standard deviation of 3.
 
@@ -1394,15 +1354,63 @@ Adding within-person systematic error led to:
 - no effect on repeatability coefficient
 - bias at the person-level, but this bias would go undetected by the estimate of group-level bias in the Bland-Altman plot
 
-### Add between-person systematic error at T2
+### Add between-person random error at T2
 
-Adding between-person systematic error at time 2 would involve adding systematic noise ($e$) across the rows, within the column. Between person systematic errors result from within-person errors that tend to be negative or positive across participants. For instance, this could reflect an influence with a shared effect across subjects. For example, social desirability leads to a positive group-level bias for rating their socially desirable attributes. Another example would be when a research assistant enters values wrong at time 2 (e.g., adding 10 to all participants’ scores). Between-person systematic error increases bias because it results in a greater group mean difference from the group’s mean true score.
+In the example below, I added between-person random error. Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at time 2:
 
-Figure \@ref(fig:betweenPersonSystematicError)
+For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed.
 
-```{r betweenPersonSystematicError, out.width = "100%", fig.align = "center", fig.cap = "Between-person systematic error.", echo = FALSE}
-knitr::include_graphics("./Images/Error_Between-PersonSystematic.png")
+```{r}
+#Simulate Data
+set.seed(52242)
+
+time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
+time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
+time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
+
+#Add Missing Data
+time1[c(5,10)] <- NA
+time2[c(10,15)] <- NA
+time3[c(10)] <- NA
+
+#Combine data into data frame
+mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
+                     rater1categorical, rater2categorical, rater3categorical,
+                     time1, time2, time3,
+                     item1, item2, item3, item4)
+
+#Add error
+set.seed(12345)
+mydata$time2 <- mydata$time2 + rnorm(sampleSize, mean = 0, sd = 3)
 ```
+
+#### Coefficient of stability
+
+```{r}
+cor.test(x = mydata$time1, y = mydata$time2)
+```
+
+#### Coefficient of repeatability
+
+```{r}
+qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
+```
+
+#### Bias {#bpRandomErrorBias}
+
+```{r}
+blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
+```
+
+#### Findings
+
+Adding between-person random error led to:
+
+- weaker (lower) stability coefficient
+- weaker (higher) repeatability coefficient
+- bias at the person-level, but this bias would go undetected by the estimate of group-level bias in the Bland-Altman plot
+
+### Add between-person systematic error at T2
 
 In the example below, I added between-person systematic error. Specifically, I added constant variance of 10 to all participants' scores at T2
 
