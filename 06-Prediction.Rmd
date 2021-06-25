@@ -1679,7 +1679,7 @@ relativeImprovementOverPredictingFromBaseRateValue
 
 ### Sensitivity (SN)
 
-Sensitivity (SN) is also called true positive rate (TPR), hit rate (HR), or recall. Sensitivity is the conditional probability of a positive test given that the person has the condition: $P(R|C)$. Higher values reflect greater accuracy. As described in Section \@ref(accuracyCutoff) and depicted in Figures \@ref(fig:sensitivitySpecificity) and \@ref(fig:SN-SP-by-cutoff), as the cutoff increases (becomes more conservative), sensitivity decreases. As the cutoff decreases, sensitivity increases.
+Sensitivity (SN) is also called true positive rate (TPR), hit rate (HR), or recall. Sensitivity is the conditional probability of a positive test given that the person has the condition: $P(R|C)$. Higher values reflect greater accuracy. As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), sensitivity decreases. As the cutoff decreases, sensitivity increases.
 
 $$
 \begin{aligned}
@@ -1738,7 +1738,7 @@ accuracyStats$specificity <- accuracyStats$TNrate <- specificity(TP = accuracySt
 sensitivitySpecificityData <- pivot_longer(accuracyStats, cols = all_of(c("sensitivity","specificity")))
 ```
 
-```{r sensitivitySpecificity, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Sensitivity and specificity by cutoff"}
+```{r sensitivitySpecificity, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Sensitivity and specificity as a function of the cutoff."}
 ggplot(sensitivitySpecificityData, aes(x = cutoff, y = value, color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "cutoff (liberal to conservative)") +
@@ -1748,7 +1748,7 @@ ggplot(sensitivitySpecificityData, aes(x = cutoff, y = value, color = name)) +
 
 ### Specificity (SP)
 
-Specificity is also called true negative rate (TNR) or selectivity. Specificity is the conditional probability of a negative test given that the person does not have the condition: $P(\text{not } R|\text{not } C)$. Higher values reflect greater accuracy. As described in Section \@ref(accuracyCutoff) and depicted in Figures \@ref(fig:sensitivitySpecificity) and \@ref(fig:SN-SP-by-cutoff), as the cutoff increases (becomes more conservative), specificity increases. As the cutoff decreases, specificity decreases.
+Specificity is also called true negative rate (TNR) or selectivity. Specificity is the conditional probability of a negative test given that the person does not have the condition: $P(\text{not } R|\text{not } C)$. Higher values reflect greater accuracy. As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), specificity increases. As the cutoff decreases, specificity decreases.
 
 $$
 \begin{aligned}
@@ -1767,10 +1767,6 @@ specificity <- function(TP, TN, FP, FN){
 
 specificityValue <- specificity(TN = TNvalue, FP = FPvalue)
 specificityValue
-```
-
-```{r SN-SP-by-cutoff, out.width = "100%", fig.align = "center", fig.cap = "Sensitivity and specificity as a function of the cutoff. Note that, unlike many measures, the cutoff for the measure depicted here becomes more liberal (not more conservative) as the cutoff increases. Figure reprinted from @Treat2012, Figure 37.3, p. 729. Treat, T. A., (ref:ampersand) Viken, R. J. (2012). Measuring test performance with signal detection theory techniques. In H. Cooper (Ed.), *Handbook of research methods in psychology: Foundations, planning, measures, and psychometrics* (Vol. 1, pp. 723–744). American Psychological Association. https://doi.org/10.1037/13619-038", echo = FALSE}
-knitr::include_graphics("./Images/SN-SP-by-cutoff.png")
 ```
 
 ### False Negative Rate (FNR)
@@ -1821,7 +1817,7 @@ falsePositiveRateValue
 
 ### Positive Predictive Value (PPV) {#ppv}
 
-The positive predictive value (PPV) is also called the positive predictive power (PPP) or precision. Many people confuse sensitivity ($P(R|C)$) with its inverse conditional probability, PPV ($P(C|R)$). PPV is the conditional probability of having the condition given a positive test: $P(C|R)$. Higher values reflect greater accuracy. PPV can be low even when sensitivity is high because it depends not only on sensitivity, but also on specificity and the base rate. Because PPV depends on the base rate, PPV is not an intrinsic property of a measure. The same measure will have a different PPV in different contexts with different base rates. As described in Section \@ref(accuracyCutoff) and depicted in Figures \@ref(fig:ppvNPVbaseRate) and \@ref(fig:PPP-NPP-by-BR), as the base rate increases, PPV increases. As the base rate decreases, PPV decreases. PPV also differs as a function of the cutoff. As described in Section \@ref(accuracyCutoff) and depicted in Figures \@ref(fig:ppvNPVcutoff) and \@ref(fig:PPP-NPP-by-cutoff), as the cutoff increases (becomes more conservative), PPV increases. As the cutoff decreases (becomes more liberal), PPV decreases.
+The positive predictive value (PPV) is also called the positive predictive power (PPP) or precision. Many people confuse sensitivity ($P(R|C)$) with its inverse conditional probability, PPV ($P(C|R)$). PPV is the conditional probability of having the condition given a positive test: $P(C|R)$. Higher values reflect greater accuracy. PPV can be low even when sensitivity is high because it depends not only on sensitivity, but also on specificity and the base rate. Because PPV depends on the base rate, PPV is not an intrinsic property of a measure. The same measure will have a different PPV in different contexts with different base rates. As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVbaseRate), as the base rate increases, PPV increases. As the base rate decreases, PPV decreases. PPV also differs as a function of the cutoff. As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVcutoff), as the cutoff increases (becomes more conservative), PPV increases. As the cutoff decreases (becomes more liberal), PPV decreases.
 
 $$
 \small
@@ -1873,7 +1869,7 @@ ppvNPVbaseRateData$negativePredictiveValue <- negativePredictiveValue(BR = ppvNP
 ppvNPVbaseRateData_long <- pivot_longer(ppvNPVbaseRateData, cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
 ```
 
-```{r ppvNPVbaseRate, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value by cutoff"}
+```{r ppvNPVbaseRate, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value as a function of the base rate."}
 ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "base rate") +
@@ -1891,7 +1887,7 @@ accuracyStats$negativePredictiveValue <- negativePredictiveValue(TP = accuracySt
 ppvNPVcutoffData <- pivot_longer(accuracyStats, cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
 ```
 
-```{r ppvNPVcutoff, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value by cutoff"}
+```{r ppvNPVcutoff, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value as a function of the cutoff."}
 ggplot(ppvNPVcutoffData, aes(x = cutoff, y = value, color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "cutoff (liberal to conservative)", limits = c(0.05,2.09)) +
@@ -1902,7 +1898,7 @@ ggplot(ppvNPVcutoffData, aes(x = cutoff, y = value, color = name)) +
 
 ### Negative Predictive Value (NPV)
 
-The negative predictive value (NPV) is also called the negative predictive power (NPP). Many people confuse specificity ($P(\text{not } R|\text{not } C)$) with its inverse conditional probability, NPV ($P(\text{not } C| \text{not } R)$). NPV is the conditional probability of not having the condition given a negative test: $P(\text{not } C| \text{not } R)$. Higher values reflect greater accuracy. NPV can be low even when specificity is high because it depends not only on specificity, but also on sensitivity and the base rate. Because NPV depends on the base rate, NPV is not an intrinsic property of a measure. The same measure will have a different NPV in different contexts with different base rates. As described in Section \@ref(accuracyCutoff) and depicted in Figures \@ref(fig:ppvNPVbaseRate) and \@ref(fig:PPP-NPP-by-BR), as the base rate increases, NPV decreases. As the base rate decreases, NPV increases. NPV also differs as a function of the cutoff. As described in Section \@ref(accuracyCutoff) and depicted in Figures \@ref(fig:ppvNPVcutoff) and \@ref(fig:PPP-NPP-by-cutoff), as the cutoff increases (becomes more conservative), NPV decreases. As the cutoff decreases (becomes more liberal), NPV decreases.
+The negative predictive value (NPV) is also called the negative predictive power (NPP). Many people confuse specificity ($P(\text{not } R|\text{not } C)$) with its inverse conditional probability, NPV ($P(\text{not } C| \text{not } R)$). NPV is the conditional probability of not having the condition given a negative test: $P(\text{not } C| \text{not } R)$. Higher values reflect greater accuracy. NPV can be low even when specificity is high because it depends not only on specificity, but also on sensitivity and the base rate. Because NPV depends on the base rate, NPV is not an intrinsic property of a measure. The same measure will have a different NPV in different contexts with different base rates. As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVbaseRate), as the base rate increases, NPV decreases. As the base rate decreases, NPV increases. NPV also differs as a function of the cutoff. As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVcutoff), as the cutoff increases (becomes more conservative), NPV decreases. As the cutoff decreases (becomes more liberal), NPV decreases.
 
 $$
 \small
@@ -1929,14 +1925,6 @@ negativePredictiveValueValue <- negativePredictiveValue(TN = TNvalue, FN = FNval
 negativePredictiveValueValue
 
 negativePredictiveValue(BR = baseRateValue, SN = sensitivityValue, SP = specificityValue)
-```
-
-```{r PPP-NPP-by-BR, out.width = "100%", fig.align = "center", fig.cap = "Positive predictive value and negative predictive value as a function of the base rate. Figure reprinted from @Treat2012, Figure 37.5, p. 730. Treat, T. A., (ref:ampersand) Viken, R. J. (2012). Measuring test performance with signal detection theory techniques. In H. Cooper (Ed.), *Handbook of research methods in psychology: Foundations, planning, measures, and psychometrics* (Vol. 1, pp. 723–744). American Psychological Association. https://doi.org/10.1037/13619-038", echo = FALSE}
-knitr::include_graphics("./Images/PPP-NPP-by-BR.png")
-```
-
-```{r PPP-NPP-by-cutoff, out.width = "100%", fig.align = "center", fig.cap = "Positive predictive value and negative predictive value as a function of the cutoff. Note that, unlike many measures, the cutoff for the measure depicted here becomes more liberal (not more conservative) as the cutoff increases. Figure reprinted from @Treat2012, Figure 37.4, p. 730. Treat, T. A., (ref:ampersand) Viken, R. J. (2012). Measuring test performance with signal detection theory techniques. In H. Cooper (Ed.), *Handbook of research methods in psychology: Foundations, planning, measures, and psychometrics* (Vol. 1, pp. 723–744). American Psychological Association. https://doi.org/10.1037/13619-038", echo = FALSE}
-knitr::include_graphics("./Images/PPP-NPP-by-cutoff.png")
 ```
 
 ### False Discovery Rate (FDR)
@@ -2629,11 +2617,7 @@ Igain(HR = (1164/1899), FAR = (935/4757), BR = (1899/6656))
 
 Information gain depends on the base rate, as depicted in Figures \@ref(fig:informationGain-by-Cutoff-BR) and \@ref(fig:informationGainBaseRate). The maximum reduction of uncertainty (i.e., greatest information) occurs when the base rate is 0.5. A base rate tells us little a priori about the condition if the probability of the condition is 50/50, so the measure can provide more benefit. If the base rate is 0.3 or 0.7, we can do better than going with the with the base rate. If the base rate is 0.9 or 0.1, it is difficult for our measure to do better than going with the base rate. If the base rate is 0.05 of 0.95 (or more extreme), it is likely that our measure will do almost nothing in terms of information gain.
 
-```{r informationGain-by-Cutoff-BR, out.width = "100%", fig.align = "center", fig.cap = "Information gain as a function of the base rate. BR = base rate. Figure reprinted from @Treat2012, Figure 37.11, p. 741. Treat, T. A., (ref:ampersand) Viken, R. J. (2012). Measuring test performance with signal detection theory techniques. In H. Cooper (Ed.), *Handbook of research methods in psychology: Foundations, planning, measures, and psychometrics* (Vol. 1, pp. 723–744). American Psychological Association. https://doi.org/10.1037/13619-038", echo = FALSE}
-knitr::include_graphics("./Images/informationGain-by-Cutoff-BR.png")
-```
-
-```{r informationGainBaseRate, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Effect of the Base Rate on Information Gain"}
+```{r informationGainBaseRate, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Information gain as a function of the base rate."}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(possibleCutoffs, max(possibleCutoffs, na.rm = TRUE) + 0.01)
