@@ -1,5 +1,113 @@
 # Test Bias {#bias}
 
+Figure \@ref(fig:jobSelection).
+
+```{r jobSelection, out.width = "100%", fig.align = "center", fig.cap = "2x2 Confusion Matrix for Job Selection.", echo = FALSE}
+knitr::include_graphics("./Images/JobSelection.png")
+```
+
+```{r jobSelection2, fig.height = 8, fig.cap = "2x2 Confusion Matrix for Job Selection in the form of a graph with predicted performance on the x-axies and actual job performance on the y-axis.", echo = FALSE}
+plot.new()
+plot.window(xlim = c(-5,5), ylim = c(-5,5))
+axis(side = 1, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0)
+axis(side = 2, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0, las = 1)
+text(x = 2.5, y = -0.4, "Test Score", cex = 1.5)
+text(x = -0.3, y = 2.5, "Job Performance", cex = 1.5, srt = 90)
+text(x = 5, y = 5, "TP")
+text(x = -5, y = -5, "TN")
+text(x = 5, y = -5, "FP")
+text(x = -5, y = 5, "FN")
+```
+
+```{r, echo = FALSE}
+set.seed(52242)
+predictor <- runif(100, min = -4, max = 4)
+outcomeGoodPredictor <- 0 + 1*predictor + rnorm(100)
+outcomeBadPredictor <- 0 + 0.1*predictor + rnorm(100)
+```
+
+```{r jobSelection3, fig.height = 8, fig.cap = "Example of a good predictor", echo = FALSE}
+plot.new()
+plot.window(xlim = c(-5,5), ylim = c(-5,5))
+points(x = predictor, y = outcomeGoodPredictor)
+abline(lm(outcomeGoodPredictor ~ predictor))
+axis(side = 1, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0)
+axis(side = 2, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0, las = 1)
+text(x = 2.5, y = -0.4, "Test Score", cex = 1.5)
+text(x = -0.3, y = 2.5, "Job Performance", cex = 1.5, srt = 90)
+text(x = 5, y = 5, "TP")
+text(x = -5, y = -5, "TN")
+text(x = 5, y = -5, "FP")
+text(x = -5, y = 5, "FN")
+```
+
+```{r jobSelection4, fig.height = 8, fig.cap = "Example of a bad predictor.", echo = FALSE}
+plot.new()
+plot.window(xlim = c(-5,5), ylim = c(-5,5))
+points(x = predictor, y = outcomeBadPredictor)
+abline(lm(outcomeBadPredictor ~ predictor))
+axis(side = 1, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0)
+axis(side = 2, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0, las = 1)
+text(x = 2.5, y = -0.4, "Test Score", cex = 1.5)
+text(x = -0.3, y = 2.5, "Job Performance", cex = 1.5, srt = 90)
+text(x = 5, y = 5, "TP")
+text(x = -5, y = -5, "TN")
+text(x = 5, y = -5, "FP")
+text(x = -5, y = 5, "FN")
+```
+
+Figure \@ref(fig:testBias1).
+
+```{r testBias1, out.width = "100%", fig.align = "center", fig.cap = "Test bias: different slopes.", echo = FALSE}
+knitr::include_graphics("./Images/testBias-01.png")
+```
+
+Figure \@ref(fig:testBias2).
+
+```{r testBias2, out.width = "100%", fig.align = "center", fig.cap = "Test bias: different intercepts.", echo = FALSE}
+knitr::include_graphics("./Images/testBias-02.png")
+```
+
+Figure \@ref(fig:testBias3).
+
+```{r testBias3, out.width = "100%", fig.align = "center", fig.cap = "Test bias: different intercepts and slopes.", echo = FALSE}
+knitr::include_graphics("./Images/testBias-03.png")
+```
+
+Figure \@ref(fig:testBias4).
+
+```{r testBias4, out.width = "100%", fig.align = "center", fig.cap = "Different factor structure across groups.", echo = FALSE}
+knitr::include_graphics("./Images/testBias-04.png")
+```
+
+Figure \@ref(fig:testBias5).
+
+```{r testBias5, out.width = "100%", fig.align = "center", fig.cap = "Different content facets in a given construct for two groups.", echo = FALSE}
+knitr::include_graphics("./Images/testBias-05.png")
+```
+
+Figure \@ref(fig:testBias6).
+
+```{r testBias6, out.width = "100%", fig.align = "center", fig.cap = "Potential unfairness in testing.", echo = FALSE}
+knitr::include_graphics("./Images/testBias-06.png")
+```
+
+## Test Fairness
+
+As described in @Fletcher2021, there are three primary ways of operationalizing fairness:
+
+1. equal outcomes: the selection rate is the same across groups
+2. equal opportunity: the sensitivity (true positive rate; 1 $-$ false negative rate) is the same across groups
+3. equal odds: the sensitivity is the same across groups and the specificity (true negative rate; 1 $-$ false positive rate) is the same across groups
+
+For example, the job selection procedure shows *equal outcomes* if the proportion of men selected is equal to the proportion of women selected. The job selection procedure shows *equal opportunity* if, among those who show strong job performance, the proportion of classification errors (false negatives) is the same for men and women. Receiver operating characteristic (ROC) curves are depicted for two groups in Figure \@ref(fig:testBias-ROC). A cutoff that represents equal opportunity is depicted with a horizontal line (i.e., the same sensitivity) in Figure \@ref(fig:testBias-ROC). The job selection procedure shows *equal odds* if (a), among those who show strong job performance, the proportion of classification errors (false negatives) is the same for men and women, and (b), among those who show poor job performance, the proportion of classification errors (false positives) is the same for men and women. A cutoff that represents equal opportunity is depicted where the ROC curve for Group A intersects with the ROC curve from Group B in Figure \@ref(fig:testBias-ROC).
+
+It is not possible to meet all three types of fairness simultaneously (i.e., equal selection rates, sensitivity, and specificity across groups) unless the base rates are the same across groups or the selection is perfectly accurate [@Fletcher2021]. In the medical context, equal odds is the most common approach to fairness. However, using the cutoff associated with equal odds typically reduces overall classification accuracy. In the case that equal odds results in a classification accuracy that is too low, it may be worth considering using separate assessment procedures/tests for each group.
+
+```{r testBias-ROC, out.width = "100%", fig.align = "center", fig.cap = "Receiver operating characteristic (ROC) curves for two groups. Figure reprinted from @Fletcher2021, Figure 2, p. 3. Fletcher, R. R., Nakeshimana, A., (ref:ampersand) Olubeko, O. (2021). Addressing fairness, bias, and appropriate use of artificial intelligence and machine learning in global health. *Frontiers in Artificial Intelligence*, *3*(116). [https://doi.org/10.3389/frai.2020.561802](https://doi.org/10.3389/frai.2020.561802)", echo = FALSE}
+knitr::include_graphics("./Images/testBias-ROC.png")
+```
+
 ## Getting Started
 
 ### Load Libraries
