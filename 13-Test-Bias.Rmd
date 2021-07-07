@@ -1,10 +1,33 @@
 # Test Bias {#bias}
 
-Figure \@ref(fig:jobSelection).
+## Overview of Bias
+
+There are multiple definitions of the term "bias" depending on the context. In general, bias is a [systematic error](#systematicError). [Mean error](#meanError) is an example of systematic error, and is sometimes called bias. [Method biases](#methodBias) are a form of systematic error that involve the influence of measurement on a person’s score that is not due to the person’s level on the construct. Method biases include response biases or response styles, including acquiescence and social desirability bias.
+
+Sometimes bias is used to refer in particular to systematic error (in measurement, prediction, etc.) as a function of group membership, where test bias refers to the same score having different meaning for different groups. Under this meaning, a test is unbiased if a given test score has the same meaning regardless of group membership. For example, a test is biased if there is differential validity of test scores for groups (e.g., age, education, culture, race, sex). Test bias would exist, for instance, if a test is a less valid predictor for racial minorities or linguistic minorities. Test bias would also exist if scores on the Scholastic Aptitude Test (SAT) under-estimate women’s grades in college, for instance.
+
+There are some known instances of test bias. Research has not produced much empirical evidence of test bias, but that does not mean that test bias does not exist.
+
+It is also worth pointing out that group differences in scores does not necessarily indicate bias. Group differences in scores could reflect true group differences in the construct. For instance, women have better verbal abilities, on average, compared to men. So, if women's scores on a verbal ability test are higher on average than men's scores, this would not be sufficient evidence for bias.
+
+There are two broad categories of test bias:
+
+1. predictive bias
+2. test structure bias
+
+Predictive bias refers to differences between groups in the relation between the test and criterion. As with all [criterion-related validity](##criterionValidity) tests, the findings depend on the strength and quality of the criterion. Test structure bias refers to differences in the internal test characteristics across groups.
+
+## Ways to Investigate/Detect Test Bias
+
+### Predictive Bias
+
+Predictive bias exists when differences emerge between groups in terms of predictive validity to a criterion. It is assessed by using a regression line looking at the association between test score and job performance. For instance, consider a 2x2 confusion matrix used for the standard prediction problem. A confusion matrix for who to select for a job is depicted in Figure \@ref(fig:jobSelection).
 
 ```{r jobSelection, out.width = "100%", fig.align = "center", fig.cap = "2x2 Confusion Matrix for Job Selection.", echo = FALSE}
 knitr::include_graphics("./Images/JobSelection.png")
 ```
+
+We can also visualize the confusion matrix in terms of a scatterplot of the test scores (i.e., predicted job performance) and the "truth" scores (i.e., actual job performance), as depicted in Figure \@ref(fig:jobSelection2). The predictor (test score) is on the x-axis. The criterion (job performance) is on the y-axis. The quadrants reflect the cutoffs (i.e., thresholds) imposed from the 2x2 confusion matrix. The vertical line reflects the cutoff for selecting someone for a job. The horizontal line reflects the cutoff for good job performance (i.e., people who should have been selected for the job).
 
 ```{r jobSelection2, fig.height = 8, fig.cap = "2x2 Confusion Matrix for Job Selection in the form of a graph with predicted performance on the x-axies and actual job performance on the y-axis.", echo = FALSE}
 plot.new()
@@ -19,6 +42,8 @@ text(x = 5, y = -5, "FP")
 text(x = -5, y = 5, "FN")
 ```
 
+The data points in the top right quadrant are true positives: people who the test predicted would do a good job and who did a good job. The data points in the bottom left quadrant are true negatives: people who the test predicted would do a poor job and who would have done a poor job. The data points in the bottom right quadrant are false positives: people who the test predicted would do a good job and who did a poor job. The data points in the top left quadrant are false negatives: people who the test predicted would do a poor job and who would have done a good job.
+
 ```{r, echo = FALSE}
 set.seed(52242)
 predictor <- runif(100, min = -4, max = 4)
@@ -26,7 +51,9 @@ outcomeGoodPredictor <- 0 + 1*predictor + rnorm(100)
 outcomeBadPredictor <- 0 + 0.1*predictor + rnorm(100)
 ```
 
-```{r jobSelection3, fig.height = 8, fig.cap = "Example of a good predictor", echo = FALSE}
+Figure \@ref(fig:jobSelection3) depicts a strong predictor. The best-fit regression line has a steep slope where there are lots of data points that are true positives and true negatives, with relatively few false positives and false negatives.
+
+```{r jobSelection3, fig.height = 8, fig.cap = "Example of a strong predictor", echo = FALSE}
 plot.new()
 plot.window(xlim = c(-5,5), ylim = c(-5,5))
 points(x = predictor, y = outcomeGoodPredictor)
@@ -41,7 +68,9 @@ text(x = 5, y = -5, "FP")
 text(x = -5, y = 5, "FN")
 ```
 
-```{r jobSelection4, fig.height = 8, fig.cap = "Example of a bad predictor.", echo = FALSE}
+Figure \@ref(fig:jobSelection4) depicts a poor predictor. The best-fit regression line has a shallow slope where there are just as many data points that are in the false cells (false positives and false negatives) as there are in the true cells (true positives and true negatives). In general, the steeper the slope, the better the predictor.
+
+```{r jobSelection4, fig.height = 8, fig.cap = "Example of a poor predictor.", echo = FALSE}
 plot.new()
 plot.window(xlim = c(-5,5), ylim = c(-5,5))
 points(x = predictor, y = outcomeBadPredictor)
@@ -56,35 +85,130 @@ text(x = 5, y = -5, "FP")
 text(x = -5, y = 5, "FN")
 ```
 
-Figure \@ref(fig:testBias1).
+We can evaluate predictive bias using a best-fit regression line between the predictor and criterion for each group.
+
+#### Types of Predictive Bias
+
+There are three types of predictive bias:
+
+1. Different slopes
+2. Different intercepts
+3. Different intercepts and slopes
+
+The slope of the regression line is the steepness of the line. The intercept of the regression line is the y-value of the point where the line crosses the y-axis. If a measure shows predictive test bias, when looking at the regression line for each group, the groups' regression lines differ in either slopes and/or intercepts.
+
+##### Different Slopes
+
+Predictive bias in terms of different slopes exists when there are differences in the slope of the regression line between minority and majority groups. Differing slopes indicate differential predictive validity, in which the test is a more effective predictor of performance in one group over the other. Different slopes predictive bias is depicted in Figure \@ref(fig:testBias1). In the figure, the predictor performs well in the majority group. However, the slope is close to zero in the minority group, indicating that there is no association between the predictor and the criterion for the minority gruop.
 
 ```{r testBias1, out.width = "100%", fig.align = "center", fig.cap = "Test bias: different slopes.", echo = FALSE}
 knitr::include_graphics("./Images/testBias-01.png")
 ```
 
-Figure \@ref(fig:testBias2).
+Different slopes can especially occur if we develop our measure and criterion based on the normative majority group. Not much evidence has found empirical evidence of different slopes across groups. However, samples often do not have the power to detect differing slopes. Theoretically, to fix biases related to different slopes, you should find another measure that is more predictive for the minority group.
+
+##### Different Intercepts
+
+Predictive bias in terms of different intercepts exists when there are differences in the intercept of the regression line between minority and majority groups. While the distributions have similar slopes, intercept differences suggest that the measure systematically under- or over-estimates group performance relative to the person's ability. The same test score leads to systematically different predictions for the majority and minority groups. In other words, minority group members get different tests scores than majority group members with the same ability. Different intercepts predictive bias is depicted in Figure \@ref(fig:testBias2).
 
 ```{r testBias2, out.width = "100%", fig.align = "center", fig.cap = "Test bias: different intercepts.", echo = FALSE}
 knitr::include_graphics("./Images/testBias-02.png")
 ```
 
-Figure \@ref(fig:testBias3).
+A higher intercept (relative to zero) indicates that the measure *under*-estimates a person's ability (at that test score)—i.e., the person's job performance is better than what the test score would suggest. A lower intercept (relative to zero) indicates that the measure *over*-estimates a person's ability (at that test score)—i.e., the person's job performance is worse than what the test score would suggest. Figure \@ref(fig:testBias2) indicates that the measure systematically under-estimates the job performance of the minority group.
+
+Performance among members of a minority group could be under- or over-estimated. For example, women's grades in math classes tend to be under-estimated by the SAT. However, where intercept differences have been observed, measures often show over-estimation of school and job performance among minority groups. For example, women's physical strength and endurance is over-estimated based on physical ability tests. In addition, over-prediction of African Americans' and Hispanics' school and job performance has been observed based on cognitive ability tests (**Cole & Sackett citations**). At the same time, the Black–White difference in job performance is less than the Black–White difference in test performance. The over-estimation of African Americans' and Hispanics' school and job performance may be due to measurement error in the tests. Moreover, test scores explain only a portion of the variation in job performance. Blacks are far less disadvantaged on the noncognitive determinants of job performance than on the cognitive ones.
+
+Predictive biases in intercepts could especially occur if we develop tests that are based on the majority group and the items assess constructs other than the construct of interest which are systematically biased in favor of the majority group or against the minority group. Arguments about reduced power to detect differences are less relevant for intercepts and means than for slopes.
+
+To correct for a bias in intercepts, we could add bonus points to the scores for the minority group to correct for the amount of the systematic error, and to result in the same regression line. But, if minority group is over-predicted (as has often been the case where intercept differences have been observed), we would not want to use score adjustment to lower minority group's scores.
+
+##### Different Intercepts and Slopes
+
+Predictive bias in terms of different intercepts and slopes exists when there are differences in the intercept and slope of the regression line between minority and majority groups. In cases of different intercepts and slopes, there is both differential validity (because the regression lines have different slopes), as well as varying under- and over-estimation of groups' performance at particular scores. Different intercepts and slopes predictive bias is depicted in Figure \@ref(fig:testBias3).
 
 ```{r testBias3, out.width = "100%", fig.align = "center", fig.cap = "Test bias: different intercepts and slopes.", echo = FALSE}
 knitr::include_graphics("./Images/testBias-03.png")
 ```
 
-Figure \@ref(fig:testBias4).
+In instances of different intercepts and slopes predictive bias, a measure can simultaneously over-estimate and under-estimate a person's ability at different test scores. For instance, a measure can under-estimate a person's ability at higher test scores and can over-estimate a person's ability at lower test scores.
+
+Different intercepts and slopes across groups is possibly more realistic than just different intercepts or just different slopes. However, different intercepts and slopes predictive bias is more complicated to study, represent, and resolve. It is difficult to examine because of complexity, and it is not easy to fix. Currently, we have nothing to address different intercepts and slopes predictive bias. We would need to use a different measure or measures for each group.
+
+### Test Structure Bias
+
+In addition to predictive bias, another type of test bias is test structure bias. Test structure bias involves differences in internal test characteristics across groups. Examining test structure bias is different from examining the total score, as is used when examining predictive bias. Test structure bias can be identified empirically or based on theory/judgment.
+
+Empirically, test structure bias can be examined in multiple ways.
+
+#### Empirical Approaches to Identification
+
+##### Item $\times$ Group tests (ANOVA)
+
+Item $\times$ Group tests in analysis of variance (ANOVA) examine whether the difference between groups on the overall score match comparisons among smaller items sets between groups. Item $\times$ Group tests are used to rule out that items are operating in different ways in different groups. If the items operate in different wats in different group, they do not have the same meaning across groups. For example, if we are going to use a measure for multiple groups, we would expect its items to operate similarly across groups. So, if women show higher scores on a depression measure compared to men, would also expect them to show similar elevations on each item (e.g., sleep loss).
+
+##### Item Response Theory
+
+Using [item response theory](#irt), we can examine differential item functioning (DIF). Evidence of DIF, indicates that there are differences between group in terms of [discrimination](#itemDiscrimination) and/or [difficulty/severity](#itemDifficulty) of items. Differences between groups in terms of the [item characteristic curve](#icc) (which combines the item's discrimination and severity) would be evidence against construct validity invariance between the groups and would provide evidence of bias. DIF examines stretching and compression of different groups. As an example, consider the item "bites others" in relation to externalizing problems. The item would be expected to show a weaker discrimination and higher severity in for adults compared to children.
+
+##### Confirmatory Factor Analysis
+
+[Confirmatory factor analysis](#cfa-sem) allows tests of measurement invariance (also called factorial invariance). Measurement invariance examines whether the factor structure of the underlying latent variables in the test is consistent across groups. It also examines whether the manifestation of the construct differs between groups.
+
+Even if you find the same slope and intercepts across groups in a prediction model, the measure would still be assessing different constructs across groups if the measure has a different factor structure between the groups. A different factor structure across groups is depicted in Figure \@ref(fig:testBias4).
 
 ```{r testBias4, out.width = "100%", fig.align = "center", fig.cap = "Different factor structure across groups.", echo = FALSE}
 knitr::include_graphics("./Images/testBias-04.png")
 ```
 
-Figure \@ref(fig:testBias5).
+An example of a different factor structure across groups is the differentiation of executive functions from on factor to three factors (inhibition, working memory, cognitive flexibility) across childhood [**CITATION**].
+
+There are different degrees of measurement invariance [for a review, see @Putnick2016]:
+
+- Configural invariance: same number of factors in each group, and which indicators load on which factors are the same in each group (i.e., the same pattern of significant loadings in each group)
+- Metric ("weak factorial") invariance: items have the same factor loadings (discrimination) in each group
+- Scalar (“strong factorial”) invariance: items have the same intercepts (difficulty/severity) in each group
+- Residual (“strict factorial”) invariance: items have the same residual/unique variances in each group
+
+##### Structural Equation Modeling
+
+[Structural equation modeling](#sem) is a confirmatory factor analysis (CFA) model that incorporates prediction. Structural equation modeling allows examining differences in the underlying structure with differences in prediction in the same model.
+
+##### Signal Detection Theory
+
+[Signal detection theory](#sdt) is a dynamic measure of bias. It allows examining the overall bias in selection systems, including both accuracy and errors at various cutoffs (sensitivity, specificity, positive predictive value, and negative predictive value), as well as accuracy across all possible cutoffs (the area under the receiver operating characteristic curve). While there may be similar predictive validity between groups, the type of errors we are making across groups might differ. It is important to decide which types of error to emphasize depending on the fairness goals and examining sensitivity/specificity to adjust cutoffs.
+
+##### Empirical Evidence of Test Structure Bias
+
+It is not uncommon to find items that show differences across groups in severity (intercepts) and/or discrimination (factor loadings). However, cross-group differences in item functioning tend to be small and not consistent across studies, suggesting that some of the differences may reflect Type I errors that result from multiple testing.
+
+#### Theoretical/Judgmental Approaches to Identification
+
+##### Facial Validity Bias
+
+Facial validity bias considered the extent to which an average person thinks that an item is biased—i.e., the item has differing validity between minority and majority groups. If so, then the item should be reconsidered. Does an item disfavor certain groups? Is the language specific to a particular group? Is it offensive to some people? This types of judgment moves into the realm of whether or not an item should be used.
+
+##### Content Validity Bias
+
+Content validity bias is deteremined by judgments of construct experts who look for items that do not do an adequate job assessing the construct between groups. A construct may include some content facets in one group, but may include different content facets in another group, as depicted in Figure \@ref(fig:testBias5).
 
 ```{r testBias5, out.width = "100%", fig.align = "center", fig.cap = "Different content facets in a given construct for two groups.", echo = FALSE}
 knitr::include_graphics("./Images/testBias-05.png")
 ```
+ 
+Examples include information questions and vocabulary question on the Wechsler Adult Intelligence Scale. If an item is linguistically complicated, a double negative, grammatically complex, or convoluted, it may be less valid or predictive for rural populations and those with less education.
+
+Also, stereotype threat may contribute to content validity bias. Stereotype threat occurs when people are or feel at risk of conforming themselves to stereotypes about their social group, thus leading them to show poorer performance in ways that are consistent with the stereotype. Stereotype threat may partially explain why some women may perform more poorly on some math items than some men.
+
+Another example of content validity bias is when the same measure is used to assess a construct across ages even though the construct shows heterotypic continuity. Heterotypic continuity occurs when a construct changes in its behavioral manifestation with development [@Petersen2020]. That is, the same construct may look different at different points in development. An example of a construct that shows heterotypic continuity is externalizing problems. In early childhood, externalizing problems often manifest in overt forms, including physical aggression (e.g., biting) and temper tantrums. By contrast, in adolescence and adulthood, externalizing problems more often manifest in covert ways, including relational aggression and substance use. Content validity and facial validity bias judgments are often related, but not always.
+
+## What to Do When Detecting Bias
+
+When detecting bias, there are several steps to take. First, consider what the bias indicates. Does the bias present adverse impact for a minority group? What reasons might the bias exist? Second, examine the effect size of the bias. If the effects are small, if the bias does not present adverse impact for a minority group, and if there is no compelling theoretical reason for the bias, it might not be sufficient to scrap the instrument for the population. Some detected bias may be artificial, but other bias may be real. Gender and cultural differences have shown a number of statistically significant effects for a number of different assessment purposes, but many of the observed effects are quite small and likely trivial, and do not present compelling reasons to change the assessment [@Youngstrom2016]. However, if you find bias, correct for it! It is generally recommended to remove or resolve items that show non-negligible bias. Removing items reduces a measure's reliability and ability to detect individual differences, but resolving item bias by allowing item parameters to differ across groups has a very small effect on reliability and person separation [@Hagquist2017; @Hagquist2019]. Addressing items that show larger bias can also reduce artificial bias in other items [@Hagquist2017]. Thus, researchers are encouraged to handled item bias sequentially by magnitude. 
+
+If you do not correct for bias, consider the impact of the test, procedure, and selection procedure. Nevertheless, it is important to examine the possibility of bias—it is important to consider how much "erroneous junk" you are introducing into your research.
+
+## Test Fairness
 
 Figure \@ref(fig:testBias6).
 
@@ -92,7 +216,9 @@ Figure \@ref(fig:testBias6).
 knitr::include_graphics("./Images/testBias-06.png")
 ```
 
-## Test Fairness
+### Bias vs. Fairness
+
+### Operationalizing Fairness
 
 As described in @Fletcher2021, there are three primary ways of operationalizing fairness:
 
