@@ -8,73 +8,110 @@
 
 ## Overview of Factor Analysis {#factorAnalysisOverview}
 
-Analytical examples of factor analysis are presented in Section \@ref(factorAnalysis).
+Factor analysis is a class of latent variable models that is designated to identify the structure of a measure or set of measures. It aims to identify the optimal latent structure for a group of variables. Factor analysis encompasses two general types: confirmatory factor analysis and exploratory factor analysis. *Exploratory factor analysis* (EFA) is a latent variable modeling approach that is used when the researcher has no a priori hypotheses about how a set of variables are structured. EFA seeks to identify the empirically optimal-fitting model in ways that balance accuracy (i.e., variance accounted for) and parsimony (i.e., simplicity). *Confirmatory factor analysis* (CFA) is a latent variable modeling approach that is used when a researcher wants to evaluate how well a hypothesized model fits, and the model can examined in comparison to alternative models. Using a CFA approach, the research can pit models representing two theoretical frameworks against each other to see which better accounts for the observed data.
 
-Figure \@ref(fig:correlationMatrix1).
+Factor analysis is considered to be a "pure" data-driven method for identifying the structure of the data, but the “truth” that we get depends heavily on the decisions we make regarding the parameters of our factor analysis. The goal of factor analysis is to identify simple, parsimonious factors that underlie the "junk" (i.e., scores filled with measurement error) that we observe.
+
+It used to take a long time to calculate a factor analysis because factor analysis was computed by hand. Now, it is very fast with computers (e.g., oftentimes less than 30 ms). In the 1920s, Spearman developed factor analysis to understand the factor structure of intelligence. It was a long process—it took Spearman around one year to calculate the first factor analysis! Factor analysis takes a large dimension dataset and simplifies into smaller constructs. If you believe that nature is simple underneath, factor analysis gives nature a chance to display the simplicity that lives beneath the complexity on the surface. Spearman identified a single factor, *g*, that accounted for most of the covariation between the measures of intelligence.
+
+Factor analysis involves observed (manifest) variables and unobserved (latent) factors. In a [reflective model](#reflectiveConstruct), it is assumed that the latent factor influences the manifest variables, and the latent factor therefore reflects the common variance among the variables. A factor model potentially includes factor loadings, residuals (errors or distrurbances), intercepts, covariances, and regression paths. A regression path indicates a hypothesis that one variable (or factor) influences another. The standardized regression coefficient represents the strength of association between the variables or factors. A factor loading is a regression path from a latent factor to an observed (manifest) variable. The standardized factor loading represents the strength of association between the variable and the latent factor. A residual is variance in a variable (or factor) that is unexplained by other variables or factors. An intercept is the expected value of a variable if the mean of the factor is equal to zero. Covariances are the associations between variables (or factors).
+
+**Decisions to be made in factor analysis (in addition to questions about which variables to use, how to scale, etc.); garbage in, garbage out; method factors**
+
+### Example Factor Models from Correlation Matrices
+
+Below, I provide some example factor models from various correlation matrices. Analytical examples of factor analysis are presented in Section \@ref(factorAnalysis).
+
+Consider the example correlation matrix in Figure \@ref(fig:correlationMatrix1). Because all of the correlations are the same ($r = .60$), we expect there is approximately one factor for this pattern of data.
 
 ```{r correlationMatrix1, out.width = "100%", fig.align = "center", fig.cap = "Example correlation matrix.", echo = FALSE}
 knitr::include_graphics("./Images/correlationMatrix1.png")
 ```
 
-Figure \@ref(fig:factorAnalysis1).
+In a single-factor model fit to these data, the factor loadings are .77 and the residual error terms are .40, as depicted in Figure \@ref(fig:factorAnalysis1). The amount of common variance ($R^2$) is estimated as the square of the standardized loading: $0.60 = .77 \times .77$. The amount of error is estimated as: $\text{error} &= 1 - \text{common variance}$, so in this case, the amount of error is: $.40 = 1 - 0.60$. In this model, the altent factor explains the covariance among the variables. If the answer is simple, a small and parsimonious model should be able to obtain the answer.
 
 ```{r factorAnalysis1, out.width = "100%", fig.align = "center", fig.cap = "Example confirmatory factor analysis model.", echo = FALSE}
 knitr::include_graphics("./Images/FactorAnalysis-01.png")
 ```
 
-Figure \@ref(fig:correlationMatrix2).
+Consider a different correlation matrix in Figure \@ref(fig:correlationMatrix2). There is no common variance (correlations between the variables are zero), so there is no reason to believe there is a common factor that influences all of the variables. Variables that are not correlated cannot be related by a third variable, such as a common factor, so a common factor is not the right model.
 
 ```{r correlationMatrix2, out.width = "100%", fig.align = "center", fig.cap = "Example correlation matrix.", echo = FALSE}
 knitr::include_graphics("./Images/correlationMatrix2.png")
 ```
 
-Figure \@ref(fig:correlationMatrix3).
+Consider another correlation matrix in Figure \@ref(fig:correlationMatrix3).
 
 ```{r correlationMatrix3, out.width = "100%", fig.align = "center", fig.cap = "Example correlation matrix.", echo = FALSE}
 knitr::include_graphics("./Images/correlationMatrix3.png")
 ```
 
-Figure \@ref(fig:factorAnalysis2).
+If you try to fit a single factor to this correlation matrix, it generates a factor model depicted in Figure \@ref(fig:factorAnalysis2). In this model, the first three variables have a factor loading of .77, but the remaining three variables have a factor loading of zero. This indicates that three remaining factors likely do not share a common factor with the first three variables.
 
 ```{r factorAnalysis2, out.width = "100%", fig.align = "center", fig.cap = "Example confirmatory factor analysis model.", echo = FALSE}
 knitr::include_graphics("./Images/FactorAnalysis-02.png")
 ```
 
-Figure \@ref(fig:factorAnalysis3).
+Therefore, a one-factor model is probably not correct; instead, the structure of the data is probably best represented by a two-factor model, as depicted in Figure \@ref(fig:factorAnalysis3). In the model, Factor 1 explains why measures 1, 2, and 3 are correlated, whereas Factor 2 explains why measures 4, 5, and 6 are correlated. A two-factor model thus explains why measures 1, 2, and 3 are not correlated with measures 4, 5, and 6.
 
 ```{r factorAnalysis3, out.width = "100%", fig.align = "center", fig.cap = "Example confirmatory factor analysis model.", echo = FALSE}
 knitr::include_graphics("./Images/FactorAnalysis-03.png")
 ```
 
-Figure \@ref(fig:correlationMatrix4).
+Consider another correlation matrix in Figure \@ref(fig:correlationMatrix4).
 
 ```{r correlationMatrix4, out.width = "100%", fig.align = "center", fig.cap = "Example correlation matrix.", echo = FALSE}
 knitr::include_graphics("./Images/correlationMatrix4.png")
 ```
 
-Figure \@ref(fig:factorAnalysis4).
+One way to model these data is depicted in Figure \@ref(fig:factorAnalysis4). In this model, the factor loadings are .77, the residual error terms are .40, and there is a covariance path of .50 for the association between Factor 1 and Factor 2. Going from the model to the correlation matrix is deterministic. If you know the model, you can calculate the correlation matrix. For instance, using path tracing rules (described in Section \@ref(ctt)), the correlation of measures within a factor in this model is calculated as: $0.60 = .77 \times .77$. Using path tracing rules, the correlation of measures across factors in this model is calculated as: $0.30 = .77 \times .50 \times .77$.
 
 ```{r factorAnalysis4, out.width = "100%", fig.align = "center", fig.cap = "Example confirmatory factor analysis model.", echo = FALSE}
 knitr::include_graphics("./Images/FactorAnalysis-04.png")
 ```
 
-Figure \@ref(fig:factorAnalysis5).
+Although going from the model to the correlation matrix is deterministic, going from the correlation matrix to the model is not deterministic. If you know the correlation matrix, there may be many possible models. For instance, the model could also be the one depicted in Figure \@ref(fig:factorAnalysis5), with factor loadings of .77, residual error terms of .40, and a regression path of .50. This model has the exact same same fit as the previous model, but it has different implications. Unlike the previous model, in this model, there is a "causal" pathway from Factor 1 to Factor 2. However, the causal effect of Factor 1 does not account for all of the variance in Factor 2 because the correlation is only .50.
 
 ```{r factorAnalysis5, out.width = "100%", fig.align = "center", fig.cap = "Example confirmatory factor analysis model.", echo = FALSE}
 knitr::include_graphics("./Images/FactorAnalysis-05.png")
 ```
 
-Figure \@ref(fig:factorAnalysis6).
+Alternatively, something else (e.g., another factor) could be explaining the data that we have not considered, as depicted in Figure \@ref(fig:factorAnalysis6). This is a hierarchical model, in which there is a higher-order factor ($A_1$) that influences both lower-order factors, Factor 1 ($F_1$) and Factor 2 ($F_2$). This model has the exact same same fit as the previous models. The factor loadings from the lower order factors to the manifest variables are .77, the factor loading from the higher-order factor to the lower-order factors is .71, and the residual error terms are .40. Using path tracing rules, the correlation of measures across factors in this model is calculated as: $0.30 = .77 \times .71 \times .71 \times .77$.
 
 ```{r factorAnalysis6, out.width = "100%", fig.align = "center", fig.cap = "Example confirmatory factor analysis model.", echo = FALSE}
 knitr::include_graphics("./Images/FactorAnalysis-06.png")
 ```
 
-Figure \@ref(fig:factorAnalysis7).
+Alternatively, there could be a single factor that ties measures 1, 2, and 3 together and measures 4, 5, and 6 together, as depicted in Figure \@ref(fig:factorAnalysis7). In this model, the measures no longer have random error: measures 1, 2, and 3 have correlated residuals—that is, they share error variance; likewise, measures 4, 5, and 6 have correlated residuals. This model has the exact same same fit as the previous models. Using path tracing rules, the correlation of measures within a factor in this model is calculated as: $.60 = (.55 \times .55) + (.70 \times .43 \times .70) + (.70 \times .43 \times .43 \times .70)$. Using path tracing rules, the correlation of measures across factors in this model is calculated as: $0.30 = .50 \times .50$.
 
 ```{r factorAnalysis7, out.width = "100%", fig.align = "center", fig.cap = "Example confirmatory factor analysis model.", echo = FALSE}
 knitr::include_graphics("./Images/FactorAnalysis-07.png")
 ```
+
+### Indeterminacy
+
+There could be many more models that have the same fit to the data. Thus, factor analysis has *indeterminancy* because all of these models can explain these data equally well, with all having different theoretical meaning. The goal of factor analysis is for the model to look at the data and induce the model. However, most data matrices in real life are very complicated—much more complicated than in these examples.
+
+This is why we do not calculate our own factor analysis by hand; use a stats program! It is important to think about the possibility of other models to determine how confident you can be in your data model. For every fully specified factor model—i.e., where the relevant paths are all defined, there is one and only one predictive data matrix (correlation matrix). However, each data matrix can produce many different factor models. There is no way to distinguish which of these factor models is correct from the data matrix alone. Any given data matrix can predict an infinite number of factor models that accurately represent the data structure—so we make decisions that determine what type of factor solution our data will yield.
+
+Many models could explain your data, and there are many more models that do not explain the data. For equally good-fitting models, decide based on interpretability. If you have strong theory, decide based on theory and things outside of factor analysis!
+
+### Practical Considerations
+
+There are important considerations for doing factor analysis in real life with complex data. Traditionally, researchers had to consider what kind of data they have, and often assumed interval-level data even though data in psychology are often not interval data. In the past, factor analysis was not good with categorical, dichotomous (e.g., True/False) data because the variance then is completely determined by the mean. So, we need something more complicated for dichotomous data. More solutions are available now for factor analysis with ordinal and dichotomous data, but it is generally best to have at least four ordered categories to perform factor analysis.
+
+The necessary sample size depends on the complexity of the true factor structure. If there is a strong single factor for 30 items, then $N = 50$ is plenty. But, if there are five factors and some correlated errors, then the sample size will need to be closer to ~5,000. Factor Analysis can recover the truth when the world is simple. However, nature is often not simple, and it may end in the distortion of nature instead of nature itself.
+
+### Decisions to Make in Factor Analysis
+
+There are many decisions to make in factor analysis. These decisions can have important impacts on the resulting solution. Decisions include things such as:
+
+1. What variables to include in the model and how to scale them
+2. Method of factor extraction: factor analysis or PCA
+3. If factor analysis, the kind of factor analysis: EFA or CFA
+4. How many factors to retain
+5. Whether and how to rotate factors (factor rotation)
+6. Model selection and interpretation
 
 ## Overview of Principal Component Analysis {#pcaOverview}
 
@@ -126,6 +163,8 @@ names(HolzingerSwineford1939) <- varNames
 ```
 
 ## Descriptive Statistics and Correlations
+
+Before conducting a factor analysis, it is important examine descriptive statistics and correlations among variables.
 
 ### Descriptive Statistics
 
