@@ -113,9 +113,55 @@ There are many decisions to make in factor analysis. These decisions can have im
 5. Whether and how to rotate factors (factor rotation)
 6. Model selection and interpretation
 
-## Overview of Principal Component Analysis {#pcaOverview}
+#### 1. Variables to Include and their Scaling
 
-Analytical examples of principal component analysis are presented in Section \@ref(pca).
+The first decision when conducting a factor analysis is which variables to include and the scaling of those variables. What factors (or components) you extract can differ widely depending on what variables you include in the analysis. For example, if you include many variables from the same source (e.g., self-report), it is possible that you will extract a factor that represents the common variance among the variables from that source (i.e., the self-reported variables). This would be considered a method factor, which works against the goal of estimating latent factors that represent the constructs of interest (as opposed to the measurement methods used to estimate those constructs). An additional consideration is the scaling of the variables—whether to use the raw scaling or whether to standardize them to be on a more common metric (e.g., z-score metric with a mean of zero and standard deviation of one).
+
+#### 2. Method of Factor Extraction
+
+The second decision is to select the method of factor extraction. This is the algorithm that is going to try to identify factors. There are two main families of factor or component extraction: analytic or principal components. The principal components approach is called principal component analysis (PCA). PCA is not really a form factor analysis; rather, it is useful for data reduction [@Lilienfeld2015]. The analytic family includes approaches such as principal axis factoring and maximum likelihood factor analysis.
+
+##### Principal Component Analysis {#pca}
+
+Principal component analysis (PCA) is used if you want to reduce your data matrix. PCA composites represent the variances of an observed measure in as economical a fashion as possible, with no latent underlying variables. The goal of PCA is to identify a smaller number of components that explain as much variance in a set of variables as possible. It is an atheoretical way to decompose a matrix. PCA involves decomposition of a data matrix into a set of eigenvectors, which are transformations of the old variables.
+
+The eigenvectors attempt to simplify the data in the matrix. PCA takes the data matrix and identifies the weighted sum of all variables that does the best job at explaining variance: these are the principal components, also called eigenvector. Principal components reflect optimally weighted sums. In this way, PCA is a [formative model](#formativeConstruct) (by contrast, factor analysis applies a [reflective model](#reflectiveConstruct)).
+
+PCA decomposes the data matrix into any number of components—as many as the number of variables, which will always account for all variance. Then, after the model is fit, you can look at the results and discard the components which likely reflect error variance. Judgments about which factors to retain are based on empirical criteria in conjunction with theory to select a parsimonious number of components that account for the majority of variance.
+
+The eigenvalue reflects amount of variance explained by the component (eigenvector). PCA then pulls the principle component out and makes a new data matrix: i.e., new correlation matrix. Then the PCA pulls out the component that explains the next most variance—i.e., the eigenvector with the next largest eigenvalue, and it does this for all components, equal to the same number of variables. For instance, if there are six variables, it will iteratively extract an additional component up to six components. You can extract as many eigenvectors as there are variables. If you extract all six components, the data matrix left over will be the same as the correlation matrix in Figure \@ref(fig:correlationMatrix2). That is, the remaining variables will be entirely uncorrelated with the remaining variables, because six components explain 100% of the variance from six variables. In other words, you can can explain (6) variables with (6) new things!
+
+However, it does no good if you have to use all (6) components because there is no data reduction from the original number of variables, but hopefully the first few components will explain most of the variance.
+
+The sum of all eigenvalues is equal to the number of variables in the analysis. PCA does not have same assumptions as factor analysis, which assumes that measures are partly from common variance and error. But, if you estimate (6) eigenvectors and only keep (2), the is a two-component model and whatever left becomes error. Therefore, PCA does not have the same assumptions as factor analysis, but it often ends up in the same place.
+
+Most people who want to conduct a factor analysis use PCA, but PCA is not really factor analysis. PCA is what SPSS can do quickly. But computers are so fast now—just do a real factor analysis! Factor analysis better handles error than PCA—factor analysis assumes that what is in the variable is the combination of common construct variance and error. By contrast, PCA assumes that the measures have no measurement error.
+
+##### Analytic Approach: Principal Axis Factoring or Maximum Likelihood Factor Analysis
+
+Factor analysis is a special case of [structural equation modeling](#sem) (SEM). Factor analysis is an analytic technique that is interested in the factor structure of a measure of set of measures. Factor analysis is a theoretical approach that considers that there are latent theoretical constructs that influence the scores on particular variables. It assumes that part of the explanation for each variable is shared between variables, and that part of it is unique variance. The unique variance is considered error. The common variance is called the communality, which is the factor variance, where $1 - \text{communality}$ is the amount of variance due to error.
+
+Factor analysis can be used to test [measurement/factorial invariance](#measurementInvariance) and for [multi-trait multi-method](#MTMM) designs.
+
+There are several differences between (real) factor analysis versus PCA. Factor analysis has greater sophistication than PCA, but greater sophistication often results in greater assumptions. Factor analysis does not always work; the day may not always fit to a factor analysis model; therefore, use PCA as a second/last option. PCA can decompose any data matrix; it always works. PCA is okay if you are not interested in the factor structure. PCA uses all variance of variables and assumes variables have no error, so it does not account for measurement error. PCA is good if you just want to form a linear composite; if the causal structure is [formative](formativeConstruct) (rather than [reflective](#reflectiveConstruct)). However, if you are interested in the factor structure, use factor analysis, which estimates a latent variable that accounts for the common variance and discards error variance. Factor analysis is useful for the identification of latent constructs—i.e., underlying dimensions or factors that explain (cause) scores on items.
+
+#### 3. EFA or CFA
+
+A third decision is the kind of factor analysis to use: exploratory factor analysis (EFA) or confirmatory factor analysis (CFA). EFA is used if you have no a priori hypotheses about the factor structure of the model, but you would like to understand the latent variables represented by your items. CFA is used to confirm a priori hypotheses about the factor structure of the model.
+
+EFA is partly induced from the data. You feed in the data and let the program build the factor model. You can set some parameters going in, including how to extract or rotate the factors.
+
+CFA is a test of the hypothesis. In a CFA, you specify the model and ask how well does this model represent the data.	In real life, there is not a clear distinction between EFA and CFA. In CFA, it is often that researchers only set half of the constraints, and let the data fill in the rest. In EFA, researchers often set constraints and assumptions. Thus, the line between EFA and CFA is often blurred.
+
+#### 4. How Many Factors to Retain
+
+#### 5. Factor Rotation
+
+#### 6. Model Selection and Interpretation
+
+### Missing Data Handling
+
+The PCA default in SPSS is listwise deletion of missing data: if a participant is missing data on any variable, the subject gets excluded from the analysis, so you might end up with too few participants. Instead, use a correlation matrix with pairwise deletion for PCA with missing data. Maximum likelihood factor analysis can make use of all available data points for a participant, even if they are missing some data points. Mplus, which is often used for [SEM](#sem) and factor analysis, will notify you if you are removing many participants in CFA/EFA. The `lavaan` package in `R` also notifies you if you removing participants in CFA/SEM models.
 
 ## Getting Started
 
@@ -1493,7 +1539,7 @@ par(mfrow = c(2, 2))
 lapply(equivalentDAGs(dagModelMTMM, n = 4), plot)
 ```
 
-## Principal Component Analysis (PCA) {#pca}
+## Principal Component Analysis (PCA) {#pcaAnalayis}
 
 Principal component analysis (PCA) is a technique for data reduction. PCA seeks to identify the principal components of the data, so that data can be reduced to that smaller set of components. Although PCA is sometimes referred to as factor analysis, PCA is not factor analysis [@Lilienfeld2015]. PCA uses the total variance of all variables whereas factor analysis uses the common variance among the variables.
 
