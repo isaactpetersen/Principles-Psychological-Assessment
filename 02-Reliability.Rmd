@@ -362,6 +362,7 @@ library("blandr")
 library("MBESS")
 library("lavaan")
 library("psychmeta")
+library("irrCAC")
 library("gtheory")
 library("tidyverse")
 library("tinytex")
@@ -822,7 +823,7 @@ BAstats
 
 Inter-rater reliability is the consistency of scores across raters. For instance, two different raters may make a diagnostic decision for the same client, two different people may provide observational ratings of the same participant, or two different researchers may process psychophysiological data (e.g., electroencephalography, electrocardiography) from the same person. Consistency of scores can also be assessed within the same rater, which is known as *intra*-rater reliability and is described in Section \@ref(intrarater-reliability). For assessing inter-rater reliability, intraclass correlation (ICC) is recommended for continuous data, such as ratings of a participants mood. By contrast, Cohen's kappa ($\kappa$) is recommended for categorical variables, such as making a diagnostic decision whether to give someone a diagnosis of depression or not.
 
-#### Intraclass Correlation (ICC)
+#### Continuous Data
 
 Use intraclass correlation (ICC) for estimating inter-rater reliability of continuous data. ICC was estimated using the `psych` package [@R-psych].
 
@@ -830,12 +831,14 @@ Use intraclass correlation (ICC) for estimating inter-rater reliability of conti
 ICC(mydata[,c("rater1continuous","rater2continuous","rater3continuous")], missing = FALSE)
 ```
 
-#### Cohen's Kappa
+#### Categorical Data
 
-Use Cohen's kappa for estimating inter-rater reliability of categorical data [@Bakeman2020]. Cohen's kappa was estimated using the `psych` package [@R-psych].
+For estimating the inter-rater reliability of categorical data, use Cohen's kappa, Fleiss's kappa, the S index [**Falotico & Quatto, 2010 CITATION**], or Gwet's AC1 statistic [**Gwet, 2001 CITATION**] [@Bakeman2020]. Cohen's kappa was estimated using the `psych` package [@R-psych]. Fleiss's kappa and Gwet's AC1 statistic were estimated using the `irrCAC` package [@R-irrCAC].
 
 ```{r}
 cohen.kappa(mydata[,c("rater1categorical","rater2categorical","rater3categorical")])
+fleiss.kappa.raw(na.omit(mydata[,c("rater1categorical","rater2categorical","rater3categorical")]))
+gwet.ac1.raw(na.omit(mydata[,c("rater1categorical","rater2categorical","rater3categorical")]))
 ```
 
 ### Intra-Rater Reliability {#intrarater-reliability}
