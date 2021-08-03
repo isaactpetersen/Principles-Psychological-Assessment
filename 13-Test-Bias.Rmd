@@ -973,6 +973,8 @@ Like DIF, when testing measurement invariance with many items or measures across
 
 When detecting non-negligible measurement non-invariance, one option is to remove the items that show measurement non-invariance. Another option is to *resolve* items that show non-negligible measurement non-invariance, by keeping the item, but allowing the item's parameters to differ across groups (i.e., essentially treating it as a different item for each group). Removing items reduces a measure’s reliability and ability to detect individual differences, but resolving measurement non-invariance has a very small effect on reliability and person separation [@Hagquist2017; @Hagquist2019]. Where possible, it therefore can be beneficial to resolve non-negligible measurement non-invariance instead of removing items. If an item is clearly invalid in one group but valid in another group, another option is to keep the item in one group, and to remove it in another group. Addressing items that show larger measurement non-invariance can also reduce artificial measurement non-invariance in other items [@Hagquist2017]. Thus, it can also be beneficial to review and address measurement non-invariance sequentially by magnitude (from high to low).
 
+Using the traditional chi-square difference test, tests of measurement invariance compare the model fit to a model with perfect fit. As the sample size grows larger, smaller differences in model fit will be detected as significant, thus rejecting measurement invariance even if the model fits well. So, it can also be useful to compare the model fit to a null hypothesis that the fit is poor, instead of the null hypothesis that the model is a perfect fit. *Chi-square equivalence tests* use the poor model fit as the null hypothesis. Thus, a significant chi-square equivalence test suggests that the equality constraints are plausible, providing support for the alternative hypothesis that the model fit is acceptable [**Counsell et al., 2020 CITATION**].
+
 [**Cite Counsell et al. 2020: Counsell, A., Cribbie, R. A., & Flora, D. B. (2020). Evaluating equivalence testing methods for measurement invariance. Multivariate Behavioral Research, 55(2), 312-328. https://doi.org/10.1080/00273171.2019.1633617**]
 
 [**Add chi-square equivalence tests from Counsell et al. (2020)**]
@@ -1325,6 +1327,11 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(configuralInvarianceModel_fit)
 
 configuralInvarianceModelFitIndices <- fitMeasures(configuralInvarianceModel_fit)[c("cfi.robust", "rmsea.robust", "srmr")]
+
+configuralInvarianceModel_chisquare <- fitMeasures(configuralInvarianceModel_fit)[c("chisq.scaled")]
+configuralInvarianceModel_chisquareScaling <- fitMeasures(configuralInvarianceModel_fit)[c("chisq.scaling.factor")]
+configuralInvarianceModel_df <- fitMeasures(configuralInvarianceModel_fit)[c("df.scaled")]
+configuralInvarianceModel_N <- lavInspect(configuralInvarianceModel_fit, what = "ntotal")
 ```
 
 #### Effect size of non-invariance
@@ -1335,6 +1342,23 @@ The effect size of measurement non-invariance, as described by @Nye2019, was cal
 
 ```{r}
 lavaan_dmacs(configuralInvarianceModel_fit)
+```
+
+#### Equivalence Test
+
+From **Counsell et al. (2020) CITATION**: https://osf.io/cqu8v. The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable.
+
+```{r}
+equiv_chi <- function(alpha = .05, chi, df, m, N_sample, popRMSEA = .08){
+  Fml <- chi/(N_sample - m)
+  popep <- (df * popRMSEA^2)/m
+  popdelt <- (N_sample - m) * popep
+  pval <- pchisq(chi, df, ncp = popdelt, lower.tail = TRUE)
+  res <- data.frame(chi, Fml, popep, popdelt, pval)
+  res
+}
+
+equiv_chi(alpha = .05, chi = configuralInvarianceModel_chisquare, df = configuralInvarianceModel_df, m = 2, N_sample = configuralInvarianceModel_N, popRMSEA = .08)
 ```
 
 #### Permutation Test
@@ -1463,6 +1487,11 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(metricInvarianceModel_fit)
 
 metricInvarianceModelFitIndices <- fitMeasures(metricInvarianceModel_fit)[c("cfi.robust", "rmsea.robust", "srmr")]
+
+metricInvarianceModel_chisquare <- fitMeasures(metricInvarianceModel_fit)[c("chisq.scaled")]
+metricInvarianceModel_chisquareScaling <- fitMeasures(metricInvarianceModel_fit)[c("chisq.scaling.factor")]
+metricInvarianceModel_df <- fitMeasures(metricInvarianceModel_fit)[c("df.scaled")]
+metricInvarianceModel_N <- lavInspect(metricInvarianceModel_fit, what = "ntotal")
 ```
 
 #### Compare Model Fit
@@ -1477,10 +1506,43 @@ anova(configuralInvarianceModel_fit, metricInvarianceModel_fit)
 
 The metric invariance model did not fit significantly worse than the configural invariance model, so metric invariance held. This provides evidence of measurement invariance of factor loadings across groups. Measurement invariance of factor loadings across groups provides support for examining whether the groups show different associations of the factor with other constructs [@Little2007].
 
+Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.
+
+```{r}
+satorraBentlerScaledChiSquareDifferenceTestStatistic <- function(T0, c0, d0, T1, c1, d1){
+    cd <- (d0 * c0 - d1*c1)/(d0 - d1)
+    TRd <- (T0*c0 - T1*c1)/cd
+    
+    return(TRd)
+}
+
+metricInvarianceModel_chisquareDiff <- satorraBentlerScaledChiSquareDifferenceTestStatistic(T0 = metricInvarianceModel_chisquare,
+                                                     c0 = metricInvarianceModel_chisquareScaling,
+                                                     d0 = metricInvarianceModel_df,
+                                                     T1 = configuralInvarianceModel_chisquare,
+                                                     c1 = configuralInvarianceModel_chisquareScaling,
+                                                     d1 = configuralInvarianceModel_df)
+
+metricInvarianceModel_chisquareDiff
+```
+
+
 ##### Compare Other Fit Criteria
 
 ```{r}
 round(metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices, digits = 3)
+```
+
+##### Equivalence Test
+
+The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable. The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
+
+```{r}
+equiv_chi(alpha = .05, chi = metricInvarianceModel_chisquare, df = metricInvarianceModel_df, m = 2, N_sample = metricInvarianceModel_N, popRMSEA = .08)
+
+metricInvarianceModel_dfDiff <- metricInvarianceModel_df - configuralInvarianceModel_df
+
+equiv_chi(alpha = .05, chi = metricInvarianceModel_chisquareDiff, df = metricInvarianceModel_dfDiff, m = 2, N_sample = metricInvarianceModel_N, popRMSEA = .08)
 ```
 
 ##### Permutation Test
@@ -1605,6 +1667,11 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(scalarInvarianceModel_fit)
 
 scalarInvarianceModelFitIndices <- fitMeasures(scalarInvarianceModel_fit)[c("cfi.robust", "rmsea.robust", "srmr")]
+
+scalarInvarianceModel_chisquare <- fitMeasures(scalarInvarianceModel_fit)[c("chisq.scaled")]
+scalarInvarianceModel_chisquareScaling <- fitMeasures(scalarInvarianceModel_fit)[c("chisq.scaling.factor")]
+scalarInvarianceModel_df <- fitMeasures(scalarInvarianceModel_fit)[c("df.scaled")]
+scalarInvarianceModel_N <- lavInspect(scalarInvarianceModel_fit, what = "ntotal")
 ```
 
 #### Compare Model Fit
@@ -1619,10 +1686,33 @@ anova(metricInvarianceModel_fit, scalarInvarianceModel_fit)
 
 The scalar invariance model fit significantly worse than the configural invariance model, so scalar invariance did not hold. This provides evidence of measurement non-invariance of indicator intercepts across groups. Measurement non-invariance of indicator intercepts poses challenges to being able to meaningfully compare levels on the latent factor across groups [@Little2007].
 
+```{r}
+scalarInvarianceModel_chisquareDiff <- satorraBentlerScaledChiSquareDifferenceTestStatistic(T0 = scalarInvarianceModel_chisquare,
+                                                     c0 = scalarInvarianceModel_chisquareScaling,
+                                                     d0 = scalarInvarianceModel_df,
+                                                     T1 = metricInvarianceModel_chisquare,
+                                                     c1 = metricInvarianceModel_chisquareScaling,
+                                                     d1 = metricInvarianceModel_df)
+
+scalarInvarianceModel_chisquareDiff
+```
+
 ##### Compare Other Fit Criteria
 
 ```{r}
 round(scalarInvarianceModelFitIndices - metricInvarianceModelFitIndices, digits = 3)
+```
+
+##### Equivalence Test
+
+The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable. The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
+
+```{r}
+equiv_chi(alpha = .05, chi = scalarInvarianceModel_chisquare, df = scalarInvarianceModel_df, m = 2, N_sample = scalarInvarianceModel_N, popRMSEA = .08)
+
+scalarInvarianceModel_dfDiff <- scalarInvarianceModel_df - metricInvarianceModel_df
+
+equiv_chi(alpha = .05, chi = scalarInvarianceModel_chisquareDiff, df = scalarInvarianceModel_dfDiff, m = 2, N_sample = scalarInvarianceModel_N, popRMSEA = .08)
 ```
 
 ##### Permutation Test
@@ -1748,6 +1838,11 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(residualInvarianceModel_fit)
 
 residualInvarianceModelFitIndices <- fitMeasures(residualInvarianceModel_fit)[c("cfi.robust", "rmsea.robust", "srmr")]
+
+residualInvarianceModel_chisquare <- fitMeasures(residualInvarianceModel_fit)[c("chisq.scaled")]
+residualInvarianceModel_chisquareScaling <- fitMeasures(residualInvarianceModel_fit)[c("chisq.scaling.factor")]
+residualInvarianceModel_df <- fitMeasures(residualInvarianceModel_fit)[c("df.scaled")]
+residualInvarianceModel_N <- lavInspect(residualInvarianceModel_fit, what = "ntotal")
 ```
 
 #### Compare Model Fit
@@ -1762,10 +1857,33 @@ anova(scalarInvarianceModel_fit, residualInvarianceModel_fit)
 
 In this instance, you do not need to examine whether residual invariance held because the preceding level of measurement invariance (scalar invariance) did not hold.
 
+```{r}
+residualInvarianceModel_chisquareDiff <- satorraBentlerScaledChiSquareDifferenceTestStatistic(T0 = residualInvarianceModel_chisquare,
+                                                     c0 = residualInvarianceModel_chisquareScaling,
+                                                     d0 = residualInvarianceModel_df,
+                                                     T1 = scalarInvarianceModel_chisquare,
+                                                     c1 = scalarInvarianceModel_chisquareScaling,
+                                                     d1 = scalarInvarianceModel_df)
+
+residualInvarianceModel_chisquareDiff
+```
+
 ##### Compare Other Fit Criteria
 
 ```{r}
 round(residualInvarianceModelFitIndices - scalarInvarianceModelFitIndices, digits = 3)
+```
+
+##### Equivalence Test
+
+The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable. The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
+
+```{r}
+equiv_chi(alpha = .05, chi = residualInvarianceModel_chisquare, df = residualInvarianceModel_df, m = 2, N_sample = residualInvarianceModel_N, popRMSEA = .08)
+
+residualInvarianceModel_dfDiff <- residualInvarianceModel_df - scalarInvarianceModel_df
+
+equiv_chi(alpha = .05, chi = residualInvarianceModel_chisquareDiff, df = residualInvarianceModel_dfDiff, m = 2, N_sample = residualInvarianceModel_N, popRMSEA = .08)
 ```
 
 ##### Permutation Test
