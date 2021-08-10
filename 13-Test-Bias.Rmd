@@ -1366,7 +1366,7 @@ equiv_chi(alpha = .05, chi = configuralInvarianceModel_chisquare, df = configura
 Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].
 
 ```{r numPermutations, cache = TRUE, cache.comments = FALSE}
-numPermutations <- 1000
+numPermutations <- 500
 ```
 
 For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed. You can specify the null model as the baseline model using: `baseline.model = nullModelFit`. **Warning**: this code takes a while to run based on `r numPermutations` iterations. You can reduce the number of iterations to be faster.
@@ -1379,7 +1379,7 @@ configuralInvarianceTest <- permuteMeasEq(nPermute = numPermutations,
                                           uncon = NULL,
                                           AFIs = myAFIs,
                                           moreAFIs = moreAFIs,
-                                          #parallelType = "snow", #uncomment line when error is fixed
+                                          parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
                                           iseed = 52242)
 ```
 
@@ -1559,7 +1559,7 @@ metricInvarianceTest <- permuteMeasEq(nPermute = numPermutations,
                                       uncon = configuralInvarianceModel_fit,
                                       AFIs = myAFIs,
                                       moreAFIs = moreAFIs,
-                                      #parallelType = "snow", #uncomment line when error is fixed
+                                      parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
                                       iseed = 52242)
 ```
 
@@ -1729,7 +1729,7 @@ scalarInvarianceTest <- permuteMeasEq(nPermute = numPermutations,
                                       uncon = metricInvarianceModel_fit,
                                       AFIs = myAFIs,
                                       moreAFIs = moreAFIs,
-                                      #parallelType = "snow", #uncomment line when error is fixed
+                                      parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
                                       iseed = 52242)
 ```
 
@@ -1900,7 +1900,7 @@ residualInvarianceTest <- permuteMeasEq(nPermute = numPermutations,
                                         uncon = scalarInvarianceModel_fit,
                                         AFIs = myAFIs,
                                         moreAFIs = moreAFIs,
-                                        #parallelType = "snow", #uncomment line when error is fixed
+                                        parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
                                         iseed = 52242)
 ```
 
