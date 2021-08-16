@@ -67,6 +67,16 @@ mydataValidity$criterionWithMeasurementErrorT1 <- mydataValidity$criterion + rno
 mydataValidity$criterionWithMeasurementErrorT2 <- mydataValidity$criterion + rnorm(n = sampleSize, mean = 0, sd = errorToAddToCriterion)
 
 mydataValidity$oldpredictor <- mydataValidity$criterion + rnorm(n = sampleSize, mean = 0, sd = 7.5)
+
+latentCorrelation <- .8
+reliabilityPredictor <- .9
+reliabilityCriterion <- .85
+
+mydataValidity$predictorLatentSEM <- rnorm(sampleSize, 0 , 1)
+mydataValidity$criterionLatentSEM <- latentCorrelation * mydataValidity$predictorLatentSEM + rnorm(sampleSize, 0, sqrt(1 - latentCorrelation ^ 2))
+
+mydataValidity$predictorObservedSEM <- reliabilityPredictor * mydataValidity$predictorLatentSEM + rnorm(sampleSize, 0, sqrt(1 - reliabilityPredictor ^ 2))
+mydataValidity$criterionObservedSEM <- reliabilityCriterion * mydataValidity$criterionLatentSEM + rnorm(sampleSize, 0, sqrt(1 - reliabilityCriterion ^ 2))
 ```
 
 #### Add Missing Data
@@ -80,10 +90,12 @@ missingValuesCriterion <- sample(1:sampleSize, size = 50, replace = FALSE)
 mydataValidity$predictor[missingValuesPredictor] <- NA
 mydataValidity$predictorWithMeasurementErrorT1[missingValuesPredictor] <- NA
 mydataValidity$predictorWithMeasurementErrorT2[missingValuesPredictor] <- NA
+mydataValidity$predictorObservedSEM[missingValuesPredictor] <- NA
 
 mydataValidity$criterion[missingValuesCriterion] <- NA
 mydataValidity$criterionWithMeasurementErrorT1[missingValuesCriterion] <- NA
 mydataValidity$criterionWithMeasurementErrorT2[missingValuesCriterion] <- NA
+mydataValidity$criterionObservedSEM[missingValuesCriterion] <- NA
 
 mydataValidity$oldpredictor[missingValuesPredictor] <- NA
 ```
@@ -713,8 +725,39 @@ Find the true association between the construct assessed by the predictor and th
 ```{r}
 reliabilityOfPredictor <- 0.9
 reliabilityOfCriterion <- 0.85
+```
 
+The observed (attenuated) association is:
+
+```{r}
+cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate
+```
+
+The true (disattenuated) association is:
+
+```{r}
 as.numeric(cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate)/sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
+```
+
+The disattenuation of an observed correlation due to measurement error can be demonstrated using [structural equation modeling](#sem):
+
+```{r}
+disattenuationSEM <- '
+  # Factor loadings
+  predictorLatent =~ 1*predictorObservedSEM
+  criterionLatent =~ 1*criterionObservedSEM
+  
+  # Factor correlation
+  predictorLatent ~ criterionLatent
+  
+  # Specify residual errors (measurement error)
+  predictorObservedSEM ~~ (1 - .9^2)*predictorObservedSEM # where .9 is the reliability of the predictor
+  criterionObservedSEM ~~ (1 - .85^2)*criterionObservedSEM # where .85 is the reliability of the criterion
+'
+
+summary(sem(disattenuationSEM,
+               data = mydataValidity,
+               missing = "ML"))
 ```
 
 ## Generalizability Theory (G-Theory) {#gTheoryValidity}
