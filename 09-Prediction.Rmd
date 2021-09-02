@@ -156,15 +156,14 @@ $$
 $$
 
 ```{r}
-pBgivenNotA <- function(pB, pBgivenA, pA){
+pBgivenNotA <- function(pBgivenA, pB, pA){
   value <- (pB - (pBgivenA * pA)) / (1 - pA)
   
   value
 }
 
-pBgivenNotA(pB = .01, pBgivenA = .95, pA = .003)
+pBgivenNotA(pBgivenA = .95, pB = .01, pA = .003)
 ```
-
 
 With this conditional probability ($P(R | \text{not } C)$), the updated marginal probability of having HIV ($P(C_i)$), and the updated marginal probability of not having HIV ($P(\text{not } C_i)$), we can now calculate an updated estimate of the marginal probability of getting a second positive test. The probability of getting a second positive test is the probability that a person with HIV gets a second positive test (i.e., sensitivity) times the updated probability of HIV plus the probability that a person without HIV gets a second positive test (i.e., false positive rate) times the updated probability of not having HIV:
 
@@ -177,6 +176,17 @@ $$
 (\#eq:baseRateUpdated)
 $$
 
+```{r}
+pB <- function(pBgivenA, pA, pBgivenNotA){
+  value <- (pBgivenA * pA) + pBgivenNotA * (1 - pA)
+  
+  value
+}
+
+pB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
+pB(pBgivenA = .95, pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01), pBgivenNotA = pBgivenNotA(pBgivenA = .95, pB = .01, pA = .003))
+```
+
 We then substitute the updated marginal probability of HIV ($P(C_i)$) and the updated marginal probability of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the errors of each test are independent, i.e., uncorrelated):
 
 $$
@@ -188,6 +198,15 @@ $$
   &= 98.14\%
 \end{aligned}
 $$
+
+```{r}
+pAgivenB(pBgivenA = .95, pA = .285, pB = .2758776)
+pAgivenB(pBgivenA = .95,
+         pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
+         pB = pB(pBgivenA = .95,
+                 pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
+                 pBgivenNotA = pBgivenNotA(pBgivenA = .95, pB = .01, pA = .003)))
+```
 
 Thus, a second positive test greatly increases the posterior probability that the person has HIV from 28.5% to over 98%.
 
@@ -228,7 +247,7 @@ pAgivenBalternative <- function(pBgivenA, pA, pBgivenNotA){
 }
 
 pAgivenBalternative(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
-pAgivenBalternative(pBgivenA = .95, pA = .003, pBgivenNotA = pBgivenNotA(pB = .01, pBgivenA = .95, pA = .003))
+pAgivenBalternative(pBgivenA = .95, pA = .003, pBgivenNotA = pBgivenNotA(pBgivenA = .95, pB = .01, pA = .003))
 ```
 
 To calculate the probability of HIV given a second positive test, we update our priors because the person has now tested positive for HIV. We update the prior probability of HIV ($P(C_i)$) based on the posterior probability of HIV after a positive test ($P(C | R)$) that we calculated above. We can calculate the probability of HIV given a second positive test using three terms: the probability that a person with HIV gets a positive test (i.e., sensitivity; which stays the same), the probability that a person without HIV gets a positive test (i.e., false positive rate; which stays the same), and the updated marginal probability of HIV. The probability of HIV given a second positive test is:
@@ -245,7 +264,7 @@ $$
 
 ```{r}
 pAgivenBalternative(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
-pAgivenBalternative(pBgivenA = .95, pA = .285, pBgivenNotA = pBgivenNotA(pB = .01, pBgivenA = .95, pA = .003))
+pAgivenBalternative(pBgivenA = .95, pA = .285, pBgivenNotA = pBgivenNotA(pBgivenA = .95, pB = .01, pA = .003))
 ```
 
 If we want to compare the relative probability of two outcomes, we can use the odds form of Bayes' theorem:
