@@ -6,7 +6,7 @@
 
 ## Overview of SEM
 
-Structural equation modeling is an advanced modeling approach that allows estimating latent variables to account for measurement error and to get purer estimates of constructs.
+Structural equation modeling is an advanced modeling approach that allows estimating latent variables to account for [measurement error](#measurementError) and to get purer estimates of constructs.
 
 ## Getting Started
 
@@ -62,31 +62,37 @@ mydataSEM <- data.frame(measure1, measure2, measure3)
 
 ### Path Analysis Model {#pathAnalysis-sem}
 
-To understand structural equation modeling (SEM), it is helpful to first understand path analysis. Path analysis is similar to multiple regression. It allows examining the association between multiple predictor variables (or independent variables) in relation to an outcome variable (or dependent variable). Unlike multiple regression, however, path analysis also allows inclusion of multiple dependent variables in the same model. SEM is path analysis, but with latent (unobserved) variables. By contrast, path analysis uses only manifest (observed) variables, not latent variables.
+To understand structural equation modeling (SEM), it is helpful to first understand *path analysis*. Path analysis is similar to multiple regression. Path analysis allows examining the association between multiple predictor variables (or independent variables) in relation to an outcome variable (or dependent variable). Unlike multiple regression, however, path analysis also allows inclusion of multiple *dependent* variables in the same model. Unlike SEM, path analysis uses only manifest (observed) variables, not latent variables (described next). Structural equation modeling (SEM) is [path analysis](#pathAnalysis-sem), but with latent (unobserved) variables. That is, it is a model that includes latent variables in addition to observed variables.
 
-### Measurement Model {#measurementModel-sem}
+### Components of a Structural Equation Model
 
-The measurement model is a crucial sub-component of any SEM model. A SEM model consists of two components: a measurement model and a structural model. The structural component of a SEM model includes the regression paths that specify the hypothesized causal relations among the latent variables. The measurement model is a [confirmatory factor analysis](#cfa-sem) (CFA) model that identifies how many latent factors are estimated, and which items load onto which latent factor. The measurement model can also specify correlated residuals. Basically, the measurement model specifies your best understanding of the structure of the latent construct(s) given how they were assessed. Before fitting the structural component of a SEM, it is important to have a well-fitting measurement model for each construct in the model. In Section \@ref(measurementModel-sem), I present an example of a measurement model.
+#### Measurement Model {#measurementModel-sem}
+
+The measurement model is a crucial sub-component of any SEM model. A SEM model consists of two components: a measurement model and a structural model. The *measurement model* is a [confirmatory factor analysis](#cfa-sem) (CFA) model that identifies how many latent factors are estimated, and which items load onto which latent factor. The measurement model can also specify correlated residuals. Basically, the measurement model specifies your best understanding of the structure of the latent construct(s) given how they were assessed. Before fitting the structural component of a SEM, it is important to have a well-fitting measurement model for each construct in the model. In Section \@ref(measurementModel-sem), I present an example of a measurement model.
+
+#### Structural Model {#structuralModel-sem}
+
+The *structural component* of a SEM model includes the regression paths that specify the hypothesized causal relations among the latent variables. 
 
 ### Confirmatory Factor Analysis Model {#cfa-sem}
 
-Confirmatory Factor Analysis (CFA) is a subset of SEM. CFA includes the measurement model but not the structural component of the model. In Section \@ref(cfaExample-sem), I present an example of a CFA model. I discuss CFA models in greater depth in Chapter \@ref(factor-analysis-PCA).
+[Confirmatory factor analysis](#cfa) (CFA) is a subset of SEM. CFA includes the [measurement model](#measurementModel-sem) but not the [structural component](#structuralModel-sem) of the model. In Section \@ref(cfaExample-sem), I present an example of a [CFA](#cfa) model. I discuss [CFA](#cfa) models in greater depth in Chapter \@ref(factor-analysis-PCA).
 
 ### Structural Equation Model
 
-SEM is CFA, but it adds regression paths that specify hypothesized causal relations between the latent variables, which is called the structural component of the model. The structural model includes the hypothesized causal relations between latent variables. A SEM model includes both the measurement model and the structural model [see Figure \@ref(fig:measurementModelStructuralModel), @Civelek2018]. SEM fits a model to observed data, or the variance-covariance matrix, and evaluates the degree of model misfit. That is, fit indices evaluate how likely it is that a given model gave rise to the observed data. In Section \@ref(semModel-sem), I present an example of a SEM model.
+SEM is [CFA](#cfa), but it adds regression paths that specify hypothesized causal relations between the latent variables, which is called the [structural component](#structuralModel-sem) of the model. The [structural model](#structuralModel-sem) includes the hypothesized causal relations between latent variables. A SEM model includes both the [measurement model](#measurementModel-sem) and the [structural model](#structuralModel-sem) [see Figure \@ref(fig:measurementModelStructuralModel), @Civelek2018]. SEM fits a model to observed data, or the variance-covariance matrix, and evaluates the degree of model misfit. That is, fit indices evaluate how likely it is that a given model gave rise to the observed data. In Section \@ref(semModel-sem), I present an example of a SEM model.
 
 ```{r measurementModelStructuralModel, out.width = "100%", fig.align = "center", fig.cap = "Demarcation between measurement model and structural model. Figure adapted from @Civelek2018, Figure 1, p. 7. Civelek, M. E. (2018). *Essentials of structural equation modeling*. Zea E-Books. [https://doi.org/10.13014/K2SJ1HR5](https://doi.org/10.13014/K2SJ1HR5)", echo = FALSE}
 knitr::include_graphics("./Images/measurementModelStructuralModel.png")
 ```
 
-SEM is flexible in allowing you to specify measurement error and correlated errors. Thus, you do not need the same assumptions as in [classical test theory](#ctt), which assumes that errors are random and uncorrelated. But, the flexibility of SEM also poses challenges because you must explicitly decide what to include—and not include—in your model. If the model fit is unacceptable, you can try fitting a different model to see which fits better. Nevertheless, it is important to use theory as a guide when specifying and comparing competing models, and not just rely solely on model fit comparison. For example, the model you fit should depend on how you conceptualize each construct: as reflective or formative.
+SEM is flexible in allowing you to specify [measurement error](#measurementError) and correlated errors. Thus, you do not need the same assumptions as in [classical test theory](#ctt), which assumes that [errors](measurementError) are [random](#unsystematicError) and uncorrelated. But, the flexibility of SEM also poses challenges because you must explicitly decide what to include—and not include—in your model. If the model fit is unacceptable, you can try fitting a different model to see which fits better. Nevertheless, it is important to use theory as a guide when specifying and comparing competing models, and not just rely solely on model fit comparison. For example, the model you fit should depend on how you conceptualize each construct: as [reflective](#reflectiveConstruct) or [formative](#formativeConstruct).
 
 ## Types of Constructs
 
 A *construct* is a concept. A construct is generally considered a latent, unobservable idea or phenomenon. For example, depression could be considered a construct because we cannot directly measure someone's level of depression. Rather, we infer a person's level on the construct of depression by taking measurements of many indirect proxies that we think are *indicators* of the construct. An indicator is a measurement, and it could be thought of as a behavior or questionnaire item. Potential indicators of depression could include behaviors/items such as whether the person has low mood, low energy, sleep difficulties, loss of interest in formerly enjoyable activities, changes in weight or appetite, etc.
 
-There are two main types of constructs: reflective constructs and formative constructs.
+There are two main types of constructs: [reflective constructs](#reflectiveConstruct) and [formative constructs](#formativeConstruct).
 
 ### Reflective Construct {#reflectiveConstruct}
 
@@ -96,7 +102,7 @@ With a *reflective construct* (or reflective model), the construct is the cause 
 knitr::include_graphics("./Images/formativeReflective.png")
 ```
 
-An example of reflective construct is extraversion, see Figure \@ref(fig:extraversion). We conceptualize extraversion as a latent concept that, although not directly observable, influences the measurements of indicators of extraversion, such as whether the person enjoys talking to strangers, goes to lots of parties, is energetic, and is happy. In a reflective model, the answers that answers people give on the items are thought to reflect a certain disposition, in this case, extraversion. None of these indicators, in isolation, is considered a direct measure of extraversion. Nevertheless, we feel that we can get better estimate of the concept of extraversion by capturing the variance that covaries across these indicators, i.e., the common (systematic) variance among the indicators. Thus, the latent factor is estimated to reflect the common variance among the indicators. Because a reflective construct influences the indicators, the indicators are called *effect indicators*. What we observe, theoretically, are the effects of the underlying construct, which influences score on each individual measure.
+An example of reflective construct is extraversion, see Figure \@ref(fig:extraversion). We conceptualize extraversion as a latent concept that, although not directly observable, influences the measurements of indicators of extraversion, such as whether the person enjoys talking to strangers, goes to lots of parties, is energetic, and is happy. In a reflective model, the answers that answers people give on the items are thought to reflect a certain disposition, in this case, extraversion. None of these indicators, in isolation, is considered a direct measure of extraversion. Nevertheless, we feel that we can get better estimate of the concept of extraversion by capturing the variance that covaries across these indicators, i.e., the common (systematic) variance among the indicators. Thus, the latent factor is estimated to reflect the common variance among the indicators. Because a reflective construct influences the indicators, the indicators are called *effect indicators*. What we observe, theoretically, are the effects of the underlying construct, which influences scores on each individual measure.
 
 ```{r extraversion, out.width = "100%", fig.align = "center", fig.cap = "Extraversion as a reflective construct.", echo = FALSE}
 knitr::include_graphics("./Images/extraversion.png")
@@ -104,7 +110,7 @@ knitr::include_graphics("./Images/extraversion.png")
 
 With a reflective construct, we would expect that the items would show strong [internal consistency reliability](#internalConsistency-reliability). That is, we would expect that the indicators would all be correlated with each other, because all indicators are thought to be a reflection of the underlying construct. But in reality, there is often still residual correlation between items even after accounting for the latent factor.
 
-In a measurement model of a reflective construct (see Figure \@ref(fig:formativeReflective)), the lambda ($\lambda$) values are called *factor loadings* that represent regression coefficients from observable indicators to latent variables. A factor loading is the relative weight that the item is given in the estimation of the latent factor, similar to the correlation between the construct and the measure. The stronger an item's factor loading on the construct, the more relative weight a given item has in the estimation of the latent factor. The epsilon ($\epsilon$) term reflects measurement error. SEM is an application of the same way we have been thinking about measurement according to [classical test theory](#ctt), but in a latent variable framework. As a reminder, according to [classical test theory](#ctt), the observed score is thought to be some combination of true score and error ($\text{observed score} = \text{true score} + \text{error}$; $X = T + e$). Or, in a multiple regression framework: $\text{extraversion} = \lambda_1 \cdot \text{strangers} + \lambda_2 \cdot \text{parties} + \lambda_3 \cdot \text{happy} + \text{errors}$. That is, the true score influences the observed score on each measure. If a person's level on the construct (extraversion) changes, their score on each measure/indicator/item is expected to change [@Edwards2000].
+In a [measurement model](#measurementModel-sem) of a reflective construct (see Figure \@ref(fig:formativeReflective)), the lambda ($\lambda$) values are called *factor loadings* that represent regression coefficients from observable indicators to latent variables. A factor loading is the relative weight that the item is given in the estimation of the latent factor, similar to the correlation between the construct and the measure. The stronger an item's factor loading on the construct, the more relative weight a given item has in the estimation of the latent factor. The epsilon ($\epsilon$) term reflects [measurement error](#measurementError). SEM is an application of the same way we have been thinking about measurement according to [classical test theory](#ctt), but in a latent variable framework. As a reminder, according to [classical test theory](#ctt), the observed score is thought to be some combination of true score and [error](#measurementError) ($\text{observed score} = \text{true score} + \text{error}$; $X = T + e$). Or, in a multiple regression framework: $\text{extraversion} = \lambda_1 \cdot \text{strangers} + \lambda_2 \cdot \text{parties} + \lambda_3 \cdot \text{happy} + \text{errors}$. That is, the true score influences the observed score on each measure. If a person's level on the construct (extraversion) changes, their score on each measure/indicator/item is expected to change [@Edwards2000].
 
 ### Formative Construct {#formativeConstruct}
 
@@ -116,27 +122,27 @@ Examples of a formative constructs include constructs such as socioeconomic stat
 knitr::include_graphics("./Images/socioeconomicStatus.png")
 ```
 
-In a structural equation model, the gamma ($\gamma$) values are regression coefficients from exogenous variables to endogenous variables. Endogenous variables are variables whose vales are determined by the model, whereas exogenous variables are variables whose values are not determined by the model. In a measurement model of a formative construct (see Figure \@ref(fig:formativeReflective)), the gamma values reflect the relative weight that the item is given in the estimation of the latent factor, similar to the correlation between the construct and the measure. The stronger an item's factor loading on the construct, the more relative weight a given item has in the estimation of the latent factor.
+In a structural equation model, the gamma ($\gamma$) values are regression coefficients from exogenous variables to endogenous variables. Endogenous variables are variables whose vales are determined by the model, whereas exogenous variables are variables whose values are not determined by the model. In a [measurement model](#measurementModel-sem) of a formative construct (see Figure \@ref(fig:formativeReflective)), the gamma values reflect the relative weight that the item is given in the estimation of the latent factor, similar to the correlation between the construct and the measure. The stronger an item's factor loading on the construct, the more relative weight a given item has in the estimation of the latent factor.
 
-With a formative construct, the disturbance term, zeta ($\zeta$), represents the part of the construct that is not explained by the measures, i.e., the measurement error. However, the measures are thought (or at least assumed) to be error-free causes of the construct. The covariances between the indicators are permissive of item correlations, but unlike the reflective model, the formative model does not require that the items are correlated. In other words, for a reflective model, it is not necessary that the items are correlated, even though the items could be correlated.
+With a formative construct, the disturbance term, zeta ($\zeta$), represents the part of the construct that is not explained by the measures, i.e., the [measurement error](#measurementError). However, the measures are thought (or at least assumed) to be error-free causes of the construct. The covariances between the indicators are permissive of item correlations, but unlike the reflective model, the formative model does not require that the items are correlated. In other words, for a reflective model, it is not necessary that the items are correlated, even though the items could be correlated.
 
-A formative construct is determined by the measures, so if you change the measures, you change the construct. A formative model requires that you include all facets of the construct. This is not true in a reflective model because all items of a unidimensional reflective construct are interchangeable as long as they are equally reliable because the construct influences the measure scores. With a reflective construct, all you need to do is find the study that reflects the underlying construct, and you could create parallel measures of the construct. This is impossible to do in a formative model.
+A formative construct is determined by the measures, so if you change the measures, you change the construct. A formative model requires that you include all facets of the construct. This is not true in a reflective model because all items of a unidimensional reflective construct are interchangeable as long as the construct is unidimensional and the items are equally reliable because the construct influences the measure scores. With a reflective construct, all you need to do is find the items that reflect the underlying construct, and you could create parallel measures of the construct. This is impossible to do in a formative model.
 
-Althought formative conceptualizations of constructs may be useful in some cases, formative constructs can be controversial [@Edwards2011; @Hardin2011; @Howell2007; @Markus2018; but see @Bollen1991; @Bollen2011; @Bollen2017; @Diamantopoulos2008]. It is important to think carefully about the construct of interest, as guided by theory, and how best to assess and estimate it.
+Although formative conceptualizations of constructs may be useful in some cases, formative constructs can be controversial [@Edwards2011; @Hardin2011; @Howell2007; @Markus2018; but see @Bollen1991; @Bollen2011; @Bollen2017; @Diamantopoulos2008]. It is important to think carefully about the construct of interest, as guided by theory, and how best to assess and estimate it.
 
 #### Differences in measurement expectations
 
-There are several differences in our measurement expectations based on the type of construct (formative or reflective) or indicator (effect or causal), as described by @Bollen1991.
+There are several differences in our measurement expectations based on the type of construct ([formative](#formativeConstruct) or [reflective](#reflectiveConstruct)) or indicator ([causal](#formativeConstruct) or [effect](#reflectiveConstruct)), as described by @Bollen1991.
 
-One difference we would expect between effect versus causal indicators is the actual correlations between the indicators. Causal indicators may not be correlated whereas effect indicators must be correlated. So, when we are assessing [internal consistency reliability](#internalConsistency-reliability) of a measure, and assume that higher correlations between items suggests higher internal consistency, we are assuming that indicators of the construct have an effects relationship. A scale assessing causal indicators would likely have very low internal consistency.
+One difference we would expect between [effect](#reflectiveConstruct) versus [causal](#formativeConstruct) indicators is the actual correlations between the indicators. [Causal indicators](#formativeConstruct) may not be correlated whereas [effect indicators](#reflectiveConstruct) must be correlated. So, when we are assessing [internal consistency reliability](#internalConsistency-reliability) of a measure, and assume that higher correlations between items suggests higher [internal consistency reliability](#internalConsistency-reliability), we are assuming that indicators of the construct have an [effects relationship](#reflectiveConstruct). A scale assessing [causal indicators](#formativeConstruct) would likely have very low [internal consistency reliability](#internalConsistency-reliability).
 
-A second difference we would expect between effect versus causal indicators is whether to use a sample or a census of indicators. The suggestions that we sample all facets of a construct when determining indicators is necessary only for causal indicators, for which a failure to assess a certain formative indicator changes the overall meaning of the construct. For effect indicators of a unidimensional construct, equally reliable measures are interchangeable.
+A second difference we would expect between [effect](#reflectiveConstruct) versus [causal](#formativeConstruct) indicators is whether to use a sample or a census of indicators. The suggestions that we sample all facets of a construct when determining indicators is necessary only for [causal indicators](#formativeConstruct), for which a failure to assess a certain formative indicator changes the overall meaning of the construct. For [effect indicators](#reflectiveConstruct) of a unidimensional construct, equally reliable measures are interchangeable.
 
-A third difference we would expect between effect versus causal indicators is the optimal correlations between the indicators. For effect indicators, high correlations are desirable. For causal indicators, too high of a correlation between indicators is likely to introduce the problem of multi-collinearity, so lower correlations are optimal. Multi-collinearity is when two or more predictors are correlated such that their regression coefficients with the outcome variable (in this case, the factor loadings on the latent factor, i.e., $\lambda$) are erratic.
+A third difference we would expect between [effect](#reflectiveConstruct) versus [causal](#formativeConstruct) indicators is the optimal correlations between the indicators. For [effect indicators](#reflectiveConstruct), high correlations are desirable. For [causal](#formativeConstruct) indicators, too high of a correlation between indicators is likely to introduce the problem of multi-collinearity, so lower correlations are optimal. Multi-collinearity is when two or more predictors are correlated such that their regression coefficients with the outcome variable (in this case, the factor loadings on the latent factor, i.e., $\lambda$) are erratic.
 
 ## Practical issues
 
-There are important practical issues to consider with both reflective and formative models. An important practical issue is model identification—adding enough constraints so that there is only one, best answer. The model is identified when each of the estimated parameters has a unique solution. Based on the number of data points compared to the number of estimated parameters, a model can be considered either just identified, under-identified, or over-identified. The number of data points in a SEM model is the number of variances and covariances in the variance/covariance matrix in addition to the number of means, which can be calculated as: $\frac{m(m + 1)}{2} + m$, where $m = \text{the number of indicators}$. A *just identified model* is a model in which the number of data points is equal to the number of parameters to be estimated (degrees of freedom = 0). An *under-identified model* is a model in which the number of data points is less than the number of parameters to be estimated (degrees of freedom < 0). An *over-identified model* is a model in which the number of number of data points is greater than the number of parameters to be estimated (degrees of freedom > 0).
+There are important practical issues to consider with both [reflective](#reflectiveConstruct) and [formative](#formativeConstruct) models. An important practical issue is model identification—adding enough constraints so that there is only one, best answer. The model is identified when each of the estimated parameters has a unique solution. Based on the number of data points compared to the number of estimated parameters, a model can be considered either just identified, under-identified, or over-identified. The number of data points in a SEM model is the number of variances and covariances in the variance/covariance matrix in addition to the number of means, which can be calculated as: $\frac{m(m + 1)}{2} + m$, where $m = \text{the number of indicators}$. A *just identified model* is a model in which the number of data points is equal to the number of parameters to be estimated (degrees of freedom = 0). An *under-identified model* is a model in which the number of data points is less than the number of parameters to be estimated (degrees of freedom < 0). An *over-identified model* is a model in which the number of number of data points is greater than the number of parameters to be estimated (degrees of freedom > 0).
 
 As an example, there are 14 data points for a model with 4 indicators ($\frac{4(4 + 1)}{2} + 4 = 14$): 4 variances, 6 covariances, and 4 means.
 
@@ -174,7 +180,7 @@ means4Measures <- apply(PoliticalDemocracy[,c("y1","y2","y3","y4")], 2, mean, na
 means4Measures
 ```
 
-For a reflective model with 4 indicators, we would need to estimate 12 parameters: a factor loading, error term, and intercept for each of the 4 indicators. Here are the parameters estimated:
+For a [reflective model](#reflectiveConstruct) with 4 indicators, we would need to estimate 12 parameters: a factor loading, error term, and intercept for each of the 4 indicators. Here are the parameters estimated:
 
 ```{r}
 reflectiveModel_syntax <- '
@@ -212,9 +218,9 @@ semPaths(reflectiveModelFit,
          edge.label.cex = 0.8)
 ```
 
-Thus, for a reflective model, We only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious. With 4 indicators, the number of data points (14) is greater than the number of parameters (12). We have two degrees of freedom ($14 - 12 = 2$). Because the degrees of freedom is greater than zero, it is easy to identify the model—the model is over-identified. A reflective model with 3 indicators would have 9 data points ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.
+Thus, for a [reflective model](#reflectiveConstruct), We only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious. With 4 indicators, the number of data points (14) is greater than the number of parameters (12). We have two degrees of freedom ($14 - 12 = 2$). Because the degrees of freedom is greater than zero, it is easy to identify the model—the model is over-identified. A [reflective model](#reflectiveConstruct) with 3 indicators would have 9 data points ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.
 
-However, for a formative model, we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters.
+However, for a [formative model](#formativeConstruct), we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters.
 
 ```{r, error = TRUE}
 formativeModel_syntax <- '
@@ -251,9 +257,9 @@ semPaths(formativeModelFit,
          edge.label.cex = 0.8)
 ```
 
-For a formative model with 4 measures, the number of data points (14) is less than the number of parameters (19). The number of degrees of freedom is negative ($14 - 19 = -5$), thus the model is not able to be identified—the model is under-identified. Here are the parameters estimated:
+For a [formative model](#formativeConstruct) with 4 measures, the number of data points (14) is less than the number of parameters (19). The number of degrees of freedom is negative ($14 - 19 = -5$), thus the model is not able to be identified—the model is under-identified. Here are the parameters estimated:
 
-Thus, for a formative model, we need more parameters than we have data—the model is under-identified. Therefore, to estimate a formative model with 4 indicators, we must add assumptions and other variables that are consequences of the formative construct. Options for identifying a formative construct are described by @Treiblmaier2011. Formative models are challenging to use, and must be used in the context of a model that allows some constraints. But, one can easily estimate formative constructs outside of a SEM context, for example, with an average or weighted average composite, similar to [principal component analysis](#pca). However, linear composite approaches (e.g., mean or sum scores) do not account for measurement error. That is, they do not include a disturbance/error term. Therefore, they are not the same as a latent variable. If no disturbance term is included, the model is equivalent to a linear composite approach. Linear composite approaches are likely more defensible for formative constructs than reflective constructs.
+Thus, for a [formative model](#formativeConstruct), we need more parameters than we have data—the model is under-identified. Therefore, to estimate a formative model with 4 indicators, we must add assumptions and other variables that are consequences of the [formative construct](#formativeConstruct). Options for identifying a [formative construct](#formativeConstruct) are described by @Treiblmaier2011. [Formative construct](#formativeConstruct) are challenging to use, and must be used in the context of a model that allows some constraints. But, one can easily estimate [formative constructs](#formativeConstruct) outside of a SEM context, for example, with an average or weighted average composite, similar to [principal component analysis](#pca). However, linear composite approaches (e.g., mean or sum scores) do not account for [measurement error](#measurementError). That is, they do not include a disturbance/error term. Therefore, they are not the same as a latent variable. If no disturbance term is included, the model is equivalent to a linear composite approach. Linear composite approaches are likely more defensible for [formative constructs](#formativeConstruct) than for [reflective constructs](#reflectiveConstruct).
 
 ## Additional Types of SEM
 
@@ -275,7 +281,7 @@ cor(mydataSEM, use = "pairwise.complete.obs")
 
 ## Measurement Model {#measurementModelFit-sem}
 
-Even though measurement models are CFA models, I provide separate examples of a measurement model and CFA models in my examples because CFA is often used to test competing factor structures. For instance, you could use CFA to test whether the variance in several measures' scores is best explained with one factor or two factors. In the measurement model below, I present a simple one-factor model with three measures. The measurement model is what we settle on as the estimation of each construct before we add the structural component to estimate the relations among latent variables. Basically, we add the structural component onto the measurement model. In Section \@ref(cfa-sem), I present a CFA model with multiple latent factors.
+Even though [measurement models](#measurementModel-sem) are [CFA models](#cfa), I provide separate examples of a [measurement model](#measurementModel-sem) and [CFA models](#cfa) in my examples because [CFA](#cfa) is often used to test competing factor structures. For instance, you could use [CFA](#cfa) to test whether the variance in several measures' scores is best explained with one factor or two factors. In the [measurement model](#measurementModel-sem) below, I present a simple one-factor model with three measures. The [measurement model](#measurementModel-sem) is what we settle on as the estimation of each construct before we add the [structural component](#structuralModel-sem) to estimate the relations among latent variables. Basically, we add the [structural component](#structuralModel-sem) onto the [measurement model](#measurementModel-sem). In Section \@ref(cfa-sem), I present a [CFA model](#cfa) with multiple latent factors.
 
 The measurement models were fit in the `lavaan` package [@R-lavaan].
 
@@ -382,9 +388,9 @@ modificationindices(measurementModelFit)
 as_tibble(predict(measurementModelFit))
 ```
 
-### Reliability
+### Internal Consistency Reliability
 
-Reliability of factor scores for the latent factors, as quantified by Cronbach's alpha ($\alpha$) and omega ($\omega$), was estimated using the `semTools` package [@R-semTools].
+[Internal consistency reliability](#internalConsistency-reliability) of factor scores for the latent factors, as quantified by [Cronbach's alpha ($\alpha$)](#cronbachAlpha) and [omega ($\omega$)](#coefficientOmega), was estimated using the `semTools` package [@R-semTools].
 
 ```{r}
 semTools::reliability(measurementModelFit)
@@ -405,7 +411,7 @@ semPaths(measurementModelFit,
 
 ## Confirmatory Factor Analysis (CFA) {#cfaExample-sem}
 
-The confirmatory factor analysis (CFA) models were fit in the `lavaan` package [@R-lavaan]. The examples were adapted from the `lavaan` documentation: http://lavaan.ugent.be/tutorial/cfa.html
+The [confirmatory factor analysis (CFA) models](#cfa) were fit in the `lavaan` package [@R-lavaan]. The examples were adapted from the `lavaan` documentation: http://lavaan.ugent.be/tutorial/cfa.html
 
 ### Specify the model
 
@@ -526,9 +532,9 @@ modificationindices(cfaModelFit)
 as_tibble(predict(cfaModelFit))
 ```
 
-### Reliability
+### Internal Consistency Reliability
 
-Reliability of factor scores for the latent factors, as quantified by Cronbach's alpha ($\alpha$) and omega ($\omega$), was estimated using the `semTools` package [@R-semTools].
+[Internal consistency reliability](#internalConsistency-reliability) of factor scores for the latent factors, as quantified by [Cronbach's alpha ($\alpha$)](#cronbachAlpha) and [omega ($\omega$)](#coefficientOmega), was estimated using the `semTools` package [@R-semTools].
 
 ```{r}
 semTools::reliability(cfaModelFit)
@@ -674,7 +680,7 @@ The model with the cross-loading fits significantly better (i.e., has a signific
 
 ## Structural Equation Model (SEM) {#semModel-sem}
 
-The structural equation models models were fit in the `lavaan` package [@R-lavaan]. The examples were adapted from the `lavaan` documentation: http://lavaan.ugent.be/tutorial/sem.html
+The structural equation models were fit in the `lavaan` package [@R-lavaan]. The examples were adapted from the `lavaan` documentation: http://lavaan.ugent.be/tutorial/sem.html
 
 ### Specify the model
 
@@ -818,9 +824,9 @@ modificationindices(semModelFit)
 as_tibble(predict(semModelFit))
 ```
 
-### Reliability
+### Internal Consistency Reliability
 
-Reliability of factor scores for the latent factors, as quantified by Cronbach's alpha ($\alpha$) and omega ($\omega$), was estimated using the `semTools` package [@R-semTools].
+[Internal consistency reliability](#internalConsistency-reliability) of factor scores for the latent factors, as quantified by [Cronbach's alpha ($\alpha$)](#cronbachAlpha) and [omega ($\omega$)](#coefficientOmega), was estimated using the `semTools` package [@R-semTools].
 
 ```{r}
 semTools::reliability(semModelFit)
@@ -841,13 +847,13 @@ semPaths(semModelFit,
 
 ## Benefits of SEM
 
-There are many benefits of fitting a model in SEM (or in other latent variable approaches). First, unlike [classical test theory](#ctt), SEM can allow correlated errors. With SEM, you do not need to make as restrictive assumptions as in classical test theory. Second, unlike multiple regression, SEM can handle multiple dependent variables simultaneously. Third, SEM uses all available information (data) using a technique called full information maximum likelihood (FIML), even if participants have missing scores on some variables. By contrast, multiple regression and many other statistical analyses use listwise deletion, in which they discard participants if they have a missing score on any of the model variables. Fourth, as described in the next section, SEM can be used to account for different forms of measurement error (e.g., method bias). Accounting for measurement error allows disattenuating associations with other constructs. All of these benefits allow SEM to generate purer estimation of constructs, more accurate estimates of people's levels on constructs, and more accurate estimates of associations between constructs.
+There are many benefits of fitting a model in SEM (or in other latent variable approaches). First, unlike [classical test theory](#ctt), SEM can allow correlated errors. With SEM, you do not need to make as restrictive assumptions as in [classical test theory](#ctt). Second, unlike multiple regression, SEM can handle multiple dependent variables simultaneously. Third, SEM uses all available information (data) using a technique called full information maximum likelihood (FIML), even if participants have missing scores on some variables. By contrast, multiple regression and many other statistical analyses use listwise deletion, in which they discard participants if they have a missing score on any of the model variables. Fourth, as described in the next section (\@ref(semMethodBias)), SEM can be used to account for different forms of [measurement error](#measurementError) (e.g., [method bias](#methodBias)). Accounting for [measurement error](#measurementError) allows [disattenuating](#disattenuation) associations with other constructs. All of these benefits allow SEM to generate purer estimation of constructs, more accurate estimates of people's levels on constructs, and more accurate estimates of associations between constructs.
 
 ### Accounting for Method Bias {#semMethodBias}
 
-SEM/CFA can be used to account for method biases and other forms of measurement error. You can use indicators that reflect different method biases, so that the method biases are discarded as unique errors, and are not combined in the "common variance" of the latent construct. SEM/CFA can be used to fit a [multi-trait multi-method matrix](#MTMM) to account for method variance. I provide an example of fitting a multi-trait multi-method matrix in CFA in Sections \@ref(mtmmCFA-validity) and \@ref(mtmmCFA). But, estimation of a multi-trait multi-method matrix can be challenging without making additional constraints/assumptions.
+SEM/[CFA](#cfa) can be used to account for [method biases](#methodBias) and other forms of [measurement error](#measurementError). You can use indicators that reflect different [method biases](#methodBias), so that the [method biases](#methodBias) are discarded as unique [errors](#measurementError), and are not combined in the "common variance" of the latent construct. SEM/[CFA](#cfa) can be used to fit a [multi-trait multi-method matrix](#MTMM) to account for method variance. I provide an example of fitting a multi-trait multi-method matrix in [CFA](#cfa) in Sections \@ref(mtmmCFA-validity) and \@ref(mtmmCFA). But, estimation of a [multi-trait multi-method matrix](#MTMM) can be challenging without making additional constraints/assumptions.
 
-A more practical utility of SEM is that allows one to obtain "purer" estimates of latent constructs (and people's standing on them) by discarding measurement error, and you do not have to assume all errors are uncorrelated!
+A more practical utility of SEM is that allows one to obtain "purer" estimates of latent constructs (and people's standing on them) by discarding [measurement error](#measurementError), and you do not have to assume all [errors](#measurementError) are uncorrelated!
 
 ## Power Analysis using Monte Carlo Simulation
 
@@ -1071,7 +1077,7 @@ repetitionsPerSampleSize <- 2
 
 ### Monte Carlo simulation to generate data from the population parameter values
 
-Conduct Monte Carlo simulation with `r repetitionsPerSampleSize` repetitions per sample size ($N\text{s} =$ `r min(sampleSizes)`–`r max(sampleSizes)`). The `multicore` backend was used for parallel processing. Parallel processing distributes a larger computation task across multiple computing processes or cores, and runs them simultaneously (in parallel) to speed up execution time. If you choose to do processing in serial rather than parallel (by setting `multicore = FALSE`), you will need to run a special `set.seed()` command, prior to running the `sim()` command, to get reproducible results with those obtained from parallel processing: `set.seed(seedNumber, "L'Ecuyer-CMRG")`, where `seedNumber` is the value used for the seed. **Warning**: this code takes a while to run based on `r length(sampleSizes)` different sample sizes ($`r max(sampleSizes)` - `r min(sampleSizes)` + 1$) and `r repetitionsPerSampleSize` repetitions per sample size, for a total of `r length(sampleSizes) * repetitionsPerSampleSize` iterations ([$`r max(sampleSizes)` - `r min(sampleSizes)` + 1$] sample sizes $\times$ `r repetitionsPerSampleSize` repetitions per sample size $= `r length(sampleSizes) * repetitionsPerSampleSize`$ iterations). You can reduce the number of sample sizes and/or repetitions per sample size to be faster.
+Conduct Monte Carlo simulation with `r repetitionsPerSampleSize` repetitions per sample size ($N\text{s} =$ `r min(sampleSizes)`–`r max(sampleSizes)`). The `multicore` backend was used for parallel processing. Parallel processing distributes a larger computation task across multiple computing processes or cores, and runs them simultaneously (in parallel) to speed up execution time (if multiple processes or cores are available). If you choose to do processing in serial rather than parallel (by setting `multicore = FALSE`), you will need to run a special `set.seed()` command, prior to running the `sim()` command, to get reproducible results with those obtained from parallel processing: `set.seed(seedNumber, "L'Ecuyer-CMRG")`, where `seedNumber` is the value used for the seed. **Warning**: this code takes a while to run based on `r length(sampleSizes)` different sample sizes ($`r max(sampleSizes)` - `r min(sampleSizes)` + 1$) and `r repetitionsPerSampleSize` repetitions per sample size, for a total of `r length(sampleSizes) * repetitionsPerSampleSize` iterations ([$`r max(sampleSizes)` - `r min(sampleSizes)` + 1$] sample sizes $\times$ `r repetitionsPerSampleSize` repetitions per sample size $= `r length(sampleSizes) * repetitionsPerSampleSize`$ iterations). You can reduce the number of sample sizes and/or repetitions per sample size to be faster.
 
 ```{r powerAnalysis, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizes", "powerAnalysisPopulationModel", "powerAnalysisAnalysisModel", "powerAnalysisMissingnessModel", "powerAnalysisIndicatorDistributions")}
 output <- simsem::sim(n = rep(sampleSizes, each = repetitionsPerSampleSize),
@@ -1176,11 +1182,11 @@ getPower(output, alpha = .05, nVal = 200)
 
 ## Generalizability Theory {#generalizability-SEM}
 
-There are also structural equation modeling approaches for performing generalizability theory analyses. The reader is referred to examples by @Vispoel2018.
+There are also SEM approaches for performing [generalizability theory](#gTheory) analyses. The reader is referred to examples by @Vispoel2018.
 
 ## Conclusion
 
-Structural equation modeling is an advanced modeling approach that allows estimating latent variables as the common variance from multiple measures. SEM holds promise to account for measurement error and method biases, which allows get more accurate estimates of constructs, people's standing on constructs (i.e., individual differences), and associations between constructs.
+Structural equation modeling (SEM) is an advanced modeling approach that allows estimating latent variables as the common variance from multiple measures. SEM holds promise to account for [measurement error](#measurementError) and [method biases](#methodBias), which allows get more accurate estimates of constructs, people's standing on constructs (i.e., individual differences), and associations between constructs.
 
 ## Exercises
 
