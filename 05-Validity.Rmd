@@ -17,6 +17,7 @@ library("lavaan")
 library("semPlot")
 library("rockchalk")
 library("semTools")
+library("semPlot")
 library("kableExtra")
 library("MASS")
 library("psych")
@@ -732,22 +733,33 @@ as.numeric(cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$
 The disattenuation of an observed correlation due to [measurement error](#measurementError) can be demonstrated using [structural equation modeling](#sem):
 
 ```{r}
-disattenuationSEM <- '
+disattenuationSEM_syntax <- '
   # Factor loadings
   predictorLatent =~ 1*predictorObservedSEM
   criterionLatent =~ 1*criterionObservedSEM
   
   # Factor correlation
-  predictorLatent ~ criterionLatent
+  criterionLatent ~ predictorLatent
   
   # Specify residual errors (measurement error)
   predictorObservedSEM ~~ (1 - .9^2)*predictorObservedSEM # where .9 is the reliability of the predictor
   criterionObservedSEM ~~ (1 - .85^2)*criterionObservedSEM # where .85 is the reliability of the criterion
 '
 
-summary(sem(disattenuationSEM,
-               data = mydataValidity,
-               missing = "ML"))
+disattenuationSEM_fit <- sem(disattenuationSEM_syntax,
+                             data = mydataValidity,
+                             missing = "ML")
+
+summary(disattenuationSEM_fit,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+semPaths(disattenuationSEM_fit,
+         what = "Std.all",
+         layout = "tree2",
+         optimizeLatRes = FALSE,
+         exoVar = FALSE,
+         edge.label.cex = 2)
 ```
 
 ## Generalizability Theory (G-Theory) {#gTheoryValidity}
