@@ -32,6 +32,13 @@ library("tinytex")
 For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed.
 
 ```{r}
+# Simulate data with specified correlation in relation to an existing variable (https://stats.stackexchange.com/a/313138/20338)
+complement <- function(y, rho, x){
+  if (missing(x)) x <- rnorm(length(y)) # Optional: supply a default if `x` is not given
+  y.perp <- residuals(lm(x ~ y, na.action = na.omit))
+  rho * sd(y.perp) * y + y.perp * sd(y, na.rm = TRUE) * sqrt(1 - rho^2)
+}
+
 sampleSize <- 300
 
 set.seed(52242)
@@ -39,6 +46,16 @@ set.seed(52242)
 measure1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 measure2 <- measure1 + rnorm(n = sampleSize, mean = 0, sd = 15)
 measure3 <- measure1 + measure2 + rnorm(n = sampleSize, mean = 0, sd = 15)
+
+v1 <- complement(PoliticalDemocracy$y1, .4)
+v2 <- complement(PoliticalDemocracy$y1, .4)
+v3 <- complement(PoliticalDemocracy$y1, .4)
+v4 <- complement(PoliticalDemocracy$y1, .4)
+
+PoliticalDemocracy$v1 <- v1
+PoliticalDemocracy$v2 <- v2
+PoliticalDemocracy$v3 <- v3
+PoliticalDemocracy$v4 <- v4
 ```
 
 #### Add Missing Data
@@ -185,7 +202,7 @@ For a [reflective model](#reflectiveConstruct) with 4 indicators, we would need 
 ```{r}
 reflectiveModel_syntax <- '
  #Reflective model factor loadings
- dem60 =~ y1 + y2 + y3 + y4
+ reflective =~ y1 + y2 + y3 + y4
 '
 
 reflectiveModelFit <- sem(reflectiveModel_syntax,
@@ -220,14 +237,14 @@ semPaths(reflectiveModelFit,
 
 Thus, for a [reflective model](#reflectiveConstruct), We only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious. With 4 indicators, the number of data points (14) is greater than the number of parameters (12). We have two degrees of freedom ($14 - 12 = 2$). Because the degrees of freedom is greater than zero, it is easy to identify the model—the model is over-identified. A [reflective model](#reflectiveConstruct) with 3 indicators would have 9 data points ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.
 
-However, for a [formative model](#formativeConstruct), we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters.
+However, for a [formative model](#formativeConstruct), we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters. Here are the parameters estimated:
 
 ```{r, error = TRUE}
 formativeModel_syntax <- '
  #Formative model factor loadings
- dem60 <~ y1 + y2 + y3 + y4
+ formative <~ v1 + v2 + v3 + v4
  
- dem60 ~~ dem60
+ formative ~~ formative
 '
 
 formativeModelFit <- sem(formativeModel_syntax,
@@ -257,9 +274,39 @@ semPaths(formativeModelFit,
          edge.label.cex = 0.8)
 ```
 
-For a [formative model](#formativeConstruct) with 4 measures, the number of data points (14) is less than the number of parameters (19). The number of degrees of freedom is negative ($14 - 19 = -5$), thus the model is not able to be identified—the model is under-identified. Here are the parameters estimated:
+For a [formative model](#formativeConstruct) with 4 measures, the number of data points (14) is less than the number of parameters (19). The number of degrees of freedom is negative ($14 - 19 = -5$), thus the model is not able to be identified—the model is under-identified.
 
-Thus, for a [formative model](#formativeConstruct), we need more parameters than we have data—the model is under-identified. Therefore, to estimate a formative model with 4 indicators, we must add assumptions and other variables that are consequences of the [formative construct](#formativeConstruct). Options for identifying a [formative construct](#formativeConstruct) are described by @Treiblmaier2011. [Formative construct](#formativeConstruct) are challenging to use, and must be used in the context of a model that allows some constraints. But, one can easily estimate [formative constructs](#formativeConstruct) outside of a SEM context, for example, with an average or weighted average composite, similar to [principal component analysis](#pca). However, linear composite approaches (e.g., mean or sum scores) do not account for [measurement error](#measurementError). That is, they do not include a disturbance/error term. Therefore, they are not the same as a latent variable. If no disturbance term is included, the model is equivalent to a linear composite approach. Linear composite approaches are likely more defensible for [formative constructs](#formativeConstruct) than for [reflective constructs](#reflectiveConstruct).
+Thus, for a [formative model](#formativeConstruct), we need more parameters than we have data—the model is under-identified. Therefore, to estimate a formative model with 4 indicators, we must add assumptions and other variables that are consequences of the [formative construct](#formativeConstruct). Options for identifying a [formative construct](#formativeConstruct) are described by @Treiblmaier2011. See below for an example formative model that is identified because of additional assumptions.
+
+```{r}
+formativeModel2_syntax <- '
+ #Formative model factor loadings
+ formative <~ 1*v1 + v2 + v3 + v4
+ reflective =~ y1 + y2 + y3 + y4
+ 
+ formative ~~ 1*formative
+ reflective ~ formative
+'
+
+formativeModel2Fit <- sem(formativeModel2_syntax,
+                          data = PoliticalDemocracy,
+                          missing = "ML",
+                          estimator = "MLR")
+
+formativeModel2Parameters <- parameterEstimates(formativeModel2Fit)
+formativeModel2Parameters
+
+fitMeasures(formativeModel2Fit, "df")
+
+semPaths(formativeModel2Fit,
+         what = "Std.all",
+         layout = "tree2",
+         optimizeLatRes = FALSE,
+         exoVar = FALSE,
+         edge.label.cex = 0.8)
+```
+
+[Formative construct](#formativeConstruct) are challenging to use, and must be used in the context of a model that allows some constraints. But, one can easily estimate [formative constructs](#formativeConstruct) outside of a SEM context, for example, with an average or weighted average composite, similar to [principal component analysis](#pca). However, linear composite approaches (e.g., mean or sum scores) do not account for [measurement error](#measurementError). That is, they do not include a disturbance/error term. Therefore, they are not the same as a latent variable. If no disturbance term is included, the model is equivalent to a linear composite approach. Linear composite approaches are likely more defensible for [formative constructs](#formativeConstruct) than for [reflective constructs](#reflectiveConstruct).
 
 ## Additional Types of SEM
 

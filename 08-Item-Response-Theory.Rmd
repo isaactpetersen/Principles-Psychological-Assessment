@@ -120,9 +120,8 @@ ICCs can be summed across items to get the test characteristic curve (TCC):
 
 ```{r modelImpliedTCC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Test characteristic curve of the expected total score on the test as a function of the person's level on the latent construct."}
 plot(newdata$itemSum, newdata$itemTotal, type = "n", ylim = c(0,10), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Expected Total Score on Test", xaxt = "n")
-lines(newdata$itemSum, newdata$itemTotal, type = "l", lwd = 2, col = viridis(10)[1])
+lines(newdata$itemSum, newdata$itemTotal, type = "l", lwd = 2)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
-legend("topleft",  legend = paste("item", 1:10, sep = " "), col = viridis(10), lwd = 2, cex = 0.6)
 ```
 
 An ICC provides more information than an [item–total correlation](#itemTotalCorrelation-reliability). Visually, we can see the utility of various items by looking at the items' ICC plots. For instance, consider what might be a useless item for diagnostic purposes. For a particular item, among those with a low total score (level on the construct), 90% respond with "TRUE" to the item, whereas among everyone else, 100% response with "TRUE" (see Figure \@ref(fig:iccCeilingEffect)). This item has a ceiling effect and provides only a little information about who would be considered above clinical threshold for a disorder. So, the item is not very clinically useful.
@@ -131,7 +130,7 @@ An ICC provides more information than an [item–total correlation](#itemTotalCo
 library("drc")
 
 empiricalICCdata$ceilingEffect <- c(.90, .95, .98, 1, 1, 1, 1, 1, 1)
-empiricalICCdata$diagnosticallyUseful <- c(0, 0, 0, .28, .29, .30, .30, .30, .30)
+empiricalICCdata$diagnosticallyUseful <- c(0, 0, 0, 0, 0, 0, .29, .30, .30)
 
 threePL_ceilingeffect <- drm(ceilingEffect ~ itemSum, data = empiricalICCdata, fct = LL.3u(), type = "continuous") #fix upper asymptote at 1
 threePL_diagnosticallyUseful <- drm(diagnosticallyUseful ~ itemSum, data = empiricalICCdata, fct = LL.3(), type = "continuous") #fix lower asymptote at 0
@@ -147,7 +146,7 @@ axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 
 Now, consider a different item. For those with a low level on the construct, 0% respond with "TRUE", so it has a floor effect and tells us nothing about the lower end of the construct. But, for those with a higher level on the construct, 30% respond true (see Figure \@ref(fig:iccDiagnosticallyUseful)). So, the item tells us something about the higher end of the distribution. Thus, an ICC allows us to immediately tell the utility of items.
 
-```{r iccDiagnosticallyUseful, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item a floor effect that is diagnostically useful."}
+```{r iccDiagnosticallyUseful, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item with a floor effect that is diagnostically useful."}
 plot(newdata$itemSum, newdata$diagnosticallyUseful, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
