@@ -326,7 +326,7 @@ The [selection ratio](#selectionRatio) might be something that the test dictates
 
 #### Percent Accuracy
 
-Based on the [confusion matrix](#confusionMatrix), we can calculate the prediction accuracy based on the [percent accuracy](#percentAccuracy) of the predictions. The [percent accuracy](#percentAccuracy) is the number of correct predictions divided by the total number of predictions, and multiplied by 100. In the context of a confusion matrix, this is calculated as: $100\% \times \frac{\text{TP} + \text{TN}}{n}$. In this case, our [percent accuracy](#percentAccuracy) was 78%—that is, 78% of our predictions were accurate, and 22% of our predictions were inaccurate.
+Based on the [confusion matrix](#confusionMatrix), we can calculate the prediction accuracy based on the [percent accuracy](#percentAccuracy) of the predictions. The [percent accuracy](#percentAccuracy) is the number of correct predictions divided by the total number of predictions, and multiplied by 100. In the context of a confusion matrix, this is calculated as: $100\% \times \frac{\text{TP} + \text{TN}}{N}$. In this case, our [percent accuracy](#percentAccuracy) was 78%—that is, 78% of our predictions were accurate, and 22% of our predictions were inaccurate.
 
 #### Percent Accuracy by Chance
 
@@ -1451,6 +1451,13 @@ addmargins(prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)
 
 True positives (TPs) are instances in which a positive classification (e.g., a disorder present) is correct—that is, the test says that a classification is present, and the classification is present. True positives are also called valid positives (VPs) or hits. Higher values reflect greater accuracy.
 
+$$
+\begin{aligned}
+  \text{TP} &= \text{BR} \times \text{SR} \times N
+\end{aligned}
+(\#eq:truePositive)
+$$
+
 ```{r}
 TPvalue <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1))
 TPvalue
@@ -1459,6 +1466,13 @@ TPvalue
 ### True Negatives (TN) {#trueNegative}
 
 True negatives (TNs) are instances in which a negative classification (e.g., absence of a disorder) is correct—that is, the test says that a classification is not present, and the classification is not present. True negatives are also called valid negatives (VNs) or correct rejections. Higher values reflect greater accuracy.
+
+$$
+\begin{aligned}
+  \text{TN} &= (1 - \text{BR}) \times (1 - \text{SR}) \times N
+\end{aligned}
+(\#eq:trueNegative)
+$$
 
 ```{r}
 TNvalue <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0))
@@ -1469,6 +1483,13 @@ TNvalue
 
 False positives (FPs) are instances in which a positive classification (e.g., a disorder present) is incorrect—that is, the test says that a classification is present, and the classification is not present. False positives are also called false alarms (FAs). Lower values reflect greater accuracy.
 
+$$
+\begin{aligned}
+  \text{FP} &= (1 - \text{BR}) \times \text{SR} \times N
+\end{aligned}
+(\#eq:falsePositive)
+$$
+
 ```{r}
 FPvalue <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0))
 FPvalue
@@ -1477,6 +1498,13 @@ FPvalue
 ### False Negatives (FN) {#falseNegative}
 
 False negatives (FNs) are instances in which a negative classification (e.g., absence of a disorder) is incorrect—that is, the test says that a classification is not present, and the classification is present. False negatives are also called misses. Lower values reflect greater accuracy.
+
+$$
+\begin{aligned}
+  \text{FN} &= \text{BR} \times (1 - \text{SR}) \times N
+\end{aligned}
+(\#eq:truePositive)
+$$
 
 ```{r}
 FNvalue <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
@@ -1498,12 +1526,12 @@ sampleSizeValue
 
 ### Selection Ratio (SR) {#selectionRatio}
 
-The selection ratio is the marginal probability of selection, independent of other things: $P(R_i)$. In clinical psychology, the selection ratio is how many people test positive for the disorder.
+The selection ratio is the marginal probability of selection, independent of other things: $P(R_i)$. In clinical psychology, the selection ratio is the proportion of people who test positive for the disorder.
 
 $$
 \begin{aligned}
   \text{SR} &= P(R_i) \\
-  &= \frac{\text{TP} + \text{FP}}{n}
+  &= \frac{\text{TP} + \text{FP}}{N}
 \end{aligned}
 (\#eq:selectionRatio)
 $$
@@ -1527,7 +1555,7 @@ The [base rate](#baseRate) of a classification is its [marginal probability](#ba
 $$
 \begin{aligned}
   \text{BR} &= P(C_i) \\
-  &= \frac{\text{TP} + \text{FN}}{n}
+  &= \frac{\text{TP} + \text{FN}}{N}
 \end{aligned}
 (\#eq:baseRate)
 $$
@@ -1580,7 +1608,7 @@ pretestOdds(pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN 
 Percent Accuracy is also called overall accuracy. Higher values reflect greater accuracy. Percent accuracy has several problems. First, it treats all errors ([FP](#falsePositive) and [FN](#falseNegative)) as equally important. However, in practice, it is rarely the case that [false positives](#falsePositive) and [false negatives](#falseNegative) are equally important. Second, percent accuracy can be misleading because it is highly influenced by [base rates](#baseRate). You can have a high percent accuracy by predicting from the [base rates](#baseRate) and saying that no one has the characteristic (if the [base rates](#baseRate) is low) or that everyone has the characteristic (if the [base rates](#baseRate) is high). Thus, it is also important to consider other aspects of accuracy. 
 
 $$
-\text{Percent Accuracy} = 100\% \times \frac{\text{TP} + \text{TN}}{n}
+\text{Percent Accuracy} = 100\% \times \frac{\text{TP} + \text{TN}}{N}
 (\#eq:percentAccuracy)
 $$
 
