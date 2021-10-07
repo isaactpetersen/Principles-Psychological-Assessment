@@ -2,6 +2,38 @@
 
 Assessments yield information. The information is encoded in scores or in other types of data. It is important to consider the different types of data because the types of data restrict what options are available to analyze the data.
 
+# Getting Started
+
+Applied examples in R are provided below. Each chapter that has R examples in this book has a section on "Getting Started" which provides the code to load relevant libraries, load data files, simulate data, add missing data, conduct calculations, and more.
+
+### Load Libraries
+
+```{r, message = FALSE, warning = FALSE}
+library("dplyr")
+```
+
+### Prepare Data
+
+#### Simulate Data
+
+For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed.
+
+```{r}
+set.seed(52242)
+
+rawData <- rnorm(n = 1000, mean = 200, sd = 30)
+
+scores <- data.frame(rawData = rawData)
+```
+
+#### Add Missing Data
+
+Adding missing data to dataframes helps make examples more realistic to real-life data, and helps you get in the habit of programming to account for missing data.
+
+```{r}
+scores$rawData[c(5,10)] <- NA
+```
+
 ## Data Types
 
 There are four general data types: nominal, ordinal, interval, and ratio. Depending on the use of the variable, the data could fall into more than one category. The type of data influences what kinds of data analysis you can do. For instance, parametric statistical analysis (e.g., *t*-test, analysis of variance [ANOVA], and linear regression) assumes that data are interval or ratio.
@@ -42,6 +74,12 @@ Percentile ranks reflect what percent of people the person scored higher than. P
 
 Percentile ranks have unusual effects. There are lots of people in the middle of a distribution, so a very small difference in raw scores gets expanded out in percentiles. For instance, a raw score of 20 may have a percentile rank of 50, but a raw score of 24 may have a percentile rank of 68. However, a larger raw score change at the ends of the distribution may have a smaller percentile change. For example, a raw score of 120 may have a percentile rank of 97 whereas a raw score of 140 may have a percentile rank of 99.  Thus, percentile ranks stretch out differences for some people but constrict differences for others.
 
+Here is an example of how to calculate percentile ranks using the `dplyr` package from the `tidyverse` [@R-tidyverse; @tidyverse2019]:
+
+```{r}
+scores$percentileRank <- percent_rank(scores$rawData) * 100
+```
+
 #### Deviation (Standardized) Scores
 
 Deviation or standardized scores are the transformation of raw scores to a normal distribution using some norm. The norm could be a comparison group, or it could be the sample itself. With deviation scores, you have similar challenges as percentile ranks including which reference group to use, but deviation scores have additional assumptions about the mean and standard deviation, which is dependent on a normal distribution. Many constructs we study in psychology are not normally distributed. For example, the frequency of hallucinations among people would show a positively skewed distribution with a truncation at zero, representing a floor effect—i.e., most people do not show hallucinations. You can compute a deviation score, but it may not be meaningful if the data and underlying construct are not normally distributed.
@@ -50,14 +88,61 @@ Deviation or standardized scores are the transformation of raw scores to a norma
 
 The *z*-score is the most common standardized score, and it can help putting different measures with different scales on the same playing field. *z*-scores have a mean of zero and a standard deviation of 1. To get a *z*-score that uses the sample as its own norm, subtract the mean from all scores and divide by the standard deviation. Every *z*-score represents how far that person's score is from the (normed) average, represented in standard deviation units. 68% of scores fall within one standard deviation of the mean. 95% of scores fall within 2 standard deviations of the mean. 99.7% of scores fall within three standard deviations of the mean.
 
+*z*-scores are calculated using the following formula:
+
+$$
+z = \frac{x - \mu}{\sigma}
+(\#eq:zScore)
+$$
+
+where $x$ is the observed score, $\mu$ is the mean observed score, and $\sigma$ is the standard deviation of observed scores.
+
+```{r}
+scores$zScore <- scale(scores$rawData)
+
+all.equal(as.vector(scores$zScore),
+          (scores$rawData - mean(scores$rawData, na.rm = TRUE))/sd(scores$rawData, na.rm = TRUE))
+```
+
 ##### *T*-scores
 
 *T*-scores have a mean of 50 and a standard deviation of 10. *T*-scores are frequently used with personality and symptom measures, where clinical cutoffs are often set at 70 (i.e., two standard deviations above the mean). For the Minnesota Multiphasic Personality Inventory (MMPI), you would examine peaks (elevations $\ge$ 70) and absences ($\le$ 30).
+
+*T*-scores are calculated using the following formula:
+
+$$
+T = 50 + 10z
+$$
+where $z$ are *z*-scores.
+
+```{r}
+scores$tScore <- 50 + 10*scale(scores$rawData)
+```
 
 ##### Standard scores
 
 Standard scores have a mean of 100 and a standard deviation of 15. Standard scores are frequently used for tests of intellectual ability, academic achievement, and cognitive ability. Intellectual disability is generally considered an I.Q. less than 70 (two standard deviations below the mean), whereas giftedness is at 130 (two standard deviations above the mean).
 
+Standard scores with a mean of 100 and standard deviation of 15 are calculated using the following formula:
+
+$$
+\text{standard score} = 100 + 15z
+$$
+where $z$ are *z*-scores.
+
+```{r}
+scores$standardScore <- 100 + 15*scale(scores$rawData)
+```
+
 ##### Scale scores
 
 Scale scores, commonly on tests of intellectual or cognitive ability, have a mean of 10 and a standard deviation of 3.
+
+$$
+\text{scale score} = 10 + 3z
+$$
+where $z$ are *z*-scores.
+
+```{r}
+scores$scaleScore <- 10 + 3*scale(scores$rawData)
+```
