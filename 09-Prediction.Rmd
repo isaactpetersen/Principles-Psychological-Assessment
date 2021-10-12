@@ -644,6 +644,7 @@ If we lower the [base rate](#baseRate), we would need larger sample to get enoug
 
 ```{r, message = FALSE, warning = FALSE}
 library("pROC")
+library("ROCR")
 library("rms")
 library("ResourceSelection")
 library("PredictABEL")
@@ -669,10 +670,17 @@ data(aSAH)
 mydataSDT <- aSAH
 ```
 
-#### Calculations
+#### Simulate Data
+
+For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed.
 
 ```{r}
+set.seed(52242)
+
 mydataSDT$testScore <- mydataSDT$s100b
+mydataSDT <- mydataSDT %>% 
+  mutate(testScoreSimple = ntile(testScore, 10))
+
 mydataSDT$predictedProbability <- (mydataSDT$s100b - min(mydataSDT$s100b, na.rm = TRUE)) / (max(mydataSDT$s100b, na.rm = TRUE) - min(mydataSDT$s100b, na.rm = TRUE))
 mydataSDT$continuousOutcome <- mydataSDT$testScore + rnorm(nrow(mydataSDT), mean = 0.20, sd = 0.20)
 mydataSDT$disorder <- NA
@@ -703,6 +711,13 @@ rocCurve <- roc(data = mydataSDT, response = disorder, predictor = testScore, sm
 
 ```{r, fig.width = 8, fig.height = 8, fig.cap = "Empirical receiver operating characteristic curve. AUC = Area under the receiver operating characteristic curve."}
 plot(rocCurve, legacy.axes = TRUE, print.auc = TRUE)
+```
+
+```{r}
+pred <- prediction(mydataSDT$testScoreSimple, mydataSDT$disorder)
+perf <- performance(pred, "tpr", "fpr")
+plot(perf, print.cutoffs.at = 1:11, text.adj = c(1, -1), ylim = c(0, 1.05))
+abline(coef = c(0,1))
 ```
 
 ### Smooth ROC Curve

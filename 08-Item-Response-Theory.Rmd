@@ -854,7 +854,7 @@ efficientAssessment_long$Item[which(efficientAssessment_long$item == "item1")] <
 efficientAssessment_long$Item[which(efficientAssessment_long$item == "item2")] <- 2
 ```
 
-```{r efficientAssessment, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves from two-parameter logistic model in item response theory."}
+```{r efficientAssessment, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of an efficient assessment based on item characteristic curves from two-parameter logistic model in item response theory."}
 ggplot(efficientAssessment_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -882,9 +882,113 @@ First, a good measure should fit your goals of the assessment, in terms of the "
 
 Second, a good measure should have good items that yield lots of [information](#irtReliability). For example, the items should have strong [discrimination](#itemDiscrimination), that is, the items are strongly related to the construct. The items should have sufficient variability in responses. This can be achieved by having likert/multiple response items, as opposed to binary items.
 
-Third, a good measure should have a good set of items that densely cover the construct within the range of interest, without redundancy. The items should not have the same [difficulty](#itemDifficulty), or they would be considered redundant. The items' [difficulty](#itemDifficulty) should densely cover the construct within the range of interest. For instance, if the construct range of interest is 1–2 standard deviations above the mean, the items should have [difficulty](#itemDifficulty) that densely cover this range (e.g., 1.0, 1.05, 1.10, 1.15, 1.20, 1.25, 1.30, ..., 2.0).
+Third, a good measure should have a good set of items that densely cover the construct within the range of interest, without redundancy. The items should not have the same [difficulty](#itemDifficulty), or they would be considered redundant and one of the redundant items could be dropped. The items' [difficulty](#itemDifficulty) should densely cover the construct within the range of interest. For instance, if the construct range of interest is 1–2 standard deviations above the mean, the items should have [difficulty](#itemDifficulty) that densely cover this range (e.g., 1.0, 1.05, 1.10, 1.15, 1.20, 1.25, 1.30, ..., 2.0).
 
 With items that (1) span the range of interest, (2) have high [discrimination](#itemDiscrimation) and [information](#irtReliability), and (3) densely cover the range of interest without redundancy, the measure should have a high [information](#irtReliability) in the range of interest. This would allow it to efficiently and accurately assess the construct for the intended purpose.
+
+An example of a bad measure is depicted in Figure \@ref(fig:badMeasure), in terms of having items with low discrimination and that does not span the range of interest with dense coverage.
+
+```{r, include = FALSE}
+badMeasure <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+
+badMeasure$item1 <- fourPL(b = -0.5, a = 0.4, theta = badMeasure$theta)
+badMeasure$item2 <- fourPL(b = -0.4, a = 1, theta = badMeasure$theta)
+badMeasure$item3 <- fourPL(b = -0.3, a = 0.8, theta = badMeasure$theta)
+badMeasure$item4 <- fourPL(b = -0.2, a = 1.5, theta = badMeasure$theta)
+badMeasure$item5 <- fourPL(b = 2.0, a = 0.6, theta = badMeasure$theta)
+badMeasure$item6 <- fourPL(b = 2.1, a = 1.2, theta = badMeasure$theta)
+badMeasure$item7 <- fourPL(b = 2.2, a = 0.8, theta = badMeasure$theta)
+badMeasure$item8 <- fourPL(b = 2.3, a = 1.3, theta = badMeasure$theta)
+badMeasure$item9 <- fourPL(b = 2.4, a = 0.6, theta = badMeasure$theta)
+badMeasure$item10 <- fourPL(b = 2.5, a = 0.5, theta = badMeasure$theta)
+
+badMeasure_long <- pivot_longer(badMeasure, cols = item1:item10) %>% 
+  rename(item = name)
+
+badMeasure_long$Item <- NA
+badMeasure_long$Item[which(badMeasure_long$item == "item1")] <- 1
+badMeasure_long$Item[which(badMeasure_long$item == "item2")] <- 2
+badMeasure_long$Item[which(badMeasure_long$item == "item3")] <- 3
+badMeasure_long$Item[which(badMeasure_long$item == "item4")] <- 4
+badMeasure_long$Item[which(badMeasure_long$item == "item5")] <- 5
+badMeasure_long$Item[which(badMeasure_long$item == "item6")] <- 6
+badMeasure_long$Item[which(badMeasure_long$item == "item7")] <- 7
+badMeasure_long$Item[which(badMeasure_long$item == "item8")] <- 8
+badMeasure_long$Item[which(badMeasure_long$item == "item9")] <- 9
+badMeasure_long$Item[which(badMeasure_long$item == "item10")] <- 10
+```
+
+```{r badMeasure, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on item characteristic curves of items from a bad measure estimated from two-parameter logistic model in item response theory."}
+ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+An example of a good measure is depicted in Figure \@ref(fig:goodMeasure), in terms of having items that span the range of interest, that have high [discrimination](#itemDiscrimation) and [information](#irtReliability), and that densely cover the range of interest without redundancy.
+
+```{r, include = FALSE}
+goodMeasure <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+
+goodMeasure$item1 <- fourPL(b = 1, a = 3, theta = goodMeasure$theta)
+goodMeasure$item2 <- fourPL(b = 1.10, a = 3, theta = goodMeasure$theta)
+goodMeasure$item3 <- fourPL(b = 1.20, a = 3, theta = goodMeasure$theta)
+goodMeasure$item4 <- fourPL(b = 1.30, a = 3, theta = goodMeasure$theta)
+goodMeasure$item5 <- fourPL(b = 1.40, a = 3, theta = goodMeasure$theta)
+goodMeasure$item6 <- fourPL(b = 1.50, a = 3, theta = goodMeasure$theta)
+goodMeasure$item7 <- fourPL(b = 1.60, a = 3, theta = goodMeasure$theta)
+goodMeasure$item8 <- fourPL(b = 1.70, a = 3, theta = goodMeasure$theta)
+goodMeasure$item9 <- fourPL(b = 1.8, a = 3, theta = goodMeasure$theta)
+goodMeasure$item10 <- fourPL(b = 1.9, a = 3, theta = goodMeasure$theta)
+goodMeasure$item11 <- fourPL(b = 2, a = 3, theta = goodMeasure$theta)
+goodMeasure$item12 <- fourPL(b = 2.1, a = 3, theta = goodMeasure$theta)
+goodMeasure$item13 <- fourPL(b = 2.2, a = 3, theta = goodMeasure$theta)
+goodMeasure$item14 <- fourPL(b = 2.3, a = 3, theta = goodMeasure$theta)
+goodMeasure$item15 <- fourPL(b = 2.4, a = 3, theta = goodMeasure$theta)
+goodMeasure$item16 <- fourPL(b = 2.5, a = 3, theta = goodMeasure$theta)
+goodMeasure$item17 <- fourPL(b = 2.6, a = 3, theta = goodMeasure$theta)
+goodMeasure$item18 <- fourPL(b = 2.7, a = 3, theta = goodMeasure$theta)
+goodMeasure$item19 <- fourPL(b = 2.8, a = 3, theta = goodMeasure$theta)
+goodMeasure$item20 <- fourPL(b = 2.9, a = 3, theta = goodMeasure$theta)
+
+goodMeasure_long <- pivot_longer(goodMeasure, cols = item1:item20) %>% 
+  rename(item = name)
+
+goodMeasure_long$Item <- NA
+goodMeasure_long$Item[which(goodMeasure_long$item == "item1")] <- 1
+goodMeasure_long$Item[which(goodMeasure_long$item == "item2")] <- 2
+goodMeasure_long$Item[which(goodMeasure_long$item == "item3")] <- 3
+goodMeasure_long$Item[which(goodMeasure_long$item == "item4")] <- 4
+goodMeasure_long$Item[which(goodMeasure_long$item == "item5")] <- 5
+goodMeasure_long$Item[which(goodMeasure_long$item == "item6")] <- 6
+goodMeasure_long$Item[which(goodMeasure_long$item == "item7")] <- 7
+goodMeasure_long$Item[which(goodMeasure_long$item == "item8")] <- 8
+goodMeasure_long$Item[which(goodMeasure_long$item == "item9")] <- 9
+goodMeasure_long$Item[which(goodMeasure_long$item == "item10")] <- 10
+goodMeasure_long$Item[which(goodMeasure_long$item == "item11")] <- 11
+goodMeasure_long$Item[which(goodMeasure_long$item == "item12")] <- 12
+goodMeasure_long$Item[which(goodMeasure_long$item == "item13")] <- 13
+goodMeasure_long$Item[which(goodMeasure_long$item == "item14")] <- 14
+goodMeasure_long$Item[which(goodMeasure_long$item == "item15")] <- 15
+goodMeasure_long$Item[which(goodMeasure_long$item == "item16")] <- 16
+goodMeasure_long$Item[which(goodMeasure_long$item == "item17")] <- 17
+goodMeasure_long$Item[which(goodMeasure_long$item == "item18")] <- 18
+goodMeasure_long$Item[which(goodMeasure_long$item == "item19")] <- 19
+goodMeasure_long$Item[which(goodMeasure_long$item == "item20")] <- 20
+```
+
+```{r goodMeasure, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on item characteristic curves of items from a good measure estimated from two-parameter logistic model in item response theory."}
+ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
+  geom_line(size = 1.5) +
+  labs(color = "Item") +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
 
 ## Getting Started
 
