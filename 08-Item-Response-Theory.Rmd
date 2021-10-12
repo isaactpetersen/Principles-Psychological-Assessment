@@ -886,21 +886,34 @@ Third, a good measure should have a good set of items that densely cover the con
 
 With items that (1) span the range of interest, (2) have high [discrimination](#itemDiscrimation) and [information](#irtReliability), and (3) densely cover the range of interest without redundancy, the measure should have a high [information](#irtReliability) in the range of interest. This would allow it to efficiently and accurately assess the construct for the intended purpose.
 
-An example of a bad measure is depicted in Figure \@ref(fig:badMeasure), in terms of having items with low discrimination and that does not span the range of interest with dense coverage.
+An example of a bad measure for assessing the full range of individual differences is depicted in terms of [ICCs](#icc) in Figure \@ref(fig:badMeasureICC) and in terms of [test information](#irtReliability) in Figure \@ref(fig:badMeasureInfo). The measure performs poorly for the intended purpose, because its items do not (a) span the range of interest (-3 to 3 standard deviations from the mean of the latent construct), (b) have high [discrimination](#itemDiscrimation) and [information](#irtReliability), and (c) densely cover the range of interest without redundancy.
 
 ```{r, include = FALSE}
-badMeasure <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+badMeasure <- badMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
-badMeasure$item1 <- fourPL(b = -0.5, a = 0.4, theta = badMeasure$theta)
-badMeasure$item2 <- fourPL(b = -0.4, a = 1, theta = badMeasure$theta)
-badMeasure$item3 <- fourPL(b = -0.3, a = 0.8, theta = badMeasure$theta)
-badMeasure$item4 <- fourPL(b = -0.2, a = 1.5, theta = badMeasure$theta)
+badMeasure$item1 <- fourPL(b = -2.5, a = 0.4, theta = badMeasure$theta)
+badMeasure$item2 <- fourPL(b = -2.4, a = 1, theta = badMeasure$theta)
+badMeasure$item3 <- fourPL(b = -2.3, a = 0.8, theta = badMeasure$theta)
+badMeasure$item4 <- fourPL(b = -2.2, a = 1.5, theta = badMeasure$theta)
 badMeasure$item5 <- fourPL(b = 2.0, a = 0.6, theta = badMeasure$theta)
 badMeasure$item6 <- fourPL(b = 2.1, a = 1.2, theta = badMeasure$theta)
 badMeasure$item7 <- fourPL(b = 2.2, a = 0.8, theta = badMeasure$theta)
 badMeasure$item8 <- fourPL(b = 2.3, a = 1.3, theta = badMeasure$theta)
 badMeasure$item9 <- fourPL(b = 2.4, a = 0.6, theta = badMeasure$theta)
 badMeasure$item10 <- fourPL(b = 2.5, a = 0.5, theta = badMeasure$theta)
+
+badMeasureInfo$info1 <- information_fourPL(b = -2.5, a = 0.4, theta = badMeasureInfo$theta)
+badMeasureInfo$info2 <- information_fourPL(b = -2.4, a = 1, theta = badMeasureInfo$theta)
+badMeasureInfo$info3 <- information_fourPL(b = -2.3, a = 0.8, theta = badMeasureInfo$theta)
+badMeasureInfo$info4 <- information_fourPL(b = -2.2, a = 1.5, theta = badMeasureInfo$theta)
+badMeasureInfo$info5 <- information_fourPL(b = 2.0, a = 0.6, theta = badMeasureInfo$theta)
+badMeasureInfo$info6 <- information_fourPL(b = 2.1, a = 1.2, theta = badMeasureInfo$theta)
+badMeasureInfo$info7 <- information_fourPL(b = 2.2, a = 0.8, theta = badMeasureInfo$theta)
+badMeasureInfo$info8 <- information_fourPL(b = 2.3, a = 1.3, theta = badMeasureInfo$theta)
+badMeasureInfo$info9 <- information_fourPL(b = 2.4, a = 0.6, theta = badMeasureInfo$theta)
+badMeasureInfo$info10 <- information_fourPL(b = 2.5, a = 0.5, theta = badMeasureInfo$theta)
+
+badMeasureInfo$information <- rowSums(badMeasureInfo[,paste("info", 1:10, sep = "")])
 
 badMeasure_long <- pivot_longer(badMeasure, cols = item1:item10) %>% 
   rename(item = name)
@@ -918,7 +931,7 @@ badMeasure_long$Item[which(badMeasure_long$item == "item9")] <- 9
 badMeasure_long$Item[which(badMeasure_long$item == "item10")] <- 10
 ```
 
-```{r badMeasure, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on item characteristic curves of items from a bad measure estimated from two-parameter logistic model in item response theory."}
+```{r badMeasureICCs, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on item characteristic curves of items from a bad measure estimated from two-parameter logistic model in item response theory."}
 ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -928,31 +941,63 @@ ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(I
   theme_bw()
 ```
 
-An example of a good measure is depicted in Figure \@ref(fig:goodMeasure), in terms of having items that span the range of interest, that have high [discrimination](#itemDiscrimation) and [information](#irtReliability), and that densely cover the range of interest without redundancy.
+```{r badMeasureInfo, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on the test information curve."}
+ggplot(badMeasureInfo, aes(theta, information)) + 
+  geom_line(size = 1.5) +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Information") +
+  theme_bw()
+```
+
+An example of a good measure for distinguishing clinical-range versus sub-clinical range is depicted in terms of [ICCs](#icc) in Figure \@ref(fig:goodMeasureICC) and in terms of [test information](#irtReliability) in Figure \@ref(fig:goodMeasureInfo). The measure is good for the intended purpose, in terms of having items that (a) span the range of interest (1–3 standard deviations above the mean of the latent construct), (b) have high [discrimination](#itemDiscrimation) and [information](#irtReliability), and (c) densely cover the range of interest without redundancy.
 
 ```{r, include = FALSE}
-goodMeasure <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+goodMeasure <- goodMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
-goodMeasure$item1 <- fourPL(b = 1, a = 3, theta = goodMeasure$theta)
-goodMeasure$item2 <- fourPL(b = 1.10, a = 3, theta = goodMeasure$theta)
-goodMeasure$item3 <- fourPL(b = 1.20, a = 3, theta = goodMeasure$theta)
-goodMeasure$item4 <- fourPL(b = 1.30, a = 3, theta = goodMeasure$theta)
-goodMeasure$item5 <- fourPL(b = 1.40, a = 3, theta = goodMeasure$theta)
-goodMeasure$item6 <- fourPL(b = 1.50, a = 3, theta = goodMeasure$theta)
-goodMeasure$item7 <- fourPL(b = 1.60, a = 3, theta = goodMeasure$theta)
-goodMeasure$item8 <- fourPL(b = 1.70, a = 3, theta = goodMeasure$theta)
-goodMeasure$item9 <- fourPL(b = 1.8, a = 3, theta = goodMeasure$theta)
-goodMeasure$item10 <- fourPL(b = 1.9, a = 3, theta = goodMeasure$theta)
-goodMeasure$item11 <- fourPL(b = 2, a = 3, theta = goodMeasure$theta)
-goodMeasure$item12 <- fourPL(b = 2.1, a = 3, theta = goodMeasure$theta)
-goodMeasure$item13 <- fourPL(b = 2.2, a = 3, theta = goodMeasure$theta)
-goodMeasure$item14 <- fourPL(b = 2.3, a = 3, theta = goodMeasure$theta)
-goodMeasure$item15 <- fourPL(b = 2.4, a = 3, theta = goodMeasure$theta)
-goodMeasure$item16 <- fourPL(b = 2.5, a = 3, theta = goodMeasure$theta)
-goodMeasure$item17 <- fourPL(b = 2.6, a = 3, theta = goodMeasure$theta)
-goodMeasure$item18 <- fourPL(b = 2.7, a = 3, theta = goodMeasure$theta)
-goodMeasure$item19 <- fourPL(b = 2.8, a = 3, theta = goodMeasure$theta)
-goodMeasure$item20 <- fourPL(b = 2.9, a = 3, theta = goodMeasure$theta)
+goodMeasure$item1 <-  fourPL(b = 1.0, a = 10, theta = goodMeasure$theta)
+goodMeasure$item2 <-  fourPL(b = 1.1, a = 10, theta = goodMeasure$theta)
+goodMeasure$item3 <-  fourPL(b = 1.2, a = 10, theta = goodMeasure$theta)
+goodMeasure$item4 <-  fourPL(b = 1.3, a = 10, theta = goodMeasure$theta)
+goodMeasure$item5 <-  fourPL(b = 1.4, a = 10, theta = goodMeasure$theta)
+goodMeasure$item6 <-  fourPL(b = 1.5, a = 10, theta = goodMeasure$theta)
+goodMeasure$item7 <-  fourPL(b = 1.6, a = 10, theta = goodMeasure$theta)
+goodMeasure$item8 <-  fourPL(b = 1.7, a = 10, theta = goodMeasure$theta)
+goodMeasure$item9 <-  fourPL(b = 1.8, a = 10, theta = goodMeasure$theta)
+goodMeasure$item10 <- fourPL(b = 1.9, a = 10, theta = goodMeasure$theta)
+goodMeasure$item11 <- fourPL(b = 2.0, a = 10, theta = goodMeasure$theta)
+goodMeasure$item12 <- fourPL(b = 2.1, a = 10, theta = goodMeasure$theta)
+goodMeasure$item13 <- fourPL(b = 2.2, a = 10, theta = goodMeasure$theta)
+goodMeasure$item14 <- fourPL(b = 2.3, a = 10, theta = goodMeasure$theta)
+goodMeasure$item15 <- fourPL(b = 2.4, a = 10, theta = goodMeasure$theta)
+goodMeasure$item16 <- fourPL(b = 2.5, a = 10, theta = goodMeasure$theta)
+goodMeasure$item17 <- fourPL(b = 2.6, a = 10, theta = goodMeasure$theta)
+goodMeasure$item18 <- fourPL(b = 2.7, a = 10, theta = goodMeasure$theta)
+goodMeasure$item19 <- fourPL(b = 2.8, a = 10, theta = goodMeasure$theta)
+goodMeasure$item20 <- fourPL(b = 2.9, a = 10, theta = goodMeasure$theta)
+
+goodMeasureInfo$info1 <- information_fourPL(b = 1.0, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info2 <- information_fourPL(b = 1.1, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info3 <- information_fourPL(b = 1.2, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info4 <- information_fourPL(b = 1.3, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info5 <- information_fourPL(b = 1.4, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info6 <- information_fourPL(b = 1.5, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info7 <- information_fourPL(b = 1.6, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info8 <- information_fourPL(b = 1.7, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info9 <- information_fourPL(b = 1.8, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info10 <- information_fourPL(b = 1.9, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info11 <- information_fourPL(b = 2.0, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info12 <- information_fourPL(b = 2.1, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info13 <- information_fourPL(b = 2.2, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info14 <- information_fourPL(b = 2.3, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info15 <- information_fourPL(b = 2.4, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info16 <- information_fourPL(b = 2.5, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info17 <- information_fourPL(b = 2.6, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info18 <- information_fourPL(b = 2.7, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info19 <- information_fourPL(b = 2.8, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info20 <- information_fourPL(b = 2.9, a = 10, theta = goodMeasureInfo$theta)
+
+goodMeasureInfo$information <- rowSums(goodMeasureInfo[,paste("info", 1:20, sep = "")])
 
 goodMeasure_long <- pivot_longer(goodMeasure, cols = item1:item20) %>% 
   rename(item = name)
@@ -980,13 +1025,22 @@ goodMeasure_long$Item[which(goodMeasure_long$item == "item19")] <- 19
 goodMeasure_long$Item[which(goodMeasure_long$item == "item20")] <- 20
 ```
 
-```{r goodMeasure, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on item characteristic curves of items from a good measure estimated from two-parameter logistic model in item response theory."}
+```{r goodMeasureICCs, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on item characteristic curves of items from a good measure estimated from two-parameter logistic model in item response theory."}
 ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
+  theme_bw()
+```
+
+```{r goodMeasureInfo, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on the test information curve."}
+ggplot(goodMeasureInfo, aes(theta, information)) + 
+  geom_line(size = 1.5) +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Information") +
   theme_bw()
 ```
 
