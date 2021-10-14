@@ -95,7 +95,21 @@ hist(scores$percentileRank, xlab = "Percentile Ranks", main = "Histogram of Perc
 
 #### Deviation (Standardized) Scores
 
-Deviation or standardized scores are the transformation of raw scores to a normal distribution using some norm. The norm could be a comparison group, or it could be the sample itself. With deviation scores, you have similar challenges as percentile ranks including which reference group to use, but deviation scores have additional assumptions about the mean and standard deviation, which is dependent on a normal distribution. Many constructs we study in psychology are not normally distributed. For example, the frequency of hallucinations among people would show a positively skewed distribution with a truncation at zero, representing a floor effect—i.e., most people do not show hallucinations. You can compute a deviation score, but it may not be meaningful if the data and underlying construct are not normally distributed.
+Deviation or standardized scores are the transformation of raw scores to a normal distribution using some norm. The norm could be a comparison group, or it could be the sample itself. With deviation scores, you have similar challenges as percentile ranks including which reference group to use, but there are additional challenges. Deviation scores are more informative when the scores are normally distributed compared to when the scores are skewed. If scores are skewed, it can lead to two *z*-scores on the opposite side of the mean having different probabilities.
+
+Many constructs we study in psychology are not normally distributed. For example, the frequency of hallucinations among people would show a positively skewed distribution with a truncation at zero, representing a floor effect—i.e., most people do not show hallucinations. For instance, consider a hypothetical distribution of hallucinations. It might follow a folded distribution:
+
+```{r foldedDistribution, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Hallucinations (Raw Score)"}
+hist(rbinom(100000, 300, .01), breaks = 8, xlab = "Hallucinations (Raw Score)", main = "Histogram of Hallucinations (Raw Score)")
+```
+
+Now consider the same distribution converted to a standardized (*z*)-score:
+
+```{r foldedDistributionZscore, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Hallucinations (z-score"}
+hist(scale(rbinom(100000, 300, .01)), breaks = 8, xlab = "Hallucinations (z-Score)", main = "Histogram of Hallucinations (z-Score)")
+```
+
+Thus, you can compute a deviation score, but it may not be meaningful if the data and underlying construct are not normally distributed.
 
 ##### *z*-scores
 
@@ -149,6 +163,7 @@ Standard scores with a mean of 100 and standard deviation of 15 are calculated u
 $$
 \text{standard score} = 100 + 15z
 $$
+
 where $z$ are *z*-scores.
 
 ```{r}
@@ -166,6 +181,7 @@ Scale scores, commonly on tests of intellectual or cognitive ability, have a mea
 $$
 \text{scale score} = 10 + 3z
 $$
+
 where $z$ are *z*-scores.
 
 ```{r}
