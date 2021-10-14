@@ -69,6 +69,10 @@ There are a number of score transformations, depending on the goal. Some score t
 
 Raw scores are the original data, or they may be aggregations (e.g., sums or means) of multiple items. Raw scores are the most pure because they are closest to the original operation (e.g., behavior). A disadvantage of raw scores is they are scale-dependent, and therefore may not be comparable across different measures with different scales.
 
+```{r rawScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Raw Scores"}
+hist(scores$rawData, xlab = "Raw Scores", main = "Histogram of Raw Scores")
+```
+
 ### Norm-Referenced Scores {#norm}
 
 Norm-referenced scores are scores that are referenced to some norm. A norm is a standard of comparison. For instance, you may be interested in how well a participant performed relative to other children of the same sex, age, grade, or ethnicity. However, interpretation of norm-referenced scores depends on the measure and on the normative sample. A person's norm-referenced score can vary widely depending on which norms are used. Which reference group should you use? Age? Sex? Age and sex? Grade? Ethnicity? The optimal reference group depends on the purpose of the assessment. Pros and cons of group-based norms are discussed in Section \@ref(withinGroupNorming).
@@ -83,6 +87,10 @@ Here is an example of how to calculate percentile ranks using the `dplyr` packag
 
 ```{r}
 scores$percentileRank <- percent_rank(scores$rawData) * 100
+```
+
+```{r rawScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Percentile Ranks"}
+hist(scores$percentileRank, xlab = "Percentile Ranks", main = "Histogram of Percentile Ranks")
 ```
 
 #### Deviation (Standardized) Scores
@@ -109,6 +117,10 @@ all.equal(as.vector(scores$zScore),
           (scores$rawData - mean(scores$rawData, na.rm = TRUE))/sd(scores$rawData, na.rm = TRUE))
 ```
 
+```{r zScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of z-Scores"}
+hist(scores$zScore, xlab = "z-Scores", main = "Histogram of z-Scores")
+```
+
 ##### *T*-scores
 
 *T*-scores have a mean of 50 and a standard deviation of 10. *T*-scores are frequently used with personality and symptom measures, where clinical cutoffs are often set at 70 (i.e., two standard deviations above the mean). For the Minnesota Multiphasic Personality Inventory (MMPI), you would examine peaks (elevations $\ge$ 70) and absences ($\le$ 30).
@@ -122,6 +134,10 @@ where $z$ are *z*-scores.
 
 ```{r}
 scores$tScore <- 50 + 10*scale(scores$rawData)
+```
+
+```{r tScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of T-Scores"}
+hist(scores$tScore, xlab = "T-Scores", main = "Histogram of T-Scores")
 ```
 
 ##### Standard scores
@@ -139,6 +155,10 @@ where $z$ are *z*-scores.
 scores$standardScore <- 100 + 15*scale(scores$rawData)
 ```
 
+```{r standardScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Standard Scores"}
+hist(scores$standardScore, xlab = "Standard Scores", main = "Histogram of Standard Scores")
+```
+
 ##### Scale scores
 
 Scale scores, commonly on tests of intellectual or cognitive ability, have a mean of 10 and a standard deviation of 3.
@@ -150,4 +170,8 @@ where $z$ are *z*-scores.
 
 ```{r}
 scores$scaleScore <- 10 + 3*scale(scores$rawData)
+```
+
+```{r scaleScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Scale Scores"}
+hist(scores$scaleScore, xlab = "Scale Scores", main = "Histogram of Scale Scores")
 ```
