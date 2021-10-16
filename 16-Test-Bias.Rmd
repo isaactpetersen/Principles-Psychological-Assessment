@@ -2,7 +2,7 @@
 
 ## Overview of Bias
 
-There are multiple definitions of the term "bias" depending on the context. In general, bias is a [systematic error](#systematicError). [Mean error](#meanError) is an example of [systematic error](#systematicError), and is sometimes called bias. [Method biases](#methodBias) are a form of [systematic error](#systematicError) that involve the influence of measurement on a person's score that is not due to the person's level on the construct. [Method biases](#methodBias) include response biases or response styles, including acquiescence and social desirability bias.
+There are multiple definitions of the term "bias" depending on the context. In general, bias is a [systematic error](#systematicError). [Mean error](#meanError) is an example of [systematic error](#systematicError), and is sometimes called bias. Cognitive biases are systematic errors in thinking, including confirmation bias and hindsight bias. [Method biases](#methodBias) are a form of [systematic error](#systematicError) that involve the influence of measurement on a person's score that is not due to the person's level on the construct. [Method biases](#methodBias) include response biases or response styles, including acquiescence and social desirability bias.
 
 Sometimes bias is used to refer in particular to [systematic error](#systematicError) (in measurement, prediction, etc.) as a function of group membership, where test bias refers to the same score having different meaning for different groups. Under this meaning, a test is unbiased if a given test score has the same meaning regardless of group membership. For example, a test is biased if there is differential [validity](#validity) of test scores for groups (e.g., age, education, culture, race, sex). Test bias would exist, for instance, if a test is a less [valid](#validity) predictor for racial minorities or linguistic minorities. Test bias would also exist if scores on the Scholastic Aptitude Test (SAT) under-estimate women's grades in college, for instance.
 
@@ -673,8 +673,7 @@ Tests of DIF were conducted using the `mirt` package [@R-mirt].
 unconstrainedModel <- multipleGroup(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
                                     model = 1,
                                     group = cnlsy$sex,
-                                    SE = TRUE,
-                                    technical = list(removeEmptyRows = TRUE))
+                                    SE = TRUE)
 ```
 
 #### Model Summary
@@ -700,8 +699,7 @@ constrainedModel <- multipleGroup(data = cnlsy[,c("bpi_antisocialT1_1","bpi_anti
                                   model = 1,
                                   group = cnlsy$sex,
                                   invariance = c(c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7"), "free_means", "free_var"),
-                                  SE = TRUE,
-                                  technical = list(removeEmptyRows = TRUE))
+                                  SE = TRUE)
 ```
 
 #### Model Summary
@@ -802,9 +800,7 @@ difAddItemsSeverity
 
 ### Compute effect size of DIF
 
-[**CITATION by Gonzalez and Pelham, in press, Assessment**]
-
-Effect size measures of DIF were computed based on expected scores [@Meade2010] using the `mirt` package [@R-mirt].
+Effect size measures of DIF were computed based on expected scores [@Meade2010] using the `mirt` package [@R-mirt]. Some researchers recommend using a simulation-based procedure to examine the impact of DIF on screening accuracy [@Gonzalez2021].
 
 #### Test-level DIF
 
@@ -831,33 +827,33 @@ empirical_ES(unconstrainedModel, DIF = TRUE, plot = TRUE)
 ### Item plots
 
 ```{r, out.width = "100%", fig.cap = "Item category boundary curves by sex"}
-itemplot(unconstrainedModel, "bpi_antisocialT1_1", type = "trace")
-itemplot(unconstrainedModel, "bpi_antisocialT1_2", type = "trace")
-itemplot(unconstrainedModel, "bpi_antisocialT1_3", type = "trace")
-itemplot(unconstrainedModel, "bpi_antisocialT1_4", type = "trace")
-itemplot(unconstrainedModel, "bpi_antisocialT1_5", type = "trace")
-itemplot(unconstrainedModel, "bpi_antisocialT1_6", type = "trace")
-itemplot(unconstrainedModel, "bpi_antisocialT1_7", type = "trace")
+itemplot(unconstrainedModel, "bpi_antisocialT1_1", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_2", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_3", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_4", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_5", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_6", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_7", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
 ```
 
 ```{r, out.width = "100%", fig.cap = "Item information functions by sex"}
-itemplot(unconstrainedModel, "bpi_antisocialT1_1", type = "info")
-itemplot(unconstrainedModel, "bpi_antisocialT1_2", type = "info")
-itemplot(unconstrainedModel, "bpi_antisocialT1_3", type = "info")
-itemplot(unconstrainedModel, "bpi_antisocialT1_4", type = "info")
-itemplot(unconstrainedModel, "bpi_antisocialT1_5", type = "info")
-itemplot(unconstrainedModel, "bpi_antisocialT1_6", type = "info")
-itemplot(unconstrainedModel, "bpi_antisocialT1_7", type = "info")
+itemplot(unconstrainedModel, "bpi_antisocialT1_1", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_2", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_3", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_4", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_5", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_6", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_7", type = "info", par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r, out.width = "100%", fig.cap = "Item information functions by sex"}
-itemplot(unconstrainedModel, "bpi_antisocialT1_1", type = "score")
-itemplot(unconstrainedModel, "bpi_antisocialT1_2", type = "score")
-itemplot(unconstrainedModel, "bpi_antisocialT1_3", type = "score")
-itemplot(unconstrainedModel, "bpi_antisocialT1_4", type = "score")
-itemplot(unconstrainedModel, "bpi_antisocialT1_5", type = "score")
-itemplot(unconstrainedModel, "bpi_antisocialT1_6", type = "score")
-itemplot(unconstrainedModel, "bpi_antisocialT1_7", type = "score")
+```{r, out.width = "100%", fig.cap = "Expected item score by sex"}
+itemplot(unconstrainedModel, "bpi_antisocialT1_1", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_2", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_3", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_4", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_5", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_6", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel, "bpi_antisocialT1_7", type = "score", par.settings = standard.theme("pdf", color = FALSE))
 ```
 
 ### Addressing DIF
@@ -873,8 +869,7 @@ constrainedModelDropItem5 <- multipleGroup(data = cnlsy[,c("bpi_antisocialT1_1",
                                   model = 1,
                                   group = cnlsy$sex,
                                   invariance = c(c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_6","bpi_antisocialT1_7"), "free_means", "free_var"),
-                                  SE = TRUE,
-                                  technical = list(removeEmptyRows = TRUE))
+                                  SE = TRUE)
 
 coef(constrainedModelDropItem5, simplify = TRUE)
 ```
@@ -891,8 +886,7 @@ constrainedModelDropItem5ForMen <- multipleGroup(data = dropItem5ForMen[,c("bpi_
                                   model = 1,
                                   group = dropItem5ForMen$sex,
                                   invariance = c(c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7"), "free_means", "free_var"),
-                                  SE = TRUE,
-                                  technical = list(removeEmptyRows = TRUE))
+                                  SE = TRUE)
 
 coef(constrainedModelDropItem5ForMen, simplify = TRUE)
 ```
@@ -906,8 +900,7 @@ constrainedModelResolveItem5 <- multipleGroup(data = cnlsy[,c("bpi_antisocialT1_
                                   model = 1,
                                   group = cnlsy$sex,
                                   invariance = c(c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_6","bpi_antisocialT1_7"), "free_means", "free_var"),
-                                  SE = TRUE,
-                                  technical = list(removeEmptyRows = TRUE))
+                                  SE = TRUE)
 
 coef(constrainedModelResolveItem5, simplify = TRUE)
 ```
@@ -928,9 +921,9 @@ Whichever of these approaches we select, we would then identify and handle the r
 
 ```{r}
 difDropItemsNew <- DIF(constrainedModelResolveItem5,
-                    c("a1","d1","d2"),
-                    scheme = "drop",
-                    simplify = TRUE)
+                       c("a1","d1","d2"),
+                       scheme = "drop",
+                       simplify = TRUE)
 difDropItemsNew
 ```
 
@@ -963,9 +956,9 @@ The chi-square difference test is sensitive to sample size, and trivial differen
 
 @Little2007 suggested that researchers establish at least partial invariance of factor loadings (metric invariance) to compare covariances across groups, and at least partial invariance of intercepts (scalar invariance) to compare mean levels across groups. Partial invariance refers to invariance with some but not all indicators. So, to examine associations with other variables, invariance of at least some factor loadings would be preferable. To examine differences in level or growth, invariance of at least some intercepts would be preferable. Residual invariance is considered overly restrictive, and it is not generally expected that one establish residual invariance [@Little2013].
 
-Although measurement invariance is important to test, it is also worth noting that tests of measurement invariance and DIF rest on various fundamentally untestable assumptions related to scale setting [@Raykovinpress]. For instance, to give the latent factor units, oftentimes researchers set one item's factor loading to be equal across time (i.e., the marker variable). Tesults of factorial invariance tests can depend highly on which item is used as the anchor item for setting the scale of the latent factor [@Belzakinpress]. And subsequent tests of measurement invariance then rest on the fundamentally untestable assumption that changes in the level of the latent factor precipitates the same amount of change in the item across groups. If this scaling is not proper, however, it could lead to improper conclusions. Researchers are, therefore, not conclusively able to establish measurement invariance. 
+Although measurement invariance is important to test, it is also worth noting that tests of measurement invariance and DIF rest on various fundamentally untestable assumptions related to scale setting [@Raykovinpress]. For instance, to give the latent factor units, oftentimes researchers set one item's factor loading to be equal across time (i.e., the marker variable). Tesults of factorial invariance tests can depend highly on which item is used as the anchor item for setting the scale of the latent factor [@Belzak2020]. And subsequent tests of measurement invariance then rest on the fundamentally untestable assumption that changes in the level of the latent factor precipitates the same amount of change in the item across groups. If this scaling is not proper, however, it could lead to improper conclusions. Researchers are, therefore, not conclusively able to establish measurement invariance. 
 
-Several possible approaches may help address this. First, it can be helpful to place greater focus on *degree* of measurement invariance and confidence (rather than presence versus absence of measurement invariance). To the extent that non-invariance is trivial in effect size, it provides the researcher with greater confidence that they can use the measure to assess a construct in a comparable way over time. A number of studies describe how to test the effect size of measurement invariance [e.g., @Liu2017a; **Gunn et al., 2020 citation**] or differential item functioning [e.g., @Meade2010]. Second, there may be important robustness checks. I describe each in greater detail below. One important sensitivity analysis could be to see if measurement invariance holds when using different marker variables. This would provide greater evidence that their apparent measurement invariance was not specific to one marker variable (i.e., one particular set of assumptions). A second robustness check would be to use effects coding, in which the average of items' factor loadings is equal to 1, so the metric of the latent variable is on the metric of all of the items rather than just one item [@Little2006a]. A third robustness check would be to use regularization, which is an alternative method to select the anchor items and to identify differential item functioning based on a machine learning technique that applies penalization to remove parameters that have little impact on model fit [@Bauer2020; @Belzakinpress].
+Several possible approaches may help address this. First, it can be helpful to place greater focus on *degree* of measurement invariance and confidence (rather than presence versus absence of measurement invariance). To the extent that non-invariance is trivial in effect size, it provides the researcher with greater confidence that they can use the measure to assess a construct in a comparable way over time. A number of studies describe how to test the effect size of measurement invariance [e.g., @Liu2017a; @Gunn2020] or differential item functioning [e.g., @Meade2010; @Gonzalez2021]. Second, there may be important robustness checks. I describe each in greater detail below. One important sensitivity analysis could be to see if measurement invariance holds when using different marker variables. This would provide greater evidence that their apparent measurement invariance was not specific to one marker variable (i.e., one particular set of assumptions). A second robustness check would be to use effects coding, in which the average of items' factor loadings is equal to 1, so the metric of the latent variable is on the metric of all of the items rather than just one item [@Little2006a]. A third robustness check would be to use regularization, which is an alternative method to select the anchor items and to identify differential item functioning based on a machine learning technique that applies penalization to remove parameters that have little impact on model fit [@Bauer2020; @Belzak2020].
 
 Another issue with measurement invariance is that the null hypothesis that adding constraints across groups will not worsen fit is likely always false, because there are often at least slight differences across groups in factor loadings, intercepts, or residuals that reflecting sampling variability. However, we are not interested in trivial differences across groups that reflect sampling variability. Instead, we are interested in the extent to which there are substantive, meaningful differences across the groups of large enough magnitude to be practically meaningful. Thus, it can also be helpful to consider whether the measures show *approximate measurement invariance* [@VanDeSchoot2015]. For details on how to test approximate measurement invariance, see @VanDeSchoot2013.
 
@@ -973,11 +966,7 @@ Like DIF, when testing measurement invariance with many items or measures across
 
 When detecting non-negligible measurement non-invariance, one option is to remove the items that show measurement non-invariance. Another option is to *resolve* items that show non-negligible measurement non-invariance, by keeping the item, but allowing the item's parameters to differ across groups (i.e., essentially treating it as a different item for each group). Removing items reduces a measure's reliability and ability to detect individual differences, but resolving measurement non-invariance has a very small effect on reliability and person separation [@Hagquist2017; @Hagquist2019]. Where possible, it therefore can be beneficial to resolve non-negligible measurement non-invariance instead of removing items. If an item is clearly invalid in one group but valid in another group, another option is to keep the item in one group, and to remove it in another group. Addressing items that show larger measurement non-invariance can also reduce artificial measurement non-invariance in other items [@Hagquist2017]. Thus, it can also be beneficial to review and address measurement non-invariance sequentially by magnitude (from high to low).
 
-Using the traditional chi-square difference test, tests of measurement invariance compare the model fit to a model with perfect fit. As the sample size grows larger, smaller differences in model fit will be detected as significant, thus rejecting measurement invariance even if the model fits well. So, it can also be useful to compare the model fit to a null hypothesis that the fit is poor, instead of the null hypothesis that the model is a perfect fit. *Chi-square equivalence tests* use the poor model fit as the null hypothesis. Thus, a significant chi-square equivalence test suggests that the equality constraints are plausible, providing support for the alternative hypothesis that the model fit is acceptable [**Counsell et al., 2020 CITATION**].
-
-[**Cite Counsell et al. 2020: Counsell, A., Cribbie, R. A., & Flora, D. B. (2020). Evaluating equivalence testing methods for measurement invariance. Multivariate Behavioral Research, 55(2), 312-328. https://doi.org/10.1080/00273171.2019.1633617**]
-
-[**Add chi-square equivalence tests from Counsell et al. (2020)**]
+Using the traditional chi-square difference test, tests of measurement invariance compare the model fit to a model with perfect fit. As the sample size grows larger, smaller differences in model fit will be detected as significant, thus rejecting measurement invariance even if the model fits well. So, it can also be useful to compare the model fit to a null hypothesis that the fit is poor, instead of the null hypothesis that the model is a perfect fit. *Chi-square equivalence tests* use the poor model fit as the null hypothesis. Thus, a significant chi-square equivalence test suggests that the equality constraints are plausible, providing support for the alternative hypothesis that the model fit is acceptable [@Counsell2020].
 
 ### Specify Models
 
@@ -1346,7 +1335,7 @@ lavaan_dmacs(configuralInvarianceModel_fit)
 
 #### Equivalence Test
 
-From **Counsell et al. (2020) CITATION**: https://osf.io/cqu8v. The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable.
+From @Counsell2020: https://osf.io/cqu8v. The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable.
 
 ```{r}
 equiv_chi <- function(alpha = .05, chi, df, m, N_sample, popRMSEA = .08){
