@@ -261,11 +261,11 @@ $$
 where $z$ are *z*-scores.
 
 ```{r}
-scores$scaleScore <- 10 + 3*scale(scores$rawData)
+scores$scaledScore <- 10 + 3*scale(scores$rawData)
 ```
 
-```{r scaleScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Scale Scores"}
-hist(scores$scaleScore, xlab = "Scale Scores", main = "Histogram of Scale Scores")
+```{r scaleScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Scaled Scores"}
+hist(scores$scaledScore, xlab = "Scale Scores", main = "Histogram of Scaled Scores")
 ```
 
 ##### Stanine scores
@@ -277,16 +277,36 @@ stanineConverstionTable <- data.frame(stanine = 1:9)
 stanineConverstionTable$bracketedPercent <- c(4,7,12,17,20,17,12,7,4)
 stanineConverstionTable$bracketedPercentTable <- paste(stanineConverstionTable$bracketedPercent, "%", sep = "")
 stanineConverstionTable$bracketedPercent <- NULL
+stanineConverstionTable$cumulativePercent <- c(4,11,23,40,60,77,89,96,100)
+stanineConverstionTable$cumulativePercentTable <- paste(stanineConverstionTable$cumulativePercent, "%", sep = "")
+stanineConverstionTable$cumulativePercent <- NULL
 stanineConverstionTable$zScore <- c("below -1.75","-1.75 to -1.25","-1.25 to -0.75","-0.75 to -0.25","-0.25 to +0.25","+0.25 to +0.75","+0.75 to +1.25","+1.25 to +1.75","above +1.75")
 stanineConverstionTable$standardScore <- c("below 74","74 to 81","81 to 89","89 to 96","96 to 104","104 to 111","111 to 119","119 to 126","above 126")
 
-names(stanineConverstionTable) <- c("Stanine","Bracketed Percent","z-Score","Standard Score")
+names(stanineConverstionTable) <- c("Stanine","Bracketed Percent","Cumulative Percent","z-Score","Standard Score")
 ```
 
 ```{r stanineCalculation, echo = FALSE}
 kable(stanineConverstionTable,
       caption = "Table for Calculating Stanine Scores",
       booktabs = TRUE)
+```
+
+```{r}
+scores$stanineScore <- NA
+scores$stanineScore[which(scores$percentileRank <= 4)] <- 1
+scores$stanineScore[which(scores$percentileRank > 4 & scores$percentileRank <= 11)] <- 2
+scores$stanineScore[which(scores$percentileRank > 11 & scores$percentileRank <= 23)] <- 3
+scores$stanineScore[which(scores$percentileRank > 23 & scores$percentileRank <= 40)] <- 4
+scores$stanineScore[which(scores$percentileRank > 40 & scores$percentileRank <= 60)] <- 5
+scores$stanineScore[which(scores$percentileRank > 60 & scores$percentileRank <= 77)] <- 6
+scores$stanineScore[which(scores$percentileRank > 77 & scores$percentileRank <= 89)] <- 7
+scores$stanineScore[which(scores$percentileRank > 89 & scores$percentileRank <= 96)] <- 8
+scores$stanineScore[which(scores$percentileRank > 96)] <- 9
+```
+
+```{r scaleScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Scaled Scores"}
+hist(scores$stanineScore, xlab = "Stanine Scores", main = "Histogram of Stanine Scores", breaks = seq(from = 0.5, to = 9.5, by = 1), xlim = c(0,10), xaxp = c(1,9,8))
 ```
 
 ## Conclusion
