@@ -4,13 +4,41 @@
 
 Repeated measurement enables examining within-person change in constructs. Relating within-person change in a construct to within-person change in another construct provides a stronger test of causality compared to simple bivariate correlations. Identifying that within-person change in construct X predicts later within-person change in construct Y does not necessarily indicate that X causes Y but it provides stronger evidence consistent with causality than a simple bivariate association between X and Y. As described in Section \@ref(correlationCausation), there are three primary reasons why a correlation between X and Y does not necessarily mean that X causes Y: First, the association could reflect the opposite direction of effect, where Y actually causes X. Second, the association could reflect the influence of a third variable that influences both X and Y (i.e., a confound). Third, the association might be spurious.
 
-If you find that within-person changes in sleep predict later within-person changes in mood, that is a stronger test of causality because (a) it demonstrates temporal precedence; it attenuates the possibility that the association is due to the opposite direction of effect; (b) it accounts for time-invariant confounds that differ between people because the association is examined *within* the individual. That is, the association examines whether the person's mood is better when they get more sleep compared to when that same person gets less sleep.
+If you find that within-person changes in sleep predict later within-person changes in mood, that is a stronger test of causality because (a) it demonstrates temporal precedence; it attenuates the possibility that the association is due to the opposite direction of effect; and (b) it accounts for all time-invariant confounds that differ between people (e.g., birth order) because the association is examined *within* the individual. That is, the association examines whether the person's mood is better when they get more sleep compared to when that same person gets less sleep. The association could still be due to time-varying confounds, but you can control for specific time-varying confounds if you measure them.
 
 Repeated measurement also enables examination of the developmental timing of effects and sensitive periods. Furthermore, repeated measures designs are important for tests of mediation, which are tests of hypothesized causal mechanisms.
 
 Repeated measurement involves more complex statistical analysis than cross-sectional measurement because multiple observations come from the same person, which would violate assumptions of traditional analyses that the observations (i.e., the residuals) are independent and uncorrelated. [Mixed-effects modeling](#mixedModels) (i.e., mixed modeling, multilevel modeling, hierarchical linear modeling) and other analyses, such as [structural equation modeling](#sem), can handle the longitudinal dependency or nesting of repeated measures data.
 
 Repeated measurement can encompass many different timescales, such as milliseconds, days, or years.
+
+### Comparison of Approaches
+
+Research designs can be compared in terms of their [internal validity](#internalValidity)—the extent to which we can be confident about causal inferences. Below is a depiction of a cross-sectional association:
+
+```{r crossSectional, out.width = "100%", fig.align = "center", fig.cap = "Cross-sectional association.", echo = FALSE}
+knitr::include_graphics("./Images/Longitudinal-01.png")
+```
+
+Among observational/correlational research designs, cross-sectional designs tend to have the weakest [internal validity](#internalValidity). That is, if we observe a cross-sectional association between $X$ and $Y$, we have little confidence that $X$ causes $Y$. Consider a lagged association, which is a slightly better approach:
+
+```{r laggedAssociation, out.width = "100%", fig.align = "center", fig.cap = "Lagged association.", echo = FALSE}
+knitr::include_graphics("./Images/Longitudinal-02.png")
+```
+
+A lagged association has somewhat better [internal validity](#internalValidity) than a cross-sectional association because we have greater evidence of temporal precedence—that the influence of the predictor *precedes* the outcome because the predictor was assessed before the outcome and it shows a predictive association. However, part of the association between the predictor with later levels of the outcome could be due to prior levels of the outcome that are stable across time. Thus, consider an even stronger alternative—a lagged association that controls for prior levels of the outcome:
+
+```{r laggedAssociationControlPriorLevels, out.width = "100%", fig.align = "center", fig.cap = "Lagged association, controlling for prior levels of the outcome.", echo = FALSE}
+knitr::include_graphics("./Images/Longitudinal-03.png")
+```
+
+A lagged association controlling for prior levels of the outcome has better [internal validity](#internalValidity) than a lagged association that does not control for prior levels of the outcome. When we control for prior levels of the outcome in the prediction, we are essentially predicting (relative) change. Predicting change provides stronger evidence consistent with causality because it uses the individual as their own control and controls for many time-invariant confounds. However, consider an even stronger alternative—lagged associations that control for prior levels of the outcome and that simultaneously test each direction of effect:
+
+```{r crossLaggedPanelModel, out.width = "100%", fig.align = "center", fig.cap = "Lagged association, controlling for prior levels of the outcome, simultaneously testing both directions of effect.", echo = FALSE}
+knitr::include_graphics("./Images/Longitudinal-04.png")
+```
+
+Lagged associations that control for prior levels of the outcome and that simultaneously test each direction of effect provide the strongest [internal validity](#internalValidity) among correlational/observational designs, especially when examining whether within-person changes in the predictor predict later within-person changes in the outcome (and vice versa). Such a design can help better clarify which which among the variables is the chicken and the egg—which variable is more likely to be the cause and which is more likely to be the effect. Or, if there are bidirectional, transactional effects, what the magnitude of each direction of effect are. The [cross-lagged panel model](#clpm) and [dual latent change score model](#lcsm) are examples of models that include lagged associations that control for prior levels of the outcome and that simultaneously test each direction of effect.
 
 ## Examples of Repeated Measurement
 
@@ -91,15 +119,15 @@ As described in Section \@ref(differenceScore-reliability), difference scores (a
 
 There are several options that are better than traditional difference scores or change scores. Instead of difference scores, use autoregressive cross-lagged models, latent change score models, or growth curve models.
 
-##### Autoregressive Cross-Lagged Models
+##### Autoregressive Cross-Lagged Models {#clpm}
 
 Autoregressive cross-lagged models with random intercepts can be fit in [path analysis](#pathAnalysis-sem) or [SEM](#sem). An autoregressive cross-lagged model with random intercepts examines relative change in a variable, that is, change in individual differences in the variable, but not changes in level on the variable. Such a model allows examining whether one variable predicts *relative* change in another variable. For example, I conducted a collaborative study that examined whether language ability predicts later behavior problems controlling for prior levels of behavior problems—that is, whether language ability predicts a person's change in behavior problems relative to the change among other people in the sample [@Petersen2013a; @PetersenLeBeau2021].
 
-##### Latent Change Score Models
+##### Latent Change Score Models {#lcsm}
 
 Latent change score models can be fit in [SEM](#sem). Unlike autoregressive cross-lagged models, latent change score models examine *absolute* change—that is, people's changes in level. With latent change score models, you can examine change in latent variables that reflect the common variance among multiple measures. Latent variables are theoretically error-free, so latent change scores can be perfectly [reliable](#reliability), unlike traditional difference scores, whose [reliability](#reliability) is strongly influenced by the [measurement unreliability](#reliability) of the specific measures that compose them. Latent change score models are described by @Kievit2018.
 
-##### Growth Curve Models
+##### Growth Curve Models {#gcm}
 
 Growth curve models can be fit in [mixed-effects modeling](#mixedModels) or [SEM](#sem). Growth curve models require three or more time points to be able to account for [measurement error](#measurementError) in terms of the shape of a linear trajectory. Growth curve models examine absolute change, i.e., changes in level. Growth curve models include an intercept (starting point) and slope (amount of change), but you can model other nonlinear forms of change as well, such as quadratic, logistic, etc. with more time points. Growth curve models correct for [measurement error](#measurementError) in the shape of the person's trajectory. In addition, growth curve models can examine risk and protective factors as predictors of the intercepts and slopes. For instance, in collaboration, I examined risk and protective factors that predict the development of externalizing problems [@Petersen2015].
 
