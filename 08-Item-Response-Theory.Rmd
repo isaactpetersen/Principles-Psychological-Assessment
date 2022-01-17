@@ -28,7 +28,7 @@ empiricalICCdata <- data.frame(
 )
 ```
 
-```{r empiricalICC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 8, fig.cap = "Empirical item characteristic curves of the probability of endorsement of a given item as a function of the person's sum score."}
+```{r empiricalICC, echo = FALSE, results = "hide", out.width = "100%", fig.height = 8, fig.cap = "Empirical item characteristic curves of the probability of endorsement of a given item as a function of the person's sum score."}
 plot(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item1, type = "b", pch = "1")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item2, type = "b", pch = "2")
@@ -100,7 +100,7 @@ newdata$item10 <- predict(twoPLitem10, newdata = newdata)
 newdata$itemTotal <- rowSums(newdata[,paste("item", 1:10, sep = "")])
 ```
 
-```{r modelImpliedICC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of the probability of endorsement of a given item as a function of the person's level on the latent construct."}
+```{r modelImpliedICC, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of the probability of endorsement of a given item as a function of the person's level on the latent construct."}
 plot(newdata$itemSum, newdata$item1, type = "n", ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 lines(newdata$itemSum, newdata$item1, type = "l", lwd = 2, col = viridis(10)[1])
 lines(newdata$itemSum, newdata$item2, type = "l", lwd = 2, col = viridis(10)[2])
@@ -118,7 +118,7 @@ legend("topleft",  legend = paste("item", 1:10, sep = " "), col = viridis(10), l
 
 ICCs can be summed across items to get the test characteristic curve (TCC):
 
-```{r modelImpliedTCC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Test characteristic curve of the expected total score on the test as a function of the person's level on the latent construct."}
+```{r modelImpliedTCC, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Test characteristic curve of the expected total score on the test as a function of the person's level on the latent construct."}
 plot(newdata$itemSum, newdata$itemTotal, type = "n", ylim = c(0,10), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Expected Total Score on Test", xaxt = "n")
 lines(newdata$itemSum, newdata$itemTotal, type = "l", lwd = 2)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
@@ -139,14 +139,14 @@ newdata$ceilingEffect <- predict(threePL_ceilingeffect, newdata = newdata)
 newdata$diagnosticallyUseful <- predict(threePL_diagnosticallyUseful, newdata = newdata)
 ```
 
-```{r iccCeilingEffect, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item with a ceiling effect that is not diagnostically useful."}
+```{r iccCeilingEffect, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item with a ceiling effect that is not diagnostically useful."}
 plot(newdata$itemSum, newdata$ceilingEffect, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
 
 Now, consider a different item. For those with a low level on the construct, 0% respond with "TRUE", so it has a floor effect and tells us nothing about the lower end of the construct. But, for those with a higher level on the construct, 70% respond true (see Figure \@ref(fig:iccDiagnosticallyUseful)). So, the item tells us something about the higher end of the distribution, and could be diagnostically useful. Thus, an ICC allows us to immediately tell the utility of items.
 
-```{r iccDiagnosticallyUseful, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item with a floor effect that is diagnostically useful."}
+```{r iccDiagnosticallyUseful, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item with a floor effect that is diagnostically useful."}
 plot(newdata$itemSum, newdata$diagnosticallyUseful, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
@@ -213,7 +213,7 @@ difficulty_long$Difficulty[which(difficulty_long$item == "lowDifficulty")] <- "L
 difficulty_long$Difficulty[which(difficulty_long$item == "highDifficulty")] <- "High"
 ```
 
-```{r iccDifficulty, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of an item with low difficulty versus high difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."}
+```{r iccDifficulty, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of an item with low difficulty versus high difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."}
 ggplot(difficulty_long, aes(theta, value, group = Difficulty, color = Difficulty)) + 
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
@@ -257,7 +257,7 @@ discrimination_long$Discrimination[which(discrimination_long$item == "lowDiscrim
 discrimination_long$Discrimination[which(discrimination_long$item == "highDiscrimination")] <- "High"
 ```
 
-```{r iccDiscrimination, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of an item with low discrimination versus high discrimination. The discrimination of an item is the slope of the line at its inflection point."}
+```{r iccDiscrimination, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves of an item with low discrimination versus high discrimination. The discrimination of an item is the slope of the line at its inflection point."}
 ggplot(discrimination_long, aes(theta, value, group = Discrimination, color = Discrimination)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
@@ -281,13 +281,13 @@ newdata$guessingTF <- predict(threePL_guessingTF, newdata = newdata)
 newdata$guessingMC <- predict(threePL_guessingMC, newdata = newdata)
 ```
 
-```{r iccGuessingTF, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item from a true/false exam, where test takers get the item correct at least 50% of the time."}
+```{r iccGuessingTF, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item from a true/false exam, where test takers get the item correct at least 50% of the time."}
 plot(newdata$itemSum, newdata$guessingTF, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
 ```
 
-```{r iccGuessingMC, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item from a 4-option multiple choice exam, where test takers get the item correct at least 25% of the time."}
+```{r iccGuessingMC, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item from a 4-option multiple choice exam, where test takers get the item correct at least 25% of the time."}
 plot(newdata$itemSum, newdata$guessingMC, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
@@ -305,7 +305,7 @@ threePL_inattention <- drm(inattention ~ itemSum, data = empiricalICCdata, fct =
 newdata$inattention <- predict(threePL_inattention, newdata = newdata)
 ```
 
-```{r iccInattention, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item where the probability of getting an item correct never exceeds .85."}
+```{r iccInattention, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curve of an item where the probability of getting an item correct never exceeds .85."}
 plot(newdata$itemSum, newdata$inattention, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
@@ -368,7 +368,7 @@ onePLitems_long$Item[which(onePLitems_long$item == "item4")] <- 4
 onePLitems_long$Item[which(onePLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt1PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "One-parameter logistic model in item response theory."}
+```{r irt1PL, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "One-parameter logistic model in item response theory."}
 ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -396,7 +396,7 @@ empiricalICCdata_noCrossing <- data.frame(
 )
 ```
 
-```{r empiricalICCnoCrossing, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 8, fig.cap = "Empirical item characteristic curves of the probability of endorsement of a given item as a function of the person's sum score. The empirical item characteristic curves of these items do not cross each other."}
+```{r empiricalICCnoCrossing, echo = FALSE, results = "hide", out.width = "100%", fig.height = 8, fig.cap = "Empirical item characteristic curves of the probability of endorsement of a given item as a function of the person's sum score. The empirical item characteristic curves of these items do not cross each other."}
 plot(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
 lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item1, type = "b", pch = "1")
 lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item2, type = "b", pch = "2")
@@ -457,7 +457,7 @@ twoPLitems_long$Item[which(twoPLitems_long$item == "item4")] <- 4
 twoPLitems_long$Item[which(twoPLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt2PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Two-parameter logistic model in item response theory."}
+```{r irt2PL, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Two-parameter logistic model in item response theory."}
 ggplot(twoPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -513,7 +513,7 @@ threePLitems_long$Item[which(threePLitems_long$item == "item4")] <- 4
 threePLitems_long$Item[which(threePLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt3PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Three-parameter logistic model in item response theory."}
+```{r irt3PL, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Three-parameter logistic model in item response theory."}
 ggplot(threePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -569,7 +569,7 @@ fourPLitems_long$Item[which(fourPLitems_long$item == "item4")] <- 4
 fourPLitems_long$Item[which(fourPLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt4PL, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Four-parameter logistic model in item response theory."}
+```{r irt4PL, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Four-parameter logistic model in item response theory."}
 ggplot(fourPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -642,7 +642,7 @@ polytomousItemResponseCategory_long$responseCategory[which(polytomousItemRespons
 polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory5")] <- 5
 ```
 
-```{r polytomousItemBoundaryCurves, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item boundary characteristic curves from two-parameter graded response model in item response theory."}
+```{r polytomousItemBoundaryCurves, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item boundary characteristic curves from two-parameter graded response model in item response theory."}
 ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), color = factor(boundary))) + 
   geom_line(size = 1.5) +
   labs(color = "Boundary") +
@@ -653,7 +653,7 @@ ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), 
   theme(axis.title.y = element_text(size = 9))
 ```
 
-```{r polytomousItemResponseCategoryCurves, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item response category characteristic curves from two-parameter graded response model in item response theory."}
+```{r polytomousItemResponseCategoryCurves, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item response category characteristic curves from two-parameter graded response model in item response theory."}
 ggplot(polytomousItemResponseCategory_long, aes(theta, value, group = factor(responseCategory), color = factor(responseCategory))) + 
   geom_line(size = 1.5) +
   labs(color = "Response Category") +
@@ -783,7 +783,7 @@ irtInformation_long$Item[which(irtInformation_long$item == "information3")] <- 3
 irtInformation_long$Item[which(irtInformation_long$item == "information4")] <- 4
 ```
 
-```{r reliabilityIRTicc, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves from two-parameter logistic model in item response theory. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."}
+```{r reliabilityIRTicc, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item characteristic curves from two-parameter logistic model in item response theory. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."}
 ggplot(irtReliability_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -800,7 +800,7 @@ ggplot(irtReliability_long, aes(theta, value, group = factor(Item), color = fact
 
 We can present the [ICC](#icc) in terms of an item information function (see Figure \@ref(fig:reliabilityIRTitemInformation)). On the x-axis, the information peak is located at the [difficulty/severity](#itemDifficulty) of the item. The higher the [discrimination](#itemDiscrimination), the higher the information peak on the y-axis.
 
-```{r reliabilityIRTitemInformation, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Item information from two-parameter logistic model in item response theory. The dashed vertical line is the item difficulty, which is located at the peak of the item information curve."}
+```{r reliabilityIRTitemInformation, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Item information from two-parameter logistic model in item response theory. The dashed vertical line is the item difficulty, which is located at the peak of the item information curve."}
 ggplot(irtInformation_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -816,7 +816,7 @@ ggplot(irtInformation_long, aes(theta, value, group = factor(Item), color = fact
 
 We can aggregate (sum) information across items to determine how much information the measure as a whole provides. This is called the test information function (see Figure \@ref(fig:reliabilityIRTtestInformation)). Note that we get more information from likert/multiple response items compared to binary/dichotomous items. Having 10 items with a 5-level response scale yields as much information as 40 dichotomous items.
 
-```{r reliabilityIRTtestInformation, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Test information curve from two-parameter logistic model in item response theory."}
+```{r reliabilityIRTtestInformation, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Test information curve from two-parameter logistic model in item response theory."}
 ggplot(irtInformation, aes(theta, testInformation)) + 
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
@@ -827,7 +827,7 @@ ggplot(irtInformation, aes(theta, testInformation)) +
 
 Based on test information, we can calculate the [standard error of measurement](#standardErrorOfMeasurement) (see Figure \@ref(fig:reliabilityIRTtestSE)). Notice how the degree of [(un)reliability](#reliability) differs at different construct levels.
 
-```{r reliabilityIRTtestSE, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Test standard error of measurement from two-parameter logistic model in item response theory."}
+```{r reliabilityIRTtestSE, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Test standard error of measurement from two-parameter logistic model in item response theory."}
 ggplot(irtInformation, aes(theta, standardError)) + 
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
@@ -854,7 +854,7 @@ efficientAssessment_long$Item[which(efficientAssessment_long$item == "item1")] <
 efficientAssessment_long$Item[which(efficientAssessment_long$item == "item2")] <- 2
 ```
 
-```{r efficientAssessment, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of an efficient assessment based on item characteristic curves from two-parameter logistic model in item response theory."}
+```{r efficientAssessment, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of an efficient assessment based on item characteristic curves from two-parameter logistic model in item response theory."}
 ggplot(efficientAssessment_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -931,7 +931,7 @@ badMeasure_long$Item[which(badMeasure_long$item == "item9")] <- 9
 badMeasure_long$Item[which(badMeasure_long$item == "item10")] <- 10
 ```
 
-```{r badMeasureICCs, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on item characteristic curves of items from a bad measure estimated from two-parameter logistic model in item response theory."}
+```{r badMeasureICCs, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on item characteristic curves of items from a bad measure estimated from two-parameter logistic model in item response theory."}
 ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -941,7 +941,7 @@ ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(I
   theme_bw()
 ```
 
-```{r badMeasureInfo, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on the test information curve."}
+```{r badMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a bad measure based on the test information curve."}
 ggplot(badMeasureInfo, aes(theta, information)) + 
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
@@ -1025,7 +1025,7 @@ goodMeasure_long$Item[which(goodMeasure_long$item == "item19")] <- 19
 goodMeasure_long$Item[which(goodMeasure_long$item == "item20")] <- 20
 ```
 
-```{r goodMeasureICCs, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on item characteristic curves of items from a good measure estimated from two-parameter logistic model in item response theory."}
+```{r goodMeasureICCs, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on item characteristic curves of items from a good measure estimated from two-parameter logistic model in item response theory."}
 ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) + 
   geom_line(size = 1.5) +
   labs(color = "Item") +
@@ -1035,7 +1035,7 @@ ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(
   theme_bw()
 ```
 
-```{r goodMeasureInfo, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on the test information curve."}
+```{r goodMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual representation of a good measure based on the test information curve."}
 ggplot(goodMeasureInfo, aes(theta, information)) + 
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
@@ -1048,7 +1048,7 @@ ggplot(goodMeasureInfo, aes(theta, information)) +
 
 ### Load Libraries
 
-```{r, message = FALSE, warning = FALSE}
+```{r}
 library("mirt")
 library("tidyverse")
 library("here")

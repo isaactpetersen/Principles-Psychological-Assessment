@@ -454,7 +454,7 @@ density_data$type <- factor(density_data$type, levels = c("edible_TN","inedible_
 
 Figure \@ref(fig:classificationDistributions) depicts the distributions of scores by berry type. Note how there are clearly two distinct distributions. However, the distributions overlap to some degree. Thus, any cutoff will have at least some inaccurate classifications.
 
-```{r classificationDistributions, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Distribution of test scores by berry type"}
+```{r classificationDistributions, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Distribution of test scores by berry type"}
 #No Cutoff
 ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
   geom_density(alpha = .5) +
@@ -467,7 +467,7 @@ ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
 
 Figure \@ref(fig:classificationStandardCutoff) depicts the distributions of scores by berry type with a cutoff. The red line indicates the cutoff—the level above which berries are classified by the test as inedible. There are errors on each side of the cutoff. Below the cutoff, there are some [false negatives](#falseNegative) (blue): inedible berries that are inaccurately classified as edible. Above the cutoff, there are some [false positives](#falsePositive) (green): edible berries that are inaccurately classified as inedible. Costs of [false negatives](#falseNegative) could include sickness or death from eating the inedible berries. Costs of [false positives](#falsePositive) could include taking longer to find food, finding insufficient food, and starvation.
 
-```{r classificationStandardCutoff, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Classifications based on a cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
+```{r classificationStandardCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Classifications based on a cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
 #Standard Cutoff
 ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
   geom_ribbon(alpha = 1) +
@@ -486,7 +486,7 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
 
 Based on our assessment goals, we might use a different [selection ratio](#selectionRatio) by changing the cutoff. Figure \@ref(fig:classificationRaiseCutoff) depicts the distributions of scores by berry type when we raise the cutoff. There are now more [false negatives](#falseNegative) (blue) and fewer [false positives](#falsePositive) (green). If we raise the cutoff (to be more conservative), the number of [false negatives](#falseNegative) increases and the number of [false positives](#falsePositive) decreases. Consequently, as the cutoff increases, [sensitivity](#sensitivity) and [NPV](#npv) decrease (because we have more [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) increase (because we have fewer [false positives](#falsePositive)). A higher cutoff could be optimal if the costs of [false positives](#falsePositive) are considered greater than the costs of [false negatives](#falseNegative). For instance, if the aliens cannot risk eating the inedible berries because the berries are fatal and there are sufficient edible berries that can be found to feed the alien colony.
 
-```{r classificationRaiseCutoff, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Classifications based on raising the cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
+```{r classificationRaiseCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Classifications based on raising the cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
 #Raise the cutoff
 cutoff <- 85
 
@@ -525,7 +525,7 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
 
 Figure \@ref(fig:classificationLowerCutoff) depicts the distributions of scores by berry type when we lower the cutoff. There are now fewer [false negatives](#falseNegative) (blue) and more [false positives](#falsePositive) (green). If we lower the cutoff (to be more liberal), the number of [false negatives](#falseNegative) decreases and the number of [false positives](#falsePositive) increases. Consequently, as the cutoff decreases, [sensitivity](#sensitivity) and [NPV](#npv) increase (because we have fewer [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) decrease (because we have more [false positives](#falsePositive)). A lower cutoff could be optimal if the costs of [false negatives](#falseNegative) are considered greater than the costs of [false positives](#falsePositive). For instance, if the aliens cannot risk missing edible berries because they are in short supply relative to the size of alien colony, and eating the inedible berries would, at worst, lead to minor, temporary discomfort.
 
-```{r classificationLowerCutoff, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Classifications based on lowering the cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
+```{r classificationLowerCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Classifications based on lowering the cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
 #Lower the cutoff
 cutoff <- 65
 
@@ -580,7 +580,7 @@ The x-axis of the ROC curve is the [false alarm rate](#falsePositiveRate) or [fa
 
 Figure \@ref(fig:empiricalROC) depicts an empirical ROC plot where lines are drawn to connect the [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates.
 
-```{r empiricalROC, echo = FALSE, message = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Empirical receiver operating characteristic curve. AUC = Area under the receiver operating characteristic curve."}
+```{r empiricalROC, echo = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Empirical receiver operating characteristic curve. AUC = Area under the receiver operating characteristic curve."}
 library("pROC")
 
 plot(roc(aSAH$outcome, aSAH$s100b), legacy.axes = TRUE, print.auc = TRUE)
@@ -588,7 +588,7 @@ plot(roc(aSAH$outcome, aSAH$s100b), legacy.axes = TRUE, print.auc = TRUE)
 
 Figure \@ref(fig:smoothROC) depicts an ROC curve where a smoothed and fitted curve is drawn to connect the [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates.
 
-```{r smoothROC, echo = FALSE, message = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Smooth receiver operating characteristic curve. AUC = Area under the receiver operating characteristic curve."}
+```{r smoothROC, echo = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Smooth receiver operating characteristic curve. AUC = Area under the receiver operating characteristic curve."}
 plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE)
 ```
 
@@ -598,11 +598,11 @@ plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc
 
 The geometrical area under the ROC curve reflects the [discriminative accuracy](#discrimination) of the measure. The index is called the area Under the [ROC](#roc) (AUC). AUC quantifies the [discriminative power](#discrimination) of an assessment. AUC is the probability that a randomly selected target and a randomly selected non-target is ranked correctly by the assessment method. AUC values range from 0.0 to 1.0, where chance accuracy is 0.5 as indicated by diagonal line in the ROC curve. That is, a measure can be useful to the extent that its ROC curve is above the diagonal line (i.e., its [discriminative accuracy](#discrimination) is above chance).
 
-```{r auc, echo = FALSE, message = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Area under the receiver operating characteristic curve (AUC)."}
+```{r auc, echo = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Area under the receiver operating characteristic curve (AUC)."}
 plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, auc.polygon = TRUE)
 ```
 
-```{r aucRange, echo = FALSE, message = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Receiver operating characteristic curves (ROCs) for various levels of area under the ROC curve (AUC) for various measures."}
+```{r aucRange, echo = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.cap = "Receiver operating characteristic curves (ROCs) for various levels of area under the ROC curve (AUC) for various measures."}
 
 #From here: https://stats.stackexchange.com/questions/422926/generate-synthetic-data-given-auc/424213
 simulateDataFromAUC <- function(auc, n){
@@ -644,7 +644,7 @@ If we lower the [base rate](#baseRate), we would need larger sample to get enoug
 
 ### Load Libraries
 
-```{r, message = FALSE, warning = FALSE}
+```{r}
 library("pROC")
 library("ROCR")
 library("rms")
@@ -707,7 +707,7 @@ The [receiver operating characteristic (ROC) curve](#roc) shows the combination 
 
 ### Empirical ROC Curve
 
-```{r, message = FALSE}
+```{r}
 rocCurve <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE)
 ```
 
@@ -724,7 +724,7 @@ abline(coef = c(0,1))
 
 ### Smooth ROC Curve
 
-```{r, message = FALSE}
+```{r}
 rocCurveSmooth <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = TRUE)
 ```
 
@@ -736,7 +736,7 @@ plot(rocCurveSmooth, legacy.axes = TRUE, print.auc = TRUE)
 
 The threshold at the Youden's J statistic is the threshold where the test has the maximum combination (i.e., sum) of [sensitivity](#sensitivity) and [specificity](#specificity): $\text{max}(\text{sensitivity} + \text{specificity} - 1)$
 
-```{r, warning = FALSE}
+```{r}
 youdenJ <- coords(rocCurve, x = "best", best.method = "youden")
 youdenJthreshold <- youdenJ$threshold
 youdenJspecificity <- youdenJ$specificity
@@ -751,7 +751,7 @@ For this test, the Youden's J Statistic is at a threshold of `r youdenJthreshold
 
 The point closest to the top-left part of the ROC plot with perfect [sensitivity](#sensitivity) and [specificity](#specificity): $\text{min}[(1 - \text{sensitivity})^2 + (1 - \text{specificity})^2]$
 
-```{r, warning = FALSE}
+```{r}
 closestTopLeft <- coords(rocCurve, x = "best", best.method = "closest.topleft")
 closestTopLeftthreshold <- closestTopLeft$threshold
 closestTopLeftspecificity <- closestTopLeft$specificity
@@ -1243,19 +1243,19 @@ colNumberOutcome <- which(names(mydataSDT) == "disorder")
 myDataNoMissing <- na.omit(mydataSDT)
 ```
 
-```{r calibrationPlot1, message = FALSE, fig.height = 8, fig.width = 8, fig.cap = c("Calibration plot 1")}
+```{r calibrationPlot1, fig.height = 8, fig.width = 8, fig.cap = c("Calibration plot 1")}
 plotCalibration(data = na.omit(myDataNoMissing), cOutcome = colNumberOutcome, predRisk = myDataNoMissing$predictedProbability, groups = 10)
 ```
 
 This calibration plot (and ROC curve) was generated using the `rms` package [@R-rms].
 
-```{r calibrationPlot2, warning = FALSE, fig.height = 8, fig.width = 8, fig.cap = c("Calibration plot 2")}
+```{r calibrationPlot2, fig.height = 8, fig.width = 8, fig.cap = c("Calibration plot 2")}
 val.prob(mydataSDT$predictedProbability, mydataSDT$disorder)
 ```
 
 This calibration plot was adapted from Darren Dahly's example here: https://darrendahly.github.io/post/homr/
 
-```{r, warning = FALSE, message = FALSE}
+```{r}
 g1 <- mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) %>% 
   # Bin prediction into 10ths
   group_by(bin) %>%
@@ -1301,7 +1301,7 @@ grid.arrange(g)
 
 Brier scores were calculated using the `rms` package [@R-rms]. Smaller values reflect greater [calibration accuracy](#calibration).
 
-```{r, warning = FALSE}
+```{r}
 brierValue <- val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["Brier"]
 brierValue
 ```
@@ -1359,7 +1359,7 @@ plotCalibration(data = na.omit(myDataNoMissing), cOutcome = colNumberOutcome, pr
 
 Spiegelhalter's $z$ was calculated using the `rms` package [@R-rms]. Smaller $z$ values (and larger associated $p$-values) reflect greater [calibration accuracy](#calibration).
 
-```{r, warning = FALSE}
+```{r}
 val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:z"]; val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:p"]
 ```
 
@@ -1809,7 +1809,7 @@ accuracyStats$specificity <- accuracyStats$TNrate <- specificity(TP = accuracySt
 sensitivitySpecificityData <- pivot_longer(accuracyStats, cols = all_of(c("sensitivity","specificity")))
 ```
 
-```{r sensitivitySpecificity, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Sensitivity and specificity as a function of the cutoff."}
+```{r sensitivitySpecificity, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Sensitivity and specificity as a function of the cutoff."}
 ggplot(sensitivitySpecificityData, aes(x = cutoff, y = value, color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "cutoff (liberal to conservative)") +
@@ -1940,7 +1940,7 @@ ppvNPVbaseRateData$negativePredictiveValue <- negativePredictiveValue(BR = ppvNP
 ppvNPVbaseRateData_long <- pivot_longer(ppvNPVbaseRateData, cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
 ```
 
-```{r ppvNPVbaseRate, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value as a function of the base rate."}
+```{r ppvNPVbaseRate, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value as a function of the base rate."}
 ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "base rate") +
@@ -1958,7 +1958,7 @@ accuracyStats$negativePredictiveValue <- negativePredictiveValue(TP = accuracySt
 ppvNPVcutoffData <- pivot_longer(accuracyStats, cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
 ```
 
-```{r ppvNPVcutoff, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value as a function of the cutoff."}
+```{r ppvNPVcutoff, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Positive predictive value and negative predictive value as a function of the cutoff."}
 ggplot(ppvNPVcutoffData, aes(x = cutoff, y = value, color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "cutoff (liberal to conservative)", limits = c(0.05,2.09)) +
@@ -2701,7 +2701,7 @@ Igain(HR = (1164/1899), FAR = (935/4757), BR = (1899/6656))
 
 Information gain depends on the [base rate](#baseRate) [@Treat2012], as depicted in Figure \@ref(fig:informationGainBaseRate). The maximum reduction of uncertainty (i.e., greatest information) occurs when the [base rate](#baseRate) is 0.5. A [base rate](#baseRate) tells us little a priori about the condition if the probability of the condition is 50/50, so the measure can provide more benefit. If the [base rate](#baseRate) is 0.3 or 0.7, we can do better than [going with the base rate](#predictingFromBaseRate). If the [base rate](#baseRate) is 0.9 or 0.1, it is difficult for our measure to do better than [going with the base rate](#predictingFromBaseRate). If the [base rate](#baseRate) is 0.05 of 0.95 (or more extreme), it is likely that our measure will do almost nothing in terms of information gain.
 
-```{r informationGainBaseRate, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Information gain as a function of the base rate."}
+```{r informationGainBaseRate, echo = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Information gain as a function of the base rate."}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(possibleCutoffs, max(possibleCutoffs, na.rm = TRUE) + 0.01)
@@ -2758,7 +2758,7 @@ utilityFalseAlarms <- 0.25
 
 ### Calculate Accuracy
 
-```{r, warning = FALSE}
+```{r}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(possibleCutoffs, max(possibleCutoffs, na.rm = TRUE) + 0.01)
@@ -2857,7 +2857,7 @@ Threshold at maximum combination of [sensitivity](#sensitivity) and [specificity
 
 $\text{max}(\text{sensitivity} + \text{specificity})$
 
-```{r, warning = FALSE}
+```{r}
 youdenIndex <- coords(roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE), x = "best", best.method = "youden")[[1]]
 
 youdenIndex
@@ -2876,7 +2876,7 @@ accuracyStats[which(accuracyStats$youdenJ == max(accuracyStats$youdenJ, na.rm = 
 
 Threshold where the ROC plot is closest to the Top Left:
 
-```{r, warning = FALSE}
+```{r}
 closestToTheTopLeft <- coords(roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE), x = "best", best.method = "closest.topleft")[[1]]
 ```
 

@@ -182,7 +182,7 @@ There are two main types of measurement error: systematic (nonrandom) errors and
 
 As depicted in Figure \@ref(fig:systematicError), systematic error does not affect the variability of the scores but it does affect the mean of the scores, so the person-level or group-level mean is less accurate. In other words, the systematic errors leads to a biased estimate of the average. However, multiple systematic errors may simultaneously co-exist and can operate in the same direction (exacerbating the effects of bias) or in opposite directions (hiding the extent of bias).
 
-```{r systematicError, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Systematic error."}
+```{r systematicError, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Systematic error."}
 library("tidyverse")
 library("viridis")
 
@@ -211,7 +211,7 @@ ggplot(errorData %>% filter(measure != "addRandomError"), aes(x = score, fill = 
 
 As depicted in Figure \@ref(fig:unsystematicError), random error does not affect the mean of the scores but it does increase the variability of the scores. In other words, the group-level mean is still accurate, but individuals' scores are less precise.
 
-```{r unsystematicError, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.cap = "Random error."}
+```{r unsystematicError, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Random error."}
 ggplot(errorData %>% filter(measure != "addSystematicError"), aes(x = score, fill = measure)) +
   geom_density(alpha = 0.25) +
   scale_fill_viridis_d(name = "",
@@ -321,7 +321,7 @@ $$
 
 where $\sigma_x$ represents the standard deviation of scores. Thus, the standard error of measurement is directly related to the reliability of the measure. The higher the reliability, the lower the standard error of measurement.
 
-```{r standardErrorOfMeasurementPlot, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Standard error of measurement as a function of reliability"}
+```{r standardErrorOfMeasurementPlot, echo = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Standard error of measurement as a function of reliability"}
 library("ggplot2")
 
 standardErrorOfMeasurementData <- expand.grid(reliability = seq(0, 1, by = 0.01),
@@ -379,7 +379,7 @@ Based on the preceding discussion, consider the characteristics of measures that
 
 ### Load Libraries
 
-```{r, message = FALSE, warning = FALSE}
+```{r}
 library("psych")
 library("blandr")
 library("MBESS")
@@ -538,7 +538,7 @@ correlations$v20 <-complement(correlations$criterion, .9)
 correlations$v21 <-complement(correlations$criterion, 1)
 ```
 
-```{r rangeOfCorrelations, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 12, fig.cap = "Correlation coefficients"}
+```{r rangeOfCorrelations, echo = FALSE, results = "hide", out.width = "100%", fig.height = 12, fig.cap = "Correlation coefficients"}
 par(mfrow = c(7,3), mar = c(1, 0, 1, 0))
 
 # -1.0
@@ -672,7 +672,7 @@ dev.off() #par(mfrow = c(1,1))
 
 Keep in mind that the Pearson correlation examines the strength of the *linear* association between two variables. If the association between two variables is non-linear, the Pearson correlation provides the strength of the linear trend and may not provide a meaningful index of the strength of the association between the variables. For instance, Anscombe's quartet includes four sets of data that have nearly identical basic descriptive statistics, including the same bivariate correlation, yet have very different distributions and whose association takes very different forms (see Figure \@ref(fig:anscombeQuartet)).
 
-```{r anscombeQuartet, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 6, fig.width = 6, fig.cap = "Anscombe's Quartet"}
+```{r anscombeQuartet, echo = FALSE, results = "hide", out.width = "100%", fig.height = 6, fig.width = 6, fig.cap = "Anscombe's Quartet"}
 anscombe
 
 par(mfrow = c(2,2))
@@ -1028,7 +1028,7 @@ Current recommendations are to use McDonald's coefficient omega ($\omega$) inste
 
 Omega total ($\omega_t$) (or simply omega) is the proportion of the total variance that is accounted for by the common factor [@Flora2020]. Omega total, like Cronbach's alpha, assumes that the items are uni-dimensional. Omega total ($\omega_t$) was calculated using the `MBESS` package [@R-MBESS]. This code quickly calculates a point estimate for omega total:
 
-```{r, warning = FALSE}
+```{r}
 ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "omega", interval.type = "none")$est
 ```
 
@@ -1040,7 +1040,7 @@ bootstrapReplications <- 1000
 
 The following code calculates a confidence interval from a bias-corrected bootstrap. For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed. **Warning**: this code takes a while to run based on `r bootstrapReplications` bootstrap replications. You can reduce the number of replications to be faster. However, the number of bootstrap replications must be larger than the number of rows in the data.
 
-```{r omegaTotal, warning = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
+```{r omegaTotal, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
 ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "omega", interval.type = "bca", B = bootstrapReplications)
 ```
@@ -1051,13 +1051,13 @@ If the items are multi-dimensional and follow a bifactor structure, omega hierar
 
 Omega hierarchical was calculated using the `MBESS` package [@R-MBESS].
 
-```{r, warning = FALSE}
+```{r}
 ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "hierarchical", interval.type = "none")$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap. For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed. **Warning**: this code takes a while to run based on `r bootstrapReplications` bootstrap replications. You can reduce the number of replications to be faster. However, the number of bootstrap replications must be larger than the number of rows in the data.
 
-```{r omegaHierarchical, warning = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
+```{r omegaHierarchical, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
 ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "hierarchical", interval.type = "bca", B = bootstrapReplications)
 ```
@@ -1068,13 +1068,13 @@ Use omega categorical ($\omega_C$) for categorical items that are uni-dimensiona
 
 Omega categorical was calculated using the `MBESS` package [@R-MBESS].
 
-```{r, warning = FALSE}
+```{r}
 ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")], type = "categorical", interval.type = "none")$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap. For reproducibility, I set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed. **Warning**: this code takes a while to run based on `r bootstrapReplications` bootstrap replications. You can reduce the number of replications to be faster. However, the number of bootstrap replications must be larger than the number of rows in the data.
 
-```{r omegaCategorical, warning = FALSE, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
+```{r omegaCategorical, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
 ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")], type = "categorical", interval.type = "bca", B = bootstrapReplications)
 ```
@@ -1147,7 +1147,7 @@ For instance, in this case, the reliability of the difference score is .26 even 
 
 In Figures \@ref(fig:reliabilityOfDifferenceScore) and \@ref(fig:reliabilityOfDifferenceScore2), I present the reliability of a difference score as a function of (a) the reliability of the indices that compose the difference score and (b) the correlation between them, assuming that both indices have equal variances.
 
-```{r reliabilityOfDifferenceScore, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Reliability of Difference Score as a Function of Reliability of Indices and the Correlation between Them"}
+```{r reliabilityOfDifferenceScore, echo = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Reliability of Difference Score as a Function of Reliability of Indices and the Correlation between Them"}
 reliabilityOfDifferenceScoreEqualVariances <- function(x, y, reliabilityX, reliabilityY){
   rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
   reliability <- (reliabilityX + reliabilityY - (2 * rxy)) / (2 * (1 - rxy))
@@ -1176,7 +1176,7 @@ ggplot(newDataDifferenceScore, aes(reliability, reliabilityOfDifferenceScore, gr
   theme(legend.background = element_rect(color = "black", fill = "white", linetype = "solid"))
 ```
 
-```{r reliabilityOfDifferenceScore2, echo = FALSE, message = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Reliability of Difference Score as a Function of Correlation between Indices and Reliability of Indices"}
+```{r reliabilityOfDifferenceScore2, echo = FALSE, results = "hide", out.width = "100%", fig.height = 4, fig.cap = "Reliability of Difference Score as a Function of Correlation between Indices and Reliability of Indices"}
 newDataDifferenceScore2 <- expand.grid(reliability = c(0, .1, .3, .5, .7, .9),
                                        correlation = seq(0, 1, by = 0.01))
 
