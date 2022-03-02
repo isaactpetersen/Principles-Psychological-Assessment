@@ -330,7 +330,7 @@ The [selection ratio](#selectionRatio) might be something that the test dictates
 
 Based on the [confusion matrix](#confusionMatrix), we can calculate the prediction accuracy based on the [percent accuracy](#percentAccuracy) of the predictions. The [percent accuracy](#percentAccuracy) is the number of correct predictions divided by the total number of predictions, and multiplied by 100. In the context of a confusion matrix, this is calculated as: $100\% \times \frac{\text{TP} + \text{TN}}{N}$. In this case, our [percent accuracy](#percentAccuracy) was 78%—that is, 78% of our predictions were accurate, and 22% of our predictions were inaccurate.
 
-#### Percent Accuracy by Chance
+#### Percent Accuracy by Chance {#accuracyByChance}
 
 78% sounds pretty accurate. And it is much higher than 50%, so we are doing a pretty good job, right? Well, it is important to compare our accuracy to what accuracy we would expect to get by chance alone, if predictions were made by a random process rather than using a test's scores. Our [selection ratio](#selectionRatio) was 25.4%. How accurate would we be if we randomly selected 25.4% of people to reject? To determine what accuracy we could get by chance alone given the [selection ratio](#selectionRatio) and the base rate, we can calculate the chance probability of [true positives](#truePositive) and the chance probability of [true negatives](#trueNegative). The probability of a given cell in the [confusion matrix](#confusionMatrix) is a [joint probability](#jointProbability)—the probability of two events occurring simultaneously. To calculate a [joint probability](#jointProbability), we multiply the probability of each event.
 
@@ -385,7 +385,7 @@ We sum the chance expectancies for the correct predictions ([TP](#truePositive) 
 
 Going with the most likely outcome in every prediction (predicting from the [base rate](#baseRate)) can be highly accurate as noted by @Meehl1955, especially when the [base rate](#baseRate) is very low or very high. This should serve as an important reminder that we need to compare the accuracy of our measures to the accuracy by (1) random chance and (2) predicting from the [base rate](#baseRate). There are several important implications of the impact of [base rates](#baseRate) on prediction accuracy. One implication is that using the same test in different settings with different [base rates](#baseRate) will markedly change the accuracy of the test. Oftentimes, using a test will actually *decrease* the predictive accuracy when the [base rate](#baseRate) deviates greatly from .50. But, [percent accuracy](#percentAccuracy) is not everything. [Percent accuracy](#percentAccuracy) treats different kinds of errors as if they are equally important. However, the value we place on different kinds of errors may be different, as described next.
 
-#### Different Kinds of Errors Have Different Costs
+#### Different Kinds of Errors Have Different Costs {#differentErrorsDifferentCosts}
 
 Some errors have a high cost and some errors have a low cost. Among the four decision outcomes, there were two types of errors: [false positives](#falsePositive) and [false negatives](#falseNegative). The extent to which [false positives](#falsePositive) and [false negatives](#falseNegative) are costly depends on the prediction problem. So, even though you can often be most accurate by going with the [base rate](#baseRate), it may be advantageous to using a screening instrument despite lower [overall accuracy](#percentAccuracy) because of the huge difference in costs of [false positives](#falsePositive) versus [false negatives](#falseNegative) in some cases.
 
@@ -1180,7 +1180,7 @@ The $c$ index, also called the concordance probability, is a generalization of t
 lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["C"]
 ```
 
-#### Effect Size ($\beta$) of Regression
+#### Effect Size ($\beta$) of Regression {#standardizedRegressionCoefficient}
 
 The effect size of a predictor, i.e., the standardized regression coefficient called beta ($\beta$), is a general index of [discrimination accuracy](#discrimination) for a continuous outcome. We can obtain standardized regression coefficients by standardizing the predictors and outcome using the `scale()` function in R.
 
@@ -2516,7 +2516,7 @@ miscalibration <- function(predicted, actual, cutoff, bins = 10){
 miscalibration(predicted = mydataSDT$predictedProbability, actual = mydataSDT$disorder, cutoff = cutoff)
 ```
 
-## Optimal Cutoff Specification
+## Optimal Cutoff Specification {#optimalCutoff}
 
 There are two ways to improve diagnostic performance [@Swets2000]. One way is to increase the diagnostic accuracy of the assessment. The second way is to increase the utility of the diagnostic decisions that are made, based on where we set the cutoff. The optimal cutoff depends on the differential costs of [false positives](#falsePositive) versus [false negatives](#falseNegative), as applied in [decision theory](#decisionTheory).
 
@@ -3028,7 +3028,7 @@ accuracyStats$cutoff[which(accuracyStats$informationGain == max(accuracyStats$in
 
 ## Regression for Prediction of Continuous Outcomes
 
-When predicting a continuous outcome regression is particularly relevant (or multiple regression, when dealing with multiple predictors). Regression takes the following form:
+When predicting a continuous outcome, regression is particularly relevant (or multiple regression, when dealing with multiple predictors). Regression takes the following form:
 
 $$
 y = b_0 + b_1 \cdot x_1 + e
@@ -3150,6 +3150,8 @@ Here are some potential ways to improve the accuracy (and honesty) of prediction
 - Work to identify and mitigate potential blindspots; be aware of cognitive biases, such as confirmation bias and [base rate](#baseRate) neglect.
 
 ## Conclusion
+
+Human behavior is challenging to predict. People commonly make cognitive pseudo-prediction errors, such as the [confusion of inverse probabilities](#inverseFallacy). People also tend to ignore [base rates](#baseRate) when making predictions. When the [base rate](#baseRate) of a behavior is very low or very high, you can be highly accurate in predicting the behavior by [predicting from the base rate](#predictingFromBaseRate). Thus, you cannot judge how accurate your prediction is until you know how you accurate your predictions would be by [random chance](#accuracyByChance). Moreover, maximizing [percent accuracy](#percentAccuracy) may not be the ultimate goal because [different errors have different costs](#differentErrorsDifferentCosts). Though there are many types of accuracy, there are two broad types: [discrimination](#discrimination) and [calibration](#calibration)—and they are orthogonal. [Discrimination](#discrimination) accuracy is frequently evaluated with the [area under the receiver operating characteristic curve](#auc), or with [sensitivity](#sensitivity) and [specificity](#specificity), [standardized regression coefficients](#standardizedRegressionCoefficient). [Calibration](#calibration) accuracy is frequently evaluated graphically and with various indices. [Sensitivity](#sensitivity) and [specificity](#specificity) [depend on the cutoff](#accuracyCutoff). Therefore, the [optimal cutoff](#optimalCutoff) depends on the purposes of the assessment and how much one weights the various costs of the different types of errors: [false negatives](#falseNegative) and [false positives](#falsePositive). It is important to evaluate both [discrimination](#discrimination) and [calibration](#calibration) when evaluating prediction accuracy.
 
 ## Suggested Readings
 
