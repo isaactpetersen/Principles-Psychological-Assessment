@@ -155,14 +155,24 @@ CFA is a test of the hypothesis. In a CFA, you specify the model and ask how wel
 
 #### 4. How Many Factors to Retain
 
-A goal of factor analysis and PCA is simplification or parsimony, while still explaining as much variance as possible. The hope is that you can have fewer factors that explain the associations between the variables than the number of observed variables. But how do you decide on the number of factors (in factor analysis) or components (in PCA)?
+A goal of factor analysis and [PCA](#pca) is simplification or parsimony, while still explaining as much variance as possible. The hope is that you can have fewer factors that explain the associations between the variables than the number of observed variables. But how do you decide on the number of factors (in factor analysis) or components (in [PCA](#pca))?
 
-There are a number of criteria that one can use to help determine how many factors to keep:
+There are a number of criteria that one can use to help determine how many factors/components to keep:
 
-- Kaiser-Guttman criterion: factors with eigenvalues greater than one
+- Kaiser-Guttman criterion: in PCA, components with eigenvalues greater than one
+    - or, for factor analysis, factors with eigenvalues greater than zero
 - Cattell's scree test: the "elbow" in a scree plot minus one
-- Parallel analysis
-- Very simple structure plot
+- Parallel analysis: factors that explain more variance than randomly simulated data
+- [Very simple structure (VSS)](#vssPlot) criterion: larger is better
+- Velicer minimum average partial (MAP) test: smaller is better
+- Aikake information criterion (AIC): smaller is better
+- Bayesian information criterion (BIC): smaller is better
+- sample size-adjusted BIC (SABIC): smaller is better
+- root mean square error of approximation (RMSEA): smaller is better
+- chi-square difference test: smaller is better; a significant test indicates that the more complex model is significantly better fitting than the less complex model
+- standardized root mean square residual (SRMR): smaller is better
+- Comparative Fit Index (CFI): larger is better
+- Tucker Lewis Index (TLI): larger is better
 
 There is not necessarily a "correct" criterion to use in determining how many factors to keep, so it is generally recommended that researchers use multiple criteria in combination with theory and interpretability.
 
@@ -178,9 +188,9 @@ One criterion for how many factors to keep is the Kaiser-Guttman criterion. Acco
 
 Another criterion is Cattell's scree test, which involves selecting the number of factors from looking at the scree plot. "Scree" refers to the rubble of stones at the bottom of a mountain. According to Cattell's scree test, you should keep the factors before the last steep drop in eigenvalues—i.e., the factors before the rubble, where the slope approaches zero. The beginning of the scree (or rubble), where the slope approaches zero, is called the "elbow" of a scree plot. Using Cattell's scree test, you retain the number of factors that explain the most variance prior to the explained variance drop off, because, ultimately, you want to include only as many factors in which you gain substantially more by the inclusion of these factors. That is, you would keep the number of factors at the elbow of the scree plot minus one. If the last steep drop occurs from Factor 4 to Factor 5 and the elbow is at Factor 5, we would keep four factors. In Figure \@ref(fig:screePlot), the last steep drop in eigenvalues occurs from Factor 3 to Factor 4; the elbow of the scree plot occurs at Factor 4. We would keep the number of factors at the elbow minus one. Thus, using Cattell's scree test, we would keep three factors based on Figure \@ref(fig:screePlot).
 
-There are more sophisticated ways of using scree plot, but they usually end up at a similar decision. Examples of more sophisticated tests include parallel analysis and very simple structure (VSS) plots. In a parallel analysis, you examine where the eigenvalues from observed data and random data converge, so you do not retain a factor that explains less variance than would be expected by random chance. A parallel analysis can be helpful when you have many variables and one factor accounts for the majority of the variance such that the elbow is at Factor 2 (which would result in keeping one factor), but you have theoretical reasons to select more than one factor. An example in which parallel analysis may be helpful is with neurophysiological data. For instance, parallel analysis can be helpful when conducting temporo-spatial PCA of event-related potential (ERP) data in which you want to separate multiple time windows and multiple spatial locations despite a predominant signal during a given time window and spatial location [@Dien2012].
+There are more sophisticated ways of using scree plot, but they usually end up at a similar decision. Examples of more sophisticated tests include parallel analysis and [very simple structure (VSS) plots](#vssPlot). In a parallel analysis, you examine where the eigenvalues from observed data and random data converge, so you do not retain a factor that explains less variance than would be expected by random chance. A parallel analysis can be helpful when you have many variables and one factor accounts for the majority of the variance such that the elbow is at Factor 2 (which would result in keeping one factor), but you have theoretical reasons to select more than one factor. An example in which parallel analysis may be helpful is with neurophysiological data. For instance, parallel analysis can be helpful when conducting temporo-spatial PCA of event-related potential (ERP) data in which you want to separate multiple time windows and multiple spatial locations despite a predominant signal during a given time window and spatial location [@Dien2012].
 
-In general, my recommendation is to use Cattell's scree test, and then test the factor solutions with plus or minus one factor. You should never accept factors with eigenvalues less than one, because they are likely to be error. If you are using maximum likelihood factor analysis, you can compare the fit of various models with model fit criteria to see which model fits best for its parsimony. A model will always fit better when you add additional parameters or factors, so you examine if there is *significant* improvement in model fit when adding the additional factor—that is, we keep adding complexity until additional complexity does not buy us much. Always try a factor solution that is one less and one more than suggested by Cattell's scree test to buffer your final solution because the purpose of factor analysis is to explain things and to have interpretability. Even if all rules or indicators suggest to keep X number of factors, maybe $\pm$ one factor helps clarifies things. Even though factor analysis is empirical, theory and interpretatability should also inform decisions.
+In general, my recommendation is to use Cattell's scree test, and then test the factor solutions with plus or minus one factor. You should never accept PCA components with eigenvalues less than one (or factors with eigenvalues less than zero), because they are likely to be error. If you are using maximum likelihood factor analysis, you can compare the fit of various models with model fit criteria to see which model fits best for its parsimony. A model will always fit better when you add additional parameters or factors, so you examine if there is *significant* improvement in model fit when adding the additional factor—that is, we keep adding complexity until additional complexity does not buy us much. Always try a factor solution that is one less and one more than suggested by Cattell's scree test to buffer your final solution because the purpose of factor analysis is to explain things and to have interpretability. Even if all rules or indicators suggest to keep X number of factors, maybe $\pm$ one factor helps clarifies things. Even though factor analysis is empirical, theory and interpretatability should also inform decisions.
 
 #### 5. Factor Rotation
 
@@ -363,18 +373,22 @@ Determine the number of factors to retain using the Scree plot and Very Simple S
 
 ##### Scree Plot
 
-Scree plots were generated using the `psych` [@R-psych] and `nFactors` [@R-nFactors] packages. The acceleration factor attempts to operationalize the scree test: i.e., the "elbow" of the scree plot. The acceleration factor is quantified using the acceleration of the curve, that is, the second derivative.
+Scree plots were generated using the `psych` [@R-psych] and `nFactors` [@R-nFactors] packages. The acceleration factor attempts to operationalize the scree test: i.e., the "elbow" of the scree plot. The acceleration factor is quantified using the acceleration of the curve, that is, the second derivative. The Kaiser-Guttman rule states to keep principal components whose eigenvalues are greater than one. However, for exploratory factor analysis (as opposed to [PCA](#pca)), the criterion is to keep the factors whose eigenvalues are greater than zero (i.e., not the factors whose eigenvalues are greater than one) [@Dinno2014].
 
 ```{r, out.width = "100%", fig.cap = "Scree plots in exploratory factor analysis"}
 fa.parallel(x = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], fm = "ml", fa = "fa")
 plot(nScree(x = cor(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], use = "pairwise.complete.obs"), model = "factors"))
 ```
 
-##### Very Simple Structure (VSS) Plot
+##### Very Simple Structure (VSS) Plot {#vssPlot}
 
-Very simple structure (VSS) plots were generated using the `psych` package [@R-psych]. [**Nice description of VSS plots: https://it.unt.edu/sites/default/files/vss_l_jds_dec2014.pdf**]
+The very simple structure (VSS) is another criterion that can be used to determine the optimal number of factors or components to retain. Using the VSS criterion, the optimal number of factors to retain is the number of factors that maximizes the VSS criterion [@Revelle1979]. As described here (https://it.unt.edu/sites/default/files/vss_l_jds_dec2014.pdf), the VSS criterion is evaluated with models in which factor loadings for a given item that are less than the maximum factor loading for that item are suppressed to zero, thus forcing simple structure (i.e., no cross-loadings). The goal is finding a factor structure with interpretability so that factors are clearly distinguishable. Very simple structure (VSS) plots were generated using the `psych` package [@R-psych].
+
+The output also provides additional criteria by which to determine the optimal number of factors, each for which lower values are better, including the Velicer minimum average partial (MAP) test, the Bayesian information criterion (BIC), the sample size-adjusted BIC (SABIC), and the root mean square error of approximation (RMSEA).
 
 ###### Orthogonal (Varimax) rotation
+
+In the example below, the VSS criterion is highest with 3 or 4 factors.
 
 ```{r, out.width = "100%", fig.cap = "Very simple structure plot with orthogonal rotation in exploratory factor analysis"}
 vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], rotate = "varimax", fm = "ml")
@@ -383,12 +397,16 @@ nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 
 ###### Oblique (Oblimin) rotation
 
+In the example below, the VSS criterion is highest with 3 factors.
+
 ```{r, out.width = "100%", fig.cap = "Very simple structure plot with oblique rotation in exploratory factor analysis"}
 vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], rotate = "oblimin", fm = "ml")
 nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], rotate = "oblimin", fm = "ml")
 ```
 
 ###### No rotation
+
+In the example below, the VSS criterion is highest with 3 or 4 factors.
 
 ```{r, out.width = "100%", fig.cap = "Very simple structure plot with no rotation in exploratory factor analysis"}
 vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], rotate = "none", fm = "ml")
@@ -1658,7 +1676,7 @@ Determine the number of components to retain using the Scree plot and Very Simpl
 
 #### Scree Plot
 
-Scree plots were generated using the **psych** [@R-psych] and **nFactors** [@R-nFactors] packages.
+Scree plots were generated using the **psych** [@R-psych] and **nFactors** [@R-nFactors] packages. Note that eigenvalues of factors in PCA models are higher than factors from [EFA](#efa) models, because PCA accounts for common and specific variance, whereas [EFA](#efa) accounts for only the common variance among the indicators.
 
 ```{r, out.width = "100%", fig.cap = "Scree plots in principal component analysis"}
 fa.parallel(x = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], fm = "ml", fa = "pc")
