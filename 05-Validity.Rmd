@@ -762,7 +762,36 @@ The true (disattenuated) association is:
 as.numeric(cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate)/sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
 ```
 
-The disattenuation of an observed correlation due to [measurement error](#measurementError) can be demonstrated using [structural equation modeling](#sem):
+The disattenuation of an observed correlation due to [measurement error](#measurementError) can be demonstrated using [structural equation modeling](#sem). For instance, consider the following observed association:
+
+```{r observedSEM, fig.align = "center", fig.cap = "Observed association, as depicted in a structural equation model."}
+cor.test(x = mydataValidity$predictorObservedSEM, y = mydataValidity$criterionObservedSEM)
+
+observedSEM_syntax <- '
+  criterionObservedSEM ~ predictorObservedSEM
+  
+  # Specify residual errors (measurement error)
+  predictorObservedSEM ~~ predictorObservedSEM
+  criterionObservedSEM ~~ criterionObservedSEM
+'
+
+observedSEM_fit <- sem(observedSEM_syntax,
+                       data = mydataValidity,
+                       missing = "ML")
+
+summary(observedSEM_fit,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+semPaths(observedSEM_fit,
+         what = "Std.all",
+         layout = "tree2",
+         optimizeLatRes = FALSE,
+         exoVar = FALSE,
+         edge.label.cex = 2)
+```
+
+Now consider when we account for the degree of unreliability of each measure:
 
 ```{r disattenuationSEM, fig.align = "center", fig.cap = "Disattenuation of an observed association due to measurement error, as depicted in a structural equation model."}
 disattenuationSEM_syntax <- '
