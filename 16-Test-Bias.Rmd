@@ -3186,6 +3186,340 @@ difDropItemsNew_ex <- DIF(constrainedModelResolveItem5_ex,
                        scheme = "drop",
                        simplify = TRUE)
 difDropItemsNew_ex
+
+# Measurement Invariance
+
+nullModel_ex <- '
+# Fix residual variances of manifest variables to be equal across groups
+bpi_antisocialT1_1 ~~ c(psi1, psi1)*bpi_antisocialT1_1
+bpi_antisocialT1_2 ~~ c(psi2, psi2)*bpi_antisocialT1_2
+bpi_antisocialT1_3 ~~ c(psi3, psi3)*bpi_antisocialT1_3
+bpi_antisocialT1_4 ~~ c(psi4, psi4)*bpi_antisocialT1_4
+bpi_antisocialT1_5 ~~ c(psi5, psi5)*bpi_antisocialT1_5
+bpi_antisocialT1_6 ~~ c(psi6, psi6)*bpi_antisocialT1_6
+bpi_antisocialT1_7 ~~ c(psi7, psi7)*bpi_antisocialT1_7
+
+bpi_antisocialT2_1 ~~ c(psi8, psi8)*bpi_antisocialT2_1
+bpi_antisocialT2_2 ~~ c(psi9, psi9)*bpi_antisocialT2_2
+bpi_antisocialT2_3 ~~ c(psi10, psi10)*bpi_antisocialT2_3
+bpi_antisocialT2_4 ~~ c(psi11, psi11)*bpi_antisocialT2_4
+bpi_antisocialT2_5 ~~ c(psi12, psi12)*bpi_antisocialT2_5
+bpi_antisocialT2_6 ~~ c(psi13, psi13)*bpi_antisocialT2_6
+bpi_antisocialT2_7 ~~ c(psi14, psi14)*bpi_antisocialT2_7
+
+# Fix intercepts of manifest variables to be equal across groups
+bpi_antisocialT1_1 ~ c(tau1, tau1)*1
+bpi_antisocialT1_2 ~ c(tau2, tau2)*1
+bpi_antisocialT1_3 ~ c(tau3, tau3)*1
+bpi_antisocialT1_4 ~ c(tau4, tau4)*1
+bpi_antisocialT1_5 ~ c(tau5, tau5)*1
+bpi_antisocialT1_6 ~ c(tau6, tau6)*1
+bpi_antisocialT1_7 ~ c(tau7, tau7)*1
+
+bpi_antisocialT2_1 ~ c(tau8, tau8)*1
+bpi_antisocialT2_2 ~ c(tau9, tau9)*1
+bpi_antisocialT2_3 ~ c(tau10, tau10)*1
+bpi_antisocialT2_4 ~ c(tau11, tau11)*1
+bpi_antisocialT2_5 ~ c(tau12, tau12)*1
+bpi_antisocialT2_6 ~ c(tau13, tau13)*1
+bpi_antisocialT2_7 ~ c(tau14, tau14)*1
+'
+
+cfaModel_ex <- '
+ # Factor loadings
+ t1 =~ bpi_antisocialT1_1 + bpi_antisocialT1_2 + bpi_antisocialT1_3 + bpi_antisocialT1_4 + bpi_antisocialT1_5 + bpi_antisocialT1_6 + bpi_antisocialT1_7
+ t2 =~ bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + bpi_antisocialT2_4 + bpi_antisocialT2_5 + bpi_antisocialT2_6 + bpi_antisocialT2_7
+'
+
+cfaModel_configuralInvariance_ex <- '
+ # Factor loadings (free the factor loading of the first indicator)
+ t1 =~ NA*bpi_antisocialT1_1 + bpi_antisocialT1_2 + bpi_antisocialT1_3 + bpi_antisocialT1_4 + bpi_antisocialT1_5 + bpi_antisocialT1_6 + bpi_antisocialT1_7
+ t2 =~ NA*bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + bpi_antisocialT2_4 + bpi_antisocialT2_5 + bpi_antisocialT2_6 + bpi_antisocialT2_7
+ 
+ # Fix latent means to zero
+ t1 ~ 0
+ t2 ~ 0
+ 
+ # Fix latent variances to one
+ t1 ~~ 1*t1
+ t2 ~~ 1*t2
+ 
+ # Estimate covariances among latent variables
+ t1 ~~ t2
+ 
+ # Estimate residual variances of manifest variables
+ bpi_antisocialT1_1 ~~ bpi_antisocialT1_1
+ bpi_antisocialT1_2 ~~ bpi_antisocialT1_2
+ bpi_antisocialT1_3 ~~ bpi_antisocialT1_3
+ bpi_antisocialT1_4 ~~ bpi_antisocialT1_4
+ bpi_antisocialT1_5 ~~ bpi_antisocialT1_5
+ bpi_antisocialT1_6 ~~ bpi_antisocialT1_6
+ bpi_antisocialT1_7 ~~ bpi_antisocialT1_7
+
+ bpi_antisocialT2_1 ~~ bpi_antisocialT2_1
+ bpi_antisocialT2_2 ~~ bpi_antisocialT2_2
+ bpi_antisocialT2_3 ~~ bpi_antisocialT2_3
+ bpi_antisocialT2_4 ~~ bpi_antisocialT2_4
+ bpi_antisocialT2_5 ~~ bpi_antisocialT2_5
+ bpi_antisocialT2_6 ~~ bpi_antisocialT2_6
+ bpi_antisocialT2_7 ~~ bpi_antisocialT2_7
+ 
+ # Free intercepts of manifest variables
+ bpi_antisocialT1_1 ~ NA*1
+ bpi_antisocialT1_2 ~ NA*1
+ bpi_antisocialT1_3 ~ NA*1
+ bpi_antisocialT1_4 ~ NA*1
+ bpi_antisocialT1_5 ~ NA*1
+ bpi_antisocialT1_6 ~ NA*1
+ bpi_antisocialT1_7 ~ NA*1
+
+ bpi_antisocialT2_1 ~ NA*1
+ bpi_antisocialT2_2 ~ NA*1
+ bpi_antisocialT2_3 ~ NA*1
+ bpi_antisocialT2_4 ~ NA*1
+ bpi_antisocialT2_5 ~ NA*1
+ bpi_antisocialT2_6 ~ NA*1
+ bpi_antisocialT2_7 ~ NA*1
+'
+
+cfaModel_metricInvariance_ex <- '
+ # Fix factor loadings to be the same across groups
+ t1 =~ lambdax1*bpi_antisocialT1_1 + lambdax2*bpi_antisocialT1_2 + lambdax3*bpi_antisocialT1_3 + lambdax4*bpi_antisocialT1_4 + lambdax5*bpi_antisocialT1_5 + lambdax6*bpi_antisocialT1_6 + lambdax7*bpi_antisocialT1_7
+ t2 =~ lambdax1*bpi_antisocialT2_1 + lambdax2*bpi_antisocialT2_2 + lambdax3*bpi_antisocialT2_3 + lambdax4*bpi_antisocialT2_4 + lambdax5*bpi_antisocialT2_5 + lambdax6*bpi_antisocialT2_6 + lambdax7*bpi_antisocialT2_7
+
+ # Fix latent means to zero
+ t1 ~ 0
+ t2 ~ 0
+ 
+ # Fix latent variances to one in group 1; free latent variances in group 2
+ t1 ~~ 1*t1
+ t2 ~~ NA*t2
+ 
+ # Estimate covariances among latent variables
+ t1 ~~ t2
+ 
+ # Estimate residual variances of manifest variables
+ bpi_antisocialT1_1 ~~ bpi_antisocialT1_1
+ bpi_antisocialT1_2 ~~ bpi_antisocialT1_2
+ bpi_antisocialT1_3 ~~ bpi_antisocialT1_3
+ bpi_antisocialT1_4 ~~ bpi_antisocialT1_4
+ bpi_antisocialT1_5 ~~ bpi_antisocialT1_5
+ bpi_antisocialT1_6 ~~ bpi_antisocialT1_6
+ bpi_antisocialT1_7 ~~ bpi_antisocialT1_7
+
+ bpi_antisocialT2_1 ~~ bpi_antisocialT2_1
+ bpi_antisocialT2_2 ~~ bpi_antisocialT2_2
+ bpi_antisocialT2_3 ~~ bpi_antisocialT2_3
+ bpi_antisocialT2_4 ~~ bpi_antisocialT2_4
+ bpi_antisocialT2_5 ~~ bpi_antisocialT2_5
+ bpi_antisocialT2_6 ~~ bpi_antisocialT2_6
+ bpi_antisocialT2_7 ~~ bpi_antisocialT2_7
+ 
+ # Free intercepts of manifest variables
+ bpi_antisocialT1_1 ~ NA*1
+ bpi_antisocialT1_2 ~ NA*1
+ bpi_antisocialT1_3 ~ NA*1
+ bpi_antisocialT1_4 ~ NA*1
+ bpi_antisocialT1_5 ~ NA*1
+ bpi_antisocialT1_6 ~ NA*1
+ bpi_antisocialT1_7 ~ NA*1
+
+ bpi_antisocialT2_1 ~ NA*1
+ bpi_antisocialT2_2 ~ NA*1
+ bpi_antisocialT2_3 ~ NA*1
+ bpi_antisocialT2_4 ~ NA*1
+ bpi_antisocialT2_5 ~ NA*1
+ bpi_antisocialT2_6 ~ NA*1
+ bpi_antisocialT2_7 ~ NA*1
+'
+
+cfaModel_scalarInvariance_ex <- '
+ # Fix factor loadings to be the same across groups
+ t1 =~ lambdax1*bpi_antisocialT1_1 + lambdax2*bpi_antisocialT1_2 + lambdax3*bpi_antisocialT1_3 + lambdax4*bpi_antisocialT1_4 + lambdax5*bpi_antisocialT1_5 + lambdax6*bpi_antisocialT1_6 + lambdax7*bpi_antisocialT1_7
+ t2 =~ lambdax1*bpi_antisocialT2_1 + lambdax2*bpi_antisocialT2_2 + lambdax3*bpi_antisocialT2_3 + lambdax4*bpi_antisocialT2_4 + lambdax5*bpi_antisocialT2_5 + lambdax6*bpi_antisocialT2_6 + lambdax7*bpi_antisocialT2_7
+ 
+ # Fix latent means to zero in group 1; free latent means in group 2
+ t1 ~ 0
+ t2 ~ NA*1
+ 
+ # Fix latent variances to one in group 1; free latent variances in group 2
+ t1 ~~ 1*t1
+ t2 ~~ NA*t2
+ 
+ # Estimate covariances among latent variables
+ t1 ~~ t2
+ 
+ # Estimate residual variances of manifest variables
+ bpi_antisocialT1_1 ~~ bpi_antisocialT1_1
+ bpi_antisocialT1_2 ~~ bpi_antisocialT1_2
+ bpi_antisocialT1_3 ~~ bpi_antisocialT1_3
+ bpi_antisocialT1_4 ~~ bpi_antisocialT1_4
+ bpi_antisocialT1_5 ~~ bpi_antisocialT1_5
+ bpi_antisocialT1_6 ~~ bpi_antisocialT1_6
+ bpi_antisocialT1_7 ~~ bpi_antisocialT1_7
+
+ bpi_antisocialT2_1 ~~ bpi_antisocialT2_1
+ bpi_antisocialT2_2 ~~ bpi_antisocialT2_2
+ bpi_antisocialT2_3 ~~ bpi_antisocialT2_3
+ bpi_antisocialT2_4 ~~ bpi_antisocialT2_4
+ bpi_antisocialT2_5 ~~ bpi_antisocialT2_5
+ bpi_antisocialT2_6 ~~ bpi_antisocialT2_6
+ bpi_antisocialT2_7 ~~ bpi_antisocialT2_7
+ 
+ # Free intercepts of manifest variables
+ bpi_antisocialT1_1 ~ intx1*1
+ bpi_antisocialT1_2 ~ intx2*1
+ bpi_antisocialT1_3 ~ intx3*1
+ bpi_antisocialT1_4 ~ intx4*1
+ bpi_antisocialT1_5 ~ intx5*1
+ bpi_antisocialT1_6 ~ intx6*1
+ bpi_antisocialT1_7 ~ intx7*1
+
+ bpi_antisocialT2_1 ~ intx1*1
+ bpi_antisocialT2_2 ~ intx2*1
+ bpi_antisocialT2_3 ~ intx3*1
+ bpi_antisocialT2_4 ~ intx4*1
+ bpi_antisocialT2_5 ~ intx5*1
+ bpi_antisocialT2_6 ~ intx6*1
+ bpi_antisocialT2_7 ~ intx7*1
+'
+
+cfaModel_residualInvariance_ex <- '
+ # Fix factor loadings to be the same across groups
+ t1 =~ lambdax1*bpi_antisocialT1_1 + lambdax2*bpi_antisocialT1_2 + lambdax3*bpi_antisocialT1_3 + lambdax4*bpi_antisocialT1_4 + lambdax5*bpi_antisocialT1_5 + lambdax6*bpi_antisocialT1_6 + lambdax7*bpi_antisocialT1_7
+ t2 =~ lambdax1*bpi_antisocialT2_1 + lambdax2*bpi_antisocialT2_2 + lambdax3*bpi_antisocialT2_3 + lambdax4*bpi_antisocialT2_4 + lambdax5*bpi_antisocialT2_5 + lambdax6*bpi_antisocialT2_6 + lambdax7*bpi_antisocialT2_7
+ 
+ # Fix latent means to zero in group 1; free latent means in group 2
+ t1 ~ 0
+ t2 ~ NA*1
+ 
+ # Fix latent variances to one in group 1; free latent variances in group 2
+ t1 ~~ 1*t1
+ t2 ~~ NA*t2
+ 
+ # Estimate covariances among latent variables
+ t1 ~~ t2
+ 
+ # Estimate residual variances of manifest variables
+ bpi_antisocialT1_1 ~~ residx1*bpi_antisocialT1_1
+ bpi_antisocialT1_2 ~~ residx2*bpi_antisocialT1_2
+ bpi_antisocialT1_3 ~~ residx3*bpi_antisocialT1_3
+ bpi_antisocialT1_4 ~~ residx4*bpi_antisocialT1_4
+ bpi_antisocialT1_5 ~~ residx5*bpi_antisocialT1_5
+ bpi_antisocialT1_6 ~~ residx6*bpi_antisocialT1_6
+ bpi_antisocialT1_7 ~~ residx7*bpi_antisocialT1_7
+
+ bpi_antisocialT2_1 ~~ residx1*bpi_antisocialT2_1
+ bpi_antisocialT2_2 ~~ residx2*bpi_antisocialT2_2
+ bpi_antisocialT2_3 ~~ residx3*bpi_antisocialT2_3
+ bpi_antisocialT2_4 ~~ residx4*bpi_antisocialT2_4
+ bpi_antisocialT2_5 ~~ residx5*bpi_antisocialT2_5
+ bpi_antisocialT2_6 ~~ residx6*bpi_antisocialT2_6
+ bpi_antisocialT2_7 ~~ residx7*bpi_antisocialT2_7
+ 
+ # Free intercepts of manifest variables
+ bpi_antisocialT1_1 ~ intx1*1
+ bpi_antisocialT1_2 ~ intx2*1
+ bpi_antisocialT1_3 ~ intx3*1
+ bpi_antisocialT1_4 ~ intx4*1
+ bpi_antisocialT1_5 ~ intx5*1
+ bpi_antisocialT1_6 ~ intx6*1
+ bpi_antisocialT1_7 ~ intx7*1
+
+ bpi_antisocialT2_1 ~ intx1*1
+ bpi_antisocialT2_2 ~ intx2*1
+ bpi_antisocialT2_3 ~ intx3*1
+ bpi_antisocialT2_4 ~ intx4*1
+ bpi_antisocialT2_5 ~ intx5*1
+ bpi_antisocialT2_6 ~ intx6*1
+ bpi_antisocialT2_7 ~ intx7*1
+'
+
+#nullModelFit_ex <- lavaan(nullModel_ex,
+#                       data = cnlsy,
+#                       missing = "ML",
+#                       estimator = "MLR")
+
+#summary(nullModelFit,
+#        fit.measures = TRUE,
+#        standardized = TRUE,
+#        rsquare = TRUE)
+
+configuralInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_configuralInvariance_ex,
+               data = cnlsy,
+               missing = "ML",
+               estimator = "MLR")
+
+summary(configuralInvarianceModelFullSyntax_fit_ex,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)
+
+configuralInvarianceModelFitIndices_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("cfi.robust", "rmsea.robust", "srmr")]
+
+configuralInvarianceCFI <- as.numeric(fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)["cfi.robust"])
+configuralInvarianceRMSEA <- as.numeric(fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)["rmsea.robust"])
+configuralInvarianceSRMR <- as.numeric(fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)["srmr"])
+
+configuralInvarianceModel_chisquare_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("chisq.scaled")]
+configuralInvarianceModel_chisquareScaling_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("chisq.scaling.factor")]
+configuralInvarianceModel_df_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("df.scaled")]
+configuralInvarianceModel_N_ex <- lavInspect(configuralInvarianceModelFullSyntax_fit_ex, what = "ntotal")
+
+equiv_chi(alpha = .05, chi = configuralInvarianceModel_chisquare_ex, df = configuralInvarianceModel_df_ex, m = 2, N_sample = configuralInvarianceModel_N_ex, popRMSEA = .08)
+
+metricInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_metricInvariance_ex,
+               data = cnlsy,
+               missing = "ML",
+               estimator = "MLR")
+
+summary(metricInvarianceModelFullSyntax_fit_ex,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+fitMeasures(metricInvarianceModelFullSyntax_fit_ex)
+
+metricInvarianceAnova_ex <- anova(configuralInvarianceModelFullSyntax_fit_ex, metricInvarianceModelFullSyntax_fit_ex)
+metricInvarianceChiSquare_ex <- metricInvarianceAnova_ex$`Chisq diff`[2]
+metricInvarianceDF_ex <- metricInvarianceAnova_ex$`Df diff`[2]
+metricInvarianceP_ex <- metricInvarianceAnova_ex$`Pr(>Chisq)`[2]
+
+scalarInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_scalarInvariance_ex,
+               data = cnlsy,
+               missing = "ML",
+               estimator = "MLR")
+
+summary(scalarInvarianceModelFullSyntax_fit_ex,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+fitMeasures(scalarInvarianceModelFullSyntax_fit_ex)
+
+scalarInvarianceAnova_ex <- anova(metricInvarianceModelFullSyntax_fit_ex, scalarInvarianceModelFullSyntax_fit_ex)
+scalarInvarianceChiSquare_ex <- scalarInvarianceAnova_ex$`Chisq diff`[2]
+scalarInvarianceDF_ex <- scalarInvarianceAnova_ex$`Df diff`[2]
+scalarInvarianceP_ex <- scalarInvarianceAnova_ex$`Pr(>Chisq)`[2]
+
+residualInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_residualInvariance_ex,
+               data = cnlsy,
+               missing = "ML",
+               estimator = "MLR")
+
+summary(residualInvarianceModelFullSyntax_fit_ex,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+fitMeasures(residualInvarianceModelFullSyntax_fit_ex)
+
+residualInvarianceAnova_ex <- anova(scalarInvarianceModelFullSyntax_fit_ex, residualInvarianceModelFullSyntax_fit_ex)
+residualInvarianceChiSquare_ex <- residualInvarianceAnova_ex$`Chisq diff`[2]
+residualInvarianceDF_ex <- residualInvarianceAnova_ex$`Df diff`[2]
+residualInvarianceP_ex <- residualInvarianceAnova_ex$`Pr(>Chisq)`[2]
 ```
 
 ### Questions
@@ -3208,7 +3542,7 @@ Note: several of the following questions use data from the Children of the Natio
     a. Does a model with item parameters constrained across sexes fit significantly worse than a model with item parameters that are allowed to vary across sexes?
     b. Starting with an unconstrained model that allows item parameters to vary across sexes, sequentially add constraints to item parameters across groups. Which items differed in discrimination across groups? Which items differed in severity across groups? Describe any differences.
     c. How could any differential item functioning be addressed?
-5. [measurement invariance]
+5. Examine the longitudinal measurement invariance of the Antisocial scale across T1 and T2. Which type(s) of longitudinal measurement invariance failed? Which items and parameters appeared to differ across ages?
 
 ### Answers
 
@@ -3221,4 +3555,4 @@ Note: several of the following questions use data from the Children of the Natio
     a. The model with item parameters constrained across sexes fit significantly worse than a model with item parameters that were allowed to vary across sexes, $\chi^2[`r apa(unconstrainedVsConstrainedDF_ex, decimals = 0)`] = `r apa(unconstrainedVsConstrainedChiSquare_ex, decimals = 2)`$. This suggests that the item parameters show differential item functioning across boys and girls.
     b. No items showed significant differences in discrimination across sexes, suggesting that items did not differ in their relation to the latent factor across boys and girls. Items 1, 2, 3, 4, 5, and 6 differed in severity across sexes. Items showed greater severity for girls than boys. It took a higher level of antisocial behavior for a girl to be endorsed as engaging in one of the following behaviors: cheats or tells lies, bullies or is cruel/mean to others, does not seem to feel sorry after misbehaving, breaks things deliberately, is disobedient at school, and has trouble getting along with teachers.
     c. The differences in item severity across boys and girls could be addressed by resolving DIF. That is, the items that show severity DIF (items 1–6) would be allowed to differ in their severity parameter across boys and girls, but these items would be constrained to have the same discrimination across groups; non-DIF items would have severity and discrimination parameters constrained to be the same across groups.
-5.
+5. The configural invariance model fit well according to RMSEA (`r apa(configuralInvarianceRMSEA, decimals = 2)`) and SRMR (`r apa(configuralInvarianceSRMR, decimals = 2)`), but fit less well according to CFI (`r apa(configuralInvarianceCFI, decimals = 2)`). The metric invariance model did not fit significantly worse than the configural invariance model ($\Delta\chi^2[`r apa(metricInvarianceDF_ex, decimals = 2)`] = `r apa(metricInvarianceChiSquare_ex, decimals = 2)`, p = `r apa(metricInvarianceP_ex, decimals = 2)`$). However, the scalar invariance model fit significantly worse than the metric invariance model ($\Delta\chi^2[`r apa(scalarInvarianceDF_ex, decimals = 2)`] = `r apa(scalarInvarianceChiSquare_ex, decimals = 2)`, p = `r apa(scalarInvarianceP_ex, decimals = 2)`$), and the residual invariance model fit significantly worse than the scalar invariance model ($\Delta\chi^2[`r apa(residualInvarianceDF_ex, decimals = 2)`] = `r apa(residualInvarianceChiSquare_ex, decimals = 2)`, p < .001$). Therefore, scalar and residual invariance failed. The following items showed larger intercepts at T1 compared to T2: items 1, 2, 3, 4, 5, and 7. Only item 6 showed larger intercepts at T2 than T1. The following items showed larger residual at T1 compared to T2: items 2–7. Only item 1 showed a larger residual at T2 compared to T1.
