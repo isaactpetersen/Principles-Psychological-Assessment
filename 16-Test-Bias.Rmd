@@ -666,7 +666,7 @@ When examining differential item functioning with many items across many groups,
 
 Tests of DIF were conducted using the `mirt` package [@R-mirt].
 
-#### Item Descriptive Statistics
+### Item Descriptive Statistics
 
 ```{r}
 itemstats(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
@@ -3024,6 +3024,168 @@ Bias is a [systematic error](#systematicError). Test bias refers to a [systemati
 
 ```{r, include = FALSE}
 library("MOTE")
+
+# Predictive Bias
+summary(lm(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum + sex + bpi_antisocialT1Sum:sex, data = cnlsy))
+
+plot(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum, data = cnlsy, type = "n", xlab = "predictor", ylab = "criterion")
+points(cnlsy$bpi_antisocialT1Sum[which(cnlsy$sex == "male")], cnlsy$bpi_antisocialT2Sum[which(cnlsy$sex == "male")], pch = 20, col = "blue")
+points(cnlsy$bpi_antisocialT1Sum[which(cnlsy$sex == "female")], cnlsy$bpi_antisocialT2Sum[which(cnlsy$sex == "female")], pch = 1, col = "red")
+abline(lm(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum, data = cnlsy[which(cnlsy$sex == "male"),]), lty = 1, col = "blue")
+abline(lm(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum, data = cnlsy[which(cnlsy$sex == "female"),]), lty = 2, col = "red")
+legend("bottomright", c("Male","Female"), lty = c(1,2), pch = c(20,1), col = c("blue","red"))
+
+cnlsy$preventative <- NA
+cnlsy$preventative[cnlsy$bpi_antisocialT1Sum > 6] <- 1
+cnlsy$preventative[cnlsy$bpi_antisocialT1Sum <= 6] <- 0
+
+cnlsy$disorder <- NA
+cnlsy$disorder[cnlsy$bpi_antisocialT2Sum > 6] <- 1
+cnlsy$disorder[cnlsy$bpi_antisocialT2Sum <= 6] <- 0
+
+srBoys <- selectionRatio(TP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 1 & cnlsy$sex == "male")),
+               TN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 0 & cnlsy$sex == "male")),
+               FP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 0 & cnlsy$sex == "male")),
+               FN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 1 & cnlsy$sex == "male")))
+
+srGirls <- selectionRatio(TP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 1 & cnlsy$sex == "female")),
+               TN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 0 & cnlsy$sex == "female")),
+               FP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 0 & cnlsy$sex == "female")),
+               FN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 1 & cnlsy$sex == "female")))
+
+# DIF
+itemstats(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
+          group = cnlsy$sex,
+          ts.tables = TRUE)
+
+unconstrainedModel_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
+                                    model = 1,
+                                    group = cnlsy$sex,
+                                    SE = TRUE)
+
+summary(unconstrainedModel_ex)
+coef(unconstrainedModel_ex, simplify = TRUE, IRTpars = TRUE)
+
+constrainedModel_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
+                                  model = 1,
+                                  group = cnlsy$sex,
+                                  invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
+                                  SE = TRUE)
+
+summary(constrainedModel_ex)
+coef(constrainedModel_ex, simplify = TRUE, IRTpars = TRUE)
+
+unconstrainedVsConstrainedAnova_ex <- anova(unconstrainedModel_ex, constrainedModel_ex)
+unconstrainedVsConstrainedChiSquare_ex <- unconstrainedVsConstrainedAnova_ex$X2[2]
+unconstrainedVsConstrainedDF_ex <- unconstrainedVsConstrainedAnova_ex$df[2]
+
+difDropItems_ex <- DIF(constrainedModel_ex,
+                    c("a1","d1","d2"),
+                    scheme = "drop",
+                    simplify = TRUE)
+difDropItems_ex
+
+difDropItemsDiscrimination_ex <- DIF(constrainedModel_ex,
+                                  c("a1"),
+                                  scheme = "drop",
+                                  simplify = TRUE)
+difDropItemsDiscrimination_ex
+
+difDropItemsSeverity_ex <- DIF(constrainedModel_ex,
+                            c("d1","d2"),
+                            scheme = "drop",
+                            simplify = TRUE)
+difDropItemsSeverity_ex
+
+difAddItems_ex <- DIF(unconstrainedModel_ex,
+                   c("a1","d1","d2"),
+                   scheme = "add",
+                   simplify = TRUE,
+                   plotdif = TRUE)
+difAddItems_ex
+
+difAddItemsDiscrimination_ex <- DIF(unconstrainedModel_ex,
+                                 c("a1"),
+                                 scheme = "add",
+                                 simplify = TRUE,
+                                 plotdif = TRUE)
+difAddItemsDiscrimination_ex
+
+difAddItemsSeverity_ex <- DIF(unconstrainedModel_ex,
+                           c("d1","d2"),
+                           scheme = "add",
+                           simplify = TRUE,
+                           plotdif = TRUE)
+difAddItemsSeverity_ex
+
+empirical_ES(unconstrainedModel_ex, DIF = FALSE)
+
+empirical_ES(unconstrainedModel_ex, DIF = FALSE, plot = TRUE)
+
+empirical_ES(unconstrainedModel_ex, DIF = TRUE)
+
+empirical_ES(unconstrainedModel_ex, DIF = TRUE, plot = TRUE)
+
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_1", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_2", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_3", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_4", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_5", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_6", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_7", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_1", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_2", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_3", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_4", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_5", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_6", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_7", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_1", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_2", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_3", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_4", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_5", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_6", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(unconstrainedModel_ex, "bpi_antisocialT2_7", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+
+constrainedModelDropItem5_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_6","bpi_antisocialT2_7")],
+                                           model = 1,
+                                           group = cnlsy$sex,
+                                           invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
+                                           SE = TRUE)
+
+coef(constrainedModelDropItem5_ex, simplify = TRUE)
+
+dropItem5ForMen_ex <- cnlsy
+dropItem5ForMen_ex[which(dropItem5ForMen_ex$sex == "male"), "bpi_antisocialT2_5"] <- NA
+
+constrainedModelDropItem5ForMen_ex <- multipleGroup(data = dropItem5ForMen_ex[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
+                                                 model = 1,
+                                                 group = dropItem5ForMen_ex$sex,
+                                                 invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
+                                                 SE = TRUE)
+
+coef(constrainedModelDropItem5ForMen_ex, simplify = TRUE)
+
+constrainedModelResolveItem5_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
+                                              model = 1,
+                                              group = cnlsy$sex,
+                                              invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
+                                              SE = TRUE)
+
+coef(constrainedModelResolveItem5_ex, simplify = TRUE)
+
+anova(constrainedModelDropItem5_ex, constrainedModel_ex)
+anova(constrainedModelDropItem5ForMen_ex, constrainedModel_ex)
+anova(constrainedModelResolveItem5_ex, constrainedModel_ex)
+
+difDropItemsNew_ex <- DIF(constrainedModelResolveItem5_ex,
+                       c("a1","d1","d2"),
+                       scheme = "drop",
+                       simplify = TRUE)
+difDropItemsNew_ex
 ```
 
 ### Questions
@@ -3037,10 +3199,26 @@ Note: several of the following questions use data from the Children of the Natio
 6) has trouble getting along with teachers
 7) has sudden changes in mood or feeling
 
-1. [different types of bias]
-2. [different ways to evaluate fairness]
-3. [fairness vs bias]
-4. [DIF]
+1.
+    a. Determine whether there is predictive bias, as a function of sex, in predicting antisocial behavior at T2 using antisocial behavior at T2. Describe any predictive bias observed.
+    b. How could you address this predictive bias?
+2. Assume that children are selected to receive preventative services if their score on the Antisocial scale at T1 is > 6. Assume that children at T2 have an antisocial disorder if their score at T2 is > 6. Does the Antisocial scale show fairness in terms of equal outcomes between boys and girls?
+3. A lawyer argues in court that a test that is used to select students for college admissions should be able to be used because it has been demonstrated to show no evidence of bias against particular groups. However, you know that just because a measure may be unbiased does not mean that using the measure's scores for that purpose is fair. How could such a measure be unbiased yet unfair?
+4. Fit a multi-group [item response theory](#irt) model to the Antisocial subscale at time 2, with the participant's sex as a grouping factor.
+    a. Does a model with item parameters constrained across sexes fit significantly worse than a model with item parameters that are allowed to vary across sexes?
+    b. Starting with an unconstrained model that allows item parameters to vary across sexes, sequentially add constraints to item parameters across groups. Which items differed in discrimination across groups? Which items differed in severity across groups? Describe any differences.
+    c. How could any differential item functioning be addressed?
 5. [measurement invariance]
 
 ### Answers
+
+1.
+    a. There is predictive bias in terms of different slopes across sexes. The slope is steeper for boys than girls, indicating that the measure is not as predictively accurate for girls as it is for boys.
+    b. You could address this predictive bias by using a different predictive measure for girls than boys, changing the criterion, or by using within-group norming.
+2. No, the Antisocial scale does not show equal outcomes in terms of [selection rate](#selectionRatio). The selection ratio is much lower in girls (`r apa(srBoys, decimals = 2)`) compared to boys (`r apa(srGirls, decimals = 2)`).
+3. The measure could be unbiased if it shows the same intercepts and slopes across groups in predicting college performance. However, a measure can still be unfair even it is unbiased. If there are different types of errors in different groups, the measure may not be fair. For instance, if there are more false negative errors in Black applicants compared to White applicants and more false positive errors in White applicants than Black applicants, the measure would be unfair against Black applicants. Even if the percent accuracy of prediction is the same for Black and White applicants, the errors have different implications for each group—White applicants who would have failed in college are more likely to be accepted whereas strong Black applicants who would have succeeded are less likely to be accepted. To address the unfairness of the test, it will be important to use one of the various operationalizations of fairness: equal outcomes, equal opportunity, or equal odds.
+4.
+    a. The model with item parameters constrained across sexes fit significantly worse than a model with item parameters that were allowed to vary across sexes, $\chi^2[`r apa(unconstrainedVsConstrainedDF_ex, decimals = 0)`] = `r apa(unconstrainedVsConstrainedChiSquare_ex, decimals = 2)`$. This suggests that the item parameters show differential item functioning across boys and girls.
+    b. No items showed significant differences in discrimination across sexes, suggesting that items did not differ in their relation to the latent factor across boys and girls. Items 1, 2, 3, 4, 5, and 6 differed in severity across sexes. Items showed greater severity for girls than boys. It took a higher level of antisocial behavior for a girl to be endorsed as engaging in one of the following behaviors: cheats or tells lies, bullies or is cruel/mean to others, does not seem to feel sorry after misbehaving, breaks things deliberately, is disobedient at school, and has trouble getting along with teachers.
+    c. The differences in item severity across boys and girls could be addressed by resolving DIF. That is, the items that show severity DIF (items 1–6) would be allowed to differ in their severity parameter across boys and girls, but these items would be constrained to have the same discrimination across groups; non-DIF items would have severity and discrimination parameters constrained to be the same across groups.
+5.
