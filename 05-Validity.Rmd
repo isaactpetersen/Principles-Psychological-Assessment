@@ -794,7 +794,25 @@ semPaths(observedSEM_fit,
 Now consider when we account for the degree of unreliability of each measure:
 
 ```{r disattenuationSEM, fig.align = "center", fig.cap = "Disattenuation of an observed association due to measurement error, as depicted in a structural equation model."}
-disattenuationSEM_syntax <- '
+# Syntax that specifies the reliability programmatically
+disattenuationSEM_syntax <- 
+  paste(
+    '
+    # Factor loadings
+    predictorLatent =~ 1*predictorObservedSEM
+    criterionLatent =~ 1*criterionObservedSEM
+    
+    # Factor correlation
+    criterionLatent ~ predictorLatent
+    
+    # Specify residual errors (measurement error)
+    predictorObservedSEM ~~ (1 - ', reliabilityOfPredictor, '^2)*predictorObservedSEM
+    criterionObservedSEM ~~ (1 - ', reliabilityOfCriterion, '^2)*criterionObservedSEM
+    ',
+    sep = "")
+
+# Syntax that substitutes in the reliability values
+disattenuationTraditionalSEM_syntax <- '
   # Factor loadings
   predictorLatent =~ 1*predictorObservedSEM
   criterionLatent =~ 1*criterionObservedSEM
