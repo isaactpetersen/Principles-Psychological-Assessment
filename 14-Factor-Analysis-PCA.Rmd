@@ -161,7 +161,9 @@ CFA is used to confirm a priori hypotheses about the factor structure of the mod
 
 ##### Exploratory Structural Equation Modeling (ESEM) {#efa-cfa-esem}
 
-In real life, there is not a clear distinction between [EFA](#efa) and [CFA](#cfa). In [CFA](#cfa), it is often that researchers set only half of the constraints, and let the data fill in the rest. In [EFA](#efa), researchers often set constraints and assumptions. Thus, the line between [EFA](#efa) and [CFA](#cfa) is often blurred. Moreover, [EFA](#efa) and [CFA](#cfa) can be considered special cases of exploratory structural equation modeling (ESEM), which combines features of [EFA](#efa), [CFA](#cfa), and [SEM](#sem) [@Marsh2014].
+In real life, there is not a clear distinction between [EFA](#efa) and [CFA](#cfa). In [CFA](#cfa), it is often that researchers set only half of the constraints, and let the data fill in the rest. In [EFA](#efa), researchers often set constraints and assumptions. Thus, the line between [EFA](#efa) and [CFA](#cfa) is often blurred.
+
+[EFA](#efa) and [CFA](#cfa) can be considered special cases of exploratory structural equation modeling (ESEM), which combines features of [EFA](#efa), [CFA](#cfa), and [SEM](#sem) [@Marsh2014]. ESEM can include any combination of ESEM and [CFA](#cfa) factors. If a [CFA](#cfa) model fits as well as an ESEM model, the [CFA](#cfa) model should be retained for its simplicity (i.e., no cross-loadings). However, ESEM models often fit better than [CFA](#cfa) models because requiring no cross-loadings is an unrealistic expectation of items from many psychological instruments [@Marsh2014].
 
 #### 4. How Many Factors to Retain
 
@@ -288,7 +290,7 @@ What can you do with factors once you have them? In [SEM](#sem), factors have me
 
 ### Missing Data Handling
 
-The [PCA](#pca) default in SPSS is listwise deletion of missing data: if a participant is missing data on any variable, the subject gets excluded from the analysis, so you might end up with too few participants. Instead, use a correlation matrix with pairwise deletion for [PCA](#pca) with missing data. Maximum likelihood [factor analysis](#factorAnalysis) can make use of all available data points for a participant, even if they are missing some data points. Mplus, which is often used for [SEM](#sem) and [factor analysis](#factorAnalysis), will notify you if you are removing many participants in [CFA](#cfa)/[EFA](#efa). The `lavaan` package in `R` also notifies you if you removing participants in [CFA](#efa-cfa)/[SEM](#sem) models.
+The [PCA](#pca) default in SPSS is listwise deletion of missing data: if a participant is missing data on any variable, the subject gets excluded from the analysis, so you might end up with too few participants. Instead, use a correlation matrix with pairwise deletion for [PCA](#pca) with missing data. Maximum likelihood [factor analysis](#factorAnalysis) can make use of all available data points for a participant, even if they are missing some data points. Mplus, which is often used for [SEM](#sem) and [factor analysis](#factorAnalysis), will notify you if you are removing many participants in [CFA](#cfa)/[EFA](#efa). The `lavaan` package [@R-lavaan] in `R` also notifies you if you removing participants in [CFA](#efa-cfa)/[SEM](#sem) models.
 
 ## Getting Started
 
@@ -426,7 +428,7 @@ nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 
 #### Run factor analysis
 
-[Exploratory factor analysis](#efa) (EFA) models were fit using the `psych` package [@R-psych].
+[Exploratory factor analysis](#efa) (EFA) models were fit using the `fa()` function of the `psych` package [@R-psych] and the `sem()` function of the `lavaan` package [@R-lavaan].
 
 ##### Orthogonal (Varimax) rotation
 
@@ -444,6 +446,227 @@ efa8factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5
 efa9factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], nfactors = 9, rotate = "varimax", fm = "ml")
 ```
 
+###### lavaan
+
+Model syntax is specified below:
+
+```{r}
+efa1factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa2factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa3factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa4factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa5factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa6factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa7factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 + 
+ efa("efa1")*f7 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa8factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 + 
+ efa("efa1")*f7 + 
+ efa("efa1")*f8 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efa9factorLavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 + 
+ efa("efa1")*f7 + 
+ efa("efa1")*f8 + 
+ efa("efa1")*f9 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+```
+
+The models are fitted below:
+
+```{r}
+efa1factorOrthogonalLavaan_fit <- sem(efa1factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa2factorOrthogonalLavaan_fit <- sem(efa2factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa3factorOrthogonalLavaan_fit <- sem(efa3factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa4factorOrthogonalLavaan_fit <- sem(efa4factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa5factorOrthogonalLavaan_fit <- sem(efa5factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa6factorOrthogonalLavaan_fit <- sem(efa6factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa7factorOrthogonalLavaan_fit <- sem(efa7factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa8factorOrthogonalLavaan_fit <- sem(efa8factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+
+efa9factorOrthogonalLavaan_fit <- sem(efa9factorLavaan_syntax,
+                                      data = HolzingerSwineford1939,
+                                      information = "observed",
+                                      missing = "ML",
+                                      estimator = "MLR",
+                                      rotation = "varimax",
+                                      meanstructure = TRUE,
+                                      rotation.args = list(orthogonal = TRUE))
+```
+
+The summary of the models is below:
+
+```{r}
+summary(efa1factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa2factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa3factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa4factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa5factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa6factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa7factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa8factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa9factorOrthogonalLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
 ##### Oblique (Oblimin) rotation
 
 Fit a different model with each number of possible factors:
@@ -458,6 +681,187 @@ efa6factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","
 efa7factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], nfactors = 7, rotate = "oblimin", fm = "ml")
 efa8factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], nfactors = 8, rotate = "oblimin", fm = "ml") #no convergence
 efa9factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], nfactors = 9, rotate = "oblimin", fm = "ml")
+```
+
+###### lavaan
+
+The models are fitted below:
+
+```{r}
+efa1factorObliqueLavaan_fit <- sem(efa1factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa2factorObliqueLavaan_fit <- sem(efa2factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa3factorObliqueLavaan_fit <- sem(efa3factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa4factorObliqueLavaan_fit <- sem(efa4factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa5factorObliqueLavaan_fit <- sem(efa5factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa6factorObliqueLavaan_fit <- sem(efa6factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa7factorObliqueLavaan_fit <- sem(efa7factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa8factorObliqueLavaan_fit <- sem(efa8factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+
+efa9factorObliqueLavaan_fit <- sem(efa9factorLavaan_syntax,
+                                   data = HolzingerSwineford1939,
+                                   information = "observed",
+                                   missing = "ML",
+                                   estimator = "MLR",
+                                   rotation = "geomin",
+                                   # mimic Mplus
+                                   meanstructure = TRUE,
+                                   rotation.args = list(rstarts = 30, row.weights = "none",
+                                                        algorithm = "gpa", orthogonal = FALSE,
+                                                        jac.init.rot = TRUE,
+                                                        std.ov = TRUE, # row standard = correlation
+                                                        geomin.epsilon = 0.0001))
+```
+
+The summary of the models is below:
+
+```{r}
+summary(efa1factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa2factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa3factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa4factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa5factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa6factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa7factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa8factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(efa9factorObliqueLavaan_fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
 ```
 
 #### Factor scores
