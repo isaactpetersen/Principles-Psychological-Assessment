@@ -2115,7 +2115,7 @@ dagModelMTMM <- lavaanToGraph(cfaModelMTMMFit)
 par(mfrow = c(2, 2))
 ```
 
-```{r, out.width = "100%", fig.cap = "Equivalently fitting models to a multitrait-multimethod model in confirmatory factor analysis"}
+```{r, out.width = "100%", fig.cap = "Equivalently fitting models to a multitrait-multimethod model in confirmatory factor analysis."}
 lapply(equivalentDAGs(dagModelMTMM, n = 4), plot)
 ```
 
@@ -2465,8 +2465,13 @@ Note: several of the following questions use data from the Children of the Natio
 ### Answers
 
 1.	
-    a. [**INSERT FIGURE**]
-    b. The Kaiser-Guttman rule states that all factors should be retained whose eigenvalues are greater than one. According to the Kaiser-Guttman rule, one factor should be retained in this case. According to the Parallel Test, factors should be retained that explain more variance than randomly generated data. According to the Parallel Test, two factors should be retained. However, it is not conceptually elegant to include factors that explain less than one variable's worth of variance (i.e., one eigenvalue), so in this case, it would probably make sense to retain one factor.
+    a. A scree plot is below:
+
+```{r out.width = "100%", fig.cap = "Scree plot from exploratory factor analysis."}
+fa.parallel(x = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], fm = "ml", fa = "fa")
+```
+
+    b. The Kaiser-Guttman rule states that all factors should be retained whose eigenvalues are greater than one, because it is not conceptually elegant to include factors that explain less than one variable's worth of variance (i.e., one eigenvalue). According to the Kaiser-Guttman rule, one factor should be retained in this case. However, for factor analysis (rather than PCA), we modify the guidelines to retain factors whose eigenvalues are greater than zero, so we would keep two factors. According to the Parallel Test, factors should be retained that explain more variance than randomly generated data. According to the Parallel Test, two factors should be retained.
     c. Items 1 (loading = .52), 2 (loading = .66), 3 (loading = .48), 4 (loading = .52), and 7 (loading = .39) load most strongly on Factor 1. Items 5 (“disobedient at school”; loading = 1.00) and 6 (“trouble getting along with teachers”; loading = .42) load most strongly on Factor 2. It is likely that these two items load onto a separate factor from the other antisocial items because they reflect school-related antisocial behavior. Item 6 has the highest cross-loading—in addition to loading onto Factor 2 (.42), it has a non-trivial loading on Factor 1 (.22).
     d. The association between Factors 1 and 2 is .48. This indicates that the factors are moderately correlated and that using an orthogonal rotation would likely be improper. An oblique rotation would be important to capture the association between the two factors. However, this could come at the expense of having simple structure and, therefore, straightforward interpretation of the factors.
 2. See the exercises on "Structural Equation Modeling" in Section \@ref(semExercises).
@@ -2475,4 +2480,7 @@ Note: several of the following questions use data from the Children of the Natio
 5. Even if a given model fits well, there are many other models that fit just as well. Any given data matrix can produce an infinite number of factor models that accurately represent the data structure (indeterminacy). For any model, there always exist an infinite number of models that fit exactly the same. There is no way to distinguish which factor model is correct from the data matrix. Although the fit of the structural model may be consistent with the hypothesized model, fit does not demonstrate that a given model is uniquely valid. Thus, it is important to consider alternative models that may better capture the causal processes, even if their fit is mathematically equivalent. For instance, you could consider models with multiple factors, correlated factors, correlated residuals, cross-loading indicators, regression paths, hierarchical (higher-order) factors, bifactors, etc. Remember, an important part of science is specifying and testing plausible alternative explanations!
 Below are some alternative, equivalently fitting models:
 
-[**INSERT FIGURE**]
+```{r out.width = "100%", fig.cap = "Equivalently fitting models in confirmatory factor analysis."}
+par(mfrow = c(3, 3))
+lapply(equivalentDAGs(dagModel, n = 9), plot)
+```
