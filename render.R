@@ -4,6 +4,12 @@
 library("rmarkdown")
 library("knitr")
 library("bookdown")
+library("renv")
+
+# Identify Packages for DESCRIPTION file ----------------------------------
+
+packagesUsed <- renv::dependencies()
+unique(packagesUsed$Package)
 
 # Render Book -------------------------------------------------------------
 
