@@ -28,13 +28,16 @@ jobs:
       #- name: Install rmarkdown and bookdown
       #  run: Rscript -e 'install.packages(c("rmarkdown","bookdown"))' # installing dependencies (below) instead of installing packages manually
       
-      - name: Install remote packages
+      - name: Install package dependencies
         run: |
          Rscript -e 'install.packages("remotes")'
          Rscript -e 'remotes::install_git("https://research-git.uiowa.edu/PetersenLab/petersenlab.git")'
+         Rscript -e "Sys.setenv(GITHUB_PAT = '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'); remotes::install_github('evwalz/uroc')"
+         Rscript -e "Sys.setenv(GITHUB_PAT = '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'); remotes::install_github('ddueber/dmacs')"
+         Rscript -e "Sys.setenv(GITHUB_PAT = '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'); remotes::install_deps(dependencies = TRUE)"
         
-      - name: Install package dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2 # update # use instead of installing package dependencies manually
+      #- name: Install package dependencies
+      #  uses: r-lib/actions/setup-r-dependencies@v2 # update # use instead of installing package dependencies manually
         
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd")'
