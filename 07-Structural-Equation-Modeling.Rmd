@@ -1876,22 +1876,22 @@ missingnessModelFIML_ex <- miss(logit = percentMissingByVariable_ex, m = 0)
 ```
 
 ```{r powerAnalysisSampleSizeExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
-sampleSizes_ex <- 50:1000
+sampleSizes_ex <- 100:700
 repetitionsPerSampleSize_ex <- 2
 ```
 
 ```{r powerAnalysisExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "dataDistributionExercise")}
 output_ex <- simsem::sim(n = rep(sampleSizes_ex, each = repetitionsPerSampleSize_ex),
-              model = analysisModelSyntax_ex,
-              generate = populationModel_ex,
-              miss = missingnessModelFIML_ex,
-              indDist = indicatorDistributions_ex,
-              lavaanfun = "lavaan",
-              missing = "ML",
-              estimator = "MLR",
-              std.lv = TRUE,
-              seed = 52242,
-              multicore = TRUE)
+                         model = analysisModelSyntax_ex,
+                         generate = populationModel_ex,
+                         miss = missingnessModelFIML_ex,
+                         indDist = indicatorDistributions_ex,
+                         lavaanfun = "lavaan",
+                         missing = "ML",
+                         estimator = "MLR",
+                         std.lv = TRUE,
+                         seed = 52242,
+                         multicore = TRUE)
 ```
 
 ```{r, include = FALSE}
@@ -1935,9 +1935,13 @@ powerStress1_ex <- power1_ex[,"dem65~ind60"]
 powerHarshParenting1_ex <- power1_ex[,"dem65~dem60"]
 ```
 
+```{r numImputationsExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
+numImputations_ex <- 5
+```
+
 ```{r multipleImputationExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
 #Multiple Imputation
-missingnessModelMI_ex <- miss(logit = percentMissingByVariable_ex, m = 5)
+missingnessModelMI_ex <- miss(logit = percentMissingByVariable_ex, m = numImputations_ex)
 ```
 
 ```{r, include = FALSE}
@@ -1956,8 +1960,13 @@ detach("package:semTools", unload = TRUE)
 library("semTools")
 ```
 
+```{r powerAnalysisSampleSizeExercise2, include = FALSE, cache = TRUE, cache.comments = FALSE}
+sampleSizes2_ex <- 150
+repetitionsPerSampleSize2_ex <- 100
+```
+
 ```{r powerAnalysisMIExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "multipleImputationExercise", "normallyDistrubutedDataExercise")}
-output2_ex <- simsem::sim(n = rep(sampleSizes_ex, each = repetitionsPerSampleSize_ex),
+output2_ex <- simsem::sim(n = rep(sampleSizes2_ex, each = repetitionsPerSampleSize2_ex),
                           model = analysisModelSyntax_ex,
                           generate = populationModel_ex,
                           miss = missingnessModelMI_ex,
@@ -2007,7 +2016,7 @@ powerHarshParenting2_ex <- power2_ex[,"dem65~dem60"]
 ```
 
 ```{r powerAnalysisNormallyDistributedExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "normallyDistrubutedDataExercise")}
-output3_ex <- simsem::sim(n = rep(sampleSizes_ex, each = repetitionsPerSampleSize_ex),
+output3_ex <- simsem::sim(n = rep(sampleSizes2_ex, each = repetitionsPerSampleSize2_ex),
                model = analysisModelSyntax_ex,
                generate = populationModel_ex,
                miss = missingnessModelFIML_ex,
@@ -2080,21 +2089,21 @@ Do not allow the residuals to be correlated.
 Use full information maximum likelihood (FIML) to account for missing data.
 Use robust standard errors to account for non-normally distributed data.
     a. This is an over-simplification, but for now let us assume a model fits "well" if CFI $\geq .95$, RMSEA $< .08$, and SRMR $< .08$ [@Schreiber2006].
-	Did the model fit well?
-What does this indicate?
+    Did the model fit well?
+    What does this indicate?
     b. Examine the modification indices.
-	Which modification would result in the greatest improvement in model fit?
-Why do you think this modification would improve model fit?
+    Which modification would result in the greatest improvement in model fit?
+    Why do you think this modification would improve model fit?
 2. Fit the modified confirmatory factor analysis model to make the suggested revision you identified in `1b`.
     a. Provide a figure of the model with standardized coefficients.
     b. The modified model and the original model are considered "nested" models.
-	The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
-	Model fit of nested models can be directly compared with a chi-square difference test.
-Did the modified model fit better than the original model?
+    The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
+    Model fit of nested models can be directly compared with a chi-square difference test.
+    Did the modified model fit better than the original model?
     c. Did the modified model fit well?
-	What does this indicate?
-	Which item is most strongly with the latent factor?
-	Which item is most weakly associated with the latent factor?
+    What does this indicate?
+    Which item is most strongly with the latent factor?
+    Which item is most weakly associated with the latent factor?
     d. What is the estimate of internal consistency reliability of the items, based on coefficient omega?
 3. Fit a confirmatory factor analysis model to the seven items of the Antisocial subscale of the Behavior Problems Index at both T1 and T2 simultaneously in the same model.
 Allow the items at T1 to load onto a different factor than the items at T2 (i.e., a two-factor model—one antisocial at each time point).
@@ -2106,13 +2115,13 @@ Use full information maximum likelihood (FIML) to account for missing data.
 Use robust standard errors to account for non-normally distributed data.
 Apply the same modification you noted in 1b above to each factor.
     a. Because the two latent factors are standardized, the "covariance" path between the two latent factors represents a correlation.
-	What is the correlation between the latent factors?
-	What is the correlation between the sum scores (`bpi_antisocialT1Sum`, `bpi_antisocialT2Sum`)?
-	Which is greater and why?
+    What is the correlation between the latent factors?
+    What is the correlation between the sum scores (`bpi_antisocialT1Sum`, `bpi_antisocialT2Sum`)?
+    Which is greater and why?
     b. Change the covariance path to a regression path from the latent factor at T1 predicting the latent factor at T2.
-	Also include the sum score of anxious/depressed symptoms at T1 (`bpi_anxiousDepressedSum`) as a predictor of antisocial behavior at T2.
-	Do anxious/depressed symptoms at T1 predict antisocial behavior at T2 controlling for prior levels of antisocial behavior at T1?
-	Interpret the findings.
+    Also include the sum score of anxious/depressed symptoms at T1 (`bpi_anxiousDepressedSum`) as a predictor of antisocial behavior at T2.
+    Do anxious/depressed symptoms at T1 predict antisocial behavior at T2 controlling for prior levels of antisocial behavior at T1?
+    Interpret the findings.
 4. You plan to conduct a study that would examine whether stress and harsh parenting predict children's antisocial behavior.
 Your hypothesis is that stress and harsh parenting both lead to children's antisocial behavior.
 You would like to apply for a grant to test these hypotheses, but you first want to know what sample size you would need to have adequate power to detect the hypothesized effects.
@@ -2128,25 +2137,24 @@ You plan to assess stress with three methods (self-report, friend report, cortis
     - Stress influences harsh parenting with a regression coefficient of .4
 
     Set the intercepts of the indicators to zero.
-	Set the scale of the latent factors by standardizing the latent factors—set their means to one and their variances to zero.
-	Do not estimate correlated errors.
-	You expect each measure to show 10% missingness, and for missingness to be completely at random (MCAR).
-	Use full information maximum likelihood (FIML) to handle missing values.
-	As is common with measures in clinical psychology, you expect each measure to be positively skewed with a skewness of 2.5 and leptokurtic with a kurtosis of 5.
-	Use robust standard errors to account for non-normally distributed data.
-	Using a seed of 52242, an alpha level of .05, and 2 repetitions per sample size, in the `simsem` package:
+    Set the scale of the latent factors by standardizing the latent factors—set their means to one and their variances to zero.
+    Do not estimate correlated errors.
+    You expect each measure to show 10% missingness, and for missingness to be completely at random (MCAR).
+    Use full information maximum likelihood (FIML) to handle missing values.
+    As is common with measures in clinical psychology, you expect each measure to be positively skewed with a skewness of 2.5 and leptokurtic with a kurtosis of 5.
+    Use robust standard errors to account for non-normally distributed data.
+    Using a seed of 52242, an alpha level of .05, and 2 repetitions per sample size, in the `simsem` package:
     a. What sample size would you need to have adequate power to detect the effect of stress on antisocial behavior and the effect of harsh parenting on antisocial behavior?
     b. Due to financial and time constraints of the grant, you are only able to collect a sample size of 150.
-	What power would you have to detect the effect of stress on antisocial behavior and the effect of harsh parenting on antisocial behavior?
+    What power would you have to detect the effect of stress on antisocial behavior and the effect of harsh parenting on antisocial behavior?
     c. Your study finds that neither stress nor harsh parenting predicts antisocial behavior.
-	How would you interpret each of these findings?
-    d. Re-run the power analysis with normally distributed values (skewness $= 0$, kurtosis $= 0$).
-	With a sample size of 150, did power to detect the hypothesized effects increase or decrease?
-What does this indicate?
-    e. Re-run the power analysis using multiple imputation instead of FIML (and normally distributed values).
-	Use five imputations.
-	With a sample size of 150, did power to detect the hypothesized effects increase or decrease?
-What does this indicate?
+    How would you interpret each of these findings?
+    d. Re-run the power analysis with normally distributed values (skewness $= 0$, kurtosis $= 0$), using 100 repetitions with a sample size of 150.
+    Did power to detect the hypothesized effects increase or decrease?
+    What does this indicate?
+    e. Re-run the power analysis using multiple imputation instead of FIML (and normally distributed values); use 100 repetitions with a sample size of 150 and use five imputations.
+    Did power to detect the hypothesized effects increase or decrease?
+    What does this indicate?
 
 ### Answers
 
