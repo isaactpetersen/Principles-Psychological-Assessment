@@ -4,7 +4,6 @@
 library("rmarkdown")
 library("knitr")
 library("bookdown")
-library("renv")
 
 # Identify Packages for DESCRIPTION file ----------------------------------
 
