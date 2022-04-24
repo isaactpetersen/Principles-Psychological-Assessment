@@ -1715,7 +1715,7 @@ semModel2StdBeta <- semModel2Std$std.all[which(semModel2Std$lhs == "antisocialT2
 ```{r populationModelExercise, include = FALSE, cache = TRUE}
 # Power Analysis ----------------------------------------------------------
 
-#Specify population model
+# Specify population model
 
 populationModel_ex <- '
  #Specify measurement model factor loadings (free the factor loading of the first indicator)
@@ -1772,7 +1772,7 @@ populationModelFit_ex <- lavaan(populationModel_ex, do.fit = FALSE)
 ```
 
 ```{r analysisModelExercise, include = FALSE, cache = TRUE}
-#Specify analysis model
+# Specify analysis model
 
 analysisModelSyntax_ex <- '
  #Measurement model factor loadings (free the factor loading of the first indicator)
@@ -1851,7 +1851,7 @@ indicatorDistributions_ex <- bindDist(p = numberOfIndicators_ex,
 ```
 
 ```{r specifyMissingnessExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
-#Specify missingness
+# Specify missingness
 percentMissingByVariable_ex <- '
   x1 ~ p(0.10)
   x2 ~ p(0.10)
@@ -1878,6 +1878,11 @@ missingnessModelFIML_ex <- miss(logit = percentMissingByVariable_ex, m = 0)
 ```{r powerAnalysisSampleSizeExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
 sampleSizes_ex <- 100:700
 repetitionsPerSampleSize_ex <- 1
+```
+
+```{r, include = FALSE}
+detach("package:semTools", unload = TRUE)
+library("semTools")
 ```
 
 ```{r powerAnalysisExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "dataDistributionExercise")}
@@ -1940,12 +1945,12 @@ numImputations_ex <- 5
 ```
 
 ```{r multipleImputationExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
-#Multiple Imputation
+# Multiple Imputation
 missingnessModelMI_ex <- miss(logit = percentMissingByVariable_ex, m = numImputations_ex)
 ```
 
 ```{r, include = FALSE}
-#Normally Distributed Data
+# Normally Distributed Data
 names(fitted(populationModelFit_ex)$mean)
 ```
 
@@ -1955,14 +1960,14 @@ indicatorDistributionsNormal <- bindDist(p = numberOfIndicators_ex,
                                          kurtosis = rep(0, 11))
 ```
 
-```{r, include = FALSE}
-detach("package:semTools", unload = TRUE)
-library("semTools")
-```
-
 ```{r powerAnalysisSampleSizeExercise2, include = FALSE, cache = TRUE, cache.comments = FALSE}
 sampleSizes2_ex <- 150
 repetitionsPerSampleSize2_ex <- 50
+```
+
+```{r, include = FALSE}
+detach("package:semTools", unload = TRUE)
+library("semTools")
 ```
 
 ```{r powerAnalysisMIExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "multipleImputationExercise", "normallyDistrubutedDataExercise")}
