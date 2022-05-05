@@ -27,6 +27,7 @@ The BibTeX citation for the book is:
   publisher = {{University of Iowa Libraries}},
   note = {Version 1.0.2},
   doi = {10.5281/zenodo.6466589},
+  isbn = {9780984037827},
   url = {https://isaactpetersen.github.io/Principles-Psychological-Assessment}
 }
 ```
