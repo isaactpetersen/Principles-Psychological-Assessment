@@ -8,14 +8,14 @@ There are other measurement theories that conceptualize [reliability](#reliabili
 One such measurement theory is generalizability theory [@Brennan1992], also known as G-theory and domain sampling theory.
 G-theory is also discussed in the chapters on [reliability](#reliability) (Chapter \@ref(reliability), Section \@ref(gTheoryReliability)), [validity](#validity) (Chapter \@ref(validity), Section \@ref(gTheoryValidity)) and [structural equation modeling](#sem) (Chapter \@ref(sem), Section \@ref(generalizability-SEM)).
 
-## Overview of Generalizability Theory (G-Theory)
+## Overview of Generalizability Theory (G-Theory) {#overview-gTheory}
 
 G-theory is an alternative measurement theory to CTT that does not treat all measurement differences across time, rater, or situation as "error" but rather as a phenomenon of interest [@Wiggins1973].
 G-theory is a measurement theory that is used to examine the extent to which scores are consistent across a specific set of conditions.
 In G-theory, the true score is conceived of as a person's *universe score*—the mean of all observations for a person over all conditions in the universe—this allows us to estimate and recognize the magnitude of multiple influences on test performance.
 These multiple influences on test performance are called *facets*.
 
-### The Universe of Generalizability
+### The Universe of Generalizability {#universeGeneralizability}
 
 Instead of conceiving of all variability in a person's scores as error, G-theory argues that we should describe the details of the particular test situation (universe) that lead to a specific test score.
 The universe is described in terms of its facets:
@@ -29,13 +29,13 @@ The universe is described in terms of its facets:
 Measures with strong [reliability](#reliability) show a high ratio of variance as a function of the person relative to the variance as a function of other facets or factors.
 To the extent that variance in scores is attributable to different settings, observers, instruments, occasions, attributes, or other facets, the [reliability](#reliability) of the measure is weakened.
 
-### Universe Score
+### Universe Score {#universeScore}
 
 A person's universe score is the average of a person's scores across all conditions in the universe.
 According to G-theory, given the exact same conditions of all the facets in the universe, the exact same test score should be obtained.
 This is the universe score, which is analogous to the true score in CTT.
 
-### G-Theory Perspective on Reliability
+### G-Theory Perspective on Reliability {#reliability-gTheory}
 
 G-theory asserts that the [reliability](#reliability) of a test does not reside within the test itself; a test's [reliability](#reliability) depends on the circumstances under which it is developed, administered, and interpreted.
 A person's test scores vary from testing to testing because of (many) variables in the testing situation.
@@ -66,7 +66,7 @@ kable(gTheoryTable,
 A score's usefulness largely depends on the extent to which it allows us to generalize accurately to behavior in a wider set of situations—i.e., a universe of generalization.
 The G-Theory equivalent of the CTT [reliability](#reliability) coefficient of a measure is the generalizability coefficient or dependability coefficient.
 
-### G-Theory Perspective on Validity
+### G-Theory Perspective on Validity {#validity-gTheory}
 
 G-theory can simultaneously consider multiple aspects of [reliability](#reliability) and [validity](#validity) in the same model.
 For instance, [internal consistency reliability](#internalConsistency-reliability), [test–retest reliability](#testRetest-reliability), [inter-rater reliability](#interrater-reliability), [parallel-forms reliability](#parallelForms-reliability), and [convergent validity](#convergentValidity) [in the @Campbell1959 sense of the same construct assessed by a different method] can all be incorporated into a G-theory model.
@@ -86,7 +86,7 @@ To the extent that variance in scores is attributable to different measurement m
 
 In sum, G-theory can be a useful way of estimating the degree of [reliability](#reliability) and [validity](#validity) of a measure's scores in the same model.
 
-### Generalizability Study
+### Generalizability Study {#generalizabilityStudy}
 
 In G-theory, the goal is to conduct a *generalizability study*.
 A generalizability study examines how generalizable scores from a particular test are if the test is administered in different situations.
@@ -94,22 +94,22 @@ The researcher must specify and define the universe (set of conditions) to which
 For instance, it might involve randomly sampling from within that universe (in terms of people, items, observers, conditions, etc.).
 In G-theory, [reliability](#reliability) is estimated with the *generalizability coefficient*.
 
-### Decision Study
+### Decision Study {#decisionStudy}
 
-### Analysis Approach
+### Analysis Approach {#analysis-gTheory}
 
 Traditionally, a generalizability theory approach would test the generalizability study and decision study using a factorial analysis of variance [ANOVA; @Brennan1992], as exemplified in Section \@ref(gTheoryANOVA), (as opposed to simple ANOVA in CTT).
 However, ANOVA is limiting—it works best with balanced designs, such as with the same sample size in each condition condition/facet; but in most real-world applications, things are not actually balanced.
 So, it is better to fit G-theory models in a mixed model framework, as exemplified in Section \@ref(gTheoryMixedModel).
 
-### Practical Challenges
+### Practical Challenges {#challenges-gTheory}
 
 G-theory is strong theoretically, but it has not been widely implemented.
 G-theory can be challenging because the researcher must specify, define, and assess the universe to which they would like to generalize their observations and to understand the [reliability](#reliability) of the measure.
 
-## Getting Started
+## Getting Started {#gettingStarted-gTheory}
 
-### Load Libraries
+### Load Libraries {#loadLibraries-gTheory}
 
 ```{r}
 library("gtheory")
@@ -120,9 +120,9 @@ library("rmarkdown")
 library("bookdown")
 ```
 
-### Prepare Data
+### Prepare Data {#prepareData-gTheory}
 
-#### Generate Data
+#### Generate Data {#generateData-gTheory}
 
 For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
@@ -140,7 +140,7 @@ Score <- c(9,9,7,4,9,8,5,5,9,8,4,6,
            8,8,9,7,6,4,5,1,3,2,3,2)
 ```
 
-#### Add Missing Data
+#### Add Missing Data {#addMissingData-gTheory}
 
 Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
 
@@ -148,7 +148,7 @@ Adding missing data to dataframes helps make examples more realistic to real-lif
 Score[30] <- NA
 ```
 
-#### Combine data into data frame
+#### Combine data into data frame {#combineData-gTheory}
 
 ```{r}
 pio_cross_dat <- data.frame(Person, Item, Score, Occasion)
@@ -158,7 +158,7 @@ Below are examples implementing G-theory.
 The `pio_cross_dat` data file for these examples come from the `gtheory` package [@R-gtheory].
 The examples are adapted from @Huebner2019.
 
-### Universe score for each person
+### Universe score for each person {#universeScore-example}
 
 ```{r}
 pio_cross_dat %>%
@@ -166,7 +166,7 @@ pio_cross_dat %>%
   summarise(universeScore = mean(Score, na.rm = TRUE), .groups = "drop")
 ```
 
-### Generalizability ($G$) Study
+### Generalizability ($G$) Study {#gStudy-example}
 
 #### ANOVA framework {#gTheoryANOVA}
 
@@ -189,7 +189,7 @@ PxIxO <- gstudy(data = pio_cross_dat,
 PxIxO
 ```
 
-### Decision ($D$) Study
+### Decision ($D$) Study {#dStudy-example}
 
 The decision ($D$) study and generalizability ($G$) study, from which the generalizability and dependendability coefficients can be estimated, were analyzed using the gtheory package [@R-gtheory].
 
@@ -197,7 +197,7 @@ The decision ($D$) study and generalizability ($G$) study, from which the genera
 decisionStudy <- dstudy(PxIxO, colname.objects = "Person", data = pio_cross_dat, colname.scores = "Score")
 ```
 
-### Generalizability Coefficient
+### Generalizability Coefficient {#generalizabilityCoefficient}
 
 The generalizability coefficient is analogous to the [reliability](#reliability) coefficient in CTT.
 It divides the estimated person variance component (the universe score variance) by the estimated observed-score variance (with some adjustment for the number of observations).
@@ -208,7 +208,7 @@ The generalizability coefficient uses relative error variance, so it is relevant
 decisionStudy$generalizability
 ```
 
-### Dependability Coefficient
+### Dependability Coefficient {#dependabilityCoefficient}
 
 The dependability coefficient is analogous to the [reliability](#reliability) coefficient in CTT.
 It uses absolute error variance, so it is relevant when decisions are made based on absolute (e.g., raw) scores.
@@ -217,17 +217,17 @@ It uses absolute error variance, so it is relevant when decisions are made based
 decisionStudy$dependability
 ```
 
-## Conclusion
+## Conclusion {#conclusion-gTheory}
 
 G-theory provides an important reminder that [reliability](#reliability) is not one thing.
 You cannot just say that a test "is reliable"; it is important to specify the facets across which the [reliability](#reliability) and [validity](#validity) of a measure has been established (e.g., times, raters, items, groups, instruments).
 Generalizability theory can be a useful way of estimating multiple aspects of [reliability](#reliability) and [validity](#validity) of measures in the same model.
 
-## Suggested Readings
+## Suggested Readings {#readings-gTheory}
 
 @Brennan2001
 
-## Exercises
+## Exercises {#exercises-gTheory}
 
 ```{r, include = FALSE}
 library("tidyverse")
@@ -269,7 +269,7 @@ generalizabilityCoefficient_ex <- decisionStudy_ex$generalizability #analogous t
 dependabilityCoefficient_ex <- decisionStudy_ex$dependability #analogous to reliability coefficient in classical test theory; uses absolute error variance: relevant when absolute decisions are made
 ```
 
-### Questions
+### Questions {#exercisesQuestions-gTheory}
 
 1. You want to see how generalizable the Antisocial Behavior subscale of the BPI is.
 You conduct a generalizability study ("$G$ study") to see how generalizable the scores are across participants ($N = 3$), two measurement occasions, and three raters.
@@ -292,7 +292,7 @@ kable(por_data_ex2,
       booktabs = TRUE)
 ```
 
-### Answers
+### Answers {#exercisesAnswers-gTheory}
 
 1. The universe score is `r person1_ex`, `r person2_ex`, and `r person3_ex` for participants 1, 2, and 3, respectively.
 The percent of variance attributable to each of those factors is: (a) participant: `r apa(varParticipant_ex, decimals = 1)`%, (b) rater: `r apa(varRater_ex, decimals = 1)`%, (c) the measurement occasion: `r apa(varOccasion_ex, decimals = 1)`%, and (d) the interactive effect of rater and measurement occasion: `r apa(varRaterXOccasion_ex, decimals = 1)`%.

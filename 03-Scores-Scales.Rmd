@@ -1,15 +1,15 @@
-# Scores and Scales
+# Scores and Scales {#scoresScales}
 
 Assessments yield information.
 The information is encoded in scores or in other [types of data](#dataTypes).
 It is important to consider the different [types of data](#dataTypes) because the [types of data](#dataTypes) restrict what options are available to analyze the data.
 
-## Getting Started
+## Getting Started {#gettingStarted-scoresScales}
 
 Applied examples in `R` are provided below.
 Each chapter that has `R` examples in this book has a section on "Getting Started" which provides the code to load relevant libraries, load data files, simulate data, add missing data, conduct calculations, and more.
 
-### Load Libraries
+### Load Libraries {#loadLibraries-scoresScales}
 
 ```{r}
 library("dplyr")
@@ -20,9 +20,9 @@ library("rmarkdown")
 library("bookdown")
 ```
 
-### Prepare Data
+### Prepare Data {#prepareData-scoresScales}
 
-#### Simulate Data
+#### Simulate Data {#simulateData-scoresScales}
 
 For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
@@ -36,7 +36,7 @@ rawData <- rnorm(n = 1000, mean = 200, sd = 30)
 scores <- data.frame(rawData = rawData)
 ```
 
-#### Add Missing Data
+#### Add Missing Data {#addMissingData-scoresScales}
 
 Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
 
@@ -51,7 +51,7 @@ Depending on the use of the variable, the data could fall into more than one cat
 The type of data influences what kinds of data analysis you can do.
 For instance, parametric statistical analysis (e.g., *t*-test, analysis of variance [ANOVA], and linear regression) assumes that data are interval or ratio.
 
-### Nominal
+### Nominal {#nominalData}
 
 Nominal data are distinct categories.
 They are categorical and unordered.
@@ -62,7 +62,7 @@ For example, zip codes are nominal.
 Numbers that represent a participant's sex, race, or ethnicity are also nominal.
 Higher numbers of nominal data do not reflect higher (or lower) levels of the construct because the numbers represent categories that do not have an order.
 
-### Ordinal
+### Ordinal {#ordinalData}
 
 Ordinal data are ordered categories: they have a name and an order.
 They make no claim about the conceptual distance between the ranks, only that higher values represent higher (or lower) levels of the construct.
@@ -75,7 +75,7 @@ For example, if the respondent is asked how many drinks they had in the past day
 Even the numbers have the same mathematical distance (1, 2, 3), they do not represent the same conceptual distance.
 Most data in psychology are ordinal data even though they are often treated as if they were interval data.
 
-### Interval
+### Interval {#intervalData}
 
 Interval data are ordered and have meaningful distances (i.e., equal spacing between intervals).
 You can sum interval data (e.g., 2 is 2 away from 4), but you cannot multiply interval data ($2 \times 2 \ne 4$).
@@ -84,7 +84,7 @@ Years of education is interval, whereas educational attainment (e.g., high schoo
 Although much data in psychology involves numbers that have the same mathematical distance between intervals, the intervals likely do not represent the same conceptual distance.
 For example, the difference in severity of two people who have two symptoms and four symptoms of depression, respectively, may not be the same difference in depression severity as two people who have four symptoms and six symptoms, respectively.
 
-### Ratio
+### Ratio {#ratioData}
 
 Ratio data are ordered, have meaningful distances, and have a true (absolute) zero that represents absence of the construct.
 With ratio data, multiplicative relationships are true.
@@ -99,7 +99,7 @@ Score transformations alter the original (raw) data.
 If you change the data, it can change the results.
 Score transformations are not neutral.
 
-### Raw Scores
+### Raw Scores {#rawScores}
 
 Raw scores are the original data, or they may be aggregations (e.g., sums or means) of multiple items.
 Raw scores are the most pure because they are closest to the original operation (e.g., behavior).
@@ -201,7 +201,7 @@ mtext("Percentile ranks", side = 2, line = 0, at = -.2746, las = 1)
 mtext("Stanines", side = 2, line = 0, at = -.335, las = 1)
 ```
 
-#### Percentile Ranks
+#### Percentile Ranks {#percentileRanks}
 
 Percentile ranks reflect what percent of people the person scored higher than.
 Percentile ranks are frequently used for tests of intellectual/cognitive ability, academic achievement, academic aptitude, and grant funding.
@@ -226,7 +226,7 @@ scores$percentileRank <- percent_rank(scores$rawData) * 100
 hist(scores$percentileRank, xlab = "Percentile Ranks", main = "Histogram of Percentile Ranks")
 ```
 
-#### Deviation (Standardized) Scores
+#### Deviation (Standardized) Scores {#standardizedScores}
 
 Deviation or standardized scores are the transformation of raw scores to a normal distribution using some norm.
 The norm could be a comparison group, or it could be the sample itself.
@@ -251,7 +251,7 @@ hist(scale(rbinom(100000, 300, .01)), breaks = 8, xlab = "Hallucinations (z-Scor
 
 Thus, you can compute a deviation score, but it may not be meaningful if the data and underlying construct are not normally distributed.
 
-##### *z*-scores
+##### *z*-scores {#zScores}
 
 The *z*-score is the most common standardized score, and it can help putting different measures with different scales on the same playing field.
 *z*-scores have a mean of zero and a standard deviation of 1.
@@ -281,7 +281,7 @@ all.equal(as.vector(scores$zScore),
 hist(scores$zScore, xlab = "z-Scores", main = "Histogram of z-Scores")
 ```
 
-##### *T*-scores
+##### *T*-scores {#tScores}
 
 *T*-scores have a mean of 50 and a standard deviation of 10.
 *T*-scores are frequently used with personality and symptom measures, where clinical cutoffs are often set at 70 (i.e., two standard deviations above the mean).
@@ -302,7 +302,7 @@ scores$tScore <- 50 + 10*scale(scores$rawData)
 hist(scores$tScore, xlab = "T-Scores", main = "Histogram of T-Scores")
 ```
 
-##### Standard scores
+##### Standard scores {#standardScores}
 
 Standard scores have a mean of 100 and a standard deviation of 15.
 Standard scores are frequently used for tests of intellectual ability, academic achievement, and cognitive ability.
@@ -325,7 +325,7 @@ scores$standardScore <- 100 + 15*scale(scores$rawData)
 hist(scores$standardScore, xlab = "Standard Scores", main = "Histogram of Standard Scores")
 ```
 
-##### Scaled scores
+##### Scaled scores {#scaledScores}
 
 Scaled scores are raw scores that have been converted to a standardized metric.
 The particular metric of the scaled score depends on the measure.
@@ -345,7 +345,7 @@ scores$scaledScore <- 10 + 3*scale(scores$rawData)
 hist(scores$scaledScore, xlab = "Scale Scores", main = "Histogram of Scaled Scores")
 ```
 
-##### Stanine scores
+##### Stanine scores {#stanineScores}
 
 Stanine scores (short for STANdard Nine), have a mean of 5 and a standard deviation of 2.
 The scores range from 1–9.
@@ -389,13 +389,13 @@ scores$stanineScore[which(scores$percentileRank > 96)] <- 9
 hist(scores$stanineScore, xlab = "Stanine Scores", main = "Histogram of Stanine Scores", breaks = seq(from = 0.5, to = 9.5, by = 1), xlim = c(0,10), xaxp = c(1,9,8))
 ```
 
-## Conclusion
+## Conclusion {#conclusion-scoresScales}
 
 It is important to consider the [types of data](#dataTypes) your data are because the [types of data](#dataTypes) restrict what options are available to analyze the data.
 It is also important to consider whether the data were [transformed](#scoreTransformation) because score transformations are not neutral—they can impact the results.
 
-## Suggested Readings
+## Suggested Readings {#readings-scoresScales}
 
 @Childs2021: https://dzchilds.github.io/stats-for-bio/data-transformations.html
 
-## Exercises
+## Exercises {#exercises-scoresScales}

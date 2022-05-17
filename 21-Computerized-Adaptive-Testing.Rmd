@@ -128,18 +128,18 @@ The cutoff criterion is usually the raw score on the scale that corresponds to a
 Two countdown approaches include (1) the classification method and (2) the full scores on elevated scales (FSES) method.
 The countdown approach to adaptive testing is described by @Forbey2007.
 
-##### Classification Method
+##### Classification Method {#classificationMethod}
 
 Using the classification method to the countdown approach of adaptive testing, the examiner stops administering items once elevation is either ruled in or ruled out.
 The classification method only tells you *whether* a client produced an elevated score on the scale.
 It does not tell you their actual score on that scale.
 
-##### Full Scores on Elevated Scales Method
+##### Full Scores on Elevated Scales Method {#fses}
 
 Using the full scores on elevated scales method to the countdown approach of adaptive testing, the examiner stops administering items only if elevation is ruled out.
 The approach generates a score on that scale only for people who produced an elevated score.
 
-#### Summary
+#### Summary {#manualAdaptiveTestingSummary}
 
 When doing manual administration with clinical scales, you see the greatest item savings when ordering items from least to most frequently endorsed (i.e., from most to least [difficulty](#itemDifficulty)) so you can rule people out faster.
 Ordering items in this way results in a 20–30% item savings on the [Minnesota Multiphasic Personality Inventory](#mmpi) (MMPI), and corresponding time savings.
@@ -194,9 +194,9 @@ By contrast, many short forms are not as accurate as their full-scale counterpar
 Part of the reason that CATs tend to do better than short forms is that the CATs are adaptive; they determine which items to administer based on the participant's responses to prior items, unlike short forms.
 For guidelines on developing and evaluating short forms, see @Smith2000.
 
-## Getting Started
+## Getting Started {#gettingStarted-cat}
 
-### Load Libraries
+### Load Libraries {#loadLibraries-cat}
 
 ```{r}
 library("mirtCAT")
@@ -204,12 +204,12 @@ library("here")
 library("tinytex")
 ```
 
-## Example of Uni-dimensional CAT
+## Example of Uni-dimensional CAT {#exampleUnidimensionalCAT}
 
 The computerized adaptive test (CAT) was fit using the `mirtCAT` package [@R-mirtCAT].
 The example of a CAT with uni-dimensional data is adapted from `mirtCAT` documentation: http://philchalmers.github.io/mirtCAT/html/unidim-exampleGUI.html
 
-### Define population IRT parameters
+### Define population IRT parameters {#definePopulationIRTparameters}
 
 For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
@@ -224,13 +224,13 @@ d <- matrix(rnorm(nitems, mean = 0, sd = 1))
 pars <- data.frame(a1 = a, d = d, g = 0.2)
 ```
 
-### Fit IRT model
+### Fit IRT model {#fitIRTmodel-cat}
 
 ```{r irtModel, cache = TRUE, cache.extra = list(getRversion(), packageVersion("mirt"), packageVersion("mirtCAT")), cache.comments = FALSE, dependson = "irtParameters"}
 mod <- generate.mirt_object(pars, "3PL")
 ```
 
-### Model Summary
+### Model Summary {#modelOutput-cat}
 
 ```{r}
 summary(mod)
@@ -238,7 +238,7 @@ coef(mod, simplify = TRUE, IRTpars = TRUE)
 modItemParameters <- coef(mod, simplify = TRUE, IRTpars = TRUE)$items
 ```
 
-### Model Plots
+### Model Plots {#modelPlots-cat}
 
 The test appears to measure theta ($\theta$) with $SE < .4$ within -2 to 2 range
 
@@ -250,7 +250,7 @@ plot(mod)
 plot(mod, type = "infoSE", theta_lim = c(-3, 3))
 ```
 
-### Item Plots
+### Item Plots {#itemPlots-cat}
 
 ```{r, out.width = "100%", fig.cap = "Item Characteristic Curves."}
 plot(mod, type = "trace", theta_lim = c(-3, 3))
@@ -274,7 +274,7 @@ itemplot(object = mod, item = "Item.16", "infotrace")
 itemplot(object = mod, item = "Item.53", "infotrace")
 ```
 
-### Create math items
+### Create math items {#createMathItems-cat
 
 ```{r mathItems, cache = TRUE, cache.comments = FALSE, dependson = "irtParameters"}
 questions <- answers <- character(nitems)
@@ -295,7 +295,7 @@ for(i in 1:nitems){
 df <- data.frame(Questions = questions, Answer = answers, Option = choices, Type = "radio")
 ```
 
-### Run computerized adaptive test (CAT)
+### Run computerized adaptive test (CAT) {#runCAT}
 
 Set the minimum standard error of measurement for the latent trait (theta; $\theta$) that must be reached before stopping the CAT.
 You can lengthen the CAT by lowering the minimum standard error of measurement, or can shorten the CAT by raising the minimum standard error of measurement.
@@ -318,26 +318,26 @@ load(here("Data", "cat.rdata"))
 RNGkind("default", "default", "default")
 ```
 
-### CAT results
+### CAT results {#catResults}
 
 ```{r}
 print(result)
 summary(result)
 ```
 
-#### CAT Standard Errors
+#### CAT Standard Errors {#CATstandardErrors}
 
 ```{r, out.width = "100%", fig.cap = "Standard Errors of Measurement Around Theta in a Computerized Adaptive Test."}
 plot(result, SE = 1)
 ```
 
-#### CAT 95% Confidence Interval
+#### CAT 95% Confidence Interval {#cat95CI}
 
 ```{r, out.width = "100%", fig.cap = "95% Confidence Interval of Theta in a Computerized Adaptive Test."}
 plot(result, SE = qnorm(.975))
 ```
 
-## Conclusion
+## Conclusion {#conclusion-cat}
 
 Computer-administered and online assessments have the potential to be both desirable and dangerous.
 They have key [advantages](#computerAdvantages); at the same times, they have both [validity](#computerValidity) and [ethical](#computerEthics) challenges.
@@ -348,16 +348,16 @@ A [CAT](#catIRT) is designed to locate a person's level on the construct with as
 A [CAT](#catIRT) administers the items that will provide the most [information](#irtReliability) based on participants' previous responses.
 [CAT](#catIRT) typically results in the greatest item savings—around 50% item savings or more.
 
-## Suggested Readings
+## Suggested Readings {#readings-cat}
 
 @Buchanan2002; @Gibbons2016
 
-## Exercises
+## Exercises {#exercises-cat}
 
 ```{r, include = FALSE}
 library("MOTE")
 ```
 
-### Questions
+### Questions {#exercisesQuestions-cat}
 
-### Answers
+### Answers {#exercisesAnswers-cat}

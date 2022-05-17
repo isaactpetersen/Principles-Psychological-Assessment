@@ -200,7 +200,7 @@ $$
 (\#eq:reliabilityIndex)
 $$
 
-## Four CTT Measurement Models
+## Four CTT Measurement Models {#cttMeasurementModels}
 
 There are four primary measurement models in CTT [@Graham2006a]:
 
@@ -322,7 +322,7 @@ For instance, you could add within-person error to a dataset by adding error to 
 Between-person error occurs across the sample.
 You could add between-person random error to a variable by adding error across the rows, within a column.
 
-### Types of Measurement Error
+### Types of Measurement Error {#measurementErrorTypes}
 
 There are four non-mutually exclusive types of measurement error: within-person random error, within-person systematic error, between-person random error, and between-person systematic error.
 The four types of measurement error are depicted in Figure \@ref(fig:measurementErrorTypes), as adapted from @Willett2012.
@@ -383,7 +383,7 @@ The influence of between-person systematic error is depicted in Figure \@ref(fig
 knitr::include_graphics("./Images/Error_Between-PersonSystematic.png")
 ```
 
-### Summary
+### Summary {#measurementErrorSummary}
 
 In sum, all types of measurement error (whether systematic or random) lead to less accurate scores for an individual.
 But, different kinds of errors have different implications.
@@ -396,7 +396,7 @@ With more measurements, we reduce our uncertainty and increase our precision.
 According to CTT, if we take many measurements and the average of the measurements is 10, we have some confidence that the true score $(T) \approx 10$.
 In reality, however, error for a given measure likely includes both systematic and random error.
 
-## Overview of Reliability
+## Overview of Reliability {#overview-reliability}
 
 The "Standards for Educational and Psychological Testing" set the standard for educational and psychological assessment, and are jointly published by the American Educational Research Association, American Psychological Association, and National Council on Measurement in Education.
 According to the "Standards" [@AERA2014, p. 33], reliability is the "consistency of the scores across instances of the testing procedure".
@@ -435,7 +435,7 @@ In general, the greater the number of items, the more reliable the measure (assu
 We never see the true scores or the error scores, so we cannot compute reliability—we can only *estimate* it from the observed scores.
 This estimate of reliability gives a probabilistic answer of the reliability of the measure, rather than an absolute answer.
 
-### How Reliable is Reliable Enough?
+### How Reliable is Reliable Enough? {#reliableEnough}
 
 As described by @Nunnally1994, how reliable a measure should be depends on the proposed uses.
 If it is early in the research process, and the focus is on group-level inferences (e.g., associations or group differences), modest reliability (e.g., .70) may be sufficient and save time and money.
@@ -516,15 +516,15 @@ Around 95% of scores would be expected to fall within $\pm 2 \text{ SEMs}$ of th
 In other words, 95% of the time, the true score is expected to fall within $\pm 2 \text{ SEMs}$ of the observed score.
 Given an observed score of $X = 15$ and $\text{SEM} = 2$, the 95% confidence interval of the true score is [11, 19].
 So, if a person gets a score of 15 on the measure, 95% of the time, their true score is expected to fall within 11–19.
-I provide an empirical example of estimating the SEM in Section \@ref(standardErrorofMeasurement).
+I provide an empirical example of estimating the SEM in Section \@ref(sem-reliability).
 
 Based on the preceding discussion, consider the characteristics of measures that make them more useful from a reliability perspective.
 A useful measure would show wide variation across people (individual differences), so we can more accurately estimate its reliability.
 And we would expect a useful measure to show consistency, stability, precision, and reliability of scores.
 
-## Getting Started
+## Getting Started {#gettingStarted-reliability}
 
-### Load Libraries
+### Load Libraries {#loadLibraries-reliability}
 
 ```{r}
 library("psych")
@@ -542,9 +542,9 @@ library("rmarkdown")
 library("bookdown")
 ```
 
-### Prepare Data
+### Prepare Data {#prepareData-reliability}
 
-#### Simulate Data
+#### Simulate Data {#simulateData-reliability}
 
 For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
@@ -584,7 +584,7 @@ Score <- c(9,9,7,4,9,8,5,5,9,8,4,6,
            8,8,9,7,6,4,5,1,3,2,3,2)
 ```
 
-#### Add Missing Data
+#### Add Missing Data {#addMissingData-reliability}
 
 Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
 
@@ -607,7 +607,7 @@ item3[c(10)] <- NA
 item4[c(10)] <- NA
 ```
 
-#### Combine data into data frame
+#### Combine data into data frame {#combineData-reliability}
 
 ```{r}
 mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
@@ -934,7 +934,7 @@ Moreover, when interpreting associations with truncated variability, it is impor
 
 To address these limitations of the coefficient of stability, it is important to consider additional indices of test–retest reliability, such as the coefficient of repeatability and bias that are depicted in Bland-Altman plots, as described below.
 
-#### Coefficient of Agreement
+#### Coefficient of Agreement {#agreement}
 
 The intraclass correlation (ICC) can be used to the extent of absolute agreement of scores within a person across time.
 ICC was estimated using the `psych` package [@R-psych].
@@ -1017,7 +1017,7 @@ bias <- function(measure1, measure2){
 bias(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
 
-##### 95% Limits of Agreement
+##### 95% Limits of Agreement {#loa}
 
 $$
 \text{Lower Limit of Agreement} = \text{Bias} - \text{Coefficient of Repeatability}
@@ -1047,13 +1047,13 @@ lowerLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
 
-##### Regression Slope
+##### Regression Slope {#repeatabilitySlope}
 
 ```{r}
 BAstats$regression.fixed.slope
 ```
 
-##### Bland-Altman Statistics
+##### Bland-Altman Statistics {#blandAltmanStats}
 
 ```{r}
 BAstats
@@ -1067,7 +1067,7 @@ Consistency of scores can also be assessed within the same rater, which is known
 For assessing inter-rater reliability, intraclass correlation (ICC) is recommended for continuous data, such as ratings of a participants mood.
 By contrast, Cohen's kappa ($\kappa$) is recommended for categorical variables, such as making a diagnostic decision whether to give someone a diagnosis of depression or not.
 
-#### Continuous Data
+#### Continuous Data {#interraterReliability-continuous}
 
 Use intraclass correlation (ICC) for estimating inter-rater reliability of continuous data.
 ICC was estimated using the `psych` package [@R-psych].
@@ -1076,7 +1076,7 @@ ICC was estimated using the `psych` package [@R-psych].
 ICC(mydata[,c("rater1continuous","rater2continuous","rater3continuous")], missing = FALSE)
 ```
 
-#### Categorical Data
+#### Categorical Data {#interraterReliability-catergorical}
 
 For estimating the inter-rater reliability of categorical data, use Cohen's kappa [@Bakeman2020], Fleiss's kappa, the S index [@Falotico2010], or Gwet's AC1 statistic [@Gwet2008; @Gwet2021a; @Gwet2021b].
 Cohen's kappa was estimated using the `psych` package [@R-psych].
@@ -1392,7 +1392,7 @@ set.seed(52242)
 ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")], type = "categorical", interval.type = "bca", B = bootstrapReplications)
 ```
 
-### Comparison
+### Comparison {#comparison-reliability}
 
 All of the types of reliability described in Section \@ref(typesOfReliability) are aspects of reliability.
 Even though they are all called "reliability" they are very different from each other.
@@ -1404,7 +1404,7 @@ $$
 \text{delayed parallel-forms} < \text{test–retest}, \text{inter-rater} < \text{immediate parallel-forms}, \text{internal consistency}, \text{intra-rater}
 $$
 
-### Reliability of a Linear Composite Score
+### Reliability of a Linear Composite Score {#linearComposite-reliability}
 
 A linear composite score is a linear combination of variables, each of which has a given weight in the linear composite.
 Unit weights (i.e., weights of 1) would reflect an unweighted composite.
@@ -1515,7 +1515,7 @@ ggplot(newDataDifferenceScore2, aes(correlation, reliabilityOfDifferenceScore, g
   theme(legend.background = element_rect(color = "black", fill = "white", linetype = "solid"))
 ```
 
-## Applied Examples
+## Applied Examples {#appliedExamples-reliability}
 
 Although reliability is an important consideration for measures, stronger reliability is not always better.
 Reliability is not one thing; it is not monolithic.
@@ -1544,7 +1544,7 @@ Consider a questionnaire assessing people's extraversion.
 We would expect high stability of construct, and therefore a high coefficient of [stability](#stability), but test and retest scores might not be equal.
 That is, the measures may show a somewhat lower [repeatability](#repeatability) coefficient because of random error—on a given day, the participant may be sick, stressed, or tired, they may have recently got into an argument, or they may be impacted by the season, the weather, or differences in the context (e.g., lab or online), just to name a few potential sources of random error.
 
-## Standard Error of Measurement (SEM)
+## Standard Error of Measurement (SEM) {#sem-reliability}
 
 We presented and discussed the formula for calculating the standard error of measurement earlier in Equation \@ref(eq:standardErrorOfMeasurement).
 It is also below:
@@ -1574,14 +1574,14 @@ upper95CI
 
 The 95% CI is: $[`r round(lower95CI, 2)`, `r round(upper95CI, 2)`]$.
 
-## Influences of Measurement Error on Test–Retest Reliability
+## Influences of Measurement Error on Test–Retest Reliability {#measurementErrorEffects-testRetestReliability}
 
 This section describes the influence of [measurement error](#measurementError) on reliability, specifically [test–retest reliability](#testRetest-reliability).
 There are different types of [measurement error](#measurementError), and each can have different impacts on reliability and, ultimately, your findings.
 As discussed in Section \@ref(measurementError), errors can be either [systematic](#systematicError) or [random](#unsystematicError).
 In addition, error can be [within-person](#withinPersonError), [between-person](#betweenPersonError), or both.
 
-### No Error
+### No Error {#noError}
 
 This section provides the coefficient of [stability](#stability), [repeatability](#repeatability), and [bias](#blandAltmanBias) that are used as a comparison to when [measurement error](#measurementError) is added.
 For reproducibility, I set the seed below.
@@ -1608,25 +1608,25 @@ mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
                      item1, item2, item3, item4)
 ```
 
-#### Coefficient of stability
+#### Coefficient of stability {#noError-stability}
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
 ```
 
-#### Coefficient of repeatability
+#### Coefficient of repeatability {#noError-repeatability}
 
 ```{r}
 qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
-#### Bias {#noErrorBias}
+#### Bias {#noError-bias}
 
 ```{r}
 blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
 ```
 
-### Add within-person random error
+### Add within-person random error {#withinPersonRandomError-example}
 
 In the example below, I added [within-person random error](#withinPersonRandomError).
 Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at all timepoints.
@@ -1661,32 +1661,32 @@ for(i in 1:nrow(mydata)){
 }
 ```
 
-#### Coefficient of stability
+#### Coefficient of stability {#withinPersonRandomError-stability}
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
 ```
 
-#### Coefficient of repeatability
+#### Coefficient of repeatability {#withinPersonRandomError-repeatability}
 
 ```{r}
 qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
-#### Bias {#wpRandomErrorBias}
+#### Bias {#withinPersonRandomError-bias}
 
 ```{r}
 blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
 ```
 
-#### Findings
+#### Findings {#withinPersonRandomError-findings}
 
 Adding [within-person random error](#withinPersonRandomError) led to:
 
 - weaker (lower) [stability](#stability) coefficient
 - weaker (higher) [repeatability](#repeatability) coefficient
 
-### Add within-person systematic error
+### Add within-person systematic error {#witinPersonSystematicError-example}
 
 In the example below, I added [within-person systematic error](#withinPersonSystematicError).
 Specifically, to all participants, I added error that is consistent across time for a given participant: pulled from a distribution with a mean of 5 and a standard deviation of 3.
@@ -1721,25 +1721,25 @@ for(i in 1:nrow(mydata)){
 }
 ```
 
-#### Coefficient of stability
+#### Coefficient of stability {#withinPersonSystematicError-stability}
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
 ```
 
-#### Coefficient of repeatability
+#### Coefficient of repeatability {#withinPersonSystematicError-repeatability}
 
 ```{r}
 qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
-#### Bias {#wpSystematicErrorBias}
+#### Bias {#wpSystematicErrorBias} {#withinPersonSystematicError-bias}
 
 ```{r}
 blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
 ```
 
-#### Findings
+#### Findings {#withinPersonSystematicError-findings}
 
 Adding [within-person systematic error](#withinPersonSystematicError) led to:
 
@@ -1747,7 +1747,7 @@ Adding [within-person systematic error](#withinPersonSystematicError) led to:
 - no effect on [repeatability](#repeatability) coefficient
 - [bias](#blandAltmanBias) at the person-level, but this [bias](#blandAltmanBias) would go undetected by the estimate of group-level [bias](#blandAltmanBias) in the [Bland-Altman plot](#blandAltmanPlot)
 
-### Add between-person random error at T2
+### Add between-person random error at T2 {#betweenPersonRandomError-example}
 
 In the example below, I added [between-person random error](#betweenPersonRandomError).
 Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at time 2:
@@ -1780,25 +1780,25 @@ set.seed(12345)
 mydata$time2 <- mydata$time2 + rnorm(sampleSize, mean = 0, sd = 3)
 ```
 
-#### Coefficient of stability
+#### Coefficient of stability {#betweenPersonRandomError-stability}
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
 ```
 
-#### Coefficient of repeatability
+#### Coefficient of repeatability {#betweenPersonRandomError-repeatability}
 
 ```{r}
 qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
-#### Bias {#bpRandomErrorBias}
+#### Bias {#bpRandomErrorBias} {#betweenPersonRandomError-bias}
 
 ```{r}
 blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
 ```
 
-#### Findings
+#### Findings {#betweenPersonRandomError-findings}
 
 Adding [between-person random error](#betweenPersonRandomError) led to:
 
@@ -1806,7 +1806,7 @@ Adding [between-person random error](#betweenPersonRandomError) led to:
 - weaker (higher) [repeatability](#repeatability) coefficient
 - [bias](#blandAltmanBias) at the person-level, but this [bias](#blandAltmanBias) would go undetected by the estimate of group-level [bias](#blandAltmanBias) in the [Bland-Altman plot](#blandAltmanPlot)
 
-### Add between-person systematic error at T2
+### Add between-person systematic error at T2 {#betweenPersonSystematicError-example}
 
 In the example below, I added [between-person systematic error](#betweenPersonSystematicError).
 Specifically, I added constant variance of 10 to all participants' scores at T2
@@ -1838,25 +1838,25 @@ mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
 mydata$time2 <- mydata$time2 + 10
 ```
 
-#### Coefficient of stability
+#### Coefficient of stability {#betweenPersonSystematicError-stability}
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
 ```
 
-#### Coefficient of repeatability
+#### Coefficient of repeatability {#betweenPersonSystematicError-repeatability}
 
 ```{r}
 qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
-#### Bias {#bpSystematicErrorBias}
+#### Bias {#betweenPersonSystematicError-bias}
 
 ```{r}
 blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
 ```
 
-#### Findings
+#### Findings {#betweenPersonSystematicError-findings}
 
 Adding [between-person systematic error](#betweenPersonSystematicError) led to:
 
@@ -1864,7 +1864,7 @@ Adding [between-person systematic error](#betweenPersonSystematicError) led to:
 - no effect on [repeatability](#repeatability) coefficient
 - [bias](#blandAltmanBias) at the group-level (detected by group-level estimate of [bias](#blandAltmanBias) in [Bland-Altman plot](#blandAltmanPlot))
 
-### Add constant variance of 10 to all participants at all timepoints
+### Add constant variance of 10 to all participants at all timepoints {#constantVariance-example}
 
 In the example below, I added constant variance to all participants' scores at all timepoints.
 Specifically I added 10 to all participants' scores at all timepoints.
@@ -1898,25 +1898,25 @@ mydata$time2 <- mydata$time2 + 10
 mydata$time3 <- mydata$time3 + 10
 ```
 
-#### Coefficient of stability
+#### Coefficient of stability {#constantVariance-stability}
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
 ```
 
-#### Coefficient of repeatability
+#### Coefficient of repeatability {#constantVariance-repeatability}
 
 ```{r}
 qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
-#### Bias {#constantErrorBias}
+#### Bias {#constantVariance-bias}
 
 ```{r}
 blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
 ```
 
-#### Findings
+#### Findings {#constantVariance-findings}
 
 Adding constant variance to all participants' scores at all time points led to:
 
@@ -1924,7 +1924,7 @@ Adding constant variance to all participants' scores at all time points led to:
 - no effect on [repeatability](#repeatability) coefficient
 - [bias](#blandAltmanBias) at the person-level, but this [bias](#blandAltmanBias) would go undetected by the estimate of group-level [bias](#blandAltmanBias) in the [Bland-Altman plot](#blandAltmanPlot)
 
-### Summary
+### Summary {#measurementErrorEffects-testRetestReliability-summary}
 
 To summarize the effects of measurement error, [random error](#randomError) (both [within](#withinPersonError)- and [between](#betweenPersonError)-person) results in (a) a worse (lower) [stability](#stability) coefficient because a smaller proportion of the observed score variance is attributable to true score variance, and (b) a worse (higher) [repeatability](#repeatability) coefficient because the standard deviation of the difference between the two measurements is greater.
 Neither type of [random error](#randomError) leads to group-level [bias](#blandAltmanBias).
@@ -1941,13 +1941,13 @@ Indeed, [within-person systematic error](#withinPersonSystematicError) actually 
 The coefficient of [stability](#stability) index of [test–retest reliability](#testRetest-reliability) is affected by the measure *and* variance across people, and it can be thrown off by outliers or by range restriction because the Pearson correlation strongly depends on these, as discussed in Section \@ref(correlationConsiderations).
 And sample variation also has a strong influence, so it is important to cross-validate estimates of reliabilty in independent samples.
 
-## Effect of Measurement Error on Associations
+## Effect of Measurement Error on Associations {#measurementErrorEffects-associations}
 
 As we describe in greater detail in the chapter on [validity](#validity) in Section \@ref(effectOfMeasurementErrorOnAssociations), ([random](#randomError)) [measurement error](#measurementError) weakens (or attenuates) the association between variables.
 The greater the [random measurement error](#randomError), the weaker the association.
 In the context of examining the association between test and retest (i.e., [test–retest reliability](#testRetest-reliability)), the estimate of the stability of the construct (i.e., true test–retest association) is attenuated to the extent that the measure is unreliable, as described in the following formula:
 
-### Attenuation of True Test–Retest Reliability due to Measurement Error
+### Attenuation of True Test–Retest Reliability due to Measurement Error {#measurementErrorEffects-attenuationTestRetestReliability}
 
 $$
 \small
@@ -1970,7 +1970,7 @@ reliabilityOfMeasure <- 0.9
 trueAssociation * reliabilityOfMeasure
 ```
 
-### Disattenuation of Observed Test–Retest Reliability due to Measurement Error
+### Disattenuation of Observed Test–Retest Reliability due to Measurement Error {#measurementErrorEffects-disattenuationTestRetestReliability}
 
 Then, to disattenuate the observed [test–retest reliability](#testRetest-reliability) due to [random measurement error](#randomError), we can rearrange the terms in the formula above to estimate what the true stability of the construct is, according to the following formula:
 
@@ -1995,7 +1995,7 @@ In the next section, I discuss [method biases](#methodBias), including what they
 
 ## Method Bias {#methodBias}
 
-### What Method Biases are and Why They are Important
+### What Method Biases are and Why They are Important {#methodBias-whyImportant}
 
 *Method bias* is the influence of measurement on a person's score that is not due to the person's level on the construct.
 Method bias is a form of [systematic, nonrandom measurement error](#systematicError) because it involves errors/biases that are shared/common to/correlated for two measures.
@@ -2010,7 +2010,7 @@ response styles inflate the magnitude of observed correlations by even more (67%
 Moreover, the method biases can also weaken the association between measures.
 If the direction of correlation between the constructs (e.g., positive) is incongruent with the direction of the correlation between the response styles (e.g., negative), the association between the measures is attenuated.
 
-### Types of Method Biases
+### Types of Method Biases {#methodBias-types}
 
 There are many different types of methods biases, including the effects of:
 
@@ -2039,7 +2039,7 @@ Also, researchers should decrease pressures for “optimal responding” on resp
 That is, researchers should attempt to reduce social desirability effects.
 - The ability of the respondent: respondents with low cognitive abilities, less education, more fatigue (after lots of questionnaires), less experience with the topic being assessed, and more uncertainty about how to respond are more likely to succumb to biasing factors.
 
-### Potential Remedies
+### Potential Remedies {#methodBias-remedies}
 
 There are numerous potential remedies to help reduce the effects of method bias, including:
 
@@ -2144,13 +2144,13 @@ There are other measurement theories that conceptualize reliability differently 
 One such measurement theory is [generalizability theory](#gTheory) [@Brennan1992], also known as G-theory and domain sampling theory.
 G-theory is described in detail in Chapter \@ref(gTheory), and is also discussed in the chapters on validity (Chapter \@ref(validity), Section \@ref(gTheoryValidity)), generalizability theory (Chapter \@ref(gTheory)), and structural equation modeling (Chapter \@ref(sem), Section \@ref(generalizability-SEM)).
 
-## Item Response Theory
+## Item Response Theory {#irt-reliability}
 
 In addition to CTT and [G-theory](#gTheory), [item response theory](#irt) (IRT) is another measurement theory.
 IRT also estimates reliability in a different way compared to CTT.
 We discuss IRT in Chapter (\@ref(irt)).
 
-## The Problem of Low Reliability
+## The Problem of Low Reliability {#lowReliabilityProblem}
 
 Using measures that have low reliability can lead to several problems, including:
 
@@ -2201,7 +2201,7 @@ Latent variable approaches include [structural equation modeling](#sem) and [ite
 Estimating a latent variable allows identifying the variance that is common to all of the measures (i.e., a better approximate of true score variance), and discards variance that is not shared by all measures (i.e., error variance).
 Thus, latent variables have the potential to get purer estimates of the constructs by reducing [measurement error](#measurementError).
 
-## Conclusion
+## Conclusion {#reliability-conclusion}
 
 Reliability is how much repeatability, consistency, and precision a measure's scores have.
 Reliability is not one thing.
@@ -2216,11 +2216,11 @@ However, it is not enough for measures to be consistent or reliable; our interpr
 In other words, our interpretation of the measures' scores should be [valid](#valid) for the intended uses.
 In the next chapter (Chapter \@ref(validity)), we discuss [validity](#validity) of measurement.
 
-## Suggested Readings
+## Suggested Readings {#readings-reliability}
 
 For more information on [inter-rater reliability](#interrater-reliability), I suggest reading @Gwet2021a and @Gwet2021b, for categorical and continuous ratings, respectively.
 
-## Exercises
+## Exercises {#exercises-reliability}
 
 ```{r, include = FALSE}
 library("tidyverse")
@@ -2443,7 +2443,7 @@ generalizabilityCoefficient_ex <- decisionStudy_ex$generalizability #analogous t
 dependabilityCoefficient_ex <- decisionStudy_ex$dependability #analogous to reliability coefficient in classical test theory; uses absolute error variance: relevant when absolute decisions are made
 ```
 
-### Questions
+### Questions {#exercisesQuestions-reliability}
 
 Note: several of the following questions use data from the Children of the National Longitudinal Survey of Youth Survey (CNLSY).
 The CNLSY is a publicly available longitudinal dataset provided by the Bureau of Labor Statistics (https://www.bls.gov/nls/nlsy79-children.htm#topical-guide).
@@ -2509,7 +2509,7 @@ According to the attenuation formula (that attenuates the association due to mea
 According to the attenuation formula, what would the observed test–retest correlation be if the true association was .9 and the reliability of the measure was .8?
 11.	According to the disattenuation formula (to correct for attenuation of the association due to measurement error), what would be the true test-rest association of the construct of antisocial behavior if the reliability of the Antisocial Behavior subscale was $r = .6299494$?
 
-### Answers
+### Answers {#exercisesAnswers-reliability}
 
 1. The coefficient of stability ($r = `r apa(stability_ex, decimals = 2, leading = FALSE)`$) indicates that the Antisocial subscale of the BPI shows moderate rank-order stability over a two-year interval at these ages in this sample.
 The coefficient of repeatability (`r apa(CR_ex, decimals = 2)`) indicates that 95% of repeated assessments on the BPI over a two-year interval would be expected to fall within `r apa(CR_ex, decimals = 2)` points of the score at the first measurement occasion (after accounting for any bias).

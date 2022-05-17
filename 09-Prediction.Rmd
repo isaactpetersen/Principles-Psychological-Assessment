@@ -4,7 +4,7 @@
 >
 > --- Neils Bohr
 
-## Overview of Prediction
+## Overview of Prediction {#overview-prediction}
 
 In psychology, we are often interested in predicting behavior.
 Behavior is complex.
@@ -33,9 +33,9 @@ Most people tend to vastly over-estimate the likelihood that the person has HIV 
 Why?
 Because they do not pay enough attention to the base rate.
 
-### Issues Around Probability
+### Issues Around Probability {#probability}
 
-#### Types of Probabilities
+#### Types of Probabilities {#probabilityTypes}
 
 It is important to distinguish between different types of probabilities: marginal probabilities, joint probabilities, and conditional probabilities.
 
@@ -368,9 +368,9 @@ $$
 In sum, the [marginal probability](#baseRate), including the [prior probability](#baseRate) or [base rate](#baseRate), should be weighed heavily in predictions unless there are sufficient data to indicate otherwise, i.e., to update the posterior probability based on new evidence.
 Bayes' theorem provides a powerful tool to anchor predictions to the [base rate](#baseRate) unless sufficient evidence changes the posterior probability (by updating the evidence and [prior probability](#baseRate)).
 
-### Prediction Accuracy
+### Prediction Accuracy {#predictionAccuracy-overview}
 
-#### Decision Outcomes
+#### Decision Outcomes {#decisionOutcomes-overview}
 
 To consider how we can evaluate the accuracy of predictions, consider an example adapted from @Meehl1955.
 The military conducts a test of its prospective members to screen out applicants who would likely fail basic training.
@@ -423,7 +423,7 @@ The [selection ratio](#selectionRatio) might be something that the test dictates
 Or, the [selection ratio](#selectionRatio) might be imposed by external factors that place limits on how many people you can assign a positive test value.
 For instance, when deciding whether to treat a client, the [selection ratio](#selectionRatio) may depend on how many therapists are available and how many cases can be treated.
 
-#### Percent Accuracy
+#### Percent Accuracy {#percentAccuracy-overview}
 
 Based on the [confusion matrix](#confusionMatrix), we can calculate the prediction accuracy based on the [percent accuracy](#percentAccuracy) of the predictions.
 The [percent accuracy](#percentAccuracy) is the number of correct predictions divided by the total number of predictions, and multiplied by 100.
@@ -548,7 +548,7 @@ As true score variance increases, [reliability](#reliability) increases.
 If the [base rate](#baseRate) is .05, then the max variance of the true scores is .05.
 The lower true score variance makes the measure less [reliable](#reliability) and hard to make accurate predictions.
 
-#### Sensitivity, Specificity, PPV, and NPV
+#### Sensitivity, Specificity, PPV, and NPV {#sensitivitySpecificityPPVnpv}
 
 As described earlier, [percent accuracy](#percentAccuracy) is not the only important aspect of accuracy.
 [Percent accuracy](#percentAccuracy) can be misleading because it is highly influenced by [base rates](#baseRate).
@@ -867,9 +867,9 @@ If we lower the [base rate](#baseRate), we would need larger sample to get enoug
 [SDT](#sdt)/[ROC](#roc) methods are traditionally about dichotomous decisions (yes/no), not graded judgments.
 [SDT](#sdt)/[ROC](#roc) methods can get messy with ordinal data that are more graded because you would have a a curve for each ordinal grouping.
 
-## Getting Started
+## Getting Started {#gettingStarted-prediction}
 
-### Load Libraries
+### Load Libraries {#loadLibraries-prediction}
 
 ```{r}
 library("pROC")
@@ -890,16 +890,16 @@ library("tinytex")
 library("rmarkdown")
 ```
 
-### Prepare Data
+### Prepare Data {#prepareData-prediction}
 
-#### Load Data
+#### Load Data {#loadData-prediction}
 
 ```{r}
 data(aSAH)
 mydataSDT <- aSAH
 ```
 
-#### Simulate Data
+#### Simulate Data {#simulateData-prediction}
 
 For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
@@ -919,7 +919,7 @@ mydataSDT$disorder[mydataSDT$outcome == "Good"] <- 0
 mydataSDT$disorder[mydataSDT$outcome == "Poor"] <- 1
 ```
 
-#### Add Missing Data
+#### Add Missing Data {#addMissingData-prediction}
 
 Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
 
@@ -928,7 +928,7 @@ mydataSDT$testScore[c(5,10)] <- NA
 mydataSDT$disorder[c(10,15)] <- NA
 ```
 
-## Receiver Operating Characteristic (ROC) Curve
+## Receiver Operating Characteristic (ROC) Curve {#rocCurve}
 
 The [receiver operating characteristic (ROC) curve](#roc) shows the combination of [hit rate](#sensitivity) ([sensitivity](#sensitivity)) and [false alarm rate](#falsePositiveRate) ($1 - \text{specificity}$) at every possible cutoff.
 It depicts that, as the cutoff increases (i.e., becomes more conservative), [sensitivity](#sensitivity) decreases and [specificity](#specificity) increases.
@@ -936,7 +936,7 @@ It also depicts that, as the cutoff decreases (i.e., becomes more liberal), [sen
 
 [Receiver operating characteristic (ROC) curves](#roc) were generated using the `pROC` package [@R-pROC].
 
-### Empirical ROC Curve
+### Empirical ROC Curve {#empiricalROC}
 
 ```{r}
 rocCurve <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE)
@@ -953,7 +953,7 @@ plot(perf, print.cutoffs.at = 1:11, text.adj = c(1, -1), ylim = c(0, 1.05))
 abline(coef = c(0,1))
 ```
 
-### Smooth ROC Curve
+### Smooth ROC Curve {#smoothROC}
 
 ```{r}
 rocCurveSmooth <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = TRUE)
@@ -963,7 +963,7 @@ rocCurveSmooth <- roc(data = mydataSDT, response = disorder, predictor = testSco
 plot(rocCurveSmooth, legacy.axes = TRUE, print.auc = TRUE)
 ```
 
-### Youden's J Statistic
+### Youden's J Statistic {#youdenJ}
 
 The threshold at the Youden's J statistic is the threshold where the test has the maximum combination (i.e., sum) of [sensitivity](#sensitivity) and [specificity](#specificity): $\text{max}(\text{sensitivity} + \text{specificity} - 1)$
 
@@ -978,7 +978,7 @@ youdenJ
 
 For this test, the Youden's J Statistic is at a threshold of `r youdenJthreshold`, where sensitivity is `r youdenJsensitivity` and specificity is `r youdenJspecificity`.
 
-### The point closest to the top-left part of the ROC curve with perfect sensitivity and specificity
+### The point closest to the top-left part of the ROC curve with perfect sensitivity and specificity {#topLeftROC}
 
 The point closest to the top-left part of the ROC plot with perfect [sensitivity](#sensitivity) and [specificity](#specificity): $\text{min}[(1 - \text{sensitivity})^2 + (1 - \text{specificity})^2]$
 
@@ -1006,7 +1006,7 @@ Aspects of accuracy at a particular cutoff are described in Section \@ref(cutoff
 There are many metrics of general prediction accuracy.
 When thinking about which metric(s) may be best for a given problem, it is important to consider the purpose of the assessment.
 
-#### Scale-Dependent Accuracy Estimates
+#### Scale-Dependent Accuracy Estimates {#scaleDependentAccuracy}
 
 The estimates of prediction accuracy described in this section are scale-dependent.
 These accuracy estimates depend on the unit of measurement and therefore cannot be compared across measures with different scales or across data sets.
@@ -1108,11 +1108,11 @@ rootMeanSquaredErrorValue <- rootMeanSquaredError(mydataSDT$testScore, mydataSDT
 rootMeanSquaredErrorValue
 ```
 
-#### Scale-Independent Accuracy Estimates
+#### Scale-Independent Accuracy Estimates {#scaleIndependentAccuracy}
 
 The estimates of prediction accuracy described in this section are intended to be scale-*independent* (unit-free) so the accuracy estimates can be compared across measures with different scales or across data sets [@Hyndman2018].
 
-##### Mean Percentage Error (MPE)
+##### Mean Percentage Error (MPE) {#meanPercentageError}
 
 Values closer to zero reflect greater accuracy.
 
@@ -1155,7 +1155,7 @@ meanPercentageErrorValue <- meanPercentageError(mydataSDT$testScore, mydataSDT$d
 meanPercentageErrorValue
 ```
 
-##### Mean Absolute Percentage Error (MAPE)
+##### Mean Absolute Percentage Error (MAPE) {#meanAbsolutePercentageError}
 
 Smaller Values (closer to zero) reflect greater accuracy.
 
@@ -1191,7 +1191,7 @@ meanAbsolutePercentageErrorValue <- meanAbsolutePercentageError(mydataSDT$testSc
 meanAbsolutePercentageErrorValue
 ```
 
-##### Symmetric Mean Absolute Percentage Error (sMAPE)
+##### Symmetric Mean Absolute Percentage Error (sMAPE) {#symmetricMeanAbsolutePercentageError}
 
 Smaller values (closer to zero) reflect greater accuracy.
 
@@ -1222,7 +1222,7 @@ symmetricMeanAbsolutePercentageErrorValue <- symmetricMeanAbsolutePercentageErro
 symmetricMeanAbsolutePercentageErrorValue
 ```
 
-##### Mean Absolute Scaled Error (MASE)
+##### Mean Absolute Scaled Error (MASE) {#meanAbsoluteScaledErrro}
 
 Mean absolute scaled error (MASE) is described by [@Hyndman2018].
 Values closer to zero reflect greater accuracy.
@@ -1265,7 +1265,7 @@ meanAbsoluteScaledErrorValue <- meanAbsoluteScaledError(mydataSDT$testScore, myd
 meanAbsoluteScaledErrorValue
 ```
 
-##### Root Mean Squared Log of the Accuracy Ratio
+##### Root Mean Squared Log of the Accuracy Ratio {#accuracyRatio}
 
 The squared log of the accuracy ratio is described by [@Tofallis2015].
 Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.
@@ -1316,10 +1316,10 @@ rootMeanSquaredLogAccuracyRatioValue <- rootMeanSquaredLogAccuracyRatio(mydataSD
 rootMeanSquaredLogAccuracyRatioValue
 ```
 
-##### Coefficient of Determination ($R^2$)
+##### Coefficient of Determination ($R^2$) {#coefficientOfDetermination}
 
 The coefficient of determination ($R^2$) is a general index of accuracy that combines both [discrimination](#discrimination) and [calibration](#calibration).
-It reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions:  $R^2 = \frac{\text{variance explained in }Y}{\text{total variance in }Y}$.
+It reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions: $R^2 = \frac{\text{variance explained in }Y}{\text{total variance in }Y}$.
 
 $R^2$ is commonly estimated in multiple regression, in which multiple predictors are allowed to predict one outcome.
 Multiple regression can be conceptualized with overlapping circles in what is called a [Ballantine graph](https://www.andrewheiss.com/blog/2021/08/21/r2-euler).
@@ -1338,7 +1338,7 @@ rSquaredValue
 
 The predictor (`testScore`) explains `r round(rSquaredValue * 100, 2)`% of the variance ($R^2 = `r round(rSquaredValue, 2)`$) in the outcome (`disorder` status).
 
-###### Adjusted $R^2$ ($R^2_{adj}$)
+###### Adjusted $R^2$ ($R^2_{adj}$) {#adjustedRsquared}
 
 $$
 R^2_{adj} = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}
@@ -1351,7 +1351,7 @@ rSquaredAdjValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$adj.r.sq
 rSquaredAdjValue
 ```
 
-###### Predictive $R^2$
+###### Predictive $R^2$ {#predictiveRsquared}
 
 Predictive $R^2$ is described here: https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/.
 
@@ -1392,7 +1392,7 @@ When dealing with a categorical outcome, discrimination is the ability to separa
 When dealing with a continuous outcome, discrimination is the strength of the association between the predictor and the outcome.
 Aspects of [discrimination](#discrimination) at a particular cutoff (e.g., [sensitivity](#sensitivity), [specificity](#specificity)) are described in Section \@ref(cutoffAccuracy).
 
-#### Area under the ROC curve (AUC)
+#### Area under the ROC curve (AUC) {#aucROC}
 
 The [area under the ROC curve (AUC)](#auc) is a general index of discrimination accuracy for a categorical outcome.
 It is also called the concordance ($c$) statistic.
@@ -1404,7 +1404,7 @@ aucValue <- rocCurve$auc
 aucValue
 ```
 
-#### Coefficient of Predictive Ability (CPA)
+#### Coefficient of Predictive Ability (CPA) {#CPA}
 
 The coefficient of predictive ability (CPA) is a generalization of [AUC](#auc) to handle non-binary outcomes including ordinal and continuous outcomes [@Gneiting2020].
 It was calculated using the `uroc` package [@Gneiting2020].
@@ -1414,7 +1414,7 @@ cpaNoMissing <- na.omit(mydataSDT[,c("testScore","continuousOutcome")])
 cpa(response = cpaNoMissing$continuousOutcome, predictor = cpaNoMissing$testScore)
 ```
 
-#### Spearman's Rho ($\rho$) Rank Correlation
+#### Spearman's Rho ($\rho$) Rank Correlation {#spearmanRho}
 
 When the coefficient of predictive ability is applied to an ordinal or continuous outcome, it is linearly related to Spearman's rho ($\rho$) rank correlation [@Gneiting2020].
 Spearman's rho was estimated in the `rms` package [@R-rms].
@@ -1425,7 +1425,7 @@ cor(x = mydataSDT$testScore, y = mydataSDT$continuousOutcome, use = "pairwise.co
 orm(continuousOutcome ~ testScore, data = mydataSDT)$stats["rho"]
 ```
 
-#### Somers' $D_{xy}$ Rank Correlation
+#### Somers' $D_{xy}$ Rank Correlation {#somersD}
  
 Somers $D_{xy}$ is an index of [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].
 Somers' $D_{xy}$ was estimated in the `rms` package [@R-rms].
@@ -1436,7 +1436,7 @@ lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Dxy"]
 rms::validate(lrm(continuousOutcome ~ testScore, data = mydataSDT, x = TRUE, y = TRUE), group = mydataSDT$continuousOutcome)["Dxy","index.corrected"]
 ```
 
-#### Kendall's Tau-a ($\tau_A$) Rank Correlation
+#### Kendall's Tau-a ($\tau_A$) Rank Correlation {#kendallTau}
 
 Kendall's tau-a ($\tau_A$) is an index of the [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].
 Kendall's tau-a was estimated in the `rms` package [@R-rms].
@@ -1447,7 +1447,7 @@ cor(x = mydataSDT$testScore, y = mydataSDT$continuousOutcome, use = "pairwise.co
 lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Tau-a"]
 ```
 
-#### $c$ Index
+#### $c$ Index {#concordanceProbability}
 
 The $c$ index, also called the concordance probability, is a generalization of the area under the [ROC curve](#roc) that applies to a continuous outcome [@Harrell2015].
 The $c$ index is the proportion of all pairs of predicted-actual values whose actual value can be ordered such that the pair with the higher predicted value is the one who had the higher actual value.
@@ -1530,7 +1530,7 @@ underExtremity <- c(0, .05, .08, .11, .2, .5, .8, .89, .92, .95, 1)
 ```
 
 ```{r miscalibrationPlots, echo = FALSE, fig.height = 8, fig.width = 8, fig.cap = c("Types Of Miscalibration.")}
-par(mfrow  =  c(2,2), mar  =  c(5,4,1,1)+0.1) #margins: bottom, left, top, right
+par(mfrow = c(2,2), mar = c(5,4,1,1)+0.1) #margins: bottom, left, top, right
 plot(examplePredictions, overExtremity, xlim = c(0,1), ylim = c(0,1), main = "Overextremity", xlab = "Predicted Probabilty", ylab = "Observed Proportion", bty = "l", cex = 1.5, col = "#e41a1c", type = "o")
 lines(c(0,1), c(0,1), lwd = 2, col = "#377eb8")
 plot(examplePredictions, underExtremity, xlim = c(0,1), ylim = c(0,1), main = "Underextremity", xlab = "Predicted Probabilty", ylab = "Observed Proportion", bty = "l", cex = 1.5, col = "#e41a1c", type = "o")
@@ -1673,7 +1673,7 @@ Smaller $z$ values (and larger associated $p$-values) reflect greater [calibrati
 val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:z"]; val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:p"]
 ```
 
-#### Calibration for predicting a continuous outcome
+#### Calibration for predicting a continuous outcome {#calibrationContinuous}
 
 When predicting a continuous outcome, [calibration](#calibration) of the predicted values in relation to the outcome values can be examined in multiple ways including:
 
@@ -1725,7 +1725,7 @@ ggplot(mydataSDT, aes(x = testScore, y = continuousOutcome)) +
 
 Gold-standard recommendations include examining the predicted values in relation to the observed values using a LOESS smoother [@Austin2014], such as in Figure \@ref(fig:calibrationContinuousOutcomeLOESS).
 We can examine whether the LOESS-based 95% confidence interval of the observed value at every level of the predicted values includes the diagonal reference line (i.e., the actual observed value).
-In this case, the 95% confidence interval of the observed value does not include the reference line at any level of the predicted values, so the predictions are [miscalibrated](#calibration)  at every level of the predicted values.
+In this case, the 95% confidence interval of the observed value does not include the reference line at any level of the predicted values, so the predictions are [miscalibrated](#calibration) at every level of the predicted values.
 
 ```{r calibrationContinuousOutcomeLOESS, fig.height = 8, fig.width = 8, fig.cap = c("Calibration Plot for Predictions of a Continuous Outcome. The yellow line is the best-fit line based on a LOESS smoother. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.")}
 #95 prediction interval based on LOESS model
@@ -1748,7 +1748,7 @@ ggplot(mydataSDT, aes(x = testScore, y = continuousOutcome)) +
 
 ## Prediction Accuracy at a Given Cutoff {#cutoffAccuracy}
 
-### Set a Cutoff
+### Set a Cutoff {#setCutoff}
 
 Here, I set a cutoff at the Youden's J Statistic to calculate the accuracy statistics at that cutoff:
 
@@ -1765,25 +1765,25 @@ mydataSDT$disorderFactor <- factor(mydataSDT$disorder, levels = c(1, 0), labels 
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}
 
-#### Number
+#### Number {#confusionMatrix-number}
 
 ```{r}
 table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)
 ```
 
-#### Number with margins added
+#### Number with margins added {#confusionMatrix-numberMargins}
 
 ```{r}
 addmargins(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor))
 ```
 
-#### Proportions
+#### Proportions {#confusionMatrix-numberMarginsProportions}
 
 ```{r}
 prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor))
 ```
 
-#### Proportions with margins added
+#### Proportions with margins added {#confusionMatrix-numberMarginsProportionsMargins}
 
 ```{r}
 addmargins(prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)))
@@ -1861,7 +1861,7 @@ FNvalue <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
 FNvalue
 ```
 
-### Sample Size (*N*)
+### Sample Size (*N*) {#sampleSize-prediction}
 
 ```{r}
 sampleSize <- function(TP, TN, FP, FN){
@@ -2009,7 +2009,7 @@ percentAccuracyByChanceValue <- percentAccuracyByChance(TP = TPvalue, TN = TNval
 percentAccuracyByChanceValue
 ```
 
-### Percent Accuracy Predicting from the Base Rate
+### Percent Accuracy Predicting from the Base Rate {#percentAccuracyPredictingFromBaseRate}
 
 [*Predicting from the base rate*](#predictingFromBaseRate) is going with the most likely outcome in every prediction.
 It is also called "betting from the base rate."
@@ -2034,7 +2034,7 @@ percentAccuracyPredictingFromBaseRateValue <- percentAccuracyPredictingFromBaseR
 percentAccuracyPredictingFromBaseRateValue
 ```
 
-### Relative Improvement Over Chance (RIOC)
+### Relative Improvement Over Chance (RIOC) {#relativeImprovementOverChance}
 
 Relative improvement over chance (RIOC) is a prediction's improvement over chance as a proportion of the maximum possible improvement over chance, as described by [@Farrington1989].
 Higher values reflect greater accuracy.
@@ -2060,7 +2060,7 @@ relativeImprovementOverChanceValue <- relativeImprovementOverChance(TP = TPvalue
 relativeImprovementOverChanceValue
 ```
 
-### Relative Improvement Over Predicting from the Base Rate
+### Relative Improvement Over Predicting from the Base Rate {#relativeImprovementOverPredictingFromBaseRate}
 
 Relative improvement over [predicting from the base rate](#predictingFromBaseRate) is a prediction's improvement over [predicting from the base rate](#predictingFromBaseRate) as a proportion of the maximum possible improvement over [predicting from the base rate](#predictingFromBaseRate).
 Higher values reflect greater accuracy.
@@ -2334,7 +2334,7 @@ ggplot(ppvNPVcutoffData, aes(x = cutoff, y = value, color = name)) +
   theme_bw()
 ```
 
-### Negative Predictive Value (NPV)
+### Negative Predictive Value (NPV) {#npv}
 
 The negative predictive value (NPV) is also called the negative predictive power (NPP).
 Many people confuse [specificity](#specificity) ($P(\text{not } R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), NPV ($P(\text{not } C| \text{not } R)$).
@@ -2376,7 +2376,7 @@ negativePredictiveValueValue
 negativePredictiveValue(BR = baseRateValue, SN = sensitivityValue, SP = specificityValue)
 ```
 
-### False Discovery Rate (FDR)
+### False Discovery Rate (FDR) {#falseDiscoveryRate}
 
 Many people confuse the false positive rate ($P(R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), the false discovery rate ($P(\text{not } C| R)$).
 The false discovery rate is the [conditional probability](#conditionalProbability) of not having the condition given a positive test: $P(\text{not } C| R)$.
@@ -2401,7 +2401,7 @@ falseDiscoveryRateValue <- falseDiscoveryRate(TP = TPvalue, FP = FPvalue)
 falseDiscoveryRateValue
 ```
 
-### False Omission Rate (FOR)
+### False Omission Rate (FOR) {#falseOmissionRate}
 
 Many people confuse the false negative rate ($P(\text{not } R|C)$) with its inverse [conditional probability](#conditionalProbability), the false omission rate ($P(C|\text{not } R)$).
 The false omission rate is the conditional probability of having the condition given a negative test: $P(C|\text{not } R)$.
@@ -2426,7 +2426,7 @@ falseOmissionRateValue <- falseOmissionRate(TN = TNvalue, FN = FNvalue)
 falseOmissionRateValue
 ```
 
-### Youden's J Statistic
+### Youden's J Statistic {#youdenJ-example}
 
 Youden's J statistic is also called Youden's Index or informedness.
 Youden's J statistic is the sum of [sensitivity](#sensitivity) and [specificity](#specificity) (and subtracting one).
@@ -2452,7 +2452,7 @@ youdenJValue <- youdenJ(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
 youdenJValue
 ```
 
-### Balanced Accuracy
+### Balanced Accuracy {#balancedAccuracy}
 
 Balanced accuracy is the average of [sensitivity](#sensitivity) and [specificity](#specificity).
 Higher values reflect greater accuracy.
@@ -2477,7 +2477,7 @@ balancedAccuracyValue <- balancedAccuracy(TP = TPvalue, TN = TNvalue, FP = FPval
 balancedAccuracyValue
 ```
 
-### F-Score
+### F-Score {#fScore}
 
 The F-score combines [precision](#ppv) ([positive predictive value](#ppv)) and [recall](#sensitivity) ([sensitivity](#sensitivity)), where $\beta$ indicates how many times more important [sensitivity](#sensitivity) is than the [positive predictive value](#ppv).
 If [sensitivity](#sensitivity) and the [positive predictive value](#ppv) are equally important, $\beta = 1$, and the F-score is called the $F_1$ score.
@@ -2505,7 +2505,7 @@ fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue, beta = 2)
 fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue, beta = 0.5)
 ```
 
-### Matthews Correlation Coefficient (MCC)
+### Matthews Correlation Coefficient (MCC) {#matthewsCorrelationCoefficient}
 
 The Matthews correlation coefficient (MCC) is also called the phi coefficient.
 It is a correlation coefficient between predicted and observed values from a binary classification.
@@ -2533,7 +2533,7 @@ mccValue <- mcc(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
 mccValue
 ```
 
-### Diagnostic Odds Ratio
+### Diagnostic Odds Ratio {#diagnosticOddsRatio}
 
 The diagnostic odds ratio is the odds of a positive test in those with the condition relative to the odds of a positive test in those without the condition.
 Higher values reflect greater accuracy.
@@ -2944,7 +2944,7 @@ According to the decision theory approach to picking the optimal cutoff, the opt
 Utility is the relative value placed on a specific decision-making outcome (i.e., user-perceived benefit or cost): utilities typically range between zero and one, where a value of zero represents the least desired outcome and a value of one indicates the most desired outcome.
 According to the decision theory approach, the optimal cutoff is the cutoff with the highest overall utility.
 
-#### Overall utility of a specific cutoff value
+#### Overall utility of a specific cutoff value {#overallUtilityCutoff}
 
 The overall utility of a specific cutoff value is a utilities-weighted sum of the probabilities of the four decision-making outcomes ([hits](#truePositive), [misses](#falseNegative), [correct rejections](#trueNegative), [false alarms](#falsePositive)).
 That is, overall utility is the sum of the product of the probability of a particular outcome (e.g., $\text{BR} \times \text{TP rate}$) and the utility of that outcome (e.g., how much we value [TPs](#truePositive) relative to other outcomes).
@@ -2974,7 +2974,7 @@ Uoverall(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue
 Uoverall(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue, UH = 0.75, UM = 0.25, UCR = 1, UFA = 0)
 ```
 
-#### Utility ratio
+#### Utility ratio {#utilityRatio}
 
 The utility ratio is the user-perceived relative importance of decisions about negative versus positive cases.
 If the utility ratio value is one, it indicates that identifying negative cases and positive cases are equally important.
@@ -3010,12 +3010,12 @@ If you cannot decide values for outcomes (relative importance between [FP](#fals
 When the user does not differentially weigh the value/importance of the four decision making outcomes ([hits](#truePositive), [misses](#falseNegative), [correct rejections](#trueNegative), [false alarms](#falsePositive)), the information theory approach can be useful for specifying the optimal cutoff.
 According to the information theory approach, the optimal cutoff is the cutoff that provides the greatest information gain [@Treat2012].
 
-#### Information gain
+#### Information gain {#informationGain}
 
 Information gain ($I_\text{gain}$) is the reduction of uncertainty about the true classification of a case that results from administering an assessment or prediction measure [@Treat2012].
 Greater values reflect greater reduction of uncertainty, so the optimal cutoff can be specified as the cutoff with the highest information gain.
 
-##### Formula from @Treat2012
+##### Formula from @Treat2012 {#IgainTreat2012}
 
 $$
 \begin{aligned}
@@ -3044,7 +3044,7 @@ Igain <- function(BR, HR, FAR){
 Igain(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue)
 ```
 
-##### Alternative formula from @Metz1973
+##### Alternative formula from @Metz1973 {#IgainMetz1973}
 
 $$
 \begin{aligned}
@@ -3072,7 +3072,7 @@ Igain2 <- function(BR, HR, FAR){
 Igain2(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue)
 ```
 
-##### Alternative formula from @Somoza1989
+##### Alternative formula from @Somoza1989 {#IgainSomoza1989}
 
 $$
 \begin{aligned}
@@ -3101,7 +3101,7 @@ Igain3 <- function(BR, HR, FAR){
 Igain3(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue)
 ```
 
-##### Examples
+##### Examples {#IgainExamples}
 
 Case A from Exhibit 37.2 [@Treat2012]:
 
@@ -3127,7 +3127,7 @@ Case B from Exhibit 37.3 [@Treat2012]:
 Igain(HR = (1164/1899), FAR = (935/4757), BR = (1899/6656))
 ```
 
-##### Effect of Base Rate
+##### Effect of Base Rate {#baseRateEffectsIgain}
 
 Information gain depends on the [base rate](#baseRate) [@Treat2012], as depicted in Figure \@ref(fig:informationGainBaseRate).
 The maximum reduction of uncertainty (i.e., greatest information) occurs when the [base rate](#baseRate) is 0.5.
@@ -3180,9 +3180,9 @@ ggplot(informationGainStats, aes(x = cutoff, y = informationGain, group = as.fac
   theme_bw()
 ```
 
-## Accuracy at Every Possible Cutoff
+## Accuracy at Every Possible Cutoff {#accuracyAtEveryPossibleCutoff}
 
-### Specify utility of each outcome
+### Specify utility of each outcome {#specifyUtility}
 
 ```{r}
 utilityHits <- 1
@@ -3191,7 +3191,7 @@ utilityCorrectRejections <- 0.75
 utilityFalseAlarms <- 0.25
 ```
 
-### Calculate Accuracy
+### Calculate Accuracy {#calculateAccuracyAtEveryPossibleCutoff}
 
 ```{r}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
@@ -3267,26 +3267,26 @@ accuracyStats[is.nan.data.frame(accuracyStats)] <- NA
 accuracyStats <- do.call(data.frame, lapply(accuracyStats, function(x) replace(x, is.infinite(x), NA)))
 ```
 
-### All Accuracy Statistics
+### All Accuracy Statistics {#allAccuracyStatistics}
 
 ```{r, eval = knitr::is_html_output(excludes = "epub")}
 #Need to add separate check for epub -> kable()
 paged_table(accuracyStats)
 ```
 
-```{r, eval = knitr::is_latex_output()}
+```{r, eval = knitr::is_latex_output(), echo = knitr::is_latex_output()}
 kable(accuracyStats,
       booktabs = TRUE)
 ```
 
-```{r eval = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm"))}
+```{r, eval = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm")), echo = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm"))}
 kable(accuracyStats,
       booktabs = TRUE)
 ```
 
-### Youden's J Statistic
+### Youden's J Statistic {#allAccuracyStatistics-youdenJ}
 
-#### Threshold
+#### Threshold {#allAccuracyStatistics-youdenJthreshold}
 
 Threshold at maximum combination of [sensitivity](#sensitivity) and [specificity](#specificity):
 
@@ -3298,16 +3298,16 @@ youdenIndex <- coords(roc(data = mydataSDT, response = disorder, predictor = tes
 youdenIndex
 ```
 
-#### Accuracy statistics at cutoff of Youden's J Statistic
+#### Accuracy statistics at cutoff of Youden's J Statistic {#allAccuracyStatistics-youdenJaccuracy}
 
 ```{r}
 accuracyStats[head(which(accuracyStats$cutoff >= youdenIndex), 1),]
 accuracyStats[which(accuracyStats$youdenJ == max(accuracyStats$youdenJ, na.rm = TRUE)),]
 ```
 
-### Closest to the Top Left of the ROC Curve
+### Closest to the Top Left of the ROC Curve {#allAccuracyStatistics-topLeftROC}
 
-#### Threshold
+#### Threshold {#allAccuracyStatistics-topLeftROCthreshold}
 
 Threshold where the ROC plot is closest to the Top Left:
 
@@ -3315,153 +3315,153 @@ Threshold where the ROC plot is closest to the Top Left:
 closestToTheTopLeft <- coords(roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE), x = "best", best.method = "closest.topleft")[[1]]
 ```
 
-#### Accuracy stats at cutoff where the ROC plot is closest to the Top Left
+#### Accuracy stats at cutoff where the ROC plot is closest to the Top Left {#allAccuracyStatistics-topLeftROCaccuracy}
 
 ```{r}
 accuracyStats[head(which(accuracyStats$cutoff >= closestToTheTopLeft), 1),]
 ```
 
-### Cutoff that optimizes each of the following criteria:
+### Cutoff that optimizes each of the following criteria: {#allAccuracyStatistics-cutoff}
 
-#### Percent Accuracy
+#### Percent Accuracy {#allAccuracyStatistics-cutoffPercentAccuracy}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$percentAccuracy == max(accuracyStats$percentAccuracy, na.rm = TRUE))]
 ```
 
-#### Percent Accuracy by Chance
+#### Percent Accuracy by Chance {#allAccuracyStatistics-cutoffPercentAccuracyByChance}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$percentAccuracyByChance == max(accuracyStats$percentAccuracyByChance, na.rm = TRUE))]
 ```
 
-#### Relative Improvement Over Chance (ROIC)
+#### Relative Improvement Over Chance (ROIC) {#allAccuracyStatistics-cutoffROIC}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$relativeImprovementOverChance == max(accuracyStats$relativeImprovementOverChance, na.rm = TRUE))]
 ```
 
-### Relative Improvement Over Predicting from the Base Rate
+#### Relative Improvement Over Predicting from the Base Rate {#allAccuracyStatistics-cutoffRelativeImprovementOverPredictingFromBaseRate}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$relativeImprovementOverPredictingFromBaseRate == max(accuracyStats$relativeImprovementOverPredictingFromBaseRate, na.rm = TRUE))]
 ```
 
-#### Sensitivity
+#### Sensitivity {#allAccuracyStatistics-cutoffSensitivity}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$sensitivity == max(accuracyStats$sensitivity, na.rm = TRUE))]
 ```
 
-#### Specificity
+#### Specificity {#allAccuracyStatistics-cutoffSpecificity}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$specificity == max(accuracyStats$specificity, na.rm = TRUE))]
 ```
 
-#### Positive Predictive Value
+#### Positive Predictive Value {#allAccuracyStatistics-cutoffPPV}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$positivePredictiveValue == max(accuracyStats$positivePredictiveValue, na.rm = TRUE))]
 ```
 
-#### Negative Predictive Value
+#### Negative Predictive Value {#allAccuracyStatistics-cutoffNPV}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$negativePredictiveValue == max(accuracyStats$negativePredictiveValue, na.rm = TRUE))]
 ```
 
-#### Youden's J Statistic
+#### Youden's J Statistic {#allAccuracyStatistics-cutoffYoudenJ}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$youdenJ == max(accuracyStats$youdenJ, na.rm = TRUE))]
 ```
 
-#### Balanced Accuracy
+#### Balanced Accuracy {#allAccuracyStatistics-cutoffBalancedAccuracy}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$balancedAccuracy == max(accuracyStats$balancedAccuracy, na.rm = TRUE))]
 ```
 
-#### F1 Score
+#### F1 Score {#allAccuracyStatistics-cutoffF1}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$f1Score == max(accuracyStats$f1Score, na.rm = TRUE))]
 ```
 
-#### Matthews Correlation Coefficient
+#### Matthews Correlation Coefficient {#allAccuracyStatistics-cutoffMCC}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$mcc == max(accuracyStats$mcc, na.rm = TRUE))]
 ```
 
-#### Diagnostic Odds Ratio
+#### Diagnostic Odds Ratio {#allAccuracyStatistics-cutoffDOR}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$diagnosticOddsRatio == max(accuracyStats$diagnosticOddsRatio, na.rm = TRUE))]
 ```
 
-#### Positive Likelihood Ratio
+#### Positive Likelihood Ratio {#allAccuracyStatistics-cutoffPLR}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$positiveLikelihoodRatio == max(accuracyStats$positiveLikelihoodRatio, na.rm = TRUE))]
 ```
 
-#### Negative Likelihood Ratio
+#### Negative Likelihood Ratio {#allAccuracyStatistics-cutoffNLR}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$negativeLikelihoodRatio == min(accuracyStats$negativeLikelihoodRatio, na.rm = TRUE))]
 ```
 
-#### $d'$ Sensitivity
+#### $d'$ Sensitivity {#allAccuracyStatistics-cutoffDprime}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$dPrimeSDT == max(accuracyStats$dPrimeSDT, na.rm = TRUE))]
 ```
 
-#### $A$ (Non-Parametric) Sensitivity
+#### $A$ (Non-Parametric) Sensitivity {#allAccuracyStatistics-cutoffAsensitivity}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$ASDT == max(accuracyStats$ASDT, na.rm = TRUE))]
 ```
 
-#### $\beta$ Bias
+#### $\beta$ Bias {#allAccuracyStatistics-cutoffBetaBias}
 
 ```{r}
 accuracyStats$cutoff[which(abs(accuracyStats$betaSDT) == min(abs(accuracyStats$betaSDT), na.rm = TRUE))]
 ```
 
-#### $c$ Bias
+#### $c$ Bias {#allAccuracyStatistics-cutoffCbias}
 
 ```{r}
 accuracyStats$cutoff[which(abs(accuracyStats$cSDT) == min(abs(accuracyStats$cSDT), na.rm = TRUE))]
 ```
 
-#### $b$ (Non-Parametric) Bias
+#### $b$ (Non-Parametric) Bias {#allAccuracyStatistics-cutoffBbias}
 
 ```{r}
 accuracyStats$cutoff[which(abs(accuracyStats$bSDT) == min(abs(accuracyStats$bSDT), na.rm = TRUE))]
 ```
 
-#### Mean difference between predicted and observed values (Miscalibration)
+#### Mean difference between predicted and observed values (Miscalibration) {#allAccuracyStatistics-cutoffMiscalibration}
 
 ```{r}
 accuracyStats$cutoff[which(abs(accuracyStats$differenceBetweenPredictedAndObserved) == min(abs(accuracyStats$differenceBetweenPredictedAndObserved), na.rm = TRUE))]
 ```
 
-#### Overall Utility
+#### Overall Utility {#allAccuracyStatistics-cutoffOverallUtility}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$overallUtility == max(accuracyStats$overallUtility, na.rm = TRUE))]
 ```
 
-#### Information Gain
+#### Information Gain {#allAccuracyStatistics-cutoffIgain}
 
 ```{r}
 accuracyStats$cutoff[which(accuracyStats$informationGain == max(accuracyStats$informationGain, na.rm = TRUE))]
 ```
 
-## Regression for Prediction of Continuous Outcomes
+## Regression for Prediction of Continuous Outcomes {#regression-prediction}
 
 When predicting a continuous outcome, regression is particularly relevant (or multiple regression, when dealing with multiple predictors).
 Regression takes the following form:
@@ -3595,7 +3595,7 @@ You can also examine indices such as variance inflation factor (VIF).
 To address multi-collinearity, you can drop the a redundant predictor or you can also use [principal component analysis](#pca) or [factor analysis](#factorAnalysis) of the predictors to reduce the predictors down to a smaller number of meaningful predictors.
 For a meaningful answer in a regression framework that is precise and confident, you need a low level of intercorrelation among predictors.
 
-## Ways to Improve Prediction Accuracy
+## Ways to Improve Prediction Accuracy {#waysToImprovePredictionAccuracy}
 
 On the whole, experts' predictions are inaccurate.
 Experts' predictions from many different domains tend to be inaccurate, including political scientists [@Tetlock2017], physicians [@Koehler2002], clinical psychologists [@Oskamp1965], stock market traders and corporate financial officers [@Skala2008], seismologists' predictions of earthquakes [@Hough2016], economists' predictions about the economy [@Makridakis2009], lawyers [@Koehler2002], and business managers [@Russo1992].
@@ -3640,7 +3640,7 @@ Update your judgments based on their accuracy, rather than trying to confirm you
 - In addition to considering the accuracy of the prediction, consider the quality of the prediction *process*, especially when random chance is involved to a degree (such as in poker) [@Silver2012].
 - Work to identify and mitigate potential blindspots; be aware of cognitive biases, such as confirmation bias and [base rate](#baseRate) neglect.
 
-## Conclusion
+## Conclusion {#conclusion-prediction}
 
 Human behavior is challenging to predict.
 People commonly make cognitive pseudo-prediction errors, such as the [confusion of inverse probabilities](#inverseFallacy).
@@ -3655,11 +3655,11 @@ Though there are many types of accuracy, there are two broad types: [discriminat
 Therefore, the [optimal cutoff](#optimalCutoff) depends on the purposes of the assessment and how much one weights the various costs of the different types of errors: [false negatives](#falseNegative) and [false positives](#falsePositive).
 It is important to evaluate both [discrimination](#discrimination) and [calibration](#calibration) when evaluating prediction accuracy.
 
-## Suggested Readings
+## Suggested Readings {#readings-prediction}
 
 @Steyerberg2010; @Meehl1955; @Treat2012; @Wiggins1973
 
-## Exercises
+## Exercises {#exercises-prediction}
 
 ```{r, include = FALSE}
 library("MOTE")
@@ -4035,7 +4035,7 @@ pctGivenTestA_ex <- probGivenTestA_ex * 100
 pctGivenTestAthenB_ex <- probGivenTestAthenB_ex * 100
 ```
 
-### Questions
+### Questions {#exercisesQuestions-prediction}
 
 Note: several of the following questions use data from the survivorship of the Titanic accident.
 The data are publicly available (http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets).
@@ -4161,7 +4161,7 @@ You test positive on Test B.
 Test B has a sensitivity of .80 and a specificity of .95.
 Assuming the errors of the Tests A and B are independent, what is your updated probability of having the virus?
 
-### Answers
+### Answers {#exercisesAnswers-prediction}
 
 1. The two main types of prediction accuracy are discrimination and calibration.
 Discrimination refers to the ability of a prediction model to separate/differentiate data into classes (e.g., survived versus died).

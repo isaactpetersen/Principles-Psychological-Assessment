@@ -10,7 +10,7 @@ However, it is a crude estimate.
 And there are many other ways to characterize the relation between an item and a construct.
 One such way is with item response theory (IRT).
 
-## Overview of IRT
+## Overview of IRT {#overview-irt}
 
 Unlike [classical test theory](#ctt), which is a measurement theory that of how test scores relate to a construct, IRT is a measurement theory that describes how an *item* is related to a construct.
 For instance, given a particular person's level on the construct, what is their chance of answering "TRUE" on a particular item?
@@ -175,7 +175,7 @@ plot(newdata$itemSum, newdata$diagnosticallyUseful, type = "l", lwd = 2, ylim = 
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
 
-### Parameters
+### Parameters {#parameters-irt}
 
 We can estimate up to four parameters in an IRT model and can glean up to four key pieces of information from an item's ICC:
 
@@ -354,7 +354,7 @@ plot(newdata$itemSum, newdata$inattention, type = "l", lwd = 2, ylim = c(0,1), x
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
 
-### Models
+### Models {#models-irt}
 
 IRT models can be fit that estimate one or more of these four item parameters.
 
@@ -655,7 +655,7 @@ In the model, $a_i$ an item-specific [discrimination parameter](#itemDiscriminat
 representing the child’s level of externalizing problems.
 In the model, $i$ represents unique items, $c$ represents different categories that are rated, and $j$ represents participants.
 
-### Type of Data
+### Type of Data {#dataTypes-irt}
 
 IRT models are most commonly estimated with binary or dichotomous data.
 For example, the measures have questions or items that can be considered collapsed into two groups (e.g., true/false, correct/incorrect, endorsed/not endorsed).
@@ -730,7 +730,7 @@ ggplot(polytomousItemResponseCategory_long, aes(theta, value, group = factor(res
 IRT does not handle continuous data well, with some exceptions [@Chen2019] such as in a Bayesian framework [@Buerkner2019].
 If you want to use continuous data, you might consider moving to a [factor analysis](#factorAnalysis) framework.
 
-### Sample Size
+### Sample Size {#sampleSize-irt}
 
 Sample size requirement depend on the complexity of the model.
 A 1-parameter model often requires ~100 participants.
@@ -1156,9 +1156,9 @@ ggplot(goodMeasureInfo, aes(theta, information)) +
   theme_bw()
 ```
 
-## Getting Started
+## Getting Started {#gettingStarted-irt}
 
-### Load Libraries
+### Load Libraries {#loadLibraries-irt}
 
 ```{r}
 library("mirt")
@@ -1167,19 +1167,19 @@ library("here")
 library("tinytex")
 ```
 
-### Load Data
+### Load Data {#loadData-irt}
 
 ```{r}
 mydataIRT <- expand.table(LSAT7)
 ```
 
-### Descriptive Statistics
+### Descriptive Statistics {#descriptiveStats-IRT}
 
 ```{r}
 itemstats(mydataIRT, ts.tables = TRUE)
 ```
 
-## Comparison of Scoring Approaches
+## Comparison of Scoring Approaches {#scoringApproaches}
 
 A measure that is a raw symptom count (i.e., a count of how many symptoms a person endorses) is low in precision and has a high standard error of measurement.
 Some diagnostic measures provide an ordinal response scale for each symptom.
@@ -1202,7 +1202,7 @@ For example, [adaptive tests](#cat) that tailor the [difficulty](#itemDifficulty
 
 Second, in [classical test theory](#ctt), a score's meaning is tied to its location in a distribution (i.e., the norm-referenced standard).
 In IRT, however, the people and items are calibrated on a common scale.
-Based on a child's IRT-estimated ability level (i.e., level on the construct), we can have a better sense of what the child knows and does not know, because it indicates the [difficulty](#itemDifficulty) level at which they would tend to get items correct 50% of the time; the person would likely fail items with a higher [difficulty](#itemDifficulty) from this level, whereas the person would likely  pass items with a lower [difficulty](#itemDifficulty) compared to this level.
+Based on a child's IRT-estimated ability level (i.e., level on the construct), we can have a better sense of what the child knows and does not know, because it indicates the [difficulty](#itemDifficulty) level at which they would tend to get items correct 50% of the time; the person would likely fail items with a higher [difficulty](#itemDifficulty) from this level, whereas the person would likely pass items with a lower [difficulty](#itemDifficulty) compared to this level.
 Consider Binet's distribution of ability that arranges the items from easiest to most difficult.
 Based on the item [difficulty](#itemDifficulty) and content of the items and the child's performance, we can have a better indication that a child can perform items successfully in a particular range (e.g., count to 10) but might not be able to perform more difficult items (e.g., tie their shoes).
 From an intervention perspective, this would allow working in the "window of opportunity" or the zone of proximal development.
@@ -1225,7 +1225,7 @@ A one-parameter logistic (1PL) item response theory (IRT) model is a model fit t
 [Discrimination](#itemDiscrimination) ($a$) is not estimated (i.e., it is fixed at the same value—one—across items).
 Rasch models were fit using the `mirt` package [@R-mirt].
 
-### Fit Model
+### Fit Model {#irt-onePLfit}
 
 ```{r, results = "hide"}
 raschModel <- mirt(data = mydataIRT,
@@ -1234,18 +1234,18 @@ raschModel <- mirt(data = mydataIRT,
                    SE = TRUE)
 ```
 
-### Model Summary
+### Model Summary {#irt-onePLoutput}
 
 ```{r}
 summary(raschModel)
 coef(raschModel, simplify = TRUE, IRTpars = TRUE)
 ```
 
-### Plots
+### Plots {#irt-onePLplots}
 
-#### Test Curves
+#### Test Curves {#irt-onePLtestCurves}
 
-##### Test Characteristic Curve
+##### Test Characteristic Curve {#irt-onePLtcc}
 
 [TCC](#icc) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1253,7 +1253,7 @@ coef(raschModel, simplify = TRUE, IRTpars = TRUE)
 plot(raschModel, type = "score")
 ```
 
-##### Test Information Function
+##### Test Information Function {#irt-onePLtif}
 
 Plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1261,7 +1261,7 @@ Plot of [test information](#irtReliability) as a function of a person's level on
 plot(raschModel, type = "info")
 ```
 
-##### Test Reliability
+##### Test Reliability {#irt-onePLreliability}
 
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1269,7 +1269,7 @@ Plot of test [reliability](#irtReliability) as a function of a person's level on
 plot(raschModel, type = "rxx")
 ```
 
-##### Test Standard Error of Measurement
+##### Test Standard Error of Measurement {#irt-onePLsem}
 
 Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1277,7 +1277,7 @@ Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a funct
 plot(raschModel, type = "SE")
 ```
 
-##### Test Information Function and Test Standard Error of Measurement
+##### Test Information Function and Test Standard Error of Measurement {#irt-onePLtifSEM}
 
 Plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1285,9 +1285,9 @@ Plot of [test information](#irtReliability) and [standard error of measurement](
 plot(raschModel, type = "infoSE")
 ```
 
-#### Item Curves
+#### Item Curves {#irt-onePLitemCurves}
 
-##### Item Characteristic Curves
+##### Item Characteristic Curves {#irt-onePLicc}
 
 [ICC](#icc) plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1296,7 +1296,7 @@ plot(raschModel, type = "itemscore", facet_items = FALSE)
 plot(raschModel, type = "itemscore", facet_items = TRUE)
 ```
 
-##### Item Information Functions
+##### Item Information Functions {#irt-onePLiif}
 
 Plot of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1310,7 +1310,7 @@ plot(raschModel, type = "infotrace", facet_items = TRUE)
 A two-parameter logistic (2PL) IRT model is a model fit to dichotomous data, which estimates a different [difficulty](#itemDifficulty) ($b$) and [discrimination](#itemDiscrimination) ($a$) parameter for each item.
 2PL models were fit using the `mirt` package [@R-mirt].
 
-### Fit Model
+### Fit Model {#irt-twoPLfit}
 
 ```{r, results = "hide"}
 twoPLModel <- mirt(data = mydataIRT,
@@ -1319,18 +1319,18 @@ twoPLModel <- mirt(data = mydataIRT,
                    SE = TRUE)
 ```
 
-### Model Summary
+### Model Summary {#irt-twoPLoutput}
 
 ```{r}
 summary(twoPLModel)
 coef(twoPLModel, simplify = TRUE, IRTpars = TRUE)
 ```
 
-### Plots
+### Plots {#irt-twoPLplots}
 
-#### Test Curves
+#### Test Curves {#irt-twoPLtestCurves}
 
-##### Test Characteristic Curve
+##### Test Characteristic Curve {#irt-twoPLtcc}
 
 [TCC](#icc) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1338,7 +1338,7 @@ coef(twoPLModel, simplify = TRUE, IRTpars = TRUE)
 plot(twoPLModel, type = "score")
 ```
 
-##### Test Information Function
+##### Test Information Function {#irt-twoPLtif}
 
 Plot of test [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1346,7 +1346,7 @@ Plot of test [information](#irtReliability) as a function of a person's level on
 plot(twoPLModel, type = "info")
 ```
 
-##### Test Reliability
+##### Test Reliability {#irt-twoPLreliability}
 
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1354,7 +1354,7 @@ Plot of test [reliability](#irtReliability) as a function of a person's level on
 plot(twoPLModel, type = "rxx")
 ```
 
-##### Test Standard Error of Measurement
+##### Test Standard Error of Measurement {#irt-twoPLsem}
 
 Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1362,7 +1362,7 @@ Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a funct
 plot(twoPLModel, type = "SE")
 ```
 
-##### Test Information Function and Standard Errors
+##### Test Information Function and Standard Errors {#irt-twoPLtifSEM}
 
 Plot of test [information](#irtReliability) and [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1370,9 +1370,9 @@ Plot of test [information](#irtReliability) and [standard error of measurement](
 plot(twoPLModel, type = "infoSE")
 ```
 
-#### Item Curves
+#### Item Curves {#irt-twoPLitemCurves}
 
-##### Item Characteristic Curves
+##### Item Characteristic Curves {#irt-twoPLicc}
 
 [ICC](#icc) plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1381,7 +1381,7 @@ plot(twoPLModel, type = "itemscore", facet_items = FALSE)
 plot(twoPLModel, type = "itemscore", facet_items = TRUE)
 ```
 
-##### Item Information Functions
+##### Item Information Functions {#irt-twoPLiif}
 
 Plot of item [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1396,7 +1396,7 @@ A 2PL multi-dimensional IRT model is a model that allows multiple dimensions (la
 Multi-dimensional IRT models were fit using the `mirt` package [@R-mirt].
 In this example, I estimate a 2PL multi-dimensional IRT model by estimating two factors.
 
-### Fit Model
+### Fit Model {#irt-twoPLmultidimensionalFit}
 
 ```{r, results = "hide"}
 twoPL2FactorModel <- mirt(data = mydataIRT,
@@ -1405,14 +1405,14 @@ twoPL2FactorModel <- mirt(data = mydataIRT,
                           SE = TRUE)
 ```
 
-### Model Summary
+### Model Summary {#irt-twoPLmultidimensionalOutput}
 
 ```{r}
 summary(twoPL2FactorModel)
 coef(twoPL2FactorModel, simplify = TRUE)
 ```
 
-### Compare model fit
+### Compare model fit {#irt-twoPLmultidimensionalCompare}
 
 The modified model with two factors and the original one-factor model are considered "nested" models.
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
@@ -1424,11 +1424,11 @@ anova(twoPLModel, twoPL2FactorModel)
 
 Using a chi-square difference test to compare two nested models, the two-factor model fits significantly better than the one-factor model.
 
-### Plots
+### Plots {#irt-twoPLmultidimensionalPlots}
 
-#### Test Curves
+#### Test Curves {#irt-twoPLmultidimensionalTestCurves}
 
-##### Test Characteristic Curve
+##### Test Characteristic Curve {#irt-twoPLmultidimensionalTCC}
 
 [TCC](#tcc) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1436,7 +1436,7 @@ Using a chi-square difference test to compare two nested models, the two-factor 
 plot(twoPL2FactorModel, type = "score")
 ```
 
-##### Test Information Function
+##### Test Information Function {#irt-twoPLmultidimensionalTIF}
 
 Plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1444,7 +1444,7 @@ Plot of [test information](#irtReliability) as a function of a person's level on
 plot(twoPL2FactorModel, type = "info")
 ```
 
-##### Test Standard Error of Measurement
+##### Test Standard Error of Measurement {#irt-twoPLmultidimensionalSEM}
 
 Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1452,9 +1452,9 @@ Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a funct
 plot(twoPL2FactorModel, type = "SE")
 ```
 
-#### Item Curves
+#### Item Curves {#irt-twoPLmultidimensionalItemCurves}
 
-##### Item Characteristic Curves
+##### Item Characteristic Curves {#irt-twoPLmultidimensionalICC}
 
 [ICC](#icc) plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1463,7 +1463,7 @@ plot(twoPL2FactorModel, type = "itemscore", facet_items = FALSE)
 plot(twoPL2FactorModel, type = "itemscore", facet_items = TRUE)
 ```
 
-##### Item Information Functions
+##### Item Information Functions {#irt-twoPLmultidimensionalIIF}
 
 Plot of item [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1477,7 +1477,7 @@ plot(twoPL2FactorModel, type = "infotrace", facet_items = TRUE)
 A three-parameter logistic (2PL) IRT model is a model fit to dichotomous data, which estimates a different [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimation) ($a$), and [guessing](#itemGuessing) parameter for each item.
 3PL models were fit using the `mirt` package [@R-mirt].
 
-### Fit Model
+### Fit Model {#irt-threePLfit}
 
 ```{r, results = "hide"}
 threePLModel <- mirt(data = mydataIRT,
@@ -1486,18 +1486,18 @@ threePLModel <- mirt(data = mydataIRT,
                      SE = TRUE)
 ```
 
-### Model Summary
+### Model Summary {#irt-threePLoutput}
 
 ```{r}
 summary(threePLModel)
 coef(threePLModel, simplify = TRUE, IRTpars = TRUE)
 ```
 
-### Plots
+### Plots {#irt-threePLplots}
 
-#### Test Curves
+#### Test Curves {#irt-threePLtestCurves}
 
-##### Test Characteristic Curve
+##### Test Characteristic Curve {#irt-threePLtcc}
 
 [TCC](#icc) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1505,7 +1505,7 @@ coef(threePLModel, simplify = TRUE, IRTpars = TRUE)
 plot(threePLModel, type = "score")
 ```
 
-##### Test Information Function
+##### Test Information Function {#irt-threePLtif}
 
 Plot of test [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1513,7 +1513,7 @@ Plot of test [information](#irtReliability) as a function of a person's level on
 plot(threePLModel, type = "info")
 ```
 
-##### Test Reliability
+##### Test Reliability {#irt-threePLreliability}
 
 Plot of test [reliability]((#irtReliability)) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1521,7 +1521,7 @@ Plot of test [reliability]((#irtReliability)) as a function of a person's level 
 plot(threePLModel, type = "rxx")
 ```
 
-##### Test Standard Error of Measurement
+##### Test Standard Error of Measurement {#irt-threePLsem}
 
 Plot of test [standard error of measurement]((#irtReliability)) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1529,7 +1529,7 @@ Plot of test [standard error of measurement]((#irtReliability)) ($SEM$) as a fun
 plot(threePLModel, type = "SE")
 ```
 
-##### Test Information Function and Standard Errors
+##### Test Information Function and Standard Errors {#irt-threePLtifSEM}
 
 Plot of test [information](#irtReliability) and [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1537,9 +1537,9 @@ Plot of test [information](#irtReliability) and [standard error of measurement](
 plot(threePLModel, type = "infoSE")
 ```
 
-#### Item Curves
+#### Item Curves {#irt-threePLitemCurves}
 
-##### Item Characteristic Curves
+##### Item Characteristic Curves {#irt-threePLicc}
 
 [ICC](#icc) plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1548,7 +1548,7 @@ plot(threePLModel, type = "itemscore", facet_items = FALSE)
 plot(threePLModel, type = "itemscore", facet_items = TRUE)
 ```
 
-##### Item Information Functions
+##### Item Information Functions {#irt-threePLiif}
 
 Plot of item [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1562,7 +1562,7 @@ plot(threePLModel, type = "infotrace", facet_items = TRUE)
 A four-parameter logistic (2PL) IRT model is a model fit to dichotomous data, which estimates a different [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), [guessing](#itemGuessing), and [careless errors](#itemCarelessErrors) parameter for each item.
 4PL models were fit using the `mirt` package [@R-mirt].
 
-### Fit Model
+### Fit Model {#irt-fourPLfit}
 
 ```{r, results = "hide"}
 fourPLModel <- mirt(data = mydataIRT,
@@ -1572,18 +1572,18 @@ fourPLModel <- mirt(data = mydataIRT,
                     technical = list(NCYCLES = 2000))
 ```
 
-### Model Summary
+### Model Summary {#irt-fourPLoutput}
 
 ```{r}
 summary(fourPLModel)
 coef(fourPLModel, simplify = TRUE, IRTpars = TRUE)
 ```
 
-### Plots
+### Plots {#irt-fourPLplots}
 
-#### Test Curves
+#### Test Curves {#irt-fourPLtestCurves}
 
-##### Test Characteristic Curve
+##### Test Characteristic Curve {#irt-fourPLtcc}
 
 [TCC](#icc) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1591,7 +1591,7 @@ coef(fourPLModel, simplify = TRUE, IRTpars = TRUE)
 plot(fourPLModel, type = "score")
 ```
 
-##### Test Information Function
+##### Test Information Function {#irt-fourPLtif}
 
 Plot of test [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1599,7 +1599,7 @@ Plot of test [information](#irtReliability) as a function of a person's level on
 plot(fourPLModel, type = "info")
 ```
 
-##### Test Reliability
+##### Test Reliability {#irt-fourPLreliability}
 
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1607,7 +1607,7 @@ Plot of test [reliability](#irtReliability) as a function of a person's level on
 plot(fourPLModel, type = "rxx")
 ```
 
-##### Test Standard Error of Measurement
+##### Test Standard Error of Measurement {#irt-fourPLsem}
 
 Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1615,7 +1615,7 @@ Plot of test [standard error of measurement](#irtReliability) ($SEM$) as a funct
 plot(fourPLModel, type = "SE")
 ```
 
-##### Test Information Function and Standard Errors
+##### Test Information Function and Standard Errors {#irt-fourPLtifSEM}
 
 Plot of test [information](#irtReliability) and [standard error of measurement](#irtReliability) ($SEM$) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1623,9 +1623,9 @@ Plot of test [information](#irtReliability) and [standard error of measurement](
 plot(fourPLModel, type = "infoSE")
 ```
 
-#### Item Curves
+#### Item Curves {#irt-fourPLitemCurves}
 
-##### Item Characteristic Curves
+##### Item Characteristic Curves {#irt-fourPLicc}
 
 [ICC](#icc) plot of probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1634,7 +1634,7 @@ plot(fourPLModel, type = "itemscore", facet_items = FALSE)
 plot(fourPLModel, type = "itemscore", facet_items = TRUE)
 ```
 
-##### Item Information Functions
+##### Item Information Functions {#irt-fourPLiif}
 
 Plot of item [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1649,7 +1649,7 @@ A graded response model (GRM) is a 2PL IRT model fit to polytomous data (in this
 It estimates four parameters for each item: [difficulty](#itemDifficulty) [for each of three threshold transitions: 1–2 ($b_1$), 2–3 ($b_2$), and 3–4 ($b_3$)] and [discrimination](#itemDiscrimination) ($a$).
 GRM models were fit using the `mirt` package [@R-mirt].
 
-### Fit Model
+### Fit Model {#irt-gradedResponseModelFit}
 
 ```{r, results = "hide"}
 gradedResponseModel <- mirt(data = Science,
@@ -1658,18 +1658,18 @@ gradedResponseModel <- mirt(data = Science,
                             SE = TRUE)
 ```
 
-### Model Summary
+### Model Summary {#irt-gradedResponseModelOutput}
 
 ```{r}
 summary(gradedResponseModel)
 coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)
 ```
 
-### Plots
+### Plots {#irt-gradedResponseModelPlots}
 
-#### Test Curves
+#### Test Curves {#irt-gradedResponseModelTestCurves}
 
-##### Test Characteristic Curve
+##### Test Characteristic Curve {#irt-gradedResponseModelTCC}
 
 [TCC](#icc) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1677,7 +1677,7 @@ coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)
 plot(gradedResponseModel, type = "score")
 ```
 
-##### Test Information Function
+##### Test Information Function {#irt-gradedResponseModelTIF}
 
 Plot of test [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1685,7 +1685,7 @@ Plot of test [information](#irtReliability) as a function of a person's level on
 plot(gradedResponseModel, type = "info")
 ```
 
-##### Test Reliability
+##### Test Reliability {#irt-gradedResponseModelReliability}
 
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1693,7 +1693,7 @@ Plot of test [reliability](#irtReliability) as a function of a person's level on
 plot(gradedResponseModel, type = "rxx")
 ```
 
-##### Test Standard Error of Measurement
+##### Test Standard Error of Measurement {#irt-gradedResponseModelSEM}
 
 Plot of test [standard error of measurement](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1701,7 +1701,7 @@ Plot of test [standard error of measurement](#irtReliability) as a function of a
 plot(gradedResponseModel, type = "SE")
 ```
 
-##### Test Information Function and Standard Errors
+##### Test Information Function and Standard Errors {#irt-gradedResponseModelTIFsem}
 
 Plot of test [information](#irtReliability) and [standard error of measurement](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1709,9 +1709,9 @@ Plot of test [information](#irtReliability) and [standard error of measurement](
 plot(gradedResponseModel, type = "infoSE")
 ```
 
-#### Item Curves
+#### Item Curves {#irt-gradedResponseModelItemCurves}
 
-##### Item Characteristic Curves
+##### Item Characteristic Curves {#irt-gradedResponseModelICC}
 
 [ICC](#icc) plot of expected item score as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1720,7 +1720,7 @@ plot(gradedResponseModel, type = "itemscore", facet_items = FALSE)
 plot(gradedResponseModel, type = "itemscore", facet_items = TRUE)
 ```
 
-##### Item Information Functions
+##### Item Information Functions {#irt-gradedResponseModelIIF}
 
 Plot of item [information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1729,7 +1729,7 @@ plot(gradedResponseModel, type = "infotrace", facet_items = FALSE)
 plot(gradedResponseModel, type = "infotrace", facet_items = TRUE)
 ```
 
-##### Item Response Category Characteristic Curves
+##### Item Response Category Characteristic Curves {#irt-gradedResponseModelIRCCC}
 
 Plot of probability of item threshold endorsement as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1737,7 +1737,7 @@ Plot of probability of item threshold endorsement as a function of a person's le
 plot(gradedResponseModel, type = "trace")
 ```
 
-##### Item Boundary Characteristic Curves (aka Item Operation Characteristic Curves)
+##### Item Boundary Characteristic Curves (aka Item Operation Characteristic Curves) {#irt-gradedResponseModelIOCC}
 
 This plot of item boundary characteristic curves was adapted from an example by Aiden Loe: https://aidenloe.github.io/irtplots.html
 
@@ -1774,16 +1774,16 @@ ggplot(longer_data, aes(theta, value, group = interaction(item, name), color = i
   theme(axis.title.y = element_text(size = 10))
 ```
 
-## Conclusion
+## Conclusion {#conclusion-irt}
 
 Item response theory is a measurement theory and advanced modeling approach that allows estimating latent variables as the common variance from multiple items, and how the items relate to the construct (latent variable).
 IRT holds promise to enable the development of briefer assessments, including short forms and [adaptive assessments](#cat), that have strong [reliability](#reliability) and [validity](#validity).
 
-## Suggested Readings
+## Suggested Readings {#readings-irt}
 
 If you are interested in learning more about IRT, I highly recommend the book by @Embretson2000.
 
-## Exercises
+## Exercises {#exercises-irt}
 
 ```{r, include = FALSE}
 library("MOTE")
@@ -1984,7 +1984,7 @@ multidimensionalModelDFDiff <- multidimensionalModelDiffTest$"df"[2]
 #plot(multidimensionalModel_ex, type = "trace")
 ```
 
-### Questions
+### Questions {#exercisesQuestions-irt}
 
 Note: several of the following questions use data from the Children of the National Longitudinal Survey of Youth Survey (CNLSY).
 The CNLSY is a publicly available longitudinal dataset provided by the Bureau of Labor Statistics (https://www.bls.gov/nls/nlsy79-children.htm#topical-guide).
@@ -2027,7 +2027,7 @@ Provide a possible explanation as two why some of the items "broke off" (from Fa
 	Model fit of nested models can be directly compared with a chi-square difference test.
 	Did the two-factor model fit better than the one-factor model?
 
-### Answers
+### Answers {#exercisesAnswers-irt}
 
 1.
     a. Item 7 (“sudden changes in mood or feeling”) has the lowest difficulty in terms of endorsing a score of one ($b_1 = `r apa(raschModelSmallestB1_ex, decimals = 2)`$).
