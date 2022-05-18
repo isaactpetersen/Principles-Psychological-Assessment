@@ -50,8 +50,8 @@ $P(C_i)$ is the probability (i.e., base rate) of a classification, $C$, independ
 In our example above, $P(C_i)$ is the base rate (i.e., prevalence) of HIV in the population: $P(\text{HIV}) = .3\%$.
 $P(R_i)$ is the probability (base rate) of a response, $R$, independent of other things.
 In the example above, $P(R_i)$ is the base rate of a positive test for HIV: $P(\text{positive test}) = 1\%$.
-The base rate of a positive test is known as the positivity rate.
-A base rate is often used as the "prior probability" in a Bayesian model.
+The base rate of a positive test is known as the *positivity rate*.
+A base rate is often used as the "*prior probability*" in a Bayesian model.
 
 ##### Joint Probability {#jointProbability}
 
@@ -148,13 +148,17 @@ $$
 \end{aligned}
 $$
 
-```{r}
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of one event, $A$, given another event, $B$.
+
+```{r, eval = FALSE}
 pAgivenB <- function(pBgivenA, pA, pB){
   value <- pBgivenA * pA / pB
   
   value
 }
+```
 
+```{r}
 pAgivenB(pBgivenA = .95, pA = .003, pB = .01)
 ```
 
@@ -224,13 +228,17 @@ $$
 (\#eq:conditionalProbabilityRevised)
 $$
 
-```{r}
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of one event, $B$, given that another event, $A$, did not occur.
+
+```{r, eval = FALSE}
 pBgivenNotA <- function(pBgivenA, pA, pB){
   value <- (pB - (pBgivenA * pA)) / (1 - pA)
   
   value
 }
+```
 
+```{r}
 pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01)
 ```
 
@@ -246,13 +254,17 @@ $$
 (\#eq:baseRateUpdated)
 $$
 
-```{r}
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the marginal probability of one event, $B$.
+
+```{r, eval = FALSE}
 pB <- function(pBgivenA, pA, pBgivenNotA){
   value <- (pBgivenA * pA) + pBgivenNotA * (1 - pA)
   
   value
 }
+```
 
+```{r}
 pB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
 pB(pBgivenA = .95, pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01), pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
@@ -268,6 +280,8 @@ $$
   &= 98.14\%
 \end{aligned}
 $$
+
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of one event, $A$, given another event, $B$.
 
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .285, pB = .2758776)
@@ -322,13 +336,20 @@ $$
 
 ```{r}
 pAgivenBalternative <- function(pBgivenA, pA, pBgivenNotA){
-  value <- (pBgivenA * pA) /((pBgivenA * pA) + (pBgivenNotA * (1 - pA)))
+  value <- (pBgivenA * pA) / ((pBgivenA * pA) + (pBgivenNotA * (1 - pA)))
   
   value
 }
 
 pAgivenBalternative(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
 pAgivenBalternative(pBgivenA = .95, pA = .003, pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+```
+
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of one event, $A$, given another event, $B$.
+
+```{r}
+pAgivenB(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
+pAgivenB(pBgivenA = .95, pA = .003, pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
 To calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test, we update our priors because the person has now tested positive for HIV.
@@ -346,9 +367,14 @@ $$
 \end{aligned}
 $$
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of one event, $A$, given another event, $B$.
+
 ```{r}
 pAgivenBalternative(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
 pAgivenBalternative(pBgivenA = .95, pA = .285, pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+
+pAgivenB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
+pAgivenB(pBgivenA = .95, pA = .285, pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
 If we want to compare the relative probability of two outcomes, we can use the odds form of Bayes' theorem:
@@ -872,6 +898,7 @@ If we lower the [base rate](#baseRate), we would need larger sample to get enoug
 ### Load Libraries {#loadLibraries-prediction}
 
 ```{r}
+library("petersenlab") #to install: install.packages("remotes"); remotes::install_git("https://research-git.uiowa.edu/PetersenLab/petersenlab.git")
 library("pROC")
 library("ROCR")
 library("rms")
@@ -1000,6 +1027,12 @@ Some general indexes of accuracy combine [discrimination](#discrimination) and [
 This section (\@ref(predictionAccuracy)) describes indexes of accuracy that span all possible cutoffs.
 That is, each index of accuracy described in this section provides a single numerical index of accuracy that aggregates the accuracy across all possible cutoffs.
 Aspects of accuracy at a particular cutoff are described in Section \@ref(cutoffAccuracy).
+
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy across cutoffs.
+
+```{r}
+accuracyOverall(predicted = mydataSDT$testScore, actual = mydataSDT$disorder)
+```
 
 ### General Prediction Accuracy {#generalPredictionAccuracy}
 
@@ -1761,6 +1794,14 @@ mydataSDT$diagnosis[mydataSDT$testScore >= cutoff] <- 1
 
 mydataSDT$diagnosisFactor <- factor(mydataSDT$diagnosis, levels = c(1, 0), labels = c("Decision: Diagnosis", "Decision: No Diagnosis"))
 mydataSDT$disorderFactor <- factor(mydataSDT$disorder, levels = c(1, 0), labels = c("Truth: Disorder", "Truth: No Disorder"))
+```
+
+### Accuracy at a Given Cutoff {#accuracyAtCutoff}
+
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at a given cutoff.
+
+```{r}
+accuracyAtCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder, cutoff = cutoff)
 ```
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}
@@ -3193,6 +3234,13 @@ utilityFalseAlarms <- 0.25
 
 ### Calculate Accuracy {#calculateAccuracyAtEveryPossibleCutoff}
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at a every possible cutoff.
+
+```{r}
+accuracyAtEachCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder,
+                     UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
+```
+
 ```{r}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
@@ -3322,6 +3370,13 @@ accuracyStats[head(which(accuracyStats$cutoff >= closestToTheTopLeft), 1),]
 ```
 
 ### Cutoff that optimizes each of the following criteria: {#allAccuracyStatistics-cutoff}
+
+The `petersenlab` package [@R-petersenlab] contains an R function that identifes the cutoff that optimizes each of various accuracy estimates.
+
+```{r}
+optimalCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder,
+              UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
+```
 
 #### Percent Accuracy {#allAccuracyStatistics-cutoffPercentAccuracy}
 

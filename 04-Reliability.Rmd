@@ -527,6 +527,7 @@ And we would expect a useful measure to show consistency, stability, precision, 
 ### Load Libraries {#loadLibraries-reliability}
 
 ```{r}
+library("petersenlab") #to install: install.packages("remotes"); remotes::install_git("https://research-git.uiowa.edu/PetersenLab/petersenlab.git")
 library("psych")
 library("blandr")
 library("MBESS")
@@ -971,6 +972,39 @@ coefficientOfRepeatability <- function(measure1, measure2){
 }
 
 coefficientOfRepeatability(measure1 = mydata$time1, measure2 = mydata$time2)
+```
+
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot).
+
+```{r, eval = FALSE}
+repeatability <- function(measure1, measure2){
+  cr <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
+  bias <- mean((measure2 - measure1), na.rm = TRUE)
+  lowerLOA <- bias - cr
+  upperLOA <- bias + cr
+
+  means <- rowMeans(cbind(measure1, measure2), na.rm = TRUE)
+  differences <- measure2 - measure1
+
+  output <- data.frame(
+    cr = cr,
+    bias = bias,
+    lowerLOA = lowerLOA,
+    upperLOA = upperLOA
+  )
+
+  plot(means, differences)
+  abline(h = 0)
+  abline(h = bias, lty = 2, col = "red")
+  abline(h = lowerLOA, lty = 2, col = "blue")
+  abline(h = upperLOA, lty = 2, col = "blue")
+
+  return(output)
+}
+```
+
+```{r}
+repeatability(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
 
 ##### Bland-Altman Plot {#blandAltmanPlot}
@@ -1450,7 +1484,7 @@ r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\
 (\#eq:reliabilityOfDifferenceScore)
 $$
 
-Here is a function to calculate the reliability of a difference score:
+Here is a function to calculate the reliability of a difference score (from the the `petersenlab` package [@R-petersenlab]):
 
 ```{r}
 reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY){

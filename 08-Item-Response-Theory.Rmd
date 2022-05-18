@@ -368,17 +368,38 @@ $$
 P(X = 1|\theta_j, b_i) = \frac{e^{\theta_j - b_i}}{1 + e^{\theta_j - b_i}}
 (\#eq:raschModel)
 $$
-A 1-parameter logistic IRT model, similar to a Rasch model, estimates the [item difficulty](#itemDifficulty) parameter, and holds everything else fixed across items (see Figure \@ref(fig:irt1PL)).
-The one-parameter model holds the [item discrimination](#itemDiscrimination) fixed across items, but does not fix it to one, unlike the Rasch model.
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of item endorsement as function of the item characteristics from the Rasch model and the person's level on the construct (theta). To estimate the probability of endorsement from the Rasch model, specify, $b$ and $theta$, while keeping the defaults for the other parameters.
 
-In the one-parameter model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) of the item and the items' (fixed) [discrimination](#itemDiscrimination) ($a$), is:
+```{r, eval = FALSE}
+fourPL <- function(a = 1, b, c = 0, d = 1, theta){
+  c + (d - c) * (exp(a * (theta - b))) / (1 + exp(a * (theta - b)))
+}
+
+fourPL(b, theta)
+```
+
+```{r}
+fourPL(b = 1, theta = 0)
+```
+
+A one-parameter logistic (1-PL) IRT model, similar to a Rasch model, estimates the [item difficulty](#itemDifficulty) parameter, and holds everything else fixed across items (see Figure \@ref(fig:irt1PL)).
+The one-parameter logistic model holds the [item discrimination](#itemDiscrimination) fixed across items, but does not fix it to one, unlike the Rasch model.
+
+In the one-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) of the item and the items' (fixed) [discrimination](#itemDiscrimination) ($a$), is:
 
 $$
 P(X = 1|\theta_j, b_i, a) = \frac{e^{a(\theta_j - b_i)}}{1 + e^{a(\theta_j - b_i)}}
 (\#eq:onePL)
 $$
 
-Rasch and one-parameter models are common and are the easiest to fit.
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of item endorsement as function of the item characteristics from the one-parameter logistic model and the person's level on the construct (theta).
+To estimate the probability of endorsement from the one-parameter logistic model, specify $a$, $b$, and $theta$, while keeping the defaults for the other parameters.
+
+```{r, eval = FALSE}
+fourPL(a, b, theta)
+```
+
+Rasch and one-parameter logistic models are common and are the easiest to fit.
 However, they make fairly strict assumptions.
 They assume that items have the same [discrimination](#itemDiscrimination).
 
@@ -386,11 +407,18 @@ They assume that items have the same [discrimination](#itemDiscrimination).
 library("tidyverse")
 
 onePLitems <- data.frame(theta = -4:4,
-                         item1 = psych::logistic(-4:4, d = -2),
-                         item2 = psych::logistic(-4:4, d = -1),
-                         item3 = psych::logistic(-4:4, d = 0),
-                         item4 = psych::logistic(-4:4, d = 1),
-                         item5 = psych::logistic(-4:4, d = 2))
+                         item1 = fourPL(b = -2, theta = -4:4),
+                         item2 = fourPL(b = -1, theta = -4:4),
+                         item3 = fourPL(b = 0, theta = -4:4),
+                         item4 = fourPL(b = 1, theta = -4:4),
+                         item5 = fourPL(b = 2, theta = -4:4))
+
+#onePLitems <- data.frame(theta = -4:4,
+#                         item1 = psych::logistic(-4:4, d = -2),
+#                         item2 = psych::logistic(-4:4, d = -1),
+#                         item3 = psych::logistic(-4:4, d = 0),
+#                         item4 = psych::logistic(-4:4, d = 1),
+#                         item5 = psych::logistic(-4:4, d = 2))
 
 onePL_item1 <- nls(item1 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
 onePL_item2 <- nls(item2 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
@@ -427,7 +455,7 @@ ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(I
   theme_bw()
 ```
 
-A 1-parameter logistic model is only valid if there are not crossing of lines in empirical [ICCs](#icc) (see Figure \@ref(fig:empiricalICCnoCrossing)).
+A one-parameter logistic model is only valid if there are not crossing of lines in empirical [ICCs](#icc) (see Figure \@ref(fig:empiricalICCnoCrossing)).
 
 ```{r, include = FALSE}
 empiricalICCdata_noCrossing <- data.frame(
@@ -464,23 +492,41 @@ axis(1, at = 1:9, labels = 1:9)
 
 #### 2-Parameter {#twoPL}
 
-A 2-parameter logistic IRT model estimates item [difficulty](#itemDifficulty) and [discrimination](#itemDiscrimination), and it holds the asymptotes fixed across items (see Figure \@ref(fig:irt2PL)).
-Two-parameter models are also common.
+A two-parameter logistic (2-PL) IRT model estimates item [difficulty](#itemDifficulty) and [discrimination](#itemDiscrimination), and it holds the asymptotes fixed across items (see Figure \@ref(fig:irt2PL)).
+Two-parameter logistic models are also common.
 
-In the two-parameter model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) and [discrimination](#itemDiscrimination) ($a$) of the item, is:
+In the two-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) and [discrimination](#itemDiscrimination) ($a$) of the item, is:
 
 $$
 P(X = 1|\theta_j, b_i, a_i) = \frac{e^{a_i(\theta_j - b_i)}}{1 + e^{a_i(\theta_j - b_i)}}
 (\#eq:twoPL)
 $$
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of item endorsement as function of the item characteristics from the two-parameter logistic model and the person's level on the construct (theta).
+To estimate the probability of endorsement from the two-parameter logistic model, specify $a$, $b$, and $theta$, while keeping the defaults for the other parameters.
+
+```{r, eval = FALSE}
+fourPL(a, b, theta)
+```
+
+```{r}
+fourPL(a = 0.6, b = 0, theta = -1)
+```
+
 ```{r, include = FALSE}
 twoPLitems <- data.frame(theta = -6:6,
-                         item1 = psych::logistic(-6:6, d = -2, a = 1.3),
-                         item2 = psych::logistic(-6:6, d = -1, a = 0.8),
-                         item3 = psych::logistic(-6:6, d = 0, a = 0.6),
-                         item4 = psych::logistic(-6:6, d = 1, a = 1.5),
-                         item5 = psych::logistic(-6:6, d = 2, a = 2.3))
+                         item1 = fourPL(a = 1.3, b = -2, theta = -6:6),
+                         item2 = fourPL(a = 0.8, b = -1, theta = -6:6),
+                         item3 = fourPL(a = 0.6, b = 0, theta = -6:6),
+                         item4 = fourPL(a = 1.5, b = 1, theta = -6:6),
+                         item5 = fourPL(a = 2.3, b = 2, theta = -6:6))
+
+#twoPLitems <- data.frame(theta = -6:6,
+#                         item1 = psych::logistic(-6:6, d = -2, a = 1.3),
+#                         item2 = psych::logistic(-6:6, d = -1, a = 0.8),
+#                         item3 = psych::logistic(-6:6, d = 0, a = 0.6),
+#                         item4 = psych::logistic(-6:6, d = 1, a = 1.5),
+#                         item5 = psych::logistic(-6:6, d = 2, a = 2.3))
 
 twoPL_item1 <- nls(item1 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
 twoPL_item2 <- nls(item2 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
@@ -519,24 +565,42 @@ ggplot(twoPLitems_long, aes(theta, value, group = factor(Item), color = factor(I
 
 #### 3-Parameter {#threePL}
 
-A 3-parameter logistic IRT model estimates item [difficulty](#itemDifficulty), [discrimination](#itemDiscrimination), and [guessing](#itemGuessing) (lower asymptote), and it holds the upper asymptote fixed across items (see Figure \@ref(fig:irt3PL)).
+A three-parameter logistic (3-PL) IRT model estimates item [difficulty](#itemDifficulty), [discrimination](#itemDiscrimination), and [guessing](#itemGuessing) (lower asymptote), and it holds the upper asymptote fixed across items (see Figure \@ref(fig:irt3PL)).
 This model would provide information about where an item drops out.
-Three-parameter models are less common to estimate because it adds considerable computational complexity and requires a large sample size, and the [guessing](#itemGuessing) parameter is often not as important as [difficulty](#itemDifficulty) and [discrimination](#itemDiscrimination) Nevertheless, 3-parameter models are sometimes estimated in the education literature to account for getting items correct by random guessing.
+Three-parameter logistic models are less common to estimate because it adds considerable computational complexity and requires a large sample size, and the [guessing](#itemGuessing) parameter is often not as important as [difficulty](#itemDifficulty) and [discrimination](#itemDiscrimination) Nevertheless, 3-parameter logistic models are sometimes estimated in the education literature to account for getting items correct by random guessing.
 
-In the three-parameter model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), and [guessing parameter](#itemGuessing) ($c$) of the item, is:
+In the three-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), and [guessing parameter](#itemGuessing) ($c$) of the item, is:
 
 $$
 P(X = 1|\theta_j, b_i, a_i, c_i) = c_i + (1 - c_i) \frac{e^{a_i(\theta_j - b_i)}}{1 + e^{a_i(\theta_j - b_i)}}
 (\#eq:threePL)
 $$
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of item endorsement as function of the item characteristics from the three-parameter logistic model and the person's level on the construct (theta).
+To estimate the probability of endorsement from the three-parameter logistic model, specify $a$, $b$, $c$, and $theta$, while keeping the defaults for the other parameters.
+
+```{r, eval = FALSE}
+fourPL(a, b, c, theta)
+```
+
+```{r}
+fourPL(a = 0.8, b = -1, c = .25, theta = -1)
+```
+
 ```{r, include = FALSE}
 threePLitems <- data.frame(theta = 1:13,
-                           item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0),
-                           item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25),
-                           item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3),
-                           item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15),
-                           item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0))
+                           item1 = fourPL(a = 1.3, b = -2, c = 0, theta = -6:6),
+                           item2 = fourPL(a = 0.8, b = -1, c = .25, theta = -6:6),
+                           item3 = fourPL(a = 0.6, b = 0, c = .3, theta = -6:6),
+                           item4 = fourPL(a = 1.5, b = 1, c = .15, theta = -6:6),
+                           item5 = fourPL(a = 2.3, b = 2, c = 0, theta = -6:6))
+
+#threePLitems <- data.frame(theta = 1:13,
+#                           item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0),
+#                           item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25),
+#                           item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3),
+#                           item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15),
+#                           item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0))
 
 threePL_item1 <- drm(item1 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
 threePL_item2 <- drm(item2 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
@@ -577,23 +641,41 @@ ggplot(threePLitems_long, aes(theta, value, group = factor(Item), color = factor
 
 #### 4-Parameter {#fourPL}
 
-A 4-parameter logistic IRT model estimates item [difficulty](#itemDifficulty), [discrimination](#itemDiscrimination), [guessing](#itemGuessing), and [careless errors](#itemCarelessErrors) (see Figure \@ref(fig:irt4PL)).
+A four-parameter logistic (4-PL) IRT model estimates item [difficulty](#itemDifficulty), [discrimination](#itemDiscrimination), [guessing](#itemGuessing), and [careless errors](#itemCarelessErrors) (see Figure \@ref(fig:irt4PL)).
 The fourth parameter adds considerable computational complexity and is rare to estimate.
 
-In the four-parameter model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), [guessing parameter](#itemGuessing) ($c$), and [careless error parameter](#itemCarelessErrors) ($d$) of the item, is [@Magis2013]:
+In the four-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), [guessing parameter](#itemGuessing) ($c$), and [careless error parameter](#itemCarelessErrors) ($d$) of the item, is [@Magis2013]:
 
 $$
 P(X = 1|\theta_j, b_i, a_i, c_i, d_i) = c_i + (d_i - c_i) \frac{e^{a_i(\theta_j - b_i)}}{1 + e^{a_i(\theta_j - b_i)}}
 (\#eq:fourPL)
 $$
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the probability of item endorsement as function of the item characteristics from the four-parameter logistic model and the person's level on the construct (theta).
+To estimate the probability of endorsement from the four-parameter logistic model, specify $a$, $b$, $c$, $d$, and $theta$.
+
+```{r, eval = FALSE}
+fourPL(a, b, c, d, theta)
+```
+
+```{r}
+fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = 3)
+```
+
 ```{r, include = FALSE}
 fourPLitems <- data.frame(theta = 1:13,
-                           item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0, z = 1),
-                           item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25, z = 0.9),
-                           item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3, z = 0.95),
-                           item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15, z = 0.85),
-                           item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0, z = 0.98))
+                          item1 = fourPL(a = 1.3, b = -2, c = 0, d = 1, theta = -6:6),
+                          item2 = fourPL(a = 0.8, b = -1, c = .25, d = 0.9, theta = -6:6),
+                          item3 = fourPL(a = 0.6, b = 0, c = .3, d = 0.95, theta = -6:6),
+                          item4 = fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = -6:6),
+                          item5 = fourPL(a = 2.3, b = 2, c = 0, d = 0.98, theta = -6:6))
+
+#fourPLitems <- data.frame(theta = 1:13,
+#                          item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0, z = 1),
+#                          item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25, z = 0.9),
+#                          item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3, z = 0.95),
+#                          item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15, z = 0.85),
+#                          item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0, z = 0.98))
 
 fourPL_item1 <- drm(item1 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
 fourPL_item2 <- drm(item2 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
@@ -765,6 +847,20 @@ $$
 (\#eq:semIRT)
 $$
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the [standard error of measurement](#standardErrorofMeasurement) at a person's level on the construct (theta) from the amount of information that the item (or test) provides.
+
+```{r, eval = FALSE}
+standardErrorIRT <- function(information){
+  1/sqrt(information)
+}
+
+standardErrorIRT(information)
+```
+
+```{r}
+standardErrorIRT(0.6)
+```
+
 The [standard error of measurement](#standardErrorofMeasurement) tends to be higher (i.e., [reliability](#reliability)/information tends to be lower) at the extreme levels of the construct where there are fewer items.
 
 The formula for information for item $i$ at construct level $\theta$ in a Rasch model is [@Baker2017]:
@@ -776,12 +872,44 @@ $$
 
 where $P_i(\theta)$ is the probability of getting a one instead of a zero on item $i$ at a given level on the latent construct, and $Q_i(\theta) = 1 - P_i(\theta)$.
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the amount of information an item provides as function of the item characteristics from the Rasch model and the person's level on the construct (theta). To estimate the amount of information an item provides in a Rasch model, specify, $b$ and $theta$, while keeping the defaults for the other parameters.
+
+```{r, eval = FALSE}
+itemInformation <- function(a = 1, b, c = 0, d = 1, theta){
+  P <- NULL
+  information <- NULL
+
+  for(i in 1:length(theta)){
+    P[i] <- fourPL(b = b, a = a, c = c, d = d, theta = theta[i])
+    information[i] <- ((a^2) * (P[i] - c)^2 * (d - P[i])^2) / ((d - c)^2 * P[i] * (1 - P[i]))
+  }
+
+  return(information)
+}
+
+itemInformation(b, theta)
+```
+
+```{r}
+itemInformation(b = 1, theta = 0)
+```
+
 The formula for information for item $i$ at construct level $\theta$ in a two-parameter logistic model is [@Baker2017]:
 
 $$
 \text{information}_i(\theta) = a^2_iP_i(\theta)Q_i(\theta)
 (\#eq:itemInformation2PL)
 $$
+
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the amount of information an item provides as function of the item characteristics from the two-parameter logistic model and the person's level on the construct (theta). To estimate the amount of information an item provides in a two-parameter logistic model, specify, $a$, $b$, and $theta$, while keeping the defaults for the other parameters.
+
+```{r, eval = FALSE}
+itemInformation(a, b, theta)
+```
+
+```{r}
+itemInformation(a = 0.6, b = 0, theta = -1)
+```
 
 The formula for information for item $i$ at construct level $\theta$ in a three-parameter logistic model is [@Baker2017]:
 
@@ -790,6 +918,16 @@ $$
 (\#eq:itemInformation3PL)
 $$
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the amount of information an item provides as function of the item characteristics from the three-parameter logistic model and the person's level on the construct (theta). To estimate the amount of information an item provides in a three-parameter logistic model, specify, $a$, $b$, $c$, and $theta$, while keeping the defaults for the other parameters.
+
+```{r, eval = FALSE}
+itemInformation(a, b, c, theta)
+```
+
+```{r}
+itemInformation(a = 0.8, b = -1, c = .25, theta = -1)
+```
+
 The formula for information for item $i$ at construct level $\theta$ in a four-parameter logistic model is [@Magis2013]:
 
 $$
@@ -797,30 +935,20 @@ $$
 (\#eq:itemInformation4PL)
 $$
 
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the amount of information an item provides as function of the item characteristics from the four-parameter logistic model and the person's level on the construct (theta). To estimate the amount of information an item provides in a four-parameter logistic model, specify, $a$, $b$, $c$, $d$, and $theta$.
+
+```{r, eval = FALSE}
+itemInformation(a, b, c, d, theta)
+```
+
+```{r}
+itemInformation(a = 1.5, b = 1, c = .15, d = 0.85, theta = 3)
+```
+
 Consider some hypothetical items depicted with [ICCs](#icc) in Figure \@ref(fig:reliabilityIRTicc).
 
 ```{r, include = FALSE}
 #https://journals.sagepub.com/doi/full/10.1177/0146621613475471
-fourPL <- function(a = 1, b, c = 0, d = 1, theta){
-  c + (d - c) * (exp(a * (theta - b))) / (1 + exp(a * (theta - b)))
-}
-
-information_fourPL <- function(b, a = 1, c = 0, d = 1, theta = seq(-4, 4, length.out = 1000)){
-  P <- NULL
-  Ii <- NULL
-  
-  for(i in 1:1000){
-    P[i] <- fourPL(b = b, a = a, c = c, d = d, theta = theta[i])
-    Ii[i] <- ((a^2) * (P[i] - c)^2 * (d - P[i])^2) / ((d - c)^2 * P[i] * (1 - P[i]))
-  }
-  
-  return(Ii)
-}
-
-standardErrorIRT <- function(information){
-  1/sqrt(information)
-}
-
 irtReliability <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
 irtReliability$item1 <- fourPL(b = -1, a = 1, theta = irtReliability$theta)
@@ -830,10 +958,10 @@ irtReliability$item4 <- fourPL(b = 2, a = 2, theta = irtReliability$theta)
 
 irtInformation <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
-irtInformation$information1 <- information_fourPL(b = -1, a = 1, theta = irtInformation$theta)
-irtInformation$information2 <- information_fourPL(b = 0, a = 0.6, theta = irtInformation$theta)
-irtInformation$information3 <- information_fourPL(b = 1, a = 1.5, theta = irtInformation$theta)
-irtInformation$information4 <- information_fourPL(b = 2, a = 2, theta = irtInformation$theta)
+irtInformation$information1 <- itemInformation(b = -1, a = 1, theta = irtInformation$theta)
+irtInformation$information2 <- itemInformation(b = 0, a = 0.6, theta = irtInformation$theta)
+irtInformation$information3 <- itemInformation(b = 1, a = 1.5, theta = irtInformation$theta)
+irtInformation$information4 <- itemInformation(b = 2, a = 2, theta = irtInformation$theta)
 
 midpoint_item1 <- irtReliability$theta[which.min(abs(irtReliability$item1 - 0.5))]
 midpoint_item2 <- irtReliability$theta[which.min(abs(irtReliability$item2 - 0.5))]
@@ -1161,6 +1289,7 @@ ggplot(goodMeasureInfo, aes(theta, information)) +
 ### Load Libraries {#loadLibraries-irt}
 
 ```{r}
+library("petersenlab") #to install: install.packages("remotes"); remotes::install_git("https://research-git.uiowa.edu/PetersenLab/petersenlab.git")
 library("mirt")
 library("tidyverse")
 library("here")

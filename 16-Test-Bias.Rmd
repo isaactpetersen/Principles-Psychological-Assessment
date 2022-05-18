@@ -754,6 +754,7 @@ However, the improvements tend to apply across groups, and they do not seem to l
 ### Load Libraries {#loadLibraries-bias}
 
 ```{r}
+library("petersenlab") #to install: install.packages("remotes"); remotes::install_git("https://research-git.uiowa.edu/PetersenLab/petersenlab.git")
 library("lavaan")
 library("semTools")
 library("semPlot")
@@ -1760,10 +1761,9 @@ lavaan_dmacs(configuralInvarianceModel_fit)
 
 #### Equivalence Test {#measurementInvarianceConfiguralModelEquivalenceTest}
 
-From @Counsell2020: https://osf.io/cqu8v.
-The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable.
+The `petersenlab` package [@R-petersenlab] contains the R function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
 
-```{r}
+```{r, eval = FALSE}
 equiv_chi <- function(alpha = .05, chi, df, m, N_sample, popRMSEA = .08){
   Fml <- chi/(N_sample - m)
   popep <- (df * popRMSEA^2)/m
@@ -1772,7 +1772,11 @@ equiv_chi <- function(alpha = .05, chi, df, m, N_sample, popRMSEA = .08){
   res <- data.frame(chi, Fml, popep, popdelt, pval)
   res
 }
+```
 
+The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable.
+
+```{r}
 equiv_chi(alpha = .05, chi = configuralInvarianceModel_chisquare, df = configuralInvarianceModel_df, m = 2, N_sample = configuralInvarianceModel_N, popRMSEA = .08)
 ```
 
@@ -1962,6 +1966,7 @@ round(metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices, dig
 
 ##### Equivalence Test {#measurementInvarianceMetricModelEquivalenceTest}
 
+The `petersenlab` package [@R-petersenlab] contains the R function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.
 The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
 
@@ -2146,6 +2151,7 @@ round(scalarInvarianceModelFitIndices - metricInvarianceModelFitIndices, digits 
 
 ##### Equivalence Test {#measurementInvarianceScalarModelEquivalenceTest}
 
+The `petersenlab` package [@R-petersenlab] contains the R function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.
 The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
 
@@ -2329,6 +2335,7 @@ round(residualInvarianceModelFitIndices - scalarInvarianceModelFitIndices, digit
 
 ##### Equivalence Test {#measurementInvarianceResidualModelEquivalenceTest}
 
+The `petersenlab` package [@R-petersenlab] contains the R function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.
 The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
 
