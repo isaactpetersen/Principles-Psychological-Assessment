@@ -1031,7 +1031,8 @@ Aspects of accuracy at a particular cutoff are described in Section \@ref(cutoff
 The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy across cutoffs.
 
 ```{r}
-accuracyOverall(predicted = mydataSDT$testScore, actual = mydataSDT$disorder)
+accuracyOverall(predicted = mydataSDT$testScore, actual = mydataSDT$disorder) %>% t
+accuracyOverall(predicted = mydataSDT$testScore, actual = mydataSDT$disorder, dropUndefined = TRUE) %>% t
 ```
 
 ### General Prediction Accuracy {#generalPredictionAccuracy}
@@ -1801,7 +1802,7 @@ mydataSDT$disorderFactor <- factor(mydataSDT$disorder, levels = c(1, 0), labels 
 The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at a given cutoff.
 
 ```{r}
-accuracyAtCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder, cutoff = cutoff)
+accuracyAtCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder, cutoff = cutoff) %>% t
 ```
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}
@@ -3234,13 +3235,6 @@ utilityFalseAlarms <- 0.25
 
 ### Calculate Accuracy {#calculateAccuracyAtEveryPossibleCutoff}
 
-The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at a every possible cutoff.
-
-```{r}
-accuracyAtEachCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder,
-                     UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
-```
-
 ```{r}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
@@ -3316,6 +3310,13 @@ accuracyStats <- do.call(data.frame, lapply(accuracyStats, function(x) replace(x
 ```
 
 ### All Accuracy Statistics {#allAccuracyStatistics}
+
+The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at a every possible cutoff.
+
+```{r}
+accuracyAtEachCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder,
+                     UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
+```
 
 ```{r, eval = knitr::is_html_output(excludes = "epub")}
 #Need to add separate check for epub -> kable()
