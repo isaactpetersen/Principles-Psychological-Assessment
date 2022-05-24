@@ -34,7 +34,7 @@ set.seed(52242)
 
 rawData <- rnorm(n = 1000, mean = 200, sd = 30)
 
-scores <- data.frame(rawData = rawData)
+scores <- data.frame(rawData = rawData, rawDataNoMissing = rawData)
 ```
 
 #### Add Missing Data {#addMissingData-scoresScales}
@@ -220,7 +220,7 @@ Thus, percentile ranks stretch out differences for some people but constrict dif
 Here is an example of how to calculate percentile ranks using the `dplyr` package from the `tidyverse` [@R-tidyverse; @tidyverse2019]:
 
 ```{r}
-scores$percentileRank <- percent_rank(scores$rawData) * 100
+scores$percentileRank <- percent_rank(scores$rawDataNoMissing) * 100
 ```
 
 ```{r percentileRanks, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Percentile Ranks."}
@@ -262,22 +262,72 @@ Every *z* score represents how far that person's score is from the (normed) aver
 95% of scores fall within two standard deviations of the mean.
 99.7% of scores fall within three standard deviations of the mean.
 
-The area under a normal curve within one standard deviation of the mean is calculated below using the `pnorm` function, which calculates the cumulative density function for a normal curve.
+The area under a normal curve within one standard deviation of the mean is calculated below using the `pnorm()` function, which calculates the cumulative density function for a normal curve.
 
 ```{r}
-pnorm(1) - pnorm(-1)
+stdDeviations <- 1
+
+pnorm(stdDeviations) - pnorm(stdDeviations * -1)
+```
+
+```{r zScoreDensity1SD, fig.align = "center", out.width = "100%", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within one standard deviation of the mean.}
+x <- seq(-4, 4, length = 200)
+y <- dnorm(x, mean = 0, sd = 1)
+plot(x, y, type = "l",
+     xlab = "z Score",
+     ylab = "Normal Density")
+
+x <- seq(stdDeviations * -1, stdDeviations, length = 100)
+y <- dnorm(x, mean = 0, sd = 1)
+polygon(c(stdDeviations * -1, x, stdDeviations), c(0, y, 0), col = "blue")
 ```
 
 The area under a normal curve within two standard deviations of the mean is calculated below:
 
 ```{r}
-pnorm(2) - pnorm(-2)
+stdDeviations <- 2
+
+pnorm(stdDeviations) - pnorm(stdDeviations * -1)
+```
+
+```{r zScoreDensity2SD, fig.align = "center", out.width = "100%", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within two standard deviations of the mean.}
+x <- seq(-4, 4, length = 200)
+y <- dnorm(x, mean = 0, sd = 1)
+plot(x, y, type = "l",
+     xlab = "z Score",
+     ylab = "Normal Density")
+
+x <- seq(stdDeviations * -1, stdDeviations, length = 100)
+y <- dnorm(x, mean = 0, sd = 1)
+polygon(c(stdDeviations * -1, x, stdDeviations), c(0, y, 0), col = "blue")
 ```
 
 The area under a normal curve within thee standard deviations of the mean is calculated below:
 
 ```{r}
-pnorm(3) - pnorm(-3)
+stdDeviations <- 3
+
+pnorm(stdDeviations) - pnorm(stdDeviations * -1)
+```
+
+```{r zScoreDensity3SD, fig.align = "center", out.width = "100%", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within three standard deviations of the mean.}
+x <- seq(-4, 4, length = 200)
+y <- dnorm(x, mean = 0, sd = 1)
+plot(x, y, type = "l",
+     xlab = "z Score",
+     ylab = "Normal Density")
+
+x <- seq(stdDeviations * -1, stdDeviations, length = 100)
+y <- dnorm(x, mean = 0, sd = 1)
+polygon(c(stdDeviations * -1, x, stdDeviations), c(0, y, 0), col = "blue")
+```
+
+Alternatively, if you want to determine the *z* score associated with a particular percentile in a normal distribution, you can use the `qnorm()` function.
+
+For instance, the *z* score associated with the 37th percentile is:
+
+```{r}
+qnorm(.37)
 ```
 
 *z* scores are calculated using the following formula:
