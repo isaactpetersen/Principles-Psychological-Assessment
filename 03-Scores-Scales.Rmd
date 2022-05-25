@@ -106,7 +106,7 @@ Raw scores are the original data, or they may be aggregations (e.g., sums or mea
 Raw scores are the purest because they are closest to the original operation (e.g., behavior).
 A disadvantage of raw scores is they are scale dependent, and therefore they may not be comparable across different measures with different scales.
 
-```{r rawScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Raw Scores."}
+```{r rawScores, out.width = "100%", fig.align = "center", fig.cap = "Histogram of Raw Scores."}
 hist(scores$rawData, xlab = "Raw Scores", main = "Histogram of Raw Scores")
 ```
 
@@ -128,7 +128,7 @@ Pros and cons of group-based norms are discussed in Section \@ref(withinGroupNor
 
 A standard normal distribution on various norm-referenced scales is depicted in Figure \@ref(fig:normedDistribution), as adapted from @Bandalos2018.
 
-```{r normedDistribution, echo = FALSE, results = "hide", fig.align = "center", out.width = "100%", fig.cap = "Various Norm-Referenced Scales."}
+```{r normedDistribution, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Various Norm-Referenced Scales."}
 standardNormal <- data.frame(zScore = -4:4)
 standardNormal$Tscore <- seq(from = 10, to = 90, by = 10)
 standardNormal$standardScore <- seq(from = 40, to = 160, by = 15)
@@ -223,7 +223,7 @@ Here is an example of how to calculate percentile ranks using the `dplyr` packag
 scores$percentileRank <- percent_rank(scores$rawDataNoMissing) * 100
 ```
 
-```{r percentileRanks, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Percentile Ranks."}
+```{r percentileRanks, out.width = "100%", fig.align = "center", fig.cap = "Histogram of Percentile Ranks."}
 hist(scores$percentileRank, xlab = "Percentile Ranks", main = "Histogram of Percentile Ranks")
 ```
 
@@ -240,13 +240,13 @@ For example, the frequency of hallucinations among people would show a positivel
 For instance, consider a hypothetical distribution of hallucinations.
 It might follow a folded distribution:
 
-```{r foldedDistribution, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Hallucinations (Raw Score)."}
+```{r foldedDistribution, out.width = "100%", fig.align = "center", fig.cap = "Histogram of Hallucinations (Raw Score)."}
 hist(rbinom(100000, 300, .01), breaks = 8, xlab = "Hallucinations (Raw Score)", main = "Histogram of Hallucinations (Raw Score)")
 ```
 
 Now consider the same distribution converted to a standardized (*z*) score:
 
-```{r foldedDistributionZscore, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Hallucinations (z Score)."}
+```{r foldedDistributionZscore, out.width = "100%", fig.align = "center", fig.cap = "Histogram of Hallucinations (z Score)."}
 hist(scale(rbinom(100000, 300, .01)), breaks = 8, xlab = "Hallucinations (z Score)", main = "Histogram of Hallucinations (z Score)")
 ```
 
@@ -270,7 +270,7 @@ stdDeviations <- 1
 pnorm(stdDeviations) - pnorm(stdDeviations * -1)
 ```
 
-```{r zScoreDensity1SD, fig.align = "center", out.width = "100%", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within one standard deviation of the mean."}
+```{r zScoreDensity1SD, out.width = "100%", fig.align = "center", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within one standard deviation of the mean."}
 x <- seq(-4, 4, length = 200)
 y <- dnorm(x, mean = 0, sd = 1)
 plot(x, y, type = "l",
@@ -290,7 +290,7 @@ stdDeviations <- 2
 pnorm(stdDeviations) - pnorm(stdDeviations * -1)
 ```
 
-```{r zScoreDensity2SD, fig.align = "center", out.width = "100%", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within two standard deviations of the mean."}
+```{r zScoreDensity2SD, out.width = "100%", fig.align = "center", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within two standard deviations of the mean."}
 x <- seq(-4, 4, length = 200)
 y <- dnorm(x, mean = 0, sd = 1)
 plot(x, y, type = "l",
@@ -310,7 +310,7 @@ stdDeviations <- 3
 pnorm(stdDeviations) - pnorm(stdDeviations * -1)
 ```
 
-```{r zScoreDensity3SD, fig.align = "center", out.width = "100%", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within three standard deviations of the mean."}
+```{r zScoreDensity3SD, out.width = "100%", fig.align = "center", fig.cap = "Density of Standard Normal Distribution. The blue region represents the area within three standard deviations of the mean."}
 x <- seq(-4, 4, length = 200)
 y <- dnorm(x, mean = 0, sd = 1)
 plot(x, y, type = "l",
@@ -346,7 +346,7 @@ all.equal(as.vector(scores$zScore),
           (scores$rawData - mean(scores$rawData, na.rm = TRUE))/sd(scores$rawData, na.rm = TRUE))
 ```
 
-```{r zScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of *z* Scores."}
+```{r zScores, out.width = "100%", fig.align = "center", fig.cap = "Histogram of *z* Scores."}
 hist(scores$zScore, xlab = "z Scores", main = "Histogram of z Scores")
 ```
 
@@ -367,7 +367,7 @@ where $z$ are *z* scores.
 scores$tScore <- 50 + 10*scale(scores$rawData)
 ```
 
-```{r tScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of *T* Scores."}
+```{r tScores, out.width = "100%", fig.align = "center", fig.cap = "Histogram of *T* Scores."}
 hist(scores$tScore, xlab = "T Scores", main = "Histogram of T Scores")
 ```
 
@@ -390,7 +390,7 @@ where $z$ are *z* scores.
 scores$standardScore <- 100 + 15*scale(scores$rawData)
 ```
 
-```{r standardScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Standard Scores."}
+```{r standardScores, out.width = "100%", fig.align = "center", fig.cap = "Histogram of Standard Scores."}
 hist(scores$standardScore, xlab = "Standard Scores", main = "Histogram of Standard Scores")
 ```
 
@@ -412,7 +412,7 @@ where $z$ are *z* scores.
 scores$scaledScore <- 10 + 3*scale(scores$rawData)
 ```
 
-```{r scaledScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Scaled Scores."}
+```{r scaledScores, out.width = "100%", fig.align = "center", fig.cap = "Histogram of Scaled Scores."}
 hist(scores$scaledScore, xlab = "Scale Scores", main = "Histogram of Scaled Scores")
 ```
 
@@ -456,7 +456,7 @@ scores$stanineScore[which(scores$percentileRank > 89 & scores$percentileRank <= 
 scores$stanineScore[which(scores$percentileRank > 96)] <- 9
 ```
 
-```{r stanineScores, fig.align = "center", out.width = "100%", fig.cap = "Histogram of Scaled Scores."}
+```{r stanineScores, out.width = "100%", fig.align = "center", fig.cap = "Histogram of Scaled Scores."}
 hist(scores$stanineScore, xlab = "Stanine Scores", main = "Histogram of Stanine Scores", breaks = seq(from = 0.5, to = 9.5, by = 1), xlim = c(0,10), xaxp = c(1,9,8))
 ```
 
