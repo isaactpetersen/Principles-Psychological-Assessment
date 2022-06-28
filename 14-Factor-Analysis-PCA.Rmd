@@ -601,7 +601,7 @@ Before conducting a [factor analysis](#factorAnalysis), it is important examine 
 
 ### Descriptive Statistics {#descriptiveStats-factorAnalysis}
 
-```{r, eval = knitr::is_html_output(excludes = "epub")}
+```{r, eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
 paged_table(psych::describe(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")]))
 ```
 
@@ -1391,7 +1391,6 @@ modificationindices(cfaModelFit, sort. = TRUE)
 
 ```{r}
 cfaFactorScores <- lavPredict(cfaModelFit)
-as_tibble(cfaFactorScores)
 ```
 
 ##### Compare CFA factor scores to EFA factor scores {#syntax-cfaEFA}
@@ -2687,11 +2686,9 @@ efa2factorOblique_ex <- fa(r = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2
 
 ### Orthogonal (Varimax) rotation
 fa2Orthogonal_ex <- efa2factorOrthogonal_ex$scores
-as_tibble(fa2Orthogonal_ex)
 
 ### Oblique (Oblimin) rotation
 fa2Oblique_ex <- efa2factorOblique_ex$scores
-as_tibble(fa2Oblique_ex)
 
 ## Plots
 
@@ -2736,7 +2733,7 @@ summary(measurementModelCorrelatedErrors1Fit,
 modificationindices(measurementModelCorrelatedErrors1Fit, sort. = TRUE)
 
 ## Factor scores
-as_tibble(lavPredict(measurementModelCorrelatedErrors1Fit))
+measurementModelCorrelatedErrors1Fit_factorScores <- lavPredict(measurementModelCorrelatedErrors1Fit)
 
 ## Equivalently fitting models (DAGs)
 dagModel <- lavaanToGraph(measurementModelCorrelatedErrors1Fit)
@@ -2817,13 +2814,13 @@ corrplot(cor(pca3Oblique_ex, use = "pairwise.complete.obs"))
 
 # Factor scores -----------------------------------------------------------
 
-efa1factorOblique_ex$scores
+efa1factorOblique_ex_factorScores <- efa1factorOblique_ex$scores
 
-as_tibble(lavPredict(measurementModelCorrelatedErrors1Fit))
+measurementModelCorrelatedErrors1Fit_factorScores <- lavPredict(measurementModelCorrelatedErrors1Fit)
 
-pca1factorOblique_ex$scores
+pca1factorOblique_ex_factorScores <- pca1factorOblique_ex$scores
 
-cor(cbind(efa1factorOblique_ex$scores, as_tibble(lavPredict(measurementModelCorrelatedErrors1Fit)), pca1factorOblique_ex$scores), use = "pairwise.complete.obs")
+cor(cbind(efa1factorOblique_ex_factorScores, as_tibble(measurementModelCorrelatedErrors1Fit_factorScores), pca1factorOblique_ex_factorScores), use = "pairwise.complete.obs")
 ```
 
 ### Questions {#exercisesQuestions-factorAnalysis}
