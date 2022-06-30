@@ -1296,6 +1296,7 @@ library("mirt")
 library("lavaan")
 library("semTools")
 library("semPlot")
+library("lme4")
 library("tidyverse")
 library("here")
 library("tinytex")
@@ -1487,6 +1488,31 @@ semPaths(onePLModel_cfa_fit,
          exoVar = FALSE,
          edge.label.cex = 1.5)
 ```
+
+### Mixed Model {#irt-onePLmixed}
+
+A Rasch model can also be fit in a mixed model framework.
+
+```{r}
+mydataIRT_long <- mydataIRT %>% 
+  mutate(ID = 1:nrow(mydataIRT)) %>% 
+  pivot_longer(cols = Item.1:Item.5) %>% 
+  rename(item = name,
+         response = value)
+
+raschModel_mixed_logit <- glmer(response ~ -1 + item + (1|ID),
+                                mydataIRT_long, 
+                                family = binomial(link = "logit"))
+
+summary(raschModel_mixed_logit)
+
+raschModel_mixed_probit <- glmer(response ~ -1 + item + (1|ID),
+                                 mydataIRT_long, 
+                                 family = binomial(link = "probit"))
+
+summary(raschModel_mixed_probit)
+```
+
 
 ## Two-Parameter Logistic Model {#irt-twoPL}
 
