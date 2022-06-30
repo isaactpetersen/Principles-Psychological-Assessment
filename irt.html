@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2022-06-29" />
+<meta name="date" content="2022-06-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -706,6 +706,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.5.3.2.2" data-path="irt.html"><a href="irt.html#irt-onePLiif"><i class="fa fa-check"></i><b>7.5.3.2.2</b> Item Information Functions</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="7.5.4" data-path="irt.html"><a href="irt.html#irt-onePLcfa"><i class="fa fa-check"></i><b>7.5.4</b> CFA</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="irt.html"><a href="irt.html#irt-twoPL"><i class="fa fa-check"></i><b>7.6</b> Two-Parameter Logistic Model</a>
 <ul>
@@ -727,6 +728,7 @@ div.csl-indent {
 <li class="chapter" data-level="7.6.3.2.2" data-path="irt.html"><a href="irt.html#irt-twoPLiif"><i class="fa fa-check"></i><b>7.6.3.2.2</b> Item Information Functions</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="7.6.4" data-path="irt.html"><a href="irt.html#irt-twoPLcfa"><i class="fa fa-check"></i><b>7.6.4</b> CFA</a></li>
 </ul></li>
 <li class="chapter" data-level="7.7" data-path="irt.html"><a href="irt.html#irt-twoPLmultidimensional"><i class="fa fa-check"></i><b>7.7</b> Two-Parameter Multi-Dimensional Logistic Model</a>
 <ul>
@@ -2559,9 +2561,12 @@ Figure 7.26: Visual Representation of a Good Measure Based on the Test Informati
 <h3><span class="header-section-number">7.2.1</span> Load Libraries<a href="irt.html#loadLibraries-irt" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb401"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb401-1"><a href="irt.html#cb401-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;petersenlab&quot;</span>) <span class="co">#to install: install.packages(&quot;remotes&quot;); remotes::install_git(&quot;https://research-git.uiowa.edu/PetersenLab/petersenlab.git&quot;)</span></span>
 <span id="cb401-2"><a href="irt.html#cb401-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;mirt&quot;</span>)</span>
-<span id="cb401-3"><a href="irt.html#cb401-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb401-4"><a href="irt.html#cb401-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
-<span id="cb401-5"><a href="irt.html#cb401-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span></code></pre></div>
+<span id="cb401-3"><a href="irt.html#cb401-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;lavaan&quot;</span>)</span>
+<span id="cb401-4"><a href="irt.html#cb401-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semTools&quot;</span>)</span>
+<span id="cb401-5"><a href="irt.html#cb401-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semPlot&quot;</span>)</span>
+<span id="cb401-6"><a href="irt.html#cb401-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb401-7"><a href="irt.html#cb401-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
+<span id="cb401-8"><a href="irt.html#cb401-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span></code></pre></div>
 </div>
 <div id="loadData-irt" class="section level3 hasAnchor" number="7.2.2">
 <h3><span class="header-section-number">7.2.2</span> Load Data<a href="irt.html#loadData-irt" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -2792,6 +2797,188 @@ Figure 7.35: Item Information Functions from Rasch Item Response Theory Model.
 </div>
 </div>
 </div>
+<div id="irt-onePLcfa" class="section level3 hasAnchor" number="7.5.4">
+<h3><span class="header-section-number">7.5.4</span> CFA<a href="irt.html#irt-onePLcfa" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A one-parameter logistic model can also be fit in a <a href="factor-analysis-PCA.html#cfa">CFA</a> framework, sometimes called item factor analysis.</p>
+<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="irt.html#cb419-1" aria-hidden="true" tabindex="-1"></a>onePLModel_cfa <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb419-2"><a href="irt.html#cb419-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Factor Loadings (i.e., discrimination parameters)</span></span>
+<span id="cb419-3"><a href="irt.html#cb419-3" aria-hidden="true" tabindex="-1"></a><span class="st">latent =~ loading*Item.1 + loading*Item.2 + loading*Item.3 + loading*Item.4 + loading*Item.5</span></span>
+<span id="cb419-4"><a href="irt.html#cb419-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb419-5"><a href="irt.html#cb419-5" aria-hidden="true" tabindex="-1"></a><span class="st"># Item Thresholds (i.e., difficulty parameters)</span></span>
+<span id="cb419-6"><a href="irt.html#cb419-6" aria-hidden="true" tabindex="-1"></a><span class="st">Item.1 | threshold1*t1</span></span>
+<span id="cb419-7"><a href="irt.html#cb419-7" aria-hidden="true" tabindex="-1"></a><span class="st">Item.2 | threshold2*t1</span></span>
+<span id="cb419-8"><a href="irt.html#cb419-8" aria-hidden="true" tabindex="-1"></a><span class="st">Item.3 | threshold3*t1</span></span>
+<span id="cb419-9"><a href="irt.html#cb419-9" aria-hidden="true" tabindex="-1"></a><span class="st">Item.4 | threshold4*t1</span></span>
+<span id="cb419-10"><a href="irt.html#cb419-10" aria-hidden="true" tabindex="-1"></a><span class="st">Item.5 | threshold5*t1</span></span>
+<span id="cb419-11"><a href="irt.html#cb419-11" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb419-12"><a href="irt.html#cb419-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb419-13"><a href="irt.html#cb419-13" aria-hidden="true" tabindex="-1"></a>onePLModel_cfa_fit <span class="ot">=</span> <span class="fu">sem</span>(<span class="at">model =</span> onePLModel_cfa,</span>
+<span id="cb419-14"><a href="irt.html#cb419-14" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> mydataIRT,</span>
+<span id="cb419-15"><a href="irt.html#cb419-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">&quot;Item.1&quot;</span>, <span class="st">&quot;Item.2&quot;</span>, <span class="st">&quot;Item.3&quot;</span>, <span class="st">&quot;Item.4&quot;</span>, <span class="st">&quot;Item.5&quot;</span>),</span>
+<span id="cb419-16"><a href="irt.html#cb419-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mimic =</span> <span class="st">&quot;Mplus&quot;</span>,</span>
+<span id="cb419-17"><a href="irt.html#cb419-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">estimator =</span> <span class="st">&quot;WLSMV&quot;</span>,</span>
+<span id="cb419-18"><a href="irt.html#cb419-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">std.lv =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb419-19"><a href="irt.html#cb419-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">parameterization =</span> <span class="st">&quot;theta&quot;</span>)</span>
+<span id="cb419-20"><a href="irt.html#cb419-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb419-21"><a href="irt.html#cb419-21" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(onePLModel_cfa_fit,</span>
+<span id="cb419-22"><a href="irt.html#cb419-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb419-23"><a href="irt.html#cb419-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb419-24"><a href="irt.html#cb419-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>lavaan 0.6-11 ended normally after 13 iterations
+
+  Estimator                                       DWLS
+  Optimization method                           NLMINB
+  Number of model parameters                        10
+  Number of equality constraints                     4
+                                                      
+  Number of observations                          1000
+                                                      
+Model Test User Model:
+                                              Standard      Robust
+  Test Statistic                                22.305      24.361
+  Degrees of freedom                                 9           9
+  P-value (Chi-square)                           0.008       0.004
+  Scaling correction factor                                  0.926
+  Shift parameter                                            0.283
+       simple second-order correction (WLSMV)                     
+
+Model Test Baseline Model:
+
+  Test statistic                               244.385     228.667
+  Degrees of freedom                                10          10
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.072
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.943       0.930
+  Tucker-Lewis Index (TLI)                       0.937       0.922
+                                                                  
+  Robust Comparative Fit Index (CFI)                            NA
+  Robust Tucker-Lewis Index (TLI)                               NA
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.038       0.041
+  90 Percent confidence interval - lower         0.019       0.022
+  90 Percent confidence interval - upper         0.059       0.061
+  P-value RMSEA &lt;= 0.05                          0.808       0.738
+                                                                  
+  Robust RMSEA                                                  NA
+  90 Percent confidence interval - lower                        NA
+  90 Percent confidence interval - upper                        NA
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.065       0.065
+
+Weighted Root Mean Square Residual:
+
+  WRMR                                           1.219       1.219
+
+Parameter Estimates:
+
+  Standard errors                           Robust.sem
+  Information                                 Expected
+  Information saturated (h1) model        Unstructured
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  latent =~                                                             
+    Item.1  (ldng)    0.599    0.038   15.831    0.000    0.599    0.514
+    Item.2  (ldng)    0.599    0.038   15.831    0.000    0.599    0.514
+    Item.3  (ldng)    0.599    0.038   15.831    0.000    0.599    0.514
+    Item.4  (ldng)    0.599    0.038   15.831    0.000    0.599    0.514
+    Item.5  (ldng)    0.599    0.038   15.831    0.000    0.599    0.514
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .Item.1            0.000                               0.000    0.000
+   .Item.2            0.000                               0.000    0.000
+   .Item.3            0.000                               0.000    0.000
+   .Item.4            0.000                               0.000    0.000
+   .Item.5            0.000                               0.000    0.000
+    latent            0.000                               0.000    0.000
+
+Thresholds:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    Itm.1|1 (thr1)   -1.103    0.056  -19.666    0.000   -1.103   -0.946
+    Itm.2|1 (thr2)   -0.474    0.048   -9.826    0.000   -0.474   -0.407
+    Itm.3|1 (thr3)   -0.869    0.052  -16.706    0.000   -0.869   -0.745
+    Itm.4|1 (thr4)   -0.313    0.047   -6.678    0.000   -0.313   -0.269
+    Itm.5|1 (thr5)   -1.174    0.058  -20.092    0.000   -1.174   -1.007
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .Item.1            1.000                               1.000    0.736
+   .Item.2            1.000                               1.000    0.736
+   .Item.3            1.000                               1.000    0.736
+   .Item.4            1.000                               1.000    0.736
+   .Item.5            1.000                               1.000    0.736
+    latent            1.000                               1.000    1.000
+
+Scales y*:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    Item.1            0.858                               0.858    1.000
+    Item.2            0.858                               0.858    1.000
+    Item.3            0.858                               0.858    1.000
+    Item.4            0.858                               0.858    1.000
+    Item.5            0.858                               0.858    1.000
+
+R-Square:
+                   Estimate
+    Item.1            0.264
+    Item.2            0.264
+    Item.3            0.264
+    Item.4            0.264
+    Item.5            0.264</code></pre>
+<div class="sourceCode" id="cb421"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb421-1"><a href="irt.html#cb421-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(onePLModel_cfa_fit, <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>, <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>))</span></code></pre></div>
+<pre><code> chisq     df pvalue  rmsea    cfi    tli   srmr 
+22.305  9.000  0.008  0.038  0.943  0.937  0.065 </code></pre>
+<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb423-1"><a href="irt.html#cb423-1" aria-hidden="true" tabindex="-1"></a><span class="fu">residuals</span>(onePLModel_cfa_fit, <span class="at">type =</span> <span class="st">&quot;cor&quot;</span>)</span></code></pre></div>
+<pre><code>$type
+[1] &quot;cor.bollen&quot;
+
+$cov
+       Item.1 Item.2 Item.3 Item.4 Item.5
+Item.1  0.000                            
+Item.2 -0.038  0.000                     
+Item.3  0.026  0.168  0.000              
+Item.4  0.032 -0.061  0.012  0.000       
+Item.5  0.022 -0.129  0.001 -0.104  0.000
+
+$mean
+Item.1 Item.2 Item.3 Item.4 Item.5 
+     0      0      0      0      0 
+
+$th
+Item.1|t1 Item.2|t1 Item.3|t1 Item.4|t1 Item.5|t1 
+        0         0         0         0         0 </code></pre>
+<div class="sourceCode" id="cb425"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb425-1"><a href="irt.html#cb425-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modificationindices</span>(onePLModel_cfa_fit, <span class="at">sort. =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["lhs"],"name":[1],"type":["chr"],"align":["left"]},{"label":["op"],"name":[2],"type":["chr"],"align":["left"]},{"label":["rhs"],"name":[3],"type":["chr"],"align":["left"]},{"label":["mi"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["epc"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sepc.lv"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["sepc.all"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["sepc.nox"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"Item.2","2":"~~","3":"Item.3","4":"1.400564e+01","5":"0.263602861","6":"0.263602861","7":"0.263602861","8":"0.263602861","_rn_":"36"},{"1":"Item.3","2":"~~","3":"Item.3","4":"9.121621e+00","5":"-1.114003600","6":"-1.000000000","7":"-0.735811057","8":"-0.735811057","_rn_":"13"},{"1":"Item.2","2":"~~","3":"Item.5","4":"4.939822e+00","5":"-0.190930417","6":"-0.190930417","7":"-0.190930417","8":"-0.190930417","_rn_":"38"},{"1":"Item.5","2":"~~","3":"Item.5","4":"4.900091e+00","5":"0.853503165","6":"1.000000000","7":"0.735811057","8":"0.735811057","_rn_":"15"},{"1":"Item.4","2":"~~","3":"Item.5","4":"3.367565e+00","5":"-0.154952830","6":"-0.154952830","7":"-0.154952830","8":"-0.154952830","_rn_":"41"},{"1":"Item.4","2":"~~","3":"Item.4","4":"1.934585e+00","5":"0.511958910","6":"1.000000000","7":"0.735811057","8":"0.735811057","_rn_":"14"},{"1":"Item.2","2":"~~","3":"Item.4","4":"1.663894e+00","5":"-0.094013949","6":"-0.094013949","7":"-0.094013949","8":"-0.094013949","_rn_":"37"},{"1":"Item.1","2":"~~","3":"Item.2","4":"4.729930e-01","5":"-0.056457970","6":"-0.056457970","7":"-0.056457970","8":"-0.056457970","_rn_":"32"},{"1":"Item.1","2":"~~","3":"Item.4","4":"3.723252e-01","5":"0.048372166","6":"0.048372166","7":"0.048372166","8":"0.048372166","_rn_":"34"},{"1":"Item.1","2":"~~","3":"Item.3","4":"2.201357e-01","5":"0.039431757","6":"0.039431757","7":"0.039431757","8":"0.039431757","_rn_":"33"},{"1":"Item.1","2":"~~","3":"Item.1","4":"1.979459e-01","5":"-0.168385550","6":"-1.000000000","7":"-0.735811057","8":"-0.735811057","_rn_":"11"},{"1":"Item.1","2":"~~","3":"Item.5","4":"1.293034e-01","5":"0.032346074","6":"0.032346074","7":"0.032346074","8":"0.032346074","_rn_":"35"},{"1":"Item.3","2":"~~","3":"Item.4","4":"5.591317e-02","5":"0.017878250","6":"0.017878250","7":"0.017878250","8":"0.017878250","_rn_":"39"},{"1":"Item.2","2":"~~","3":"Item.2","4":"3.291738e-03","5":"-0.021066148","6":"-1.000000000","7":"-0.735811057","8":"-0.735811057","_rn_":"12"},{"1":"Item.3","2":"~~","3":"Item.5","4":"1.577549e-04","5":"0.001088139","6":"0.001088139","7":"0.001088139","8":"0.001088139","_rn_":"40"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb426"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb426-1"><a href="irt.html#cb426-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compRelSEM</span>(onePLModel_cfa_fit)</span></code></pre></div>
+<pre><code>latent 
+ 0.467 </code></pre>
+<div class="sourceCode" id="cb428"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb428-1"><a href="irt.html#cb428-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AVE</span>(onePLModel_cfa_fit)</span></code></pre></div>
+<pre><code>latent 
+ 0.264 </code></pre>
+<div class="sourceCode" id="cb430"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb430-1"><a href="irt.html#cb430-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(onePLModel_cfa_fit,</span>
+<span id="cb430-2"><a href="irt.html#cb430-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;std&quot;</span>,</span>
+<span id="cb430-3"><a href="irt.html#cb430-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb430-4"><a href="irt.html#cb430-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">optimizeLatRes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb430-5"><a href="irt.html#cb430-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">exoVar =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb430-6"><a href="irt.html#cb430-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-320"></span>
+<img src="Book_files/figure-html/unnamed-chunk-320-1.png" alt="Item Factor Analysis Diagram of One-Parameter Logistic Model." width="100%" />
+<p class="caption">
+Figure 7.36: Item Factor Analysis Diagram of One-Parameter Logistic Model.
+</p>
+</div>
+</div>
 </div>
 <div id="irt-twoPL" class="section level2 hasAnchor" number="7.6">
 <h2><span class="header-section-number">7.6</span> Two-Parameter Logistic Model<a href="irt.html#irt-twoPL" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -2799,14 +2986,14 @@ Figure 7.35: Item Information Functions from Rasch Item Response Theory Model.
 2PL models were fit using the <code>mirt</code> package <span class="citation">(<a href="#ref-R-mirt" role="doc-biblioref">Chalmers, 2020</a>)</span>.</p>
 <div id="irt-twoPLfit" class="section level3 hasAnchor" number="7.6.1">
 <h3><span class="header-section-number">7.6.1</span> Fit Model<a href="irt.html#irt-twoPLfit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="irt.html#cb419-1" aria-hidden="true" tabindex="-1"></a>twoPLModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
-<span id="cb419-2"><a href="irt.html#cb419-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">model =</span> <span class="dv">1</span>,</span>
-<span id="cb419-3"><a href="irt.html#cb419-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">itemtype =</span> <span class="st">&quot;2PL&quot;</span>,</span>
-<span id="cb419-4"><a href="irt.html#cb419-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb431"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb431-1"><a href="irt.html#cb431-1" aria-hidden="true" tabindex="-1"></a>twoPLModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
+<span id="cb431-2"><a href="irt.html#cb431-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">model =</span> <span class="dv">1</span>,</span>
+<span id="cb431-3"><a href="irt.html#cb431-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">itemtype =</span> <span class="st">&quot;2PL&quot;</span>,</span>
+<span id="cb431-4"><a href="irt.html#cb431-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 <div id="irt-twoPLoutput" class="section level3 hasAnchor" number="7.6.2">
 <h3><span class="header-section-number">7.6.2</span> Model Summary<a href="irt.html#irt-twoPLoutput" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="irt.html#cb420-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(twoPLModel)</span></code></pre></div>
+<div class="sourceCode" id="cb432"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb432-1"><a href="irt.html#cb432-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(twoPLModel)</span></code></pre></div>
 <pre><code>          F1    h2
 Item.1 0.502 0.252
 Item.2 0.536 0.287
@@ -2821,7 +3008,7 @@ Factor correlations:
 
    F1
 F1  1</code></pre>
-<div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb422-1"><a href="irt.html#cb422-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(twoPLModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="irt.html#cb434-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(twoPLModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>$items
            a      b g u
 Item.1 0.988 -1.879 0 1
@@ -2845,55 +3032,55 @@ F1  1</code></pre>
 <div id="irt-twoPLtcc" class="section level5 hasAnchor" number="7.6.3.1.1">
 <h5><span class="header-section-number">7.6.3.1.1</span> Test Characteristic Curve<a href="irt.html#irt-twoPLtcc" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">TCC</a> plot of the expected total score as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb424-1"><a href="irt.html#cb424-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-321"></span>
-<img src="Book_files/figure-html/unnamed-chunk-321-1.png" alt="Test Characteristic Curve From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="irt.html#cb436-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-323"></span>
+<img src="Book_files/figure-html/unnamed-chunk-323-1.png" alt="Test Characteristic Curve From Two-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.36: Test Characteristic Curve From Two-Parameter Logistic Item Response Theory Model.
+Figure 7.37: Test Characteristic Curve From Two-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLtif" class="section level5 hasAnchor" number="7.6.3.1.2">
 <h5><span class="header-section-number">7.6.3.1.2</span> Test Information Function<a href="irt.html#irt-twoPLtif" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb425"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb425-1"><a href="irt.html#cb425-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-322"></span>
-<img src="Book_files/figure-html/unnamed-chunk-322-1.png" alt="Test Information Function From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb437"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb437-1"><a href="irt.html#cb437-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-324"></span>
+<img src="Book_files/figure-html/unnamed-chunk-324-1.png" alt="Test Information Function From Two-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.37: Test Information Function From Two-Parameter Logistic Item Response Theory Model.
+Figure 7.38: Test Information Function From Two-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLreliability" class="section level5 hasAnchor" number="7.6.3.1.3">
 <h5><span class="header-section-number">7.6.3.1.3</span> Test Reliability<a href="irt.html#irt-twoPLreliability" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">reliability</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb426"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb426-1"><a href="irt.html#cb426-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-323"></span>
-<img src="Book_files/figure-html/unnamed-chunk-323-1.png" alt="Test Reliability From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="irt.html#cb438-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-325"></span>
+<img src="Book_files/figure-html/unnamed-chunk-325-1.png" alt="Test Reliability From Two-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.38: Test Reliability From Two-Parameter Logistic Item Response Theory Model.
+Figure 7.39: Test Reliability From Two-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLsem" class="section level5 hasAnchor" number="7.6.3.1.4">
 <h5><span class="header-section-number">7.6.3.1.4</span> Test Standard Error of Measurement<a href="irt.html#irt-twoPLsem" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">standard error of measurement</a> (<span class="math inline">\(SEM\)</span>) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb427"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb427-1"><a href="irt.html#cb427-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-324"></span>
-<img src="Book_files/figure-html/unnamed-chunk-324-1.png" alt="Test Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb439"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb439-1"><a href="irt.html#cb439-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-326"></span>
+<img src="Book_files/figure-html/unnamed-chunk-326-1.png" alt="Test Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.39: Test Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model.
+Figure 7.40: Test Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLtifSEM" class="section level5 hasAnchor" number="7.6.3.1.5">
 <h5><span class="header-section-number">7.6.3.1.5</span> Test Information Function and Standard Errors<a href="irt.html#irt-twoPLtifSEM" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> and <a href="irt.html#irtReliability">standard error of measurement</a> (<span class="math inline">\(SEM\)</span>) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb428"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb428-1"><a href="irt.html#cb428-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-325"></span>
-<img src="Book_files/figure-html/unnamed-chunk-325-1.png" alt="Test Information Function and Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb440-1"><a href="irt.html#cb440-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-327"></span>
+<img src="Book_files/figure-html/unnamed-chunk-327-1.png" alt="Test Information Function and Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.40: Test Information Function and Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model.
+Figure 7.41: Test Information Function and Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
@@ -2903,39 +3090,220 @@ Figure 7.40: Test Information Function and Standard Error of Measurement From Tw
 <div id="irt-twoPLicc" class="section level5 hasAnchor" number="7.6.3.2.1">
 <h5><span class="header-section-number">7.6.3.2.1</span> Item Characteristic Curves<a href="irt.html#irt-twoPLicc" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">ICC</a> plot of probability of item endorsement (or getting the item correct) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb429"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb429-1"><a href="irt.html#cb429-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-326-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-326-1.png" alt="Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model." width="100%" />
-<p class="caption">
-Figure 7.41: Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model.
-</p>
-</div>
-<div class="sourceCode" id="cb430"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb430-1"><a href="irt.html#cb430-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-326-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-326-2.png" alt="Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb441"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb441-1"><a href="irt.html#cb441-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-328-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-328-1.png" alt="Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
 Figure 7.42: Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model.
+</p>
+</div>
+<div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="irt.html#cb442-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-328-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-328-2.png" alt="Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<p class="caption">
+Figure 7.43: Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLiif" class="section level5 hasAnchor" number="7.6.3.2.2">
 <h5><span class="header-section-number">7.6.3.2.2</span> Item Information Functions<a href="irt.html#irt-twoPLiif" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of item <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb431"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb431-1"><a href="irt.html#cb431-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-327-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-327-1.png" alt="Item Information Functions From Two-Parameter Logistic Item Response Theory Model." width="100%" />
-<p class="caption">
-Figure 7.43: Item Information Functions From Two-Parameter Logistic Item Response Theory Model.
-</p>
-</div>
-<div class="sourceCode" id="cb432"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb432-1"><a href="irt.html#cb432-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-327-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-327-2.png" alt="Item Information Functions From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb443"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb443-1"><a href="irt.html#cb443-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-329-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-329-1.png" alt="Item Information Functions From Two-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
 Figure 7.44: Item Information Functions From Two-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
+<div class="sourceCode" id="cb444"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb444-1"><a href="irt.html#cb444-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-329-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-329-2.png" alt="Item Information Functions From Two-Parameter Logistic Item Response Theory Model." width="100%" />
+<p class="caption">
+Figure 7.45: Item Information Functions From Two-Parameter Logistic Item Response Theory Model.
+</p>
 </div>
+</div>
+</div>
+</div>
+<div id="irt-twoPLcfa" class="section level3 hasAnchor" number="7.6.4">
+<h3><span class="header-section-number">7.6.4</span> CFA<a href="irt.html#irt-twoPLcfa" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A two-parameter logistic model can also be fit in a <a href="factor-analysis-PCA.html#cfa">CFA</a> framework, sometimes called item factor analysis.</p>
+<div class="sourceCode" id="cb445"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb445-1"><a href="irt.html#cb445-1" aria-hidden="true" tabindex="-1"></a>twoPLModel_cfa <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb445-2"><a href="irt.html#cb445-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Factor Loadings (i.e., discrimination parameters)</span></span>
+<span id="cb445-3"><a href="irt.html#cb445-3" aria-hidden="true" tabindex="-1"></a><span class="st">latent =~ loading1*Item.1 + loading2*Item.2 + loading3*Item.3 + loading4*Item.4 + loading5*Item.5</span></span>
+<span id="cb445-4"><a href="irt.html#cb445-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb445-5"><a href="irt.html#cb445-5" aria-hidden="true" tabindex="-1"></a><span class="st"># Item Thresholds (i.e., difficulty parameters)</span></span>
+<span id="cb445-6"><a href="irt.html#cb445-6" aria-hidden="true" tabindex="-1"></a><span class="st">Item.1 | threshold1*t1</span></span>
+<span id="cb445-7"><a href="irt.html#cb445-7" aria-hidden="true" tabindex="-1"></a><span class="st">Item.2 | threshold2*t1</span></span>
+<span id="cb445-8"><a href="irt.html#cb445-8" aria-hidden="true" tabindex="-1"></a><span class="st">Item.3 | threshold3*t1</span></span>
+<span id="cb445-9"><a href="irt.html#cb445-9" aria-hidden="true" tabindex="-1"></a><span class="st">Item.4 | threshold4*t1</span></span>
+<span id="cb445-10"><a href="irt.html#cb445-10" aria-hidden="true" tabindex="-1"></a><span class="st">Item.5 | threshold5*t1</span></span>
+<span id="cb445-11"><a href="irt.html#cb445-11" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb445-12"><a href="irt.html#cb445-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb445-13"><a href="irt.html#cb445-13" aria-hidden="true" tabindex="-1"></a>twoPLModel_cfa_fit <span class="ot">=</span> <span class="fu">sem</span>(<span class="at">model =</span> twoPLModel_cfa,</span>
+<span id="cb445-14"><a href="irt.html#cb445-14" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> mydataIRT,</span>
+<span id="cb445-15"><a href="irt.html#cb445-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">&quot;Item.1&quot;</span>, <span class="st">&quot;Item.2&quot;</span>, <span class="st">&quot;Item.3&quot;</span>, <span class="st">&quot;Item.4&quot;</span>, <span class="st">&quot;Item.5&quot;</span>),</span>
+<span id="cb445-16"><a href="irt.html#cb445-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mimic =</span> <span class="st">&quot;Mplus&quot;</span>,</span>
+<span id="cb445-17"><a href="irt.html#cb445-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">estimator =</span> <span class="st">&quot;WLSMV&quot;</span>,</span>
+<span id="cb445-18"><a href="irt.html#cb445-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">std.lv =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb445-19"><a href="irt.html#cb445-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">parameterization =</span> <span class="st">&quot;theta&quot;</span>)</span>
+<span id="cb445-20"><a href="irt.html#cb445-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb445-21"><a href="irt.html#cb445-21" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(twoPLModel_cfa_fit,</span>
+<span id="cb445-22"><a href="irt.html#cb445-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb445-23"><a href="irt.html#cb445-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb445-24"><a href="irt.html#cb445-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>lavaan 0.6-11 ended normally after 28 iterations
+
+  Estimator                                       DWLS
+  Optimization method                           NLMINB
+  Number of model parameters                        10
+                                                      
+  Number of observations                          1000
+                                                      
+Model Test User Model:
+                                              Standard      Robust
+  Test Statistic                                 9.131      11.688
+  Degrees of freedom                                 5           5
+  P-value (Chi-square)                           0.104       0.039
+  Scaling correction factor                                  0.784
+  Shift parameter                                            0.041
+       simple second-order correction (WLSMV)                     
+
+Model Test Baseline Model:
+
+  Test statistic                               244.385     228.667
+  Degrees of freedom                                10          10
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.072
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.982       0.969
+  Tucker-Lewis Index (TLI)                       0.965       0.939
+                                                                  
+  Robust Comparative Fit Index (CFI)                            NA
+  Robust Tucker-Lewis Index (TLI)                               NA
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.029       0.037
+  90 Percent confidence interval - lower         0.000       0.008
+  90 Percent confidence interval - upper         0.058       0.064
+  P-value RMSEA &lt;= 0.05                          0.871       0.757
+                                                                  
+  Robust RMSEA                                                  NA
+  90 Percent confidence interval - lower                        NA
+  90 Percent confidence interval - upper                        NA
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.045       0.045
+
+Weighted Root Mean Square Residual:
+
+  WRMR                                           0.780       0.780
+
+Parameter Estimates:
+
+  Standard errors                           Robust.sem
+  Information                                 Expected
+  Information saturated (h1) model        Unstructured
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  latent =~                                                             
+    Item.1  (ldn1)    0.587    0.099    5.916    0.000    0.587    0.506
+    Item.2  (ldn2)    0.627    0.099    6.338    0.000    0.627    0.531
+    Item.3  (ldn3)    0.979    0.175    5.594    0.000    0.979    0.699
+    Item.4  (ldn4)    0.479    0.076    6.325    0.000    0.479    0.432
+    Item.5  (ldn5)    0.417    0.084    4.961    0.000    0.417    0.384
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .Item.1            0.000                               0.000    0.000
+   .Item.2            0.000                               0.000    0.000
+   .Item.3            0.000                               0.000    0.000
+   .Item.4            0.000                               0.000    0.000
+   .Item.5            0.000                               0.000    0.000
+    latent            0.000                               0.000    0.000
+
+Thresholds:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    Itm.1|1 (thr1)   -1.097    0.070  -15.602    0.000   -1.097   -0.946
+    Itm.2|1 (thr2)   -0.480    0.052   -9.200    0.000   -0.480   -0.407
+    Itm.3|1 (thr3)   -1.043    0.108   -9.623    0.000   -1.043   -0.745
+    Itm.4|1 (thr4)   -0.298    0.045   -6.556    0.000   -0.298   -0.269
+    Itm.5|1 (thr5)   -1.091    0.060  -18.265    0.000   -1.091   -1.007
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .Item.1            1.000                               1.000    0.743
+   .Item.2            1.000                               1.000    0.718
+   .Item.3            1.000                               1.000    0.511
+   .Item.4            1.000                               1.000    0.813
+   .Item.5            1.000                               1.000    0.852
+    latent            1.000                               1.000    1.000
+
+Scales y*:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    Item.1            0.862                               0.862    1.000
+    Item.2            0.847                               0.847    1.000
+    Item.3            0.715                               0.715    1.000
+    Item.4            0.902                               0.902    1.000
+    Item.5            0.923                               0.923    1.000
+
+R-Square:
+                   Estimate
+    Item.1            0.257
+    Item.2            0.282
+    Item.3            0.489
+    Item.4            0.187
+    Item.5            0.148</code></pre>
+<div class="sourceCode" id="cb447"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb447-1"><a href="irt.html#cb447-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(twoPLModel_cfa_fit, <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>, <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>))</span></code></pre></div>
+<pre><code> chisq     df pvalue  rmsea    cfi    tli   srmr 
+ 9.131  5.000  0.104  0.029  0.982  0.965  0.045 </code></pre>
+<div class="sourceCode" id="cb449"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb449-1"><a href="irt.html#cb449-1" aria-hidden="true" tabindex="-1"></a><span class="fu">residuals</span>(twoPLModel_cfa_fit, <span class="at">type =</span> <span class="st">&quot;cor&quot;</span>)</span></code></pre></div>
+<pre><code>$type
+[1] &quot;cor.bollen&quot;
+
+$cov
+       Item.1 Item.2 Item.3 Item.4 Item.5
+Item.1  0.000                            
+Item.2 -0.043  0.000                     
+Item.3 -0.064  0.060  0.000              
+Item.4  0.077 -0.026 -0.026  0.000       
+Item.5  0.091 -0.069 -0.004 -0.006  0.000
+
+$mean
+Item.1 Item.2 Item.3 Item.4 Item.5 
+     0      0      0      0      0 
+
+$th
+Item.1|t1 Item.2|t1 Item.3|t1 Item.4|t1 Item.5|t1 
+        0         0         0         0         0 </code></pre>
+<div class="sourceCode" id="cb451"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb451-1"><a href="irt.html#cb451-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modificationindices</span>(twoPLModel_cfa_fit, <span class="at">sort. =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["lhs"],"name":[1],"type":["chr"],"align":["left"]},{"label":["op"],"name":[2],"type":["chr"],"align":["left"]},{"label":["rhs"],"name":[3],"type":["chr"],"align":["left"]},{"label":["mi"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["epc"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sepc.lv"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["sepc.all"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["sepc.nox"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"Item.2","2":"~~","3":"Item.3","4":"7.205624961","5":"0.45765003","6":"0.45765003","7":"0.45765003","8":"0.45765003","_rn_":"32"},{"1":"Item.1","2":"~~","3":"Item.3","4":"3.506163884","5":"-0.31126927","6":"-0.31126927","7":"-0.31126927","8":"-0.31126927","_rn_":"29"},{"1":"Item.1","2":"~~","3":"Item.4","4":"3.273413179","5":"0.16629566","6":"0.16629566","7":"0.16629566","8":"0.16629566","_rn_":"30"},{"1":"Item.1","2":"~~","3":"Item.5","4":"3.011633470","5":"0.16739824","6":"0.16739824","7":"0.16739824","8":"0.16739824","_rn_":"31"},{"1":"Item.2","2":"~~","3":"Item.5","4":"2.032951195","5":"-0.13844745","6":"-0.13844745","7":"-0.13844745","8":"-0.13844745","_rn_":"34"},{"1":"Item.1","2":"~~","3":"Item.2","4":"1.110645843","5":"-0.11809773","6":"-0.11809773","7":"-0.11809773","8":"-0.11809773","_rn_":"28"},{"1":"Item.3","2":"~~","3":"Item.4","4":"0.719653611","5":"-0.11638754","6":"-0.11638754","7":"-0.11638754","8":"-0.11638754","_rn_":"35"},{"1":"Item.2","2":"~~","3":"Item.4","4":"0.529663761","5":"-0.06731526","6":"-0.06731526","7":"-0.06731526","8":"-0.06731526","_rn_":"33"},{"1":"Item.4","2":"~~","3":"Item.5","4":"0.013390784","5":"-0.00967424","6":"-0.00967424","7":"-0.00967424","8":"-0.00967424","_rn_":"37"},{"1":"Item.3","2":"~~","3":"Item.5","4":"0.009367398","5":"-0.01317597","6":"-0.01317597","7":"-0.01317597","8":"-0.01317597","_rn_":"36"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb452"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb452-1"><a href="irt.html#cb452-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compRelSEM</span>(twoPLModel_cfa_fit)</span></code></pre></div>
+<pre><code>latent 
+ 0.468 </code></pre>
+<div class="sourceCode" id="cb454"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb454-1"><a href="irt.html#cb454-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AVE</span>(twoPLModel_cfa_fit)</span></code></pre></div>
+<pre><code>latent 
+ 0.296 </code></pre>
+<div class="sourceCode" id="cb456"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb456-1"><a href="irt.html#cb456-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(twoPLModel_cfa_fit,</span>
+<span id="cb456-2"><a href="irt.html#cb456-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;std&quot;</span>,</span>
+<span id="cb456-3"><a href="irt.html#cb456-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb456-4"><a href="irt.html#cb456-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">optimizeLatRes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb456-5"><a href="irt.html#cb456-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">exoVar =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb456-6"><a href="irt.html#cb456-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-331"></span>
+<img src="Book_files/figure-html/unnamed-chunk-331-1.png" alt="Item Factor Analysis Diagram of Two-Parameter Logistic Model." width="100%" />
+<p class="caption">
+Figure 7.46: Item Factor Analysis Diagram of Two-Parameter Logistic Model.
+</p>
 </div>
 </div>
 </div>
@@ -2946,14 +3314,14 @@ Multi-dimensional IRT models were fit using the <code>mirt</code> package <span 
 In this example, I estimate a 2PL multi-dimensional IRT model by estimating two factors.</p>
 <div id="irt-twoPLmultidimensionalFit" class="section level3 hasAnchor" number="7.7.1">
 <h3><span class="header-section-number">7.7.1</span> Fit Model<a href="irt.html#irt-twoPLmultidimensionalFit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb433"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb433-1"><a href="irt.html#cb433-1" aria-hidden="true" tabindex="-1"></a>twoPL2FactorModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
-<span id="cb433-2"><a href="irt.html#cb433-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">model =</span> <span class="dv">2</span>,</span>
-<span id="cb433-3"><a href="irt.html#cb433-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">itemtype =</span> <span class="st">&quot;2PL&quot;</span>,</span>
-<span id="cb433-4"><a href="irt.html#cb433-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb457"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb457-1"><a href="irt.html#cb457-1" aria-hidden="true" tabindex="-1"></a>twoPL2FactorModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
+<span id="cb457-2"><a href="irt.html#cb457-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">model =</span> <span class="dv">2</span>,</span>
+<span id="cb457-3"><a href="irt.html#cb457-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">itemtype =</span> <span class="st">&quot;2PL&quot;</span>,</span>
+<span id="cb457-4"><a href="irt.html#cb457-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 <div id="irt-twoPLmultidimensionalOutput" class="section level3 hasAnchor" number="7.7.2">
 <h3><span class="header-section-number">7.7.2</span> Model Summary<a href="irt.html#irt-twoPLmultidimensionalOutput" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="irt.html#cb434-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(twoPL2FactorModel)</span></code></pre></div>
+<div class="sourceCode" id="cb458"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb458-1"><a href="irt.html#cb458-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(twoPL2FactorModel)</span></code></pre></div>
 <pre><code>
 Rotation:  oblimin 
 
@@ -2973,7 +3341,7 @@ Factor correlations:
       F1    F2
 F1 1.000 0.463
 F2 0.463 1.000</code></pre>
-<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="irt.html#cb436-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(twoPL2FactorModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb460-1"><a href="irt.html#cb460-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(twoPL2FactorModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>$items
            a1     a2     d g u
 Item.1 -2.007  0.870 2.648 0 1
@@ -2996,7 +3364,7 @@ F2  0  1</code></pre>
 <p>The modified model with two factors and the original one-factor model are considered “nested” models.
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
 Model fit of nested models can be compared with a chi-square difference test.</p>
-<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="irt.html#cb438-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(twoPLModel, twoPL2FactorModel)</span></code></pre></div>
+<div class="sourceCode" id="cb462"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb462-1"><a href="irt.html#cb462-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(twoPLModel, twoPL2FactorModel)</span></code></pre></div>
 <pre><code>
 Model 1: mirt(data = mydataIRT, model = 1, itemtype = &quot;2PL&quot;, SE = TRUE)
 Model 2: mirt(data = mydataIRT, model = 2, itemtype = &quot;2PL&quot;, SE = TRUE)</code></pre>
@@ -3014,33 +3382,33 @@ Model 2: mirt(data = mydataIRT, model = 2, itemtype = &quot;2PL&quot;, SE = TRUE
 <div id="irt-twoPLmultidimensionalTCC" class="section level5 hasAnchor" number="7.7.4.1.1">
 <h5><span class="header-section-number">7.7.4.1.1</span> Test Characteristic Curve<a href="irt.html#irt-twoPLmultidimensionalTCC" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="#tcc">TCC</a> plot of the expected total score as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb440-1"><a href="irt.html#cb440-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-331"></span>
-<img src="Book_files/figure-html/unnamed-chunk-331-1.png" alt="Test Characteristic Curve From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb464-1"><a href="irt.html#cb464-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-335"></span>
+<img src="Book_files/figure-html/unnamed-chunk-335-1.png" alt="Test Characteristic Curve From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.45: Test Characteristic Curve From Two-Parameter Multi-Dimensional Item Response Theory Model.
+Figure 7.47: Test Characteristic Curve From Two-Parameter Multi-Dimensional Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLmultidimensionalTIF" class="section level5 hasAnchor" number="7.7.4.1.2">
 <h5><span class="header-section-number">7.7.4.1.2</span> Test Information Function<a href="irt.html#irt-twoPLmultidimensionalTIF" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of <a href="irt.html#irtReliability">test information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb441"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb441-1"><a href="irt.html#cb441-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-332"></span>
-<img src="Book_files/figure-html/unnamed-chunk-332-1.png" alt="Test Information Function From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb465"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb465-1"><a href="irt.html#cb465-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-336"></span>
+<img src="Book_files/figure-html/unnamed-chunk-336-1.png" alt="Test Information Function From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.46: Test Information Function From Two-Parameter Multi-Dimensional Item Response Theory Model.
+Figure 7.48: Test Information Function From Two-Parameter Multi-Dimensional Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLmultidimensionalSEM" class="section level5 hasAnchor" number="7.7.4.1.3">
 <h5><span class="header-section-number">7.7.4.1.3</span> Test Standard Error of Measurement<a href="irt.html#irt-twoPLmultidimensionalSEM" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">standard error of measurement</a> (<span class="math inline">\(SEM\)</span>) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="irt.html#cb442-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-333"></span>
-<img src="Book_files/figure-html/unnamed-chunk-333-1.png" alt="Test Standard Error of Measurement From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb466-1"><a href="irt.html#cb466-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-337"></span>
+<img src="Book_files/figure-html/unnamed-chunk-337-1.png" alt="Test Standard Error of Measurement From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.47: Test Standard Error of Measurement From Two-Parameter Multi-Dimensional Item Response Theory Model.
+Figure 7.49: Test Standard Error of Measurement From Two-Parameter Multi-Dimensional Item Response Theory Model.
 </p>
 </div>
 </div>
@@ -3050,36 +3418,36 @@ Figure 7.47: Test Standard Error of Measurement From Two-Parameter Multi-Dimensi
 <div id="irt-twoPLmultidimensionalICC" class="section level5 hasAnchor" number="7.7.4.2.1">
 <h5><span class="header-section-number">7.7.4.2.1</span> Item Characteristic Curves<a href="irt.html#irt-twoPLmultidimensionalICC" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">ICC</a> plot of probability of item endorsement (or getting the item correct) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb443"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb443-1"><a href="irt.html#cb443-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-334-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-334-1.png" alt="Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb467"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb467-1"><a href="irt.html#cb467-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-338-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-338-1.png" alt="Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.48: Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model.
+Figure 7.50: Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model.
 </p>
 </div>
-<div class="sourceCode" id="cb444"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb444-1"><a href="irt.html#cb444-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-334-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-334-2.png" alt="Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb468"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb468-1"><a href="irt.html#cb468-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-338-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-338-2.png" alt="Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.49: Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model.
+Figure 7.51: Item Characteristic Curves From Two-Parameter Multi-Dimensional Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-twoPLmultidimensionalIIF" class="section level5 hasAnchor" number="7.7.4.2.2">
 <h5><span class="header-section-number">7.7.4.2.2</span> Item Information Functions<a href="irt.html#irt-twoPLmultidimensionalIIF" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of item <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb445"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb445-1"><a href="irt.html#cb445-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-335-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-335-1.png" alt="Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb469-1"><a href="irt.html#cb469-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-339-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-339-1.png" alt="Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.50: Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model.
+Figure 7.52: Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model.
 </p>
 </div>
-<div class="sourceCode" id="cb446"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb446-1"><a href="irt.html#cb446-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-335-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-335-2.png" alt="Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb470-1"><a href="irt.html#cb470-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(twoPL2FactorModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-339-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-339-2.png" alt="Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.51: Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model.
+Figure 7.53: Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model.
 </p>
 </div>
 </div>
@@ -3092,14 +3460,14 @@ Figure 7.51: Item Information Functions From Two-Parameter Multi-Dimensional Ite
 3PL models were fit using the <code>mirt</code> package <span class="citation">(<a href="#ref-R-mirt" role="doc-biblioref">Chalmers, 2020</a>)</span>.</p>
 <div id="irt-threePLfit" class="section level3 hasAnchor" number="7.8.1">
 <h3><span class="header-section-number">7.8.1</span> Fit Model<a href="irt.html#irt-threePLfit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb447"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb447-1"><a href="irt.html#cb447-1" aria-hidden="true" tabindex="-1"></a>threePLModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
-<span id="cb447-2"><a href="irt.html#cb447-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">model =</span> <span class="dv">1</span>,</span>
-<span id="cb447-3"><a href="irt.html#cb447-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">itemtype =</span> <span class="st">&quot;3PL&quot;</span>,</span>
-<span id="cb447-4"><a href="irt.html#cb447-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb471-1"><a href="irt.html#cb471-1" aria-hidden="true" tabindex="-1"></a>threePLModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
+<span id="cb471-2"><a href="irt.html#cb471-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">model =</span> <span class="dv">1</span>,</span>
+<span id="cb471-3"><a href="irt.html#cb471-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">itemtype =</span> <span class="st">&quot;3PL&quot;</span>,</span>
+<span id="cb471-4"><a href="irt.html#cb471-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 <div id="irt-threePLoutput" class="section level3 hasAnchor" number="7.8.2">
 <h3><span class="header-section-number">7.8.2</span> Model Summary<a href="irt.html#irt-threePLoutput" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb448"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb448-1"><a href="irt.html#cb448-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(threePLModel)</span></code></pre></div>
+<div class="sourceCode" id="cb472"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb472-1"><a href="irt.html#cb472-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(threePLModel)</span></code></pre></div>
 <pre><code>          F1    h2
 Item.1 0.509 0.259
 Item.2 0.750 0.562
@@ -3114,7 +3482,7 @@ Factor correlations:
 
    F1
 F1  1</code></pre>
-<div class="sourceCode" id="cb450"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb450-1"><a href="irt.html#cb450-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(threePLModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb474"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb474-1"><a href="irt.html#cb474-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(threePLModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>$items
            a      b     g u
 Item.1 1.007 -1.853 0.000 1
@@ -3138,55 +3506,55 @@ F1  1</code></pre>
 <div id="irt-threePLtcc" class="section level5 hasAnchor" number="7.8.3.1.1">
 <h5><span class="header-section-number">7.8.3.1.1</span> Test Characteristic Curve<a href="irt.html#irt-threePLtcc" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">TCC</a> plot of the expected total score as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb452"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb452-1"><a href="irt.html#cb452-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-338"></span>
-<img src="Book_files/figure-html/unnamed-chunk-338-1.png" alt="Test Characteristic Curve From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb476"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb476-1"><a href="irt.html#cb476-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-342"></span>
+<img src="Book_files/figure-html/unnamed-chunk-342-1.png" alt="Test Characteristic Curve From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.52: Test Characteristic Curve From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.54: Test Characteristic Curve From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-threePLtif" class="section level5 hasAnchor" number="7.8.3.1.2">
 <h5><span class="header-section-number">7.8.3.1.2</span> Test Information Function<a href="irt.html#irt-threePLtif" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb453"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb453-1"><a href="irt.html#cb453-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-339"></span>
-<img src="Book_files/figure-html/unnamed-chunk-339-1.png" alt="Test Information Function From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb477"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb477-1"><a href="irt.html#cb477-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-343"></span>
+<img src="Book_files/figure-html/unnamed-chunk-343-1.png" alt="Test Information Function From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.53: Test Information Function From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.55: Test Information Function From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-threePLreliability" class="section level5 hasAnchor" number="7.8.3.1.3">
 <h5><span class="header-section-number">7.8.3.1.3</span> Test Reliability<a href="irt.html#irt-threePLreliability" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="(#irtReliability)">reliability</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb454"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb454-1"><a href="irt.html#cb454-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-340"></span>
-<img src="Book_files/figure-html/unnamed-chunk-340-1.png" alt="Test Reliability From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb478-1"><a href="irt.html#cb478-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-344"></span>
+<img src="Book_files/figure-html/unnamed-chunk-344-1.png" alt="Test Reliability From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.54: Test Reliability From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.56: Test Reliability From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-threePLsem" class="section level5 hasAnchor" number="7.8.3.1.4">
 <h5><span class="header-section-number">7.8.3.1.4</span> Test Standard Error of Measurement<a href="irt.html#irt-threePLsem" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="(#irtReliability)">standard error of measurement</a> (<span class="math inline">\(SEM\)</span>) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb455"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb455-1"><a href="irt.html#cb455-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-341"></span>
-<img src="Book_files/figure-html/unnamed-chunk-341-1.png" alt="Test Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb479"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb479-1"><a href="irt.html#cb479-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-345"></span>
+<img src="Book_files/figure-html/unnamed-chunk-345-1.png" alt="Test Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.55: Test Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.57: Test Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-threePLtifSEM" class="section level5 hasAnchor" number="7.8.3.1.5">
 <h5><span class="header-section-number">7.8.3.1.5</span> Test Information Function and Standard Errors<a href="irt.html#irt-threePLtifSEM" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> and <a href="irt.html#irtReliability">standard error of measurement</a> (<span class="math inline">\(SEM\)</span>) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb456"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb456-1"><a href="irt.html#cb456-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-342"></span>
-<img src="Book_files/figure-html/unnamed-chunk-342-1.png" alt="Test Information Function and Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb480-1"><a href="irt.html#cb480-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-346"></span>
+<img src="Book_files/figure-html/unnamed-chunk-346-1.png" alt="Test Information Function and Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.56: Test Information Function and Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.58: Test Information Function and Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
@@ -3196,36 +3564,36 @@ Figure 7.56: Test Information Function and Standard Error of Measurement From Th
 <div id="irt-threePLicc" class="section level5 hasAnchor" number="7.8.3.2.1">
 <h5><span class="header-section-number">7.8.3.2.1</span> Item Characteristic Curves<a href="irt.html#irt-threePLicc" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">ICC</a> plot of probability of item endorsement (or getting the item correct) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb457"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb457-1"><a href="irt.html#cb457-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-343-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-343-1.png" alt="Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb481"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb481-1"><a href="irt.html#cb481-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-347-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-347-1.png" alt="Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.57: Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.59: Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
-<div class="sourceCode" id="cb458"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb458-1"><a href="irt.html#cb458-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-343-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-343-2.png" alt="Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb482-1"><a href="irt.html#cb482-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-347-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-347-2.png" alt="Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.58: Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.60: Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-threePLiif" class="section level5 hasAnchor" number="7.8.3.2.2">
 <h5><span class="header-section-number">7.8.3.2.2</span> Item Information Functions<a href="irt.html#irt-threePLiif" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of item <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb459"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb459-1"><a href="irt.html#cb459-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-344-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-344-1.png" alt="Item Information Functions From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb483"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb483-1"><a href="irt.html#cb483-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-348-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-348-1.png" alt="Item Information Functions From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.59: Item Information Functions From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.61: Item Information Functions From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
-<div class="sourceCode" id="cb460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb460-1"><a href="irt.html#cb460-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-344-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-344-2.png" alt="Item Information Functions From Three-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="irt.html#cb484-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(threePLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-348-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-348-2.png" alt="Item Information Functions From Three-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.60: Item Information Functions From Three-Parameter Logistic Item Response Theory Model.
+Figure 7.62: Item Information Functions From Three-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
@@ -3238,15 +3606,15 @@ Figure 7.60: Item Information Functions From Three-Parameter Logistic Item Respo
 4PL models were fit using the <code>mirt</code> package <span class="citation">(<a href="#ref-R-mirt" role="doc-biblioref">Chalmers, 2020</a>)</span>.</p>
 <div id="irt-fourPLfit" class="section level3 hasAnchor" number="7.9.1">
 <h3><span class="header-section-number">7.9.1</span> Fit Model<a href="irt.html#irt-fourPLfit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb461"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb461-1"><a href="irt.html#cb461-1" aria-hidden="true" tabindex="-1"></a>fourPLModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
-<span id="cb461-2"><a href="irt.html#cb461-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="dv">1</span>,</span>
-<span id="cb461-3"><a href="irt.html#cb461-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">itemtype =</span> <span class="st">&quot;4PL&quot;</span>,</span>
-<span id="cb461-4"><a href="irt.html#cb461-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">SE =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb461-5"><a href="irt.html#cb461-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">technical =</span> <span class="fu">list</span>(<span class="at">NCYCLES =</span> <span class="dv">2000</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb485"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb485-1"><a href="irt.html#cb485-1" aria-hidden="true" tabindex="-1"></a>fourPLModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> mydataIRT,</span>
+<span id="cb485-2"><a href="irt.html#cb485-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="dv">1</span>,</span>
+<span id="cb485-3"><a href="irt.html#cb485-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">itemtype =</span> <span class="st">&quot;4PL&quot;</span>,</span>
+<span id="cb485-4"><a href="irt.html#cb485-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">SE =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb485-5"><a href="irt.html#cb485-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">technical =</span> <span class="fu">list</span>(<span class="at">NCYCLES =</span> <span class="dv">2000</span>))</span></code></pre></div>
 </div>
 <div id="irt-fourPLoutput" class="section level3 hasAnchor" number="7.9.2">
 <h3><span class="header-section-number">7.9.2</span> Model Summary<a href="irt.html#irt-fourPLoutput" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb462"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb462-1"><a href="irt.html#cb462-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fourPLModel)</span></code></pre></div>
+<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="irt.html#cb486-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fourPLModel)</span></code></pre></div>
 <pre><code>          F1    h2
 Item.1 0.834 0.695
 Item.2 0.981 0.961
@@ -3261,7 +3629,7 @@ Factor correlations:
 
    F1
 F1  1</code></pre>
-<div class="sourceCode" id="cb464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb464-1"><a href="irt.html#cb464-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fourPLModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="irt.html#cb488-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fourPLModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>$items
            a      b     g     u
 Item.1 2.570 -1.619 0.000 0.911
@@ -3285,55 +3653,55 @@ F1  1</code></pre>
 <div id="irt-fourPLtcc" class="section level5 hasAnchor" number="7.9.3.1.1">
 <h5><span class="header-section-number">7.9.3.1.1</span> Test Characteristic Curve<a href="irt.html#irt-fourPLtcc" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">TCC</a> plot of the expected total score as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb466-1"><a href="irt.html#cb466-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-347"></span>
-<img src="Book_files/figure-html/unnamed-chunk-347-1.png" alt="Test Characteristic Curve From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="irt.html#cb490-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-351"></span>
+<img src="Book_files/figure-html/unnamed-chunk-351-1.png" alt="Test Characteristic Curve From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.61: Test Characteristic Curve From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.63: Test Characteristic Curve From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-fourPLtif" class="section level5 hasAnchor" number="7.9.3.1.2">
 <h5><span class="header-section-number">7.9.3.1.2</span> Test Information Function<a href="irt.html#irt-fourPLtif" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb467"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb467-1"><a href="irt.html#cb467-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-348"></span>
-<img src="Book_files/figure-html/unnamed-chunk-348-1.png" alt="Test Information Function From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb491"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb491-1"><a href="irt.html#cb491-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-352"></span>
+<img src="Book_files/figure-html/unnamed-chunk-352-1.png" alt="Test Information Function From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.62: Test Information Function From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.64: Test Information Function From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-fourPLreliability" class="section level5 hasAnchor" number="7.9.3.1.3">
 <h5><span class="header-section-number">7.9.3.1.3</span> Test Reliability<a href="irt.html#irt-fourPLreliability" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">reliability</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb468"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb468-1"><a href="irt.html#cb468-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-349"></span>
-<img src="Book_files/figure-html/unnamed-chunk-349-1.png" alt="Test Reliability From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb492-1"><a href="irt.html#cb492-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-353"></span>
+<img src="Book_files/figure-html/unnamed-chunk-353-1.png" alt="Test Reliability From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.63: Test Reliability From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.65: Test Reliability From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-fourPLsem" class="section level5 hasAnchor" number="7.9.3.1.4">
 <h5><span class="header-section-number">7.9.3.1.4</span> Test Standard Error of Measurement<a href="irt.html#irt-fourPLsem" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">standard error of measurement</a> (<span class="math inline">\(SEM\)</span>) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb469-1"><a href="irt.html#cb469-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-350"></span>
-<img src="Book_files/figure-html/unnamed-chunk-350-1.png" alt="Test Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb493"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb493-1"><a href="irt.html#cb493-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-354"></span>
+<img src="Book_files/figure-html/unnamed-chunk-354-1.png" alt="Test Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.64: Test Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.66: Test Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-fourPLtifSEM" class="section level5 hasAnchor" number="7.9.3.1.5">
 <h5><span class="header-section-number">7.9.3.1.5</span> Test Information Function and Standard Errors<a href="irt.html#irt-fourPLtifSEM" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> and <a href="irt.html#irtReliability">standard error of measurement</a> (<span class="math inline">\(SEM\)</span>) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb470-1"><a href="irt.html#cb470-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-351"></span>
-<img src="Book_files/figure-html/unnamed-chunk-351-1.png" alt="Test Information Function and Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="irt.html#cb494-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-355"></span>
+<img src="Book_files/figure-html/unnamed-chunk-355-1.png" alt="Test Information Function and Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.65: Test Information Function and Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.67: Test Information Function and Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
@@ -3343,36 +3711,36 @@ Figure 7.65: Test Information Function and Standard Error of Measurement From Fo
 <div id="irt-fourPLicc" class="section level5 hasAnchor" number="7.9.3.2.1">
 <h5><span class="header-section-number">7.9.3.2.1</span> Item Characteristic Curves<a href="irt.html#irt-fourPLicc" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">ICC</a> plot of probability of item endorsement (or getting the item correct) as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb471-1"><a href="irt.html#cb471-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-352-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-352-1.png" alt="Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb495"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb495-1"><a href="irt.html#cb495-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-356-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-356-1.png" alt="Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.66: Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.68: Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
-<div class="sourceCode" id="cb472"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb472-1"><a href="irt.html#cb472-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-352-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-352-2.png" alt="Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb496-1"><a href="irt.html#cb496-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-356-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-356-2.png" alt="Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.67: Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.69: Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
 <div id="irt-fourPLiif" class="section level5 hasAnchor" number="7.9.3.2.2">
 <h5><span class="header-section-number">7.9.3.2.2</span> Item Information Functions<a href="irt.html#irt-fourPLiif" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of item <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb473-1"><a href="irt.html#cb473-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-353-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-353-1.png" alt="Item Information Functions From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb497"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb497-1"><a href="irt.html#cb497-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-357-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-357-1.png" alt="Item Information Functions From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.68: Item Information Functions From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.70: Item Information Functions From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
-<div class="sourceCode" id="cb474"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb474-1"><a href="irt.html#cb474-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-353-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-353-2.png" alt="Item Information Functions From Four-Parameter Logistic Item Response Theory Model." width="100%" />
+<div class="sourceCode" id="cb498"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb498-1"><a href="irt.html#cb498-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fourPLModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-357-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-357-2.png" alt="Item Information Functions From Four-Parameter Logistic Item Response Theory Model." width="100%" />
 <p class="caption">
-Figure 7.69: Item Information Functions From Four-Parameter Logistic Item Response Theory Model.
+Figure 7.71: Item Information Functions From Four-Parameter Logistic Item Response Theory Model.
 </p>
 </div>
 </div>
@@ -3386,14 +3754,14 @@ It estimates four parameters for each item: <a href="irt.html#itemDifficulty">di
 GRM models were fit using the <code>mirt</code> package <span class="citation">(<a href="#ref-R-mirt" role="doc-biblioref">Chalmers, 2020</a>)</span>.</p>
 <div id="irt-gradedResponseModelFit" class="section level3 hasAnchor" number="7.10.1">
 <h3><span class="header-section-number">7.10.1</span> Fit Model<a href="irt.html#irt-gradedResponseModelFit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb475"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb475-1"><a href="irt.html#cb475-1" aria-hidden="true" tabindex="-1"></a>gradedResponseModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> Science,</span>
-<span id="cb475-2"><a href="irt.html#cb475-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">model =</span> <span class="dv">1</span>,</span>
-<span id="cb475-3"><a href="irt.html#cb475-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">itemtype =</span> <span class="st">&quot;graded&quot;</span>,</span>
-<span id="cb475-4"><a href="irt.html#cb475-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb499"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb499-1"><a href="irt.html#cb499-1" aria-hidden="true" tabindex="-1"></a>gradedResponseModel <span class="ot">&lt;-</span> <span class="fu">mirt</span>(<span class="at">data =</span> Science,</span>
+<span id="cb499-2"><a href="irt.html#cb499-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">model =</span> <span class="dv">1</span>,</span>
+<span id="cb499-3"><a href="irt.html#cb499-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">itemtype =</span> <span class="st">&quot;graded&quot;</span>,</span>
+<span id="cb499-4"><a href="irt.html#cb499-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">SE =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 <div id="irt-gradedResponseModelOutput" class="section level3 hasAnchor" number="7.10.2">
 <h3><span class="header-section-number">7.10.2</span> Model Summary<a href="irt.html#irt-gradedResponseModelOutput" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb476"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb476-1"><a href="irt.html#cb476-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gradedResponseModel)</span></code></pre></div>
+<div class="sourceCode" id="cb500"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb500-1"><a href="irt.html#cb500-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gradedResponseModel)</span></code></pre></div>
 <pre><code>           F1    h2
 Comfort 0.522 0.273
 Work    0.584 0.342
@@ -3407,7 +3775,7 @@ Factor correlations:
 
    F1
 F1  1</code></pre>
-<div class="sourceCode" id="cb478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb478-1"><a href="irt.html#cb478-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(gradedResponseModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="irt.html#cb502-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(gradedResponseModel, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>$items
             a     b1     b2    b3
 Comfort 1.042 -4.669 -2.534 1.407
@@ -3430,55 +3798,55 @@ F1  1</code></pre>
 <div id="irt-gradedResponseModelTCC" class="section level5 hasAnchor" number="7.10.3.1.1">
 <h5><span class="header-section-number">7.10.3.1.1</span> Test Characteristic Curve<a href="irt.html#irt-gradedResponseModelTCC" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">TCC</a> plot of the expected total score as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb480-1"><a href="irt.html#cb480-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-356"></span>
-<img src="Book_files/figure-html/unnamed-chunk-356-1.png" alt="Test Characteristic Curve From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb504-1"><a href="irt.html#cb504-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;score&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-360"></span>
+<img src="Book_files/figure-html/unnamed-chunk-360-1.png" alt="Test Characteristic Curve From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.70: Test Characteristic Curve From Graded Response Model.
+Figure 7.72: Test Characteristic Curve From Graded Response Model.
 </p>
 </div>
 </div>
 <div id="irt-gradedResponseModelTIF" class="section level5 hasAnchor" number="7.10.3.1.2">
 <h5><span class="header-section-number">7.10.3.1.2</span> Test Information Function<a href="irt.html#irt-gradedResponseModelTIF" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb481"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb481-1"><a href="irt.html#cb481-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-357"></span>
-<img src="Book_files/figure-html/unnamed-chunk-357-1.png" alt="Test Information Function From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb505"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb505-1"><a href="irt.html#cb505-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;info&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-361"></span>
+<img src="Book_files/figure-html/unnamed-chunk-361-1.png" alt="Test Information Function From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.71: Test Information Function From Graded Response Model.
+Figure 7.73: Test Information Function From Graded Response Model.
 </p>
 </div>
 </div>
 <div id="irt-gradedResponseModelReliability" class="section level5 hasAnchor" number="7.10.3.1.3">
 <h5><span class="header-section-number">7.10.3.1.3</span> Test Reliability<a href="irt.html#irt-gradedResponseModelReliability" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">reliability</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb482-1"><a href="irt.html#cb482-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-358"></span>
-<img src="Book_files/figure-html/unnamed-chunk-358-1.png" alt="Test Reliability From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb506"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb506-1"><a href="irt.html#cb506-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;rxx&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-362"></span>
+<img src="Book_files/figure-html/unnamed-chunk-362-1.png" alt="Test Reliability From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.72: Test Reliability From Graded Response Model.
+Figure 7.74: Test Reliability From Graded Response Model.
 </p>
 </div>
 </div>
 <div id="irt-gradedResponseModelSEM" class="section level5 hasAnchor" number="7.10.3.1.4">
 <h5><span class="header-section-number">7.10.3.1.4</span> Test Standard Error of Measurement<a href="irt.html#irt-gradedResponseModelSEM" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">standard error of measurement</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb483"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb483-1"><a href="irt.html#cb483-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-359"></span>
-<img src="Book_files/figure-html/unnamed-chunk-359-1.png" alt="Test Standard Error of Measurement From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb507"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb507-1"><a href="irt.html#cb507-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;SE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-363"></span>
+<img src="Book_files/figure-html/unnamed-chunk-363-1.png" alt="Test Standard Error of Measurement From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.73: Test Standard Error of Measurement From Graded Response Model.
+Figure 7.75: Test Standard Error of Measurement From Graded Response Model.
 </p>
 </div>
 </div>
 <div id="irt-gradedResponseModelTIFsem" class="section level5 hasAnchor" number="7.10.3.1.5">
 <h5><span class="header-section-number">7.10.3.1.5</span> Test Information Function and Standard Errors<a href="irt.html#irt-gradedResponseModelTIFsem" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of test <a href="irt.html#irtReliability">information</a> and <a href="irt.html#irtReliability">standard error of measurement</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="irt.html#cb484-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-360"></span>
-<img src="Book_files/figure-html/unnamed-chunk-360-1.png" alt="Test Information Function and Standard Error of Measurement From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb508"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb508-1"><a href="irt.html#cb508-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-364"></span>
+<img src="Book_files/figure-html/unnamed-chunk-364-1.png" alt="Test Information Function and Standard Error of Measurement From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.74: Test Information Function and Standard Error of Measurement From Graded Response Model.
+Figure 7.76: Test Information Function and Standard Error of Measurement From Graded Response Model.
 </p>
 </div>
 </div>
@@ -3488,87 +3856,87 @@ Figure 7.74: Test Information Function and Standard Error of Measurement From Gr
 <div id="irt-gradedResponseModelICC" class="section level5 hasAnchor" number="7.10.3.2.1">
 <h5><span class="header-section-number">7.10.3.2.1</span> Item Characteristic Curves<a href="irt.html#irt-gradedResponseModelICC" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p><a href="irt.html#icc">ICC</a> plot of expected item score as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb485"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb485-1"><a href="irt.html#cb485-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-361-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-361-1.png" alt="Item Characteristic Curves From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb509"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb509-1"><a href="irt.html#cb509-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-365-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-365-1.png" alt="Item Characteristic Curves From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.75: Item Characteristic Curves From Graded Response Model.
+Figure 7.77: Item Characteristic Curves From Graded Response Model.
 </p>
 </div>
-<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="irt.html#cb486-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-361-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-361-2.png" alt="Item Characteristic Curves From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb510"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb510-1"><a href="irt.html#cb510-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;itemscore&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-365-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-365-2.png" alt="Item Characteristic Curves From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.76: Item Characteristic Curves From Graded Response Model.
+Figure 7.78: Item Characteristic Curves From Graded Response Model.
 </p>
 </div>
 </div>
 <div id="irt-gradedResponseModelIIF" class="section level5 hasAnchor" number="7.10.3.2.2">
 <h5><span class="header-section-number">7.10.3.2.2</span> Item Information Functions<a href="irt.html#irt-gradedResponseModelIIF" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of item <a href="irt.html#irtReliability">information</a> as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb487"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb487-1"><a href="irt.html#cb487-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-362-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-362-1.png" alt="Item Information Functions From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb511"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb511-1"><a href="irt.html#cb511-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-366-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-366-1.png" alt="Item Information Functions From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.77: Item Information Functions From Graded Response Model.
+Figure 7.79: Item Information Functions From Graded Response Model.
 </p>
 </div>
-<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="irt.html#cb488-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-362-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-362-2.png" alt="Item Information Functions From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb512"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb512-1"><a href="irt.html#cb512-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">facet_items =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-366-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-366-2.png" alt="Item Information Functions From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.78: Item Information Functions From Graded Response Model.
+Figure 7.80: Item Information Functions From Graded Response Model.
 </p>
 </div>
 </div>
 <div id="irt-gradedResponseModelIRCCC" class="section level5 hasAnchor" number="7.10.3.2.3">
 <h5><span class="header-section-number">7.10.3.2.3</span> Item Response Category Characteristic Curves<a href="irt.html#irt-gradedResponseModelIRCCC" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Plot of probability of item threshold endorsement as a function of a person’s level on the latent construct (theta; <span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb489"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb489-1"><a href="irt.html#cb489-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;trace&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-363"></span>
-<img src="Book_files/figure-html/unnamed-chunk-363-1.png" alt="Item Response Category Characteristic Curves From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb513-1"><a href="irt.html#cb513-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gradedResponseModel, <span class="at">type =</span> <span class="st">&quot;trace&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-367"></span>
+<img src="Book_files/figure-html/unnamed-chunk-367-1.png" alt="Item Response Category Characteristic Curves From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.79: Item Response Category Characteristic Curves From Graded Response Model.
+Figure 7.81: Item Response Category Characteristic Curves From Graded Response Model.
 </p>
 </div>
 </div>
 <div id="irt-gradedResponseModelIOCC" class="section level5 hasAnchor" number="7.10.3.2.4">
 <h5><span class="header-section-number">7.10.3.2.4</span> Item Boundary Characteristic Curves (aka Item Operation Characteristic Curves)<a href="irt.html#irt-gradedResponseModelIOCC" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>This plot of item boundary characteristic curves was adapted from an example by Aiden Loe: <a href="https://aidenloe.github.io/irtplots.html" class="uri">https://aidenloe.github.io/irtplots.html</a></p>
-<div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="irt.html#cb490-1" aria-hidden="true" tabindex="-1"></a>modelCoefficients <span class="ot">&lt;-</span> <span class="fu">coef</span>(gradedResponseModel, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>items</span>
-<span id="cb490-2"><a href="irt.html#cb490-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb490-3"><a href="irt.html#cb490-3" aria-hidden="true" tabindex="-1"></a>twopl <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, theta){ <span class="co"># 2pl function</span></span>
-<span id="cb490-4"><a href="irt.html#cb490-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a <span class="sc">*</span> (theta <span class="sc">-</span> b))))}</span>
-<span id="cb490-5"><a href="irt.html#cb490-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb490-6"><a href="irt.html#cb490-6" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">6</span>, <span class="at">to =</span> <span class="dv">6</span>, <span class="at">by =</span> .<span class="dv">1</span>)</span>
-<span id="cb490-7"><a href="irt.html#cb490-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb490-8"><a href="irt.html#cb490-8" aria-hidden="true" tabindex="-1"></a>difficultyThresholds <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">&quot;b&quot;</span>, <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">2</span>]], <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb490-9"><a href="irt.html#cb490-9" aria-hidden="true" tabindex="-1"></a>numberDifficultyThresholds <span class="ot">&lt;-</span> <span class="fu">length</span>(difficultyThresholds)</span>
-<span id="cb490-10"><a href="irt.html#cb490-10" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">1</span>]]</span>
-<span id="cb490-11"><a href="irt.html#cb490-11" aria-hidden="true" tabindex="-1"></a>numberOfItems <span class="ot">&lt;-</span> <span class="fu">length</span>(items)</span>
-<span id="cb490-12"><a href="irt.html#cb490-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb490-13"><a href="irt.html#cb490-13" aria-hidden="true" tabindex="-1"></a>lst <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>numberOfItems, <span class="cf">function</span>(x) <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> numberDifficultyThresholds <span class="sc">+</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="fu">length</span>(theta), <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;theta&quot;</span>, difficultyThresholds)))))</span>
-<span id="cb490-14"><a href="irt.html#cb490-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb490-15"><a href="irt.html#cb490-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberOfItems){</span>
-<span id="cb490-16"><a href="irt.html#cb490-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberDifficultyThresholds){</span>
-<span id="cb490-17"><a href="irt.html#cb490-17" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,<span class="dv">1</span>] <span class="ot">&lt;-</span> theta</span>
-<span id="cb490-18"><a href="irt.html#cb490-18" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,j <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">twopl</span>(<span class="at">a =</span> modelCoefficients[i,<span class="dv">1</span>], <span class="at">b =</span> modelCoefficients[i,j <span class="sc">+</span> <span class="dv">1</span>], <span class="at">theta =</span> theta)</span>
-<span id="cb490-19"><a href="irt.html#cb490-19" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb490-20"><a href="irt.html#cb490-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb490-21"><a href="irt.html#cb490-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb490-22"><a href="irt.html#cb490-22" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lst) <span class="ot">&lt;-</span> items</span>
-<span id="cb490-23"><a href="irt.html#cb490-23" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(lst, <span class="at">.id =</span> <span class="st">&quot;item&quot;</span>)</span>
-<span id="cb490-24"><a href="irt.html#cb490-24" aria-hidden="true" tabindex="-1"></a>longer_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(dat, <span class="at">cols =</span> <span class="fu">all_of</span>(difficultyThresholds))</span>
-<span id="cb490-25"><a href="irt.html#cb490-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb490-26"><a href="irt.html#cb490-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(longer_data, <span class="fu">aes</span>(theta, value, <span class="at">group =</span> <span class="fu">interaction</span>(item, name), <span class="at">color =</span> item)) <span class="sc">+</span></span>
-<span id="cb490-27"><a href="irt.html#cb490-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb490-28"><a href="irt.html#cb490-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Probability of Endorsing an Item Response Category that is Higher than the Boundary&quot;</span>) <span class="sc">+</span></span>
-<span id="cb490-29"><a href="irt.html#cb490-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb490-30"><a href="irt.html#cb490-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-364"></span>
-<img src="Book_files/figure-html/unnamed-chunk-364-1.png" alt="Item Boundary Category Characteristic Curves From Graded Response Model." width="100%" />
+<div class="sourceCode" id="cb514"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb514-1"><a href="irt.html#cb514-1" aria-hidden="true" tabindex="-1"></a>modelCoefficients <span class="ot">&lt;-</span> <span class="fu">coef</span>(gradedResponseModel, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>items</span>
+<span id="cb514-2"><a href="irt.html#cb514-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-3"><a href="irt.html#cb514-3" aria-hidden="true" tabindex="-1"></a>twopl <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, theta){ <span class="co"># 2pl function</span></span>
+<span id="cb514-4"><a href="irt.html#cb514-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a <span class="sc">*</span> (theta <span class="sc">-</span> b))))}</span>
+<span id="cb514-5"><a href="irt.html#cb514-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-6"><a href="irt.html#cb514-6" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">6</span>, <span class="at">to =</span> <span class="dv">6</span>, <span class="at">by =</span> .<span class="dv">1</span>)</span>
+<span id="cb514-7"><a href="irt.html#cb514-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-8"><a href="irt.html#cb514-8" aria-hidden="true" tabindex="-1"></a>difficultyThresholds <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">&quot;b&quot;</span>, <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">2</span>]], <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb514-9"><a href="irt.html#cb514-9" aria-hidden="true" tabindex="-1"></a>numberDifficultyThresholds <span class="ot">&lt;-</span> <span class="fu">length</span>(difficultyThresholds)</span>
+<span id="cb514-10"><a href="irt.html#cb514-10" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">1</span>]]</span>
+<span id="cb514-11"><a href="irt.html#cb514-11" aria-hidden="true" tabindex="-1"></a>numberOfItems <span class="ot">&lt;-</span> <span class="fu">length</span>(items)</span>
+<span id="cb514-12"><a href="irt.html#cb514-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-13"><a href="irt.html#cb514-13" aria-hidden="true" tabindex="-1"></a>lst <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>numberOfItems, <span class="cf">function</span>(x) <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> numberDifficultyThresholds <span class="sc">+</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="fu">length</span>(theta), <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;theta&quot;</span>, difficultyThresholds)))))</span>
+<span id="cb514-14"><a href="irt.html#cb514-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-15"><a href="irt.html#cb514-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberOfItems){</span>
+<span id="cb514-16"><a href="irt.html#cb514-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberDifficultyThresholds){</span>
+<span id="cb514-17"><a href="irt.html#cb514-17" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,<span class="dv">1</span>] <span class="ot">&lt;-</span> theta</span>
+<span id="cb514-18"><a href="irt.html#cb514-18" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,j <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">twopl</span>(<span class="at">a =</span> modelCoefficients[i,<span class="dv">1</span>], <span class="at">b =</span> modelCoefficients[i,j <span class="sc">+</span> <span class="dv">1</span>], <span class="at">theta =</span> theta)</span>
+<span id="cb514-19"><a href="irt.html#cb514-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb514-20"><a href="irt.html#cb514-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb514-21"><a href="irt.html#cb514-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-22"><a href="irt.html#cb514-22" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lst) <span class="ot">&lt;-</span> items</span>
+<span id="cb514-23"><a href="irt.html#cb514-23" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(lst, <span class="at">.id =</span> <span class="st">&quot;item&quot;</span>)</span>
+<span id="cb514-24"><a href="irt.html#cb514-24" aria-hidden="true" tabindex="-1"></a>longer_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(dat, <span class="at">cols =</span> <span class="fu">all_of</span>(difficultyThresholds))</span>
+<span id="cb514-25"><a href="irt.html#cb514-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb514-26"><a href="irt.html#cb514-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(longer_data, <span class="fu">aes</span>(theta, value, <span class="at">group =</span> <span class="fu">interaction</span>(item, name), <span class="at">color =</span> item)) <span class="sc">+</span></span>
+<span id="cb514-27"><a href="irt.html#cb514-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb514-28"><a href="irt.html#cb514-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Probability of Endorsing an Item Response Category that is Higher than the Boundary&quot;</span>) <span class="sc">+</span></span>
+<span id="cb514-29"><a href="irt.html#cb514-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb514-30"><a href="irt.html#cb514-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-368"></span>
+<img src="Book_files/figure-html/unnamed-chunk-368-1.png" alt="Item Boundary Category Characteristic Curves From Graded Response Model." width="100%" />
 <p class="caption">
-Figure 7.80: Item Boundary Category Characteristic Curves From Graded Response Model.
+Figure 7.82: Item Boundary Category Characteristic Curves From Graded Response Model.
 </p>
 </div>
 </div>
@@ -3650,10 +4018,10 @@ It takes a very high level of antisocial behavior for a child to be endorsed as 
 <li>Below is a figure of item characteristic curves:</li>
 </ol></li>
 </ol>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-379"></span>
-<img src="Book_files/figure-html/unnamed-chunk-379-1.png" alt="Exercise 1a: Item Characteristic Curves." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-383"></span>
+<img src="Book_files/figure-html/unnamed-chunk-383-1.png" alt="Exercise 1a: Item Characteristic Curves." width="100%" />
 <p class="caption">
-Figure 7.81: Exercise 1a: Item Characteristic Curves.
+Figure 7.83: Exercise 1a: Item Characteristic Curves.
 </p>
 </div>
 <ol start="2" style="list-style-type: decimal">
@@ -3661,10 +4029,10 @@ Figure 7.81: Exercise 1a: Item Characteristic Curves.
 <li>Below is a figure of item boundary characteristic curves:</li>
 </ol></li>
 </ol>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-380"></span>
-<img src="Book_files/figure-html/unnamed-chunk-380-1.png" alt="Exercise 2b: Item Boundary Characteristic Curves." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-384"></span>
+<img src="Book_files/figure-html/unnamed-chunk-384-1.png" alt="Exercise 2b: Item Boundary Characteristic Curves." width="100%" />
 <p class="caption">
-Figure 7.82: Exercise 2b: Item Boundary Characteristic Curves.
+Figure 7.84: Exercise 2b: Item Boundary Characteristic Curves.
 </p>
 </div>
 <ol start="2" style="list-style-type: decimal">
@@ -3679,10 +4047,10 @@ That suggests that “trouble getting along with teachers” is more core to the
 <li>Below is a figure of item information functions:</li>
 </ol></li>
 </ol>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-381"></span>
-<img src="Book_files/figure-html/unnamed-chunk-381-1.png" alt="Exercise 2c: Item Information Functions." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-385"></span>
+<img src="Book_files/figure-html/unnamed-chunk-385-1.png" alt="Exercise 2c: Item Information Functions." width="100%" />
 <p class="caption">
-Figure 7.83: Exercise 2c: Item Information Functions.
+Figure 7.85: Exercise 2c: Item Information Functions.
 </p>
 </div>
 <ol start="2" style="list-style-type: decimal">
@@ -3693,10 +4061,10 @@ Item 1 (“cheats or tells lies”) provides the most information at somewhat lo
 <li></li>
 </ol></li>
 </ol>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-382"></span>
-<img src="Book_files/figure-html/unnamed-chunk-382-1.png" alt="Exercise 2e: Test Information Function." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-386"></span>
+<img src="Book_files/figure-html/unnamed-chunk-386-1.png" alt="Exercise 2e: Test Information Function." width="100%" />
 <p class="caption">
-Figure 7.84: Exercise 2e: Test Information Function.
+Figure 7.86: Exercise 2e: Test Information Function.
 </p>
 </div>
 <ol start="2" style="list-style-type: decimal">
