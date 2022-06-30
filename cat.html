@@ -707,6 +707,7 @@ div.csl-indent {
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7.5.4" data-path="irt.html"><a href="irt.html#irt-onePLcfa"><i class="fa fa-check"></i><b>7.5.4</b> CFA</a></li>
+<li class="chapter" data-level="7.5.5" data-path="irt.html"><a href="irt.html#irt-onePLmixed"><i class="fa fa-check"></i><b>7.5.5</b> Mixed Model</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="irt.html"><a href="irt.html#irt-twoPL"><i class="fa fa-check"></i><b>7.6</b> Two-Parameter Logistic Model</a>
 <ul>
@@ -2239,10 +2240,10 @@ For guidelines on developing and evaluating short forms, see <span class="citati
 <h2><span class="header-section-number">20.3</span> Getting Started<a href="cat.html#gettingStarted-cat" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="loadLibraries-cat" class="section level3 hasAnchor" number="20.3.1">
 <h3><span class="header-section-number">20.3.1</span> Load Libraries<a href="cat.html#loadLibraries-cat" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb1455"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1455-1"><a href="cat.html#cb1455-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;petersenlab&quot;</span>) <span class="co">#to install: install.packages(&quot;remotes&quot;); remotes::install_git(&quot;https://research-git.uiowa.edu/PetersenLab/petersenlab.git&quot;)</span></span>
-<span id="cb1455-2"><a href="cat.html#cb1455-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;mirtCAT&quot;</span>)</span>
-<span id="cb1455-3"><a href="cat.html#cb1455-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
-<span id="cb1455-4"><a href="cat.html#cb1455-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1459"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1459-1"><a href="cat.html#cb1459-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;petersenlab&quot;</span>) <span class="co">#to install: install.packages(&quot;remotes&quot;); remotes::install_git(&quot;https://research-git.uiowa.edu/PetersenLab/petersenlab.git&quot;)</span></span>
+<span id="cb1459-2"><a href="cat.html#cb1459-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;mirtCAT&quot;</span>)</span>
+<span id="cb1459-3"><a href="cat.html#cb1459-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
+<span id="cb1459-4"><a href="cat.html#cb1459-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="exampleUnidimensionalCAT" class="section level2 hasAnchor" number="20.4">
@@ -2254,20 +2255,20 @@ The example of a CAT with uni-dimensional data is adapted from <code>mirtCAT</co
 <p>For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
-<div class="sourceCode" id="cb1456"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1456-1"><a href="cat.html#cb1456-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb1456-2"><a href="cat.html#cb1456-2" aria-hidden="true" tabindex="-1"></a>nitems <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb1456-3"><a href="cat.html#cb1456-3" aria-hidden="true" tabindex="-1"></a>itemnames <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;Item.&quot;</span>, <span class="dv">1</span><span class="sc">:</span>nitems, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb1456-4"><a href="cat.html#cb1456-4" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rlnorm</span>(nitems, <span class="at">meanlog =</span> .<span class="dv">2</span>, <span class="at">sdlog =</span> .<span class="dv">3</span>))</span>
-<span id="cb1456-5"><a href="cat.html#cb1456-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(nitems, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
-<span id="cb1456-6"><a href="cat.html#cb1456-6" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a1 =</span> a, <span class="at">d =</span> d, <span class="at">g =</span> <span class="fl">0.2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1460-1"><a href="cat.html#cb1460-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb1460-2"><a href="cat.html#cb1460-2" aria-hidden="true" tabindex="-1"></a>nitems <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1460-3"><a href="cat.html#cb1460-3" aria-hidden="true" tabindex="-1"></a>itemnames <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;Item.&quot;</span>, <span class="dv">1</span><span class="sc">:</span>nitems, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb1460-4"><a href="cat.html#cb1460-4" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rlnorm</span>(nitems, <span class="at">meanlog =</span> .<span class="dv">2</span>, <span class="at">sdlog =</span> .<span class="dv">3</span>))</span>
+<span id="cb1460-5"><a href="cat.html#cb1460-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(nitems, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
+<span id="cb1460-6"><a href="cat.html#cb1460-6" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a1 =</span> a, <span class="at">d =</span> d, <span class="at">g =</span> <span class="fl">0.2</span>)</span></code></pre></div>
 </div>
 <div id="fitIRTmodel-cat" class="section level3 hasAnchor" number="20.4.2">
 <h3><span class="header-section-number">20.4.2</span> Fit IRT model<a href="cat.html#fitIRTmodel-cat" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb1457"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1457-1"><a href="cat.html#cb1457-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">generate.mirt_object</span>(pars, <span class="st">&quot;3PL&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1461"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1461-1"><a href="cat.html#cb1461-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">generate.mirt_object</span>(pars, <span class="st">&quot;3PL&quot;</span>)</span></code></pre></div>
 </div>
 <div id="modelOutput-cat" class="section level3 hasAnchor" number="20.4.3">
 <h3><span class="header-section-number">20.4.3</span> Model Summary<a href="cat.html#modelOutput-cat" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb1458"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1458-1"><a href="cat.html#cb1458-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code></pre></div>
+<div class="sourceCode" id="cb1462"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1462-1"><a href="cat.html#cb1462-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code></pre></div>
 <pre><code>            F1    h2
 Item.1   0.673 0.453
 Item.2   0.369 0.136
@@ -2377,7 +2378,7 @@ Factor correlations:
 
    F1
 F1  1</code></pre>
-<div class="sourceCode" id="cb1460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1460-1"><a href="cat.html#cb1460-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1464-1"><a href="cat.html#cb1464-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>$items
              a      b   g u
 Item.1   1.549  0.298 0.2 1
@@ -2488,21 +2489,21 @@ F1
 $cov
    F1
 F1  1</code></pre>
-<div class="sourceCode" id="cb1462"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1462-1"><a href="cat.html#cb1462-1" aria-hidden="true" tabindex="-1"></a>modItemParameters <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>items</span></code></pre></div>
+<div class="sourceCode" id="cb1466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1466-1"><a href="cat.html#cb1466-1" aria-hidden="true" tabindex="-1"></a>modItemParameters <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod, <span class="at">simplify =</span> <span class="cn">TRUE</span>, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>items</span></code></pre></div>
 </div>
 <div id="modelPlots-cat" class="section level3 hasAnchor" number="20.4.4">
 <h3><span class="header-section-number">20.4.4</span> Model Plots<a href="cat.html#modelPlots-cat" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The test appears to measure theta (<span class="math inline">\(\theta\)</span>) with <span class="math inline">\(SE &lt; .4\)</span> within -2 to 2 range</p>
-<div class="sourceCode" id="cb1463"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1463-1"><a href="cat.html#cb1463-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-813"></span>
-<img src="Book_files/figure-html/unnamed-chunk-813-1.png" alt="Test Characteristic Curve." width="100%" />
+<div class="sourceCode" id="cb1467"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1467-1"><a href="cat.html#cb1467-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-814"></span>
+<img src="Book_files/figure-html/unnamed-chunk-814-1.png" alt="Test Characteristic Curve." width="100%" />
 <p class="caption">
 Figure 20.1: Test Characteristic Curve.
 </p>
 </div>
-<div class="sourceCode" id="cb1464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1464-1"><a href="cat.html#cb1464-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>, <span class="at">theta_lim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-814"></span>
-<img src="Book_files/figure-html/unnamed-chunk-814-1.png" alt="Test Information and Standard Error of Measurement." width="100%" />
+<div class="sourceCode" id="cb1468"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1468-1"><a href="cat.html#cb1468-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">type =</span> <span class="st">&quot;infoSE&quot;</span>, <span class="at">theta_lim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-815"></span>
+<img src="Book_files/figure-html/unnamed-chunk-815-1.png" alt="Test Information and Standard Error of Measurement." width="100%" />
 <p class="caption">
 Figure 20.2: Test Information and Standard Error of Measurement.
 </p>
@@ -2510,16 +2511,16 @@ Figure 20.2: Test Information and Standard Error of Measurement.
 </div>
 <div id="itemPlots-cat" class="section level3 hasAnchor" number="20.4.5">
 <h3><span class="header-section-number">20.4.5</span> Item Plots<a href="cat.html#itemPlots-cat" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb1465"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1465-1"><a href="cat.html#cb1465-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">type =</span> <span class="st">&quot;trace&quot;</span>, <span class="at">theta_lim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-815"></span>
-<img src="Book_files/figure-html/unnamed-chunk-815-1.png" alt="Item Characteristic Curves." width="100%" />
+<div class="sourceCode" id="cb1469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1469-1"><a href="cat.html#cb1469-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">type =</span> <span class="st">&quot;trace&quot;</span>, <span class="at">theta_lim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-816"></span>
+<img src="Book_files/figure-html/unnamed-chunk-816-1.png" alt="Item Characteristic Curves." width="100%" />
 <p class="caption">
 Figure 20.3: Item Characteristic Curves.
 </p>
 </div>
-<div class="sourceCode" id="cb1466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1466-1"><a href="cat.html#cb1466-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">theta_lim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-816"></span>
-<img src="Book_files/figure-html/unnamed-chunk-816-1.png" alt="Item Information Functions." width="100%" />
+<div class="sourceCode" id="cb1470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1470-1"><a href="cat.html#cb1470-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">type =</span> <span class="st">&quot;infotrace&quot;</span>, <span class="at">theta_lim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-817"></span>
+<img src="Book_files/figure-html/unnamed-chunk-817-1.png" alt="Item Information Functions." width="100%" />
 <p class="caption">
 Figure 20.4: Item Information Functions.
 </p>
@@ -2531,37 +2532,37 @@ Figure 20.4: Item Information Functions.
 <li>Item 16 is a difficult item (<span class="math inline">\(b = 2.062\)</span>)</li>
 <li>Item 53 has a low discrimination (<span class="math inline">\(a = 0.572\)</span>)</li>
 </ul>
-<div class="sourceCode" id="cb1467"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1467-1"><a href="cat.html#cb1467-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.30&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-817-1"></span>
-<img src="Book_files/figure-html/unnamed-chunk-817-1.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
+<div class="sourceCode" id="cb1471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1471-1"><a href="cat.html#cb1471-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.30&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-818-1"></span>
+<img src="Book_files/figure-html/unnamed-chunk-818-1.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
 <p class="caption">
 Figure 20.5: Item Characteristic Curves and Information Functions.
 </p>
 </div>
-<div class="sourceCode" id="cb1468"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1468-1"><a href="cat.html#cb1468-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.70&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-817-2"></span>
-<img src="Book_files/figure-html/unnamed-chunk-817-2.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
+<div class="sourceCode" id="cb1472"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1472-1"><a href="cat.html#cb1472-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.70&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-818-2"></span>
+<img src="Book_files/figure-html/unnamed-chunk-818-2.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
 <p class="caption">
 Figure 20.6: Item Characteristic Curves and Information Functions.
 </p>
 </div>
-<div class="sourceCode" id="cb1469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1469-1"><a href="cat.html#cb1469-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.86&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-817-3"></span>
-<img src="Book_files/figure-html/unnamed-chunk-817-3.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
+<div class="sourceCode" id="cb1473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1473-1"><a href="cat.html#cb1473-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.86&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-818-3"></span>
+<img src="Book_files/figure-html/unnamed-chunk-818-3.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
 <p class="caption">
 Figure 20.7: Item Characteristic Curves and Information Functions.
 </p>
 </div>
-<div class="sourceCode" id="cb1470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1470-1"><a href="cat.html#cb1470-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.16&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-817-4"></span>
-<img src="Book_files/figure-html/unnamed-chunk-817-4.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
+<div class="sourceCode" id="cb1474"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1474-1"><a href="cat.html#cb1474-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.16&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-818-4"></span>
+<img src="Book_files/figure-html/unnamed-chunk-818-4.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
 <p class="caption">
 Figure 20.8: Item Characteristic Curves and Information Functions.
 </p>
 </div>
-<div class="sourceCode" id="cb1471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1471-1"><a href="cat.html#cb1471-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.53&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-817-5"></span>
-<img src="Book_files/figure-html/unnamed-chunk-817-5.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
+<div class="sourceCode" id="cb1475"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1475-1"><a href="cat.html#cb1475-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemplot</span>(<span class="at">object =</span> mod, <span class="at">item =</span> <span class="st">&quot;Item.53&quot;</span>, <span class="st">&quot;infotrace&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-818-5"></span>
+<img src="Book_files/figure-html/unnamed-chunk-818-5.png" alt="Item Characteristic Curves and Information Functions." width="100%" />
 <p class="caption">
 Figure 20.9: Item Characteristic Curves and Information Functions.
 </p>
@@ -2569,38 +2570,38 @@ Figure 20.9: Item Characteristic Curves and Information Functions.
 </div>
 <div id="createMathItems-cat" class="section level3 hasAnchor" number="20.4.6">
 <h3><span class="header-section-number">20.4.6</span> Create math items<a href="cat.html#createMathItems-cat" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb1472"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1472-1"><a href="cat.html#cb1472-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> answers <span class="ot">&lt;-</span> <span class="fu">character</span>(nitems)</span>
-<span id="cb1472-2"><a href="cat.html#cb1472-2" aria-hidden="true" tabindex="-1"></a>choices <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="st">&quot;a&quot;</span>, nitems, <span class="dv">5</span>)</span>
-<span id="cb1472-3"><a href="cat.html#cb1472-3" aria-hidden="true" tabindex="-1"></a>spacing <span class="ot">&lt;-</span> <span class="fu">floor</span>(d <span class="sc">-</span> <span class="fu">min</span>(d)) <span class="sc">+</span> <span class="dv">1</span> <span class="co">#easier items have more variation</span></span>
-<span id="cb1472-4"><a href="cat.html#cb1472-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1472-5"><a href="cat.html#cb1472-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nitems){</span>
-<span id="cb1472-6"><a href="cat.html#cb1472-6" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">1</span>)</span>
-<span id="cb1472-7"><a href="cat.html#cb1472-7" aria-hidden="true" tabindex="-1"></a>  n2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">101</span><span class="sc">:</span><span class="dv">200</span>, <span class="dv">1</span>)</span>
-<span id="cb1472-8"><a href="cat.html#cb1472-8" aria-hidden="true" tabindex="-1"></a>  ans <span class="ot">&lt;-</span> n1 <span class="sc">+</span> n2</span>
-<span id="cb1472-9"><a href="cat.html#cb1472-9" aria-hidden="true" tabindex="-1"></a>  questions[i] <span class="ot">&lt;-</span> <span class="fu">paste</span>(n1, <span class="st">&quot; + &quot;</span>, n2, <span class="st">&quot; = ?&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb1472-10"><a href="cat.html#cb1472-10" aria-hidden="true" tabindex="-1"></a>  answers[i] <span class="ot">&lt;-</span> <span class="fu">as.character</span>(ans)</span>
-<span id="cb1472-11"><a href="cat.html#cb1472-11" aria-hidden="true" tabindex="-1"></a>  ch <span class="ot">&lt;-</span> ans <span class="sc">+</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span><span class="sc">:-</span><span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">*</span> spacing[i,], <span class="dv">5</span>)</span>
-<span id="cb1472-12"><a href="cat.html#cb1472-12" aria-hidden="true" tabindex="-1"></a>  ch[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span>)] <span class="ot">&lt;-</span> ans</span>
-<span id="cb1472-13"><a href="cat.html#cb1472-13" aria-hidden="true" tabindex="-1"></a>  choices[i,] <span class="ot">&lt;-</span> <span class="fu">as.character</span>(ch)</span>
-<span id="cb1472-14"><a href="cat.html#cb1472-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1472-15"><a href="cat.html#cb1472-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1472-16"><a href="cat.html#cb1472-16" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Questions =</span> questions, <span class="at">Answer =</span> answers, <span class="at">Option =</span> choices, <span class="at">Type =</span> <span class="st">&quot;radio&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1476"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1476-1"><a href="cat.html#cb1476-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> answers <span class="ot">&lt;-</span> <span class="fu">character</span>(nitems)</span>
+<span id="cb1476-2"><a href="cat.html#cb1476-2" aria-hidden="true" tabindex="-1"></a>choices <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="st">&quot;a&quot;</span>, nitems, <span class="dv">5</span>)</span>
+<span id="cb1476-3"><a href="cat.html#cb1476-3" aria-hidden="true" tabindex="-1"></a>spacing <span class="ot">&lt;-</span> <span class="fu">floor</span>(d <span class="sc">-</span> <span class="fu">min</span>(d)) <span class="sc">+</span> <span class="dv">1</span> <span class="co">#easier items have more variation</span></span>
+<span id="cb1476-4"><a href="cat.html#cb1476-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1476-5"><a href="cat.html#cb1476-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nitems){</span>
+<span id="cb1476-6"><a href="cat.html#cb1476-6" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb1476-7"><a href="cat.html#cb1476-7" aria-hidden="true" tabindex="-1"></a>  n2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">101</span><span class="sc">:</span><span class="dv">200</span>, <span class="dv">1</span>)</span>
+<span id="cb1476-8"><a href="cat.html#cb1476-8" aria-hidden="true" tabindex="-1"></a>  ans <span class="ot">&lt;-</span> n1 <span class="sc">+</span> n2</span>
+<span id="cb1476-9"><a href="cat.html#cb1476-9" aria-hidden="true" tabindex="-1"></a>  questions[i] <span class="ot">&lt;-</span> <span class="fu">paste</span>(n1, <span class="st">&quot; + &quot;</span>, n2, <span class="st">&quot; = ?&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb1476-10"><a href="cat.html#cb1476-10" aria-hidden="true" tabindex="-1"></a>  answers[i] <span class="ot">&lt;-</span> <span class="fu">as.character</span>(ans)</span>
+<span id="cb1476-11"><a href="cat.html#cb1476-11" aria-hidden="true" tabindex="-1"></a>  ch <span class="ot">&lt;-</span> ans <span class="sc">+</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span><span class="sc">:-</span><span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">*</span> spacing[i,], <span class="dv">5</span>)</span>
+<span id="cb1476-12"><a href="cat.html#cb1476-12" aria-hidden="true" tabindex="-1"></a>  ch[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span>)] <span class="ot">&lt;-</span> ans</span>
+<span id="cb1476-13"><a href="cat.html#cb1476-13" aria-hidden="true" tabindex="-1"></a>  choices[i,] <span class="ot">&lt;-</span> <span class="fu">as.character</span>(ch)</span>
+<span id="cb1476-14"><a href="cat.html#cb1476-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1476-15"><a href="cat.html#cb1476-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1476-16"><a href="cat.html#cb1476-16" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Questions =</span> questions, <span class="at">Answer =</span> answers, <span class="at">Option =</span> choices, <span class="at">Type =</span> <span class="st">&quot;radio&quot;</span>)</span></code></pre></div>
 </div>
 <div id="runCAT" class="section level3 hasAnchor" number="20.4.7">
 <h3><span class="header-section-number">20.4.7</span> Run computerized adaptive test (CAT)<a href="cat.html#runCAT" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Set the minimum standard error of measurement for the latent trait (theta; <span class="math inline">\(\theta\)</span>) that must be reached before stopping the CAT.
 You can lengthen the CAT by lowering the minimum standard error of measurement, or can shorten the CAT by raising the minimum standard error of measurement.</p>
-<div class="sourceCode" id="cb1473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1473-1"><a href="cat.html#cb1473-1" aria-hidden="true" tabindex="-1"></a>minimum_SEM <span class="ot">&lt;-</span> .<span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb1477"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1477-1"><a href="cat.html#cb1477-1" aria-hidden="true" tabindex="-1"></a>minimum_SEM <span class="ot">&lt;-</span> .<span class="dv">3</span></span></code></pre></div>
 <p>Run the CAT and stop once the standard error of measurement for the latent trait (theta; <span class="math inline">\(\theta\)</span>) becomes 0.3 or lower.</p>
-<div class="sourceCode" id="cb1474"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1474-1"><a href="cat.html#cb1474-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mirtCAT</span>(df, mod, <span class="at">start_item =</span> <span class="st">&quot;MI&quot;</span>, <span class="at">method =</span> <span class="st">&quot;EAP&quot;</span>, <span class="at">criteria =</span> <span class="st">&quot;MI&quot;</span>, <span class="at">design =</span> <span class="fu">list</span>(<span class="at">min_SEM =</span> minimum_SEM))</span></code></pre></div>
-<div class="sourceCode" id="cb1475"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1475-1"><a href="cat.html#cb1475-1" aria-hidden="true" tabindex="-1"></a><span class="fu">RNGkind</span>(<span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1478-1"><a href="cat.html#cb1478-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mirtCAT</span>(df, mod, <span class="at">start_item =</span> <span class="st">&quot;MI&quot;</span>, <span class="at">method =</span> <span class="st">&quot;EAP&quot;</span>, <span class="at">criteria =</span> <span class="st">&quot;MI&quot;</span>, <span class="at">design =</span> <span class="fu">list</span>(<span class="at">min_SEM =</span> minimum_SEM))</span></code></pre></div>
+<div class="sourceCode" id="cb1479"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1479-1"><a href="cat.html#cb1479-1" aria-hidden="true" tabindex="-1"></a><span class="fu">RNGkind</span>(<span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>)</span></code></pre></div>
 </div>
 <div id="catResults" class="section level3 hasAnchor" number="20.4.8">
 <h3><span class="header-section-number">20.4.8</span> CAT results<a href="cat.html#catResults" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb1476"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1476-1"><a href="cat.html#cb1476-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code></pre></div>
+<div class="sourceCode" id="cb1480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1480-1"><a href="cat.html#cb1480-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code></pre></div>
 <pre><code> n.items.answered  Theta_1 SE.Theta_1
                27 0.238911  0.2975387</code></pre>
-<div class="sourceCode" id="cb1478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1478-1"><a href="cat.html#cb1478-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result)</span></code></pre></div>
+<div class="sourceCode" id="cb1482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1482-1"><a href="cat.html#cb1482-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result)</span></code></pre></div>
 <pre><code>$final_estimates
             Theta_1
 Estimates 0.2389110
@@ -2684,9 +2685,9 @@ $terminated_sucessfully
 [1] TRUE</code></pre>
 <div id="CATstandardErrors" class="section level4 hasAnchor" number="20.4.8.1">
 <h4><span class="header-section-number">20.4.8.1</span> CAT Standard Errors<a href="cat.html#CATstandardErrors" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb1480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1480-1"><a href="cat.html#cb1480-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result, <span class="at">SE =</span> <span class="dv">1</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-821"></span>
-<img src="Book_files/figure-html/unnamed-chunk-821-1.png" alt="Standard Errors of Measurement Around Theta in a Computerized Adaptive Test." width="100%" />
+<div class="sourceCode" id="cb1484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1484-1"><a href="cat.html#cb1484-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result, <span class="at">SE =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-822"></span>
+<img src="Book_files/figure-html/unnamed-chunk-822-1.png" alt="Standard Errors of Measurement Around Theta in a Computerized Adaptive Test." width="100%" />
 <p class="caption">
 Figure 20.10: Standard Errors of Measurement Around Theta in a Computerized Adaptive Test.
 </p>
@@ -2694,9 +2695,9 @@ Figure 20.10: Standard Errors of Measurement Around Theta in a Computerized Adap
 </div>
 <div id="cat95CI" class="section level4 hasAnchor" number="20.4.8.2">
 <h4><span class="header-section-number">20.4.8.2</span> CAT 95% Confidence Interval<a href="cat.html#cat95CI" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb1481"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1481-1"><a href="cat.html#cb1481-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result, <span class="at">SE =</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-822"></span>
-<img src="Book_files/figure-html/unnamed-chunk-822-1.png" alt="95% Confidence Interval of Theta in a Computerized Adaptive Test." width="100%" />
+<div class="sourceCode" id="cb1485"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1485-1"><a href="cat.html#cb1485-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(result, <span class="at">SE =</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-823"></span>
+<img src="Book_files/figure-html/unnamed-chunk-823-1.png" alt="95% Confidence Interval of Theta in a Computerized Adaptive Test." width="100%" />
 <p class="caption">
 Figure 20.11: 95% Confidence Interval of Theta in a Computerized Adaptive Test.
 </p>
