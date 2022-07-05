@@ -564,6 +564,8 @@ summary(measurementModelFit_full,
 
 ### Estimates of model fit {#measurementModelFitCriteria-sem}
 
+You can extract specific fit indices using the following syntax:
+
 ```{r}
 fitMeasures(measurementModelFit, fit.measures = c("chisq", "df", "pvalue",
                                                   "chisq.scaled", "df.scaled", "pvalue.scaled",
@@ -991,6 +993,25 @@ semModelFit_full <- lavaan(semModel_fullSyntax,
 ```
 
 ### Display summary output {#semModelOutput-sem}
+
+#### Interpreting `lavaan` output
+
+```{r, include = FALSE}
+library("MOTE")
+
+chiSquareTestP <- fitMeasures(semModelFit, fit.measures = "pvalue.scaled")
+chiSquareTestBaselineP <- fitMeasures(semModelFit, fit.measures = "baseline.pvalue")
+```
+
+Output from a SEM model includes information such as regression coefficients, intercepts, variances, and model fit indices.
+As noted above, there are two chi-square tests.
+In `lavaan` syntax, one is labeled "Model Test User Model" and the other is labeled "Model Test Baseline Model."
+The chi-square test labeled "Model Test User Model" refers to the chi-square test of whether the model fits worse than the best-possible fitting model.
+In this case, the *p*-value of the robust chi-square test is `r apa(chiSquareTestP, decimals = 2)`.
+Thus, the model does not show significant misfit—i.e., the model does not fit significantly worse than the best-possible fitting model.
+The chi-square test labeled "Model Test Baseline Model" refers to the chi-square test of whether the model fits better than the worst-possible fitting model.
+In this case, the *p*-value of the robust chi-square test in comparison to the worse-possible fitting model is < .05.
+Thus, the model fits significantly better than the worst-possible-fitting model.
 
 ```{r}
 summary(semModelFit,
