@@ -569,12 +569,6 @@ library("rmarkdown")
 
 ### Load Data {#loadData-factorAnalysis}
 
-The `MTMM` data file comes from W. Joel Schneider: http://my.ilstu.edu/~wjschne/442/MTMM.csv
-
-```{r}
-MTMM <- read_csv(here("Data", "MTMM.csv"))
-```
-
 ### Prepare Data {#prepareData-factorAnalysis}
 
 #### Add Missing Data {#addMissingData-factorAnalysis}
@@ -2110,14 +2104,14 @@ lavaanify(cfaModelBifactor_fullSyntax)
 
 ```{r}
 cfaModelBifactorFit <- cfa(cfaModelBifactor_syntax,
-                        data = MTMM,
+                        data = MTMM_data,
                         orthogonal = TRUE,
                         std.lv = TRUE,
                         missing = "ML",
                         estimator = "MLR")
 
 cfaModelBifactorFit_full <- lavaan(cfaModelBifactor_fullSyntax,
-                                   data = MTMM,
+                                   data = MTMM_data,
                                    missing = "ML",
                                    estimator = "MLR")
 ```
@@ -2197,163 +2191,169 @@ lapply(equivalentDAGs(dagModelBifactor, n = 4), plot)
 
 #### Multitrait-Multimethod Model (MTMM) {#mtmmCFA}
 
+##### Simulate the data {#mtmmSimulate}
+
+We simulated the data for the MTMM in Section \@ref(mtmmCFA-validity).
+
 ##### Specify the model {#mtmmCFAsyntax}
+
+This example comes from W. Joel Schneider.
 
 ```{r}
 cfaModelMTMM_syntax <- '
-  g =~ Verbal + Spatial + Quant
-  Verbal =~ 
-    VO1 + VO2 + VO3 + 
-    VW1 + VW2 + VW3 + 
-    VM1 + VM2 + VM3
-  Spatial =~ 
-    SO1 + SO2 + SO3 + 
-    SW1 + SW2 + SW3 + 
-    SM1 + SM2 + SM3
-  Quant =~ 
-    QO1 + QO2 + QO3 + 
-    QW1 + QW2 + QW3 + 
-    QM1 + QM2 + QM3
-  Oral =~ 
-    VO1 + VO2 + VO3 + 
-    SO1 + SO2 + SO3 + 
-    QO1 + QO2 + QO3
-  Written =~ 
-    VW1 + VW2 + VW3 + 
-    SW1 + SW2 + SW3 + 
-    QW1 + QW2 + QW3
-  Manipulative =~ 
-    VM1 + VM2 + VM3 + 
-    SM1 + SM2 + SM3 + 
-    QM1 + QM2 + QM3
+ g =~ Verbal + Spatial + Quant
+ Verbal =~ 
+   VO1 + VO2 + VO3 + 
+   VW1 + VW2 + VW3 + 
+   VM1 + VM2 + VM3
+ Spatial =~ 
+   SO1 + SO2 + SO3 + 
+   SW1 + SW2 + SW3 + 
+   SM1 + SM2 + SM3
+ Quant =~ 
+   QO1 + QO2 + QO3 + 
+   QW1 + QW2 + QW3 + 
+   QM1 + QM2 + QM3
+ Oral =~ 
+   VO1 + VO2 + VO3 + 
+   SO1 + SO2 + SO3 + 
+   QO1 + QO2 + QO3
+ Written =~ 
+   VW1 + VW2 + VW3 + 
+   SW1 + SW2 + SW3 + 
+   QW1 + QW2 + QW3
+ Manipulative =~ 
+   VM1 + VM2 + VM3 + 
+   SM1 + SM2 + SM3 + 
+   QM1 + QM2 + QM3
 '
 
 cfaModelMTMM_fullSyntax <- '
-  #Factor loadings (free the factor loading of the first indicator)
-  g =~ NA*Verbal + Spatial + Quant
-  Verbal =~ 
-    NA*VO1 + VO2 + VO3 + 
-    VW1 + VW2 + VW3 + 
-    VM1 + VM2 + VM3
-  Spatial =~ 
-    NA*SO1 + SO2 + SO3 + 
-    SW1 + SW2 + SW3 + 
-    SM1 + SM2 + SM3
-  Quant =~ 
-    NA*QO1 + QO2 + QO3 + 
-    QW1 + QW2 + QW3 + 
-    QM1 + QM2 + QM3
-  Oral =~ 
-    NA*VO1 + VO2 + VO3 + 
-    SO1 + SO2 + SO3 + 
-    QO1 + QO2 + QO3
-  Written =~ 
-    NA*VW1 + VW2 + VW3 + 
-    SW1 + SW2 + SW3 + 
-    QW1 + QW2 + QW3
-  Manipulative =~ 
-    NA*VM1 + VM2 + VM3 + 
-    SM1 + SM2 + SM3 + 
-    QM1 + QM2 + QM3
-    
-  #Fix latent means to zero
-  Verbal ~ 0
-  Spatial ~ 0
-  Quant ~ 0
-  Oral ~ 0
-  Written ~ 0
-  Manipulative ~ 0
-  g ~ 0
+ #Factor loadings (free the factor loading of the first indicator)
+ g =~ NA*Verbal + Spatial + Quant
+ Verbal =~ 
+  NA*VO1 + VO2 + VO3 + 
+  VW1 + VW2 + VW3 + 
+  VM1 + VM2 + VM3
+ Spatial =~ 
+  NA*SO1 + SO2 + SO3 + 
+  SW1 + SW2 + SW3 + 
+  SM1 + SM2 + SM3
+ Quant =~ 
+  NA*QO1 + QO2 + QO3 + 
+  QW1 + QW2 + QW3 + 
+  QM1 + QM2 + QM3
+ Oral =~ 
+  NA*VO1 + VO2 + VO3 + 
+  SO1 + SO2 + SO3 + 
+  QO1 + QO2 + QO3
+ Written =~ 
+  NA*VW1 + VW2 + VW3 + 
+  SW1 + SW2 + SW3 + 
+  QW1 + QW2 + QW3
+ Manipulative =~ 
+  NA*VM1 + VM2 + VM3 + 
+  SM1 + SM2 + SM3 + 
+  QM1 + QM2 + QM3
   
-  #Fix latent variances to one
-  Verbal ~~ 1*Verbal
-  Spatial ~~ 1*Spatial
-  Quant ~~ 1*Quant
-  Oral ~~ 1*Oral
-  Written ~~ 1*Written
-  Manipulative ~~ 1*Manipulative
-  g ~~ 1*g
-  
-  #Fix covariances among latent variables at zero
-  Verbal ~~ 0*Spatial
-  Verbal ~~ 0*Quant
-  Verbal ~~ 0*Oral
-  Verbal ~~ 0*Written
-  Verbal ~~ 0*Manipulative
-  Spatial ~~ 0*Quant
-  Spatial ~~ 0*Oral
-  Spatial ~~ 0*Written
-  Spatial ~~ 0*Manipulative
-  Quant ~~ 0*Oral
-  Quant ~~ 0*Written
-  Quant ~~ 0*Manipulative
-  Oral ~~ 0*Written
-  Oral ~~ 0*Manipulative
-  Written ~~ 0*Manipulative
-  g ~~ 0*Verbal
-  g ~~ 0*Spatial
-  g ~~ 0*Quant
-  g ~~ 0*Oral
-  g ~~ 0*Written
-  g ~~ 0*Manipulative
-  
-  #Estimate residual variances of manifest variables
-  VO1 ~~ VO1
-  VO2 ~~ VO2
-  VO3 ~~ VO3
-  VW1 ~~ VW1
-  VW2 ~~ VW2
-  VW3 ~~ VW3
-  VM1 ~~ VM1
-  VM2 ~~ VM2
-  VM3 ~~ VM3
-  SO1 ~~ SO1
-  SO2 ~~ SO2
-  SO3 ~~ SO3
-  SW1 ~~ SW1
-  SW2 ~~ SW2
-  SW3 ~~ SW3
-  SM1 ~~ SM1
-  SM2 ~~ SM2
-  SM3 ~~ SM3
-  QO1 ~~ QO1
-  QO2 ~~ QO2
-  QO3 ~~ QO3
-  QW1 ~~ QW1
-  QW2 ~~ QW2
-  QW3 ~~ QW3
-  QM1 ~~ QM1
-  QM2 ~~ QM2
-  QM3 ~~ QM3
-  
-  #Free intercepts of manifest variables
-  VO1 ~ intVO1*1
-  VO2 ~ intVO2*1
-  VO3 ~ intVO3*1
-  VW1 ~ intVW1*1
-  VW2 ~ intVW2*1
-  VW3 ~ intVW3*1
-  VM1 ~ intVM1*1
-  VM2 ~ intVM2*1
-  VM3 ~ intVM3*1
-  SO1 ~ intSO1*1
-  SO2 ~ intSO2*1
-  SO3 ~ intSO3*1
-  SW1 ~ intSW1*1
-  SW2 ~ intSW2*1
-  SW3 ~ intSW3*1
-  SM1 ~ intSM1*1
-  SM2 ~ intSM2*1
-  SM3 ~ intSM3*1
-  QO1 ~ intQO1*1
-  QO2 ~ intQO2*1
-  QO3 ~ intQO3*1
-  QW1 ~ intQW1*1
-  QW2 ~ intQW2*1
-  QW3 ~ intQW3*1
-  QM1 ~ intQM1*1
-  QM2 ~ intQM2*1
-  QM3 ~ intQM3*1
+ #Fix latent means to zero
+ Verbal ~ 0
+ Spatial ~ 0
+ Quant ~ 0
+ Oral ~ 0
+ Written ~ 0
+ Manipulative ~ 0
+ g ~ 0
+ 
+ #Fix latent variances to one
+ Verbal ~~ 1*Verbal
+ Spatial ~~ 1*Spatial
+ Quant ~~ 1*Quant
+ Oral ~~ 1*Oral
+ Written ~~ 1*Written
+ Manipulative ~~ 1*Manipulative
+ g ~~ 1*g
+ 
+ #Fix covariances among latent variables at zero
+ Verbal ~~ 0*Spatial
+ Verbal ~~ 0*Quant
+ Verbal ~~ 0*Oral
+ Verbal ~~ 0*Written
+ Verbal ~~ 0*Manipulative
+ Spatial ~~ 0*Quant
+ Spatial ~~ 0*Oral
+ Spatial ~~ 0*Written
+ Spatial ~~ 0*Manipulative
+ Quant ~~ 0*Oral
+ Quant ~~ 0*Written
+ Quant ~~ 0*Manipulative
+ Oral ~~ 0*Written
+ Oral ~~ 0*Manipulative
+ Written ~~ 0*Manipulative
+ g ~~ 0*Verbal
+ g ~~ 0*Spatial
+ g ~~ 0*Quant
+ g ~~ 0*Oral
+ g ~~ 0*Written
+ g ~~ 0*Manipulative
+ 
+ #Estimate residual variances of manifest variables
+ VO1 ~~ VO1
+ VO2 ~~ VO2
+ VO3 ~~ VO3
+ VW1 ~~ VW1
+ VW2 ~~ VW2
+ VW3 ~~ VW3
+ VM1 ~~ VM1
+ VM2 ~~ VM2
+ VM3 ~~ VM3
+ SO1 ~~ SO1
+ SO2 ~~ SO2
+ SO3 ~~ SO3
+ SW1 ~~ SW1
+ SW2 ~~ SW2
+ SW3 ~~ SW3
+ SM1 ~~ SM1
+ SM2 ~~ SM2
+ SM3 ~~ SM3
+ QO1 ~~ QO1
+ QO2 ~~ QO2
+ QO3 ~~ QO3
+ QW1 ~~ QW1
+ QW2 ~~ QW2
+ QW3 ~~ QW3
+ QM1 ~~ QM1
+ QM2 ~~ QM2
+ QM3 ~~ QM3
+ 
+ #Free intercepts of manifest variables
+ VO1 ~ intVO1*1
+ VO2 ~ intVO2*1
+ VO3 ~ intVO3*1
+ VW1 ~ intVW1*1
+ VW2 ~ intVW2*1
+ VW3 ~ intVW3*1
+ VM1 ~ intVM1*1
+ VM2 ~ intVM2*1
+ VM3 ~ intVM3*1
+ SO1 ~ intSO1*1
+ SO2 ~ intSO2*1
+ SO3 ~ intSO3*1
+ SW1 ~ intSW1*1
+ SW2 ~ intSW2*1
+ SW3 ~ intSW3*1
+ SM1 ~ intSM1*1
+ SM2 ~ intSM2*1
+ SM3 ~ intSM3*1
+ QO1 ~ intQO1*1
+ QO2 ~ intQO2*1
+ QO3 ~ intQO3*1
+ QW1 ~ intQW1*1
+ QW2 ~ intQW2*1
+ QW3 ~ intQW3*1
+ QM1 ~ intQM1*1
+ QM2 ~ intQM2*1
+ QM3 ~ intQM3*1
 '
 ```
 
@@ -2368,14 +2368,14 @@ lavaanify(cfaModelMTMM_fullSyntax)
 
 ```{r}
 cfaModelMTMMFit <- cfa(cfaModelMTMM_syntax,
-                        data = MTMM,
+                        data = MTMM_data,
                         orthogonal = TRUE,
                         std.lv = TRUE,
                         missing = "ML",
                         estimator = "MLR")
 
 cfaModelMTMMFit_full <- lavaan(cfaModelMTMM_fullSyntax,
-                               data = MTMM,
+                               data = MTMM_data,
                                missing = "ML",
                                estimator = "MLR")
 ```

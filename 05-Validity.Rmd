@@ -28,6 +28,7 @@ library("semPlot")
 library("kableExtra")
 library("MASS")
 library("psych")
+library("simstandard")
 library("tidyverse")
 library("tinytex")
 library("knitr")
@@ -38,14 +39,6 @@ library("DT")
 ```
 
 ### Prepare Data {#prepareData-validity}
-
-#### Load Data {#loadData-validity}
-
-The `MTMM` data file comes from W. Joel Schneider: http://my.ilstu.edu/~wjschne/442/MTMM.csv
-
-```{r}
-MTMM <- read_csv(here("Data", "MTMM.csv"))
-```
 
 #### Simulate Data {#simulateData-validity}
 
@@ -606,39 +599,73 @@ For an example of a MTMM in [confirmatory factor analysis](#cfa), see Figure \@r
 knitr::include_graphics("./Images/mtmmCFA.png")
 ```
 
-This example comes from W. Joel Schneider: http://my.ilstu.edu/~wjschne/442/CFA.html#(15).
+This example comes from W. Joel Schneider.
+First, we simulate data for a MTMM model using a fixed model with population parameters using the `simstandard` package [@R-simstandard]:
+
+```{r}
+model_fixed <- '
+ Verbal =~ .5*VO1 + .6*VO2 + .7*VO3 +
+           .7*VW1 + .6*VW2 + .5*VW3 + 
+           .6*VM1 + .7*VM2 + .5*VM3 
+ Spatial =~ .7*SO1 + .7*SO2 + .6*SO3 + 
+            .6*SW1 + .7*SW2 + .5*SW3 + 
+            .7*SM1 + .5*SM2 + .7*SM3 
+ Quant =~ .5*QO1 + .7*QO2 + .5*QO3 + 
+          .5*QW1 + .6*QW2 + .7*QW3 + 
+          .5*QM1 + .6*QM2 + .7*QM3 
+ Oral =~ .4*VO1 + .5*VO2 + .3*VO3 + 
+         .3*SO1 + .3*SO2 + .5*SO3 + 
+         .6*QO1 + .3*QO2 + .4*QO3
+ Written =~ .6*VW1 + .4*VW2 + .3*VW3 + 
+            .6*SW1 + .5*SW2 + .5*SW3 + 
+            .4*QW1 + .4*QW2 + .5*QW3
+ Manipulative =~ .5*VM1 + .5*VM2 + .3*VM3 + 
+                 .5*SM1 + .5*SM2 + .6*SM3 + 
+                 .4*QM1 + .3*QM2 + .3*QM3
+ Verbal ~~ .7*Spatial + .6*Quant
+ Spatial ~~ .5*Quant
+'
+
+MTMM_data <- sim_standardized(model_fixed,
+                              n = 10000,
+                              observed = TRUE,
+                              latent = FALSE,
+                              errors = FALSE)
+```
+
 The confirmatory factor analysis (CFA) model was fit in the `lavaan` package [@R-lavaan].
 
 ```{r}
 modelMTMM <- '
-  g =~ Verbal + Spatial + Quant
-  Verbal =~ 
-    VO1 + VO2 + VO3 + 
-    VW1 + VW2 + VW3 + 
-    VM1 + VM2 + VM3
-  Spatial =~ 
-    SO1 + SO2 + SO3 + 
-    SW1 + SW2 + SW3 + 
-    SM1 + SM2 + SM3
-  Quant =~ 
-    QO1 + QO2 + QO3 + 
-    QW1 + QW2 + QW3 + 
-    QM1 + QM2 + QM3
-  Oral =~ 
-    VO1 + VO2 + VO3 + 
-    SO1 + SO2 + SO3 + 
-    QO1 + QO2 + QO3
-  Written =~ 
-    VW1 + VW2 + VW3 + 
-    SW1 + SW2 + SW3 + 
-    QW1 + QW2 + QW3
-  Manipulative =~ 
-    VM1 + VM2 + VM3 + 
-    SM1 + SM2 + SM3 + 
-    QM1 + QM2 + QM3
+ g =~ Verbal + Spatial + Quant
+ Verbal =~ 
+   VO1 + VO2 + VO3 + 
+   VW1 + VW2 + VW3 + 
+   VM1 + VM2 + VM3
+ Spatial =~ 
+   SO1 + SO2 + SO3 + 
+   SW1 + SW2 + SW3 + 
+   SM1 + SM2 + SM3
+ Quant =~ 
+   QO1 + QO2 + QO3 + 
+   QW1 + QW2 + QW3 + 
+   QM1 + QM2 + QM3
+ Oral =~ 
+   VO1 + VO2 + VO3 + 
+   SO1 + SO2 + SO3 + 
+   QO1 + QO2 + QO3
+ Written =~ 
+   VW1 + VW2 + VW3 + 
+   SW1 + SW2 + SW3 + 
+   QW1 + QW2 + QW3
+ Manipulative =~ 
+   VM1 + VM2 + VM3 + 
+   SM1 + SM2 + SM3 + 
+   QM1 + QM2 + QM3
 '
+
 MTMM.fit <- cfa(modelMTMM,
-                data = MTMM,
+                data = MTMM_data,
                 orthogonal = TRUE,
                 missing = "ml")
 
@@ -647,8 +674,6 @@ summary(MTMM.fit,
         standardized = TRUE,
         rsquare = TRUE)
 ```
-
-Path Diagram:
 
 A path diagram of the model is depicted using the `semPlot` package [@R-semPlot].
 
