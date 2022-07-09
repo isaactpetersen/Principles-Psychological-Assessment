@@ -1,14 +1,11 @@
 # From: https://orchid00.github.io/actions_sandbox/websites-using-pkgdown-bookdown-and-blogdown.html#deploy-bookdown
-# To Do:
-# 1. Create a personal access token (PAT) labeled `EMAIL`: https://github.com/settings/tokens; save the value in LastPass
-# 2. Create a secret labeled `EMAIL` in the repo (Settings -> Security -> Secrets -> Actions), and copy the PAT for `EMAIL` into the secret labeled `EMAIL`
 
 on:
   push:
      branches:
-       - main
+       - crc-press
 
-name: build-book
+name: build-pdf
 
 jobs:
   bookdown:
@@ -45,36 +42,9 @@ jobs:
          #Rscript -e "remotes::install_deps(dependencies = TRUE)"
         
       - name: Render Book
-        run: Rscript -e 'bookdown::render_book("index.Rmd")'
+        run: Rscript -e 'bookdown::render_book("index.Rmd, output_format = "bookdown::pdf_book"")'
         
       - uses: actions/upload-artifact@v3 # update
         with:
-          name: _book
-          path: _book/
-
-# Need to first create an empty gh-pages branch
-# see https://pkgdown.r-lib.org/reference/deploy_site_github.html
-# and also add secrets for a GH_PAT and EMAIL to the repository
-# gh-action from Cecilapp/GitHub-Pages-deploy
-  checkout-and-deploy:
-   runs-on: ubuntu-latest
-   needs: bookdown
-   steps:
-     - name: Checkout
-       uses: actions/checkout@v3 # update
-
-     - name: Download artifact
-       uses: actions/download-artifact@v3 # update
-       with:
-         # Artifact name
-         name: _book # optional
-         # Destination path
-         path: _book # optional
-
-     - name: Deploy to GitHub Pages
-       uses: Cecilapp/GitHub-Pages-deploy@v3 # update
-       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-          build_dir: _book/ # "_site/" by default
-          email: ${{ secrets.EMAIL }} # must be a verified email
+          name: _pdf
+          path: _pdf/
