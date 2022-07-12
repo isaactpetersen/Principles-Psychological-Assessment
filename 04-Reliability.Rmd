@@ -565,8 +565,12 @@ rater1categorical <- sample(c(0,1), size = sampleSize, replace = TRUE)
 rater2categorical <- rater1categorical
 rater3categorical <- rater1categorical
 
-rater2categorical[sample(1:length(rater2categorical), size = 10, replace = FALSE)] <- 0
-rater3categorical[sample(1:length(rater3categorical), size = 10, replace = FALSE)] <- 1
+rater2categorical[sample(1:length(rater2categorical),
+                         size = 10,
+                         replace = FALSE)] <- 0
+rater3categorical[sample(1:length(rater3categorical),
+                         size = 10,
+                         replace = FALSE)] <- 1
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
@@ -1037,7 +1041,12 @@ BAplotlimits <- blandr.plot.limits(BAstats)
 ```
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
-blandr.plot.rplot(BAstats, plot.limits = BAplotlimits, annotate = TRUE, method1name = "T1", method2name = "T2", ciDisplay = FALSE)
+blandr.plot.rplot(BAstats,
+                  plot.limits = BAplotlimits,
+                  annotate = TRUE,
+                  method1name = "T1",
+                  method2name = "T2",
+                  ciDisplay = FALSE)
 ```
 
 ##### Bias {#blandAltmanBias}
@@ -1360,7 +1369,9 @@ Omega total ($\omega_t$) was calculated using the `MBESS` package [@R-MBESS].
 This code quickly calculates a point estimate for omega total:
 
 ```{r}
-ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "omega", interval.type = "none")$est
+ci.reliability(mydata[,c("item1","item2","item3","item4")],
+               type = "omega",
+               interval.type = "none")$est
 ```
 
 If you want to calculate a confidence interval for omega, you will need to specify an `interval.type` and specify how many bootstrap replications.
@@ -1379,7 +1390,10 @@ However, the number of bootstrap replications must be larger than the number of 
 
 ```{r omegaTotal, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
-ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "omega", interval.type = "bca", B = bootstrapReplications)
+ci.reliability(mydata[,c("item1","item2","item3","item4")],
+               type = "omega",
+               interval.type = "bca",
+               B = bootstrapReplications)
 ```
 
 ##### Omega Hierarchical ($\omega_h$)
@@ -1392,7 +1406,9 @@ If the multi-dimensional items follow a higher-order structure, use omega higher
 Omega hierarchical was calculated using the `MBESS` package [@R-MBESS].
 
 ```{r}
-ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "hierarchical", interval.type = "none")$est
+ci.reliability(mydata[,c("item1","item2","item3","item4")],
+               type = "hierarchical",
+               interval.type = "none")$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.
@@ -1405,7 +1421,10 @@ However, the number of bootstrap replications must be larger than the number of 
 
 ```{r omegaHierarchical, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
-ci.reliability(mydata[,c("item1","item2","item3","item4")], type = "hierarchical", interval.type = "bca", B = bootstrapReplications)
+ci.reliability(mydata[,c("item1","item2","item3","item4")],
+               type = "hierarchical",
+               interval.type = "bca",
+               B = bootstrapReplications)
 ```
 
 ##### Omega Categorical ($\omega_C$)
@@ -1418,7 +1437,9 @@ If the categorical items are multi-dimensional, and they follow a higher-order s
 Omega categorical was calculated using the `MBESS` package [@R-MBESS].
 
 ```{r}
-ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")], type = "categorical", interval.type = "none")$est
+ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
+               type = "categorical",
+               interval.type = "none")$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.
@@ -1431,7 +1452,10 @@ However, the number of bootstrap replications must be larger than the number of 
 
 ```{r omegaCategorical, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
-ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")], type = "categorical", interval.type = "bca", B = bootstrapReplications)
+ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
+               type = "categorical",
+               interval.type = "bca",
+               B = bootstrapReplications)
 ```
 
 ### Comparison {#comparison-reliability}
@@ -1661,7 +1685,8 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#noError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1,
+                                   method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
 #### Bias {#noError-bias}
@@ -1891,7 +1916,8 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#betweenPersonSystematicError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1,
+                                   method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
 #### Bias {#betweenPersonSystematicError-bias}
@@ -1951,7 +1977,8 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#constantVariance-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1,
+                                   method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
 #### Bias {#constantVariance-bias}

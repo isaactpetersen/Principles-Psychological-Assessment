@@ -242,7 +242,9 @@ difficulty_long$Difficulty[which(difficulty_long$item == "lowDifficulty")] <- "L
 difficulty_long$Difficulty[which(difficulty_long$item == "highDifficulty")] <- "High"
 ```
 
-```{r iccDifficulty, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item characteristic curves of an item with low difficulty versus high difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."}
+(ref:iccDifficulty) Item characteristic curves of an item with low difficulty versus high difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%.
+
+```{r iccDifficulty, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "(ref:iccDifficulty)"}
 ggplot(difficulty_long, aes(theta, value, group = Difficulty, color = Difficulty)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
@@ -1448,7 +1450,8 @@ The item factor analysis models were fit in the `lavaan` package [@R-lavaan].
 ```{r}
 onePLModel_cfa <- '
 # Factor Loadings (i.e., discrimination parameters)
-latent =~ loading*Item.1 + loading*Item.2 + loading*Item.3 + loading*Item.4 + loading*Item.5
+latent =~ loading*Item.1 + loading*Item.2 + loading*Item.3 + loading*Item.4 + 
+  loading*Item.5
 
 # Item Thresholds (i.e., difficulty parameters)
 Item.1 | threshold1*t1
@@ -1460,7 +1463,8 @@ Item.5 | threshold5*t1
 
 onePLModel_cfa_fit = sem(model = onePLModel_cfa,
                          data = mydataIRT,
-                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
+                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4",
+                                     "Item.5"),
                          mimic = "Mplus",
                          estimator = "WLSMV",
                          std.lv = TRUE,
@@ -1471,7 +1475,8 @@ summary(onePLModel_cfa_fit,
         rsquare = TRUE,
         standardized = TRUE)
 
-fitMeasures(onePLModel_cfa_fit, fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+fitMeasures(onePLModel_cfa_fit, fit.measures = c("chisq", "df", "pvalue",
+                                                 "rmsea", "cfi", "tli", "srmr"))
 
 residuals(onePLModel_cfa_fit, type = "cor")
 
@@ -1609,7 +1614,8 @@ The item factor analysis models were fit in the `lavaan` package [@R-lavaan].
 ```{r}
 twoPLModel_cfa <- '
 # Factor Loadings (i.e., discrimination parameters)
-latent =~ loading1*Item.1 + loading2*Item.2 + loading3*Item.3 + loading4*Item.4 + loading5*Item.5
+latent =~ loading1*Item.1 + loading2*Item.2 + loading3*Item.3 + 
+  loading4*Item.4 + loading5*Item.5
 
 # Item Thresholds (i.e., difficulty parameters)
 Item.1 | threshold1*t1
@@ -1621,7 +1627,8 @@ Item.5 | threshold5*t1
 
 twoPLModel_cfa_fit = sem(model = twoPLModel_cfa,
                          data = mydataIRT,
-                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
+                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4",
+                                     "Item.5"),
                          mimic = "Mplus",
                          estimator = "WLSMV",
                          std.lv = TRUE,
@@ -1632,7 +1639,8 @@ summary(twoPLModel_cfa_fit,
         rsquare = TRUE,
         standardized = TRUE)
 
-fitMeasures(twoPLModel_cfa_fit, fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+fitMeasures(twoPLModel_cfa_fit, fit.measures = c("chisq", "df", "pvalue",
+                                                 "rmsea", "cfi", "tli", "srmr"))
 
 residuals(twoPLModel_cfa_fit, type = "cor")
 
@@ -2003,24 +2011,33 @@ plot(gradedResponseModel, type = "trace")
 This plot of item boundary characteristic curves was adapted from an example by Aiden Loe: https://aidenloe.github.io/irtplots.html
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Item Boundary Category Characteristic Curves From Graded Response Model."}
-modelCoefficients <- coef(gradedResponseModel, IRTpars = TRUE, simplify = TRUE)$items
+modelCoefficients <- coef(gradedResponseModel,
+                          IRTpars = TRUE,
+                          simplify = TRUE)$items
 
 twopl <- function(a, b, theta){ # 2pl function
   1 / (1 + exp(-(a * (theta - b))))}
 
 theta <- seq(from = -6, to = 6, by = .1)
 
-difficultyThresholds <- grep("b", dimnames(modelCoefficients)[[2]], value = TRUE)
+difficultyThresholds <- grep("b",
+                             dimnames(modelCoefficients)[[2]],
+                             value = TRUE)
 numberDifficultyThresholds <- length(difficultyThresholds)
 items <- dimnames(modelCoefficients)[[1]]
 numberOfItems <- length(items)
 
-lst <- lapply(1:numberOfItems, function(x) data.frame(matrix(ncol = numberDifficultyThresholds + 1, nrow = length(theta), dimnames = list(NULL, c("theta", difficultyThresholds)))))
+lst <- lapply(1:numberOfItems,
+              function(x) data.frame(matrix(ncol = numberDifficultyThresholds + 1,
+                                            nrow = length(theta),
+                                            dimnames = list(NULL, c("theta", difficultyThresholds)))))
 
 for(i in 1:numberOfItems){
   for(j in 1:numberDifficultyThresholds){
     lst[[i]][,1] <- theta
-    lst[[i]][,j + 1] <- twopl(a = modelCoefficients[i,1], b = modelCoefficients[i,j + 1], theta = theta)
+    lst[[i]][,j + 1] <- twopl(a = modelCoefficients[i,1],
+                              b = modelCoefficients[i,j + 1],
+                              theta = theta)
   }
 }
 
@@ -2028,7 +2045,8 @@ names(lst) <- items
 dat <- bind_rows(lst, .id = "item")
 longer_data <- pivot_longer(dat, cols = all_of(difficultyThresholds))
 
-ggplot(longer_data, aes(theta, value, group = interaction(item, name), color = item)) +
+ggplot(longer_data,
+       aes(theta, value, group = interaction(item, name), color = item)) +
   geom_line() +
   ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
   theme_bw() +
