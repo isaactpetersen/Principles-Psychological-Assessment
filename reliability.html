@@ -2471,7 +2471,8 @@ The formula for the standard error of measurement is below:</p>
 \]</span></p>
 <p>where <span class="math inline">\(\sigma_x\)</span> represents the standard deviation of scores.
 Thus, the standard error of measurement is directly related to the reliability of the measure.
-The higher the reliability, the lower the standard error of measurement.</p>
+The higher the reliability, the lower the standard error of measurement.
+The standard error of measurement as a function of reliability of the measure and the standard deviation of scores is depicted in Figure <a href="reliability.html#fig:standardErrorOfMeasurementPlot">3.13</a>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:standardErrorOfMeasurementPlot"></span>
 <img src="Book_files/figure-html/standardErrorOfMeasurementPlot-1.png" alt="Standard Error of Measurement as a Function of Reliability." width="100%" />
 <p class="caption">
@@ -2657,18 +2658,17 @@ sample estimates:
 time1 1.0000000 0.9317389 0.8290914
 time2 0.9317389 1.0000000 0.8425997
 time3 0.8290914 0.8425997 1.0000000</code></pre>
-<p>Below is a scatterplot of the time 1 scores on the x-axis and time 2 scores on the y-axis.
-The black line is the best-fitting linear line.
-The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit.</p>
+<p>Figure <a href="reliability.html#fig:testRetestScatterplot">3.14</a> depicts a scatterplot of the time 1 scores on the x-axis and time 2 scores on the y-axis.</p>
+
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="reliability.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mydata<span class="sc">$</span>time1, mydata<span class="sc">$</span>time2,</span>
 <span id="cb41-2"><a href="reliability.html#cb41-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">substitute</span>(<span class="fu">paste</span>(<span class="fu">italic</span>(r), <span class="st">&quot; = &quot;</span>, x, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>), <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">round</span>(<span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>estimate, <span class="dv">2</span>))))</span>
 <span id="cb41-3"><a href="reliability.html#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(time2 <span class="sc">~</span> time1, <span class="at">data =</span> mydata), <span class="at">col =</span> <span class="st">&quot;black&quot;</span>)</span>
 <span id="cb41-4"><a href="reliability.html#cb41-4" aria-hidden="true" tabindex="-1"></a>mydataNoMissing <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(mydata[,<span class="fu">c</span>(<span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>)])</span>
 <span id="cb41-5"><a href="reliability.html#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">lowess</span>(mydataNoMissing<span class="sc">$</span>time1, mydataNoMissing<span class="sc">$</span>time2), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:testRetestScatterplot"></span>
-<img src="Book_files/figure-html/testRetestScatterplot-1.png" alt="Test–retest Reliability Scatterplot." width="100%" />
+<img src="Book_files/figure-html/testRetestScatterplot-1.png" alt="Test–retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit." width="100%" />
 <p class="caption">
-Figure 3.14: Test–retest Reliability Scatterplot.
+Figure 3.14: Test–retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit.
 </p>
 </div>
 <div id="correlationConsiderations" class="section level5 hasAnchor" number="3.6.1.1.1">
@@ -2799,7 +2799,7 @@ CR = 1.959964 \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 <span id="cb45-6"><a href="reliability.html#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-7"><a href="reliability.html#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficientOfRepeatability</span>(<span class="at">measure1 =</span> mydata<span class="sc">$</span>time1, <span class="at">measure2 =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
 <pre><code>[1] 7.694052</code></pre>
-<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2022</a>)</span> contains the <code>repeatability()</code> function that estimates the repeatability of a measure’s scores and generates a <a href="reliability.html#blandAltmanPlot">Bland-Altman plot</a>.</p>
+<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2022</a>)</span> contains the <code>repeatability()</code> function that estimates the repeatability of a measure’s scores and generates a <a href="reliability.html#blandAltmanPlot">Bland-Altman plot</a> in Figure <a href="reliability.html#fig:repeatability">3.19</a>.</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="reliability.html#cb47-1" aria-hidden="true" tabindex="-1"></a>repeatability <span class="ot">&lt;-</span> <span class="cf">function</span>(measure1, measure2){</span>
 <span id="cb47-2"><a href="reliability.html#cb47-2" aria-hidden="true" tabindex="-1"></a>  cr <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>((measure1 <span class="sc">-</span> measure2), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb47-3"><a href="reliability.html#cb47-3" aria-hidden="true" tabindex="-1"></a>  bias <span class="ot">&lt;-</span> <span class="fu">mean</span>((measure2 <span class="sc">-</span> measure1), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
@@ -2827,7 +2827,12 @@ CR = 1.959964 \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 <span id="cb47-25"><a href="reliability.html#cb47-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(output)</span>
 <span id="cb47-26"><a href="reliability.html#cb47-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="reliability.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">repeatability</span>(<span class="at">measure1 =</span> mydata<span class="sc">$</span>time1, <span class="at">measure2 =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
-<img src="Book_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:repeatability"></span>
+<img src="Book_files/figure-html/repeatability-1.png" alt="Bland-Altman Plot." width="100%" />
+<p class="caption">
+Figure 3.19: Bland-Altman Plot.
+</p>
+</div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["cr"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["bias"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["lowerLOA"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["upperLOA"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"7.694052","2":"0.3956087","3":"-7.298443","4":"8.08966"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2840,7 +2845,7 @@ CR = 1.959964 \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:blandAltman"></span>
 <img src="Images/blandAltman.png" alt="Example of a Bland-Altman plot. Figure reprinted from Vaz et al. (2013), Figure 2, p. 4. Vaz, S., Falkmer, T., Passmore, A. E., Parsons, R., (ref:ampersand) Andreou, P. (2013). The case for using the repeatability coefficient when calculating test–retest reliability. PLoS ONE, 8(9), e73990. https://doi.org/10.1371/journal.pone.0073990" width="100%" />
 <p class="caption">
-Figure 3.19: Example of a Bland-Altman plot. Figure reprinted from <span class="citation">Vaz et al. (<a href="#ref-Vaz2013" role="doc-biblioref">2013</a>)</span>, Figure 2, p. 4. Vaz, S., Falkmer, T., Passmore, A. E., Parsons, R., (ref:ampersand) Andreou, P. (2013). The case for using the repeatability coefficient when calculating test–retest reliability. <em>PLoS ONE</em>, <em>8</em>(9), e73990. <a href="https://doi.org/10.1371/journal.pone.0073990">https://doi.org/10.1371/journal.pone.0073990</a>
+Figure 3.20: Example of a Bland-Altman plot. Figure reprinted from <span class="citation">Vaz et al. (<a href="#ref-Vaz2013" role="doc-biblioref">2013</a>)</span>, Figure 2, p. 4. Vaz, S., Falkmer, T., Passmore, A. E., Parsons, R., (ref:ampersand) Andreou, P. (2013). The case for using the repeatability coefficient when calculating test–retest reliability. <em>PLoS ONE</em>, <em>8</em>(9), e73990. <a href="https://doi.org/10.1371/journal.pone.0073990">https://doi.org/10.1371/journal.pone.0073990</a>
 </p>
 </div>
 <p>In a Bland-Altman plot, the x-axis represents the mean of a person’s score across the two time points, and the y-axis represents the within-subject differences across time points.
@@ -2859,10 +2864,10 @@ The Bland-Altman plot was created using the <code>blandr</code> package <span cl
 <span id="cb50-4"><a href="reliability.html#cb50-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">method1name =</span> <span class="st">&quot;T1&quot;</span>,</span>
 <span id="cb50-5"><a href="reliability.html#cb50-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">method2name =</span> <span class="st">&quot;T2&quot;</span>,</span>
 <span id="cb50-6"><a href="reliability.html#cb50-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ciDisplay =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-28"></span>
-<img src="Book_files/figure-html/unnamed-chunk-28-1.png" alt="Bland-Altman Plot." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-27"></span>
+<img src="Book_files/figure-html/unnamed-chunk-27-1.png" alt="Bland-Altman Plot." width="100%" />
 <p class="caption">
-Figure 3.20: Bland-Altman Plot.
+Figure 3.21: Bland-Altman Plot.
 </p>
 </div>
 </div>
@@ -3204,14 +3209,24 @@ Internal consistency is helpful to a point, but you do not want items to be too 
 <pre><code>[1] 0.7417243</code></pre>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="reliability.html#cb76-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])<span class="sc">$</span>total<span class="sc">$</span>average_r</span></code></pre></div>
 <pre><code>[1] 0.7452872</code></pre>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="reliability.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(meanInterItemCorrelations)</span>
-<span id="cb78-2"><a href="reliability.html#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">mean</span>(meanInterItemCorrelations), <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
-<p><img src="Book_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
-<p>Here is the median inter-item correlation:</p>
+<p>Figure <a href="reliability.html#fig:histogramITCs">3.22</a> is a histogram of the inter-item correlations.</p>
+
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="reliability.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(meanInterItemCorrelations,</span>
+<span id="cb78-2"><a href="reliability.html#cb78-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Inter-Item Correlations&quot;</span>,</span>
+<span id="cb78-3"><a href="reliability.html#cb78-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Inter-Item Correlations&quot;</span>)</span>
+<span id="cb78-4"><a href="reliability.html#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">mean</span>(meanInterItemCorrelations), <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:histogramITCs"></span>
+<img src="Book_files/figure-html/histogramITCs-1.png" alt="Histogram of Inter-Item Correlations. The vertical black line reflects the mean inter-item correlation." width="100%" />
+<p class="caption">
+Figure 3.22: Histogram of Inter-Item Correlations. The vertical black line reflects the mean inter-item correlation.
+</p>
+</div>
+<p>Here is the median inter-item correlation for each item:</p>
 <div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="reliability.html#cb79-1" aria-hidden="true" tabindex="-1"></a>medianInterItemCorrelations <span class="ot">&lt;-</span> <span class="fu">apply</span>(interItemCorrelations, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">median</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb79-2"><a href="reliability.html#cb79-2" aria-hidden="true" tabindex="-1"></a>medianInterItemCorrelations</span></code></pre></div>
 <pre><code>    item1     item2     item3     item4 
 0.7577984 0.7791957 0.7577984 0.6316587 </code></pre>
+<p>Here is the median inter-item correlation across all items:</p>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="reliability.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(interItemCorrelations[<span class="fu">lower.tri</span>(interItemCorrelations)])</span></code></pre></div>
 <pre><code>[1] 0.7412414</code></pre>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="reliability.html#cb83-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])<span class="sc">$</span>total<span class="sc">$</span>median_r</span></code></pre></div>
@@ -3627,17 +3642,17 @@ r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\
 <div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="reliability.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reliabilityOfDifferenceScore</span>(<span class="at">x =</span> mydata<span class="sc">$</span>item1, <span class="at">y =</span> mydata<span class="sc">$</span>item2, <span class="at">reliabilityX =</span> .<span class="dv">95</span>, <span class="at">reliabilityY =</span> .<span class="dv">95</span>)</span></code></pre></div>
 <pre><code>[1] 0.2552898</code></pre>
 <p>For instance, in this case, the reliability of the difference score is .26 even though the reliability of both indices is .95.</p>
-<p>In Figures <a href="reliability.html#fig:reliabilityOfDifferenceScore">3.21</a> and <a href="reliability.html#fig:reliabilityOfDifferenceScore2">3.22</a>, I present the reliability of a difference score as a function of (a) the reliability of the indices that compose the difference score and (b) the correlation between them, assuming that both indices have equal variances.</p>
+<p>In Figures <a href="reliability.html#fig:reliabilityOfDifferenceScore">3.23</a> and <a href="reliability.html#fig:reliabilityOfDifferenceScore2">3.24</a>, the reliability of a difference score is depicted as a function of (a) the reliability of the indices that compose the difference score and (b) the correlation between them, assuming that both indices have equal variances.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:reliabilityOfDifferenceScore"></span>
 <img src="Book_files/figure-html/reliabilityOfDifferenceScore-1.png" alt="Reliability of Difference Score as a Function of Reliability of Indices and the Correlation Between Them." width="100%" />
 <p class="caption">
-Figure 3.21: Reliability of Difference Score as a Function of Reliability of Indices and the Correlation Between Them.
+Figure 3.23: Reliability of Difference Score as a Function of Reliability of Indices and the Correlation Between Them.
 </p>
 </div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:reliabilityOfDifferenceScore2"></span>
 <img src="Book_files/figure-html/reliabilityOfDifferenceScore2-1.png" alt="Reliability of Difference Score as a Function of Correlation Between Indices and Reliability of Indices." width="100%" />
 <p class="caption">
-Figure 3.22: Reliability of Difference Score as a Function of Correlation Between Indices and Reliability of Indices.
+Figure 3.24: Reliability of Difference Score as a Function of Correlation Between Indices and Reliability of Indices.
 </p>
 </div>
 </div>
@@ -4245,13 +4260,13 @@ However, the slope can exist at multiple levels when data are nested within grou
 For example, you can observe different associations of a predictor with an outcome at the between-individual level compared to the within-individual level.
 That is, the association between the predictor and outcome can differ when comparing across individuals versus when looking at the association between the predictor and outcome based on fluctuations within the individual.
 When the associations differ at multiple levels, this is known as <em>Simpson’s paradox</em>.
-For an example of Simpson’s paradox, see Figure <a href="reliability.html#fig:simpsonParadox">3.23</a> <span class="citation">(<a href="#ref-Kievit2013" role="doc-biblioref">R. Kievit et al., 2013</a>)</span>.
+For an example of Simpson’s paradox, see Figure <a href="reliability.html#fig:simpsonParadox">3.25</a> <span class="citation">(<a href="#ref-Kievit2013" role="doc-biblioref">R. Kievit et al., 2013</a>)</span>.
 Thus, it is important to consider that the association between variables may differ at different levels (person-level, group-level, population-level, etc.).</p>
 
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:simpsonParadox"></span>
 <img src="Images/simpsonParadox.png" alt="Example of Simpson’s paradox, where the association between the predictor and outcome differs at different levels. In this case, the association between dosage and recovery probability is positive at the population-level (upper-level unit), but the association is negative among men and women separately (lower-level unit). Figure reprinted from R. Kievit et al. (2013), Figure 1, p. 2. Kievit, R., Frankenhuis, W., Waldorp, L., (ref:ampersand) Borsboom, D. (2013). Simpson’s paradox in psychological science: a practical guide. Frontiers in Psychology, 4(513). https://doi.org/10.3389/fpsyg.2013.00513" width="100%" />
 <p class="caption">
-Figure 3.23: Example of Simpson’s paradox, where the association between the predictor and outcome differs at different levels. In this case, the association between dosage and recovery probability is positive at the population-level (upper-level unit), but the association is negative among men and women separately (lower-level unit). Figure reprinted from <span class="citation">R. Kievit et al. (<a href="#ref-Kievit2013" role="doc-biblioref">2013</a>)</span>, Figure 1, p. 2. Kievit, R., Frankenhuis, W., Waldorp, L., (ref:ampersand) Borsboom, D. (2013). Simpson’s paradox in psychological science: a practical guide. <em>Frontiers in Psychology</em>, <em>4</em>(513). <a href="https://doi.org/10.3389/fpsyg.2013.00513">https://doi.org/10.3389/fpsyg.2013.00513</a>
+Figure 3.25: Example of Simpson’s paradox, where the association between the predictor and outcome differs at different levels. In this case, the association between dosage and recovery probability is positive at the population-level (upper-level unit), but the association is negative among men and women separately (lower-level unit). Figure reprinted from <span class="citation">R. Kievit et al. (<a href="#ref-Kievit2013" role="doc-biblioref">2013</a>)</span>, Figure 1, p. 2. Kievit, R., Frankenhuis, W., Waldorp, L., (ref:ampersand) Borsboom, D. (2013). Simpson’s paradox in psychological science: a practical guide. <em>Frontiers in Psychology</em>, <em>4</em>(513). <a href="https://doi.org/10.3389/fpsyg.2013.00513">https://doi.org/10.3389/fpsyg.2013.00513</a>
 </p>
 </div>
 <p>To account for method biases in a mixed model, you could use scores from multiple measures and methods as the outcome variable.

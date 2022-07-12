@@ -2148,7 +2148,8 @@ Score transformations are not neutral.</p>
 <h3><span class="header-section-number">2.3.1</span> Raw Scores<a href="scoresScales.html#rawScores" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Raw scores are the original data, or they may be aggregations (e.g., sums or means) of multiple items.
 Raw scores are the purest because they are closest to the original operation (e.g., behavior).
-A disadvantage of raw scores is they are scale dependent, and therefore they may not be comparable across different measures with different scales.</p>
+A disadvantage of raw scores is they are scale dependent, and therefore they may not be comparable across different measures with different scales.
+An example histogram of raw scores is in Figure <a href="scoresScales.html#fig:rawScores">2.1</a>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="scoresScales.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(scores<span class="sc">$</span>rawData,</span>
 <span id="cb6-2"><a href="scoresScales.html#cb6-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Raw Scores&quot;</span>,</span>
 <span id="cb6-3"><a href="scoresScales.html#cb6-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Raw Scores&quot;</span>)</span></code></pre></div>
@@ -2196,6 +2197,7 @@ For example, a raw score of 120 may have a percentile rank of 97 whereas a raw s
 Thus, percentile ranks stretch out differences for some people but constrict differences for others.</p>
 <p>Here is an example of how to calculate percentile ranks using the <code>dplyr</code> package from the <code>tidyverse</code> <span class="citation">(<a href="#ref-tidyverse2019" role="doc-biblioref">Wickham et al., 2019</a>; <a href="#ref-R-tidyverse" role="doc-biblioref">Wickham, 2021</a>)</span>:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="scoresScales.html#cb7-1" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>percentileRank <span class="ot">&lt;-</span> <span class="fu">percent_rank</span>(scores<span class="sc">$</span>rawDataNoMissing) <span class="sc">*</span> <span class="dv">100</span></span></code></pre></div>
+<p>A histogram of percentile rank scores is in Figure <a href="scoresScales.html#fig:percentileRanks">2.3</a>.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="scoresScales.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(scores<span class="sc">$</span>percentileRank,</span>
 <span id="cb8-2"><a href="scoresScales.html#cb8-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Percentile Ranks&quot;</span>,</span>
 <span id="cb8-3"><a href="scoresScales.html#cb8-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Percentile Ranks&quot;</span>)</span></code></pre></div>
@@ -2216,7 +2218,7 @@ If scores are skewed, it can lead to two <em>z</em> scores on the opposite side 
 <p>Many constructs we study in psychology are not normally distributed.
 For example, the frequency of hallucinations among people would show a positively skewed distribution with a truncation at zero, representing a floor effect—i.e., most people do not show hallucinations.
 For instance, consider a hypothetical distribution of hallucinations.
-It might follow a folded distribution:</p>
+It might follow a folded distribution, as depicted in Figure <a href="scoresScales.html#fig:foldedDistribution">2.4</a>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="scoresScales.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">rbinom</span>(<span class="dv">100000</span>, <span class="dv">300</span>, .<span class="dv">01</span>),</span>
 <span id="cb9-2"><a href="scoresScales.html#cb9-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">8</span>,</span>
 <span id="cb9-3"><a href="scoresScales.html#cb9-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Hallucinations (Raw Score)&quot;</span>,</span>
@@ -2227,7 +2229,7 @@ It might follow a folded distribution:</p>
 Figure 2.4: Histogram of Hallucinations (Raw Score).
 </p>
 </div>
-<p>Now consider the same distribution converted to a standardized (<em>z</em>) score:</p>
+<p>Now consider the same distribution converted to a standardized (<em>z</em>) score, as depicted in Figure <a href="scoresScales.html#fig:foldedDistributionZscore">2.5</a>:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="scoresScales.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">scale</span>(<span class="fu">rbinom</span>(<span class="dv">100000</span>, <span class="dv">300</span>, .<span class="dv">01</span>)),</span>
 <span id="cb10-2"><a href="scoresScales.html#cb10-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">8</span>,</span>
 <span id="cb10-3"><a href="scoresScales.html#cb10-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Hallucinations (z Score)&quot;</span>,</span>
@@ -2253,6 +2255,7 @@ Every <em>z</em> score represents how far that person’s score is from the (nor
 <span id="cb11-2"><a href="scoresScales.html#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="scoresScales.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(stdDeviations) <span class="sc">-</span> <span class="fu">pnorm</span>(stdDeviations <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
 <pre><code>[1] 0.6826895</code></pre>
+<p>The area under a normal curve within one standard deviation of the mean is depicted in Figure <a href="scoresScales.html#fig:zScoreDensity1SD">2.6</a>.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="scoresScales.html#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length =</span> <span class="dv">200</span>)</span>
 <span id="cb13-2"><a href="scoresScales.html#cb13-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
 <span id="cb13-3"><a href="scoresScales.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
@@ -2275,6 +2278,7 @@ Figure 2.6: Density of Standard Normal Distribution. The blue region represents 
 <span id="cb14-2"><a href="scoresScales.html#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="scoresScales.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(stdDeviations) <span class="sc">-</span> <span class="fu">pnorm</span>(stdDeviations <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
 <pre><code>[1] 0.9544997</code></pre>
+<p>The area under a normal curve within two standard deviations of the mean is depicted in Figure <a href="scoresScales.html#fig:zScoreDensity2SD">2.7</a>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="scoresScales.html#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length =</span> <span class="dv">200</span>)</span>
 <span id="cb16-2"><a href="scoresScales.html#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
 <span id="cb16-3"><a href="scoresScales.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
@@ -2297,6 +2301,7 @@ Figure 2.7: Density of Standard Normal Distribution. The blue region represents 
 <span id="cb17-2"><a href="scoresScales.html#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="scoresScales.html#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(stdDeviations) <span class="sc">-</span> <span class="fu">pnorm</span>(stdDeviations <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
 <pre><code>[1] 0.9973002</code></pre>
+<p>The area under a normal curve within three standard deviations of the mean is depicted in Figure <a href="scoresScales.html#fig:zScoreDensity3SD">2.8</a>.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="scoresScales.html#cb19-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="at">length =</span> <span class="dv">200</span>)</span>
 <span id="cb19-2"><a href="scoresScales.html#cb19-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
 <span id="cb19-3"><a href="scoresScales.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
@@ -2329,6 +2334,7 @@ z = \frac{x - \mu}{\sigma}
 <span id="cb22-3"><a href="scoresScales.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">as.vector</span>(scores<span class="sc">$</span>zScore),</span>
 <span id="cb22-4"><a href="scoresScales.html#cb22-4" aria-hidden="true" tabindex="-1"></a>          (scores<span class="sc">$</span>rawData <span class="sc">-</span> <span class="fu">mean</span>(scores<span class="sc">$</span>rawData, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))<span class="sc">/</span><span class="fu">sd</span>(scores<span class="sc">$</span>rawData, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <pre><code>[1] TRUE</code></pre>
+<p>An example histogram of <em>z</em> scores is in Figure <a href="scoresScales.html#fig:zScores">2.9</a>.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="scoresScales.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(scores<span class="sc">$</span>zScore,</span>
 <span id="cb24-2"><a href="scoresScales.html#cb24-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;z Scores&quot;</span>,</span>
 <span id="cb24-3"><a href="scoresScales.html#cb24-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of z Scores&quot;</span>)</span></code></pre></div>
@@ -2350,6 +2356,7 @@ T = 50 + 10z
 \]</span>
 where <span class="math inline">\(z\)</span> are <em>z</em> scores.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="scoresScales.html#cb25-1" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>tScore <span class="ot">&lt;-</span> <span class="dv">50</span> <span class="sc">+</span> <span class="dv">10</span><span class="sc">*</span><span class="fu">scale</span>(scores<span class="sc">$</span>rawData)</span></code></pre></div>
+<p>An example histogram of <em>T</em> scores is in Figure <a href="scoresScales.html#fig:tScores">2.10</a>.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="scoresScales.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(scores<span class="sc">$</span>tScore,</span>
 <span id="cb26-2"><a href="scoresScales.html#cb26-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;T Scores&quot;</span>,</span>
 <span id="cb26-3"><a href="scoresScales.html#cb26-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of T Scores&quot;</span>)</span></code></pre></div>
@@ -2372,6 +2379,7 @@ less than 70 (two standard deviations below the mean), whereas giftedness is at 
 \]</span></p>
 <p>where <span class="math inline">\(z\)</span> are <em>z</em> scores.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="scoresScales.html#cb27-1" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>standardScore <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">+</span> <span class="dv">15</span><span class="sc">*</span><span class="fu">scale</span>(scores<span class="sc">$</span>rawData)</span></code></pre></div>
+<p>An example histogram of standard scores is in Figure <a href="scoresScales.html#fig:standardScores">2.11</a>.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="scoresScales.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(scores<span class="sc">$</span>standardScore,</span>
 <span id="cb28-2"><a href="scoresScales.html#cb28-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Standard Scores&quot;</span>,</span>
 <span id="cb28-3"><a href="scoresScales.html#cb28-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Standard Scores&quot;</span>)</span></code></pre></div>
@@ -2393,6 +2401,7 @@ On tests of intellectual or cognitive ability, scaled scores commonly have a mea
 \]</span></p>
 <p>where <span class="math inline">\(z\)</span> are <em>z</em> scores.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="scoresScales.html#cb29-1" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>scaledScore <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span><span class="fu">scale</span>(scores<span class="sc">$</span>rawData)</span></code></pre></div>
+<p>An example histogram of scaled scores is in Figure <a href="scoresScales.html#fig:scaledScores">2.12</a>.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="scoresScales.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(scores<span class="sc">$</span>scaledScore,</span>
 <span id="cb30-2"><a href="scoresScales.html#cb30-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Scale Scores&quot;</span>,</span>
 <span id="cb30-3"><a href="scoresScales.html#cb30-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Scaled Scores&quot;</span>)</span></code></pre></div>
@@ -2496,6 +2505,7 @@ The lowest 4% receive a stanine score of 1, the next 7% receive a stanine score 
 <span id="cb31-8"><a href="scoresScales.html#cb31-8" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>stanineScore[<span class="fu">which</span>(scores<span class="sc">$</span>percentileRank <span class="sc">&gt;</span> <span class="dv">77</span> <span class="sc">&amp;</span> scores<span class="sc">$</span>percentileRank <span class="sc">&lt;=</span> <span class="dv">89</span>)] <span class="ot">&lt;-</span> <span class="dv">7</span></span>
 <span id="cb31-9"><a href="scoresScales.html#cb31-9" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>stanineScore[<span class="fu">which</span>(scores<span class="sc">$</span>percentileRank <span class="sc">&gt;</span> <span class="dv">89</span> <span class="sc">&amp;</span> scores<span class="sc">$</span>percentileRank <span class="sc">&lt;=</span> <span class="dv">96</span>)] <span class="ot">&lt;-</span> <span class="dv">8</span></span>
 <span id="cb31-10"><a href="scoresScales.html#cb31-10" aria-hidden="true" tabindex="-1"></a>scores<span class="sc">$</span>stanineScore[<span class="fu">which</span>(scores<span class="sc">$</span>percentileRank <span class="sc">&gt;</span> <span class="dv">96</span>)] <span class="ot">&lt;-</span> <span class="dv">9</span></span></code></pre></div>
+<p>A histogram of stanine scores is in Figure <a href="scoresScales.html#fig:stanineScores">2.13</a>.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="scoresScales.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(scores<span class="sc">$</span>stanineScore,</span>
 <span id="cb32-2"><a href="scoresScales.html#cb32-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Stanine Scores&quot;</span>,</span>
 <span id="cb32-3"><a href="scoresScales.html#cb32-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Stanine Scores&quot;</span>,</span>
