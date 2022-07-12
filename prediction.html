@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2022-07-11" />
+<meta name="date" content="2022-07-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -2319,7 +2319,7 @@ If <span class="math inline">\(P(R_i) &gt; P(C_i)\)</span>, our predictions must
 \]</span></p>
 <p>Instead of using <a href="prediction.html#baseRate">marginal probability</a> (<a href="prediction.html#baseRate">base rate</a>) of <span class="math inline">\(R\)</span>, as in the original formulation of Bayes’ theorem, it uses the <a href="prediction.html#conditionalProbability">conditional probability</a>, <span class="math inline">\(P(R|\text{not } C)\)</span>.
 Thus, it uses three terms: two <a href="prediction.html#conditionalProbability">conditional probabilities</a>—<span class="math inline">\(P(R|C)\)</span> and <span class="math inline">\(P(R|\text{not } C)\)</span>—and one <a href="prediction.html#baseRate">marginal probability</a>, <span class="math inline">\(P(C_i)\)</span>.
-This alternative formulation of Bayes’ theorem can be used to calculate <a href="prediction.html#ppv">positive predictive value</a>, based on <a href="prediction.html#sensitivity">sensitivity</a>, <a href="prediction.html#specificity">specificity</a>, and the <a href="prediction.html#baseRate">base rate</a>, as presented in Equation <a href="prediction.html#eq:positivePredictiveValue">(8.39)</a>.</p>
+This alternative formulation of Bayes’ theorem can be used to calculate <a href="prediction.html#ppv">positive predictive value</a>, based on <a href="prediction.html#sensitivity">sensitivity</a>, <a href="prediction.html#specificity">specificity</a>, and the <a href="prediction.html#baseRate">base rate</a>, as presented in Equation <a href="prediction.html#eq:positivePredictiveValue">(8.40)</a>.</p>
 <p>Let us see how the alternative formulation of Bayes’ theorem applies to the HIV example above.
 We can calculate the probability of HIV given a positive test using three terms: the <a href="prediction.html#conditionalProbability">conditional probability</a> that a person with HIV gets a positive test (i.e., <a href="prediction.html#sensitivity">sensitivity</a>), the <a href="prediction.html#conditionalProbability">conditional probability</a> that a person without HIV gets a positive test (i.e., <a href="prediction.html#falsePositiveRate">false positive rate</a>), and the <a href="prediction.html#baseRate">base rate</a> of HIV.
 Using the <span class="math inline">\(P(R|\text{not } C)\)</span> calculated in Equation <a href="prediction.html#eq:conditionalProbabilityRevised">(8.8)</a>, the <a href="prediction.html#conditionalProbability">conditional probability</a> of HIV given a single positive test is:</p>
@@ -3774,11 +3774,11 @@ Lower values reflect greater accuracy.</p>
 <p>False negatives (FNs) are instances in which a negative classification (e.g., absence of a disorder) is incorrect—that is, the test says that a classification is not present, and the classification is present.
 False negatives are also called misses.
 Lower values reflect greater accuracy.</p>
-<p><span class="math display" id="eq:truePositive">\[
+<p><span class="math display" id="eq:falseNegative">\[
 \begin{aligned}
   \text{FN} &amp;= \text{BR} \times (1 - \text{SR}) \times N
 \end{aligned}
-\tag{8.25}
+\tag{8.28}
 \]</span></p>
 <div class="sourceCode" id="cb666"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb666-1"><a href="prediction.html#cb666-1" aria-hidden="true" tabindex="-1"></a>FNvalue <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(mydataSDT<span class="sc">$</span>diagnosis <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> mydataSDT<span class="sc">$</span>disorder <span class="sc">==</span> <span class="dv">1</span>))</span>
 <span id="cb666-2"><a href="prediction.html#cb666-2" aria-hidden="true" tabindex="-1"></a>FNvalue</span></code></pre></div>
@@ -3805,7 +3805,7 @@ In clinical psychology, the selection ratio is the proportion of people who test
   \text{SR} &amp;= P(R_i) \\
   &amp;= \frac{\text{TP} + \text{FP}}{N}
 \end{aligned}
-\tag{8.28}
+\tag{8.29}
 \]</span></p>
 <div class="sourceCode" id="cb670"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb670-1"><a href="prediction.html#cb670-1" aria-hidden="true" tabindex="-1"></a>selectionRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb670-2"><a href="prediction.html#cb670-2" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> TP <span class="sc">+</span> TN <span class="sc">+</span> FP <span class="sc">+</span> FN</span>
@@ -3828,7 +3828,7 @@ Without additional information, the <a href="prediction.html#baseRate">base rate
   \text{BR} &amp;= P(C_i) \\
   &amp;= \frac{\text{TP} + \text{FN}}{N}
 \end{aligned}
-\tag{8.29}
+\tag{8.30}
 \]</span></p>
 <div class="sourceCode" id="cb672"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb672-1"><a href="prediction.html#cb672-1" aria-hidden="true" tabindex="-1"></a>baseRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb672-2"><a href="prediction.html#cb672-2" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> TP <span class="sc">+</span> TN <span class="sc">+</span> FP <span class="sc">+</span> FN</span>
@@ -3849,7 +3849,7 @@ To convert a probability to odds, divide the probability by one minus that proba
 \begin{aligned}
   \text{pretest odds} &amp;= \frac{\text{pretest probability}}{1 - \text{pretest probability}} \\
 \end{aligned}
-\tag{8.30}
+\tag{8.31}
 \]</span></p>
 <div class="sourceCode" id="cb674"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb674-1"><a href="prediction.html#cb674-1" aria-hidden="true" tabindex="-1"></a>pretestOdds <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">pretestProb =</span> <span class="cn">NULL</span>){</span>
 <span id="cb674-2"><a href="prediction.html#cb674-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(pretestProb)){</span>
@@ -3882,7 +3882,7 @@ You can have a high percent accuracy by predicting from the <a href="prediction.
 Thus, it is also important to consider other aspects of accuracy.</p>
 <p><span class="math display" id="eq:percentAccuracy">\[
 \text{Percent Accuracy} = 100\% \times \frac{\text{TP} + \text{TN}}{N}
-\tag{8.31}
+\tag{8.32}
 \]</span></p>
 <div class="sourceCode" id="cb678"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb678-1"><a href="prediction.html#cb678-1" aria-hidden="true" tabindex="-1"></a>percentAccuracy <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb678-2"><a href="prediction.html#cb678-2" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> TP <span class="sc">+</span> TN <span class="sc">+</span> FP <span class="sc">+</span> FN</span>
@@ -3902,7 +3902,7 @@ Thus, it is also important to consider other aspects of accuracy.</p>
   \text{Percent Accuracy by Chance} &amp;= 100\% \times [P(\text{TP}) + P(\text{TN})] \\
   &amp;= 100\% \times \{(\text{BR} \times {\text{SR}}) + [(1 - \text{BR}) \times (1 - \text{SR})]\}
 \end{aligned}
-\tag{8.32}
+\tag{8.33}
 \]</span></p>
 <div class="sourceCode" id="cb680"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb680-1"><a href="prediction.html#cb680-1" aria-hidden="true" tabindex="-1"></a>percentAccuracyByChance <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb680-2"><a href="prediction.html#cb680-2" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> TP <span class="sc">+</span> TN <span class="sc">+</span> FP <span class="sc">+</span> FN</span>
@@ -3948,7 +3948,7 @@ Higher values reflect greater accuracy.</p>
 \begin{aligned}
   \text{relative improvement over chance (RIOC)} &amp;= \frac{\text{total correct} - \text{chance correct}}{\text{maximum correct} - \text{chance correct}} \\
 \end{aligned}
-\tag{8.33}
+\tag{8.34}
 \]</span></p>
 <div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb684-1"><a href="prediction.html#cb684-1" aria-hidden="true" tabindex="-1"></a>relativeImprovementOverChance <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb684-2"><a href="prediction.html#cb684-2" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> TP <span class="sc">+</span> TN <span class="sc">+</span> FP <span class="sc">+</span> FN</span>
@@ -3972,7 +3972,7 @@ Higher values reflect greater accuracy.</p>
 \begin{aligned}
   \text{relative improvement over predicting from base rate} &amp;= \frac{\text{total correct} - \text{correct by predicting from base rate}}{\text{maximum correct} - \text{correct by predicting from base rate}} \\
 \end{aligned}
-\tag{8.34}
+\tag{8.35}
 \]</span></p>
 <div class="sourceCode" id="cb686"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb686-1"><a href="prediction.html#cb686-1" aria-hidden="true" tabindex="-1"></a>relativeImprovementOverPredictingFromBaseRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb686-2"><a href="prediction.html#cb686-2" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> TP <span class="sc">+</span> TN <span class="sc">+</span> FP <span class="sc">+</span> FN</span>
@@ -4004,7 +4004,7 @@ As the cutoff decreases, sensitivity increases.</p>
   \text{sensitivity (SN)} &amp;= P(R|C) \\
   &amp;= \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{\text{TP}}{N \times \text{BR}} = 1 - \text{FNR}
 \end{aligned}
-\tag{8.35}
+\tag{8.36}
 \]</span></p>
 <div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb688-1"><a href="prediction.html#cb688-1" aria-hidden="true" tabindex="-1"></a>sensitivity <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb688-2"><a href="prediction.html#cb688-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4068,7 +4068,7 @@ As the cutoff decreases, specificity decreases.</p>
   \text{specificity (SP)} &amp;= P(\text{not } R|\text{not } C) \\
   &amp;= \frac{\text{TN}}{\text{TN} + \text{FP}} = \frac{\text{TN}}{N (1 - \text{BR})} = 1 - \text{FPR}
 \end{aligned}
-\tag{8.36}
+\tag{8.37}
 \]</span></p>
 <div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb691-1"><a href="prediction.html#cb691-1" aria-hidden="true" tabindex="-1"></a>specificity <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb691-2"><a href="prediction.html#cb691-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> TN<span class="sc">/</span>(TN <span class="sc">+</span> FP)</span>
@@ -4090,7 +4090,7 @@ Lower values reflect greater accuracy.</p>
   \text{false negative rate (FNR)} &amp;= P(\text{not } R|C) \\
   &amp;= \frac{\text{FN}}{\text{FN} + \text{TP}} = \frac{\text{FN}}{N \times \text{BR}} = 1 - \text{TPR}
 \end{aligned}
-\tag{8.37}
+\tag{8.38}
 \]</span></p>
 <div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb693-1"><a href="prediction.html#cb693-1" aria-hidden="true" tabindex="-1"></a>falseNegativeRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb693-2"><a href="prediction.html#cb693-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> FN<span class="sc">/</span>(FN <span class="sc">+</span> TP)</span>
@@ -4112,7 +4112,7 @@ Lower values reflect greater accuracy.</p>
   \text{false positive rate (FPR)} &amp;= P(R|\text{not } C) \\
   &amp;= \frac{\text{FP}}{\text{FP} + \text{TN}} = \frac{\text{FP}}{N (1 - \text{BR})} = 1 - \text{TNR}
 \end{aligned}
-\tag{8.38}
+\tag{8.39}
 \]</span></p>
 <div class="sourceCode" id="cb695"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb695-1"><a href="prediction.html#cb695-1" aria-hidden="true" tabindex="-1"></a>falsePositiveRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb695-2"><a href="prediction.html#cb695-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> FP<span class="sc">/</span>(FP <span class="sc">+</span> TN)</span>
@@ -4145,7 +4145,7 @@ As the cutoff decreases (becomes more liberal), PPV decreases.</p>
   &amp;= \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{\text{TP}}{N \times \text{SR}}\\
   &amp;= \frac{\text{sensitivity} \times {\text{BR}}}{\text{sensitivity} \times {\text{BR}} + [(1 - \text{specificity}) \times (1 - \text{BR})]}
 \end{aligned}
-\tag{8.39}
+\tag{8.40}
 \]</span></p>
 <div class="sourceCode" id="cb697"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb697-1"><a href="prediction.html#cb697-1" aria-hidden="true" tabindex="-1"></a>positivePredictiveValue <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">BR =</span> <span class="cn">NULL</span>, SN, SP){</span>
 <span id="cb697-2"><a href="prediction.html#cb697-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(BR)){</span>
@@ -4220,7 +4220,7 @@ As the cutoff decreases (becomes more liberal), NPV decreases.</p>
   &amp;= \frac{\text{TN}}{\text{TN} + \text{FN}} = \frac{\text{TN}}{N(\text{1 - SR})}\\
   &amp;= \frac{\text{specificity} \times (1-{\text{BR}})}{\text{specificity} \times (1-{\text{BR}}) + [(1 - \text{sensitivity}) \times \text{BR})]}
 \end{aligned}
-\tag{8.40}
+\tag{8.41}
 \]</span></p>
 <div class="sourceCode" id="cb703"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb703-1"><a href="prediction.html#cb703-1" aria-hidden="true" tabindex="-1"></a>negativePredictiveValue <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">BR =</span> <span class="cn">NULL</span>, SN, SP){</span>
 <span id="cb703-2"><a href="prediction.html#cb703-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(BR)){</span>
@@ -4248,7 +4248,7 @@ Lower values reflect greater accuracy.</p>
   \text{false discovery rate (FDR)} &amp;= P(\text{not } C|R) \\
   &amp;= \frac{\text{FP}}{\text{FP} + \text{TP}} = 1 - \text{PPV}
 \end{aligned}
-\tag{8.41}
+\tag{8.42}
 \]</span></p>
 <div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="prediction.html#cb707-1" aria-hidden="true" tabindex="-1"></a>falseDiscoveryRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb707-2"><a href="prediction.html#cb707-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> FP<span class="sc">/</span>(FP <span class="sc">+</span> TP)</span>
@@ -4270,7 +4270,7 @@ Lower values reflect greater accuracy.</p>
   \text{false omission rate (FOR)} &amp;= P(C|\text{not } R) \\
   &amp;= \frac{\text{FN}}{\text{FN} + \text{TN}} = 1 - \text{NPV}
 \end{aligned}
-\tag{8.42}
+\tag{8.43}
 \]</span></p>
 <div class="sourceCode" id="cb709"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb709-1"><a href="prediction.html#cb709-1" aria-hidden="true" tabindex="-1"></a>falseOmissionRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb709-2"><a href="prediction.html#cb709-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> FN<span class="sc">/</span>(FN <span class="sc">+</span> TN)</span>
@@ -4291,7 +4291,7 @@ Higher values reflect greater accuracy.</p>
 \begin{aligned}
   \text{Youden&#39;s J statistic} &amp;= \text{sensitivity} + \text{specificity} - 1
 \end{aligned}
-\tag{8.43}
+\tag{8.44}
 \]</span></p>
 <div class="sourceCode" id="cb711"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb711-1"><a href="prediction.html#cb711-1" aria-hidden="true" tabindex="-1"></a>youdenJ <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb711-2"><a href="prediction.html#cb711-2" aria-hidden="true" tabindex="-1"></a>  SN <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4313,7 +4313,7 @@ Higher values reflect greater accuracy.</p>
 \begin{aligned}
   \text{balanced accuracy} &amp;= \frac{\text{sensitivity} + \text{specificity}}{2}
 \end{aligned}
-\tag{8.44}
+\tag{8.45}
 \]</span></p>
 <div class="sourceCode" id="cb713"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb713-1"><a href="prediction.html#cb713-1" aria-hidden="true" tabindex="-1"></a>balancedAccuracy <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb713-2"><a href="prediction.html#cb713-2" aria-hidden="true" tabindex="-1"></a>  SN <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4337,7 +4337,7 @@ Higher values reflect greater accuracy.</p>
   F_\beta &amp;= (1 + \beta^2) \cdot \frac{\text{positive predictive value} \cdot \text{sensitivity}}{(\beta^2 \cdot \text{positive predictive value}) + \text{sensitivity}} \\
   &amp;= \frac{(1 + \beta^2) \cdot \text{TP}}{(1 + \beta^2) \cdot \text{TP} + \beta^2 \cdot \text{FN} + \text{FP}}
 \end{aligned}
-\tag{8.45}
+\tag{8.46}
 \]</span></p>
 <div class="sourceCode" id="cb715"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb715-1"><a href="prediction.html#cb715-1" aria-hidden="true" tabindex="-1"></a>fScore <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">beta =</span> <span class="dv">1</span>){</span>
 <span id="cb715-2"><a href="prediction.html#cb715-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> ((<span class="dv">1</span> <span class="sc">+</span> beta<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> TP) <span class="sc">/</span> ((<span class="dv">1</span> <span class="sc">+</span> beta<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> TP <span class="sc">+</span> beta<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> FN <span class="sc">+</span> FP)</span>
@@ -4362,7 +4362,7 @@ Higher values reflect greater accuracy.</p>
 \begin{aligned}
   \text{MCC} &amp;= \frac{\text{TP} \times \text{TN} - \text{FP} \times \text{FN}}{\sqrt{(\text{TP} + \text{FP})(\text{TP} + \text{FN})(\text{TN} + \text{FP})(\text{TN} + \text{FN})}}
 \end{aligned}
-\tag{8.46}
+\tag{8.47}
 \]</span></p>
 <div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="prediction.html#cb721-1" aria-hidden="true" tabindex="-1"></a>mcc <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb721-2"><a href="prediction.html#cb721-2" aria-hidden="true" tabindex="-1"></a>  TP <span class="ot">&lt;-</span> <span class="fu">as.double</span>(TP)</span>
@@ -4396,7 +4396,7 @@ Assuming the prevalence of tuberculosis is less than 1/10th of 1%, your risk of 
   &amp;= \frac{\text{PPV} \times \text{NPV}}{(1 - \text{PPV}) \times (1 - \text{NPV})} \\
   &amp;= \frac{\text{LR+}}{\text{LR}-}
 \end{aligned}
-\tag{8.47}
+\tag{8.48}
 \]</span></p>
 <div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb723-1"><a href="prediction.html#cb723-1" aria-hidden="true" tabindex="-1"></a>diagnosticOddsRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb723-2"><a href="prediction.html#cb723-2" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> (TP <span class="sc">*</span> TN) <span class="sc">/</span> (FP <span class="sc">*</span> FN)</span>
@@ -4426,7 +4426,7 @@ Higher values reflect greater accuracy because it indicates the degree to which 
   &amp;= \frac{P(R|C)}{1 - P(\text{not } R|\text{not } C)} \\
   &amp;= \frac{\text{sensitivity}}{1 - \text{specificity}}
 \end{aligned}
-\tag{8.48}
+\tag{8.49}
 \]</span></p>
 <div class="sourceCode" id="cb725"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb725-1"><a href="prediction.html#cb725-1" aria-hidden="true" tabindex="-1"></a>positiveLikelihoodRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb725-2"><a href="prediction.html#cb725-2" aria-hidden="true" tabindex="-1"></a>  SN <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4452,7 +4452,7 @@ Smaller values reflect greater accuracy because it indicates that a <a href="pre
   &amp;= \frac{1 - P(R|C)}{P(\text{not } R|\text{not } C)} \\
   &amp;= \frac{1 - \text{sensitivity}}{\text{specificity}}
 \end{aligned}
-\tag{8.49}
+\tag{8.50}
 \]</span></p>
 <div class="sourceCode" id="cb727"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb727-1"><a href="prediction.html#cb727-1" aria-hidden="true" tabindex="-1"></a>negativeLikelihoodRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb727-2"><a href="prediction.html#cb727-2" aria-hidden="true" tabindex="-1"></a>  SN <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4477,7 +4477,7 @@ For instance, you might use a different <a href="prediction.html#baseRate">prete
 \begin{aligned}
   \text{posttest odds} &amp;= \text{pretest odds} \times \text{likelihood ratio} \\
 \end{aligned}
-\tag{8.50}
+\tag{8.51}
 \]</span></p>
 <p>For calculating the posttest odds of a <a href="prediction.html#truePositive">true positive</a> compared to a <a href="prediction.html#falsePositive">false positive</a>, we use the <a href="prediction.html#positiveLikelihoodRatio">positive likelihood ratio</a> below.
 We would use the <a href="prediction.html#negativeLikelihoodRatio">negative likelihood ratio</a> if we wanted to calculate the posttest odds of a <a href="prediction.html#falseNegative">false negative</a> compared to a <a href="prediction.html#trueNegative">true negative</a>.</p>
@@ -4527,7 +4527,7 @@ To convert odds to a probability, divide the odds by one plus the odds.</p>
 \begin{aligned}
   \text{posttest probability} &amp;= \frac{\text{posttest odds}}{1 + \text{posttest odds}}
 \end{aligned}
-\tag{8.51}
+\tag{8.52}
 \]</span></p>
 <div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb735-1"><a href="prediction.html#cb735-1" aria-hidden="true" tabindex="-1"></a>posttestProbability <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">pretestProb =</span> <span class="cn">NULL</span>, <span class="at">SN =</span> <span class="cn">NULL</span>, <span class="at">SP =</span> <span class="cn">NULL</span>, <span class="at">likelihoodRatio =</span> <span class="cn">NULL</span>){</span>
 <span id="cb735-2"><a href="prediction.html#cb735-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(pretestProb) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.null</span>(SN) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.null</span>(SP)){</span>
@@ -4588,7 +4588,7 @@ The probability of having the condition if the person has a positive test on Tes
 Higher values reflect greater accuracy.</p>
 <p><span class="math display" id="eq:dPrimeSDT">\[
 d&#39; = z(\text{hit rate}) − z(\text{false alarm rate})
-\tag{8.52}
+\tag{8.53}
 \]</span></p>
 <div class="sourceCode" id="cb745"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb745-1"><a href="prediction.html#cb745-1" aria-hidden="true" tabindex="-1"></a>dPrimeSDT <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb745-2"><a href="prediction.html#cb745-2" aria-hidden="true" tabindex="-1"></a>  HR <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4614,7 +4614,7 @@ A =
  \frac{3}{4} + \frac{H - F}{4} - \frac{F}{4H} &amp; \text{if } F \leq H \leq 0.5 ;\\
  \frac{3}{4} + \frac{H - F}{4} - \frac{1 - H}{4(1 - F)} &amp; \text{if } 0.5 \leq F \leq H .
 \end{cases}
-\tag{8.53}
+\tag{8.54}
 \]</span></p>
 <div class="sourceCode" id="cb747"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb747-1"><a href="prediction.html#cb747-1" aria-hidden="true" tabindex="-1"></a>aSDT <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb747-2"><a href="prediction.html#cb747-2" aria-hidden="true" tabindex="-1"></a>  HR <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4637,7 +4637,7 @@ A =
 Smaller values reflect greater accuracy.</p>
 <p><span class="math display" id="eq:betaSDT">\[
 \beta =
-\tag{8.54}
+\tag{8.55}
 \]</span></p>
 <div class="sourceCode" id="cb749"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb749-1"><a href="prediction.html#cb749-1" aria-hidden="true" tabindex="-1"></a>betaSDT <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb749-2"><a href="prediction.html#cb749-2" aria-hidden="true" tabindex="-1"></a>  HR <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4657,7 +4657,7 @@ Smaller values reflect greater accuracy.</p>
 Smaller values reflect greater accuracy.</p>
 <p><span class="math display" id="eq:cSDT">\[
 c =
-\tag{8.55}
+\tag{8.56}
 \]</span></p>
 <div class="sourceCode" id="cb751"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb751-1"><a href="prediction.html#cb751-1" aria-hidden="true" tabindex="-1"></a>cSDT <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb751-2"><a href="prediction.html#cb751-2" aria-hidden="true" tabindex="-1"></a>  HR <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4682,7 +4682,7 @@ b =
  \frac{H^2 + H}{H^2 + F} &amp; \text{if } F \leq H \leq 0.5 ;\\
  \frac{(1 - F)^2 + (1 - H)}{(1 - F)^2 + (1 - F)} &amp; \text{if } 0.5 \leq F \leq H .
 \end{cases}
-\tag{8.56}
+\tag{8.57}
 \]</span></p>
 <div class="sourceCode" id="cb753"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb753-1"><a href="prediction.html#cb753-1" aria-hidden="true" tabindex="-1"></a>bSDT <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
 <span id="cb753-2"><a href="prediction.html#cb753-2" aria-hidden="true" tabindex="-1"></a>  HR <span class="ot">&lt;-</span> TP<span class="sc">/</span>(TP <span class="sc">+</span> FN)</span>
@@ -4763,7 +4763,7 @@ Higher values reflect greater utility, so you would pick the cutoff with the hig
   &amp;+ (1 - \text{BR})(\text{FAR})(U_\text{FA}) \\
   &amp;+ (1 - \text{BR})(1 - \text{FAR})(U_\text{CR})
 \end{aligned}
-\tag{8.57}
+\tag{8.58}
 \]</span></p>
 <p>where <span class="math inline">\(\text{BR} = \text{base rate}\)</span>, <span class="math inline">\(\text{HR} = \text{hit rate (true positive rate)}\)</span>, <span class="math inline">\(\text{FAR} = \text{false alarm rate (false positive rate)}\)</span>, <span class="math inline">\(U_\text{H} = \text{utility of hits (true positives)}\)</span>, <span class="math inline">\(U_\text{M} = \text{utility of misses (false negatives)}\)</span>, <span class="math inline">\(U_\text{FA} = \text{utility of false alarms (false positives)}\)</span>, <span class="math inline">\(U_\text{CR} = \text{utility of correct rejections (true negatives)}\)</span></p>
 <div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb757-1"><a href="prediction.html#cb757-1" aria-hidden="true" tabindex="-1"></a>Uoverall <span class="ot">&lt;-</span> <span class="cf">function</span>(BR, HR, FAR, UH, UM, UCR, UFA){</span>
@@ -4785,7 +4785,7 @@ Values below one indicate greater relative importance of identifying positive ca
 Values of one indicate that you are maximizing percent accuracy.</p>
 <p><span class="math display" id="eq:utilityRatio">\[
 \text{Utility Ratio} = \frac{U_\text{CR} - U_\text{FA}}{U_\text{H} - U_\text{M}}
-\tag{8.58}
+\tag{8.59}
 \]</span></p>
 <p>where <span class="math inline">\(U_\text{H} = \text{utility of hits (true positives)}\)</span>, <span class="math inline">\(U_\text{M} = \text{utility of misses (false negatives)}\)</span>, <span class="math inline">\(U_\text{FA} = \text{utility of false alarms (false positives)}\)</span>, <span class="math inline">\(U_\text{CR} = \text{utility of correct rejections (true negatives)}\)</span></p>
 <div class="sourceCode" id="cb764"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb764-1"><a href="prediction.html#cb764-1" aria-hidden="true" tabindex="-1"></a>utilityRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(UH, UM, UCR, UFA){</span>
@@ -4819,7 +4819,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
   &amp;+ (1 - \text{BR})(\text{FAR})\bigg[\log_2\bigg(\frac{\text{FAR}}{G}\bigg)\bigg] \\
   &amp;+ (1 - \text{BR})(1 - FAR)\bigg[\log_2\bigg(\frac{1 - \text{FAR}}{1 - G}\bigg)\bigg]
 \end{aligned}
-\tag{8.59}
+\tag{8.60}
 \]</span></p>
 <p>where <span class="math inline">\(\text{BR} =\)</span> <a href="prediction.html#baseRate">base rate</a>, <span class="math inline">\(\text{HR} =\)</span> <a href="prediction.html#sensitivity">hit rate</a> (<a href="prediction.html#sensitivity">true positive rate</a>), <span class="math inline">\(\text{FAR} =\)</span> <a href="prediction.html#falsePositiveRate">false alarm rate</a> (<a href="prediction.html#falsePositiveRate">false positive rate</a>), <span class="math inline">\(G =\)</span> <a href="#selectionRation">selection ratio</a> <span class="math inline">\(= \text{BR} (\text{HR}) + (1 - \text{BR}) (\text{FAR})\)</span>, as reported in <span class="citation">Somoza et al. (<a href="#ref-Somoza1989" role="doc-biblioref">1989</a>)</span> [; see below].</p>
 <div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb771-1"><a href="prediction.html#cb771-1" aria-hidden="true" tabindex="-1"></a>Igain <span class="ot">&lt;-</span> <span class="cf">function</span>(BR, HR, FAR){</span>
@@ -4842,7 +4842,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
   &amp;+ [1 - p(S|s)] \cdot p(s) \times log_2\Bigg\{\frac{1 - p(S|s)}{1 - p(S|s) \cdot p(s) - p(S|n)[1 - p(s)]}\Bigg\} \\
   &amp;+ [1 - p(S|n)][1 - p(s)] \times log_2\Bigg\{\frac{1 - p(S|n)}{1 - p(S|s) \cdot p(s) - p(S|n)[1 - p(s)]}\Bigg\}
 \end{aligned}
-\tag{8.60}
+\tag{8.61}
 \]</span></p>
 <p>where <span class="math inline">\(p(S|s) =\)</span> <a href="prediction.html#sensitivity">sensitivity</a> (<a href="prediction.html#sensitivity">hit rate</a> or <a href="prediction.html#sensitivity">true positive rate</a>); i.e., the <a href="prediction.html#conditionalProbability">conditional probability</a> of deciding a signal is present (<span class="math inline">\(S\)</span>) when the signal is in fact present(<span class="math inline">\(s\)</span>), <span class="math inline">\(p(S|n) =\)</span> <a href="prediction.html#falsePositiveRate">false positive rate</a> (<a href="prediction.html#falsePositiveRate">false alarm rate</a>); i.e., the <a href="prediction.html#conditionalProbability">conditional probability</a> of deciding a signal is present (<span class="math inline">\(S\)</span>) when the signal is in fact absent (<span class="math inline">\(n\)</span>), <span class="math inline">\(p(s) =\)</span> <a href="prediction.html#baseRate">base rate</a>, i.e., the probability that the signal is in fact present (<span class="math inline">\(s\)</span>).</p>
 <div class="sourceCode" id="cb774"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb774-1"><a href="prediction.html#cb774-1" aria-hidden="true" tabindex="-1"></a>Igain2 <span class="ot">&lt;-</span> <span class="cf">function</span>(BR, HR, FAR){</span>
@@ -4863,7 +4863,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
   &amp;+ [(1 - \text{TPR})(\text{Pr})] \times \log_2\bigg(\frac{1 - \text{TPR}}{1 - G}\bigg) \\
   &amp;+ [(1 - FPR)(1 - \text{Pr})] \times \log_2\bigg(\frac{1 - \text{FPR}}{1 - G}\bigg)
 \end{aligned}
-\tag{8.61}
+\tag{8.62}
 \]</span></p>
 <p>where <span class="math inline">\(\text{TP} =\)</span> <a href="prediction.html#sensitivity">true positive rate</a> (<a href="prediction.html#sensitivity">hit rate</a>), <span class="math inline">\(\text{Pr} =\)</span> <a href="prediction.html#baseRate">prevalence</a> (<a href="prediction.html#baseRate">base rate</a>), <span class="math inline">\(\text{FP} =\)</span> <a href="prediction.html#falsePositiveRate">false positive rate</a> (<a href="prediction.html#falsePositiveRate">false alarm rate</a>), <span class="math inline">\(G = \text{Pr} (\text{TP}) + (1 - \text{Pr}) (\text{FP}) =\)</span> <a href="prediction.html#selectionRatio">selection ratio</a></p>
 <div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb777-1"><a href="prediction.html#cb777-1" aria-hidden="true" tabindex="-1"></a>Igain3 <span class="ot">&lt;-</span> <span class="cf">function</span>(BR, HR, FAR){</span>
@@ -5287,7 +5287,7 @@ Figure 8.32: Information Gain as a Function of the Base Rate.
 Regression takes the following form:</p>
 <p><span class="math display" id="eq:regression">\[
 y = b_0 + b_1 \cdot x_1 + e
-\tag{8.62}
+\tag{8.63}
 \]</span></p>
 <p>where <span class="math inline">\(y\)</span> is the outcome, <span class="math inline">\(b_0\)</span> is the intercept, <span class="math inline">\(b_1\)</span> is the slope of the association between the predictor (<span class="math inline">\(x_1\)</span>) and outcome, and <span class="math inline">\(e\)</span> is the error term.</p>
 <div id="pseudoPrediction" class="section level3 hasAnchor" number="8.8.1">
@@ -5415,10 +5415,10 @@ In this example, the <span class="math inline">\(R^2\)</span> is <span class="ma
 The equation with the second predictor provides a perfect prediction of the outcome.</p>
 <p>Providing perfect prediction with the right set of predictors is the dream of multiple regression.
 So, in psychology, we often add predictors to incrementally improve prediction.
-Knowing how much variance would be accounted for by random chance follows Equation <a href="prediction.html#eq:predictionByChance">(8.63)</a>:</p>
+Knowing how much variance would be accounted for by random chance follows Equation <a href="prediction.html#eq:predictionByChance">(8.64)</a>:</p>
 <p><span class="math display" id="eq:predictionByChance">\[
 E(R^2) = \frac{K}{n-1}
-\tag{8.63}
+\tag{8.64}
 \]</span></p>
 <p>where <span class="math inline">\(E(R^2)\)</span> is the expected value of <span class="math inline">\(R^2\)</span> (the proportion of variance explained), <span class="math inline">\(K\)</span> is the number of predictors, and <span class="math inline">\(n\)</span> is the sample size.
 The formula demonstrates that the more predictors in the regression model, the more variance will be accounted for by chance.
