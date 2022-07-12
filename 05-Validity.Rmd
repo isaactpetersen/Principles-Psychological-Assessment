@@ -575,7 +575,7 @@ In part, this may be because we need better measures (i.e., a higher ratio of co
 
 ###### Multitrait Multimethod Correlation Matrix {#mtmmCorrelationMatrix}
 
-This example comes from W. Joel Schneider.
+This example is courtesy of W. Joel Schneider.
 First, we simulate data for a MTMM model using a fixed model with population parameters using the `simstandard` package [@R-simstandard]:
 
 ```{r}
@@ -690,9 +690,9 @@ summary(MTMM.fit,
         rsquare = TRUE)
 ```
 
-A path diagram of the model is depicted using the `semPlot` package [@R-semPlot].
+A path diagram of the model is depicted in Figure \@ref(fig:mtmmCFAFigure) using the `semPlot` package [@R-semPlot].
 
-```{r, out.width = "100%", fig.align = "center", fig.height = 8, fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
+```{r mtmmCFAFigure, out.width = "100%", fig.align = "center", fig.height = 8, fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
 semPaths(MTMM.fit,
          what = "std",
          layout = "tree3",
@@ -1133,7 +1133,7 @@ as.numeric(cor.test(x = mydataValidity$predictor,
 The disattenuation of an observed correlation due to [measurement error](#measurementError) can be demonstrated using [structural equation modeling](#sem).
 For instance, consider the following observed association:
 
-```{r observedSEM, out.width = "100%", fig.align = "center", fig.cap = "Observed Association, as Depicted in a Structural Equation Model."}
+```{r}
 cor.test(x = mydataValidity$predictorObservedSEM, y = mydataValidity$criterionObservedSEM)
 
 observedSEM_syntax <- '
@@ -1151,7 +1151,11 @@ observedSEM_fit <- sem(observedSEM_syntax,
 summary(observedSEM_fit,
         standardized = TRUE,
         rsquare = TRUE)
+```
+        
+A path diagram of the observed association is depicted in Figure \@ref(fig:observedSEM).
 
+```{r observedSEM, out.width = "100%", fig.align = "center", fig.cap = "Observed Association, as Depicted in a Structural Equation Model."}
 semPaths(observedSEM_fit,
          what = "Std.all",
          layout = "tree2",
@@ -1162,7 +1166,7 @@ semPaths(observedSEM_fit,
 
 Now consider when we account for the degree of unreliability of each measure:
 
-```{r disattenuationSEM, out.width = "100%", fig.align = "center", fig.cap = "Disattenuation of an Observed Association due to Measurement Error, as Depicted in a Structural Equation Model."}
+```{r}
 # Syntax that specifies the reliability programmatically
 disattenuationSEM_syntax <- 
   paste(
@@ -1201,7 +1205,11 @@ disattenuationSEM_fit <- sem(disattenuationSEM_syntax,
 summary(disattenuationSEM_fit,
         standardized = TRUE,
         rsquare = TRUE)
+```
 
+A path diagram of the true association is depicted in Figure \@ref(fig:disattenuationSEM).
+
+```{r disattenuationSEM, out.width = "100%", fig.align = "center", fig.cap = "Disattenuation of an Observed Association due to Measurement Error, as Depicted in a Structural Equation Model."}
 semPaths(disattenuationSEM_fit,
          what = "Std.all",
          layout = "tree2",
@@ -1262,7 +1270,6 @@ library("MOTE")
 ```
 
 ```{r, include = FALSE}
-#MTMM <- read_csv("../Data/MTMM.csv") #data from W. Joel Schneider: http://my.ilstu.edu/~wjschne/442/MTMM.csv
 cnlsy <- read_csv(here("Data", "cnlsy.csv"))
 ```
 
