@@ -462,6 +462,7 @@ $$
 where $\sigma_x$ represents the standard deviation of scores.
 Thus, the standard error of measurement is directly related to the reliability of the measure.
 The higher the reliability, the lower the standard error of measurement.
+The standard error of measurement as a function of reliability of the measure and the standard deviation of scores is depicted in Figure \@ref(fig:standardErrorOfMeasurementPlot).
 
 ```{r standardErrorOfMeasurementPlot, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.height = 4, fig.cap = "Standard Error of Measurement as a Function of Reliability."}
 library("ggplot2")
@@ -666,11 +667,11 @@ cor.test(x = mydata$time1, y = mydata$time2)
 cor(mydata[,c("time1","time2","time3")], use = "pairwise.complete.obs")
 ```
 
-Below is a scatterplot of the time 1 scores on the x-axis and time 2 scores on the y-axis.
-The black line is the best-fitting linear line.
-The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit.
+Figure \@ref(fig:testRetestScatterplot) depicts a scatterplot of the time 1 scores on the x-axis and time 2 scores on the y-axis.
 
-```{r testRetestScatterplot, out.width = "100%", fig.align = "center", fig.cap = "Test–retest Reliability Scatterplot."}
+(ref:testRetestScatterplotCaption) Test–retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit.
+
+```{r testRetestScatterplot, out.width = "100%", fig.align = "center", fig.cap = "(ref:testRetestScatterplotCaption)"}
 plot(mydata$time1, mydata$time2,
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = mydata$time1, y = mydata$time2)$estimate, 2))))
 abline(lm(time2 ~ time1, data = mydata), col = "black")
@@ -981,7 +982,7 @@ coefficientOfRepeatability <- function(measure1, measure2){
 coefficientOfRepeatability(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
 
-The `petersenlab` package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot).
+The `petersenlab` package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot) in Figure \@ref(fig:repeatability).
 
 ```{r, eval = FALSE}
 repeatability <- function(measure1, measure2){
@@ -1012,7 +1013,7 @@ repeatability <- function(measure1, measure2){
 }
 ```
 
-```{r}
+```{r repeatability, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
 repeatability(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
 
@@ -1217,17 +1218,27 @@ mean(interItemCorrelations_nodiag, na.rm = TRUE)
 psych::alpha(mydata[,c("item1","item2","item3","item4")])$total$average_r
 ```
 
-```{r}
-hist(meanInterItemCorrelations)
+Figure \@ref(fig:histogramITCs) is a histogram of the inter-item correlations.
+
+(ref:histogramITCsCaption) Histogram of Inter-Item Correlations. The vertical black line reflects the mean inter-item correlation.
+
+```{r histogramITCs, out.width = "100%", fig.align = "center", fig.cap = "(ref:histogramITCsCaption)"}
+hist(meanInterItemCorrelations,
+     xlab = "Inter-Item Correlations",
+     main = "Histogram of Inter-Item Correlations")
 abline(v = mean(meanInterItemCorrelations), lwd = 2)
 ```
 
-Here is the median inter-item correlation:
+Here is the median inter-item correlation for each item:
 
 ```{r}
 medianInterItemCorrelations <- apply(interItemCorrelations, 2, function(x) median(x, na.rm = TRUE))
 medianInterItemCorrelations
+```
 
+Here is the median inter-item correlation across all items:
+
+```{r}
 median(interItemCorrelations[lower.tri(interItemCorrelations)])
 
 psych::alpha(mydata[,c("item1","item2","item3","item4")])$total$median_r
@@ -1536,7 +1547,7 @@ reliabilityOfDifferenceScore(x = mydata$item1, y = mydata$item2, reliabilityX = 
 
 For instance, in this case, the reliability of the difference score is .26 even though the reliability of both indices is .95.
 
-In Figures \@ref(fig:reliabilityOfDifferenceScore) and \@ref(fig:reliabilityOfDifferenceScore2), I present the reliability of a difference score as a function of (a) the reliability of the indices that compose the difference score and (b) the correlation between them, assuming that both indices have equal variances.
+In Figures \@ref(fig:reliabilityOfDifferenceScore) and \@ref(fig:reliabilityOfDifferenceScore2), the reliability of a difference score is depicted as a function of (a) the reliability of the indices that compose the difference score and (b) the correlation between them, assuming that both indices have equal variances.
 
 ```{r reliabilityOfDifferenceScore, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.height = 4, fig.cap = "Reliability of Difference Score as a Function of Reliability of Indices and the Correlation Between Them."}
 reliabilityOfDifferenceScoreEqualVariances <- function(x, y, reliabilityX, reliabilityY){
