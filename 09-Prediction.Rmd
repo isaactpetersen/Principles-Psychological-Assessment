@@ -266,7 +266,8 @@ pB <- function(pBgivenA, pA, pBgivenNotA){
 
 ```{r}
 pB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
-pB(pBgivenA = .95, pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01), pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+pB(pBgivenA = .95, pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
+   pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
 We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the errors of each test are independent, i.e., uncorrelated):
@@ -1669,7 +1670,10 @@ $g = 2$
 gValue <- 2
 
 hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing), cOutcome = colNumberOutcome, predRisk = myDataNoMissing$predictedProbability, groups = gValue)$Table_HLtest
+plotCalibration(data = na.omit(myDataNoMissing),
+                cOutcome = colNumberOutcome,
+                predRisk = myDataNoMissing$predictedProbability,
+                groups = gValue)$Table_HLtest
 ```
 
 $g = 4$
@@ -1678,7 +1682,10 @@ $g = 4$
 gValue <- 4
 
 hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing), cOutcome = colNumberOutcome, predRisk = myDataNoMissing$predictedProbability, groups = gValue)$Table_HLtest
+plotCalibration(data = na.omit(myDataNoMissing),
+                cOutcome = colNumberOutcome,
+                predRisk = myDataNoMissing$predictedProbability,
+                groups = gValue)$Table_HLtest
 ```
 
 $g = 6$
@@ -1687,7 +1694,10 @@ $g = 6$
 gValue <- 6
 
 hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing), cOutcome = colNumberOutcome, predRisk = myDataNoMissing$predictedProbability, groups = gValue)$Table_HLtest
+plotCalibration(data = na.omit(myDataNoMissing),
+                cOutcome = colNumberOutcome,
+                predRisk = myDataNoMissing$predictedProbability,
+                groups = gValue)$Table_HLtest
 ```
 
 $g = 8$
@@ -1696,7 +1706,10 @@ $g = 8$
 gValue <- 8
 
 hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing), cOutcome = colNumberOutcome, predRisk = myDataNoMissing$predictedProbability, groups = gValue)$Table_HLtest
+plotCalibration(data = na.omit(myDataNoMissing),
+                cOutcome = colNumberOutcome,
+                predRisk = myDataNoMissing$predictedProbability,
+                groups = gValue)$Table_HLtest
 ```
 
 $g = 10$
@@ -1705,7 +1718,10 @@ $g = 10$
 gValue <- 10
 
 hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing), cOutcome = colNumberOutcome, predRisk = myDataNoMissing$predictedProbability, groups = gValue)$Table_HLtest
+plotCalibration(data = na.omit(myDataNoMissing),
+                cOutcome = colNumberOutcome,
+                predRisk = myDataNoMissing$predictedProbability,
+                groups = gValue)$Table_HLtest
 ```
 
 #### Spiegelhalter's z {#spiegelhalterZ}
@@ -1745,18 +1761,34 @@ The black diagonal line indicates the reference line with an intercept of zero a
 The predictions would be significantly [miscalibrated](#calibration) at a given level of the predicted values if the 95% confidence interval of the observed value does not include the reference line at that level of the predicted value.
 In this case, the 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at any level of the predicted values, so the predictions are [miscalibrated](#calibration) at every level of the predicted values.
 
-```{r calibrationContinuousOutcome, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = c("Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The yellow line is the best-fit line. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at any level of the predicted values, so the predictions are miscalibrated at every level of the predicted values.")}
+(ref:calibrationContinuousOutcomeCaption) Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The yellow line is the best-fit line. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at any level of the predicted values, so the predictions are miscalibrated at every level of the predicted values.
+
+```{r calibrationContinuousOutcome, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = c("(ref:calibrationContinuousOutcomeCaption)")}
 #95 prediction interval based on linear model
 calibrationModel <- lm(continuousOutcome ~ testScore, data = mydataSDT)
-calibrationModelPredictionInterval <- expand.grid(testScore = seq(from = min(mydataSDT$testScore, na.rm = TRUE), to = max(mydataSDT$testScore, na.rm = TRUE), length.out = 1000))
-calibrationModelPredictionInterval <- cbind(calibrationModelPredictionInterval, data.frame(predict(calibrationModel, newdata = calibrationModelPredictionInterval, interval = "predict", level = 0.95)))
+calibrationModelPredictionInterval <- expand.grid(testScore = seq(from = min(mydataSDT$testScore, na.rm = TRUE),
+                                                                  to = max(mydataSDT$testScore, na.rm = TRUE),
+                                                                  length.out = 1000))
+calibrationModelPredictionInterval <- cbind(calibrationModelPredictionInterval,
+                                            data.frame(predict(calibrationModel,
+                                                               newdata = calibrationModelPredictionInterval,
+                                                               interval = "predict",
+                                                               level = 0.95)))
 
 ggplot(mydataSDT, aes(x = testScore, y = continuousOutcome)) +
   geom_point() +
-  geom_line(data = calibrationModelPredictionInterval, aes(y = lwr), color = "red", linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
-  geom_line(data = calibrationModelPredictionInterval, aes(y = upr), color = "red", linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
+  geom_line(data = calibrationModelPredictionInterval,
+            aes(y = lwr),
+            color = "red",
+            linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
+  geom_line(data = calibrationModelPredictionInterval,
+            aes(y = upr),
+            color = "red",
+            linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
   #geom_ribbon(data = calibrationModelPredictionInterval, aes(y = fit, ymin = lwr, ymax = upr), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
-  geom_smooth(method = "lm", color = viridis(3)[3], fill = viridis(3)[1], alpha = 0.7) + #95% confidence interval of linear model
+  geom_smooth(method = "lm",
+              color = viridis(3)[3], fill = viridis(3)[1],
+              alpha = 0.7) + #95% confidence interval of linear model
   geom_abline(slope = 1, intercept = 0) +
   xlim(0,2.4) +
   ylim(0,2.4) +
@@ -1773,15 +1805,29 @@ In this case, the 95% confidence interval of the observed value does not include
 
 ```{r calibrationContinuousOutcomeLOESS, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = c("Calibration Plot for Predictions of a Continuous Outcome. The yellow line is the best-fit line based on a LOESS smoother. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.")}
 #95 prediction interval based on LOESS model
-calibrationLoessModel <- loess.sd(x = mydataSDT$testScore, y = mydataSDT$continuousOutcome, nsigma = qnorm(.975), na.action = "na.exclude")
-calibrationLoessPredictionInterval <- data.frame(x = calibrationLoessModel$x, y = calibrationLoessModel$y, lower = calibrationLoessModel$lower, upper = calibrationLoessModel$upper)
+calibrationLoessModel <- loess.sd(x = mydataSDT$testScore,
+                                  y = mydataSDT$continuousOutcome,
+                                  nsigma = qnorm(.975),
+                                  na.action = "na.exclude")
+calibrationLoessPredictionInterval <- data.frame(x = calibrationLoessModel$x,
+                                                 y = calibrationLoessModel$y,
+                                                 lower = calibrationLoessModel$lower,
+                                                 upper = calibrationLoessModel$upper)
 
 ggplot(mydataSDT, aes(x = testScore, y = continuousOutcome)) +
   geom_point() +
-  geom_line(data = calibrationLoessPredictionInterval, aes(x = x, y = lower), color = "red", linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
-  geom_line(data = calibrationLoessPredictionInterval, aes(x = x, y = upper), color = "red", linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
+  geom_line(data = calibrationLoessPredictionInterval,
+            aes(x = x, y = lower),
+            color = "red",
+            linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
+  geom_line(data = calibrationLoessPredictionInterval,
+            aes(x = x, y = upper),
+            color = "red",
+            linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
   #geom_ribbon(data = calibrationLoessPredictionInterval, aes(x = x, y = y, ymin = lower, ymax = upper), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
-  geom_smooth(method = "loess", color = viridis(3)[3], fill = viridis(3)[1], alpha = 0.7) + #95% confidence interval of LOESS model
+  geom_smooth(method = "loess",
+              color = viridis(3)[3], fill = viridis(3)[1],
+              alpha = 0.7) + #95% confidence interval of LOESS model
   geom_abline(slope = 1, intercept = 0) +
   xlim(0,2.4) +
   ylim(0,2.4) +
@@ -1803,8 +1849,12 @@ mydataSDT$diagnosis <- NA
 mydataSDT$diagnosis[mydataSDT$testScore < cutoff] <- 0
 mydataSDT$diagnosis[mydataSDT$testScore >= cutoff] <- 1
 
-mydataSDT$diagnosisFactor <- factor(mydataSDT$diagnosis, levels = c(1, 0), labels = c("Decision: Diagnosis", "Decision: No Diagnosis"))
-mydataSDT$disorderFactor <- factor(mydataSDT$disorder, levels = c(1, 0), labels = c("Truth: Disorder", "Truth: No Disorder"))
+mydataSDT$diagnosisFactor <- factor(mydataSDT$diagnosis,
+                                    levels = c(1, 0),
+                                    labels = c("Decision: Diagnosis", "Decision: No Diagnosis"))
+mydataSDT$disorderFactor <- factor(mydataSDT$disorder,
+                                   levels = c(1, 0),
+                                   labels = c("Truth: Disorder", "Truth: No Disorder"))
 ```
 
 ### Accuracy at a Given Cutoff {#accuracyAtCutoff}
@@ -1812,7 +1862,9 @@ mydataSDT$disorderFactor <- factor(mydataSDT$disorder, levels = c(1, 0), labels 
 The `petersenlab` package [@R-petersenlab] contains the `accuracyAtCutoff()` function that estimates the prediction accuracy at a given cutoff.
 
 ```{r}
-accuracyAtCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder, cutoff = cutoff) %>% t
+accuracyAtCutoff(predicted = mydataSDT$testScore,
+                 actual = mydataSDT$disorder,
+                 cutoff = cutoff) %>% t
 ```
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}
@@ -2003,10 +2055,16 @@ pretestOdds <- function(TP, TN, FP, FN, pretestProb = NULL){
   return(value)
 }
 
-pretestOddsValue <- pretestOdds(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+pretestOddsValue <- pretestOdds(TP = TPvalue,
+                                TN = TNvalue,
+                                FP = FPvalue,
+                                FN = FNvalue)
 pretestOddsValue
 
-pretestOdds(pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue))
+pretestOdds(pretestProb = baseRate(TP = TPvalue,
+                                   TN = TNvalue,
+                                   FP = FPvalue,
+                                   FN = FNvalue))
 ```
 
 ### Percent Accuracy {#percentAccuracy}
@@ -2033,7 +2091,10 @@ percentAccuracy <- function(TP, TN, FP, FN){
   return(value)
 }
 
-percentAccuracyValue <- percentAccuracy(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+percentAccuracyValue <- percentAccuracy(TP = TPvalue,
+                                        TN = TNvalue,
+                                        FP = FPvalue,
+                                        FN = FNvalue)
 percentAccuracyValue
 ```
 
@@ -2057,7 +2118,10 @@ percentAccuracyByChance <- function(TP, TN, FP, FN){
   return(value)
 }
 
-percentAccuracyByChanceValue <- percentAccuracyByChance(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+percentAccuracyByChanceValue <- percentAccuracyByChance(TP = TPvalue,
+                                                        TN = TNvalue,
+                                                        FP = FPvalue,
+                                                        FN = FNvalue)
 percentAccuracyByChanceValue
 ```
 
@@ -2082,7 +2146,10 @@ percentAccuracyPredictingFromBaseRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-percentAccuracyPredictingFromBaseRateValue <- percentAccuracyPredictingFromBaseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+percentAccuracyPredictingFromBaseRateValue <- percentAccuracyPredictingFromBaseRate(TP = TPvalue,
+                                                                                    TN = TNvalue,
+                                                                                    FP = FPvalue,
+                                                                                    FN = FNvalue)
 percentAccuracyPredictingFromBaseRateValue
 ```
 
@@ -2108,7 +2175,10 @@ relativeImprovementOverChance <- function(TP, TN, FP, FN){
   return(value)
 }
 
-relativeImprovementOverChanceValue <- relativeImprovementOverChance(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+relativeImprovementOverChanceValue <- relativeImprovementOverChance(TP = TPvalue,
+                                                                    TN = TNvalue,
+                                                                    FP = FPvalue,
+                                                                    FN = FNvalue)
 relativeImprovementOverChanceValue
 ```
 
@@ -2140,7 +2210,10 @@ relativeImprovementOverPredictingFromBaseRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-relativeImprovementOverPredictingFromBaseRateValue <- relativeImprovementOverPredictingFromBaseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+relativeImprovementOverPredictingFromBaseRateValue <- relativeImprovementOverPredictingFromBaseRate(TP = TPvalue,
+                                                                                                    TN = TNvalue,
+                                                                                                    FP = FPvalue,
+                                                                                                    FN = FNvalue)
 relativeImprovementOverPredictingFromBaseRateValue
 ```
 
@@ -2353,8 +2426,12 @@ ppvNPVbaseRateData <- data.frame(BR = seq(from = 0, to = 1, by = .01),
                                  SN = sensitivityValue,
                                  SP = specificityValue)
 
-ppvNPVbaseRateData$positivePredictiveValue <- positivePredictiveValue(BR = ppvNPVbaseRateData$BR, SN = ppvNPVbaseRateData$SN, SP = ppvNPVbaseRateData$SP)
-ppvNPVbaseRateData$negativePredictiveValue <- negativePredictiveValue(BR = ppvNPVbaseRateData$BR, SN = ppvNPVbaseRateData$SN, SP = ppvNPVbaseRateData$SP)
+ppvNPVbaseRateData$positivePredictiveValue <- positivePredictiveValue(BR = ppvNPVbaseRateData$BR,
+                                                                      SN = ppvNPVbaseRateData$SN,
+                                                                      SP = ppvNPVbaseRateData$SP)
+ppvNPVbaseRateData$negativePredictiveValue <- negativePredictiveValue(BR = ppvNPVbaseRateData$BR,
+                                                                      SN = ppvNPVbaseRateData$SN,
+                                                                      SP = ppvNPVbaseRateData$SP)
 
 ppvNPVbaseRateData_long <- pivot_longer(ppvNPVbaseRateData, cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
 ```
@@ -2364,17 +2441,27 @@ ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "base rate") +
   scale_y_continuous(name = "predictive value") +
-  scale_color_viridis_d(name = "", breaks = c("negativePredictiveValue","positivePredictiveValue"), labels = c("Negative Predictive Value","Positive Predictive Value")) +
+  scale_color_viridis_d(name = "",
+                        breaks = c("negativePredictiveValue","positivePredictiveValue"),
+                        labels = c("Negative Predictive Value","Positive Predictive Value")) +
   theme_bw()
 ```
 
 Below I compute PPV and [NPV](#npv) at every possible cutoff.
 
 ```{r}
-accuracyStats$positivePredictiveValue <- positivePredictiveValue(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$negativePredictiveValue <- negativePredictiveValue(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$positivePredictiveValue <- positivePredictiveValue(TP = accuracyStats$TP,
+                                                                 TN = accuracyStats$TN,
+                                                                 FP = accuracyStats$FP,
+                                                                 FN = accuracyStats$FN)
 
-ppvNPVcutoffData <- pivot_longer(accuracyStats, cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
+accuracyStats$negativePredictiveValue <- negativePredictiveValue(TP = accuracyStats$TP,
+                                                                 TN = accuracyStats$TN,
+                                                                 FP = accuracyStats$FP,
+                                                                 FN = accuracyStats$FN)
+
+ppvNPVcutoffData <- pivot_longer(accuracyStats,
+                                 cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
 ```
 
 ```{r ppvNPVcutoff, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Positive Predictive Value and Negative Predictive Value as a Function of the Cutoff."}
@@ -2422,10 +2509,13 @@ negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
   return(value)
 }
 
-negativePredictiveValueValue <- negativePredictiveValue(TN = TNvalue, FN = FNvalue)
+negativePredictiveValueValue <- negativePredictiveValue(TN = TNvalue,
+                                                        FN = FNvalue)
 negativePredictiveValueValue
 
-negativePredictiveValue(BR = baseRateValue, SN = sensitivityValue, SP = specificityValue)
+negativePredictiveValue(BR = baseRateValue,
+                        SN = sensitivityValue,
+                        SP = specificityValue)
 ```
 
 ### False Discovery Rate (FDR) {#falseDiscoveryRate}
@@ -2525,7 +2615,10 @@ balancedAccuracy <- function(TP, TN, FP, FN){
   return(value)
 }
 
-balancedAccuracyValue <- balancedAccuracy(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+balancedAccuracyValue <- balancedAccuracy(TP = TPvalue,
+                                          TN = TNvalue,
+                                          FP = FPvalue,
+                                          FN = FNvalue)
 balancedAccuracyValue
 ```
 
@@ -2581,7 +2674,10 @@ mcc <- function(TP, TN, FP, FN){
   return(value)
 }
 
-mccValue <- mcc(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+mccValue <- mcc(TP = TPvalue,
+                TN = TNvalue,
+                FP = FPvalue,
+                FN = FNvalue)
 mccValue
 ```
 
@@ -2614,7 +2710,10 @@ diagnosticOddsRatio <- function(TP, TN, FP, FN){
   return(value)
 }
 
-diagnosticOddsRatioValue <- diagnosticOddsRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+diagnosticOddsRatioValue <- diagnosticOddsRatio(TP = TPvalue,
+                                                TN = TNvalue,
+                                                FP = FPvalue,
+                                                FN = FNvalue)
 diagnosticOddsRatioValue
 ```
 
@@ -2651,7 +2750,10 @@ positiveLikelihoodRatio <- function(TP, TN, FP, FN){
   return(value)
 }
 
-positiveLikelihoodRatioValue <- positiveLikelihoodRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+positiveLikelihoodRatioValue <- positiveLikelihoodRatio(TP = TPvalue,
+                                                        TN = TNvalue,
+                                                        FP = FPvalue,
+                                                        FN = FNvalue)
 positiveLikelihoodRatioValue
 ```
 
@@ -2680,7 +2782,10 @@ negativeLikelihoodRatio <- function(TP, TN, FP, FN){
   return(value)
 }
 
-negativeLikelihoodRatioValue <- negativeLikelihoodRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+negativeLikelihoodRatioValue <- negativeLikelihoodRatio(TP = TPvalue,
+                                                        TN = TNvalue,
+                                                        FP = FPvalue,
+                                                        FN = FNvalue)
 negativeLikelihoodRatioValue
 ```
 
@@ -2727,15 +2832,27 @@ posttestOdds <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, SP = NUL
   return(value)
 }
 
-posttestOddsValue <- posttestOdds(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+posttestOddsValue <- posttestOdds(TP = TPvalue,
+                                  TN = TNvalue,
+                                  FP = FPvalue,
+                                  FN = FNvalue)
 posttestOddsValue
 
-posttestOdds(pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
+posttestOdds(pretestProb = baseRate(TP = TPvalue,
+                                    TN = TNvalue,
+                                    FP = FPvalue,
+                                    FN = FNvalue),
              SN = sensitivity(TP = TPvalue, FN = FNvalue),
              SP = specificity(TN = TNvalue, FP = FPvalue))
 
-posttestOdds(pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
-             likelihoodRatio = positiveLikelihoodRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue))
+posttestOdds(pretestProb = baseRate(TP = TPvalue,
+                                    TN = TNvalue,
+                                    FP = FPvalue,
+                                    FN = FNvalue),
+             likelihoodRatio = positiveLikelihoodRatio(TP = TPvalue,
+                                                       TN = TNvalue,
+                                                       FP = FPvalue,
+                                                       FN = FNvalue))
 ```
 
 ### Posttest Probability {#posttestProbability}
@@ -2779,15 +2896,27 @@ posttestProbability <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, S
   return(value)
 }
 
-posttestProbabilityValue <- posttestProbability(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+posttestProbabilityValue <- posttestProbability(TP = TPvalue,
+                                                TN = TNvalue,
+                                                FP = FPvalue,
+                                                FN = FNvalue)
 posttestProbabilityValue
 
-posttestProbability(pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
+posttestProbability(pretestProb = baseRate(TP = TPvalue,
+                                           TN = TNvalue,
+                                           FP = FPvalue,
+                                           FN = FNvalue),
                     SN = sensitivity(TP = TPvalue, FN = FNvalue),
                     SP = specificity(TN = TNvalue, FP = FPvalue))
 
-posttestProbability(pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
-                    likelihoodRatio = positiveLikelihoodRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue))
+posttestProbability(pretestProb = baseRate(TP = TPvalue,
+                                           TN = TNvalue,
+                                           FP = FPvalue,
+                                           FN = FNvalue),
+                    likelihoodRatio = positiveLikelihoodRatio(TP = TPvalue,
+                                                              TN = TNvalue,
+                                                              FP = FPvalue,
+                                                              FN = FNvalue))
 ```
 
 Consider the following example: Assume the [base rate](#baseRate) of the condition is .03%.
@@ -2798,8 +2927,12 @@ What is the probability of having the condition if a person has a positive test 
 Assuming the errors of the two tests are independent, what is the probability of having the condition if the person has a positive test on Test B after having a positive test on Test A?
 
 ```{r}
-probGivenTestA <- posttestProbability(pretestProb = .003, SN = .95, SP = .80)
-probGivenTestAthenB <- posttestProbability(pretestProb = probGivenTestA, SN = .70, SP = .90)
+probGivenTestA <- posttestProbability(pretestProb = .003,
+                                      SN = .95,
+                                      SP = .80)
+probGivenTestAthenB <- posttestProbability(pretestProb = probGivenTestA,
+                                           SN = .70,
+                                           SP = .90)
 
 probGivenTestA
 probGivenTestAthenB
@@ -2827,7 +2960,10 @@ dPrimeSDT <- function(TP, TN, FP, FN){
   return(value)
 }
   
-dPrimeValue <- dPrimeSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+dPrimeValue <- dPrimeSDT(TP = TPvalue,
+                         TN = TNvalue,
+                         FP = FPvalue,
+                         FN = FNvalue)
 dPrimeValue
 ```
 
@@ -2860,7 +2996,10 @@ aSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-Avalue <- aSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+Avalue <- aSDT(TP = TPvalue,
+               TN = TNvalue,
+               FP = FPvalue,
+               FN = FNvalue)
 Avalue
 ```
 
@@ -2883,7 +3022,10 @@ betaSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-betaValue <- betaSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+betaValue <- betaSDT(TP = TPvalue,
+                     TN = TNvalue,
+                     FP = FPvalue,
+                     FN = FNvalue)
 betaValue
 ```
 
@@ -2906,7 +3048,10 @@ cSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-cValue <- cSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+cValue <- cSDT(TP = TPvalue,
+               TN = TNvalue,
+               FP = FPvalue,
+               FN = FNvalue)
 cValue
 ```
 
@@ -2937,7 +3082,10 @@ bSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-bValue <- bSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+bValue <- bSDT(TP = TPvalue,
+               TN = TNvalue,
+               FP = FPvalue,
+               FN = FNvalue)
 bValue
 ```
 
@@ -3021,9 +3169,29 @@ Uoverall <- function(BR, HR, FAR, UH, UM, UCR, UFA){
 ```
 
 ```{r}
-Uoverall(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue, UH = 1, UM = 0, UCR = 0.75, UFA = 0.25)
-Uoverall(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue, UH = 1, UM = 0, UCR = 1, UFA = 0)
-Uoverall(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue, UH = 0.75, UM = 0.25, UCR = 1, UFA = 0)
+Uoverall(BR = baseRateValue,
+         HR = sensitivityValue,
+         FAR = falsePositiveRateValue,
+         UH = 1,
+         UM = 0,
+         UCR = 0.75,
+         UFA = 0.25)
+
+Uoverall(BR = baseRateValue,
+         HR = sensitivityValue,
+         FAR = falsePositiveRateValue,
+         UH = 1,
+         UM = 0,
+         UCR = 1,
+         UFA = 0)
+
+Uoverall(BR = baseRateValue,
+         HR = sensitivityValue,
+         FAR = falsePositiveRateValue,
+         UH = 0.75,
+         UM = 0.25,
+         UCR = 1,
+         UFA = 0)
 ```
 
 #### Utility ratio {#utilityRatio}
@@ -3324,8 +3492,12 @@ accuracyStats <- do.call(data.frame, lapply(accuracyStats, function(x) replace(x
 The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at a every possible cutoff.
 
 ```{r}
-accuracyAtEachCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder,
-                     UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
+accuracyAtEachCutoff(predicted = mydataSDT$testScore,
+                     actual = mydataSDT$disorder,
+                     UH = utilityHits,
+                     UM = utilityMisses,
+                     UCR = utilityCorrectRejections,
+                     UFA = utilityFalseAlarms)
 ```
 
 ```{r, eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
@@ -3352,7 +3524,12 @@ Threshold at maximum combination of [sensitivity](#sensitivity) and [specificity
 $\text{max}(\text{sensitivity} + \text{specificity})$
 
 ```{r}
-youdenIndex <- coords(roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE), x = "best", best.method = "youden")[[1]]
+youdenIndex <- coords(roc(data = mydataSDT,
+                          response = disorder,
+                          predictor = testScore,
+                          smooth = FALSE),
+                      x = "best",
+                      best.method = "youden")[[1]]
 
 youdenIndex
 ```
