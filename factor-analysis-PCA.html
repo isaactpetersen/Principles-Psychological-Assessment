@@ -2617,11 +2617,12 @@ The <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan" 
 <span id="cb848-7"><a href="factor-analysis-PCA.html#cb848-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;lavaan&quot;</span>)</span>
 <span id="cb848-8"><a href="factor-analysis-PCA.html#cb848-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semTools&quot;</span>)</span>
 <span id="cb848-9"><a href="factor-analysis-PCA.html#cb848-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;dagitty&quot;</span>)</span>
-<span id="cb848-10"><a href="factor-analysis-PCA.html#cb848-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb848-11"><a href="factor-analysis-PCA.html#cb848-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
-<span id="cb848-12"><a href="factor-analysis-PCA.html#cb848-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span>
-<span id="cb848-13"><a href="factor-analysis-PCA.html#cb848-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;knitr&quot;</span>)</span>
-<span id="cb848-14"><a href="factor-analysis-PCA.html#cb848-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rmarkdown&quot;</span>)</span></code></pre></div>
+<span id="cb848-10"><a href="factor-analysis-PCA.html#cb848-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;kableExtra&quot;</span>)</span>
+<span id="cb848-11"><a href="factor-analysis-PCA.html#cb848-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb848-12"><a href="factor-analysis-PCA.html#cb848-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
+<span id="cb848-13"><a href="factor-analysis-PCA.html#cb848-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span>
+<span id="cb848-14"><a href="factor-analysis-PCA.html#cb848-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;knitr&quot;</span>)</span>
+<span id="cb848-15"><a href="factor-analysis-PCA.html#cb848-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rmarkdown&quot;</span>)</span></code></pre></div>
 </div>
 <div id="loadData-factorAnalysis" class="section level3 hasAnchor" number="14.2.2">
 <h3><span class="header-section-number">14.2.2</span> Load Data<a href="factor-analysis-PCA.html#loadData-factorAnalysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -2641,7 +2642,8 @@ There is nothing special about this particular seed.</p>
 <span id="cb849-5"><a href="factor-analysis-PCA.html#cb849-5" aria-hidden="true" tabindex="-1"></a>unlistedDf <span class="ot">&lt;-</span> <span class="fu">unlist</span>(HolzingerSwineford1939)</span>
 <span id="cb849-6"><a href="factor-analysis-PCA.html#cb849-6" aria-hidden="true" tabindex="-1"></a>unlistedDf[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(unlistedDf), <span class="at">size =</span> .<span class="dv">15</span> <span class="sc">*</span> <span class="fu">length</span>(unlistedDf))] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb849-7"><a href="factor-analysis-PCA.html#cb849-7" aria-hidden="true" tabindex="-1"></a>HolzingerSwineford1939 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">matrix</span>(unlistedDf, <span class="at">ncol =</span> dimensionsDf[<span class="dv">2</span>]))</span>
-<span id="cb849-8"><a href="factor-analysis-PCA.html#cb849-8" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(HolzingerSwineford1939) <span class="ot">&lt;-</span> varNames</span></code></pre></div>
+<span id="cb849-8"><a href="factor-analysis-PCA.html#cb849-8" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(HolzingerSwineford1939) <span class="ot">&lt;-</span> varNames</span>
+<span id="cb849-9"><a href="factor-analysis-PCA.html#cb849-9" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -2650,7 +2652,7 @@ There is nothing special about this particular seed.</p>
 <p>Before conducting a <a href="factor-analysis-PCA.html#factorAnalysis">factor analysis</a>, it is important examine descriptive statistics and correlations among variables.</p>
 <div id="descriptiveStats-factorAnalysis" class="section level3 hasAnchor" number="14.3.1">
 <h3><span class="header-section-number">14.3.1</span> Descriptive Statistics<a href="factor-analysis-PCA.html#descriptiveStats-factorAnalysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb850"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb850-1"><a href="factor-analysis-PCA.html#cb850-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(psych<span class="sc">::</span><span class="fu">describe</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)]))</span></code></pre></div>
+<div class="sourceCode" id="cb850"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb850-1"><a href="factor-analysis-PCA.html#cb850-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paged_table</span>(psych<span class="sc">::</span><span class="fu">describe</span>(HolzingerSwineford1939[,vars]))</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["vars"],"name":[1],"type":["int"],"align":["right"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["mean"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["trimmed"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["mad"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["min"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["range"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["skew"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["kurtosis"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[13],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"251","3":"4.970784","4":"1.157597","5":"5.000000","6":"4.990050","7":"1.235500","8":"1.6666667","9":"8.500000","10":"6.833333","11":"-0.1100844","12":"0.05731688","13":"0.07306690","_rn_":"x1"},{"1":"2","2":"265","3":"6.050000","4":"1.160264","5":"5.750000","6":"5.976526","7":"1.111950","8":"2.2500000","9":"9.250000","10":"7.000000","11":"0.5143298","12":"0.44929760","13":"0.07127444","_rn_":"x2"},{"1":"3","2":"255","3":"2.225000","4":"1.129442","5":"2.000000","6":"2.170732","7":"1.111950","8":"0.3750000","9":"4.500000","10":"4.125000","11":"0.4089035","12":"-0.91375743","13":"0.07072842","_rn_":"x3"},{"1":"4","2":"252","3":"3.115079","4":"1.182161","5":"3.000000","6":"3.084158","7":"0.988400","8":"0.0000000","9":"6.333333","10":"6.333333","11":"0.2267573","12":"0.08685913","13":"0.07446916","_rn_":"x4"},{"1":"5","2":"259","3":"4.340734","4":"1.284776","5":"4.500000","6":"4.400718","7":"1.482600","8":"1.0000000","9":"6.750000","10":"5.750000","11":"-0.3858949","12":"-0.58979389","13":"0.07983212","_rn_":"x5"},{"1":"6","2":"248","3":"2.157258","4":"1.031459","5":"2.000000","6":"2.077143","7":"0.847200","8":"0.1428571","9":"6.142857","10":"6.000000","11":"0.8448515","12":"1.12484815","13":"0.06549773","_rn_":"x6"},{"1":"7","2":"266","3":"4.167375","4":"1.073860","5":"4.086957","6":"4.145063","7":"1.095835","8":"1.3043478","9":"7.260870","10":"5.956522","11":"0.2349748","12":"-0.38825545","13":"0.06584260","_rn_":"x7"},{"1":"8","2":"259","3":"5.514093","4":"1.016913","5":"5.550000","6":"5.486364","7":"0.963690","8":"3.0500000","9":"10.000000","10":"6.950000","11":"0.5167524","12":"1.37850253","13":"0.06318792","_rn_":"x8"},{"1":"9","2":"257","3":"5.389429","4":"1.024166","5":"5.333333","6":"5.379227","7":"1.029583","8":"2.7777778","9":"9.250000","10":"6.472222","11":"0.2359744","12":"0.28091873","13":"0.06388570","_rn_":"x9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2659,7 +2661,7 @@ There is nothing special about this particular seed.</p>
 </div>
 <div id="correlations-factorAnalysis" class="section level3 hasAnchor" number="14.3.2">
 <h3><span class="header-section-number">14.3.2</span> Correlations<a href="factor-analysis-PCA.html#correlations-factorAnalysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="factor-analysis-PCA.html#cb851-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="factor-analysis-PCA.html#cb851-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb851-2"><a href="factor-analysis-PCA.html#cb851-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>)</span></code></pre></div>
 <pre><code>           x1          x2        x3        x4        x5        x6          x7
 x1 1.00000000  0.31671519 0.4592132 0.4009470 0.3060026 0.3204367  0.04336147
@@ -2682,7 +2684,7 @@ x7 0.48743045 0.3462204
 x8 1.00000000 0.4637719
 x9 0.46377193 1.0000000</code></pre>
 <p>Here are correlation matrices of various types from the <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2022</a>)</span>:</p>
-<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="factor-analysis-PCA.html#cb853-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.table</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="factor-analysis-PCA.html#cb853-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.table</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb853-2"><a href="factor-analysis-PCA.html#cb853-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">dig =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>             x1     x2     x3     x4     x5     x6     x7     x8     x9
 1. x1.r    1.00 .32*** .46*** .40*** .31*** .32***    .04 .26*** .34***
@@ -2712,7 +2714,7 @@ x9 0.46377193 1.0000000</code></pre>
 25. x9.r .34*** .20*** .40*** .19*** .26***   .18* .35*** .46***   1.00
 26. sig     .00    .00    .00    .00    .00    .01    .00    .00     NA
 27. n       215    229    220    215    219    209    226    222    257</code></pre>
-<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="factor-analysis-PCA.html#cb855-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.table</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="factor-analysis-PCA.html#cb855-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.table</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb855-2"><a href="factor-analysis-PCA.html#cb855-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">type =</span> <span class="st">&quot;manuscript&quot;</span>,</span>
 <span id="cb855-3"><a href="factor-analysis-PCA.html#cb855-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">dig =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>          x1     x2     x3     x4     x5   x6     x7     x8   x9
@@ -2725,7 +2727,7 @@ x9 0.46377193 1.0000000</code></pre>
 7. x7    .04   -.09    .09   .15*    .11  .10   1.00            
 8. x8 .26***    .09 .20***   .13† .21*** .19* .49***   1.00     
 9. x9 .34*** .20*** .40*** .19*** .26*** .18* .35*** .46*** 1.00</code></pre>
-<div class="sourceCode" id="cb857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb857-1"><a href="factor-analysis-PCA.html#cb857-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.table</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb857-1"><a href="factor-analysis-PCA.html#cb857-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.table</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb857-2"><a href="factor-analysis-PCA.html#cb857-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">type =</span> <span class="st">&quot;manuscriptBig&quot;</span>,</span>
 <span id="cb857-3"><a href="factor-analysis-PCA.html#cb857-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">dig =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>        x1   x2   x3   x4   x5   x6   x7   x8   x9
@@ -2740,14 +2742,14 @@ x9 0.46377193 1.0000000</code></pre>
 9. x9  .34  .20  .40  .19  .26  .18  .35  .46 1.00</code></pre>
 <p>Pairs panel plots were generated using the <code>psych</code> package <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.
 Correlation plots were generated using the <code>corrplot</code> package <span class="citation">(<a href="#ref-R-corrplot" role="doc-biblioref">Wei &amp; Simko, 2021</a>)</span>.</p>
-<div class="sourceCode" id="cb859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb859-1"><a href="factor-analysis-PCA.html#cb859-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs.panels</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)])</span></code></pre></div>
+<div class="sourceCode" id="cb859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb859-1"><a href="factor-analysis-PCA.html#cb859-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs.panels</span>(HolzingerSwineford1939[,vars])</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-570"></span>
 <img src="Book_files/figure-html/unnamed-chunk-570-1.png" alt="Pairs Panel Plot." width="100%" />
 <p class="caption">
 Figure 14.25: Pairs Panel Plot.
 </p>
 </div>
-<div class="sourceCode" id="cb860"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb860-1"><a href="factor-analysis-PCA.html#cb860-1" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(<span class="fu">cor</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb860"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb860-1"><a href="factor-analysis-PCA.html#cb860-1" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(<span class="fu">cor</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb860-2"><a href="factor-analysis-PCA.html#cb860-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-571"></span>
 <img src="Book_files/figure-html/unnamed-chunk-571-1.png" alt="Correlation Plot." width="100%" />
@@ -2774,7 +2776,7 @@ whether observed eigenvalues exceed the predicted values.
 The acceleration factor is quantified using the acceleration of the curve, that is, the second derivative.
 The Kaiser-Guttman rule states to keep principal components whose eigenvalues are greater than one.
 However, for <a href="factor-analysis-PCA.html#efa">exploratory factor analysis</a> (as opposed to <a href="factor-analysis-PCA.html#pca">PCA</a>), the criterion is to keep the factors whose eigenvalues are greater than zero (i.e., not the factors whose eigenvalues are greater than one) <span class="citation">(<a href="#ref-Dinno2014" role="doc-biblioref">Dinno, 2014</a>)</span>.</p>
-<div class="sourceCode" id="cb861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb861-1"><a href="factor-analysis-PCA.html#cb861-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(<span class="at">x =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb861-1"><a href="factor-analysis-PCA.html#cb861-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(<span class="at">x =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb861-2"><a href="factor-analysis-PCA.html#cb861-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>,</span>
 <span id="cb861-3"><a href="factor-analysis-PCA.html#cb861-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">fa =</span> <span class="st">&quot;fa&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-572-1"></span>
@@ -2784,7 +2786,7 @@ Figure 14.27: Scree Plots in Exploratory Factor Analysis.
 </p>
 </div>
 <pre><code>Parallel analysis suggests that the number of factors =  3  and the number of components =  NA </code></pre>
-<div class="sourceCode" id="cb863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb863-1"><a href="factor-analysis-PCA.html#cb863-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">nScree</span>(<span class="at">x =</span> <span class="fu">cor</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb863-1"><a href="factor-analysis-PCA.html#cb863-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">nScree</span>(<span class="at">x =</span> <span class="fu">cor</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb863-2"><a href="factor-analysis-PCA.html#cb863-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>),</span>
 <span id="cb863-3"><a href="factor-analysis-PCA.html#cb863-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">model =</span> <span class="st">&quot;factors&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-572-2"></span>
@@ -2805,7 +2807,7 @@ Very simple structure (VSS) plots were generated using the <code>psych</code> pa
 <div id="orthogonal-vss" class="section level6 hasAnchor" number="14.4.1.1.2.1">
 <h6><span class="header-section-number">14.4.1.1.2.1</span> Orthogonal (Varimax) rotation<a href="factor-analysis-PCA.html#orthogonal-vss" class="anchor-section" aria-label="Anchor link to header"></a></h6>
 <p>In the example below, the VSS criterion is highest with 3 or 4 factors.</p>
-<div class="sourceCode" id="cb864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb864-1"><a href="factor-analysis-PCA.html#cb864-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb864-1"><a href="factor-analysis-PCA.html#cb864-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb864-2"><a href="factor-analysis-PCA.html#cb864-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb864-3"><a href="factor-analysis-PCA.html#cb864-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-573-1"></span>
@@ -2816,8 +2818,7 @@ Figure 14.29: Very Simple Structure Plot With Orthogonal Rotation in Exploratory
 </div>
 <pre><code>
 Very Simple Structure
-Call: vss(x = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], rotate = &quot;varimax&quot;, fm = &quot;ml&quot;)
+Call: vss(x = HolzingerSwineford1939[, vars], rotate = &quot;varimax&quot;, fm = &quot;ml&quot;)
 Although the VSS complexity 1 shows  6  factors, it is probably more reasonable to think about  4  factors
 VSS complexity 2 achieves a maximimum of 0.84  with  3  factors
 
@@ -2844,7 +2845,7 @@ Statistics by number of factors
 6 1.3e-08 7.7e-07    NA    NA
 7 2.1e-13 3.1e-09    NA    NA
 8 2.2e-16 1.0e-10    NA    NA</code></pre>
-<div class="sourceCode" id="cb866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb866-1"><a href="factor-analysis-PCA.html#cb866-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nfactors</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb866-1"><a href="factor-analysis-PCA.html#cb866-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nfactors</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb866-2"><a href="factor-analysis-PCA.html#cb866-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb866-3"><a href="factor-analysis-PCA.html#cb866-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-573-2"></span>
@@ -2888,7 +2889,7 @@ Statistics by number of factors
 <div id="oblique-vss" class="section level6 hasAnchor" number="14.4.1.1.2.2">
 <h6><span class="header-section-number">14.4.1.1.2.2</span> Oblique (Oblimin) rotation<a href="factor-analysis-PCA.html#oblique-vss" class="anchor-section" aria-label="Anchor link to header"></a></h6>
 <p>In the example below, the VSS criterion is highest with 3 factors.</p>
-<div class="sourceCode" id="cb868"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb868-1"><a href="factor-analysis-PCA.html#cb868-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb868"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb868-1"><a href="factor-analysis-PCA.html#cb868-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb868-2"><a href="factor-analysis-PCA.html#cb868-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb868-3"><a href="factor-analysis-PCA.html#cb868-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-574-1"></span>
@@ -2899,8 +2900,7 @@ Figure 14.31: Very Simple Structure Plot With Oblique Rotation in Exploratory Fa
 </div>
 <pre><code>
 Very Simple Structure
-Call: vss(x = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], rotate = &quot;oblimin&quot;, fm = &quot;ml&quot;)
+Call: vss(x = HolzingerSwineford1939[, vars], rotate = &quot;oblimin&quot;, fm = &quot;ml&quot;)
 VSS complexity 1 achieves a maximimum of 0.69  with  3  factors
 VSS complexity 2 achieves a maximimum of 0.77  with  3  factors
 
@@ -2927,7 +2927,7 @@ Statistics by number of factors
 6 1.3e-08 7.7e-07    NA    NA
 7 2.1e-13 3.1e-09    NA    NA
 8 2.2e-16 1.0e-10    NA    NA</code></pre>
-<div class="sourceCode" id="cb870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb870-1"><a href="factor-analysis-PCA.html#cb870-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nfactors</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb870-1"><a href="factor-analysis-PCA.html#cb870-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nfactors</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb870-2"><a href="factor-analysis-PCA.html#cb870-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb870-3"><a href="factor-analysis-PCA.html#cb870-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-574-2"></span>
@@ -2971,7 +2971,7 @@ Statistics by number of factors
 <div id="noRotation-vss" class="section level6 hasAnchor" number="14.4.1.1.2.3">
 <h6><span class="header-section-number">14.4.1.1.2.3</span> No rotation<a href="factor-analysis-PCA.html#noRotation-vss" class="anchor-section" aria-label="Anchor link to header"></a></h6>
 <p>In the example below, the VSS criterion is highest with 3 or 4 factors.</p>
-<div class="sourceCode" id="cb872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb872-1"><a href="factor-analysis-PCA.html#cb872-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb872-1"><a href="factor-analysis-PCA.html#cb872-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb872-2"><a href="factor-analysis-PCA.html#cb872-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">rotate =</span> <span class="st">&quot;none&quot;</span>,</span>
 <span id="cb872-3"><a href="factor-analysis-PCA.html#cb872-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-575-1"></span>
@@ -2982,8 +2982,7 @@ Figure 14.33: Very Simple Structure Plot With no Rotation in Exploratory Factor 
 </div>
 <pre><code>
 Very Simple Structure
-Call: vss(x = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], rotate = &quot;none&quot;, fm = &quot;ml&quot;)
+Call: vss(x = HolzingerSwineford1939[, vars], rotate = &quot;none&quot;, fm = &quot;ml&quot;)
 VSS complexity 1 achieves a maximimum of 0.62  with  2  factors
 VSS complexity 2 achieves a maximimum of 0.8  with  5  factors
 
@@ -3010,7 +3009,7 @@ Statistics by number of factors
 6 1.3e-08 7.7e-07    NA    NA
 7 2.1e-13 3.1e-09    NA    NA
 8 2.2e-16 1.0e-10    NA    NA</code></pre>
-<div class="sourceCode" id="cb874"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb874-1"><a href="factor-analysis-PCA.html#cb874-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nfactors</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb874"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb874-1"><a href="factor-analysis-PCA.html#cb874-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nfactors</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb874-2"><a href="factor-analysis-PCA.html#cb874-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">rotate =</span> <span class="st">&quot;none&quot;</span>,</span>
 <span id="cb874-3"><a href="factor-analysis-PCA.html#cb874-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-575-2"></span>
@@ -3061,47 +3060,47 @@ Statistics by number of factors
 <div id="orthogonalPsych-efa" class="section level6 hasAnchor" number="14.4.1.2.1.1">
 <h6><span class="header-section-number">14.4.1.2.1.1</span> <code>psych</code><a href="factor-analysis-PCA.html#orthogonalPsych-efa" class="anchor-section" aria-label="Anchor link to header"></a></h6>
 <p>Fit a different model with each number of possible factors:</p>
-<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="factor-analysis-PCA.html#cb876-1" aria-hidden="true" tabindex="-1"></a>efa1factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="factor-analysis-PCA.html#cb876-1" aria-hidden="true" tabindex="-1"></a>efa1factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-2"><a href="factor-analysis-PCA.html#cb876-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">1</span>,</span>
 <span id="cb876-3"><a href="factor-analysis-PCA.html#cb876-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-4"><a href="factor-analysis-PCA.html#cb876-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-5"><a href="factor-analysis-PCA.html#cb876-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-6"><a href="factor-analysis-PCA.html#cb876-6" aria-hidden="true" tabindex="-1"></a>efa2factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-6"><a href="factor-analysis-PCA.html#cb876-6" aria-hidden="true" tabindex="-1"></a>efa2factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-7"><a href="factor-analysis-PCA.html#cb876-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">2</span>,</span>
 <span id="cb876-8"><a href="factor-analysis-PCA.html#cb876-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-9"><a href="factor-analysis-PCA.html#cb876-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-10"><a href="factor-analysis-PCA.html#cb876-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-11"><a href="factor-analysis-PCA.html#cb876-11" aria-hidden="true" tabindex="-1"></a>efa3factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-11"><a href="factor-analysis-PCA.html#cb876-11" aria-hidden="true" tabindex="-1"></a>efa3factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-12"><a href="factor-analysis-PCA.html#cb876-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">3</span>,</span>
 <span id="cb876-13"><a href="factor-analysis-PCA.html#cb876-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-14"><a href="factor-analysis-PCA.html#cb876-14" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-15"><a href="factor-analysis-PCA.html#cb876-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-16"><a href="factor-analysis-PCA.html#cb876-16" aria-hidden="true" tabindex="-1"></a>efa4factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-16"><a href="factor-analysis-PCA.html#cb876-16" aria-hidden="true" tabindex="-1"></a>efa4factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-17"><a href="factor-analysis-PCA.html#cb876-17" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
 <span id="cb876-18"><a href="factor-analysis-PCA.html#cb876-18" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-19"><a href="factor-analysis-PCA.html#cb876-19" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-20"><a href="factor-analysis-PCA.html#cb876-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-21"><a href="factor-analysis-PCA.html#cb876-21" aria-hidden="true" tabindex="-1"></a>efa5factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-21"><a href="factor-analysis-PCA.html#cb876-21" aria-hidden="true" tabindex="-1"></a>efa5factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-22"><a href="factor-analysis-PCA.html#cb876-22" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">5</span>,</span>
 <span id="cb876-23"><a href="factor-analysis-PCA.html#cb876-23" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-24"><a href="factor-analysis-PCA.html#cb876-24" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-25"><a href="factor-analysis-PCA.html#cb876-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-26"><a href="factor-analysis-PCA.html#cb876-26" aria-hidden="true" tabindex="-1"></a>efa6factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-26"><a href="factor-analysis-PCA.html#cb876-26" aria-hidden="true" tabindex="-1"></a>efa6factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-27"><a href="factor-analysis-PCA.html#cb876-27" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">6</span>,</span>
 <span id="cb876-28"><a href="factor-analysis-PCA.html#cb876-28" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-29"><a href="factor-analysis-PCA.html#cb876-29" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-30"><a href="factor-analysis-PCA.html#cb876-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-31"><a href="factor-analysis-PCA.html#cb876-31" aria-hidden="true" tabindex="-1"></a>efa7factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-31"><a href="factor-analysis-PCA.html#cb876-31" aria-hidden="true" tabindex="-1"></a>efa7factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-32"><a href="factor-analysis-PCA.html#cb876-32" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">7</span>,</span>
 <span id="cb876-33"><a href="factor-analysis-PCA.html#cb876-33" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-34"><a href="factor-analysis-PCA.html#cb876-34" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-35"><a href="factor-analysis-PCA.html#cb876-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-36"><a href="factor-analysis-PCA.html#cb876-36" aria-hidden="true" tabindex="-1"></a>efa8factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-36"><a href="factor-analysis-PCA.html#cb876-36" aria-hidden="true" tabindex="-1"></a>efa8factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-37"><a href="factor-analysis-PCA.html#cb876-37" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">8</span>,</span>
 <span id="cb876-38"><a href="factor-analysis-PCA.html#cb876-38" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-39"><a href="factor-analysis-PCA.html#cb876-39" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb876-40"><a href="factor-analysis-PCA.html#cb876-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb876-41"><a href="factor-analysis-PCA.html#cb876-41" aria-hidden="true" tabindex="-1"></a>efa9factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb876-41"><a href="factor-analysis-PCA.html#cb876-41" aria-hidden="true" tabindex="-1"></a>efa9factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb876-42"><a href="factor-analysis-PCA.html#cb876-42" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nfactors =</span> <span class="dv">9</span>,</span>
 <span id="cb876-43"><a href="factor-analysis-PCA.html#cb876-43" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>,</span>
 <span id="cb876-44"><a href="factor-analysis-PCA.html#cb876-44" aria-hidden="true" tabindex="-1"></a>                           <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
@@ -3277,47 +3276,47 @@ Statistics by number of factors
 <div id="obliquePsych-efa" class="section level6 hasAnchor" number="14.4.1.2.2.1">
 <h6><span class="header-section-number">14.4.1.2.2.1</span> <code>psych</code><a href="factor-analysis-PCA.html#obliquePsych-efa" class="anchor-section" aria-label="Anchor link to header"></a></h6>
 <p>Fit a different model with each number of possible factors:</p>
-<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="factor-analysis-PCA.html#cb879-1" aria-hidden="true" tabindex="-1"></a>efa1factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="factor-analysis-PCA.html#cb879-1" aria-hidden="true" tabindex="-1"></a>efa1factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-2"><a href="factor-analysis-PCA.html#cb879-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">1</span>,</span>
 <span id="cb879-3"><a href="factor-analysis-PCA.html#cb879-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-4"><a href="factor-analysis-PCA.html#cb879-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb879-5"><a href="factor-analysis-PCA.html#cb879-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-6"><a href="factor-analysis-PCA.html#cb879-6" aria-hidden="true" tabindex="-1"></a>efa2factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-6"><a href="factor-analysis-PCA.html#cb879-6" aria-hidden="true" tabindex="-1"></a>efa2factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-7"><a href="factor-analysis-PCA.html#cb879-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">2</span>,</span>
 <span id="cb879-8"><a href="factor-analysis-PCA.html#cb879-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-9"><a href="factor-analysis-PCA.html#cb879-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb879-10"><a href="factor-analysis-PCA.html#cb879-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-11"><a href="factor-analysis-PCA.html#cb879-11" aria-hidden="true" tabindex="-1"></a>efa3factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-11"><a href="factor-analysis-PCA.html#cb879-11" aria-hidden="true" tabindex="-1"></a>efa3factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-12"><a href="factor-analysis-PCA.html#cb879-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">3</span>,</span>
 <span id="cb879-13"><a href="factor-analysis-PCA.html#cb879-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-14"><a href="factor-analysis-PCA.html#cb879-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb879-15"><a href="factor-analysis-PCA.html#cb879-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-16"><a href="factor-analysis-PCA.html#cb879-16" aria-hidden="true" tabindex="-1"></a>efa4factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-16"><a href="factor-analysis-PCA.html#cb879-16" aria-hidden="true" tabindex="-1"></a>efa4factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-17"><a href="factor-analysis-PCA.html#cb879-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
 <span id="cb879-18"><a href="factor-analysis-PCA.html#cb879-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-19"><a href="factor-analysis-PCA.html#cb879-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb879-20"><a href="factor-analysis-PCA.html#cb879-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-21"><a href="factor-analysis-PCA.html#cb879-21" aria-hidden="true" tabindex="-1"></a>efa5factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-21"><a href="factor-analysis-PCA.html#cb879-21" aria-hidden="true" tabindex="-1"></a>efa5factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-22"><a href="factor-analysis-PCA.html#cb879-22" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">5</span>,</span>
 <span id="cb879-23"><a href="factor-analysis-PCA.html#cb879-23" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-24"><a href="factor-analysis-PCA.html#cb879-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb879-25"><a href="factor-analysis-PCA.html#cb879-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-26"><a href="factor-analysis-PCA.html#cb879-26" aria-hidden="true" tabindex="-1"></a>efa6factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-26"><a href="factor-analysis-PCA.html#cb879-26" aria-hidden="true" tabindex="-1"></a>efa6factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-27"><a href="factor-analysis-PCA.html#cb879-27" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">6</span>,</span>
 <span id="cb879-28"><a href="factor-analysis-PCA.html#cb879-28" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-29"><a href="factor-analysis-PCA.html#cb879-29" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb879-30"><a href="factor-analysis-PCA.html#cb879-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-31"><a href="factor-analysis-PCA.html#cb879-31" aria-hidden="true" tabindex="-1"></a>efa7factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-31"><a href="factor-analysis-PCA.html#cb879-31" aria-hidden="true" tabindex="-1"></a>efa7factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-32"><a href="factor-analysis-PCA.html#cb879-32" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">7</span>,</span>
 <span id="cb879-33"><a href="factor-analysis-PCA.html#cb879-33" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-34"><a href="factor-analysis-PCA.html#cb879-34" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span>
 <span id="cb879-35"><a href="factor-analysis-PCA.html#cb879-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-36"><a href="factor-analysis-PCA.html#cb879-36" aria-hidden="true" tabindex="-1"></a>efa8factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-36"><a href="factor-analysis-PCA.html#cb879-36" aria-hidden="true" tabindex="-1"></a>efa8factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-37"><a href="factor-analysis-PCA.html#cb879-37" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">8</span>,</span>
 <span id="cb879-38"><a href="factor-analysis-PCA.html#cb879-38" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-39"><a href="factor-analysis-PCA.html#cb879-39" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>) <span class="co">#no convergence</span></span>
 <span id="cb879-40"><a href="factor-analysis-PCA.html#cb879-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb879-41"><a href="factor-analysis-PCA.html#cb879-41" aria-hidden="true" tabindex="-1"></a>efa9factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb879-41"><a href="factor-analysis-PCA.html#cb879-41" aria-hidden="true" tabindex="-1"></a>efa9factorOblique <span class="ot">&lt;-</span> <span class="fu">fa</span>(<span class="at">r =</span> HolzingerSwineford1939[,vars],</span>
 <span id="cb879-42"><a href="factor-analysis-PCA.html#cb879-42" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nfactors =</span> <span class="dv">9</span>,</span>
 <span id="cb879-43"><a href="factor-analysis-PCA.html#cb879-43" aria-hidden="true" tabindex="-1"></a>                        <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>,</span>
 <span id="cb879-44"><a href="factor-analysis-PCA.html#cb879-44" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
@@ -3462,8 +3461,7 @@ Statistics by number of factors
 <p>The factor loadings and summaries of the model results are below:</p>
 <div class="sourceCode" id="cb881"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb881-1"><a href="factor-analysis-PCA.html#cb881-1" aria-hidden="true" tabindex="-1"></a>efa1factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 1, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 1, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1    h2   u2 com
@@ -3504,8 +3502,7 @@ Multiple R square of scores with factors          0.88
 Minimum correlation of possible factor scores     0.76</code></pre>
 <div class="sourceCode" id="cb883"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb883-1"><a href="factor-analysis-PCA.html#cb883-1" aria-hidden="true" tabindex="-1"></a>efa2factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 2, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 2, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1  ML2    h2   u2 com
@@ -3549,8 +3546,7 @@ Multiple R square of scores with factors          0.86 0.72
 Minimum correlation of possible factor scores     0.73 0.45</code></pre>
 <div class="sourceCode" id="cb885"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb885-1"><a href="factor-analysis-PCA.html#cb885-1" aria-hidden="true" tabindex="-1"></a>efa3factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 3, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 3, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1   ML3   ML2   h2   u2 com
@@ -3594,8 +3590,7 @@ Multiple R square of scores with factors          0.86 0.67 0.71
 Minimum correlation of possible factor scores     0.71 0.34 0.41</code></pre>
 <div class="sourceCode" id="cb887"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb887-1"><a href="factor-analysis-PCA.html#cb887-1" aria-hidden="true" tabindex="-1"></a>efa4factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 4, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 4, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1   ML4   ML3   ML2   h2    u2 com
@@ -3639,8 +3634,7 @@ Multiple R square of scores with factors          0.99 0.68 0.73 0.98
 Minimum correlation of possible factor scores     0.97 0.36 0.46 0.96</code></pre>
 <div class="sourceCode" id="cb889"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb889-1"><a href="factor-analysis-PCA.html#cb889-1" aria-hidden="true" tabindex="-1"></a>efa5factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 5, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 5, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1   ML4   ML5   ML2   ML3   h2    u2 com
@@ -3684,8 +3678,7 @@ Multiple R square of scores with factors          0.97 0.70 0.60 0.91 0.87
 Minimum correlation of possible factor scores     0.94 0.40 0.20 0.82 0.73</code></pre>
 <div class="sourceCode" id="cb891"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb891-1"><a href="factor-analysis-PCA.html#cb891-1" aria-hidden="true" tabindex="-1"></a>efa6factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 6, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 6, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1   ML4   ML2   ML6   ML3   ML5   h2    u2 com
@@ -3731,8 +3724,7 @@ Multiple R square of scores with factors           0.46
 Minimum correlation of possible factor scores     -0.07</code></pre>
 <div class="sourceCode" id="cb893"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb893-1"><a href="factor-analysis-PCA.html#cb893-1" aria-hidden="true" tabindex="-1"></a>efa7factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 7, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 7, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1   ML3   ML4   ML7   ML5   ML2   ML6   h2     u2 com
@@ -3778,8 +3770,7 @@ Multiple R square of scores with factors           0.50  0.22
 Minimum correlation of possible factor scores     -0.01 -0.55</code></pre>
 <div class="sourceCode" id="cb895"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb895-1"><a href="factor-analysis-PCA.html#cb895-1" aria-hidden="true" tabindex="-1"></a>efa8factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 8, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 8, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1   ML3   ML4   ML7   ML6   ML2   ML5   ML8   h2     u2 com
@@ -3825,8 +3816,7 @@ Multiple R square of scores with factors          0.79  0.45  0.21
 Minimum correlation of possible factor scores     0.59 -0.10 -0.58</code></pre>
 <div class="sourceCode" id="cb897"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb897-1"><a href="factor-analysis-PCA.html#cb897-1" aria-hidden="true" tabindex="-1"></a>efa9factorOrthogonal</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 9, rotate = &quot;varimax&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 9, rotate = &quot;varimax&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1   ML3   ML2   ML4 ML9 ML5 ML8 ML7 ML6   h2   u2 com
@@ -4690,8 +4680,7 @@ R-Square:
 <p>The factor loadings and summaries of the model results are below:</p>
 <div class="sourceCode" id="cb917"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb917-1"><a href="factor-analysis-PCA.html#cb917-1" aria-hidden="true" tabindex="-1"></a>efa1factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 1, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 1, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     ML1    h2   u2 com
@@ -4732,8 +4721,7 @@ Multiple R square of scores with factors          0.88
 Minimum correlation of possible factor scores     0.76</code></pre>
 <div class="sourceCode" id="cb919"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb919-1"><a href="factor-analysis-PCA.html#cb919-1" aria-hidden="true" tabindex="-1"></a>efa2factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 2, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 2, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML1   ML2    h2   u2 com
@@ -4782,8 +4770,7 @@ Multiple R square of scores with factors          0.88 0.75
 Minimum correlation of possible factor scores     0.77 0.50</code></pre>
 <div class="sourceCode" id="cb921"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb921-1"><a href="factor-analysis-PCA.html#cb921-1" aria-hidden="true" tabindex="-1"></a>efa3factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 3, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 3, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML1   ML3   ML2   h2   u2 com
@@ -4833,8 +4820,7 @@ Multiple R square of scores with factors          0.88 0.72 0.73
 Minimum correlation of possible factor scores     0.77 0.44 0.45</code></pre>
 <div class="sourceCode" id="cb923"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb923-1"><a href="factor-analysis-PCA.html#cb923-1" aria-hidden="true" tabindex="-1"></a>efa4factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 4, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 4, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML4   ML1   ML2   ML3   h2    u2 com
@@ -4885,8 +4871,7 @@ Multiple R square of scores with factors          0.73 0.99 0.99 0.73
 Minimum correlation of possible factor scores     0.45 0.99 0.99 0.47</code></pre>
 <div class="sourceCode" id="cb925"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb925-1"><a href="factor-analysis-PCA.html#cb925-1" aria-hidden="true" tabindex="-1"></a>efa5factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 5, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 5, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML4   ML1   ML3   ML2   ML5   h2    u2 com
@@ -4938,8 +4923,7 @@ Multiple R square of scores with factors          0.73 0.99 0.94 0.99 0.67
 Minimum correlation of possible factor scores     0.46 0.99 0.88 0.99 0.35</code></pre>
 <div class="sourceCode" id="cb927"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb927-1"><a href="factor-analysis-PCA.html#cb927-1" aria-hidden="true" tabindex="-1"></a>efa6factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 6, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 6, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML4   ML1   ML3   ML2   ML6   ML5   h2    u2 com
@@ -4990,8 +4974,7 @@ Multiple R square of scores with factors          0.74 0.95 0.93 0.76 0.66 0.77
 Minimum correlation of possible factor scores     0.48 0.90 0.86 0.51 0.32 0.53</code></pre>
 <div class="sourceCode" id="cb929"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb929-1"><a href="factor-analysis-PCA.html#cb929-1" aria-hidden="true" tabindex="-1"></a>efa7factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 7, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 7, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML3   ML2   ML1   ML4   ML6   ML5   ML7   h2     u2 com
@@ -5047,8 +5030,7 @@ Multiple R square of scores with factors          0.52
 Minimum correlation of possible factor scores     0.05</code></pre>
 <div class="sourceCode" id="cb931"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb931-1"><a href="factor-analysis-PCA.html#cb931-1" aria-hidden="true" tabindex="-1"></a>efa8factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 8, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 8, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML1   ML3   ML2   ML4   ML6   ML5   ML7   ML8   h2     u2 com
@@ -5105,8 +5087,7 @@ Multiple R square of scores with factors          0.61  0.35
 Minimum correlation of possible factor scores     0.23 -0.29</code></pre>
 <div class="sourceCode" id="cb933"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb933-1"><a href="factor-analysis-PCA.html#cb933-1" aria-hidden="true" tabindex="-1"></a>efa9factorOblique</span></code></pre></div>
 <pre><code>Factor Analysis using method =  ml
-Call: fa(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 9, rotate = &quot;oblimin&quot;, 
+Call: fa(r = HolzingerSwineford1939[, vars], nfactors = 9, rotate = &quot;oblimin&quot;, 
     fm = &quot;ml&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      ML1   ML2   ML3   ML4 ML5 ML6 ML7 ML8 ML9   h2   u2 com
@@ -9956,7 +9937,7 @@ Although <a href="factor-analysis-PCA.html#pca">PCA</a> is sometimes referred to
 <h4><span class="header-section-number">14.5.1.1</span> Scree Plot<a href="factor-analysis-PCA.html#pcaAnalysisScreePlot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Scree plots were generated using the <strong>psych</strong> <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span> and <strong>nFactors</strong> <span class="citation">(<a href="#ref-R-nFactors" role="doc-biblioref">Raiche &amp; Magis, 2020</a>)</span> packages.
 Note that eigenvalues of factors in <a href="factor-analysis-PCA.html#pca">PCA</a> models are higher than factors from <a href="factor-analysis-PCA.html#efa">EFA</a> models, because <a href="factor-analysis-PCA.html#pca">PCA</a> components include <em>common</em> variance among the indicators in addition to <em>error</em> variance, whereas <a href="factor-analysis-PCA.html#efa">EFA</a> factors include only the common variance among the indicators.</p>
-<div class="sourceCode" id="cb1163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1163-1"><a href="factor-analysis-PCA.html#cb1163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(<span class="at">x =</span> HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)], <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>, <span class="at">fa =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1163-1"><a href="factor-analysis-PCA.html#cb1163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(<span class="at">x =</span> HolzingerSwineford1939[,vars], <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>, <span class="at">fa =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-676-1"></span>
 <img src="Book_files/figure-html/unnamed-chunk-676-1.png" alt="Scree Plots in Principal Component Analysis." width="100%" />
 <p class="caption">
@@ -9964,7 +9945,7 @@ Figure 14.80: Scree Plots in Principal Component Analysis.
 </p>
 </div>
 <pre><code>Parallel analysis suggests that the number of factors =  NA  and the number of components =  3 </code></pre>
-<div class="sourceCode" id="cb1165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1165-1"><a href="factor-analysis-PCA.html#cb1165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">nScree</span>(<span class="at">x =</span> <span class="fu">cor</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)], <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>), <span class="at">model =</span> <span class="st">&quot;components&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1165-1"><a href="factor-analysis-PCA.html#cb1165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">nScree</span>(<span class="at">x =</span> <span class="fu">cor</span>(HolzingerSwineford1939[,vars], <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>), <span class="at">model =</span> <span class="st">&quot;components&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-676-2"></span>
 <img src="Book_files/figure-html/unnamed-chunk-676-2.png" alt="Scree Plots in Principal Component Analysis." width="100%" />
 <p class="caption">
@@ -9977,7 +9958,7 @@ Figure 14.81: Scree Plots in Principal Component Analysis.
 <p>Very simple structure (VSS) plots were generated using the <code>psych</code> package <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <div id="pcaAnalysisVSSplotOrthogonal" class="section level5 hasAnchor" number="14.5.1.2.1">
 <h5><span class="header-section-number">14.5.1.2.1</span> Orthogonal (Varimax) rotation<a href="factor-analysis-PCA.html#pcaAnalysisVSSplotOrthogonal" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<div class="sourceCode" id="cb1166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1166-1"><a href="factor-analysis-PCA.html#cb1166-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)], <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1166-1"><a href="factor-analysis-PCA.html#cb1166-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars], <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-677"></span>
 <img src="Book_files/figure-html/unnamed-chunk-677-1.png" alt="Very Simple Structure Plot in Principal Component Analysis." width="100%" />
 <p class="caption">
@@ -9986,8 +9967,7 @@ Figure 14.82: Very Simple Structure Plot in Principal Component Analysis.
 </div>
 <pre><code>
 Very Simple Structure
-Call: vss(x = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], rotate = &quot;varimax&quot;, fm = &quot;pc&quot;)
+Call: vss(x = HolzingerSwineford1939[, vars], rotate = &quot;varimax&quot;, fm = &quot;pc&quot;)
 VSS complexity 1 achieves a maximimum of 0.75  with  4  factors
 VSS complexity 2 achieves a maximimum of 0.91  with  4  factors
 
@@ -10017,7 +9997,7 @@ Statistics by number of factors
 </div>
 <div id="pcaAnalysisVSSplotOblique" class="section level5 hasAnchor" number="14.5.1.2.2">
 <h5><span class="header-section-number">14.5.1.2.2</span> Oblique (Oblimin) rotation<a href="factor-analysis-PCA.html#pcaAnalysisVSSplotOblique" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<div class="sourceCode" id="cb1168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1168-1"><a href="factor-analysis-PCA.html#cb1168-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)], <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1168-1"><a href="factor-analysis-PCA.html#cb1168-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars], <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-678"></span>
 <img src="Book_files/figure-html/unnamed-chunk-678-1.png" alt="Very Simple Structure Plot in Principal Component Analysis." width="100%" />
 <p class="caption">
@@ -10026,8 +10006,7 @@ Figure 14.83: Very Simple Structure Plot in Principal Component Analysis.
 </div>
 <pre><code>
 Very Simple Structure
-Call: vss(x = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], rotate = &quot;oblimin&quot;, fm = &quot;pc&quot;)
+Call: vss(x = HolzingerSwineford1939[, vars], rotate = &quot;oblimin&quot;, fm = &quot;pc&quot;)
 Although the VSS complexity 1 shows  8  factors, it is probably more reasonable to think about  5  factors
 VSS complexity 2 achieves a maximimum of 0.99  with  8  factors
 
@@ -10057,7 +10036,7 @@ Statistics by number of factors
 </div>
 <div id="pcaAnalysisVSSplotNoRotation" class="section level5 hasAnchor" number="14.5.1.2.3">
 <h5><span class="header-section-number">14.5.1.2.3</span> No rotation<a href="factor-analysis-PCA.html#pcaAnalysisVSSplotNoRotation" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<div class="sourceCode" id="cb1170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1170-1"><a href="factor-analysis-PCA.html#cb1170-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)], <span class="at">rotate =</span> <span class="st">&quot;none&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1170-1"><a href="factor-analysis-PCA.html#cb1170-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars], <span class="at">rotate =</span> <span class="st">&quot;none&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-679"></span>
 <img src="Book_files/figure-html/unnamed-chunk-679-1.png" alt="Very Simple Structure Plot in Principal Component Analysis." width="100%" />
 <p class="caption">
@@ -10066,8 +10045,7 @@ Figure 14.84: Very Simple Structure Plot in Principal Component Analysis.
 </div>
 <pre><code>
 Very Simple Structure
-Call: vss(x = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, &quot;x5&quot;, 
-    &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], rotate = &quot;none&quot;, fm = &quot;pc&quot;)
+Call: vss(x = HolzingerSwineford1939[, vars], rotate = &quot;none&quot;, fm = &quot;pc&quot;)
 VSS complexity 1 achieves a maximimum of 0.75  with  4  factors
 VSS complexity 2 achieves a maximimum of 0.91  with  4  factors
 
@@ -10102,77 +10080,77 @@ Statistics by number of factors
 <p><a href="factor-analysis-PCA.html#pca">Principal component analysis</a> (PCA) models were fit using the <code>psych</code> package <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <div id="pcaAnalysisFitOrthogonal" class="section level4 hasAnchor" number="14.5.2.1">
 <h4><span class="header-section-number">14.5.2.1</span> Orthogonal (Varimax) rotation<a href="factor-analysis-PCA.html#pcaAnalysisFitOrthogonal" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb1172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1172-1"><a href="factor-analysis-PCA.html#cb1172-1" aria-hidden="true" tabindex="-1"></a>pca1factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb1172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1172-1"><a href="factor-analysis-PCA.html#cb1172-1" aria-hidden="true" tabindex="-1"></a>pca1factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-2"><a href="factor-analysis-PCA.html#cb1172-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">1</span>,</span>
 <span id="cb1172-3"><a href="factor-analysis-PCA.html#cb1172-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-4"><a href="factor-analysis-PCA.html#cb1172-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-5"><a href="factor-analysis-PCA.html#cb1172-5" aria-hidden="true" tabindex="-1"></a>pca2factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-5"><a href="factor-analysis-PCA.html#cb1172-5" aria-hidden="true" tabindex="-1"></a>pca2factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-6"><a href="factor-analysis-PCA.html#cb1172-6" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">2</span>,</span>
 <span id="cb1172-7"><a href="factor-analysis-PCA.html#cb1172-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-8"><a href="factor-analysis-PCA.html#cb1172-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-9"><a href="factor-analysis-PCA.html#cb1172-9" aria-hidden="true" tabindex="-1"></a>pca3factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-9"><a href="factor-analysis-PCA.html#cb1172-9" aria-hidden="true" tabindex="-1"></a>pca3factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-10"><a href="factor-analysis-PCA.html#cb1172-10" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">3</span>,</span>
 <span id="cb1172-11"><a href="factor-analysis-PCA.html#cb1172-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-12"><a href="factor-analysis-PCA.html#cb1172-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-13"><a href="factor-analysis-PCA.html#cb1172-13" aria-hidden="true" tabindex="-1"></a>pca4factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-13"><a href="factor-analysis-PCA.html#cb1172-13" aria-hidden="true" tabindex="-1"></a>pca4factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-14"><a href="factor-analysis-PCA.html#cb1172-14" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
 <span id="cb1172-15"><a href="factor-analysis-PCA.html#cb1172-15" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-16"><a href="factor-analysis-PCA.html#cb1172-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-17"><a href="factor-analysis-PCA.html#cb1172-17" aria-hidden="true" tabindex="-1"></a>pca5factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-17"><a href="factor-analysis-PCA.html#cb1172-17" aria-hidden="true" tabindex="-1"></a>pca5factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-18"><a href="factor-analysis-PCA.html#cb1172-18" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">5</span>,</span>
 <span id="cb1172-19"><a href="factor-analysis-PCA.html#cb1172-19" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-20"><a href="factor-analysis-PCA.html#cb1172-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-21"><a href="factor-analysis-PCA.html#cb1172-21" aria-hidden="true" tabindex="-1"></a>pca6factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-21"><a href="factor-analysis-PCA.html#cb1172-21" aria-hidden="true" tabindex="-1"></a>pca6factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-22"><a href="factor-analysis-PCA.html#cb1172-22" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">6</span>,</span>
 <span id="cb1172-23"><a href="factor-analysis-PCA.html#cb1172-23" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-24"><a href="factor-analysis-PCA.html#cb1172-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-25"><a href="factor-analysis-PCA.html#cb1172-25" aria-hidden="true" tabindex="-1"></a>pca7factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-25"><a href="factor-analysis-PCA.html#cb1172-25" aria-hidden="true" tabindex="-1"></a>pca7factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-26"><a href="factor-analysis-PCA.html#cb1172-26" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">7</span>,</span>
 <span id="cb1172-27"><a href="factor-analysis-PCA.html#cb1172-27" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-28"><a href="factor-analysis-PCA.html#cb1172-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-29"><a href="factor-analysis-PCA.html#cb1172-29" aria-hidden="true" tabindex="-1"></a>pca8factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-29"><a href="factor-analysis-PCA.html#cb1172-29" aria-hidden="true" tabindex="-1"></a>pca8factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-30"><a href="factor-analysis-PCA.html#cb1172-30" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">8</span>,</span>
 <span id="cb1172-31"><a href="factor-analysis-PCA.html#cb1172-31" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span>
 <span id="cb1172-32"><a href="factor-analysis-PCA.html#cb1172-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1172-33"><a href="factor-analysis-PCA.html#cb1172-33" aria-hidden="true" tabindex="-1"></a>pca9factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1172-33"><a href="factor-analysis-PCA.html#cb1172-33" aria-hidden="true" tabindex="-1"></a>pca9factorOrthogonal <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1172-34"><a href="factor-analysis-PCA.html#cb1172-34" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">nfactors =</span> <span class="dv">9</span>,</span>
 <span id="cb1172-35"><a href="factor-analysis-PCA.html#cb1172-35" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>)</span></code></pre></div>
 </div>
 <div id="pcaAnalysisFitOblique" class="section level4 hasAnchor" number="14.5.2.2">
 <h4><span class="header-section-number">14.5.2.2</span> Oblique (Oblimin) rotation<a href="factor-analysis-PCA.html#pcaAnalysisFitOblique" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb1173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1173-1"><a href="factor-analysis-PCA.html#cb1173-1" aria-hidden="true" tabindex="-1"></a>pca1factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<div class="sourceCode" id="cb1173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1173-1"><a href="factor-analysis-PCA.html#cb1173-1" aria-hidden="true" tabindex="-1"></a>pca1factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-2"><a href="factor-analysis-PCA.html#cb1173-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">1</span>,</span>
 <span id="cb1173-3"><a href="factor-analysis-PCA.html#cb1173-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-4"><a href="factor-analysis-PCA.html#cb1173-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-5"><a href="factor-analysis-PCA.html#cb1173-5" aria-hidden="true" tabindex="-1"></a>pca2factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-5"><a href="factor-analysis-PCA.html#cb1173-5" aria-hidden="true" tabindex="-1"></a>pca2factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-6"><a href="factor-analysis-PCA.html#cb1173-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">2</span>,</span>
 <span id="cb1173-7"><a href="factor-analysis-PCA.html#cb1173-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-8"><a href="factor-analysis-PCA.html#cb1173-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-9"><a href="factor-analysis-PCA.html#cb1173-9" aria-hidden="true" tabindex="-1"></a>pca3factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-9"><a href="factor-analysis-PCA.html#cb1173-9" aria-hidden="true" tabindex="-1"></a>pca3factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-10"><a href="factor-analysis-PCA.html#cb1173-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">3</span>,</span>
 <span id="cb1173-11"><a href="factor-analysis-PCA.html#cb1173-11" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-12"><a href="factor-analysis-PCA.html#cb1173-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-13"><a href="factor-analysis-PCA.html#cb1173-13" aria-hidden="true" tabindex="-1"></a>pca4factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-13"><a href="factor-analysis-PCA.html#cb1173-13" aria-hidden="true" tabindex="-1"></a>pca4factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-14"><a href="factor-analysis-PCA.html#cb1173-14" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
 <span id="cb1173-15"><a href="factor-analysis-PCA.html#cb1173-15" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-16"><a href="factor-analysis-PCA.html#cb1173-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-17"><a href="factor-analysis-PCA.html#cb1173-17" aria-hidden="true" tabindex="-1"></a>pca5factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-17"><a href="factor-analysis-PCA.html#cb1173-17" aria-hidden="true" tabindex="-1"></a>pca5factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-18"><a href="factor-analysis-PCA.html#cb1173-18" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">5</span>,</span>
 <span id="cb1173-19"><a href="factor-analysis-PCA.html#cb1173-19" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-20"><a href="factor-analysis-PCA.html#cb1173-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-21"><a href="factor-analysis-PCA.html#cb1173-21" aria-hidden="true" tabindex="-1"></a>pca6factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-21"><a href="factor-analysis-PCA.html#cb1173-21" aria-hidden="true" tabindex="-1"></a>pca6factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-22"><a href="factor-analysis-PCA.html#cb1173-22" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">6</span>,</span>
 <span id="cb1173-23"><a href="factor-analysis-PCA.html#cb1173-23" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-24"><a href="factor-analysis-PCA.html#cb1173-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-25"><a href="factor-analysis-PCA.html#cb1173-25" aria-hidden="true" tabindex="-1"></a>pca7factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-25"><a href="factor-analysis-PCA.html#cb1173-25" aria-hidden="true" tabindex="-1"></a>pca7factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-26"><a href="factor-analysis-PCA.html#cb1173-26" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">7</span>,</span>
 <span id="cb1173-27"><a href="factor-analysis-PCA.html#cb1173-27" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-28"><a href="factor-analysis-PCA.html#cb1173-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-29"><a href="factor-analysis-PCA.html#cb1173-29" aria-hidden="true" tabindex="-1"></a>pca8factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-29"><a href="factor-analysis-PCA.html#cb1173-29" aria-hidden="true" tabindex="-1"></a>pca8factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-30"><a href="factor-analysis-PCA.html#cb1173-30" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">8</span>,</span>
 <span id="cb1173-31"><a href="factor-analysis-PCA.html#cb1173-31" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span>
 <span id="cb1173-32"><a href="factor-analysis-PCA.html#cb1173-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1173-33"><a href="factor-analysis-PCA.html#cb1173-33" aria-hidden="true" tabindex="-1"></a>pca9factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;x3&quot;</span>,<span class="st">&quot;x4&quot;</span>,<span class="st">&quot;x5&quot;</span>,<span class="st">&quot;x6&quot;</span>,<span class="st">&quot;x7&quot;</span>,<span class="st">&quot;x8&quot;</span>,<span class="st">&quot;x9&quot;</span>)],</span>
+<span id="cb1173-33"><a href="factor-analysis-PCA.html#cb1173-33" aria-hidden="true" tabindex="-1"></a>pca9factorOblique <span class="ot">&lt;-</span> <span class="fu">principal</span>(HolzingerSwineford1939[,vars],</span>
 <span id="cb1173-34"><a href="factor-analysis-PCA.html#cb1173-34" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nfactors =</span> <span class="dv">9</span>,</span>
 <span id="cb1173-35"><a href="factor-analysis-PCA.html#cb1173-35" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>)</span></code></pre></div>
 </div>
@@ -10183,8 +10161,7 @@ Statistics by number of factors
 <h4><span class="header-section-number">14.5.3.1</span> Orthogonal (Varimax) rotation<a href="factor-analysis-PCA.html#pcaAnalysisLoadingsOrthogonal" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <div class="sourceCode" id="cb1174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1174-1"><a href="factor-analysis-PCA.html#cb1174-1" aria-hidden="true" tabindex="-1"></a>pca1factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 1, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 1, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     PC1   h2   u2 com
 x1 0.66 0.43 0.57   1
@@ -10210,8 +10187,7 @@ The root mean square of the residuals (RMSR) is  0.16
 Fit based upon off diagonal values = 0.74</code></pre>
 <div class="sourceCode" id="cb1176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1176-1"><a href="factor-analysis-PCA.html#cb1176-1" aria-hidden="true" tabindex="-1"></a>pca2factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 2, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 2, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      RC1  RC2   h2   u2 com
 x1  0.51 0.42 0.43 0.57 1.9
@@ -10240,8 +10216,7 @@ The root mean square of the residuals (RMSR) is  0.12
 Fit based upon off diagonal values = 0.86</code></pre>
 <div class="sourceCode" id="cb1178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1178-1"><a href="factor-analysis-PCA.html#cb1178-1" aria-hidden="true" tabindex="-1"></a>pca3factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 3, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 3, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     RC1   RC3   RC2   h2   u2 com
 x1 0.32  0.68  0.15 0.59 0.41 1.5
@@ -10270,8 +10245,7 @@ The root mean square of the residuals (RMSR) is  0.08
 Fit based upon off diagonal values = 0.93</code></pre>
 <div class="sourceCode" id="cb1180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1180-1"><a href="factor-analysis-PCA.html#cb1180-1" aria-hidden="true" tabindex="-1"></a>pca4factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 4, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 4, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     RC1  RC2   RC3   RC4   h2    u2 com
 x1 0.31 0.06  0.77  0.09 0.70 0.296 1.4
@@ -10300,8 +10274,7 @@ The root mean square of the residuals (RMSR) is  0.07
 Fit based upon off diagonal values = 0.95</code></pre>
 <div class="sourceCode" id="cb1182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1182-1"><a href="factor-analysis-PCA.html#cb1182-1" aria-hidden="true" tabindex="-1"></a>pca5factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 5, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 5, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     RC1   RC2  RC3   RC4   RC5   h2    u2 com
 x1 0.26  0.08 0.29  0.13  0.87 0.94 0.063 1.5
@@ -10330,8 +10303,7 @@ The root mean square of the residuals (RMSR) is  0.07
 Fit based upon off diagonal values = 0.96</code></pre>
 <div class="sourceCode" id="cb1184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1184-1"><a href="factor-analysis-PCA.html#cb1184-1" aria-hidden="true" tabindex="-1"></a>pca6factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 6, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 6, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     RC1   RC2   RC6   RC5   RC4   RC3   h2    u2 com
 x1 0.26  0.00  0.12  0.87  0.13  0.28 0.94 0.062 1.5
@@ -10360,8 +10332,7 @@ The root mean square of the residuals (RMSR) is  0.05
 Fit based upon off diagonal values = 0.97</code></pre>
 <div class="sourceCode" id="cb1186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1186-1"><a href="factor-analysis-PCA.html#cb1186-1" aria-hidden="true" tabindex="-1"></a>pca7factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 7, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 7, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     RC1   RC2   RC3   RC4   RC7   RC6   RC5   h2      u2 com
 x1 0.23 -0.02  0.22  0.14  0.12  0.13  0.91 0.98 0.01620 1.4
@@ -10390,8 +10361,7 @@ The root mean square of the residuals (RMSR) is  0.03
 Fit based upon off diagonal values = 0.99</code></pre>
 <div class="sourceCode" id="cb1188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1188-1"><a href="factor-analysis-PCA.html#cb1188-1" aria-hidden="true" tabindex="-1"></a>pca8factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 8, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 8, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     RC1   RC2   RC4  RC3   RC7   RC5  RC6  RC8   h2      u2 com
 x1 0.21 -0.01  0.14 0.22  0.11  0.92 0.14 0.07 0.99 1.1e-02 1.4
@@ -10420,8 +10390,7 @@ The root mean square of the residuals (RMSR) is  0.02
 Fit based upon off diagonal values = 1</code></pre>
 <div class="sourceCode" id="cb1190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1190-1"><a href="factor-analysis-PCA.html#cb1190-1" aria-hidden="true" tabindex="-1"></a>pca9factorOrthogonal</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 9, rotate = &quot;varimax&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 9, rotate = &quot;varimax&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     RC8   RC2   RC4  RC3   RC5  RC7  RC6  RC1  RC9 h2       u2 com
 x1 0.11 -0.01  0.14 0.22  0.93 0.11 0.13 0.09 0.15  1  0.0e+00 1.3
@@ -10453,8 +10422,7 @@ Fit based upon off diagonal values = 1</code></pre>
 <h4><span class="header-section-number">14.5.3.2</span> Oblique (Oblimin) rotation<a href="factor-analysis-PCA.html#pcaAnalysisLoadingsOblique" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <div class="sourceCode" id="cb1192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1192-1"><a href="factor-analysis-PCA.html#cb1192-1" aria-hidden="true" tabindex="-1"></a>pca1factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 1, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 1, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     PC1   h2   u2 com
 x1 0.66 0.43 0.57   1
@@ -10480,8 +10448,7 @@ The root mean square of the residuals (RMSR) is  0.16
 Fit based upon off diagonal values = 0.74</code></pre>
 <div class="sourceCode" id="cb1194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1194-1"><a href="factor-analysis-PCA.html#cb1194-1" aria-hidden="true" tabindex="-1"></a>pca2factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 2, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 2, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      TC1   TC2   h2   u2 com
 x1  0.45  0.39 0.43 0.57 2.0
@@ -10515,8 +10482,7 @@ The root mean square of the residuals (RMSR) is  0.12
 Fit based upon off diagonal values = 0.86</code></pre>
 <div class="sourceCode" id="cb1196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1196-1"><a href="factor-analysis-PCA.html#cb1196-1" aria-hidden="true" tabindex="-1"></a>pca3factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 3, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 3, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      TC1   TC3   TC2   h2   u2 com
 x1  0.24  0.65  0.05 0.59 0.41 1.3
@@ -10551,8 +10517,7 @@ The root mean square of the residuals (RMSR) is  0.08
 Fit based upon off diagonal values = 0.93</code></pre>
 <div class="sourceCode" id="cb1198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1198-1"><a href="factor-analysis-PCA.html#cb1198-1" aria-hidden="true" tabindex="-1"></a>pca4factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 4, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 4, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      TC1   TC2   TC3   TC4   h2    u2 com
 x1  0.21 -0.05  0.78 -0.03 0.70 0.296 1.2
@@ -10588,8 +10553,7 @@ The root mean square of the residuals (RMSR) is  0.07
 Fit based upon off diagonal values = 0.95</code></pre>
 <div class="sourceCode" id="cb1200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1200-1"><a href="factor-analysis-PCA.html#cb1200-1" aria-hidden="true" tabindex="-1"></a>pca5factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 5, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 5, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      TC1   TC2   TC3   TC4   TC5   h2    u2 com
 x1  0.09  0.06  0.13  0.00  0.88 0.94 0.063 1.1
@@ -10626,8 +10590,7 @@ The root mean square of the residuals (RMSR) is  0.07
 Fit based upon off diagonal values = 0.96</code></pre>
 <div class="sourceCode" id="cb1202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1202-1"><a href="factor-analysis-PCA.html#cb1202-1" aria-hidden="true" tabindex="-1"></a>pca6factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 6, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 6, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      TC1   TC6   TC2   TC5   TC4   TC3   h2    u2 com
 x1  0.08 -0.09 -0.03  0.93  0.01  0.10 0.94 0.062 1.1
@@ -10665,8 +10628,7 @@ The root mean square of the residuals (RMSR) is  0.05
 Fit based upon off diagonal values = 0.97</code></pre>
 <div class="sourceCode" id="cb1204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1204-1"><a href="factor-analysis-PCA.html#cb1204-1" aria-hidden="true" tabindex="-1"></a>pca7factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 7, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 7, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
      TC1   TC4   TC6   TC5   TC7   TC3   TC2   h2      u2 com
 x1  0.00  0.02 -0.04  0.95  0.02  0.04  0.06 0.98 0.01620 1.0
@@ -10705,8 +10667,7 @@ The root mean square of the residuals (RMSR) is  0.03
 Fit based upon off diagonal values = 0.99</code></pre>
 <div class="sourceCode" id="cb1206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1206-1"><a href="factor-analysis-PCA.html#cb1206-1" aria-hidden="true" tabindex="-1"></a>pca8factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 8, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 8, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
     TC1  TC8  TC3   TC4   TC2   TC6   TC7   TC5   h2      u2 com
 x1 0.01 0.02 0.02  0.02  0.03 -0.03  0.04  0.95 0.99 1.1e-02 1.0
@@ -10746,8 +10707,7 @@ The root mean square of the residuals (RMSR) is  0.02
 Fit based upon off diagonal values = 1</code></pre>
 <div class="sourceCode" id="cb1208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1208-1"><a href="factor-analysis-PCA.html#cb1208-1" aria-hidden="true" tabindex="-1"></a>pca9factorOblique</span></code></pre></div>
 <pre><code>Principal Components Analysis
-Call: principal(r = HolzingerSwineford1939[, c(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;, &quot;x4&quot;, 
-    &quot;x5&quot;, &quot;x6&quot;, &quot;x7&quot;, &quot;x8&quot;, &quot;x9&quot;)], nfactors = 9, rotate = &quot;oblimin&quot;)
+Call: principal(r = HolzingerSwineford1939[, vars], nfactors = 9, rotate = &quot;oblimin&quot;)
 Standardized loadings (pattern matrix) based upon correlation matrix
    TC4 TC6 TC2 TC3 TC7 TC5 TC8 TC1 TC9 h2       u2 com
 x1   0   0   0   0   0   1   0   0   0  1  0.0e+00   1
