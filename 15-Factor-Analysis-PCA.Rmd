@@ -560,6 +560,7 @@ library("semPlot")
 library("lavaan")
 library("semTools")
 library("dagitty")
+library("kableExtra")
 library("tidyverse")
 library("here")
 library("tinytex")
@@ -587,6 +588,7 @@ unlistedDf <- unlist(HolzingerSwineford1939)
 unlistedDf[sample(1:length(unlistedDf), size = .15 * length(unlistedDf))] <- NA
 HolzingerSwineford1939 <- as.data.frame(matrix(unlistedDf, ncol = dimensionsDf[2]))
 names(HolzingerSwineford1939) <- varNames
+vars <- c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 ```
 
 ## Descriptive Statistics and Correlations {#descriptiveStatsCorrelations-factorAnalysis}
@@ -596,37 +598,39 @@ Before conducting a [factor analysis](#factorAnalysis), it is important examine 
 ### Descriptive Statistics {#descriptiveStats-factorAnalysis}
 
 ```{r, eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
-paged_table(psych::describe(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")]))
+paged_table(psych::describe(HolzingerSwineford1939[,vars]))
 ```
 
 ```{r, eval = knitr::is_latex_output(), echo = knitr::is_latex_output()}
-kable(psych::describe(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")]),
-      booktabs = TRUE)
+kable(psych::describe(HolzingerSwineford1939[,vars]),
+      format = "latex",
+      booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ```{r, eval = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm")), echo = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm"))}
-kable(psych::describe(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")]),
+kable(psych::describe(HolzingerSwineford1939[,vars]),
       booktabs = TRUE)
 ```
 
 ### Correlations {#correlations-factorAnalysis}
 
 ```{r}
-cor(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+cor(HolzingerSwineford1939[,vars],
     use = "pairwise.complete.obs")
 ```
 
 Here are correlation matrices of various types from the `petersenlab` package [@R-petersenlab]:
 
 ```{r}
-cor.table(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+cor.table(HolzingerSwineford1939[,vars],
           dig = 2)
 
-cor.table(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+cor.table(HolzingerSwineford1939[,vars],
           type = "manuscript",
           dig = 2)
 
-cor.table(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+cor.table(HolzingerSwineford1939[,vars],
           type = "manuscriptBig",
           dig = 2)
 ```
@@ -635,11 +639,11 @@ Pairs panel plots were generated using the `psych` package [@R-psych].
 Correlation plots were generated using the `corrplot` package [@R-corrplot].
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot."}
-pairs.panels(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")])
+pairs.panels(HolzingerSwineford1939[,vars])
 ```
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot."}
-corrplot(cor(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+corrplot(cor(HolzingerSwineford1939[,vars],
              use = "pairwise.complete.obs"))
 ```
 
@@ -664,11 +668,11 @@ The Kaiser-Guttman rule states to keep principal components whose eigenvalues ar
 However, for [exploratory factor analysis](#efa) (as opposed to [PCA](#pca)), the criterion is to keep the factors whose eigenvalues are greater than zero (i.e., not the factors whose eigenvalues are greater than one) [@Dinno2014].
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Scree Plots in Exploratory Factor Analysis."}
-fa.parallel(x = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+fa.parallel(x = HolzingerSwineford1939[,vars],
             fm = "ml",
             fa = "fa")
 
-plot(nScree(x = cor(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+plot(nScree(x = cor(HolzingerSwineford1939[,vars],
                     use = "pairwise.complete.obs"),
             model = "factors"))
 ```
@@ -688,11 +692,11 @@ The output also provides additional criteria by which to determine the optimal n
 In the example below, the VSS criterion is highest with 3 or 4 factors.
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
-vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+vss(HolzingerSwineford1939[,vars],
     rotate = "varimax",
     fm = "ml")
 
-nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+nfactors(HolzingerSwineford1939[,vars],
          rotate = "varimax",
          fm = "ml")
 ```
@@ -702,11 +706,11 @@ nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 In the example below, the VSS criterion is highest with 3 factors.
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."}
-vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+vss(HolzingerSwineford1939[,vars],
     rotate = "oblimin",
     fm = "ml")
 
-nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+nfactors(HolzingerSwineford1939[,vars],
          rotate = "oblimin",
          fm = "ml")
 ```
@@ -716,11 +720,11 @@ nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 In the example below, the VSS criterion is highest with 3 or 4 factors.
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."}
-vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+vss(HolzingerSwineford1939[,vars],
     rotate = "none",
     fm = "ml")
 
-nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+nfactors(HolzingerSwineford1939[,vars],
          rotate = "none",
          fm = "ml")
 ```
@@ -736,47 +740,47 @@ nfactors(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 Fit a different model with each number of possible factors:
 
 ```{r}
-efa1factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa1factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 1,
                            rotate = "varimax",
                            fm = "ml")
 
-efa2factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa2factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 2,
                            rotate = "varimax",
                            fm = "ml")
 
-efa3factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa3factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 3,
                            rotate = "varimax",
                            fm = "ml")
 
-efa4factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa4factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 4,
                            rotate = "varimax",
                            fm = "ml")
 
-efa5factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa5factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 5,
                            rotate = "varimax",
                            fm = "ml")
 
-efa6factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa6factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 6,
                            rotate = "varimax",
                            fm = "ml")
 
-efa7factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa7factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 7,
                            rotate = "varimax",
                            fm = "ml")
 
-efa8factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa8factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 8,
                            rotate = "varimax",
                            fm = "ml")
 
-efa9factorOrthogonal <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa9factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
                            nfactors = 9,
                            rotate = "varimax",
                            fm = "ml")
@@ -961,47 +965,47 @@ efa9factorOrthogonalLavaan_fit <- sem(efa9factorLavaan_syntax,
 Fit a different model with each number of possible factors:
 
 ```{r}
-efa1factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa1factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 1,
                         rotate = "oblimin",
                         fm = "ml")
 
-efa2factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa2factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 2,
                         rotate = "oblimin",
                         fm = "ml")
 
-efa3factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa3factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 3,
                         rotate = "oblimin",
                         fm = "ml")
 
-efa4factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa4factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 4,
                         rotate = "oblimin",
                         fm = "ml")
 
-efa5factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa5factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 5,
                         rotate = "oblimin",
                         fm = "ml")
 
-efa6factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa6factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 6,
                         rotate = "oblimin",
                         fm = "ml")
 
-efa7factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa7factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 7,
                         rotate = "oblimin",
                         fm = "ml")
 
-efa8factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa8factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 8,
                         rotate = "oblimin",
                         fm = "ml") #no convergence
 
-efa9factorOblique <- fa(r = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+efa9factorOblique <- fa(r = HolzingerSwineford1939[,vars],
                         nfactors = 9,
                         rotate = "oblimin",
                         fm = "ml")
@@ -2586,8 +2590,8 @@ Scree plots were generated using the **psych** [@R-psych] and **nFactors** [@R-n
 Note that eigenvalues of factors in [PCA](#pca) models are higher than factors from [EFA](#efa) models, because [PCA](#pca) components include *common* variance among the indicators in addition to *error* variance, whereas [EFA](#efa) factors include only the common variance among the indicators.
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Scree Plots in Principal Component Analysis."}
-fa.parallel(x = HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], fm = "ml", fa = "pc")
-plot(nScree(x = cor(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], use = "pairwise.complete.obs"), model = "components"))
+fa.parallel(x = HolzingerSwineford1939[,vars], fm = "ml", fa = "pc")
+plot(nScree(x = cor(HolzingerSwineford1939[,vars], use = "pairwise.complete.obs"), model = "components"))
 ```
 
 #### Very Simple Structure (VSS) Plot {#pcaAnalysisVSSplot}
@@ -2597,19 +2601,19 @@ Very simple structure (VSS) plots were generated using the `psych` package [@R-p
 ##### Orthogonal (Varimax) rotation {#pcaAnalysisVSSplotOrthogonal}
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], rotate = "varimax", fm = "pc")
+vss(HolzingerSwineford1939[,vars], rotate = "varimax", fm = "pc")
 ```
 
 ##### Oblique (Oblimin) rotation {#pcaAnalysisVSSplotOblique}
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], rotate = "oblimin", fm = "pc")
+vss(HolzingerSwineford1939[,vars], rotate = "oblimin", fm = "pc")
 ```
 
 ##### No rotation {#pcaAnalysisVSSplotNoRotation}
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], rotate = "none", fm = "pc")
+vss(HolzingerSwineford1939[,vars], rotate = "none", fm = "pc")
 ```
 
 ### Run the Principal Component Analysis {#pcaAnalysisFit}
@@ -2619,39 +2623,39 @@ vss(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")], ro
 #### Orthogonal (Varimax) rotation {#pcaAnalysisFitOrthogonal}
 
 ```{r}
-pca1factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca1factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 1,
                                   rotate = "varimax")
 
-pca2factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca2factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 2,
                                   rotate = "varimax")
 
-pca3factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca3factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 3,
                                   rotate = "varimax")
 
-pca4factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca4factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 4,
                                   rotate = "varimax")
 
-pca5factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca5factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 5,
                                   rotate = "varimax")
 
-pca6factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca6factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 6,
                                   rotate = "varimax")
 
-pca7factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca7factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 7,
                                   rotate = "varimax")
 
-pca8factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca8factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 8,
                                   rotate = "varimax")
 
-pca9factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca9factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
                                   nfactors = 9,
                                   rotate = "varimax")
 ```
@@ -2659,39 +2663,39 @@ pca9factorOrthogonal <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4",
 #### Oblique (Oblimin) rotation {#pcaAnalysisFitOblique}
 
 ```{r}
-pca1factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca1factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 1,
                                rotate = "oblimin")
 
-pca2factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca2factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 2,
                                rotate = "oblimin")
 
-pca3factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca3factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 3,
                                rotate = "oblimin")
 
-pca4factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca4factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 4,
                                rotate = "oblimin")
 
-pca5factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca5factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 5,
                                rotate = "oblimin")
 
-pca6factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca6factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 6,
                                rotate = "oblimin")
 
-pca7factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca7factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 7,
                                rotate = "oblimin")
 
-pca8factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca8factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 8,
                                rotate = "oblimin")
 
-pca9factorOblique <- principal(HolzingerSwineford1939[,c("x1","x2","x3","x4","x5","x6","x7","x8","x9")],
+pca9factorOblique <- principal(HolzingerSwineford1939[,vars],
                                nfactors = 9,
                                rotate = "oblimin")
 ```
