@@ -2466,10 +2466,14 @@ To estimate the amount of information an item provides in a four-parameter logis
   &amp;= \frac{\text{information}(\theta)}{\text{information}(\theta) + 1}
 \end{aligned}
 \tag{8.13}
-\]</span>
-where <span class="math inline">\(\sigma^2(\theta)\)</span> is the variance of theta, which is fixed to one in most IRT models.</p>
+\]</span></p>
+<p>where <span class="math inline">\(\sigma^2(\theta)\)</span> is the variance of theta, which is fixed to one in most IRT models.</p>
 <p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2022</a>)</span> contains the <code>reliabilityiRT()</code> function that estimates the amount of <a href="irt.html#irtReliability">reliability</a> an item or a measure provides as function of its information and the variance of people’s construct levels (<span class="math inline">\(\theta\)</span>).</p>
-<div class="sourceCode" id="cb403"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb403-1"><a href="irt.html#cb403-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reliabilityIRT</span>(information, <span class="at">varTheta =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb403"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb403-1"><a href="irt.html#cb403-1" aria-hidden="true" tabindex="-1"></a>reliabilityIRT <span class="ot">&lt;-</span> <span class="cf">function</span>(information, <span class="at">varTheta =</span> <span class="dv">1</span>){</span>
+<span id="cb403-2"><a href="irt.html#cb403-2" aria-hidden="true" tabindex="-1"></a>  information <span class="sc">/</span> (information <span class="sc">+</span> varTheta)</span>
+<span id="cb403-3"><a href="irt.html#cb403-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb403-4"><a href="irt.html#cb403-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb403-5"><a href="irt.html#cb403-5" aria-hidden="true" tabindex="-1"></a><span class="fu">reliabilityIRT</span>(information, <span class="at">varTheta =</span> <span class="dv">1</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb404"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb404-1"><a href="irt.html#cb404-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reliabilityIRT</span>(<span class="dv">10</span>)</span></code></pre></div>
 <pre><code>[1] 0.9090909</code></pre>
 <p>Consider some hypothetical items depicted with <a href="irt.html#icc">ICCs</a> in Figure <a href="irt.html#fig:reliabilityIRTicc">8.18</a>.</p>
@@ -4051,42 +4055,39 @@ Figure 8.82: Item Response Category Characteristic Curves From Graded Response M
 <span id="cb533-2"><a href="irt.html#cb533-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">IRTpars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb533-3"><a href="irt.html#cb533-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">simplify =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>items</span>
 <span id="cb533-4"><a href="irt.html#cb533-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb533-5"><a href="irt.html#cb533-5" aria-hidden="true" tabindex="-1"></a>twopl <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, theta){ <span class="co"># 2pl function</span></span>
-<span id="cb533-6"><a href="irt.html#cb533-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a <span class="sc">*</span> (theta <span class="sc">-</span> b))))}</span>
-<span id="cb533-7"><a href="irt.html#cb533-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb533-8"><a href="irt.html#cb533-8" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">6</span>, <span class="at">to =</span> <span class="dv">6</span>, <span class="at">by =</span> .<span class="dv">1</span>)</span>
-<span id="cb533-9"><a href="irt.html#cb533-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb533-10"><a href="irt.html#cb533-10" aria-hidden="true" tabindex="-1"></a>difficultyThresholds <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">&quot;b&quot;</span>,</span>
-<span id="cb533-11"><a href="irt.html#cb533-11" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">2</span>]],</span>
-<span id="cb533-12"><a href="irt.html#cb533-12" aria-hidden="true" tabindex="-1"></a>                             <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb533-13"><a href="irt.html#cb533-13" aria-hidden="true" tabindex="-1"></a>numberDifficultyThresholds <span class="ot">&lt;-</span> <span class="fu">length</span>(difficultyThresholds)</span>
-<span id="cb533-14"><a href="irt.html#cb533-14" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">1</span>]]</span>
-<span id="cb533-15"><a href="irt.html#cb533-15" aria-hidden="true" tabindex="-1"></a>numberOfItems <span class="ot">&lt;-</span> <span class="fu">length</span>(items)</span>
-<span id="cb533-16"><a href="irt.html#cb533-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb533-17"><a href="irt.html#cb533-17" aria-hidden="true" tabindex="-1"></a>lst <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>numberOfItems,</span>
-<span id="cb533-18"><a href="irt.html#cb533-18" aria-hidden="true" tabindex="-1"></a>              <span class="cf">function</span>(x) <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> numberDifficultyThresholds <span class="sc">+</span> <span class="dv">1</span>,</span>
-<span id="cb533-19"><a href="irt.html#cb533-19" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">nrow =</span> <span class="fu">length</span>(theta),</span>
-<span id="cb533-20"><a href="irt.html#cb533-20" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;theta&quot;</span>, difficultyThresholds)))))</span>
-<span id="cb533-21"><a href="irt.html#cb533-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb533-22"><a href="irt.html#cb533-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberOfItems){</span>
-<span id="cb533-23"><a href="irt.html#cb533-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberDifficultyThresholds){</span>
-<span id="cb533-24"><a href="irt.html#cb533-24" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,<span class="dv">1</span>] <span class="ot">&lt;-</span> theta</span>
-<span id="cb533-25"><a href="irt.html#cb533-25" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,j <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">twopl</span>(<span class="at">a =</span> modelCoefficients[i,<span class="dv">1</span>],</span>
-<span id="cb533-26"><a href="irt.html#cb533-26" aria-hidden="true" tabindex="-1"></a>                              <span class="at">b =</span> modelCoefficients[i,j <span class="sc">+</span> <span class="dv">1</span>],</span>
-<span id="cb533-27"><a href="irt.html#cb533-27" aria-hidden="true" tabindex="-1"></a>                              <span class="at">theta =</span> theta)</span>
-<span id="cb533-28"><a href="irt.html#cb533-28" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb533-29"><a href="irt.html#cb533-29" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb533-30"><a href="irt.html#cb533-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb533-31"><a href="irt.html#cb533-31" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lst) <span class="ot">&lt;-</span> items</span>
-<span id="cb533-32"><a href="irt.html#cb533-32" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(lst, <span class="at">.id =</span> <span class="st">&quot;item&quot;</span>)</span>
-<span id="cb533-33"><a href="irt.html#cb533-33" aria-hidden="true" tabindex="-1"></a>longer_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(dat, <span class="at">cols =</span> <span class="fu">all_of</span>(difficultyThresholds))</span>
-<span id="cb533-34"><a href="irt.html#cb533-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb533-35"><a href="irt.html#cb533-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(longer_data,</span>
-<span id="cb533-36"><a href="irt.html#cb533-36" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(theta, value, <span class="at">group =</span> <span class="fu">interaction</span>(item, name), <span class="at">color =</span> item)) <span class="sc">+</span></span>
-<span id="cb533-37"><a href="irt.html#cb533-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb533-38"><a href="irt.html#cb533-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Probability of Endorsing an Item Response Category that is Higher than the Boundary&quot;</span>) <span class="sc">+</span></span>
-<span id="cb533-39"><a href="irt.html#cb533-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb533-40"><a href="irt.html#cb533-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code></pre></div>
+<span id="cb533-5"><a href="irt.html#cb533-5" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">6</span>, <span class="at">to =</span> <span class="dv">6</span>, <span class="at">by =</span> .<span class="dv">1</span>)</span>
+<span id="cb533-6"><a href="irt.html#cb533-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb533-7"><a href="irt.html#cb533-7" aria-hidden="true" tabindex="-1"></a>difficultyThresholds <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">&quot;b&quot;</span>,</span>
+<span id="cb533-8"><a href="irt.html#cb533-8" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">2</span>]],</span>
+<span id="cb533-9"><a href="irt.html#cb533-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb533-10"><a href="irt.html#cb533-10" aria-hidden="true" tabindex="-1"></a>numberDifficultyThresholds <span class="ot">&lt;-</span> <span class="fu">length</span>(difficultyThresholds)</span>
+<span id="cb533-11"><a href="irt.html#cb533-11" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">dimnames</span>(modelCoefficients)[[<span class="dv">1</span>]]</span>
+<span id="cb533-12"><a href="irt.html#cb533-12" aria-hidden="true" tabindex="-1"></a>numberOfItems <span class="ot">&lt;-</span> <span class="fu">length</span>(items)</span>
+<span id="cb533-13"><a href="irt.html#cb533-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb533-14"><a href="irt.html#cb533-14" aria-hidden="true" tabindex="-1"></a>lst <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>numberOfItems,</span>
+<span id="cb533-15"><a href="irt.html#cb533-15" aria-hidden="true" tabindex="-1"></a>              <span class="cf">function</span>(x) <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> numberDifficultyThresholds <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb533-16"><a href="irt.html#cb533-16" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">nrow =</span> <span class="fu">length</span>(theta),</span>
+<span id="cb533-17"><a href="irt.html#cb533-17" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&quot;theta&quot;</span>, difficultyThresholds)))))</span>
+<span id="cb533-18"><a href="irt.html#cb533-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb533-19"><a href="irt.html#cb533-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberOfItems){</span>
+<span id="cb533-20"><a href="irt.html#cb533-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numberDifficultyThresholds){</span>
+<span id="cb533-21"><a href="irt.html#cb533-21" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,<span class="dv">1</span>] <span class="ot">&lt;-</span> theta</span>
+<span id="cb533-22"><a href="irt.html#cb533-22" aria-hidden="true" tabindex="-1"></a>    lst[[i]][,j <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">fourPL</span>(<span class="at">a =</span> modelCoefficients[i,<span class="dv">1</span>],</span>
+<span id="cb533-23"><a href="irt.html#cb533-23" aria-hidden="true" tabindex="-1"></a>                               <span class="at">b =</span> modelCoefficients[i,j <span class="sc">+</span> <span class="dv">1</span>],</span>
+<span id="cb533-24"><a href="irt.html#cb533-24" aria-hidden="true" tabindex="-1"></a>                               <span class="at">theta =</span> theta)</span>
+<span id="cb533-25"><a href="irt.html#cb533-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb533-26"><a href="irt.html#cb533-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb533-27"><a href="irt.html#cb533-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb533-28"><a href="irt.html#cb533-28" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lst) <span class="ot">&lt;-</span> items</span>
+<span id="cb533-29"><a href="irt.html#cb533-29" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(lst, <span class="at">.id =</span> <span class="st">&quot;item&quot;</span>)</span>
+<span id="cb533-30"><a href="irt.html#cb533-30" aria-hidden="true" tabindex="-1"></a>longer_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(dat, <span class="at">cols =</span> <span class="fu">all_of</span>(difficultyThresholds))</span>
+<span id="cb533-31"><a href="irt.html#cb533-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb533-32"><a href="irt.html#cb533-32" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(longer_data,</span>
+<span id="cb533-33"><a href="irt.html#cb533-33" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(theta, value, <span class="at">group =</span> <span class="fu">interaction</span>(item, name), <span class="at">color =</span> item)) <span class="sc">+</span></span>
+<span id="cb533-34"><a href="irt.html#cb533-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb533-35"><a href="irt.html#cb533-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Probability of Endorsing an Item Response Category that is Higher than the Boundary&quot;</span>) <span class="sc">+</span></span>
+<span id="cb533-36"><a href="irt.html#cb533-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb533-37"><a href="irt.html#cb533-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-379"></span>
 <img src="Book_files/figure-html/unnamed-chunk-379-1.png" alt="Item Boundary Category Characteristic Curves From Graded Response Model." width="100%" />
 <p class="caption">
