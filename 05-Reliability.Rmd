@@ -916,13 +916,15 @@ plot(mydata$time1, mydata$time3,
      ylab = "time3",
      xlim = c(25,85),
      ylim = c(25,85))
-points(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)], mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)], pch = 19)
+points(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
+       mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)], pch = 19)
 abline(lm(time3 ~ time1, data = mydata), col = "black")
 mydataNoMissing <- na.omit(mydata[,c("time1","time3")])
 lines(lowess(mydataNoMissing$time1, mydataNoMissing$time3), col = "red")
 
 #Plot with restricted range
-plot(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)], mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
+plot(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
+     mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
      main = substitute(paste("Restricted range for time1 (55-65): ", italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)], y = mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)])$estimate, 2))),
      xlab = "time1",
      ylab = "time3",
@@ -930,9 +932,13 @@ plot(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)], mydata$time3[wh
      ylim = c(25,85),
      yaxt = "n",
      pch = 19)
-abline(lm(time3 ~ time1, data = mydata[which(mydata$time1 > 55 & mydata$time1 < 65),]), col = "black")
+abline(lm(time3 ~ time1,
+          data = mydata[which(mydata$time1 > 55 & mydata$time1 < 65),]),
+       col = "black")
 mydataNoMissing <- na.omit(mydata[,c("time1","time3")])
-lines(lowess(mydataNoMissing$time1[which(mydataNoMissing$time1 > 55 & mydataNoMissing$time1 < 65)], mydataNoMissing$time3[which(mydataNoMissing$time1 > 55 & mydataNoMissing$time1 < 65)]), col = "red")
+lines(lowess(mydataNoMissing$time1[which(mydataNoMissing$time1 > 55 & mydataNoMissing$time1 < 65)],
+             mydataNoMissing$time3[which(mydataNoMissing$time1 > 55 & mydataNoMissing$time1 < 65)]),
+      col = "red")
 
 mtext("time3", side = 2, outer = TRUE, line = 2.7, adj = 0.6)
 ```
@@ -1249,7 +1255,8 @@ psych::alpha(mydata[,c("item1","item2","item3","item4")])$total$median_r
 Another estimate of internal consistency is the average item–total correlation.
 
 ```{r}
-itemTotalCorrelations <- psych::alpha(mydata[,c("item1","item2","item3","item4")])$item.stats["raw.r"]
+itemTotalCorrelations <- psych::alpha(
+  mydata[,c("item1","item2","item3","item4")])$item.stats["raw.r"]
 
 mean(itemTotalCorrelations$raw.r)
 ```
@@ -1258,7 +1265,8 @@ When examining the item–total correlation for a given item, it is preferable t
 This reduces the extent to which the association reflects that the item is associated with itself.
 
 ```{r}
-itemTotalCorrelationsDrop <- psych::alpha(mydata[,c("item1","item2","item3","item4")])$item.stats["r.drop"]
+itemTotalCorrelationsDrop <- psych::alpha(
+  mydata[,c("item1","item2","item3","item4")])$item.stats["r.drop"]
 
 mean(itemTotalCorrelationsDrop$r.drop)
 ```
@@ -1495,21 +1503,29 @@ We specify items 2 and 3 to have twice the weight as item 1 in the composite, an
 
 ```{r}
 rxx <- c(0.70, 0.75, 0.80, 0.85) #reliability coefficients
-rho <- cor(mydata[,c("item1","item2","item3","item4")], use = "pairwise.complete.obs")
-sigma <- apply(mydata[,c("item1","item2","item3","item4")], 2, function(x) sd(x, na.rm = TRUE)) #standard deviations
+rho <- cor(mydata[,c("item1","item2","item3","item4")],
+           use = "pairwise.complete.obs")
+sigma <- apply(mydata[,c("item1","item2","item3","item4")],
+               2,
+               function(x) sd(x, na.rm = TRUE)) #standard deviations
 weights <- c(1, 2, 2, 1.5) #weights of each variable in the linear combination
 ```
 
 Here is the reliability of an unweighted composite:
 
 ```{r}
-composite_rel_matrix(rel_vec = rxx, r_mat = rho, sd_vec = sigma)
+composite_rel_matrix(rel_vec = rxx,
+                     r_mat = rho,
+                     sd_vec = sigma)
 ```
 
 Here is the reliability of a weighted composite:
 
 ```{r}
-composite_rel_matrix(rel_vec = rxx, r_mat = rho, sd_vec = sigma, wt_vec = weights)
+composite_rel_matrix(rel_vec = rxx,
+                     r_mat = rho,
+                     sd_vec = sigma,
+                     wt_vec = weights)
 ```
 
 ### Reliability of a Difference Score {#differenceScore-reliability}
@@ -1636,7 +1652,8 @@ where $\sigma_x = \text{standard deviation of scores on measure } x$ and $r_{xx}
 The reliability of the measure was estimated here based on the test–retest reliability of the measure at T1 with the measure at T2.
 
 ```{r}
-reliabilityOfMeasure <- as.numeric(cor.test(x = mydata$time1, y = mydata$time2)$estimate)
+reliabilityOfMeasure <- as.numeric(cor.test(x = mydata$time1,
+                                            y = mydata$time2)$estimate)
 sem <- sd(mydata$time1, na.rm = TRUE) * sqrt(1 - reliabilityOfMeasure)
 sem
 ```
