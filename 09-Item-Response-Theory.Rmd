@@ -880,7 +880,8 @@ $$
 
 where $P_i(\theta)$ is the probability of getting a one instead of a zero on item $i$ at a given level on the latent construct, and $Q_i(\theta) = 1 - P_i(\theta)$.
 
-The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the Rasch model and the person's level on the construct (theta). To estimate the amount of information an item provides in a Rasch model, specify, $b$ and $\theta$, while keeping the defaults for the other parameters.
+The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the Rasch model and the person's level on the construct (theta).
+To estimate the amount of information an item provides in a Rasch model, specify, $b$ and $\theta$, while keeping the defaults for the other parameters.
 
 ```{r, eval = FALSE}
 itemInformation <- function(a = 1, b, c = 0, d = 1, theta){
@@ -909,7 +910,8 @@ $$
 (\#eq:itemInformation2PL)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the two-parameter logistic model and the person's level on the construct (theta). To estimate the amount of information an item provides in a two-parameter logistic model, specify, $a$, $b$, and $\theta$, while keeping the defaults for the other parameters.
+The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the two-parameter logistic model and the person's level on the construct (theta).
+To estimate the amount of information an item provides in a two-parameter logistic model, specify, $a$, $b$, and $\theta$, while keeping the defaults for the other parameters.
 
 ```{r, eval = FALSE}
 itemInformation(a, b, theta)
@@ -926,7 +928,8 @@ $$
 (\#eq:itemInformation3PL)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the three-parameter logistic model and the person's level on the construct (theta). To estimate the amount of information an item provides in a three-parameter logistic model, specify, $a$, $b$, $c$, and $\theta$, while keeping the defaults for the other parameters.
+The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the three-parameter logistic model and the person's level on the construct (theta).
+To estimate the amount of information an item provides in a three-parameter logistic model, specify, $a$, $b$, $c$, and $\theta$, while keeping the defaults for the other parameters.
 
 ```{r, eval = FALSE}
 itemInformation(a, b, c, theta)
@@ -943,7 +946,8 @@ $$
 (\#eq:itemInformation4PL)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the four-parameter logistic model and the person's level on the construct (theta). To estimate the amount of information an item provides in a four-parameter logistic model, specify, $a$, $b$, $c$, $d$, and $\theta$.
+The `petersenlab` package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the four-parameter logistic model and the person's level on the construct (theta).
+To estimate the amount of information an item provides in a four-parameter logistic model, specify, $a$, $b$, $c$, $d$, and $\theta$.
 
 ```{r, eval = FALSE}
 itemInformation(a, b, c, d, theta)
@@ -951,6 +955,27 @@ itemInformation(a, b, c, d, theta)
 
 ```{r}
 itemInformation(a = 1.5, b = 1, c = .15, d = 0.85, theta = 3)
+```
+
+[Reliability](#irtReliability) at a given level of the construct ($\theta$) can be estimated as:
+
+$$
+\begin{aligned}
+  \text{reliability}(\theta) &= \frac{\text{information}(\theta)}{\text{information}(\theta) + \sigma^2(\theta)} \\
+  &= \frac{\text{information}(\theta)}{\text{information}(\theta) + 1}
+\end{aligned}
+(\#eq:reliabilityIRT)
+$$
+where $\sigma^2(\theta)$ is the variance of theta, which is fixed to one in most IRT models.
+
+The `petersenlab` package [@R-petersenlab] contains the `reliabilityiRT()` function that estimates the amount of [reliability](#irtReliability) an item or a measure provides as function of its information and the variance of people's construct levels ($\theta$).
+
+```{r, eval = FALSE}
+reliabilityIRT(information, varTheta = 1)
+```
+
+```{r}
+reliabilityIRT(10)
 ```
 
 Consider some hypothetical items depicted with [ICCs](#icc) in Figure \@ref(fig:reliabilityIRTicc).
@@ -978,6 +1003,7 @@ midpoint_item4 <- irtReliability$theta[which.min(abs(irtReliability$item4 - 0.5)
 
 irtInformation$testInformation <- rowSums(irtInformation[,c("information1","information2","information3","information4")])
 irtInformation$standardError <- standardErrorIRT(irtInformation$testInformation)
+irtInformation$reliability <- reliabilityIRT(irtInformation$testInformation)
 
 irtReliability_long <- pivot_longer(irtReliability, cols = item1:item4) %>%
   rename(item = name)
@@ -1043,7 +1069,7 @@ ggplot(irtInformation, aes(theta, testInformation)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
-  scale_y_continuous(name = "Test Information") +
+  scale_y_continuous(name = "Test Information", limits = c(0,2)) +
   theme_bw()
 ```
 
@@ -1055,7 +1081,19 @@ ggplot(irtInformation, aes(theta, standardError)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
-  scale_y_continuous(name = "Standard Error of Measurement", limits = c(0,3)) +
+  scale_y_continuous(name = "Standard Error of Measurement", limits = c(0,4)) +
+  theme_bw()
+```
+
+Based on test information, we can estimate the [reliability](#irtReliability) (see Figure \@ref(fig:reliabilityIRTtestReliability)).
+Notice how the degree of [(un)reliability](#reliability) differs at different construct levels.
+
+```{r reliabilityIRTtestReliability, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Two-Parameter Logistic Model in Item Response Theory."}
+ggplot(irtInformation, aes(theta, reliability)) +
+  geom_line(size = 1.5) +
+  scale_color_viridis_d() +
+  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_y_continuous(name = "Reliability", limits = c(0,1)) +
   theme_bw()
 ```
 
@@ -1400,6 +1438,12 @@ plot(raschModel, type = "info")
 
 ##### Test Reliability {#irt-onePLreliability}
 
+Marginal [reliability](#irtReliability):
+
+```{r}
+marginal_rxx(raschModel)
+```
+
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Rasch Item Response Theory Model."}
@@ -1561,6 +1605,12 @@ plot(twoPLModel, type = "info")
 ```
 
 ##### Test Reliability {#irt-twoPLreliability}
+
+Marginal [reliability](#irtReliability):
+
+```{r}
+marginal_rxx(twoPLModel)
+```
 
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
@@ -1780,6 +1830,12 @@ plot(threePLModel, type = "info")
 
 ##### Test Reliability {#irt-threePLreliability}
 
+Marginal [reliability](#irtReliability):
+
+```{r}
+marginal_rxx(threePLModel)
+```
+
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Three-Parameter Logistic Item Response Theory Model."}
@@ -1866,6 +1922,12 @@ plot(fourPLModel, type = "info")
 
 ##### Test Reliability {#irt-fourPLreliability}
 
+Marginal [reliability](#irtReliability):
+
+```{r}
+marginal_rxx(fourPLModel)
+```
+
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Four-Parameter Logistic Item Response Theory Model."}
@@ -1951,6 +2013,12 @@ plot(gradedResponseModel, type = "info")
 ```
 
 ##### Test Reliability {#irt-gradedResponseModelReliability}
+
+Marginal [reliability](#irtReliability):
+
+```{r}
+marginal_rxx(gradedResponseModel)
+```
 
 Plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$).
 
