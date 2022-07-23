@@ -966,11 +966,16 @@ $$
 \end{aligned}
 (\#eq:reliabilityIRT)
 $$
+
 where $\sigma^2(\theta)$ is the variance of theta, which is fixed to one in most IRT models.
 
 The `petersenlab` package [@R-petersenlab] contains the `reliabilityiRT()` function that estimates the amount of [reliability](#irtReliability) an item or a measure provides as function of its information and the variance of people's construct levels ($\theta$).
 
 ```{r, eval = FALSE}
+reliabilityIRT <- function(information, varTheta = 1){
+  information / (information + varTheta)
+}
+
 reliabilityIRT(information, varTheta = 1)
 ```
 
@@ -2079,9 +2084,6 @@ modelCoefficients <- coef(gradedResponseModel,
                           IRTpars = TRUE,
                           simplify = TRUE)$items
 
-twopl <- function(a, b, theta){ # 2pl function
-  1 / (1 + exp(-(a * (theta - b))))}
-
 theta <- seq(from = -6, to = 6, by = .1)
 
 difficultyThresholds <- grep("b",
@@ -2099,9 +2101,9 @@ lst <- lapply(1:numberOfItems,
 for(i in 1:numberOfItems){
   for(j in 1:numberDifficultyThresholds){
     lst[[i]][,1] <- theta
-    lst[[i]][,j + 1] <- twopl(a = modelCoefficients[i,1],
-                              b = modelCoefficients[i,j + 1],
-                              theta = theta)
+    lst[[i]][,j + 1] <- fourPL(a = modelCoefficients[i,1],
+                               b = modelCoefficients[i,j + 1],
+                               theta = theta)
   }
 }
 
