@@ -368,7 +368,7 @@ IRT models can be fit that estimate one or more of these four item parameters.
 
 A Rasch model, estimates the [item difficulty](#itemDifficulty) parameter, and holds everything else fixed across items.
 It fixes the [item discrimination](#itemDiscrimination) to be one for each item.
-In the Rasch model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the difficulty ($b$) of the item, is:
+In the Rasch model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the difficulty ($b$) of the item, is estimated using Equation \@ref(eq:raschModel):
 
 $$
 P(X = 1|\theta_j, b_i) = \frac{e^{\theta_j - b_i}}{1 + e^{\theta_j - b_i}}
@@ -393,7 +393,7 @@ fourPL(b = 1, theta = 0)
 A one-parameter logistic (1-PL) IRT model, similar to a Rasch model, estimates the [item difficulty](#itemDifficulty) parameter, and holds everything else fixed across items (see Figure \@ref(fig:irt1PL)).
 The one-parameter logistic model holds the [item discrimination](#itemDiscrimination) fixed across items, but does not fix it to one, unlike the Rasch model.
 
-In the one-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) of the item and the items' (fixed) [discrimination](#itemDiscrimination) ($a$), is:
+In the one-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) of the item and the items' (fixed) [discrimination](#itemDiscrimination) ($a$), is estimated using Equation \@ref(eq:onePL):
 
 $$
 P(X = 1|\theta_j, b_i, a) = \frac{e^{a(\theta_j - b_i)}}{1 + e^{a(\theta_j - b_i)}}
@@ -503,7 +503,7 @@ axis(1, at = 1:9, labels = 1:9)
 A two-parameter logistic (2-PL) IRT model estimates item [difficulty](#itemDifficulty) and [discrimination](#itemDiscrimination), and it holds the asymptotes fixed across items (see Figure \@ref(fig:irt2PL)).
 Two-parameter logistic models are also common.
 
-In the two-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) and [discrimination](#itemDiscrimination) ($a$) of the item, is:
+In the two-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$) and [discrimination](#itemDiscrimination) ($a$) of the item, is estimated using Equation \@ref(eq:twoPL):
 
 $$
 P(X = 1|\theta_j, b_i, a_i) = \frac{e^{a_i(\theta_j - b_i)}}{1 + e^{a_i(\theta_j - b_i)}}
@@ -577,7 +577,7 @@ A three-parameter logistic (3-PL) IRT model estimates item [difficulty](#itemDif
 This model would provide information about where an item drops out.
 Three-parameter logistic models are less common to estimate because it adds considerable computational complexity and requires a large sample size, and the [guessing](#itemGuessing) parameter is often not as important as [difficulty](#itemDifficulty) and [discrimination](#itemDiscrimination) Nevertheless, 3-parameter logistic models are sometimes estimated in the education literature to account for getting items correct by random guessing.
 
-In the three-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), and [guessing parameter](#itemGuessing) ($c$) of the item, is:
+In the three-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), and [guessing parameter](#itemGuessing) ($c$) of the item, is estimated using Equation \@ref(eq:threePL):
 
 $$
 P(X = 1|\theta_j, b_i, a_i, c_i) = c_i + (1 - c_i) \frac{e^{a_i(\theta_j - b_i)}}{1 + e^{a_i(\theta_j - b_i)}}
@@ -652,7 +652,7 @@ ggplot(threePLitems_long, aes(theta, value, group = factor(Item), color = factor
 A four-parameter logistic (4-PL) IRT model estimates item [difficulty](#itemDifficulty), [discrimination](#itemDiscrimination), [guessing](#itemGuessing), and [careless errors](#itemCarelessErrors) (see Figure \@ref(fig:irt4PL)).
 The fourth parameter adds considerable computational complexity and is rare to estimate.
 
-In the four-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), [guessing parameter](#itemGuessing) ($c$), and [careless error parameter](#itemCarelessErrors) ($d$) of the item, is [@Magis2013]:
+In the four-parameter logistic model, the probability that a person $j$ with a level on the construct of $\theta$ gets a score of one (instead of zero) on item $i$, based on the [difficulty](#itemDifficulty) ($b$), [discrimination](#itemDiscrimination) ($a$), [guessing parameter](#itemGuessing) ($c$), and [careless error parameter](#itemCarelessErrors) ($d$) of the item, is estimated using Equation \@ref(eq:fourPL) [@Magis2013]:
 
 $$
 P(X = 1|\theta_j, b_i, a_i, c_i, d_i) = c_i + (d_i - c_i) \frac{e^{a_i(\theta_j - b_i)}}{1 + e^{a_i(\theta_j - b_i)}}
@@ -727,7 +727,7 @@ ggplot(fourPLitems_long, aes(theta, value, group = factor(Item), color = factor(
 *Graded response models* and *generalized partial credit models* can be estimated with one, two, three, or four parameters.
 However, they use polytomous data, as described in the section below.
 
-The [two-parameter](#twoPL) graded response model takes the following general form:
+The [two-parameter](#twoPL) graded response model takes the general form of Equation \@ref(eq:gradedResponseModel1):
 
 $$
 P(X_{ji} = x_{ji}|\theta_j) = P^*_{x_{ji}}(\theta_j) - P^*_{x_{ji} + 1}(\theta_j)
@@ -848,7 +848,7 @@ $$
 
 where $\sigma_x = \text{standard deviation of observed scores on the item } x$ and $r_{xx} = \text{reliability of the item } x$.
 The [standard error of measurement](#standardErrorofMeasurement) is used to generate confidence intervals for people's scores.
-In IRT, the [standard error of measurement](#standardErrorofMeasurement) (at a given construct level) can be calculated as the inverse of the square root of the amount of test information at that construct level:
+In IRT, the [standard error of measurement](#standardErrorofMeasurement) (at a given construct level) can be calculated as the inverse of the square root of the amount of test information at that construct level, as in Equation \@ref(eq:semIRT):
 
 $$
 \text{SEM}(\theta) = \frac{1}{\sqrt{\text{information}(\theta)}}
@@ -871,7 +871,7 @@ standardErrorIRT(0.6)
 
 The [standard error of measurement](#standardErrorofMeasurement) tends to be higher (i.e., [reliability](#reliability)/information tends to be lower) at the extreme levels of the construct where there are fewer items.
 
-The formula for information for item $i$ at construct level $\theta$ in a Rasch model is [@Baker2017]:
+The formula for information for item $i$ at construct level $\theta$ in a Rasch model is in Equation \@ref(eq:itemInformationRasch) [@Baker2017]:
 
 $$
 \text{information}_i(\theta) = P_i(\theta)Q_i(\theta)
@@ -903,7 +903,7 @@ itemInformation(b, theta)
 itemInformation(b = 1, theta = 0)
 ```
 
-The formula for information for item $i$ at construct level $\theta$ in a two-parameter logistic model is [@Baker2017]:
+The formula for information for item $i$ at construct level $\theta$ in a two-parameter logistic model is in Equation \@ref(eq:itemInformation2PL) [@Baker2017]:
 
 $$
 \text{information}_i(\theta) = a^2_iP_i(\theta)Q_i(\theta)
@@ -921,7 +921,7 @@ itemInformation(a, b, theta)
 itemInformation(a = 0.6, b = 0, theta = -1)
 ```
 
-The formula for information for item $i$ at construct level $\theta$ in a three-parameter logistic model is [@Baker2017]:
+The formula for information for item $i$ at construct level $\theta$ in a three-parameter logistic model is in Equation \@ref(eq:itemInformation3PL) [@Baker2017]:
 
 $$
 \text{information}_i(\theta) = a^2_i\bigg[\frac{Q_i(\theta)}{P_i(\theta)}\bigg]\bigg[\frac{(P_i(\theta) - c_i)^2}{(1 - c_i)^2}\bigg]
@@ -939,7 +939,7 @@ itemInformation(a, b, c, theta)
 itemInformation(a = 0.8, b = -1, c = .25, theta = -1)
 ```
 
-The formula for information for item $i$ at construct level $\theta$ in a four-parameter logistic model is [@Magis2013]:
+The formula for information for item $i$ at construct level $\theta$ in a four-parameter logistic model is in Equation \@ref(eq:itemInformation4PL) [@Magis2013]:
 
 $$
 \text{information}_i(\theta) = \frac{a^2_i[P_i(\theta) - c_i]^2[d_i - P_i(\theta)^2]}{(d_i - c_i)^2 P_i(\theta)[1 - P_i(\theta)]}
@@ -957,7 +957,7 @@ itemInformation(a, b, c, d, theta)
 itemInformation(a = 1.5, b = 1, c = .15, d = 0.85, theta = 3)
 ```
 
-[Reliability](#irtReliability) at a given level of the construct ($\theta$) can be estimated as:
+[Reliability](#irtReliability) at a given level of the construct ($\theta$) can be estimated as is Equation \@ref(eq:reliabilityIRT):
 
 $$
 \begin{aligned}
