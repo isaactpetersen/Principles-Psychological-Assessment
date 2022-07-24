@@ -57,14 +57,14 @@ A base rate is often used as the "*prior probability*" in a Bayesian model.
 
 A *joint probability* is the probability of two (or more) events occurring simultaneously.
 For instance, the probability of events $A$ and $B$ both occurring together is $P(A, B)$.
-A joint probability can be calculated using the [marginal probability](#baseRate) of each event:
+A joint probability can be calculated using the [marginal probability](#baseRate) of each event, as in Equation \@ref(eq:jointProbability):
 
 $$
 P(A, B) = P(A) \cdot P(B)
 (\#eq:jointProbability)
 $$
 
-Conversely (and rearranging the terms for the calculation of [conditional probability](#conditionalProbability)), a [joint probability](#jointProbability) can also be calculated using the [conditional probability](#conditionalProbability) and [marginal probability](#baseRate):
+Conversely (and rearranging the terms for the calculation of [conditional probability](#conditionalProbability)), a [joint probability](#jointProbability) can also be calculated using the [conditional probability](#conditionalProbability) and [marginal probability](#baseRate), as in Equation \@ref(eq:jointProbability2):
 
 $$
 P(A, B) = P(A | B) \cdot P(B)
@@ -83,7 +83,7 @@ In other words, $P(C | R)$ is the probability of having HIV given a positive tes
 $P(R | C)$ is the probability of a response, $R$, given a classification, $C$.
 In the example above, $P(R | C)$ is the probability of having a positive test given that a person has HIV: $P(\text{positive test} | \text{HIV}) = 95\%$.
 
-A conditional probability can be calculated using the [joint probability](#jointProbability) and [marginal probability](#baseRate) (base rate):
+A conditional probability can be calculated using the [joint probability](#jointProbability) and [marginal probability](#baseRate) (base rate), as in Equation \@ref(eq:conditionalProbability):
 
 $$
 P(A | B) = \frac{P(A, B)}{P(B)}
@@ -111,7 +111,7 @@ Instead, they care about the probability that the car will be stolen given that 
 An alternative way of calculating a [conditional probability](#conditionalProbability) is using the inverse [conditional probability](#conditionalProbability) (instead of the [joint probability](#jointProbability)).
 This is known as Bayes' theorem.
 Bayes' theorem can help us calculate a [conditional probability](#conditionalProbability) of some classification, $C$, given some response, $R$, if we know the inverse [conditional probability](#conditionalProbability) and the [base rate](#baseRate) (marginal probability) of each.
-Bayes' theorem is as follows:
+Bayes' theorem is in Equation \@ref(eq:bayes1):
 
 $$
 \begin{aligned}
@@ -136,7 +136,7 @@ $$
 $$
 
 In the HIV example above, we can calculate the [conditional probability](#conditionalProbability) of HIV given a positive test using three terms: the [conditional probability](#conditionalProbability) of a positive test given HIV (i.e., the sensitivity of the test), the [base rate](#baseRate) of HIV, and the [base rate](#baseRate) of a positive test for HIV.
-The [conditional probability](#conditionalProbability) of HIV given a positive test is:
+The [conditional probability](#conditionalProbability) of HIV given a positive test is in Equation \@ref(eq:hivExample1):
 
 $$
 \begin{aligned}
@@ -146,6 +146,7 @@ $$
   &= \frac{95\% \times .3\%}{1\%} = \frac{.95 \times .003}{.01}\\
   &= 28.5\%
 \end{aligned}
+(\#eq:hivExample1)
 $$
 
 The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.
@@ -201,7 +202,7 @@ This is known as [*Bayesian updating*](#bayesianUpdating).
 We would also update the "evidence" to be the [marginal probability](#baseRate) of getting a second positive test.
 
 If we do not know a [marginal probability](#baseRate) (i.e., base rate) of an event (e.g., getting a second positive test), we can calculate a [marginal probability](#baseRate) with the *law of total probability* using [conditional probabilities](#conditionalProbability) and the [marginal probability](#baseRate) of another event (e.g., having HIV).
-According to the law of total probability, the probability of getting a positive test is the probability that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity)) times the base rate of HIV plus the probability that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate)) times the [base rate](#baseRate) of not having HIV:
+According to the law of total probability, the probability of getting a positive test is the probability that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity)) times the base rate of HIV plus the probability that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate)) times the [base rate](#baseRate) of not having HIV, as in Equation \@ref(eq:lawOfTotalProbability):
 
 $$
 \begin{aligned}
@@ -212,7 +213,7 @@ $$
 (\#eq:lawOfTotalProbability)
 $$
 
-In this case, we know the [marginal probability](#baseRate) ($P(R_i)$), and we can use that to solve for the unknown [conditional probability](#conditionalProbability) that reflects the [false positive rate](#falsePositiveRate) ($P(R | \text{not } C)$):
+In this case, we know the [marginal probability](#baseRate) ($P(R_i)$), and we can use that to solve for the unknown [conditional probability](#conditionalProbability) that reflects the [false positive rate](#falsePositiveRate) ($P(R | \text{not } C)$), as in Equation \@ref(eq:conditionalProbabilityRevised):
 
 $$
 \scriptsize
@@ -243,7 +244,7 @@ pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01)
 ```
 
 With this [conditional probability](#conditionalProbability) ($P(R | \text{not } C)$), the updated [marginal probability](#baseRate) of having HIV ($P(C_i)$), and the updated marginal probability of not having HIV ($P(\text{not } C_i)$), we can now calculate an updated estimate of the [marginal probability](#baseRate) of getting a second positive test.
-The probability of getting a second positive test is the probability that a person with HIV gets a second positive test (i.e., [sensitivity](#sensitivity)) times the updated probability of HIV plus the probability that a person without HIV gets a second positive test (i.e., [false positive rate](#falsePositiveRate)) times the updated probability of not having HIV:
+The probability of getting a second positive test is the probability that a person with HIV gets a second positive test (i.e., [sensitivity](#sensitivity)) times the updated probability of HIV plus the probability that a person without HIV gets a second positive test (i.e., [false positive rate](#falsePositiveRate)) times the updated probability of not having HIV, as in Equation \@ref(eq:baseRateUpdated):
 
 $$
 \begin{aligned}
@@ -270,7 +271,7 @@ pB(pBgivenA = .95, pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
    pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
-We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the errors of each test are independent, i.e., uncorrelated):
+We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the errors of each test are independent, i.e., uncorrelated), as in Equation \@ref(eq:baseRateUpdated2):
 
 $$
 \begin{aligned}
@@ -280,6 +281,7 @@ $$
   &= \frac{95\% \times 28.5\%}{27.58776\%} \\
   &= 98.14\%
 \end{aligned}
+(\#eq:baseRateUpdated2)
 $$
 
 The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.
@@ -306,7 +308,7 @@ If the [base rates](#baseRate) are not equal, we are making at least some predic
 If $P(C_i) > P(R_i)$, our predictions must include some [false negatives](#falseNegative).
 If $P(R_i) > P(C_i)$, our predictions must include some [false positives](#falsePositive).
 
-Using the law of total probability, we can substitute the calculation of the [marginal probability](#baseRate) ($P(R_i)$) into Bayes' theorem to get an alternative formulation of Bayes' theorem:
+Using the law of total probability, we can substitute the calculation of the [marginal probability](#baseRate) ($P(R_i)$) into Bayes' theorem to get an alternative formulation of Bayes' theorem, as in Equation \@ref(eq:baseRateUpdated3):
 
 $$
 \begin{aligned}
@@ -314,7 +316,7 @@ $$
   &= \frac{P(R | C) \cdot P(C_i)}{P(R | C) \cdot P(C_i) + P(R | \text{not } C) \cdot P(\text{not } C_i)} \\
   &= \frac{P(R | C) \cdot P(C_i)}{P(R | C) \cdot P(C_i) + P(R | \text{not } C) \cdot [1 - P(C_i)]}
 \end{aligned}
-(\#eq:bayes4)
+(\#eq:baseRateUpdated3)
 $$
 
 Instead of using [marginal probability](#baseRate) ([base rate](#baseRate)) of $R$, as in the original formulation of Bayes' theorem, it uses the [conditional probability](#conditionalProbability), $P(R|\text{not } C)$.
@@ -323,7 +325,7 @@ This alternative formulation of Bayes' theorem can be used to calculate [positiv
 
 Let us see how the alternative formulation of Bayes' theorem applies to the HIV example above.
 We can calculate the probability of HIV given a positive test using three terms: the [conditional probability](#conditionalProbability) that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity)), the [conditional probability](#conditionalProbability) that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate)), and the [base rate](#baseRate) of HIV.
-Using the $P(R|\text{not } C)$ calculated in Equation \@ref(eq:conditionalProbabilityRevised), the [conditional probability](#conditionalProbability) of HIV given a single positive test is:
+Using the $P(R|\text{not } C)$ calculated in Equation \@ref(eq:conditionalProbabilityRevised), the [conditional probability](#conditionalProbability) of HIV given a single positive test is in Equation \@ref(eq:bayes4):
 
 $$
 \small
@@ -333,6 +335,7 @@ $$
   &= \frac{95\% \times .3\%}{95\% \times .3\% + .7171515\% \times (1 - .3\%)} = \frac{.95 \times .003}{.95 \times .003 + .007171515 \times (1 - .003)}\\
   &= 28.5\%
 \end{aligned}
+(\#eq:bayes4)
 $$
 
 ```{r}
@@ -358,7 +361,7 @@ pAgivenB(pBgivenA = .95, pA = .003,
 To calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test, we update our priors because the person has now tested positive for HIV.
 We update the [prior probability](#baseRate) of HIV ($P(C_i)$) based on the posterior probability of HIV after a positive test ($P(C | R)$) that we calculated above.
 We can calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test using three terms: the [conditional probability](#conditionalProbability) that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity); which stays the same), the [conditional probability](#conditionalProbability) that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate); which stays the same), and the updated [marginal probability](#baseRate) of HIV.
-The [conditional probability](#conditionalProbability) of HIV given a second positive test is:
+The [conditional probability](#conditionalProbability) of HIV given a second positive test is in Equation \@ref(eq:baseRateUpdated4):
 
 $$
 \scriptsize
@@ -368,6 +371,7 @@ $$
   &= \frac{95\% \times 28.5\%}{95\% \times 28.5\% + .7171515\% \times (1 - 28.5\%)} = \frac{.95 \times .285}{.95 \times .285 + .007171515 \times (1 - .285)}\\
   &= 98.14\%
 \end{aligned}
+(\#eq:baseRateUpdated4)
 $$
 
 The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.
@@ -384,7 +388,7 @@ pAgivenB(pBgivenA = .95, pA = .285,
          pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
-If we want to compare the relative probability of two outcomes, we can use the odds form of Bayes' theorem:
+If we want to compare the relative probability of two outcomes, we can use the odds form of Bayes' theorem, as in Equation \@ref(eq:bayes5):
 
 $$
 \begin{aligned}
@@ -474,7 +478,7 @@ To determine what accuracy we could get by chance alone given the [selection rat
 The probability of a given cell in the [confusion matrix](#confusionMatrix) is a [joint probability](#jointProbability)—the probability of two events occurring simultaneously.
 To calculate a [joint probability](#jointProbability), we multiply the probability of each event.
 
-So, to get the chance expectancies of [true positives](#truePositive), we would multiply the respective [marginal probabilities](#baseRate):
+So, to get the chance expectancies of [true positives](#truePositive), we would multiply the respective [marginal probabilities](#baseRate), as in Equation \@ref(eq:truePositivesByChanceExample):
 
 $$
 \begin{aligned}
@@ -483,9 +487,10 @@ $$
   &= .05 \times .254 \\
   &= .0127
 \end{aligned}
+(\#eq:truePositivesByChanceExample)
 $$
 
-To get the chance expectancies of [true negatives](#trueNegative), we would multiply the respective [marginal probabilities](#baseRate):
+To get the chance expectancies of [true negatives](#trueNegative), we would multiply the respective [marginal probabilities](#baseRate), as in Equation \@ref(eq:trueNegativesByChanceExample):
 
 $$
 \begin{aligned}
@@ -494,6 +499,7 @@ $$
   &= .95 \times .746 \\
   &= .7087
 \end{aligned}
+(\#eq:trueNegativesByChanceExample)
 $$
 
 To get the [percent accuracy by chance](#percentAccuracyByChance), we sum the chance expectancies for the correct predictions ([TP](#truePositive) and [TN](#trueNegative)): $.0127 + .7087 = .7214$.
@@ -511,9 +517,9 @@ knitr::include_graphics("./Images/2x2-Matrix_2d.png")
 #### Predicting from the Base Rate {#predictingFromBaseRate}
 
 Now, let us consider how well you would do if you were to predict from the [base rate](#baseRate).
-Predicting from the [base rate](#baseRate) is also called "betting from the [base rate](#baseRate)", and it involves setting the [selection ratio](#selectioNRatio) by taking advantage of the [base rate](#baseRate) so that you go with the most likely outcome in every prediction.
+Predicting from the [base rate](#baseRate) is also called "betting from the [base rate](#baseRate)," and it involves setting the [selection ratio](#selectioNRatio) by taking advantage of the [base rate](#baseRate) so that you go with the most likely outcome in every prediction.
 Because the [base rate](#baseRate) is quite low (.05), we could predict from the [base rate](#baseRate) by selecting no one to reject (i.e., setting the [selection ratio](#selectionRatio) at zero).
-our [percent accuracy by chance](#percentAccuracyByChance) if we predict from the [base rate](#baseRate) would be calculated by multiplying the [marginal probabilities](#baseRate), as we did above, but with a new [selection ratio](#selectionRatio):
+Our [percent accuracy by chance](#percentAccuracyByChance) if we predict from the [base rate](#baseRate) would be calculated by multiplying the [marginal probabilities](#baseRate), as we did above, but with a new [selection ratio](#selectionRatio), as in Equation \@ref(eq:predictingFromBaseRateExample):
 
 $$
 \begin{aligned}
@@ -526,6 +532,7 @@ $$
   &= .95 \times 1 \\
   &= .95
 \end{aligned}
+(\#eq:predictingFromBaseRateExample)
 $$
 
 We sum the chance expectancies for the correct predictions ([TP](#truePositive) and [TN](#trueNegative)): $0 + .95 = .95$.
@@ -1062,6 +1069,7 @@ If mean error is below zero, it indicates that predicted values are, on average,
 If both over-estimating and under-estimating errors are present, however, they can cancel each other out.
 As a result, even with a mean error of zero, there can still be considerable error present.
 Thus, although mean error can be helpful for examining whether predictions systematically under- or over-estimate the actual scores, other forms of accuracy are necessary to examine to examine the *extent* of error.
+The formula for mean error is in Equation \@ref(eq:meanError):
 
 $$
 \begin{aligned}
@@ -1085,6 +1093,7 @@ meanErrorValue
 
 Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.
 Smaller values (closer to zero) reflect greater accuracy.
+The formula for mean absolute error is in Equation \@ref(eq:meanAbsoluteError):
 
 $$
 \begin{aligned}
@@ -1107,6 +1116,7 @@ meanAbsoluteErrorValue
 ##### Mean Squared Error (MSE) {#meanSquaredError}
 
 Smaller values (closer to zero) reflect greater accuracy.
+The formula for mean squared error is in Equation \@ref(eq:meanSquaredError):
 
 $$
 \begin{aligned}
@@ -1130,6 +1140,7 @@ meanSquaredErrorValue
 
 Smaller values (closer to zero) reflect greater accuracy.
 RMSE penalizes larger errors more so than MAE does.
+The formula for root mean squared error is in Equation \@ref(eq:rootMeanSquaredError):
 
 $$
 \begin{aligned}
@@ -1156,6 +1167,7 @@ The estimates of prediction accuracy described in this section are intended to b
 ##### Mean Percentage Error (MPE) {#meanPercentageError}
 
 Values closer to zero reflect greater accuracy.
+The formula for percentage error is in Equation \@ref(eq:percentageError):
 
 $$
 \begin{aligned}
@@ -1163,6 +1175,9 @@ $$
 \end{aligned}
 (\#eq:percentageError)
 $$
+
+We then take the mean of the percentage errors to get mean percentage error.
+The formula for mean percentage error is in Equation \@ref(eq:meanPercentageError):
 
 $$
 \begin{aligned}
@@ -1199,6 +1214,7 @@ meanPercentageErrorValue
 ##### Mean Absolute Percentage Error (MAPE) {#meanAbsolutePercentageError}
 
 Smaller Values (closer to zero) reflect greater accuracy.
+The formula for mean absolute percentage error is in Equation \@ref(eq:meanAbsolutePercentageError):
 
 $$
 \begin{aligned}
@@ -1235,6 +1251,7 @@ meanAbsolutePercentageErrorValue
 ##### Symmetric Mean Absolute Percentage Error (sMAPE) {#symmetricMeanAbsolutePercentageError}
 
 Smaller values (closer to zero) reflect greater accuracy.
+The formula for symmetric mean absolute percentage error is in Equation \@ref(eq:symmetricMeanAbsolutePercentageError):
 
 $$
 \small
@@ -1268,7 +1285,8 @@ symmetricMeanAbsolutePercentageErrorValue
 Mean absolute scaled error (MASE) is described by [@Hyndman2018].
 Values closer to zero reflect greater accuracy.
 
-The adapted formula for MASE with non-time series data is described [here (https://stats.stackexchange.com/a/108963/20338)](https://stats.stackexchange.com/a/108963/20338), and is below:
+The adapted formula for MASE with non-time series data is described [here (https://stats.stackexchange.com/a/108963/20338)](https://stats.stackexchange.com/a/108963/20338).
+Scaled errors are calculated using Equation \@ref(eq:scaledError):
 
 $$
 \begin{aligned}
@@ -1277,6 +1295,8 @@ $$
 \end{aligned}
 (\#eq:scaledError)
 $$
+
+Then, we calculate the mean of the absolute value of the scaled errors to get mean absolute scaled error, as in Equation \@ref(eq:meanAbsoluteScaledError):
 
 $$
 \begin{aligned}
@@ -1309,8 +1329,7 @@ meanAbsoluteScaledErrorValue
 ##### Root Mean Squared Log of the Accuracy Ratio {#accuracyRatio}
 
 The squared log of the accuracy ratio is described by [@Tofallis2015].
-Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.
-Here, I take the mean of the squared log values, which keeps the values positive, and I calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric.
+The accuracy ratio is in Equation \@ref(eq:accuracyRatio):
 
 $$
 \begin{aligned}
@@ -1318,6 +1337,9 @@ $$
 \end{aligned}
 (\#eq:accuracyRatio)
 $$
+
+Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.
+Here, I take the mean of the squared log values, which keeps the values positive, and I calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric, as in Equation \@ref(eq:rootMeanSquaredLogAccuracyRatio):
 
 $$
 \begin{aligned}
@@ -1380,6 +1402,8 @@ rSquaredValue
 The predictor (`testScore`) explains $`r round(rSquaredValue * 100, 2)`%$ of the variance $(R^2 = `r round(rSquaredValue, 2)`)$ in the outcome (`disorder` status).
 
 ###### Adjusted $R^2$ ($R^2_{adj}$) {#adjustedRsquared}
+
+The formula for adjusted $R^2$ is in Equation \@ref(eq:adjustedRSquared):
 
 $$
 R^2_{adj} = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}
@@ -1900,6 +1924,7 @@ addmargins(prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)
 True positives (TPs) are instances in which a positive classification (e.g., a disorder present) is correct—that is, the test says that a classification is present, and the classification is present.
 True positives are also called valid positives (VPs) or hits.
 Higher values reflect greater accuracy.
+The formula for true positives is in Equation \@ref(eq:truePositive):
 
 $$
 \begin{aligned}
@@ -1918,6 +1943,7 @@ TPvalue
 True negatives (TNs) are instances in which a negative classification (e.g., absence of a disorder) is correct—that is, the test says that a classification is not present, and the classification is not present.
 True negatives are also called valid negatives (VNs) or correct rejections.
 Higher values reflect greater accuracy.
+The formula for true negatives is in Equation \@ref(eq:trueNegative):
 
 $$
 \begin{aligned}
@@ -1936,6 +1962,7 @@ TNvalue
 False positives (FPs) are instances in which a positive classification (e.g., a disorder present) is incorrect—that is, the test says that a classification is present, and the classification is not present.
 False positives are also called false alarms (FAs).
 Lower values reflect greater accuracy.
+The formula for false positives is in Equation \@ref(eq:falsePositive):
 
 $$
 \begin{aligned}
@@ -1954,6 +1981,7 @@ FPvalue
 False negatives (FNs) are instances in which a negative classification (e.g., absence of a disorder) is incorrect—that is, the test says that a classification is not present, and the classification is present.
 False negatives are also called misses.
 Lower values reflect greater accuracy.
+The formula for false negatives is in Equation \@ref(eq:falseNegative):
 
 $$
 \begin{aligned}
@@ -1983,7 +2011,7 @@ sampleSizeValue
 ### Selection Ratio (SR) {#selectionRatio}
 
 The selection ratio is the marginal probability of selection, independent of other things: $P(R_i)$.
-In clinical psychology, the selection ratio is the proportion of people who test positive for the disorder.
+In clinical psychology, the selection ratio is the proportion of people who test positive for the disorder, as in Equation \@ref(eq:selectionRatio):
 
 $$
 \begin{aligned}
@@ -2008,7 +2036,7 @@ selectionRatioValue
 ### Base Rate (BR) {#pretestProbability}
 
 The [base rate](#baseRate) of a classification is its [marginal probability](#baseRate), independent of other things: $P(C_i)$.
-In clinical psychology, the base rate of a disorder is its prevalence in the population.
+In clinical psychology, the base rate of a disorder is its prevalence in the population, as in Equation \@ref(eq:baseRate).
 Without additional information, the [base rate](#baseRate) is used as the initial *pretest probability*.
 
 $$
@@ -2034,7 +2062,7 @@ baseRateValue
 ### Pretest Odds {#pretestOdds}
 
 The pretest odds of a classification can be calculated using the pretest probability (i.e., [base rate](#baseRate)).
-To convert a probability to odds, divide the probability by one minus that probability.
+To convert a probability to odds, divide the probability by one minus that probability, as in Equation \@ref(eq:pretestOdds).
 
 $$
 \begin{aligned}
@@ -2073,6 +2101,7 @@ pretestOdds(pretestProb = baseRate(TP = TPvalue,
 
 Percent Accuracy is also called overall accuracy.
 Higher values reflect greater accuracy.
+The formula for percent accuracy is in Equation \@ref(eq:percentAccuracy).
 Percent accuracy has several problems.
 First, it treats all errors ([FP](#falsePositive) and [FN](#falseNegative)) as equally important.
 However, in practice, it is rarely the case that [false positives](#falsePositive) and [false negatives](#falseNegative) are equally important.
@@ -2101,6 +2130,8 @@ percentAccuracyValue
 ```
 
 ### Percent Accuracy by Chance {#percentAccuracyByChance}
+
+The formula for calculating percent accuracy by chance is in Equation \@ref(eq:PercentAccuracyByChance).
 
 $$
 \begin{aligned}
@@ -2159,6 +2190,7 @@ percentAccuracyPredictingFromBaseRateValue
 
 Relative improvement over chance (RIOC) is a prediction's improvement over chance as a proportion of the maximum possible improvement over chance, as described by [@Farrington1989].
 Higher values reflect greater accuracy.
+The formula for calculating RIOC is in Equation \@ref(eq:relativeImprovementOverChance).
 
 $$
 \begin{aligned}
@@ -2188,6 +2220,7 @@ relativeImprovementOverChanceValue
 
 Relative improvement over [predicting from the base rate](#predictingFromBaseRate) is a prediction's improvement over [predicting from the base rate](#predictingFromBaseRate) as a proportion of the maximum possible improvement over [predicting from the base rate](#predictingFromBaseRate).
 Higher values reflect greater accuracy.
+The formula for calculating relative improvement over predicting from the base rate is in Equation \@ref(eq:relativeImprovementOverPredictingFromBaseRate).
 
 $$
 \scriptsize
@@ -2224,6 +2257,7 @@ relativeImprovementOverPredictingFromBaseRateValue
 Sensitivity (SN) is also called true positive rate (TPR), hit rate (HR), or recall.
 Sensitivity is the [conditional probability](#conditionalProbability) of a positive test given that the person has the condition: $P(R|C)$.
 Higher values reflect greater accuracy.
+The formula for calculating sensitivity is in Equation \@ref(eq:sensitivity).
 As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), sensitivity decreases.
 As the cutoff decreases, sensitivity increases.
 
@@ -2297,6 +2331,7 @@ ggplot(sensitivitySpecificityData, aes(x = cutoff, y = value, color = name)) +
 Specificity is also called true negative rate (TNR) or selectivity.
 Specificity is the [conditional probability](#conditionalProbability) of a negative test given that the person does not have the condition: $P(\text{not } R|\text{not } C)$.
 Higher values reflect greater accuracy.
+The formula for calculating specificity is in Equation \@ref(eq:specificity).
 As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), specificity increases.
 As the cutoff decreases, specificity decreases.
 
@@ -2324,6 +2359,7 @@ specificityValue
 The false negative rate (FNR) is also called the miss rate.
 The false negative rate is the [conditional probability](#conditionalProbability) of a negative test given that the person has the condition: $P(\text{not } R|C)$.
 Lower values reflect greater accuracy.
+The formula for calculating false negative rate is in Equation \@ref(eq:falseNegativeRate).
 
 $$
 \begin{aligned}
@@ -2349,6 +2385,7 @@ falseNegativeRateValue
 The false positive rate (FPR) is also called the false alarm rate (FAR) or fall-out.
 The false positive rate is the [conditional probability](#conditionalProbability) of a positive test given that the person does not have the condition: $P(R|\text{not } C)$.
 Lower values reflect greater accuracy.
+The formula for calculating false positive rate is in Equation \@ref(eq:falsePositiveRate):
 
 $$
 \begin{aligned}
@@ -2375,6 +2412,7 @@ The positive predictive value (PPV) is also called the positive predictive power
 Many people confuse [sensitivity](#sensitivity) ($P(R|C)$) with its inverse [conditional probability](#conditionalProbability), PPV ($P(C|R)$).
 PPV is the [conditional probability](#conditionalProbability) of having the condition given a positive test: $P(C|R)$.
 Higher values reflect greater accuracy.
+The formula for calculating positive predictive value is in Equation \@ref(eq:positivePredictiveValue).
 PPV can be low even when [sensitivity](#sensitivity) is high because it depends not only on [sensitivity](#sensitivity), but also on [specificity](#specificity) and the [base rate](#baseRate).
 Because PPV depends on the [base rate](#baseRate), PPV is not an intrinsic property of a measure.
 The same measure will have a different PPV in different contexts with different [base rates](#baseRate) [@Treat2012].
@@ -2481,6 +2519,7 @@ The negative predictive value (NPV) is also called the negative predictive power
 Many people confuse [specificity](#specificity) ($P(\text{not } R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), NPV ($P(\text{not } C| \text{not } R)$).
 NPV is the [conditional probability](#conditionalProbability) of not having the condition given a negative test: $P(\text{not } C| \text{not } R)$.
 Higher values reflect greater accuracy.
+The formula for calculating negative predictive value is in Equation \@ref(eq:negativePredictiveValue).
 NPV can be low even when [specificity](#specificity) is high because it depends not only on [specificity](#specificity), but also on [sensitivity](#sensitivity) and the [base rate](#baseRate).
 Because NPV depends on the [base rate](#baseRate), NPV is not an intrinsic property of a measure.
 The same measure will have a different NPV in different contexts with different [base rates](#baseRate) [@Treat2012].
@@ -2525,6 +2564,7 @@ negativePredictiveValue(BR = baseRateValue,
 Many people confuse the false positive rate ($P(R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), the false discovery rate ($P(\text{not } C| R)$).
 The false discovery rate is the [conditional probability](#conditionalProbability) of not having the condition given a positive test: $P(\text{not } C| R)$.
 Lower values reflect greater accuracy.
+The formula for calculating false discovery rate is in Equation \@ref(eq:falseDiscoveryRate).
 
 $$
 \begin{aligned}
@@ -2550,6 +2590,7 @@ falseDiscoveryRateValue
 Many people confuse the false negative rate ($P(\text{not } R|C)$) with its inverse [conditional probability](#conditionalProbability), the false omission rate ($P(C|\text{not } R)$).
 The false omission rate is the conditional probability of having the condition given a negative test: $P(C|\text{not } R)$.
 Lower values reflect greater accuracy.
+The formula for calculating false omission rate is in Equation \@ref(eq:falseOmissionRate).
 
 $$
 \begin{aligned}
@@ -2575,6 +2616,7 @@ falseOmissionRateValue
 Youden's J statistic is also called Youden's Index or informedness.
 Youden's J statistic is the sum of [sensitivity](#sensitivity) and [specificity](#specificity) (and subtracting one).
 Higher values reflect greater accuracy.
+The formula for calculating Youden's J statistic is in Equation \@ref(eq:youdenIndex).
 
 $$
 \begin{aligned}
@@ -2600,6 +2642,7 @@ youdenJValue
 
 Balanced accuracy is the average of [sensitivity](#sensitivity) and [specificity](#specificity).
 Higher values reflect greater accuracy.
+The formula for calculating balanced accuracy is in Equation \@ref(eq:balancedAccuracy).
 
 $$
 \begin{aligned}
@@ -2629,6 +2672,7 @@ balancedAccuracyValue
 The F-score combines [precision](#ppv) ([positive predictive value](#ppv)) and [recall](#sensitivity) ([sensitivity](#sensitivity)), where $\beta$ indicates how many times more important [sensitivity](#sensitivity) is than the [positive predictive value](#ppv).
 If [sensitivity](#sensitivity) and the [positive predictive value](#ppv) are equally important, $\beta = 1$, and the F-score is called the $F_1$ score.
 Higher values reflect greater accuracy.
+The formula for calculating the F-score is in Equation \@ref(eq:FScore).
 
 $$
 \begin{aligned}
@@ -2657,6 +2701,7 @@ fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue, beta = 0.5)
 The Matthews correlation coefficient (MCC) is also called the phi coefficient.
 It is a correlation coefficient between predicted and observed values from a binary classification.
 Higher values reflect greater accuracy.
+The formula for calculating the MCC is in Equation \@ref(eq:matthewsCorrelationCoefficient).
 
 $$
 \begin{aligned}
@@ -2687,6 +2732,7 @@ mccValue
 
 The diagnostic odds ratio is the odds of a positive test in those with the condition relative to the odds of a positive test in those without the condition.
 Higher values reflect greater accuracy.
+The formula for calculating the diagnostic odds ratio is in Equation \@ref(eq:diagnosticOddsRatio).
 If the predictor is bad, the diagnostic odds ratio could be less than one, and values can go up from there.
 If the diagnostic odds ratio is greater than 2, we take the odds ratio seriously because we are twice as likely to predict accurately than inaccurately.
 However, the diagnostic odds ratio ignores/hides [base rates](#baseRate).
@@ -2731,6 +2777,7 @@ There are two types of diagnostic likelihood ratios: the [positive likelihood ra
 
 The positive likelihood ratio compares the [true positive rate](#sensitivity) to the [false positive rate](#falsePositiveRate).
 Higher values reflect greater accuracy because it indicates the degree to which a [true positive](#truePositive) is more likely than a [false positive](#falsePositive).
+The formula for calculating the positive likelihood ratio is in Equation \@ref(eq:positiveLikelihoodRatio).
 
 $$
 \begin{aligned}
@@ -2763,6 +2810,7 @@ positiveLikelihoodRatioValue
 
 The negative likelihood ratio compares the [false negative rate](#falseNegativeRate) to the [true negative rate](#specificity).
 Smaller values reflect greater accuracy because it indicates that a [false negative](#falseNegative) is less likely than a [true negative](#trueNegative).
+The formula for calculating the negative likelihood ratio is in Equation \@ref(eq:negativeLikelihoodRatio).
 
 $$
 \begin{aligned}
@@ -2796,6 +2844,7 @@ negativeLikelihoodRatioValue
 As presented in Equation \@ref(eq:bayes5), the posttest (or posterior) odds are equal to the [pretest odds](#pretestOdds) multiplied by the likelihood ratio.
 The posttest odds and [posttest probability](#posttestProbability) can be useful to calculate when the [pretest probability](#baseRate) is different from the [pretest probability](#baseRate) (or prevalence) of the classification.
 For instance, you might use a different [pretest probability](#baseRate) if a test result is already known and you want to know the updated [posttest probability](#posttestProbability) after conducting a second test.
+The formula for calculating posttest odds is in Equation \@ref(eq:posttestOdds).
 
 $$
 \begin{aligned}
@@ -2861,7 +2910,7 @@ posttestOdds(pretestProb = baseRate(TP = TPvalue,
 
 The posttest probability is the probability of having the disorder given a test result.
 When the [base rate](#baseRate) is used as the [pretest probability](#baseRate), the posttest probability given a positive test is equal to [positive predictive value](#ppv).
-To convert odds to a probability, divide the odds by one plus the odds.
+To convert odds to a probability, divide the odds by one plus the odds, as is in Equation \@ref(eq:posttestProbability).
 
 $$
 \begin{aligned}
@@ -2947,6 +2996,7 @@ The probability of having the condition if the person has a positive test on Tes
 
 $d'$ ($d$ prime) is an index of sensitivity from [signal detection theory](#sdt), as described by [@Stanislaw1999].
 Higher values reflect greater accuracy.
+The formula for calculating $d'$ is in Equation \@ref(eq:dPrimeSDT).
 
 $$
 d' = z(\text{hit rate}) − z(\text{false alarm rate})
@@ -2973,6 +3023,7 @@ dPrimeValue
 
 $A$ is a non-parametric index of sensitivity from [signal detection theory](#sdt), as described by [@Zhang2005].
 Higher values reflect greater accuracy.
+The formula for calculating $A$ is in Equation \@ref(eq:aSDT).
 
 https://sites.google.com/a/mtu.edu/whynotaprime/
 
@@ -3009,6 +3060,7 @@ Avalue
 
 $\beta$ is an index of bias from [signal detection theory](#sdt), as described by [@Stanislaw1999].
 Smaller values reflect greater accuracy.
+The formula for calculating $\beta$ is in Equation \@ref(eq:betaSDT).
 
 $$
 \beta =
@@ -3035,6 +3087,7 @@ betaValue
 
 $c$ is an index of bias from [signal detection theory](#sdt), as described by [@Stanislaw1999].
 Smaller values reflect greater accuracy.
+The formula for calculating $c$ is in Equation \@ref(eq:cSDT).
 
 $$
 c =
@@ -3061,6 +3114,7 @@ cValue
 
 $b$ is a non-parametric index of bias from [signal detection theory](#sdt), as described by [@Zhang2005].
 Smaller values reflect greater accuracy.
+The formula for calculating $b$ is in Equation \@ref(eq:bSDT).
 
 $$
 b = 
@@ -3151,6 +3205,7 @@ According to the decision theory approach, the optimal cutoff is the cutoff with
 The overall utility of a specific cutoff value is a utilities-weighted sum of the probabilities of the four decision-making outcomes ([hits](#truePositive), [misses](#falseNegative), [correct rejections](#trueNegative), [false alarms](#falsePositive)).
 That is, overall utility is the sum of the product of the probability of a particular outcome (e.g., $\text{BR} \times \text{TP rate}$) and the utility of that outcome (e.g., how much we value [TPs](#truePositive) relative to other outcomes).
 Higher values reflect greater utility, so you would pick the cutoff with the highest overall utility.
+The formula for calculating overall utility is in Equation \@ref(eq:overallUtility):
 
 $$
 \begin{aligned}
@@ -3203,6 +3258,7 @@ If the utility ratio value is one, it indicates that identifying negative cases 
 Values above one indicate greater relative importance of identifying negative cases than positive cases.
 Values below one indicate greater relative importance of identifying positive cases than negative cases.
 Values of one indicate that you are maximizing percent accuracy.
+The formula for calculating the utility ratio is in Equation \@ref(eq:utilityRatio):
 
 $$
 \text{Utility Ratio} = \frac{U_\text{CR} - U_\text{FA}}{U_\text{H} - U_\text{M}}
@@ -3239,6 +3295,8 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
 
 ##### Formula from @Treat2012 {#IgainTreat2012}
 
+The formula from @Treat2012 for calculating information gain is in Equation \@ref(eq:informationGain1):
+
 $$
 \begin{aligned}
   I_\text{gain} = \ & (\text{BR})(\text{HR})\bigg[\log_2\bigg(\frac{\text{HR}}{G}\bigg)\bigg] \\
@@ -3268,6 +3326,8 @@ Igain(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue)
 
 ##### Alternative formula from @Metz1973 {#IgainMetz1973}
 
+The alternative formula from @Metz1973 for calculating information gain is in Equation \@ref(eq:informationGain2):
+
 $$
 \begin{aligned}
   I_\text{gain} = \ & p(S|s) \cdot p(s) \cdot log_2\Bigg\{\frac{p(S|s)}{p(S|s) \cdot p(s) + p(S|n)[1 - p(s)]}\Bigg\} \\
@@ -3295,6 +3355,8 @@ Igain2(BR = baseRateValue, HR = sensitivityValue, FAR = falsePositiveRateValue)
 ```
 
 ##### Alternative formula from @Somoza1989 {#IgainSomoza1989}
+
+The alternative formula from @Somoza1989 for calculating information gain is in Equation \@ref(eq:informationGain3):
 
 $$
 \begin{aligned}
@@ -3717,7 +3779,7 @@ accuracyStats$cutoff[which(accuracyStats$informationGain == max(accuracyStats$in
 ## Regression for Prediction of Continuous Outcomes {#regression-prediction}
 
 When predicting a continuous outcome, regression is particularly relevant (or multiple regression, when dealing with multiple predictors).
-Regression takes the following form:
+Regression takes the general form in Equation \@ref(eq:regression):
 
 $$
 y = b_0 + b_1 \cdot x_1 + e
@@ -3824,7 +3886,7 @@ kable(regression3,
 ```
 
 The second measure is not very good—it is exactly twice the value of the first measure.
-This means that there are different prediction equation possibilities that are equally good:
+This means that there are different prediction equation possibilities that are equally good (see Equations in \@ref(eq:multicollinearity):
 
 $$
 \begin{aligned}
@@ -3837,6 +3899,7 @@ $$
   ...
 &= y
 \end{aligned}
+(\#eq:multicollinearity)
 $$
 
 Then, what are the regression coefficients?
