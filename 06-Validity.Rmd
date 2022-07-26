@@ -1138,7 +1138,11 @@ For instance, consider the following observed association:
 
 ```{r}
 cor.test(x = mydataValidity$predictorObservedSEM, y = mydataValidity$criterionObservedSEM)
+```
 
+The observed association can be estimated in [structural equation modeling](#sem) in the `lavaan` package [@R-lavaan] using the following syntax:
+
+```{r}
 observedSEM_syntax <- '
   criterionObservedSEM ~ predictorObservedSEM
   
@@ -1155,7 +1159,14 @@ summary(observedSEM_fit,
         standardized = TRUE,
         rsquare = TRUE)
 ```
-        
+
+```{r, include = FALSE}
+observedSEM_parameters <- parameterEstimates(observedSEM_fit,
+                                             standardized = TRUE)
+
+observedBeta <- observedSEM_parameters[which(observedSEM_parameters$lhs == "criterionObservedSEM" & observedSEM_parameters$rhs == "predictorObservedSEM"), "std.all"]
+```
+
 A path diagram of the observed association is depicted in Figure \@ref(fig:observedSEM).
 
 ```{r observedSEM, out.width = "100%", fig.align = "center", fig.cap = "Observed Association, as Depicted in a Structural Equation Model."}
@@ -1165,7 +1176,10 @@ semPaths(observedSEM_fit,
          edge.label.cex = 2)
 ```
 
-Now consider when we account for the degree of unreliability of each measure:
+Now consider when we account for the degree of unreliability of each measure.
+We can account for the (un)reliability of each measure by specifying the residual errors.
+As described in Section \@ref(exampleFactorModelsFromCorrelationMatrices) of the chapter on [factor analysis](#factor-analysis-PCA), residual errors are equal to $1 - R^2$ of the indicator.
+Thus, we can account for the (un)reliability of each measure by specifying the residual errors as $1 - \text{reliability}^2$, as below:
 
 ```{r}
 # Syntax that specifies the reliability programmatically
@@ -1208,6 +1222,13 @@ summary(disattenuationSEM_fit,
         rsquare = TRUE)
 ```
 
+```{r, include = FALSE}
+disattenuationSEM_parameters <- parameterEstimates(disattenuationSEM_fit,
+                                                   standardized = TRUE)
+
+trueBeta <- disattenuationSEM_parameters[which(disattenuationSEM_parameters$lhs == "criterionLatent" & disattenuationSEM_parameters$rhs == "predictorLatent"), "std.all"]
+```
+
 A path diagram of the true association is depicted in Figure \@ref(fig:disattenuationSEM).
 
 ```{r disattenuationSEM, out.width = "100%", fig.align = "center", fig.cap = "Disattenuation of an Observed Association due to Measurement Error, as Depicted in a Structural Equation Model."}
@@ -1216,6 +1237,8 @@ semPaths(disattenuationSEM_fit,
          layout = "tree2",
          edge.label.cex = 2)
 ```
+
+The observed association ($\beta = `r apa(observedBeta, 2)`$) becomes $\beta = `r apa(trueBeta, 2)`$ when it is disattenuated for [measurement error](#measurementError).
 
 ## Generalizability Theory (G-Theory) {#gTheoryValidity}
 
