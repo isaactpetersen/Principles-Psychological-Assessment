@@ -538,6 +538,7 @@ library("semTools")
 library("psychmeta")
 library("irrCAC")
 library("gtheory")
+library("MOTE")
 library("tidyverse")
 library("tinytex")
 library("knitr")
@@ -667,13 +668,19 @@ cor.test(x = mydata$time1, y = mydata$time2)
 cor(mydata[,c("time1","time2","time3")], use = "pairwise.complete.obs")
 ```
 
+```{r, include = FALSE}
+corValue <- cor.test(x = mydata$time1, y = mydata$time2)$estimate
+```
+
+The *r* value of $`r apa(corValue, 2, leading = FALSE)`$ indicates a strong positive association.
 Figure \@ref(fig:testRetestScatterplot) depicts a scatterplot of the time 1 scores on the x-axis and time 2 scores on the y-axis.
 
 (ref:testRetestScatterplotCaption) Test–retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit.
 
 ```{r testRetestScatterplot, out.width = "100%", fig.align = "center", fig.cap = "(ref:testRetestScatterplotCaption)"}
 plot(mydata$time1, mydata$time2,
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = mydata$time1, y = mydata$time2)$estimate, 2))))
+     main = substitute(paste(italic(r), " = ", x, sep = ""),
+                       list(x = apa(corValue, 2, leading = FALSE))))
 abline(lm(time2 ~ time1, data = mydata), col = "black")
 mydataNoMissing <- na.omit(mydata[,c("time1","time2")])
 lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2), col = "red")
@@ -905,13 +912,14 @@ See Figure \@ref(fig:restrictedRange) for an example of how a correlation coeffi
 
 Here is the correlation without and with restriction of range on $x$ (i.e., $x$ is restricted to values between 55 and 65):
 
-```{r restrictedRange, fig.cap = "Example of correlation without and with range restriction. Filled black points represent the points in common across the two scatterplots.", out.width = "100%", fig.align = "center", fig.width = 10, fig.height = 5}
+```{r restrictedRange, fig.cap = "Example of correlation without and with range restriction. Filled black points represent the points in common across the two scatterplots.", out.width = "100%", fig.align = "center", fig.width = 10, fig.height = 5, echo = FALSE}
 par(mfrow = c(1,2))
 par(mar = c(4, 0, 3, 0), oma = c(0, 4, 0, 0))
 
 #Plot with no restricted range
 plot(mydata$time1, mydata$time3,
-     main = substitute(paste("No range restriction: ", italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = mydata$time1, y = mydata$time3)$estimate, 2))),
+     main = substitute(paste("No range restriction: ", italic(r), " = ", x, sep = ""),
+                       list(x = apa(cor.test(x = mydata$time1, y = mydata$time3)$estimate, 2, leading = FALSE))),
      xlab = "time1",
      ylab = "time3",
      xlim = c(25,85),
@@ -925,7 +933,8 @@ lines(lowess(mydataNoMissing$time1, mydataNoMissing$time3), col = "red")
 #Plot with restricted range
 plot(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
      mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
-     main = substitute(paste("Restricted range for time1 (55-65): ", italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)], y = mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)])$estimate, 2))),
+     main = substitute(paste("Restricted range for time1 (55-65): ", italic(r), " = ", x, sep = ""),
+                       list(x = apa(cor.test(x = mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)], y = mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)])$estimate, 2, leading = FALSE))),
      xlab = "time1",
      ylab = "time3",
      xlim = c(25,85),
@@ -951,11 +960,19 @@ To address these limitations of the coefficient of stability, it is important to
 
 #### Coefficient of Agreement {#agreement}
 
-The intraclass correlation (ICC) can be used to the extent of absolute agreement of scores within a person across time.
+The intraclass correlation (ICC) can be used to evaluate the extent of absolute agreement of scores within a person across time.
+ICC ranges from 0–1, with higher scores indicating greater agreement.
 ICC was estimated using the `psych` package [@R-psych].
 
 ```{r}
 ICC(mydata[,c("time1","time2")], missing = FALSE)
+```
+
+There are various kinds of ICC coefficients.
+To read more about the various types of ICC coefficients, type the following command:
+
+```{r, eval = FALSE}
+?ICC
 ```
 
 #### Coefficient of Repeatability {#repeatability}
@@ -969,7 +986,8 @@ This precise value is based on the fact that 95% of the area under a standard no
 This is based on the quantile of the 2.5th ($`r qnorm(.025)`$) and 97.5th ($`r qnorm(.975)`$) percentile of the standard normal distribution (the 95% confidence interval spans the 92.5th percentile to the 97.5th percentile).
 However, some researchers have rounded $`r qnorm(.975)`$ to 1.96 or to 2 for simplicity.
 
-The smaller the coefficient of repeatability, the more consistent the scores are across time within a person.
+The minimum possible coefficient of repeatability is zero, but there is no theoretical limit on the maximum possible coefficient of repeatability.
+The smaller the coefficient of repeatability (i.e., the closer to zero), the more consistent the scores are across time within a person.
 The coefficient of repeatability is tied to the units of the measure, so how small is considered "good" absolute reliability depends on the measure.
 In general, however, given the same units of measurement, a smaller coefficient of repeatability indicates stronger absolute test–retest reliability.
 
@@ -1067,13 +1085,19 @@ As a result, it is also important to examine other indices of test–retest reli
 
 ```{r}
 bias <- function(measure1, measure2){
-  value <- mean((measure1 - measure2), na.rm = TRUE)
+  value <- mean((measure2 - measure1), na.rm = TRUE)
   
   return(value)
 }
 
 bias(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
+
+```{r, include = FALSE}
+biasValue <- bias(measure1 = mydata$time1, measure2 = mydata$time2)
+```
+
+The bias of `r apa(biasValue, 2)` indicates that the scores at time 2 are somewhat larger, on average, than the scores at time 1.
 
 ##### 95% Limits of Agreement {#loa}
 
@@ -1105,6 +1129,13 @@ lowerLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
 
+```{r, include = FALSE}
+lowerLOAvalue <- lowerLOA(measure1 = mydata$time1, measure2 = mydata$time2)
+uppwerLOAvalue <- upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
+```
+
+The limits of agreement indicate that 95% of scores at time 2 are expected to within $[`r apa(lowerLOAvalue, 2)`, `r apa(uppwerLOAvalue, 2)`]$ of scores at time 1.
+
 ##### Regression Slope {#repeatabilitySlope}
 
 ```{r}
@@ -1128,10 +1159,18 @@ By contrast, Cohen's kappa ($\kappa$) is recommended for categorical variables, 
 #### Continuous Data {#interraterReliability-continuous}
 
 Use intraclass correlation (ICC) for estimating inter-rater reliability of continuous data.
+ICC ranges from 0–1, with higher scores indicating greater agreement.
 ICC was estimated using the `psych` package [@R-psych].
 
 ```{r}
 ICC(mydata[,c("rater1continuous","rater2continuous","rater3continuous")], missing = FALSE)
+```
+
+There are various kinds of ICC coefficients.
+To read more about the various types of ICC coefficients, type the following command:
+
+```{r, eval = FALSE}
+?ICC
 ```
 
 #### Categorical Data {#interraterReliability-catergorical}
@@ -1139,6 +1178,7 @@ ICC(mydata[,c("rater1continuous","rater2continuous","rater3continuous")], missin
 For estimating the inter-rater reliability of categorical data, use Cohen's kappa [@Bakeman2020], Fleiss's kappa, the S index [@Falotico2010], or Gwet's AC1 statistic [@Gwet2008; @Gwet2021a; @Gwet2021b].
 Cohen's kappa was estimated using the `psych` package [@R-psych].
 Fleiss's kappa and Gwet's AC1 statistic were estimated using the `irrCAC` package.
+These estimates of inter-rater reliability range from 0–1, with higher scores indicating greater agreement.
 
 ```{r}
 cohen.kappa(mydata[,c("rater1categorical","rater2categorical","rater3categorical")])
@@ -1180,6 +1220,8 @@ Internal consistency reliability is the consistency of scores across items, that
 Internal consistency is necessary, but insufficient, for establishing the homogeneity or uni-dimensionality of the measure, i.e., that the items on the measure assess the same construct.
 
 There are many examples of internal consistency estimates, including Cronbach's coefficient alpha ($\alpha$), Kuder-Richardson Formula 20 (which is a special case of Cronbach's alpha with dichotomous items), omega coefficients, greatest lower bound, coefficient H, split-half reliability, average inter–item correlation, and average item–total correlation.
+In general, internal consistency ranges from 0–1, with higher scores indicating greater consistency.
+There is no magic cutoff for determining adequate internal consistency; however, values below .70 suggest that the items may not assess the same construct.
 
 Internal consistency can be affected by many factors, such as
 
@@ -1487,6 +1529,7 @@ However, delayed [parallel-forms reliability](#parallelForms-reliability) tends 
 Thus, if we put the different types of reliability in order from low to high, they tend to be (but not always) arranged like this (Equation \@ref(eq:reliabilityOrder)):
 
 $$
+\small
 \text{delayed parallel-forms} < \text{test–retest}, \text{inter-rater} < \text{immediate parallel-forms}, \text{internal consistency}, \text{intra-rater}
 (\#eq:reliabilityOrder)
 $$
@@ -2265,7 +2308,7 @@ However, when samples sizes are small-to-modest, measurement error can actually 
 2. reduced statistical power to detect the effects of interest
 3. failure to replicate findings
 4. [invalid](#validity) measurement for the proposed uses.
-As we described in the chapter on validity in Section \@ref(reliabilityVsValidity), reliability constrains validity.
+As we described in the chapter on [validity](#validity) in Section \@ref(reliabilityVsValidity), reliability constrains [validity](#validity).
 
 These concerns are especially important for individual differences research (e.g., correlational designs) or for when making decisions about individual people based on their scores on measure.
 However, these concerns are also relevant for experimental designs.
