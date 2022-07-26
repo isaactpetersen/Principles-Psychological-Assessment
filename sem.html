@@ -2093,30 +2093,24 @@ div.csl-indent {
 <p>For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="sem.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data with specified correlation in relation to an existing variable (https://stats.stackexchange.com/a/313138/20338)</span></span>
-<span id="cb238-2"><a href="sem.html#cb238-2" aria-hidden="true" tabindex="-1"></a>complement <span class="ot">&lt;-</span> <span class="cf">function</span>(y, rho, x){</span>
-<span id="cb238-3"><a href="sem.html#cb238-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">missing</span>(x)) x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(y)) <span class="co"># Optional: supply a default if `x` is not given</span></span>
-<span id="cb238-4"><a href="sem.html#cb238-4" aria-hidden="true" tabindex="-1"></a>  y.perp <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="fu">lm</span>(x <span class="sc">~</span> y, <span class="at">na.action =</span> na.omit))</span>
-<span id="cb238-5"><a href="sem.html#cb238-5" aria-hidden="true" tabindex="-1"></a>  rho <span class="sc">*</span> <span class="fu">sd</span>(y.perp) <span class="sc">*</span> y <span class="sc">+</span> y.perp <span class="sc">*</span> <span class="fu">sd</span>(y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> rho<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb238-6"><a href="sem.html#cb238-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb238-7"><a href="sem.html#cb238-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb238-8"><a href="sem.html#cb238-8" aria-hidden="true" tabindex="-1"></a>sampleSize <span class="ot">&lt;-</span> <span class="dv">300</span></span>
-<span id="cb238-9"><a href="sem.html#cb238-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb238-10"><a href="sem.html#cb238-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb238-11"><a href="sem.html#cb238-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb238-12"><a href="sem.html#cb238-12" aria-hidden="true" tabindex="-1"></a>measure1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb238-13"><a href="sem.html#cb238-13" aria-hidden="true" tabindex="-1"></a>measure2 <span class="ot">&lt;-</span> measure1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">15</span>)</span>
-<span id="cb238-14"><a href="sem.html#cb238-14" aria-hidden="true" tabindex="-1"></a>measure3 <span class="ot">&lt;-</span> measure1 <span class="sc">+</span> measure2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">15</span>)</span>
-<span id="cb238-15"><a href="sem.html#cb238-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb238-16"><a href="sem.html#cb238-16" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
-<span id="cb238-17"><a href="sem.html#cb238-17" aria-hidden="true" tabindex="-1"></a>v2 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
-<span id="cb238-18"><a href="sem.html#cb238-18" aria-hidden="true" tabindex="-1"></a>v3 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
-<span id="cb238-19"><a href="sem.html#cb238-19" aria-hidden="true" tabindex="-1"></a>v4 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
-<span id="cb238-20"><a href="sem.html#cb238-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb238-21"><a href="sem.html#cb238-21" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v1 <span class="ot">&lt;-</span> v1</span>
-<span id="cb238-22"><a href="sem.html#cb238-22" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v2 <span class="ot">&lt;-</span> v2</span>
-<span id="cb238-23"><a href="sem.html#cb238-23" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v3 <span class="ot">&lt;-</span> v3</span>
-<span id="cb238-24"><a href="sem.html#cb238-24" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v4 <span class="ot">&lt;-</span> v4</span></code></pre></div>
+<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2022</a>)</span> includes a <a href="https://stats.stackexchange.com/a/313138/20338"><code>complement()</code> function</a> that simulates data with a specified correlation in relation to an existing variable.</p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="sem.html#cb238-1" aria-hidden="true" tabindex="-1"></a>sampleSize <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb238-2"><a href="sem.html#cb238-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-3"><a href="sem.html#cb238-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb238-4"><a href="sem.html#cb238-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-5"><a href="sem.html#cb238-5" aria-hidden="true" tabindex="-1"></a>measure1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb238-6"><a href="sem.html#cb238-6" aria-hidden="true" tabindex="-1"></a>measure2 <span class="ot">&lt;-</span> measure1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">15</span>)</span>
+<span id="cb238-7"><a href="sem.html#cb238-7" aria-hidden="true" tabindex="-1"></a>measure3 <span class="ot">&lt;-</span> measure1 <span class="sc">+</span> measure2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">15</span>)</span>
+<span id="cb238-8"><a href="sem.html#cb238-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-9"><a href="sem.html#cb238-9" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
+<span id="cb238-10"><a href="sem.html#cb238-10" aria-hidden="true" tabindex="-1"></a>v2 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
+<span id="cb238-11"><a href="sem.html#cb238-11" aria-hidden="true" tabindex="-1"></a>v3 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
+<span id="cb238-12"><a href="sem.html#cb238-12" aria-hidden="true" tabindex="-1"></a>v4 <span class="ot">&lt;-</span> <span class="fu">complement</span>(PoliticalDemocracy<span class="sc">$</span>y1, .<span class="dv">4</span>)</span>
+<span id="cb238-13"><a href="sem.html#cb238-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-14"><a href="sem.html#cb238-14" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v1 <span class="ot">&lt;-</span> v1</span>
+<span id="cb238-15"><a href="sem.html#cb238-15" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v2 <span class="ot">&lt;-</span> v2</span>
+<span id="cb238-16"><a href="sem.html#cb238-16" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v3 <span class="ot">&lt;-</span> v3</span>
+<span id="cb238-17"><a href="sem.html#cb238-17" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy<span class="sc">$</span>v4 <span class="ot">&lt;-</span> v4</span></code></pre></div>
 </div>
 <div id="addMissingData-sem" class="section level4 hasAnchor" number="7.2.2.2">
 <h4><span class="header-section-number">7.2.2.2</span> Add Missing Data<a href="sem.html#addMissingData-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -2414,7 +2408,7 @@ BIC penalizes model complexity more so than AIC.
 Lower values indicate better fit.</p>
 <p>Chi-square difference tests and CFI can be used to compare two nested models.
 AIC and BIC can be used to compare two non-nested models.</p>
-<p>Criteria for acceptable fit and good fit of SEM models are in <a href="sem.html#tab:semFitIndices">7.1</a>.</p>
+<p>Criteria for acceptable fit and good fit of SEM models are in Table <a href="sem.html#tab:semFitIndices">7.1</a>.</p>
 <table>
 <caption><span id="tab:semFitIndices">Table 7.1: </span> Criteria for Acceptable and Good Fit of Structural Equation Models Based on Fit Indices.</caption>
 <thead>
@@ -4688,24 +4682,24 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <h3><span class="header-section-number">7.12.10</span> Time to completion<a href="sem.html#monteCarloPowerAnalysis-completionTime" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb367"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb367-1"><a href="sem.html#cb367-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaryTime</span>(output)</span></code></pre></div>
 <pre><code>============ Wall Time ============
-  1. Error Checking and setting up data-generation and analysis template:        0.001
-  2. Set combinations of n, pmMCAR, and pmMAR:                                   0.001
-  3. Setting up simulation conditions for each replication:                      0.028
-  4. Total time elapsed running all replications:                             1156.442
-  5. Combining outputs from different replications:                              0.092
+  1. Error Checking and setting up data-generation and analysis template:        0.000
+  2. Set combinations of n, pmMCAR, and pmMAR:                                   0.002
+  3. Setting up simulation conditions for each replication:                      0.022
+  4. Total time elapsed running all replications:                             1137.013
+  5. Combining outputs from different replications:                              0.083
 
 ============ Average Time in Each Replication ============
   1. Data Generation:                                  0.046
   2. Impose Missing Values:                            0.009
   3. User-defined Data-Transformation Function:        0.000
-  4. Main Data Analysis:                               1.861
-  5. Extracting Outputs:                               0.174
+  4. Main Data Analysis:                               1.830
+  5. Extracting Outputs:                               0.171
 
 ============ Summary ============
-  Start Time:                   2022-07-26 18:04:55
-  End Time:                     2022-07-26 18:24:12
-  Wall (Actual) Time:             1156.564
-  System (Processors) Time:       2303.873
+  Start Time:                   2022-07-26 18:24:48
+  End Time:                     2022-07-26 18:43:45
+  Wall (Actual) Time:             1137.120
+  System (Processors) Time:       2265.263
   Units:                        seconds</code></pre>
 </div>
 <div id="monteCarloPowerAnalysis-fitIndicesCutoffs" class="section level3 hasAnchor" number="7.12.11">
