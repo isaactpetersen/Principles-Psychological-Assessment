@@ -1692,8 +1692,9 @@ summary(twoPLModel_cfa_fit,
         rsquare = TRUE,
         standardized = TRUE)
 
-fitMeasures(twoPLModel_cfa_fit, fit.measures = c("chisq", "df", "pvalue",
-                                                 "rmsea", "cfi", "tli", "srmr"))
+fitMeasures(twoPLModel_cfa_fit,
+            fit.measures = c("chisq", "df", "pvalue",
+                             "rmsea", "cfi", "tli", "srmr"))
 
 residuals(twoPLModel_cfa_fit, type = "cor")
 
@@ -1790,6 +1791,58 @@ Plot of item [information](#irtReliability) as a function of a person's level on
 ```{r, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Item Information Functions From Two-Parameter Multi-Dimensional Item Response Theory Model."}
 plot(twoPL2FactorModel, type = "infotrace", facet_items = FALSE)
 plot(twoPL2FactorModel, type = "infotrace", facet_items = TRUE)
+```
+
+### CFA {#irt-twoPLcfa}
+
+A two-parameter multi-dimensional model can also be fit in a [CFA](#cfa) framework, sometimes called item factor analysis.
+The item factor analysis models were fit in the `lavaan` package [@R-lavaan].
+
+```{r}
+twoPLModelMultidimensional_cfa <- '
+# Factor Loadings (i.e., discrimination parameters)
+latent1 =~ loading1*Item.1 + loading4*Item.4 + loading5*Item.5
+latent2 =~ loading2*Item.2 + loading3*Item.3
+
+# Item Thresholds (i.e., difficulty parameters)
+Item.1 | threshold1*t1
+Item.2 | threshold2*t1
+Item.3 | threshold3*t1
+Item.4 | threshold4*t1
+Item.5 | threshold5*t1
+'
+
+twoPLModelMultidimensional_cfa_fit = sem(model = twoPLModelMultidimensional_cfa,
+                         data = mydataIRT,
+                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4",
+                                     "Item.5"),
+                         mimic = "Mplus",
+                         estimator = "WLSMV",
+                         std.lv = TRUE,
+                         parameterization = "theta")
+
+summary(twoPLModelMultidimensional_cfa_fit,
+        fit.measures = TRUE,
+        rsquare = TRUE,
+        standardized = TRUE)
+
+fitMeasures(twoPLModelMultidimensional_cfa_fit,
+            fit.measures = c("chisq", "df", "pvalue",
+                             "rmsea", "cfi", "tli", "srmr"))
+
+residuals(twoPLModelMultidimensional_cfa_fit, type = "cor")
+
+modificationindices(twoPLModelMultidimensional_cfa_fit, sort. = TRUE)
+
+compRelSEM(twoPLModelMultidimensional_cfa_fit)
+AVE(twoPLModelMultidimensional_cfa_fit)
+```
+
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of Two-Parameter Multi-Dimensional Logistic Model."}
+semPaths(twoPLModelMultidimensional_cfa_fit,
+         what = "std",
+         layout = "tree2",
+         edge.label.cex = 1.5)
 ```
 
 ## Three-Parameter Logistic Model {#irt-threePL}
