@@ -205,7 +205,7 @@ library("here")
 library("tinytex")
 ```
 
-## Example of Uni-dimensional CAT {#exampleUnidimensionalCAT}
+## Example of Uni-Dimensional CAT {#exampleUnidimensionalCAT}
 
 The computerized adaptive test (CAT) was fit using the `mirtCAT` package [@R-mirtCAT].
 The example of a CAT with uni-dimensional data is adapted from `mirtCAT` documentation: http://philchalmers.github.io/mirtCAT/html/unidim-exampleGUI.html
@@ -346,6 +346,47 @@ plot(result, SE = 1)
 
 ```{r cat95PctCI, out.width = "100%", fig.align = "center", fig.cap = "(ref:cat95PctCICaption)"}
 plot(result, SE = qnorm(.975))
+```
+
+## Example with Pre-Existing IRT Model
+
+You can create a computerized adaptive test from any item response theory model.
+For instance, below I create a matrix with the questions and response options from the [graded response model](#irt-gradedResponseModel) that I fit in Section in Chapter \@ref(irt) on [item response theory](#irt).
+
+```{r}
+numItemsGRM <- nrow(coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)$items)
+
+names(Science)
+
+questionsGRM <- c("Science and technology are making our lives healthier, easier and more comfortable.",
+                  "The application of science and new technology will make work more interesting.",
+                  "Thanks to science and technology, there will be more opportunities for the future generations.",
+                  "The benefits of science are greater than any harmful effect it may have.")
+
+responseOptionsGRM <- c("strongly disagree", "disagree to some extent", "agree to some extent", "strongly agree")
+
+numResponseOptionsGRM <- length(responseOptionsGRM)
+
+choicesGRM <- matrix("a", numItemsGRM, numResponseOptionsGRM)
+
+for(i in 1:numItemsGRM){
+  choicesGRM[i,] <- responseOptionsGRM
+}
+
+dfGRM <- data.frame(Questions = questionsGRM,
+                    Option = choicesGRM,
+                    Type = "radio")
+```
+
+Then you can create the computerized adaptive model:
+
+```{r, eval = FALSE}
+resultGRM <- mirtCAT(dfGRM,
+                     gradedResponseModel,
+                     start_item = "MI",
+                     method = "EAP",
+                     criteria = "MI",
+                     design = list(min_SEM = minimum_SEM))
 ```
 
 ## Conclusion {#conclusion-cat}
