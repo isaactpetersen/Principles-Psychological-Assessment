@@ -225,7 +225,7 @@ d <- matrix(rnorm(nitems, mean = 0, sd = 1))
 pars <- data.frame(a1 = a, d = d, g = 0.2)
 ```
 
-### Fit IRT model {#fitIRTmodel-cat}
+### Fit IRT Model {#fitIRTmodel-cat}
 
 ```{r irtModel, cache = TRUE, cache.extra = list(getRversion(), packageVersion("mirt"), packageVersion("mirtCAT")), cache.comments = FALSE, dependson = "irtParameters"}
 mod <- generate.mirt_object(pars, "3PL")
@@ -275,7 +275,7 @@ itemplot(object = mod, item = "Item.16", "infotrace")
 itemplot(object = mod, item = "Item.53", "infotrace")
 ```
 
-### Create math items {#createMathItems-cat}
+### Create Math Items {#createMathItems-cat}
 
 ```{r mathItems, cache = TRUE, cache.comments = FALSE, dependson = "irtParameters"}
 questions <- answers <- character(nitems)
@@ -299,7 +299,7 @@ df <- data.frame(Questions = questions,
                  Type = "radio")
 ```
 
-### Run computerized adaptive test (CAT) {#runCAT}
+### Run Computerized Adaptive Test (CAT) {#runCAT}
 
 Set the minimum standard error of measurement for the latent trait (theta; $\theta$) that must be reached before stopping the CAT.
 You can lengthen the CAT by lowering the minimum standard error of measurement, or can shorten the CAT by raising the minimum standard error of measurement.
@@ -327,7 +327,7 @@ load(here("Data", "cat.rdata"))
 RNGkind("default", "default", "default")
 ```
 
-### CAT results {#catResults}
+### CAT Results {#catResults}
 
 ```{r}
 print(result)
@@ -348,9 +348,12 @@ plot(result, SE = 1)
 plot(result, SE = qnorm(.975))
 ```
 
-## Example with Pre-Existing IRT Model
+## Example with Pre-Existing IRT Model {#cat-preexisting}
 
 You can create a computerized adaptive test from any item response theory model.
+
+### Create Items {#cat-createItems}
+
 For instance, below I create a matrix with the questions and response options from the [graded response model](#irt-gradedResponseModel) that I fit in Section in Chapter \@ref(irt) on [item response theory](#irt).
 
 ```{r}
@@ -378,7 +381,9 @@ dfGRM <- data.frame(Questions = questionsGRM,
                     Type = "radio")
 ```
 
-Then you can create the computerized adaptive model:
+### Run Computerized Adaptive Test {#cat-runModel}
+
+Then you can create and run the computerized adaptive model:
 
 ```{r, eval = FALSE}
 resultGRM <- mirtCAT(dfGRM,
