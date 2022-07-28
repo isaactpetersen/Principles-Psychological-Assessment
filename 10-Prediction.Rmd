@@ -1069,7 +1069,7 @@ These accuracy estimates depend on the unit of measurement and therefore cannot 
 
 ##### Mean Error {#meanError}
 
-Here, "error" ($e$) is the difference between the predicted and observed value.
+Here, "error" ($e$) is the difference between the predicted and observed value for a given individual ($i$).
 Mean error (also known as bias, see Section \@ref(blandAltmanBias)) is the mean difference between the predicted and observed values across individuals ($i$), that is, the mean of the errors across individuals ($e_i$).
 Values closer to zero reflect greater accuracy.
 If mean error is above zero, it indicates that predicted values are, on average, greater than observed values (i.e., over-estimating errors).
@@ -1129,7 +1129,7 @@ meanAbsoluteErrorValue <- meanAbsoluteError(mydataSDT$testScore, mydataSDT$disor
 
 ##### Mean Squared Error (MSE) {#meanSquaredError}
 
-Smaller values (closer to zero) reflect greater accuracy.
+Smaller mean squared error (MSE) values (closer to zero) reflect greater accuracy.
 The formula for mean squared error is in Equation \@ref(eq:meanSquaredError):
 
 $$
@@ -1155,7 +1155,7 @@ meanSquaredErrorValue <- meanSquaredError(mydataSDT$testScore, mydataSDT$disorde
 
 ##### Root Mean Squared Error (RMSE) {#rootMeanSquaredError}
 
-Smaller values (closer to zero) reflect greater accuracy.
+Smaller root mean squared error (RMSE) values (closer to zero) reflect greater accuracy.
 RMSE penalizes larger errors more so than MAE does.
 The formula for root mean squared error is in Equation \@ref(eq:rootMeanSquaredError):
 
@@ -1186,7 +1186,7 @@ The estimates of prediction accuracy described in this section are intended to b
 
 ##### Mean Percentage Error (MPE) {#meanPercentageError}
 
-Values closer to zero reflect greater accuracy.
+Mean percentage error (MPE) values closer to zero reflect greater accuracy.
 The formula for percentage error is in Equation \@ref(eq:percentageError):
 
 $$
@@ -1233,7 +1233,7 @@ meanPercentageErrorValue <- meanPercentageError(mydataSDT$testScore, mydataSDT$d
 
 ##### Mean Absolute Percentage Error (MAPE) {#meanAbsolutePercentageError}
 
-Smaller Values (closer to zero) reflect greater accuracy.
+Smaller mean absolute percentage error (MAPE) Values (closer to zero) reflect greater accuracy.
 The formula for mean absolute percentage error is in Equation \@ref(eq:meanAbsolutePercentageError):
 
 $$
@@ -1270,7 +1270,7 @@ meanAbsolutePercentageErrorValue <- meanAbsolutePercentageError(mydataSDT$testSc
 
 ##### Symmetric Mean Absolute Percentage Error (sMAPE) {#symmetricMeanAbsolutePercentageError}
 
-Smaller values (closer to zero) reflect greater accuracy.
+Smaller symmetric mean asbolute percentage error (sMAPE) values (closer to zero) reflect greater accuracy.
 The formula for symmetric mean absolute percentage error is in Equation \@ref(eq:symmetricMeanAbsolutePercentageError):
 
 $$
@@ -1409,6 +1409,7 @@ rootMeanSquaredLogAccuracyRatioValue <- rootMeanSquaredLogAccuracyRatio(mydataSD
 
 The coefficient of determination ($R^2$) is a general index of accuracy that combines both [discrimination](#discrimination) and [calibration](#calibration).
 It reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions: $R^2 = \frac{\text{variance explained in }Y}{\text{total variance in }Y}$.
+Larger values indicate greater accuracy.
 
 $R^2$ is commonly estimated in multiple regression, in which multiple predictors are allowed to predict one outcome.
 Multiple regression can be conceptualized with overlapping circles in what is called a [Ballantine graph](https://www.andrewheiss.com/blog/2021/08/21/r2-euler).
@@ -1428,16 +1429,20 @@ summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
 rSquaredValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
 ```
 
-The predictor (`testScore`) explains $`r round(rSquaredValue * 100, 2)`%$ of the variance $(R^2 = `r round(rSquaredValue, 2)`)$ in the outcome (`disorder` status).
+The predictor (`testScore`) explains $`r round(rSquaredValue * 100, 2)`$% of the variance $(R^2 = `r round(rSquaredValue, 2, leading = FALSE)`)$ in the outcome (`disorder` status).
 
 ###### Adjusted $R^2$ ($R^2_{adj}$) {#adjustedRsquared}
 
+Adjusted $R^2$ is similar to the [coefficient of determination](#coefficientOfDetermination), but it accounts for the number of predictors included in the regression model.
+Adjusted $R^2$ reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions over and above what would be expected to be accounted for by chance, given the number of predictors in the model.
+Larger values indicate greater accuracy.
 The formula for adjusted $R^2$ is in Equation \@ref(eq:adjustedRSquared):
 
 $$
 R^2_{adj} = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}
 (\#eq:adjustedRSquared)
 $$
+
 where $p$ is the number of predictors in the model, and $n$ is the sample size.
 
 ```{r}
@@ -1448,9 +1453,12 @@ summary(lm(disorder ~ testScore, data = mydataSDT))$adj.r.squared
 rSquaredAdjValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$adj.r.squared
 ```
 
+Adjusted $R^2$ is described further in Section \@ref(pseudoPrediction).
+
 ###### Predictive $R^2$ {#predictiveRsquared}
 
 Predictive $R^2$ is described here: https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/.
+Larger values indicate greater accuracy.
 
 ```{r}
 #predictive residual sum of squares (PRESS)
@@ -1510,6 +1518,7 @@ aucValue <- rocCurve$auc
 #### Coefficient of Predictive Ability (CPA) {#CPA}
 
 The coefficient of predictive ability (CPA) is a generalization of [AUC](#auc) to handle non-binary outcomes including ordinal and continuous outcomes [@Gneiting2020].
+Larger values reflect greater accuracy.
 It was calculated using the `uroc` package [@Gneiting2020].
 
 ```{r}
@@ -1520,6 +1529,7 @@ cpa(response = cpaNoMissing$continuousOutcome, predictor = cpaNoMissing$testScor
 #### Spearman's Rho ($\rho$) Rank Correlation {#spearmanRho}
 
 When the coefficient of predictive ability is applied to an ordinal or continuous outcome, it is linearly related to Spearman's rho ($\rho$) rank correlation [@Gneiting2020].
+Larger values reflect greater accuracy.
 Spearman's rho was estimated in the `rms` package [@R-rms].
 
 ```{r}
@@ -1531,6 +1541,7 @@ orm(continuousOutcome ~ testScore, data = mydataSDT)$stats["rho"]
 #### Somers' $D_{xy}$ Rank Correlation {#somersD}
  
 Somers $D_{xy}$ is an index of [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].
+Larger values reflect greater accuracy.
 Somers' $D_{xy}$ was estimated in the `rms` package [@R-rms].
 
 ```{r}
@@ -1542,6 +1553,7 @@ rms::validate(lrm(continuousOutcome ~ testScore, data = mydataSDT, x = TRUE, y =
 #### Kendall's Tau-a ($\tau_A$) Rank Correlation {#kendallTau}
 
 Kendall's tau-a ($\tau_A$) is an index of the [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].
+Larger values reflect greater accuracy.
 Kendall's tau-a was estimated in the `rms` package [@R-rms].
 
 ```{r}
@@ -1554,6 +1566,7 @@ lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Tau-a"]
 
 The $c$ index, also called the concordance probability, is a generalization of the area under the [ROC curve](#roc) that applies to a continuous outcome [@Harrell2015].
 The $c$ index is the proportion of all pairs of predicted-actual values whose actual value can be ordered such that the pair with the higher predicted value is the one who had the higher actual value.
+Larger values reflect greater accuracy.
 The Brown–Hollander–Korwar nonparametric test of association was estimated in the `rms` package [@R-rms].
 
 ```{r}
@@ -1563,6 +1576,7 @@ lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["C"]
 #### Effect Size ($\beta$) of Regression {#standardizedRegressionCoefficient}
 
 The effect size of a predictor, i.e., the standardized regression coefficient called beta ($\beta$), is a general index of [discrimination accuracy](#discrimination) for a continuous outcome.
+Larger values reflect greater accuracy.
 We can obtain standardized regression coefficients by standardizing the predictors and outcome using the `scale()` function in R.
 
 $\beta$:
@@ -2116,7 +2130,7 @@ baseRateValue <- baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue
 
 ### Pretest Odds {#pretestOdds}
 
-The pretest odds of a classification can be calculated using the pretest probability (i.e., [base rate](#baseRate)).
+The pretest odds of a classification can be estimated using the pretest probability (i.e., [base rate](#baseRate)).
 To convert a probability to odds, divide the probability by one minus that probability, as in Equation \@ref(eq:pretestOdds).
 
 $$
@@ -2167,7 +2181,7 @@ Percent accuracy has several problems.
 First, it treats all errors ([FP](#falsePositive) and [FN](#falseNegative)) as equally important.
 However, in practice, it is rarely the case that [false positives](#falsePositive) and [false negatives](#falseNegative) are equally important.
 Second, percent accuracy can be misleading because it is highly influenced by [base rates](#baseRate).
-You can have a high percent accuracy by predicting from the [base rates](#baseRate) and saying that no one has the characteristic (if the [base rates](#baseRate) is low) or that everyone has the characteristic (if the [base rates](#baseRate) is high).
+You can have a high percent accuracy by predicting from the [base rate](#baseRate) and saying that no one has the characteristic (if the [base rate](#baseRate) is low) or that everyone has the characteristic (if the [base rate](#baseRate) is high).
 Thus, it is also important to consider other aspects of accuracy.
 
 $$
@@ -3182,8 +3196,8 @@ probGivenTestA
 probGivenTestAthenB
 ```
 
-The probability of having the condition if a person has a positive test on Test A is $`r apa(probGivenTestA * 100, decimals = 1)`%$.
-The probability of having the condition if the person has a positive test on Test B after having a positive test on Test A is $`r apa(probGivenTestAthenB * 100, decimals = 1)`%$.
+The probability of having the condition if a person has a positive test on Test A is $`r apa(probGivenTestA * 100, decimals = 1)`$%.
+The probability of having the condition if the person has a positive test on Test B after having a positive test on Test A is $`r apa(probGivenTestAthenB * 100, decimals = 1)`$%.
 
 ### $d'$ Sensitivity from Signal Detection Theory {#dPrimeSDT}
 
@@ -3375,7 +3389,7 @@ The mean difference between predicted values versus expected values at a given c
 It is called "calibration-in-the-small" (as opposed to calibration-in-the-large, which spans all cutoffs).
 Values closer to zero reflect greater accuracy.
 Values above zero indicate that the predicted values are, on average, greater than the observed values.
-Values below zero indicate that the observed values are, on average, greater than predicted values.
+Values below zero indicate that the observed values are, on average, greater than the predicted values.
 
 ```{r, fig.show = "hide"}
 miscalibration <- function(predicted, actual, cutoff, bins = 10){
