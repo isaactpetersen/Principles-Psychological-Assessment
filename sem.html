@@ -2124,11 +2124,12 @@ There is nothing special about this particular seed.</p>
 <div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="sem.html#cb239-1" aria-hidden="true" tabindex="-1"></a>measure1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb239-2"><a href="sem.html#cb239-2" aria-hidden="true" tabindex="-1"></a>measure2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb239-3"><a href="sem.html#cb239-3" aria-hidden="true" tabindex="-1"></a>measure3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb239-4"><a href="sem.html#cb239-4" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">lapply</span>(PoliticalDemocracy,</span>
-<span id="cb239-5"><a href="sem.html#cb239-5" aria-hidden="true" tabindex="-1"></a>                                           <span class="cf">function</span>(cc) cc[ <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">NA</span>),</span>
-<span id="cb239-6"><a href="sem.html#cb239-6" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.9</span>, <span class="fl">0.1</span>),</span>
-<span id="cb239-7"><a href="sem.html#cb239-7" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">size =</span> <span class="fu">length</span>(cc),</span>
-<span id="cb239-8"><a href="sem.html#cb239-8" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">replace =</span> <span class="cn">TRUE</span>)]))</span></code></pre></div>
+<span id="cb239-4"><a href="sem.html#cb239-4" aria-hidden="true" tabindex="-1"></a>PoliticalDemocracy <span class="ot">&lt;-</span> </span>
+<span id="cb239-5"><a href="sem.html#cb239-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(<span class="fu">lapply</span>(PoliticalDemocracy,</span>
+<span id="cb239-6"><a href="sem.html#cb239-6" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">function</span>(cc) cc[ <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">NA</span>),</span>
+<span id="cb239-7"><a href="sem.html#cb239-7" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.9</span>, <span class="fl">0.1</span>),</span>
+<span id="cb239-8"><a href="sem.html#cb239-8" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">size =</span> <span class="fu">length</span>(cc),</span>
+<span id="cb239-9"><a href="sem.html#cb239-9" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">replace =</span> <span class="cn">TRUE</span>)]))</span></code></pre></div>
 </div>
 <div id="combineData-sem" class="section level4 hasAnchor" number="7.2.2.3">
 <h4><span class="header-section-number">7.2.2.3</span> Combine data into data frame<a href="sem.html#combineData-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -2486,7 +2487,7 @@ For instance, you could use <a href="factor-analysis-PCA.html#cfa">CFA</a> to te
 In the <a href="sem.html#measurementModel-sem">measurement model</a> below, I present a simple one-factor model with three measures.
 The <a href="sem.html#measurementModel-sem">measurement model</a> is what we settle on as the estimation of each construct before we add the <a href="sem.html#structuralModel-sem">structural component</a> to estimate the relations among latent variables.
 Basically, we add the <a href="sem.html#structuralModel-sem">structural component</a> onto the <a href="sem.html#measurementModel-sem">measurement model</a>.
-In Section <a href="sem.html#cfa-sem">7.3.3</a>, I present a <a href="factor-analysis-PCA.html#cfa">CFA model</a> with multiple latent factors.</p>
+In Section <a href="sem.html#cfaExample-sem">7.9</a>, I present a <a href="factor-analysis-PCA.html#cfa">CFA model</a> with multiple latent factors.</p>
 <p>The measurement models were fit in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan" role="doc-biblioref">Rosseel et al., 2022</a>)</span>.</p>
 <div id="measurementModelSyntax-sem" class="section level3 hasAnchor" number="7.8.1">
 <h3><span class="header-section-number">7.8.1</span> Specify the model<a href="sem.html#measurementModelSyntax-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -2557,6 +2558,12 @@ In Section <a href="sem.html#cfa-sem">7.3.3</a>, I present a <a href="factor-ana
 </div>
 <div id="measurementModelOutput-sem" class="section level3 hasAnchor" number="7.8.3">
 <h3><span class="header-section-number">7.8.3</span> Display summary output<a href="sem.html#measurementModelOutput-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of data points, thus leaving zero degrees of freedom.
+In the model, all three indicators load strongly on the latent factor (measure 1: <span class="math inline">\(\beta = 0.65\)</span>; measure 2: <span class="math inline">\(\beta = 0.75\)</span>; measure 3: <span class="math inline">\(\beta = 1.06\)</span>).
+Thus, the loadings of this measurement model would be consistent with a <a href="constructs.html#reflectiveConstruct">reflective latent construct</a>.
+In terms of interpretation, all three indicators loaded positively on the latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.
+However, one of the estimated observed variances is negative, so the model is not able to be estimated accurately.
+Thus, we would need to make additional adjustments in order to estimate the model.</p>
 <div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="sem.html#cb277-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(measurementModelFit,</span>
 <span id="cb277-2"><a href="sem.html#cb277-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb277-3"><a href="sem.html#cb277-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
@@ -2741,22 +2748,27 @@ R-Square:
 <div id="measurementModelFitCriteria-sem" class="section level3 hasAnchor" number="7.8.4">
 <h3><span class="header-section-number">7.8.4</span> Estimates of model fit<a href="sem.html#measurementModelFitCriteria-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>You can extract specific fit indices using the following syntax:</p>
-<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="sem.html#cb281-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(measurementModelFit,</span>
-<span id="cb281-2"><a href="sem.html#cb281-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
-<span id="cb281-3"><a href="sem.html#cb281-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
-<span id="cb281-4"><a href="sem.html#cb281-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
-<span id="cb281-5"><a href="sem.html#cb281-5" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
-<span id="cb281-6"><a href="sem.html#cb281-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="sem.html#cb281-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
+<span id="cb281-2"><a href="sem.html#cb281-2" aria-hidden="true" tabindex="-1"></a>  measurementModelFit,</span>
+<span id="cb281-3"><a href="sem.html#cb281-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb281-4"><a href="sem.html#cb281-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
+<span id="cb281-5"><a href="sem.html#cb281-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
+<span id="cb281-6"><a href="sem.html#cb281-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;baseline.chisq&quot;</span>,<span class="st">&quot;baseline.df&quot;</span>,<span class="st">&quot;baseline.pvalue&quot;</span>,</span>
+<span id="cb281-7"><a href="sem.html#cb281-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
+<span id="cb281-8"><a href="sem.html#cb281-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
 <pre><code>               chisq                   df               pvalue 
-                   0                    0                   NA 
+               0.000                0.000                   NA 
         chisq.scaled            df.scaled        pvalue.scaled 
-                   0                    0                   NA 
-chisq.scaling.factor                rmsea                  cfi 
-                  NA                    0                    1 
+               0.000                0.000                   NA 
+chisq.scaling.factor       baseline.chisq          baseline.df 
+                  NA              487.311                3.000 
+     baseline.pvalue                rmsea                  cfi 
+               0.000                0.000                1.000 
                  tli                 srmr         rmsea.robust 
-                   1                    0                    0 
+               1.000                0.000                0.000 
           cfi.robust           tli.robust 
-                   1                    1 </code></pre>
+               1.000                1.000 </code></pre>
+<p>Because the model is just-identified, many fit statistics are not able to be estimated.</p>
 </div>
 <div id="measurementModelResiduals-sem" class="section level3 hasAnchor" number="7.8.5">
 <h3><span class="header-section-number">7.8.5</span> Residuals<a href="sem.html#measurementModelResiduals-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -2804,8 +2816,8 @@ measure1 measure2 measure3
 <span id="cb291-2"><a href="sem.html#cb291-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
 <span id="cb291-3"><a href="sem.html#cb291-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
 <span id="cb291-4"><a href="sem.html#cb291-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-186"></span>
-<img src="Book_files/figure-html/unnamed-chunk-186-1.png" alt="Measurement Model." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-187"></span>
+<img src="Book_files/figure-html/unnamed-chunk-187-1.png" alt="Measurement Model." width="100%" />
 <p class="caption">
 Figure 7.5: Measurement Model.
 </p>
@@ -2816,6 +2828,7 @@ Figure 7.5: Measurement Model.
 <h2><span class="header-section-number">7.9</span> Confirmatory Factor Analysis (CFA)<a href="sem.html#cfaExample-sem" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The <a href="factor-analysis-PCA.html#cfa">confirmatory factor analysis</a> (CFA) models were fit in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan" role="doc-biblioref">Rosseel et al., 2022</a>)</span>.
 The examples were adapted from the <code>lavaan</code> documentation: <a href="http://lavaan.ugent.be/tutorial/cfa.html" class="uri">http://lavaan.ugent.be/tutorial/cfa.html</a></p>
+<p>In this <a href="factor-analysis-PCA.html#cfa">CFA model</a>, we estimate three latent factors with three indicators loading on each latent factor.</p>
 <div id="cfaModelSyntax-sem" class="section level3 hasAnchor" number="7.9.1">
 <h3><span class="header-section-number">7.9.1</span> Specify the model<a href="sem.html#cfaModelSyntax-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="sem.html#cb292-1" aria-hidden="true" tabindex="-1"></a>cfaModel_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
@@ -2899,6 +2912,9 @@ The examples were adapted from the <code>lavaan</code> documentation: <a href="h
 </div>
 <div id="cfaModelOutput-sem" class="section level3 hasAnchor" number="7.9.3">
 <h3><span class="header-section-number">7.9.3</span> Display summary output<a href="sem.html#cfaModelOutput-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this model, all nine indicators load strongly on their respective latent factor.
+Thus, this measurement model would be defensible.
+In terms of interpretation, all indicators load positively on their respective latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.</p>
 <div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="sem.html#cb296-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cfaModelFit,</span>
 <span id="cb296-2"><a href="sem.html#cb296-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb296-3"><a href="sem.html#cb296-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
@@ -3170,18 +3186,25 @@ R-Square:
 </div>
 <div id="cfaModelFitCriteria-sem" class="section level3 hasAnchor" number="7.9.4">
 <h3><span class="header-section-number">7.9.4</span> Estimates of model fit<a href="sem.html#cfaModelFitCriteria-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="sem.html#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(cfaModelFit,</span>
-<span id="cb300-2"><a href="sem.html#cb300-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
-<span id="cb300-3"><a href="sem.html#cb300-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
-<span id="cb300-4"><a href="sem.html#cb300-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
-<span id="cb300-5"><a href="sem.html#cb300-5" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
-<span id="cb300-6"><a href="sem.html#cb300-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
+<p>According to model fit estimates, the model fit is good according to SRMR and acceptable according to CFI, but the model fit is weaker according to RMSEA and TLI.
+Thus, we may want to consider adjustments to improve the model fit.
+In general, we want to make decisions regarding what parameters to estimate based on theory in conjunction with empiricism.</p>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="sem.html#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
+<span id="cb300-2"><a href="sem.html#cb300-2" aria-hidden="true" tabindex="-1"></a>  cfaModelFit,</span>
+<span id="cb300-3"><a href="sem.html#cb300-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb300-4"><a href="sem.html#cb300-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
+<span id="cb300-5"><a href="sem.html#cb300-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
+<span id="cb300-6"><a href="sem.html#cb300-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;baseline.chisq&quot;</span>,<span class="st">&quot;baseline.df&quot;</span>,<span class="st">&quot;baseline.pvalue&quot;</span>,</span>
+<span id="cb300-7"><a href="sem.html#cb300-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
+<span id="cb300-8"><a href="sem.html#cb300-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
 <pre><code>               chisq                   df               pvalue 
               85.306               24.000                0.000 
         chisq.scaled            df.scaled        pvalue.scaled 
               87.132               24.000                0.000 
-chisq.scaling.factor                rmsea                  cfi 
-               0.979                0.092                0.931 
+chisq.scaling.factor       baseline.chisq          baseline.df 
+               0.979              918.852               36.000 
+     baseline.pvalue                rmsea                  cfi 
+               0.000                0.092                0.931 
                  tli                 srmr         rmsea.robust 
                0.896                0.060                0.092 
           cfi.robust           tli.robust 
@@ -3211,6 +3234,10 @@ x1 x2 x3 x4 x5 x6 x7 x8 x9
 </div>
 <div id="cfaModelModIndices-sem" class="section level3 hasAnchor" number="7.9.6">
 <h3><span class="header-section-number">7.9.6</span> Modification indices<a href="sem.html#cfaModelModIndices-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Modification indices indicate potential additional parameters that could be estimated that would improve model fit.
+For instance, the modification indices below indicate a few additional factor loadings (i.e., cross loadings) or correlated residuals that could substantially improve model fit.
+However, it is generally not recommended to blindly estimate additional parameters solely based on modification indices.
+Rather, it is generally advised to consider modification indices in light of theory.</p>
 <div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="sem.html#cb304-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modificationindices</span>(cfaModelFit, <span class="at">sort. =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3239,8 +3266,8 @@ x1 x2 x3 x4 x5 x6 x7 x8 x9
 <span id="cb310-2"><a href="sem.html#cb310-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
 <span id="cb310-3"><a href="sem.html#cb310-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
 <span id="cb310-4"><a href="sem.html#cb310-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-196"></span>
-<img src="Book_files/figure-html/unnamed-chunk-196-1.png" alt="Confirmatory Factor Analysis Model." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-197"></span>
+<img src="Book_files/figure-html/unnamed-chunk-197-1.png" alt="Confirmatory Factor Analysis Model." width="100%" />
 <p class="caption">
 Figure 7.6: Confirmatory Factor Analysis Model.
 </p>
@@ -3248,6 +3275,10 @@ Figure 7.6: Confirmatory Factor Analysis Model.
 </div>
 <div id="cfaModelModification-sem" class="section level3 hasAnchor" number="7.9.10">
 <h3><span class="header-section-number">7.9.10</span> Modify model based on modification indices<a href="sem.html#cfaModelModification-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the model below, I modified the model based on estimating an additional factor loading (assuming the additional factor loading is theoretically supported).
+This could be supported, for instance, if a given test involves considerable skills in both the visual domain and in speed of processing.
+When the same indicator loads simultaneously on two factors, this is called a <em>cross loading</em>.
+Cross loadings can complicate the interpretation of latent factors, as discussed in Section @ref(#factorRotation) of the chapter on <a href="factor-analysis-PCA.html#factor-analysis-PCA">factor analysis</a>.</p>
 <div id="cfaModelModifiedSyntax-sem" class="section level4 hasAnchor" number="7.9.10.1">
 <h4><span class="header-section-number">7.9.10.1</span> Specify the model<a href="sem.html#cfaModelModifiedSyntax-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="sem.html#cb311-1" aria-hidden="true" tabindex="-1"></a>cfaModel2_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
@@ -3590,18 +3621,24 @@ R-Square:
 </div>
 <div id="cfaModelModifiedFitCriteria-sem" class="section level4 hasAnchor" number="7.9.10.4">
 <h4><span class="header-section-number">7.9.10.4</span> Estimates of model fit<a href="sem.html#cfaModelModifiedFitCriteria-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="sem.html#cb317-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(cfaModel2Fit,</span>
-<span id="cb317-2"><a href="sem.html#cb317-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
-<span id="cb317-3"><a href="sem.html#cb317-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
-<span id="cb317-4"><a href="sem.html#cb317-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
-<span id="cb317-5"><a href="sem.html#cb317-5" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
-<span id="cb317-6"><a href="sem.html#cb317-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
+<p>After fitting the additional factor loading, the model fits well according to RMSEA, CFI, and SRMR, and the model fit is acceptable according to TLI.
+Thus, this model could be defensible.</p>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="sem.html#cb317-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
+<span id="cb317-2"><a href="sem.html#cb317-2" aria-hidden="true" tabindex="-1"></a>  cfaModel2Fit,</span>
+<span id="cb317-3"><a href="sem.html#cb317-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb317-4"><a href="sem.html#cb317-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
+<span id="cb317-5"><a href="sem.html#cb317-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
+<span id="cb317-6"><a href="sem.html#cb317-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;baseline.chisq&quot;</span>,<span class="st">&quot;baseline.df&quot;</span>,<span class="st">&quot;baseline.pvalue&quot;</span>,</span>
+<span id="cb317-7"><a href="sem.html#cb317-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
+<span id="cb317-8"><a href="sem.html#cb317-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
 <pre><code>               chisq                   df               pvalue 
               52.382               23.000                0.000 
         chisq.scaled            df.scaled        pvalue.scaled 
               51.725               23.000                0.001 
-chisq.scaling.factor                rmsea                  cfi 
-               1.013                0.065                0.967 
+chisq.scaling.factor       baseline.chisq          baseline.df 
+               1.013              918.852               36.000 
+     baseline.pvalue                rmsea                  cfi 
+               0.000                0.065                0.967 
                  tli                 srmr         rmsea.robust 
                0.948                0.041                0.065 
           cfi.robust           tli.robust 
@@ -3636,8 +3673,8 @@ x4 x5 x6 x1 x2 x3 x9 x7 x8
 <span id="cb321-2"><a href="sem.html#cb321-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
 <span id="cb321-3"><a href="sem.html#cb321-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
 <span id="cb321-4"><a href="sem.html#cb321-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-202"></span>
-<img src="Book_files/figure-html/unnamed-chunk-202-1.png" alt="Modified Confirmatory Factor Analysis Model." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-203"></span>
+<img src="Book_files/figure-html/unnamed-chunk-203-1.png" alt="Modified Confirmatory Factor Analysis Model." width="100%" />
 <p class="caption">
 Figure 7.7: Modified Confirmatory Factor Analysis Model.
 </p>
@@ -3645,7 +3682,7 @@ Figure 7.7: Modified Confirmatory Factor Analysis Model.
 </div>
 <div id="nestedModelComparison-sem" class="section level4 hasAnchor" number="7.9.10.7">
 <h4><span class="header-section-number">7.9.10.7</span> Compare model fit using chi-square difference test for nested models<a href="sem.html#nestedModelComparison-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>The modified model with the cross-loading and the original model are considered “nested” models.
+<p>The modified model with the cross loading and the original model are considered “nested” models.
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
 Model fit of nested models can be compared with a chi-square difference test.</p>
 <div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="sem.html#cb322-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cfaModelFit, cfaModel2Fit)</span></code></pre></div>
@@ -3654,7 +3691,7 @@ Model fit of nested models can be compared with a chi-square difference test.</p
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Chisq diff"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Df diff"],"name":[6],"type":["int"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"23","2":"7504.566","3":"7619.487","4":"52.38212","5":"NA","6":"NA","7":"NA","_rn_":"cfaModel2Fit"},{"1":"24","2":"7535.490","3":"7646.703","4":"85.30552","5":"160.6117","6":"1","7":"8.317771e-37","_rn_":"cfaModelFit"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>The model with the cross-loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross-loading.</p>
+<p>In this case, the model with the cross loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross loading.</p>
 </div>
 </div>
 </div>
@@ -3662,6 +3699,7 @@ Model fit of nested models can be compared with a chi-square difference test.</p
 <h2><span class="header-section-number">7.10</span> Structural Equation Model (SEM)<a href="sem.html#semModelExample-sem" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The structural equation models were fit in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan" role="doc-biblioref">Rosseel et al., 2022</a>)</span>.
 The examples were adapted from the <code>lavaan</code> documentation: <a href="http://lavaan.ugent.be/tutorial/sem.html" class="uri">http://lavaan.ugent.be/tutorial/sem.html</a></p>
+<p>In this model, we fit a <a href="sem.html#measurementModel-sem">measurement model</a> with three latent factors in addition to a <a href="sem.html#structuralModel-sem">structural model</a> with regressions estimated among the latent factors.</p>
 <div id="semModelSyntax-sem" class="section level3 hasAnchor" number="7.10.1">
 <h3><span class="header-section-number">7.10.1</span> Specify the model<a href="sem.html#semModelSyntax-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="sem.html#cb323-1" aria-hidden="true" tabindex="-1"></a>semModel_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
@@ -3779,6 +3817,7 @@ Thus, the model does not show significant misfit—i.e., the model does not fit 
 The chi-square test labeled “Model Test Baseline Model” refers to the chi-square test of whether the model fits better than the worst-possible fitting model.
 In this case, the <em>p</em>-value of the robust chi-square test in comparison to the worse-possible fitting model is &lt; .05.
 Thus, the model fits significantly better than the worst-possible-fitting model.</p>
+<p>In terms of the model findings, <code>ind60</code> was significantly positively associated with <code>dem60</code>, <code>dem60</code> was significantly positively associated with <code>dem65</code>, and <code>ind60</code> was marginally significantly positively associated with <code>dem65</code>.</p>
 <div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="sem.html#cb327-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(semModelFit,</span>
 <span id="cb327-2"><a href="sem.html#cb327-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb327-3"><a href="sem.html#cb327-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
@@ -4099,18 +4138,22 @@ R-Square:
 </div>
 <div id="semModelFitCriteria-sem" class="section level3 hasAnchor" number="7.10.4">
 <h3><span class="header-section-number">7.10.4</span> Estimates of model fit<a href="sem.html#semModelFitCriteria-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="sem.html#cb331-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(semModelFit,</span>
-<span id="cb331-2"><a href="sem.html#cb331-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
-<span id="cb331-3"><a href="sem.html#cb331-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
-<span id="cb331-4"><a href="sem.html#cb331-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
-<span id="cb331-5"><a href="sem.html#cb331-5" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
-<span id="cb331-6"><a href="sem.html#cb331-6" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="sem.html#cb331-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
+<span id="cb331-2"><a href="sem.html#cb331-2" aria-hidden="true" tabindex="-1"></a>  semModelFit,</span>
+<span id="cb331-3"><a href="sem.html#cb331-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(<span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb331-4"><a href="sem.html#cb331-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
+<span id="cb331-5"><a href="sem.html#cb331-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
+<span id="cb331-6"><a href="sem.html#cb331-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;baseline.chisq&quot;</span>,<span class="st">&quot;baseline.df&quot;</span>,<span class="st">&quot;baseline.pvalue&quot;</span>,</span>
+<span id="cb331-7"><a href="sem.html#cb331-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
+<span id="cb331-8"><a href="sem.html#cb331-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
 <pre><code>               chisq                   df               pvalue 
               38.748               35.000                0.304 
         chisq.scaled            df.scaled        pvalue.scaled 
               42.709               35.000                0.174 
-chisq.scaling.factor                rmsea                  cfi 
-               0.907                0.038                0.993 
+chisq.scaling.factor       baseline.chisq          baseline.df 
+               0.907              601.314               55.000 
+     baseline.pvalue                rmsea                  cfi 
+               0.000                0.038                0.993 
                  tli                 srmr         rmsea.robust 
                0.989                0.046                0.052 
           cfi.robust           tli.robust 
@@ -4170,8 +4213,8 @@ $mean
 <span id="cb341-2"><a href="sem.html#cb341-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
 <span id="cb341-3"><a href="sem.html#cb341-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
 <span id="cb341-4"><a href="sem.html#cb341-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="fl">0.7</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-214"></span>
-<img src="Book_files/figure-html/unnamed-chunk-214-1.png" alt="Structural Equation Model." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-215"></span>
+<img src="Book_files/figure-html/unnamed-chunk-215-1.png" alt="Structural Equation Model." width="100%" />
 <p class="caption">
 Figure 7.8: Structural Equation Model.
 </p>
@@ -4503,8 +4546,8 @@ If you set <span class="math inline">\(m\)</span> to a value greater than zero, 
 <div id="monteCarloPowerAnalysis-missingDataPlot" class="section level4 hasAnchor" number="7.12.4.2">
 <h4><span class="header-section-number">7.12.4.2</span> Plot of extent of missing data specified<a href="sem.html#monteCarloPowerAnalysis-missingDataPlot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="sem.html#cb357-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLogitMiss</span>(percentMissingByVariable)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-219"></span>
-<img src="Book_files/figure-html/unnamed-chunk-219-1.png" alt="Percent Missingness Specified for Each Variable." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-220"></span>
+<img src="Book_files/figure-html/unnamed-chunk-220-1.png" alt="Percent Missingness Specified for Each Variable." width="100%" />
 <p class="caption">
 Figure 7.9: Percent Missingness Specified for Each Variable.
 </p>
@@ -4690,22 +4733,22 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <pre><code>============ Wall Time ============
   1. Error Checking and setting up data-generation and analysis template:        0.000
   2. Set combinations of n, pmMCAR, and pmMAR:                                   0.002
-  3. Setting up simulation conditions for each replication:                      0.064
-  4. Total time elapsed running all replications:                             1882.719
-  5. Combining outputs from different replications:                              0.105
+  3. Setting up simulation conditions for each replication:                      0.026
+  4. Total time elapsed running all replications:                             1306.997
+  5. Combining outputs from different replications:                              0.104
 
 ============ Average Time in Each Replication ============
-  1. Data Generation:                                  0.067
-  2. Impose Missing Values:                            0.012
+  1. Data Generation:                                  0.053
+  2. Impose Missing Values:                            0.010
   3. User-defined Data-Transformation Function:        0.000
-  4. Main Data Analysis:                               3.063
-  5. Extracting Outputs:                               0.246
+  4. Main Data Analysis:                               2.107
+  5. Extracting Outputs:                               0.195
 
 ============ Summary ============
-  Start Time:                   2022-07-28 15:55:11
-  End Time:                     2022-07-28 16:26:34
-  Wall (Actual) Time:             1882.890
-  System (Processors) Time:       3734.917
+  Start Time:                   2022-07-28 17:15:12
+  End Time:                     2022-07-28 17:36:59
+  Wall (Actual) Time:             1307.129
+  System (Processors) Time:       2607.386
   Units:                        seconds</code></pre>
 </div>
 <div id="monteCarloPowerAnalysis-fitIndicesCutoffs" class="section level3 hasAnchor" number="7.12.11">
@@ -4714,8 +4757,8 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <h4><span class="header-section-number">7.12.11.1</span> Plot of cutoffs of fit indices<a href="sem.html#monteCarloPowerAnalysis-fitIndicesCutoffsPlot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>At <span class="math inline">\(\alpha = .05\)</span></p>
 <div class="sourceCode" id="cb369"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb369-1"><a href="sem.html#cb369-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCutoff</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-225"></span>
-<img src="Book_files/figure-html/unnamed-chunk-225-1.png" alt="Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-226"></span>
+<img src="Book_files/figure-html/unnamed-chunk-226-1.png" alt="Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis." width="100%" />
 <p class="caption">
 Figure 7.10: Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis.
 </p>
@@ -4750,8 +4793,8 @@ Figure 7.10: Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis.
 <span id="cb371-11"><a href="sem.html#cb371-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
 <span id="cb371-12"><a href="sem.html#cb371-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb371-13"><a href="sem.html#cb371-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-227"></span>
-<img src="Book_files/figure-html/unnamed-chunk-227-1.png" alt="Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-228"></span>
+<img src="Book_files/figure-html/unnamed-chunk-228-1.png" alt="Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis." width="100%" />
 <p class="caption">
 Figure 7.11: Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis.
 </p>
