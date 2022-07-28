@@ -66,11 +66,12 @@ Adding missing data to dataframes helps make examples more realistic to real-lif
 measure1[c(5,10)] <- NA
 measure2[c(10,15)] <- NA
 measure3[c(10)] <- NA
-PoliticalDemocracy <- as.data.frame(lapply(PoliticalDemocracy,
-                                           function(cc) cc[ sample(c(TRUE, NA),
-                                                                   prob = c(0.9, 0.1),
-                                                                   size = length(cc),
-                                                                   replace = TRUE)]))
+PoliticalDemocracy <- 
+  as.data.frame(lapply(PoliticalDemocracy,
+                       function(cc) cc[ sample(c(TRUE, NA),
+                                               prob = c(0.9, 0.1),
+                                               size = length(cc),
+                                               replace = TRUE)]))
 ```
 
 #### Combine data into data frame {#combineData-sem}
@@ -98,7 +99,7 @@ That is, it is a model that includes latent variables in addition to observed va
 The measurement model is a crucial sub-component of any SEM model.
 A SEM model consists of two components: a measurement model and a structural model.
 The *measurement model* is a [confirmatory factor analysis](#cfa-sem) (CFA) model that identifies how many latent factors are estimated, and which items load onto which latent factor.
-The measurement model can also specify correlated residuals.
+The measurement model can also specify correlated residuals.\index{residuals!correlated}
 Basically, the measurement model specifies your best understanding of the structure of the latent construct(s) given how they were assessed.
 Before fitting the structural component of a SEM, it is important to have a well-fitting measurement model for each construct in the model.
 In Section \@ref(measurementModel-sem), I present an example of a measurement model.
@@ -386,7 +387,7 @@ For instance, you could use [CFA](#cfa) to test whether the variance in several 
 In the [measurement model](#measurementModel-sem) below, I present a simple one-factor model with three measures.
 The [measurement model](#measurementModel-sem) is what we settle on as the estimation of each construct before we add the [structural component](#structuralModel-sem) to estimate the relations among latent variables.
 Basically, we add the [structural component](#structuralModel-sem) onto the [measurement model](#measurementModel-sem).
-In Section \@ref(cfa-sem), I present a [CFA model](#cfa) with multiple latent factors.
+In Section \@ref(cfaExample-sem), I present a [CFA model](#cfa) with multiple latent factors.
 
 The measurement models were fit in the `lavaan` package [@R-lavaan].
 
@@ -453,6 +454,22 @@ measurementModelFit_full <- lavaan(measurementModel_fullSyntax,
 
 ### Display summary output {#measurementModelOutput-sem}
 
+```{r, include = FALSE}
+measurementModelParameters <- parameterEstimates(measurementModelFit,
+                                                 standardized = TRUE)
+
+measurementModelParameters_beta1 <- measurementModelParameters[which(measurementModelParameters$lhs == "latentFactor" & measurementModelParameters$rhs == "measure1"), "std.all"]
+measurementModelParameters_beta2 <- measurementModelParameters[which(measurementModelParameters$lhs == "latentFactor" & measurementModelParameters$rhs == "measure2"), "std.all"]
+measurementModelParameters_beta3 <- measurementModelParameters[which(measurementModelParameters$lhs == "latentFactor" & measurementModelParameters$rhs == "measure3"), "std.all"]
+```
+
+This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of data points, thus leaving zero degrees of freedom.
+In the model, all three indicators load strongly on the latent factor (measure 1: $\beta = `r apa(measurementModelParameters_beta1, 2)`$; measure 2: $\beta = `r apa(measurementModelParameters_beta2, 2)`$; measure 3: $\beta = `r apa(measurementModelParameters_beta3, 2)`$).
+Thus, the loadings of this measurement model would be consistent with a [reflective latent construct](#reflectiveConstruct).
+In terms of interpretation, all three indicators loaded positively on the latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.
+However, one of the estimated observed variances is negative, so the model is not able to be estimated accurately.
+Thus, we would need to make additional adjustments in order to estimate the model.
+
 ```{r}
 summary(measurementModelFit,
         fit.measures = TRUE,
@@ -470,13 +487,17 @@ summary(measurementModelFit_full,
 You can extract specific fit indices using the following syntax:
 
 ```{r}
-fitMeasures(measurementModelFit,
-            fit.measures = c("chisq", "df", "pvalue",
-                             "chisq.scaled", "df.scaled", "pvalue.scaled",
-                             "chisq.scaling.factor",
-                             "rmsea", "cfi", "tli", "srmr",
-                             "rmsea.robust", "cfi.robust", "tli.robust"))
+fitMeasures(
+  measurementModelFit,
+  fit.measures = c("chisq", "df", "pvalue",
+                   "chisq.scaled", "df.scaled", "pvalue.scaled",
+                   "chisq.scaling.factor",
+                   "baseline.chisq","baseline.df","baseline.pvalue",
+                   "rmsea", "cfi", "tli", "srmr",
+                   "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
+
+Because the model is just-identified, many fit statistics are not able to be estimated.
 
 ### Residuals {#measurementModelResiduals-sem}
 
@@ -520,6 +541,8 @@ semPaths(measurementModelFit,
 
 The [confirmatory factor analysis](#cfa) (CFA) models were fit in the `lavaan` package [@R-lavaan].
 The examples were adapted from the `lavaan` documentation: http://lavaan.ugent.be/tutorial/cfa.html
+
+In this [CFA model](#cfa), we estimate three latent factors with three indicators loading on each latent factor.
 
 ### Specify the model {#cfaModelSyntax-sem}
 
@@ -600,6 +623,10 @@ cfaModelFit_full <- lavaan(cfaModel_fullSyntax,
 
 ### Display summary output {#cfaModelOutput-sem}
 
+In this model, all nine indicators load strongly on their respective latent factor.
+Thus, this measurement model would be defensible.
+In terms of interpretation, all indicators load positively on their respective latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.
+
 ```{r}
 summary(cfaModelFit,
         fit.measures = TRUE,
@@ -614,13 +641,19 @@ summary(cfaModelFit_full,
 
 ### Estimates of model fit {#cfaModelFitCriteria-sem}
 
+According to model fit estimates, the model fit is good according to SRMR and acceptable according to CFI, but the model fit is weaker according to RMSEA and TLI.
+Thus, we may want to consider adjustments to improve the model fit.
+In general, we want to make decisions regarding what parameters to estimate based on theory in conjunction with empiricism.
+
 ```{r}
-fitMeasures(cfaModelFit,
-            fit.measures = c("chisq", "df", "pvalue",
-                             "chisq.scaled", "df.scaled", "pvalue.scaled",
-                             "chisq.scaling.factor",
-                             "rmsea", "cfi", "tli", "srmr",
-                             "rmsea.robust", "cfi.robust", "tli.robust"))
+fitMeasures(
+  cfaModelFit,
+  fit.measures = c("chisq", "df", "pvalue",
+                   "chisq.scaled", "df.scaled", "pvalue.scaled",
+                   "chisq.scaling.factor",
+                   "baseline.chisq","baseline.df","baseline.pvalue",
+                   "rmsea", "cfi", "tli", "srmr",
+                   "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 ### Residuals {#cfaModelResiduals-sem}
@@ -630,6 +663,11 @@ residuals(cfaModelFit, type = "cor")
 ```
 
 ### Modification indices {#cfaModelModIndices-sem}
+
+Modification indices indicate potential additional parameters that could be estimated that would improve model fit.
+For instance, the modification indices below indicate a few additional factor loadings (i.e., cross loadings) or correlated residuals that could substantially improve model fit.\index{residuals!correlated}\index{cross loading}
+However, it is generally not recommended to blindly estimate additional parameters solely based on modification indices.
+Rather, it is generally advised to consider modification indices in light of theory.
 
 ```{r}
 modificationindices(cfaModelFit, sort. = TRUE)
@@ -662,6 +700,11 @@ semPaths(cfaModelFit,
 ```
 
 ### Modify model based on modification indices {#cfaModelModification-sem}
+
+In the model below, I modified the model based on estimating an additional factor loading (assuming the additional factor loading is theoretically supported).
+This could be supported, for instance, if a given test involves considerable skills in both the visual domain and in speed of processing.
+When the same indicator loads simultaneously on two factors, this is called a *cross loading*.\index{cross loading}
+Cross loadings can complicate the interpretation of latent factors, as discussed in Section \@ref(#factorRotation) of the chapter on [factor analysis](#factor-analysis-PCA).\index{cross loading}
 
 #### Specify the model {#cfaModelModifiedSyntax-sem}
 
@@ -749,13 +792,18 @@ summary(cfaModel2Fit_full,
 
 #### Estimates of model fit {#cfaModelModifiedFitCriteria-sem}
 
+After fitting the additional factor loading, the model fits well according to RMSEA, CFI, and SRMR, and the model fit is acceptable according to TLI.
+Thus, this model could be defensible.
+
 ```{r}
-fitMeasures(cfaModel2Fit,
-            fit.measures = c("chisq", "df", "pvalue",
-                             "chisq.scaled", "df.scaled", "pvalue.scaled",
-                             "chisq.scaling.factor",
-                             "rmsea", "cfi", "tli", "srmr",
-                             "rmsea.robust", "cfi.robust", "tli.robust"))
+fitMeasures(
+  cfaModel2Fit,
+  fit.measures = c("chisq", "df", "pvalue",
+                   "chisq.scaled", "df.scaled", "pvalue.scaled",
+                   "chisq.scaling.factor",
+                   "baseline.chisq","baseline.df","baseline.pvalue",
+                   "rmsea", "cfi", "tli", "srmr",
+                   "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 #### Residuals {#cfaModelModifiedResiduals-sem}
@@ -777,20 +825,22 @@ semPaths(cfaModel2Fit,
 
 #### Compare model fit using chi-square difference test for nested models {#nestedModelComparison-sem}
 
-The modified model with the cross-loading and the original model are considered "nested" models.
+The modified model with the cross loading and the original model are considered "nested" models.\index{nested model}\index{cross loading}
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
-Model fit of nested models can be compared with a chi-square difference test.
+Model fit of nested models can be compared with a chi-square difference test.\index{chi-square difference test}
 
 ```{r}
 anova(cfaModelFit, cfaModel2Fit)
 ```
 
-The model with the cross-loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross-loading.
+In this case, the model with the cross loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross loading.\index{cross loading}
 
 ## Structural Equation Model (SEM) {#semModelExample-sem}
 
 The structural equation models were fit in the `lavaan` package [@R-lavaan].
 The examples were adapted from the `lavaan` documentation: http://lavaan.ugent.be/tutorial/sem.html
+
+In this model, we fit a [measurement model](#measurementModel-sem) with three latent factors in addition to a [structural model](#structuralModel-sem) with regressions estimated among the latent factors.
 
 ### Specify the model {#semModelSyntax-sem}
 
@@ -915,6 +965,8 @@ The chi-square test labeled "Model Test Baseline Model" refers to the chi-square
 In this case, the *p*-value of the robust chi-square test in comparison to the worse-possible fitting model is < .05.
 Thus, the model fits significantly better than the worst-possible-fitting model.
 
+In terms of the model findings, `ind60` was significantly positively associated with `dem60`, `dem60` was significantly positively associated with `dem65`, and `ind60` was marginally significantly positively associated with `dem65`.
+
 ```{r}
 summary(semModelFit,
         fit.measures = TRUE,
@@ -930,12 +982,14 @@ summary(semModelFit_full,
 ### Estimates of model fit {#semModelFitCriteria-sem}
 
 ```{r}
-fitMeasures(semModelFit,
-            fit.measures = c("chisq", "df", "pvalue",
-                             "chisq.scaled", "df.scaled", "pvalue.scaled",
-                             "chisq.scaling.factor",
-                             "rmsea", "cfi", "tli", "srmr",
-                             "rmsea.robust", "cfi.robust", "tli.robust"))
+fitMeasures(
+  semModelFit,
+  fit.measures = c("chisq", "df", "pvalue",
+                   "chisq.scaled", "df.scaled", "pvalue.scaled",
+                   "chisq.scaling.factor",
+                   "baseline.chisq","baseline.df","baseline.pvalue",
+                   "rmsea", "cfi", "tli", "srmr",
+                   "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 ### Residuals {#semModelResiduals-sem}
