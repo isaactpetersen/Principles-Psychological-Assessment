@@ -5,7 +5,7 @@
 ## Overview of Validity {#overview-validity}
 
 According to the "Standards for Educational and Psychological Testing" [@AERA2014, p. 11], measurement validity is "the degree to which evidence and theory support the interpretations of test scores for proposed uses of tests."
-I summarized reliability with three words: repeatability, consistency, and precision.
+I summarized [reliability](#reliability) with three words: repeatability, consistency, and precision.
 My summary of validity in three words is: accuracy, utility, and meaningfulness (of the interpretations of a measure's scores for the proposed uses).
 Validity is tied to the *interpretation* of a measure's scores for the *proposed uses*, not (just) to the measure itself.
 The same set of scores can have different degrees of validity for different purposes.
@@ -228,9 +228,14 @@ This is quantified by the correlation between a measure's scores and some (hopef
 For instance, a criterion could be a diagnosis, a child's achievement in school, an employee's performance in a job, etc.
 
 Below, I provide an example of criterion-related validity by examining the [Pearson correlation](#correlationConsiderations) between a predictor and a criterion.
+In this case, the estimate of criterion-related validity is $r = `r apa(criterionValidity, 2, leading = FALSE)`$.
 
 ```{r}
 cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)
+```
+
+```{r, include = FALSE}
+criterionValidity <- cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate
 ```
 
 There are two types of criterion-related validity: concurrent validity and predictive validity.
@@ -488,9 +493,9 @@ For example, A MTMM could include self-report and observation of depression and 
 You would then examine the correlations across combinations of construct and method.
 
 For an example of a MTMM, see Figure \@ref(fig:campbellFiske).
-Several aspects of psychometrics can be evaluated with a MTMM, including [reliability](#reliability), convergent validity, and discriminant validity.
-The reliability diagonal of a MTMM is the correlation of variable with itself, i.e., the [test-retest reliability](#testRetest-reliability) or monotrait-monomethod correlations.
-The reliability coefficients should be the highest values in the matrix because each measure should be more correlated with itself than with anything else.
+Several aspects of psychometrics can be evaluated with a MTMM, including [reliability](#reliability), [convergent validity](#convergentValidity), and [discriminant validity](#discriminantValidity).
+The [reliability](#reliability) diagonal of a MTMM is the correlation of variable with itself, i.e., the [test-retest reliability](#testRetest-reliability) or monotrait-monomethod correlations.
+The [reliability](#reliability) coefficients should be the highest values in the matrix because each measure should be more correlated with itself than with anything else.
 
 (ref:campbellFiskeCaption) Multitrait-Multimethod Matrix. Figure reprinted from @Campbell1959, Table 1, p. 82. Campbell, D. T., \& Fiske, D. W. (1959). Convergent and discriminant validation by the multitrait-multimethod matrix. *Psychological Bulletin*, *56*, 81-105. [https://doi.org/10.1037/h0046016](https://doi.org/10.1037/h0046016)
 
@@ -544,6 +549,7 @@ In many practical situations, a threshold of 0.85 reliably distinguishes between
 The authors updated the HTMT to use the geometric mean of the correlations rather than the arithmetic mean of the correlations to relax the assumption of [tau-equivalence](#cttTauEquivalent) [@Roemer2021].
 They called the updated index HTMT2.
 HTMT2 was calculated below using the `semTools` package [@R-semTools].
+In this case, the HTMT values are less than .85, providing evidence of discriminant validity.
 
 ```{r}
 modelCFA <- '
@@ -612,15 +618,21 @@ MTMM_data <- sim_standardized(model_fixed,
 
 A multitrait-multimethod matrix correlation matrix is below.
 
-```{r mtmmCorrelationHTML, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
+```{r, eval = FALSE}
+round(cor(MTMM_data), 2)
+```
+
+```{r mtmmCorrelationHTML, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub"), echo = FALSE}
 paged_table(data.frame(round(cor(MTMM_data), 2)))
 ```
 
-```{r mtmmCorrelationPDF, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_latex_output(), echo = knitr::is_latex_output()}
-kable(data.frame(round(cor(MTMM_data), 2)),
-      format = "latex",
-      booktabs = TRUE) %>%
-          kable_styling(latex_options = "scale_down")
+```{r mtmmCorrelationPDF, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_latex_output(), echo = knitr::is_latex_output(), echo = FALSE}
+kable(
+  data.frame(round(cor(MTMM_data), 2)),
+  format = "latex",
+  booktabs = TRUE
+  ) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ```{r mtmmCorrelationEPUB, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm")), echo = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm"))}
@@ -708,7 +720,7 @@ Accuracy is not enough for a measure to be useful.
 Proposed by @Sechrest1963, measures should also be judged by the extent to which they provide an increment in predictive efficiency over the information otherwise easily and cheaply available.
 *Incremental validity* deals with the incremental value or utility over a measure beyond other sources of information.
 It must be demonstrated that the addition of a measure will produce better predictions than are made on the basis of information ordinarily available.
-It is not enough to show that the measure is better than chance, and the measure should not just be capitalizing on shared method variance with criterion or on increased reliability of the measure.
+It is not enough to show that the measure is better than chance, and the measure should not just be capitalizing on shared method variance with criterion or on increased [reliability](#reliability) of the measure.
 That is, the measure should explain truly unique variance—variance that was not explained before.
 Incremental validity demonstrates added value, unless the other measure is cheaper or less time consuming.
 Incremental validity is a specific kind of [criterion-related validity](#criterionValidity): significantly increased $R^2$ in hierarchical regression.
@@ -737,13 +749,13 @@ getDeltaRsquare(model2)
 
 $\Delta R^2$ was calculated using the `rockchalk` package [@R-rockchalk].
 The predictor shows significant incremental validity above the old predictor in predicting the criterion.
-`Model 1` explains $`r round(model1Rsquare * 100, 2)`%$ of the variance $(R^2 = `r round(model1Rsquare, 2)`)$, and `Model 2` explains $`r round(model2Rsquare * 100, 2)`%$ of the variance $(R^2 = `r round(model2Rsquare, 2)`)$.
-Thus, the predictor explains only $`r round(deltaRsquare * 100, 2)`%$ additional variance in the criterion above the variance explained by the old predictor $(\Delta R^2)$.
-Based on adjusted $R^2$ ($R^2_{adj}$), the predictor explains only $`r round(deltaRsquareAdj * 100, 2)`%$ additional variance in the criterion above the variance explained by the old predictor ($\Delta R^2_{adj}$).
+`Model 1` explains $`r round(model1Rsquare * 100, 2)`$% of the variance $(R^2 = `r round(model1Rsquare, 2)`)$, and `Model 2` explains $`r round(model2Rsquare * 100, 2)`$% of the variance $(R^2 = `r round(model2Rsquare, 2)`)$.
+Thus, the predictor explains only $`r round(deltaRsquare * 100, 2)`$% additional variance in the criterion above the variance explained by the old predictor $(\Delta R^2)$.
+Based on adjusted $R^2$ ($R^2_{adj}$), the predictor explains only $`r round(deltaRsquareAdj * 100, 2)`$% additional variance in the criterion above the variance explained by the old predictor ($\Delta R^2_{adj}$).
 
 #### Treatment Utility of Assessment {#treatmentUtility}
 
-@Hayes1987 argued that it is not enough for measures to be reliable and valid.
+@Hayes1987 argued that it is not enough for measures to be [reliable](#reliability) and valid.
 The authors raised another important consideration for the validity of a measure: its treatment utility or usefulness.
 They asked the question: what goal do assessments accomplish in clinical psychology?
 In clinical psychology, the goal of assessment is to lead to better treatment outcomes.
@@ -943,7 +955,7 @@ The organization of types of [measurement validity](#measurementValidity) that a
 knitr::include_graphics("./Images/Validity-03.png")
 ```
 
-Moreover, many different types of reliability and validity can be viewed through the lens of [construct validity](#constructValidity):
+Moreover, many different types of [reliability](#reliability) and validity can be viewed through the lens of [construct validity](#constructValidity):
 
 - [Internal consistency](#internalConsistency-reliability): can be calculated as the [coefficient of internal consistency](#internalConsistency-reliability), where the criterion for [criterion-related validity](#criterionValidity) is other items on same measure
 - [Test–retest reliability](#testRetest-reliability): can be calculated as the [coefficient of stability](#stability), where the criterion for [criterion-related validity](#criterionValidity) is the same measure at another time point
@@ -1053,11 +1065,23 @@ cor.test(x = mydataValidity$predictorWithMeasurementErrorT1,
          y = mydataValidity$predictorWithMeasurementErrorT2)
 ```
 
+```{r, include = FALSE}
+reliabilityPredictor_sim <- 
+  cor.test(x = mydataValidity$predictorWithMeasurementErrorT1,
+           y = mydataValidity$predictorWithMeasurementErrorT2)$estimate
+```
+
 #### Reliability of Criterion {#measurementErrorEffects-reliabilityCriterion}
 
 ```{r}
 cor.test(x = mydataValidity$criterionWithMeasurementErrorT1,
          y = mydataValidity$criterionWithMeasurementErrorT2)
+```
+
+```{r, include = FALSE}
+reliabilityCriterion_sim <- 
+  cor.test(x = mydataValidity$criterionWithMeasurementErrorT1,
+         y = mydataValidity$criterionWithMeasurementErrorT2)$estimate
 ```
 
 #### True Association {#measurementErrorEffects-trueAssociation}
@@ -1066,12 +1090,26 @@ cor.test(x = mydataValidity$criterionWithMeasurementErrorT1,
 cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)
 ```
 
+```{r, include = FALSE}
+trueAssociation_sim <- 
+  cor.test(x = mydataValidity$predictor,
+           y = mydataValidity$criterion)$estimate
+```
+
 #### Observed Association (after adding measurement error) {#measurementErrorEffects-observedAssociation}
 
 ```{r}
 cor.test(x = mydataValidity$predictorWithMeasurementErrorT1,
          y = mydataValidity$criterionWithMeasurementErrorT1)
 ```
+
+```{r, include = FALSE}
+observedAssociation_sim <- 
+  cor.test(x = mydataValidity$predictorWithMeasurementErrorT1,
+           y = mydataValidity$criterionWithMeasurementErrorT1)$estimate
+```
+
+Using simulated data, when the [reliability](#reliability) of the predictor is `r apa(reliabilityPredictor_sim, 2, leading = FALSE)`, the [reliability](#reliability) of the criterion is `r apa(reliabilityCriterion_sim, 2, leading = FALSE)`, and the true association between the predictor and criterion is $r = `r apa(trueAssociation_sim, 2, leading = FALSE)`$, the observed association is attenuated to $r = `r apa(observedAssociation_sim, 2, leading = FALSE)`$.
 
 ### Attenuation of True Correlation due to Measurement Error {#attenuation}
 
@@ -1089,7 +1127,7 @@ $$
 
 where $x = \text{measure of construct} \ A$; $y = \text{measure of construct} \ B$
 
-Find the observed correlation between the predictor and criterion if the true association between the constructs (i.e., correlation between true scores of constructs) is .7, the [reliability](#reliability) of the predictor is .9, and the [reliability](#reliability) of the criterion is .85:
+Find the observed correlation between the predictor and criterion if the true association between the constructs (i.e., correlation between true scores of constructs) is .70, the [reliability](#reliability) of the predictor is .90, and the [reliability](#reliability) of the criterion is .85:
 
 ```{r}
 trueAssociation <- .7
@@ -1098,6 +1136,12 @@ reliabilityOfCriterion <- 0.85
 
 trueAssociation * sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
 ```
+
+```{r, include = FALSE}
+observedAssociation <- trueAssociation * sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
+```
+
+The observed association ($r = `r apa(observedAssociation, 2, leading = FALSE)`$) is attenuated relative to the true association ($r = .70$).
 
 ### Disattenuation of Observed Correlation due to Measurement Error {#disattenuation}
 
@@ -1125,21 +1169,26 @@ reliabilityOfCriterion <- 0.85
 The observed (attenuated) association is:
 
 ```{r}
-cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate
+cor.test(x = mydataValidity$predictor,
+         y = mydataValidity$criterion)$estimate
 ```
 
 The true (disattenuated) association is:
 
 ```{r}
-as.numeric(cor.test(x = mydataValidity$predictor,
-                    y = mydataValidity$criterion)$estimate)/sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
+as.numeric(cor.test(
+  x = mydataValidity$predictor,
+  y = mydataValidity$criterion)$estimate) / 
+  sqrt(reliabilityOfPredictor * reliabilityOfCriterion
+)
 ```
 
 The disattenuation of an observed correlation due to [measurement error](#measurementError) can be demonstrated using [structural equation modeling](#sem).
 For instance, consider the following observed association:
 
 ```{r}
-cor.test(x = mydataValidity$predictorObservedSEM, y = mydataValidity$criterionObservedSEM)
+cor.test(x = mydataValidity$predictorObservedSEM,
+         y = mydataValidity$criterionObservedSEM)$estimate
 ```
 
 The observed association can be estimated in [structural equation modeling](#sem) in the `lavaan` package [@R-lavaan] using the following syntax:
@@ -1178,10 +1227,10 @@ semPaths(observedSEM_fit,
          edge.label.cex = 2)
 ```
 
-Now consider when we account for the degree of unreliability of each measure.
-We can account for the (un)reliability of each measure by specifying the residual errors.
-As described in Section \@ref(exampleFactorModelsFromCorrelationMatrices) of the chapter on [factor analysis](#factor-analysis-PCA), residual errors are equal to $1 - R^2$ of the indicator.
-Thus, we can account for the (un)reliability of each measure by specifying the residual errors as $1 - \text{reliability}^2$, as below:
+Now consider when we account for the degree of [unreliability](#measurementError) of each measure.
+We can account for the [(un)reliability](#reliability) of each measure by specifying the residual errors.
+As described in Section \@ref(exampleFactorModelsFromCorrelationMatrices) of the chapter on [factor analysis](#factor-analysis-PCA), residual errors for each indicator are equal to $1 - R^2$.
+Thus, we can account for the [(un)reliability](#reliability) of each measure by specifying the residual errors as $1 - \text{reliability}^2$, as below:
 
 ```{r}
 # Syntax that specifies the reliability programmatically
@@ -1253,8 +1302,8 @@ G-theory can simultaneously consider multiple aspects of [reliability](#reliabil
 Here are potential ways to increase the validity of the interpretation of a measure's scores for a particular purpose:
 
 - Make sure the measure's scores are [reliable](#reliability).
-For potential ways to increase the reliability of measurement, see Section \@ref(increaseReliability).
-But, do not switch to a less valid measure or to items that are less valid merely because they are more reliable.
+For potential ways to increase the [reliability](#reliability) of measurement, see Section \@ref(increaseReliability).
+But, do not switch to a less valid measure or to items that are less valid merely because they are more [reliable](#reliability).
 - Use multiple measures and multiple methods to remedy the effects of [method bias](#methodBias).
 - Design the measure with a particular population and purpose in mind.
 When describing the measure in papers or in public spheres, make it clear to others what the population and intended purposes are, and what they are not.
