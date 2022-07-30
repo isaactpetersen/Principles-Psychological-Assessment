@@ -164,8 +164,7 @@ In sum, the clinician seeks to integrate all information to make a decision, but
 
 Hundreds of studies have examined clinical versus actuarial [prediction](#prediction) methods across many disciplines.
 Findings consistently show that actuarial methods are as [accurate](#validity) or more [accurate](#validity) than clinical [prediction](#prediction) methods.
-"There is no controversy in social science that shows such a large body of qualitatively diverse studies coming out so uniformly...as this one" [@Meehl1986, pp.
-373–374].
+"There is no controversy in social science that shows such a large body of qualitatively diverse studies coming out so uniformly...as this one" [@Meehl1986, pp. 373–374].
 
 Actuarial methods are particularly valuable for criterion-referenced assessment tasks, in which the aim is to [predict](#prediction) specific events or outcomes [@Garb2019].
 For instance, actuarial methods have shown promise in [predicting](#prediction) violence, criminal recidivism, psychosis onset, course of mental disorders, treatment selection, treatment failure, suicide attempts, and suicide [@Garb2019].
@@ -216,7 +215,8 @@ For instance, LASSO can accommodate situations where there are more [predictors]
 Moreover, unlike multiple regression, it can handle [collinear](#multiCollinearity) predictors.\index{multicollinearity}
 LASSO	uses internal cross-validation to avoid over-fitting.
 
-@Youngstrom2018 found that model complexity improves [accuracy](#validity) but only to a point; some of the simpler models (Naïve Bayesian and Logistic regression) did just as well and in some cases better than LASSO models in classifying bipolar disorder.	Although LASSO models showed the highest [discrimination accuracy](#discrimination) in the internal sample, it showed the largest shrinkage in the external sample.
+@Youngstrom2018 found that model complexity improves [accuracy](#validity) but only to a point; some of the simpler models (Naïve Bayesian and Logistic regression) did just as well and in some cases better than LASSO models in classifying bipolar disorder.
+Although LASSO models showed the highest [discrimination accuracy](#discrimination) in the internal sample, it showed the largest shrinkage in the external sample.
 Moreover, the LASSO models showed poor [calibration](#calibration) in the internal sample; they over-diagnosed bipolar disorder.
 By contrast, simpler models showed better [calibration](#calibration) in the internal sample.
 The [probability nomogram](#bayesianUpdating) with one or multiple assessment findings showed better [calibration](#calibration) than LASSO models because they accounted for the original [base rate](#baseRate), so they did not over-diagnose bipolar disorder.
@@ -244,6 +244,117 @@ For example, you can perform *k*-fold cross-validation, where you:
 An emerging technique that hold promise for increasing predictive accuracy of actuarial methods is machine learning [@Garb2019].
 However, one challenge of some machine learning techniques is that they are like a "black box" and are not transparent, which raises [ethical](#ethics) issues [@Garb2019].
 Machine learning may be most valuable when the data available are complex and there are many [predictive](#prediction) variables [@Garb2019].
+
+## Getting Started {#gettingStarted-actuarial}
+
+### Load Libraries {#loadLibraries-actuarial}
+
+```{r}
+library("petersenlab") #to install: install.packages("remotes"); remotes::install_git("https://research-git.uiowa.edu/PetersenLab/petersenlab.git")
+library("pROC")
+library("caret")
+library("randomForest")
+library("viridis")
+library("MOTE")
+library("tidyverse")
+library("here")
+library("tinytex")
+library("rmarkdown")
+```
+
+### Prepare Data {#prepareData-prediction}
+
+#### Load Data {#loadData-prediction}
+
+`aSAH` is a dataset from the `pROC` package [@R-pROC] that contains test scores (`s100b`) and clinical outcomes (`outcome`) for patients.
+
+```{r}
+data(aSAH)
+mydataActuarial <- aSAH
+
+mydataActuarial$disorder <- NA
+mydataActuarial$disorder[which(mydataActuarial$outcome == "Poor")] <- 1
+mydataActuarial$disorder[which(mydataActuarial$outcome == "Good")] <- 0
+```
+
+## Fitting the Statistical Models
+
+### Regression with One Predictor
+
+```{r}
+summary(
+  glm(disorder ~ s100b,
+  data = mydataActuarial))
+```
+
+### Regression with Multiple Predictors
+
+```{r}
+summary(
+  glm(disorder ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial))
+```
+
+### Least Absolute Shrinkage and Selection Option (LASSO) {#lasso}
+
+```{r}
+lassoModel <- train(
+  s100b ~ ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "lasso")
+
+print(lassoModel)
+```
+
+### Ridge Regression {#ridgeRegression}
+
+```{r}
+ridgeModel <- train(
+  s100b ~ ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "ridge")
+
+print(ridgeModel)
+```
+
+### Random Forest Machine Learning {#randomForest}
+
+```{r}
+rfModel <- train(
+  factor(disorder) ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "rf")
+
+print(rfModel)
+```
+
+### k-Fold Cross-Validation {#kfoldCV}
+
+```{r}
+train.control <- trainControl(method = "cv", number = 10)
+
+cvModel <- train(
+  factor(disorder) ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "glm",
+  trControl = train.control)
+
+print(cvModel)
+```
+
+### Leave-One-Out (LOO) Cross-Validation {#looCV}
+
+```{r}
+train.control <- trainControl(method = "LOOCV", number = 10)
+
+loocvModel <- train(
+  factor(disorder) ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "glm",
+  trControl = train.control)
+
+print(loocvModel)
+```
 
 ## Why Clinical Judgment is More Widely Used Than Statistical Formulas {#whyHumanJudgmentIsMoreWidelyUsed}
 
