@@ -255,6 +255,7 @@ library("pROC")
 library("caret")
 library("randomForest")
 library("elasticnet")
+library("LiblineaR")
 library("viridis")
 library("MOTE")
 library("tidyverse")
@@ -263,9 +264,9 @@ library("tinytex")
 library("rmarkdown")
 ```
 
-### Prepare Data {#prepareData-prediction}
+### Prepare Data {#prepareData-actuarial}
 
-#### Load Data {#loadData-prediction}
+#### Load Data {#loadData-actuarial}
 
 `aSAH` is a dataset from the `pROC` package [@R-pROC] that contains test scores (`s100b`) and clinical outcomes (`outcome`) for patients.
 
@@ -278,9 +279,11 @@ mydataActuarial$disorder[which(mydataActuarial$outcome == "Poor")] <- 1
 mydataActuarial$disorder[which(mydataActuarial$outcome == "Good")] <- 0
 ```
 
-## Fitting the Statistical Models
+## Fitting the Statistical Models {#fittingModels-actuarial}
 
-### Regression with One Predictor
+### Regression with One Predictor {#regressionOnePredictor}
+
+Dichotomous Outcome:
 
 ```{r}
 summary(
@@ -288,7 +291,17 @@ summary(
   data = mydataActuarial))
 ```
 
-### Regression with Multiple Predictors
+Continuous Outcome:
+
+```{r}
+summary(
+  lm(s100b ~ ndka,
+  data = mydataActuarial))
+```
+
+### Regression with Multiple Predictors {#regressionMultiplePredictors}
+
+Dichotomous Outcome:
 
 ```{r}
 summary(
@@ -296,43 +309,90 @@ summary(
   data = mydataActuarial))
 ```
 
+Continuous Outcome:
+
+```{r}
+summary(
+  lm(s100b ~ ndka + gender + age + wfns,
+  data = mydataActuarial))
+```
+
 ### Least Absolute Shrinkage and Selection Option (LASSO) {#lasso}
 
 The least absolute shrinkage and selection option (LASSO) models were fit in the `caret` package [@R-caret].
 
+Dichotomous Outcome:
+
 ```{r}
-lassoModel <- train(
+lassoModelDichotomous <- train(
+  outcome ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "glmnet")
+
+print(lassoModelDichotomous)
+```
+
+Continuous Outcome:
+
+```{r}
+lassoModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "lasso")
 
-print(lassoModel)
+print(lassoModelContinuous)
 ```
 
 ### Ridge Regression {#ridgeRegression}
 
 The ridge regression models were fit in the `caret` package [@R-caret].
 
+Dichotomous Outcome:
+
 ```{r}
-ridgeModel <- train(
+ridgeModelDichotomous <- train(
+  outcome ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "regLogistic")
+
+print(ridgeModelDichotomous)
+```
+
+Continuous Outcome:
+
+```{r}
+ridgeModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "ridge")
 
-print(ridgeModel)
+print(ridgeModelContinuous)
 ```
 
 ### Random Forest Machine Learning {#randomForest}
 
 The random forest models were fit in the `caret` package [@R-caret].
 
+Dichotomous Outcome:
+
 ```{r}
-rfModel <- train(
-  factor(disorder) ~ s100b + ndka + gender + age + wfns,
+rfModelDichotomous <- train(
+  outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "rf")
 
-print(rfModel)
+print(rfModelDichotomous)
+```
+
+Continuous Outcome:
+
+```{r}
+rfModelContinuous <- train(
+  s100b ~ ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "rf")
+
+print(rfModelContinuous)
 ```
 
 ### *k*-Fold Cross-Validation {#kfoldCV}
@@ -341,14 +401,30 @@ The *k*-fold cross-validation models were fit in the `caret` package [@R-caret].
 
 ```{r}
 train.control <- trainControl(method = "cv", number = 10)
+```
 
-cvModel <- train(
-  factor(disorder) ~ s100b + ndka + gender + age + wfns,
+Dichotomous Outcome:
+
+```{r}
+cvModelDichotomous <- train(
+  outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "glm",
   trControl = train.control)
 
-print(cvModel)
+print(cvModelDichotomous)
+```
+
+Continuous Outcome:
+
+```{r}
+cvModelContinuous <- train(
+  s100b ~ ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "lm",
+  trControl = train.control)
+
+print(cvModelContinuous)
 ```
 
 ### Leave-One-Out (LOO) Cross-Validation {#looCV}
@@ -357,14 +433,30 @@ The leave-one-out (LOO) cross-validation models were fit in the `caret` package 
 
 ```{r}
 train.control <- trainControl(method = "LOOCV", number = 10)
+```
 
-loocvModel <- train(
-  factor(disorder) ~ s100b + ndka + gender + age + wfns,
+Dichotomous Outcome:
+
+```{r}
+loocvModelDichotomous <- train(
+  outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "glm",
   trControl = train.control)
 
-print(loocvModel)
+print(loocvModelDichotomous)
+```
+
+Continuous Outcome:
+
+```{r}
+loocvModelContinuous <- train(
+  s100b ~ ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "glm",
+  trControl = train.control)
+
+print(loocvModelContinuous)
 ```
 
 ## Why Clinical Judgment is More Widely Used Than Statistical Formulas {#whyHumanJudgmentIsMoreWidelyUsed}
