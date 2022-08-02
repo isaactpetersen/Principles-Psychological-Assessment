@@ -240,6 +240,8 @@ Judgments about which factors to retain are based on empirical criteria in conju
 
 The eigenvalue reflects the amount of variance explained by the component (eigenvector).
 When using a varimax (orthogonal) rotation, an eigenvalue for a component is calculated as the sum of squared component loadings on that component.
+When using oblique rotation, however, the items explain more variance than is attributable to their factor loadings because the factors are correlated.
+
 PCA pulls the first principal component out (i.e., the eigenvector that explains the most variance) and makes a new data matrix: i.e., new correlation matrix.
 Then the PCA pulls out the component that explains the next most variance—i.e., the eigenvector with the next largest eigenvalue, and it does this for all components, equal to the same number of variables.
 For instance, if there are six variables, it will iteratively extract an additional component up to six components.
@@ -252,7 +254,7 @@ However, it does no good if you have to use all (6) components because there is 
 
 The sum of all eigenvalues is equal to the number of variables in the analysis.
 PCA does not have same assumptions as [factor analysis](#factorAnalysis), which assumes that measures are partly from common variance and error.
-But, if you estimate (6) eigenvectors and only keep (2), the is a two-component model and whatever left becomes error.
+But, if you estimate (6) eigenvectors and only keep (2), the model is a two-component model and whatever left becomes error.
 Therefore, PCA does not have the same assumptions as [factor analysis](#factorAnalysis), but it often ends up in the same place.
 
 Most people who want to conduct a [factor analysis](#factorAnalysis) use PCA, but PCA is not really [factor analysis](#factorAnalysis) [@Lilienfeld2015].
@@ -641,11 +643,15 @@ cor.table(HolzingerSwineford1939[,vars],
 Pairs panel plots were generated using the `psych` package [@R-psych].
 Correlation plots were generated using the `corrplot` package [@R-corrplot].
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot."}
+A pairs panel plot is in Figure \@ref(fig:pairsPanel).
+
+```{r pairsPanel, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot."}
 pairs.panels(HolzingerSwineford1939[,vars])
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot."}
+A correlation plot is in Figure \@ref(fig:correlationPlot).
+
+```{r correlationPlot, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot."}
 corrplot(cor(HolzingerSwineford1939[,vars],
              use = "pairwise.complete.obs"))
 ```
@@ -670,14 +676,27 @@ The acceleration factor is quantified using the acceleration of the curve, that 
 The Kaiser-Guttman rule states to keep principal components whose eigenvalues are greater than one.
 However, for [exploratory factor analysis](#efa) (as opposed to [PCA](#pca)), the criterion is to keep the factors whose eigenvalues are greater than zero (i.e., not the factors whose eigenvalues are greater than one) [@Dinno2014].
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Scree Plots in Exploratory Factor Analysis."}
-fa.parallel(x = HolzingerSwineford1939[,vars],
-            fm = "ml",
-            fa = "fa")
+The number of factors to keep would depend on which criteria one uses.
+Based on the rule to keep factors whose eigenvalues are greater than zero and based on the parallel test, we would keep three factors.
+However, based on the Cattell scree test (as operationalized by the optimal coordinates and acceleration factor), we would keep one factor.
+Therefore, interpretability of the factors would be important for deciding between whether to keep one, two, or three factors.
 
-plot(nScree(x = cor(HolzingerSwineford1939[,vars],
-                    use = "pairwise.complete.obs"),
-            model = "factors"))
+A scree plot from a parallel analysis is in Figure \@ref(fig:screePlotEFAparallel).
+
+```{r screePlotEFAparallel, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot from Parallel Analysis in Exploratory Factor Analysis."}
+fa.parallel(
+  x = HolzingerSwineford1939[,vars],
+  fm = "ml",
+  fa = "fa")
+```
+
+A scree plot from EFA is in Figure \@ref(fig:screePlotEFA). 
+
+```{r screePlotEFA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Exploratory Factor Analysis."}
+plot(
+  nScree(x = cor(HolzingerSwineford1939[,vars],
+                 use = "pairwise.complete.obs"),
+         model = "factors"))
 ```
 
 ##### Very Simple Structure (VSS) Plot {#vssPlot}
@@ -686,19 +705,27 @@ The very simple structure (VSS) is another criterion that can be used to determi
 Using the VSS criterion, the optimal number of factors to retain is the number of factors that maximizes the VSS criterion [@Revelle1979].
 As described here (https://it.unt.edu/sites/default/files/vss_l_jds_dec2014.pdf), the VSS criterion is evaluated with models in which factor loadings for a given item that are less than the maximum factor loading for that item are suppressed to zero, thus forcing simple structure (i.e., no cross loadings).\index{cross loading}
 The goal is finding a factor structure with interpretability so that factors are clearly distinguishable.
+Thus, the we want to identify the number of factors with the highest VSS criterion (i.e., the highest line).
 Very simple structure (VSS) plots were generated using the `psych` package [@R-psych].
 
 The output also provides additional criteria by which to determine the optimal number of factors, each for which lower values are better, including the Velicer minimum average partial (MAP) test, the Bayesian information criterion (BIC), the sample size-adjusted BIC (SABIC), and the root mean square error of approximation (RMSEA).
 
 ###### Orthogonal (Varimax) rotation {#orthogonal-vss}
 
-In the example below, the VSS criterion is highest with 3 or 4 factors.
+In the example with orthogonal rotation below, the VSS criterion is highest with 3 or 4 factors.
+A three-factor solution is supported by the lowest BIC, whereas a four-factor solution is supported by the lowest SABIC.
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+A VSS plot is in Figure \@ref(fig:vssOrthogonal).
+
+```{r vssOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
 vss(HolzingerSwineford1939[,vars],
     rotate = "varimax",
     fm = "ml")
+```
 
+Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOrthogonal).
+
+```{r vssComplexOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Orthogonal Rotation in Exploratory Factor Analysis."}
 nfactors(HolzingerSwineford1939[,vars],
          rotate = "varimax",
          fm = "ml")
@@ -706,13 +733,20 @@ nfactors(HolzingerSwineford1939[,vars],
 
 ###### Oblique (Oblimin) rotation {#oblique-vss}
 
-In the example below, the VSS criterion is highest with 3 factors.
+In the example with oblique rotation below, the VSS criterion is highest with 3 factors.
+A three-factor solution is supported by the lowest BIC.
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."}
+A VSS plot is in Figure \@ref(fig:vssOblique).
+
+```{r vssOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."}
 vss(HolzingerSwineford1939[,vars],
     rotate = "oblimin",
     fm = "ml")
+```
 
+Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOblique).
+
+```{r vssComplexOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Oblique Rotation in Exploratory Factor Analysis."}
 nfactors(HolzingerSwineford1939[,vars],
          rotate = "oblimin",
          fm = "ml")
@@ -720,13 +754,20 @@ nfactors(HolzingerSwineford1939[,vars],
 
 ###### No rotation {#noRotation-vss}
 
-In the example below, the VSS criterion is highest with 3 or 4 factors.
+In the example with no rotation below, the VSS criterion is highest with 3 or 4 factors.
+A three-factor solution is supported by the lowest BIC, whereas a four-factor solution is supported by the lowest SABIC.
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."}
-vss(HolzingerSwineford1939[,vars],
-    rotate = "none",
-    fm = "ml")
+A VSS plot is in Figure \@ref(fig:vssUnrotated).
 
+```{r vssUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."}
+nfactors(HolzingerSwineford1939[,vars],
+         rotate = "none",
+         fm = "ml")
+```
+
+Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexUnrotated).
+
+```{r vssComplexUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With no Rotation in Exploratory Factor Analysis."}
 nfactors(HolzingerSwineford1939[,vars],
          rotate = "none",
          fm = "ml")
@@ -743,50 +784,59 @@ nfactors(HolzingerSwineford1939[,vars],
 Fit a different model with each number of possible factors:
 
 ```{r}
-efa1factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 1,
-                           rotate = "varimax",
-                           fm = "ml")
+efa1factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 1,
+  rotate = "varimax",
+  fm = "ml")
 
-efa2factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 2,
-                           rotate = "varimax",
-                           fm = "ml")
+efa2factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 2,
+  rotate = "varimax",
+  fm = "ml")
 
-efa3factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 3,
-                           rotate = "varimax",
-                           fm = "ml")
+efa3factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 3,
+  rotate = "varimax",
+  fm = "ml")
 
-efa4factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 4,
-                           rotate = "varimax",
-                           fm = "ml")
+efa4factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 4,
+  rotate = "varimax",
+  fm = "ml")
 
-efa5factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 5,
-                           rotate = "varimax",
-                           fm = "ml")
+efa5factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 5,
+  rotate = "varimax",
+  fm = "ml")
 
-efa6factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 6,
-                           rotate = "varimax",
-                           fm = "ml")
+efa6factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 6,
+  rotate = "varimax",
+  fm = "ml")
 
-efa7factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 7,
-                           rotate = "varimax",
-                           fm = "ml")
+efa7factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 7,
+  rotate = "varimax",
+  fm = "ml")
 
-efa8factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 8,
-                           rotate = "varimax",
-                           fm = "ml")
+efa8factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 8,
+  rotate = "varimax",
+  fm = "ml")
 
-efa9factorOrthogonal <- fa(r = HolzingerSwineford1939[,vars],
-                           nfactors = 9,
-                           rotate = "varimax",
-                           fm = "ml")
+efa9factorOrthogonal <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 9,
+  rotate = "varimax",
+  fm = "ml")
 ```
 
 ###### `lavaan` {#orthogonalLavaan-efa}
@@ -879,86 +929,95 @@ efa9factorLavaan_syntax <- '
 The models are fitted below:
 
 ```{r}
-efa1factorOrthogonalLavaan_fit <- sem(efa1factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa1factorOrthogonalLavaan_fit <- sem(
+  efa1factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa2factorOrthogonalLavaan_fit <- sem(efa2factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa2factorOrthogonalLavaan_fit <- sem(
+  efa2factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa3factorOrthogonalLavaan_fit <- sem(efa3factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa3factorOrthogonalLavaan_fit <- sem(
+  efa3factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa4factorOrthogonalLavaan_fit <- sem(efa4factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa4factorOrthogonalLavaan_fit <- sem(
+  efa4factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa5factorOrthogonalLavaan_fit <- sem(efa5factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa5factorOrthogonalLavaan_fit <- sem(
+  efa5factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa6factorOrthogonalLavaan_fit <- sem(efa6factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa6factorOrthogonalLavaan_fit <- sem(
+  efa6factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa7factorOrthogonalLavaan_fit <- sem(efa7factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa7factorOrthogonalLavaan_fit <- sem(
+  efa7factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa8factorOrthogonalLavaan_fit <- sem(efa8factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa8factorOrthogonalLavaan_fit <- sem(
+  efa8factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 
-efa9factorOrthogonalLavaan_fit <- sem(efa9factorLavaan_syntax,
-                                      data = HolzingerSwineford1939,
-                                      information = "observed",
-                                      missing = "ML",
-                                      estimator = "MLR",
-                                      rotation = "varimax",
-                                      meanstructure = TRUE,
-                                      rotation.args = list(orthogonal = TRUE))
+efa9factorOrthogonalLavaan_fit <- sem(
+  efa9factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 ```
 
 ##### Oblique (Oblimin) rotation {#oblique-efa}
@@ -968,50 +1027,59 @@ efa9factorOrthogonalLavaan_fit <- sem(efa9factorLavaan_syntax,
 Fit a different model with each number of possible factors:
 
 ```{r}
-efa1factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 1,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa1factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 1,
+  rotate = "oblimin",
+  fm = "ml")
 
-efa2factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 2,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa2factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 2,
+  rotate = "oblimin",
+  fm = "ml")
 
-efa3factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 3,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa3factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 3,
+  rotate = "oblimin",
+  fm = "ml")
 
-efa4factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 4,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa4factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 4,
+  rotate = "oblimin",
+  fm = "ml")
 
-efa5factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 5,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa5factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 5,
+  rotate = "oblimin",
+  fm = "ml")
 
-efa6factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 6,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa6factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 6,
+  rotate = "oblimin",
+  fm = "ml")
 
-efa7factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 7,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa7factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 7,
+  rotate = "oblimin",
+  fm = "ml")
 
-efa8factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 8,
-                        rotate = "oblimin",
-                        fm = "ml") #no convergence
+efa8factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 8,
+  rotate = "oblimin",
+  fm = "ml") #no convergence
 
-efa9factorOblique <- fa(r = HolzingerSwineford1939[,vars],
-                        nfactors = 9,
-                        rotate = "oblimin",
-                        fm = "ml")
+efa9factorOblique <- fa(
+  r = HolzingerSwineford1939[,vars],
+  nfactors = 9,
+  rotate = "oblimin",
+  fm = "ml")
 ```
 
 ###### `lavaan` {#obliqueLavaan-efa}
@@ -1019,131 +1087,158 @@ efa9factorOblique <- fa(r = HolzingerSwineford1939[,vars],
 The models are fitted below:
 
 ```{r}
-efa1factorObliqueLavaan_fit <- sem(efa1factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa1factorObliqueLavaan_fit <- sem(
+  efa1factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa2factorObliqueLavaan_fit <- sem(efa2factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa2factorObliqueLavaan_fit <- sem(
+  efa2factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa3factorObliqueLavaan_fit <- sem(efa3factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa3factorObliqueLavaan_fit <- sem(
+  efa3factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa4factorObliqueLavaan_fit <- sem(efa4factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa4factorObliqueLavaan_fit <- sem(
+  efa4factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa5factorObliqueLavaan_fit <- sem(efa5factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa5factorObliqueLavaan_fit <- sem(
+  efa5factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa6factorObliqueLavaan_fit <- sem(efa6factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa6factorObliqueLavaan_fit <- sem(
+  efa6factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa7factorObliqueLavaan_fit <- sem(efa7factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa7factorObliqueLavaan_fit <- sem(
+  efa7factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa8factorObliqueLavaan_fit <- sem(efa8factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa8factorObliqueLavaan_fit <- sem(
+  efa8factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 
-efa9factorObliqueLavaan_fit <- sem(efa9factorLavaan_syntax,
-                                   data = HolzingerSwineford1939,
-                                   information = "observed",
-                                   missing = "ML",
-                                   estimator = "MLR",
-                                   rotation = "geomin",
-                                   # mimic Mplus
-                                   meanstructure = TRUE,
-                                   rotation.args = list(rstarts = 30, row.weights = "none",
-                                                        algorithm = "gpa", orthogonal = FALSE,
-                                                        jac.init.rot = TRUE,
-                                                        std.ov = TRUE, # row standard = correlation
-                                                        geomin.epsilon = 0.0001))
+efa9factorObliqueLavaan_fit <- sem(
+  efa9factorLavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "geomin",
+  # mimic Mplus
+  meanstructure = TRUE,
+  rotation.args = list(rstarts = 30,
+                       row.weights = "none",
+                       algorithm = "gpa",
+                       orthogonal = FALSE,
+                       jac.init.rot = TRUE,
+                       std.ov = TRUE, # row standard = correlation
+                       geomin.epsilon = 0.0001))
 ```
 
 #### Factor Loadings {#factorLoadings-efa}
@@ -1286,7 +1381,7 @@ summary(efa9factorObliqueLavaan_fit,
         rsquare = TRUE)
 ```
 
-#### Factor scores {#factorScores-efa}
+#### Factor Scores {#factorScores-efa}
 
 ##### Orthogonal (Varimax) rotation {#factorScoresOrthogonal-efa}
 
@@ -1324,46 +1419,184 @@ Correlation plots were generated using the `corrplot` package [@R-corrplot].
 
 ##### Orthogonal (Varimax) rotation {#factorScoresPlotsOrthogonal-efa}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Exploratory Factor Analysis."}
+A scree plot from a model with oblique rotation is in Figure \@ref(fig:screePlotPsychOrthogonal).
+
+```{r screePlotPsychOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: psych."}
+plot(efa9factorOrthogonal$e.values,
+     xlab = "Factor",
+     ylab = "Eigevalue")
+```
+
+A scree plot based on factor loadings from `lavaan` is in Figure \@ref(fig:screePlotLavaanOrthogonal).
+When the factors are uncorrelated (orthogonal rotation), the eigenvalue for a factor is calculated as the sum of squared factor loadings across all items, as described in Section \@ref(pca).
+
+```{r screePlotLavaanOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: lavaan."}
+param1Factor <- parameterEstimates(
+    efa1factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param2Factor <- parameterEstimates(
+    efa2factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param3Factor <- parameterEstimates(
+    efa3factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param4Factor <- parameterEstimates(
+    efa4factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param5Factor <- parameterEstimates(
+    efa5factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param6Factor <- parameterEstimates(
+    efa6factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param7Factor <- parameterEstimates(
+    efa7factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param8Factor <- parameterEstimates(
+    efa8factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+param9Factor <- parameterEstimates(
+    efa9factorOrthogonalLavaan_fit,
+    standardized = TRUE)
+
+factorNames <- c("f1","f2","f3","f4","f5","f6","f7","f8","f9")
+vars
+
+loadings1Factor <- param1Factor[which(param1Factor$lhs %in% factorNames & param1Factor$rhs %in% vars), c("lhs","std.all")]
+loadings2Factor <- param2Factor[which(param2Factor$lhs %in% factorNames & param2Factor$rhs %in% vars), c("lhs","std.all")]
+loadings3Factor <- param3Factor[which(param3Factor$lhs %in% factorNames & param3Factor$rhs %in% vars), c("lhs","std.all")]
+loadings4Factor <- param4Factor[which(param4Factor$lhs %in% factorNames & param4Factor$rhs %in% vars), c("lhs","std.all")]
+loadings5Factor <- param5Factor[which(param5Factor$lhs %in% factorNames & param5Factor$rhs %in% vars), c("lhs","std.all")]
+loadings6Factor <- param6Factor[which(param6Factor$lhs %in% factorNames & param6Factor$rhs %in% vars), c("lhs","std.all")]
+loadings7Factor <- param7Factor[which(param7Factor$lhs %in% factorNames & param7Factor$rhs %in% vars), c("lhs","std.all")]
+loadings8Factor <- param8Factor[which(param8Factor$lhs %in% factorNames & param8Factor$rhs %in% vars), c("lhs","std.all")]
+loadings9Factor <- param9Factor[which(param9Factor$lhs %in% factorNames & param9Factor$rhs %in% vars), c("lhs","std.all")]
+
+eigenData <- data.frame(Factor = 1:9, Eigenvalue = NA)
+
+eigenData$Eigenvalue[which(eigenData$Factor == 1)] <- sum(loadings1Factor$std.all^2)
+
+eigenData$Eigenvalue[which(eigenData$Factor == 2)] <- 
+  loadings2Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+eigenData$Eigenvalue[which(eigenData$Factor == 3)] <- 
+  loadings3Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+eigenData$Eigenvalue[which(eigenData$Factor == 4)] <- 
+  loadings4Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+eigenData$Eigenvalue[which(eigenData$Factor == 5)] <- 
+  loadings5Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+eigenData$Eigenvalue[which(eigenData$Factor == 6)] <- 
+  loadings6Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+eigenData$Eigenvalue[which(eigenData$Factor == 7)] <- 
+  loadings7Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+eigenData$Eigenvalue[which(eigenData$Factor == 8)] <- 
+  loadings8Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+eigenData$Eigenvalue[which(eigenData$Factor == 9)] <- 
+  loadings9Factor %>% 
+  group_by(lhs) %>% 
+  summarise(Eigenvalue = sum(std.all^2),
+            .groups = "drop") %>% 
+  summarise(min(Eigenvalue))
+
+plot(eigenData$Factor, eigenData$Eigenvalue,
+     xlab = "Factor",
+     ylab = "Eigevalue")
+```
+
+A biplot is in Figure \@ref(fig:biplotOrthogonal).
+
+```{r biplotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Exploratory Factor Analysis."}
 biplot(efa2factorOrthogonal)
 abline(h = 0, v = 0, lty = 2)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+A factor plot is in Figure \@ref(fig:factorPlotOrthogonal).
+
+```{r factorPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
 factor.plot(efa3factorOrthogonal, cut = 0.5)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Orthogonal Rotation in Exploratory Factor Analysis."}
+A factor diagram is in Figure \@ref(fig:factorDiagramOrthogonal).
+
+```{r factorDiagramOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Orthogonal Rotation in Exploratory Factor Analysis."}
 fa.diagram(efa3factorOrthogonal, digits = 2)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+A pairs panel plot is in Figure \@ref(fig:pairsPlotOrthogonal).
+
+```{r pairsPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
 pairs.panels(fa3Orthogonal)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonal).
+
+```{r correlationPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
 corrplot(cor(fa3Orthogonal, use = "pairwise.complete.obs"))
 ```
 
 ##### Oblique (Oblimin) rotation {#factorScoresPlotsOblique-efa}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Oblique Rotation in Exploratory Factor Analysis."}
+A biplot is in Figure \@ref(fig:biplotOblique).
+
+```{r biplotOblique, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Oblique Rotation in Exploratory Factor Analysis."}
 biplot(efa2factorOblique)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Factor Flot With Oblique Rotation in Exploratory Factor Analysis."}
+A factor plot is in Figure \@ref(fig:factorPlotOblique).
+
+```{r factorPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Oblique Rotation in Exploratory Factor Analysis."}
 factor.plot(efa3factorOblique, cut = 0.5)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Oblique Rotation in Exploratory Factor Analysis."}
+A factor diagram is in Figure \@ref(fig:factorDiagramOblique).
+
+```{r factorDiagramOblique, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Oblique Rotation in Exploratory Factor Analysis."}
 fa.diagram(efa3factorOblique, digits = 2)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Oblique Rotation in Exploratory Factor Analysis."}
+A pairs panel plot is in Figure \@ref(fig:pairsPlotOblique).
+
+```{r pairsPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Oblique Rotation in Exploratory Factor Analysis."}
 pairs.panels(fa3Oblique)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."}
+A correlation plot is in Figure \@ref(fig:correlationPlotOblique).
+
+```{r correlationPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."}
 corrplot(cor(fa3Oblique, use = "pairwise.complete.obs"))
 ```
 
@@ -1470,12 +1703,13 @@ summary(cfaModelFit_full,
 ```{r}
 fitMeasures(
   cfaModelFit,
-  fit.measures = c("chisq", "df", "pvalue",
-                   "chisq.scaled", "df.scaled", "pvalue.scaled",
-                   "chisq.scaling.factor",
-                   "baseline.chisq","baseline.df","baseline.pvalue",
-                   "rmsea", "cfi", "tli", "srmr",
-                   "rmsea.robust", "cfi.robust", "tli.robust"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 #### Residuals {#residuals-cfa}
@@ -1515,9 +1749,9 @@ AVE(cfaModelFit)
 
 #### Path diagram {#pathDiagram-cfa}
 
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagram).
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model Diagram."}
+```{r cfaPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model Diagram."}
 semPaths(cfaModelFit,
          what = "std",
          layout = "tree2",
@@ -1584,7 +1818,9 @@ summary(cfaModel1Fit,
 ```{r}
 fitMeasures(
   cfaModel1Fit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 ```
 
 ###### Residuals {#classExamplesModel1residuals-cfa}
@@ -1610,9 +1846,9 @@ AVE(cfaModel1Fit)
 
 ###### Path diagram {#classExamplesModel1pathDiagram-cfa}
 
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass1).
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 1 Diagram."}
+```{r cfaPathDiagramClass1, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 1 Diagram."}
 semPaths(cfaModel1Fit,
          what = "std",
          layout = "tree2",
@@ -1672,7 +1908,9 @@ summary(cfaModel2Fit,
 ```{r}
 fitMeasures(
   cfaModel2Fit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 ```
 
 ###### Residuals {#classExamplesModel2residuals-cfa}
@@ -1698,9 +1936,9 @@ AVE(cfaModel2Fit)
 
 ###### Path diagram {#classExamplesModel2pathDiagram-cfa}
 
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass2).
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 2 Diagram."}
+```{r cfaPathDiagramClass2, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 2 Diagram."}
 semPaths(cfaModel2Fit,
          what = "std",
          layout = "tree2",
@@ -1782,11 +2020,15 @@ summary(cfaModel3BFit,
 ```{r}
 fitMeasures(
   cfaModel3AFit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 
 fitMeasures(
   cfaModel3BFit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 ```
 
 ###### Compare model fit {#classExamplesModel3nestedModelComparison-cfa}
@@ -1826,16 +2068,16 @@ AVE(cfaModel3BFit)
 
 ###### Path diagram {#classExamplesModel3pathDiagram-cfa}
 
-Below are path diagrams of the models generated using the `semPlot` package [@R-semPlot].
+Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaPathDiagramClass3A) and \@ref(fig:cfaPathDiagramClass3B).
 
-```{r, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 3a Diagram."}
+```{r cfaPathDiagramClass3A, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 3a Diagram."}
 semPaths(cfaModel3AFit,
          what = "std",
          layout = "tree2",
          edge.label.cex = 1.5)
 ```
 
-```{r, out.width = "100%", fig.cap = "Confirmatory Factor Analysis Model 3b Diagram."}
+```{r cfaPathDiagramClass3B, out.width = "100%", fig.cap = "Confirmatory Factor Analysis Model 3b Diagram."}
 semPaths(cfaModel3BFit,
          what = "std",
          layout = "tree2",
@@ -1967,19 +2209,27 @@ summary(cfaModel4DFit,
 ```{r}
 fitMeasures(
   cfaModel4AFit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 
 fitMeasures(
   cfaModel4BFit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 
 fitMeasures(
   cfaModel4CFit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 
 fitMeasures(
   cfaModel4DFit,
-  fit.measures = c("chisq", "df", "pvalue", "rmsea", "cfi", "tli", "srmr"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 ```
 
 ###### Residuals {#classExamplesModel4residuals-cfa}
@@ -2019,7 +2269,7 @@ AVE(cfaModel4DFit)
 
 ###### Path diagram {#classExamplesModel4pathDiagram-cfa}
 
-Below are path diagrams of the models generated using the `semPlot` package [@R-semPlot].
+Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaModel4AFit), \@ref(fig:cfaModel4BFit), \@ref(fig:cfaModel4CFit), and \@ref(fig:cfaModel4DFit).
 
 ```{r cfaModel4AFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4a Diagram."}
 semPaths(cfaModel4AFit,
@@ -2052,6 +2302,7 @@ semPaths(cfaModel4DFit,
 ###### Equivalently fitting models {#classExamplesModel4equivalent-cfa}
 
 Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].
+Path diagrams of equivalent models are in Figure \@ref(fig:cfaModel4equivalent).
 
 ```{r}
 dagModel <- lavaanToGraph(cfaModel4AFit)
@@ -2059,7 +2310,7 @@ dagModel <- lavaanToGraph(cfaModel4AFit)
 par(mfrow = c(4, 4))
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to Confirmatory Factor Analysis Model 4."}
+```{r cfaModel4equivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to Confirmatory Factor Analysis Model 4."}
 lapply(equivalentDAGs(dagModel, n = 16), plot)
 ```
 
@@ -2219,11 +2470,11 @@ lavaanify(cfaModelBifactor_fullSyntax)
 
 ```{r}
 cfaModelBifactorFit <- cfa(cfaModelBifactor_syntax,
-                        data = MTMM_data,
-                        orthogonal = TRUE,
-                        std.lv = TRUE,
-                        missing = "ML",
-                        estimator = "MLR")
+                           data = MTMM_data,
+                           orthogonal = TRUE,
+                           std.lv = TRUE,
+                           missing = "ML",
+                           estimator = "MLR")
 
 cfaModelBifactorFit_full <- lavaan(cfaModelBifactor_fullSyntax,
                                    data = MTMM_data,
@@ -2250,12 +2501,13 @@ summary(cfaModelBifactorFit_full,
 ```{r}
 fitMeasures(
   cfaModelBifactorFit,
-  fit.measures = c("chisq", "df", "pvalue",
-                   "chisq.scaled", "df.scaled", "pvalue.scaled",
-                   "chisq.scaling.factor",
-                   "baseline.chisq","baseline.df","baseline.pvalue",
-                   "rmsea", "cfi", "tli", "srmr",
-                   "rmsea.robust", "cfi.robust", "tli.robust"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 ##### Residuals {#bifactorModelResiduals}
@@ -2281,9 +2533,9 @@ AVE(cfaModelBifactorFit)
 
 ##### Path diagram {#bifactorModelPathDiagram}
 
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:bifactorModelPathDiagram).
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Bifactor Model."}
+```{r bifactorModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Bifactor Model."}
 semPaths(cfaModelBifactorFit,
          what = "std",
          layout = "tree3",
@@ -2294,6 +2546,7 @@ semPaths(cfaModelBifactorFit,
 ##### Equivalently fitting models {#bifactorModelEquivalent}
 
 Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].
+Path diagrams of equivalent models are in Figure \@ref(fig:bifactorModelEquivalent).
 
 ```{r}
 dagModelBifactor <- lavaanToGraph(cfaModelBifactorFit)
@@ -2301,7 +2554,7 @@ dagModelBifactor <- lavaanToGraph(cfaModelBifactorFit)
 par(mfrow = c(2, 2))
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Bifactor Model."}
+```{r bifactorModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Bifactor Model."}
 lapply(equivalentDAGs(dagModelBifactor, n = 4), plot)
 ```
 
@@ -2515,12 +2768,13 @@ summary(cfaModelMTMMFit_full,
 ```{r}
 fitMeasures(
   cfaModelMTMMFit,
-  fit.measures = c("chisq", "df", "pvalue",
-                   "chisq.scaled", "df.scaled", "pvalue.scaled",
-                   "chisq.scaling.factor",
-                   "baseline.chisq","baseline.df","baseline.pvalue",
-                   "rmsea", "cfi", "tli", "srmr",
-                   "rmsea.robust", "cfi.robust", "tli.robust"))
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 ##### Residuals {#mtmmCFAresiduals}
@@ -2548,9 +2802,9 @@ AVE(cfaModelMTMMFit)
 
 ##### Path diagram {#mtmmCFApathDiagram}
 
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:mtmmCFApathDiagram).
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
+```{r mtmmCFApathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
 semPaths(cfaModelMTMMFit,
          what = "std",
          layout = "tree3",
@@ -2561,6 +2815,7 @@ semPaths(cfaModelMTMMFit,
 ##### Equivalently fitting models {#mtmmCFAequivalent}
 
 Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].
+Path diagrams of equivalently fitting models are in Figure \@ref(fig:mtmmCFAequivalent).
 
 ```{r}
 dagModelMTMM <- lavaanToGraph(cfaModelMTMMFit)
@@ -2568,7 +2823,7 @@ dagModelMTMM <- lavaanToGraph(cfaModelMTMMFit)
 par(mfrow = c(2, 2))
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
+```{r mtmmCFAequivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
 lapply(equivalentDAGs(dagModelMTMM, n = 4), plot)
 ```
 
@@ -2587,8 +2842,9 @@ Determine the number of components to retain using the Scree plot and Very Simpl
 
 Scree plots were generated using the **psych** [@R-psych] and **nFactors** [@R-nFactors] packages.
 Note that eigenvalues of factors in [PCA](#pca) models are higher than factors from [EFA](#efa) models, because [PCA](#pca) components include *common* variance among the indicators in addition to *error* variance, whereas [EFA](#efa) factors include only the common variance among the indicators.
+A scree plot is in Figure \@ref(fig:screePlotPCA).
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Scree Plots in Principal Component Analysis."}
+```{r screePlotPCA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plots in Principal Component Analysis."}
 fa.parallel(x = HolzingerSwineford1939[,vars], fm = "ml", fa = "pc")
 plot(nScree(x = cor(HolzingerSwineford1939[,vars], use = "pairwise.complete.obs"), model = "components"))
 ```
@@ -2599,19 +2855,25 @@ Very simple structure (VSS) plots were generated using the `psych` package [@R-p
 
 ##### Orthogonal (Varimax) rotation {#pcaAnalysisVSSplotOrthogonal}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
+A VSS plot of PCA with orthogonal rotation is in Figure \@ref(fig:vssOrthogonalPCA).
+
+```{r vssOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
 vss(HolzingerSwineford1939[,vars], rotate = "varimax", fm = "pc")
 ```
 
 ##### Oblique (Oblimin) rotation {#pcaAnalysisVSSplotOblique}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
+A VSS plot of PCA with oblique rotation is in Figure \@ref(fig:vssObliquePCA).
+
+```{r vssObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
 vss(HolzingerSwineford1939[,vars], rotate = "oblimin", fm = "pc")
 ```
 
 ##### No rotation {#pcaAnalysisVSSplotNoRotation}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
+A VSS plot of PCA with no rotation is in Figure \@ref(fig:vssUnrotatedPCA).
+
+```{r vssUnrotatedPCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
 vss(HolzingerSwineford1939[,vars], rotate = "none", fm = "pc")
 ```
 
@@ -2751,28 +3013,38 @@ Correlation plots were generated using the `corrplot` package [@R-corrplot].
 
 #### Biplot {#pcaBiplot}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Principal Component Analysis."}
+A biplot is in Figure \@ref(fig:pcaBiplot).
+
+```{r pcaBiplot, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Principal Component Analysis."}
 biplot(pca2factorOrthogonal)
 abline(h = 0, v = 0, lty = 2)
 ```
 
 #### Orthogonal (Varimax) rotation {#pcaAnalysisPlotsOrthogonal}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Orthogonal Rotation in Principal Component Analysis."}
+A pairs panel plot is in Figure \@ref(pairsPlotOrthogonalPCA).
+
+```{r pairsPlotOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Orthogonal Rotation in Principal Component Analysis."}
 pairs.panels(pca3Orthogonal)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Orthogonal Rotation in Principal Component Analysis."}
+A correlation plot is in Figure \@ref(correlationPlotOrthogonalPCA).
+
+```{r correlationPlotOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Orthogonal Rotation in Principal Component Analysis."}
 corrplot(cor(pca3Orthogonal, use = "pairwise.complete.obs"))
 ```
 
 #### Oblique (Oblimin) rotation {#pcaAnalysisPlotsOblique}
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Oblique Rotation in Principal Component Analysis."}
+A pairs panel plot is in Figure \@ref(pairsPlotObliquePCA).
+
+```{r pairsPlotObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Oblique Rotation in Principal Component Analysis."}
 pairs.panels(pca3Oblique)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Oblique Rotation in Principal Component Analysis."}
+A correlation plot is in Figure \@ref(correlationPlotObliquePCA).
+
+```{r correlationPlotObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Oblique Rotation in Principal Component Analysis."}
 corrplot(cor(pca3Oblique, use = "pairwise.complete.obs"))
 ```
 
@@ -3035,9 +3307,9 @@ What are some possible alternative models?
 ### Answers {#exercisesAnswers-factorAnalysis}
 
 1.
-    a. A scree plot is below:
+    a. A scree plot is in Figure \@ref(screePlot_ex).
 
-```{r echo = FALSE, results = "hide", message = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot From Exploratory Factor Analysis."}
+```{r screePlot_ex, echo = FALSE, results = "hide", message = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot From Exploratory Factor Analysis."}
 fa.parallel(x = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], fm = "ml", fa = "fa")
 ```
 
@@ -3068,9 +3340,9 @@ Although the fit of the structural model may be consistent with the hypothesized
 Thus, it is important to consider alternative models that may better capture the causal processes, even if their fit is mathematically equivalent.
 For instance, you could consider models with multiple factors, correlated factors, correlated residuals, cross-loading indicators, regression paths, hierarchical (higher-order) factors, bifactors, etc.
 Remember, an important part of science is specifying and testing plausible alternative explanations!
-Below are some alternative, equivalently fitting models:
+Some alternative, equivalently fitting models are in Figure \@ref(equivalentModels_ex).
 
-```{r echo = FALSE, results = "hide", message = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models in Confirmatory Factor Analysis."}
+```{r equivalentModels_ex, echo = FALSE, results = "hide", message = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models in Confirmatory Factor Analysis."}
 par(mfrow = c(3, 3))
 lapply(equivalentDAGs(dagModel, n = 9), plot)
 ```
