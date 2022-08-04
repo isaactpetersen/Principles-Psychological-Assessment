@@ -320,6 +320,7 @@ Thus, the line between [EFA](#efa) and [CFA](#cfa) is often blurred.
 
 [EFA](#efa) and [CFA](#cfa) can be considered special cases of exploratory structural equation modeling (ESEM), which combines features of [EFA](#efa), [CFA](#cfa), and [SEM](#sem) [@Marsh2014].
 ESEM can include any combination of ESEM and [CFA](#cfa) factors.
+ESEM, unlike traditional [CFA](#cfa) models, typically estimates all cross loadings.\index{cross loading}
 If a [CFA](#cfa) model without cross loadings and correlated residuals fits as well as an ESEM model, the [CFA](#cfa) model should be retained for its simplicity.\index{cross loading}\index{residuals!correlated}
 However, ESEM models often fit better than [CFA](#cfa) models because requiring no cross loadings is an unrealistic expectation of items from many psychological instruments [@Marsh2014].\index{cross loading}
 The correlations between factors tend to be positively biased when fitting [CFA](#cfa) models without cross loadings, which leads to challenges in using [CFA](#cfa) to establish [discriminant validity](#discriminantValidity) [@Marsh2014].\index{cross loading}
@@ -2534,7 +2535,7 @@ esem_loadings
 
 In ESEM, you specify one anchor item for each latent factor.
 You want the anchor item to be an item that has a strong loading on one latent factor and to have weak loadings on every other latent factor.
-The cross loadings for the anchor item are fixed to the respective loadings from the original [EFA](#efa) model.
+The cross loadings for the anchor item are fixed to the respective loadings from the original [EFA](#efa) model.\index{cross loading}
 I specify an anchor item for each latent factor below:
 
 ```{r}
@@ -2551,7 +2552,7 @@ make_esem_model <- function(loadings, anchors){
     loadings[which(loadings$latent != names(anchors)[i] & loadings$item == anchors[i]), "is_anchor"] <- 1
   }
   
-  # Make syntax column per item (which differs depending on whether the an item loading is an anchor loading)
+  # Make syntax for each per item (which differs depending on whether the item loading is an anchor loading)
   loadings$syntax <- NA
   loadings[which(loadings$is_anchor == 0), "syntax"] <- paste("start(", loadings$loading, ")*", loadings$item, sep = "")[which(loadings$is_anchor == 0)]
   loadings[which(loadings$is_anchor == 1), "syntax"] <- paste(loadings$loading, "*", loadings$item, sep = "")[which(loadings$is_anchor == 1)]
@@ -2561,7 +2562,7 @@ make_esem_model <- function(loadings, anchors){
     paste(latent, "=~", paste(loadings[which(loadings$latent == latent), "syntax"], collapse = "+", sep = ""),"\n")
   }
   
-  # Put all syntaxes together
+  # Put all syntax together
   lavaanSyntax <- 
     paste(sapply(unique(loadings$latent), each_syntax), collapse = " ")
   
@@ -2610,6 +2611,14 @@ fitMeasures(
     "baseline.chisq","baseline.df","baseline.pvalue",
     "rmsea", "cfi", "tli", "srmr",
     "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+##### Nested model comparison {#esemModelFitComparison}
+
+A nested model comparison indicates that the ESEM model fits significantly better than the [CFA](#cfa) model.
+
+```{r}
+anova(cfaModelFit, esemModelFit)
 ```
 
 ##### Residuals {#esemModelResiduals}
