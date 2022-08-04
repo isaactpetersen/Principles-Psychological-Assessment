@@ -2526,9 +2526,9 @@ esem_loadings <- parameterEstimates(
   efa3factorObliqueLavaan_fit,
   standardized = TRUE
 ) %>% 
-  filter(efa == "efa1") %>% 
-  select(lhs, rhs, est) %>% 
-  rename(item = rhs, latent = lhs, loading = est)
+  dplyr::filter(efa == "efa1") %>% 
+  dplyr::select(lhs, rhs, est) %>% 
+  dplyr::rename(item = rhs, latent = lhs, loading = est)
 
 esem_loadings
 ```
@@ -2542,33 +2542,9 @@ I specify an anchor item for each latent factor below:
 anchors <- c(f1 = "x3", f2 = "x5", f3 = "x7")
 ```
 
-The function below for creating `lavaan` syntax for an ESEM model is adapted from Mateus Silvestrin: https://msilvestrin.me/post/esem/
+The `petersenlab` package [@R-petersenlab] includes the `make_esem_model()` function that creates `lavaan` syntax for an ESEM model from the factor loadings of an [EFA](#efa) model, as adapted from Mateus Silvestrin: https://msilvestrin.me/post/esem/
 
 ```{r}
-make_esem_model <- function(loadings, anchors){
-  # Make variable indicating whether an item loading is an anchor loading (i.e., fixed to the EFA result)
-  loadings$is_anchor <- 0
-  for(i in 1:length(anchors)){
-    loadings[which(loadings$latent != names(anchors)[i] & loadings$item == anchors[i]), "is_anchor"] <- 1
-  }
-  
-  # Make syntax for each per item (which differs depending on whether the item loading is an anchor loading)
-  loadings$syntax <- NA
-  loadings[which(loadings$is_anchor == 0), "syntax"] <- paste("start(", loadings$loading, ")*", loadings$item, sep = "")[which(loadings$is_anchor == 0)]
-  loadings[which(loadings$is_anchor == 1), "syntax"] <- paste(loadings$loading, "*", loadings$item, sep = "")[which(loadings$is_anchor == 1)]
-  
-  # Make syntax for each latent variable
-  each_syntax <- function(latent){
-    paste(latent, "=~", paste(loadings[which(loadings$latent == latent), "syntax"], collapse = "+", sep = ""),"\n")
-  }
-  
-  # Put all syntax together
-  lavaanSyntax <- 
-    paste(sapply(unique(loadings$latent), each_syntax), collapse = " ")
-  
-  return(lavaanSyntax)
-}
-
 esemModel_syntax <- make_esem_model(esem_loadings, anchors)
 
 writeLines(esemModel_syntax)
