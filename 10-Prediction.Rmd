@@ -16,7 +16,7 @@ And, similar to chaos theory, one small change in the system can lead to large d
 
 Predictions can come in different types.
 Some predictions involve categorical data, whereas other predictions involve continuous data.
-When dealing with categorical data, we can evaluate predictions a 2x2 table known as a confusion matrix (see Figure \@ref(fig:twoByTwoMatrix1)), or with logistic regression models.
+When dealing with categorical data, we can evaluate predictions a 2x2 table known as a [confusion matrix](#confusionMatrix) (see Figure \@ref(fig:twoByTwoMatrix1)), or with logistic regression models.
 When dealing with continuous data, we can evaluate predictions using multiple regression or similar variants such as [structural equation modeling](#sem) and [mixed models](#mixedModels).
 
 Let's consider a prediction example, assuming the following probabilities:
@@ -47,11 +47,11 @@ A *marginal probability* is the probability of an event irrespective of the outc
 For instance, we can consider the following marginal probabilities:
 
 $P(C_i)$ is the probability (i.e., base rate) of a classification, $C$, independent of other things.
+A base rate is often used as the "*prior probability*" in a Bayesian model.
 In our example above, $P(C_i)$ is the base rate (i.e., prevalence) of HIV in the population: $P(\text{HIV}) = .3\%$.
 $P(R_i)$ is the probability (base rate) of a response, $R$, independent of other things.
 In the example above, $P(R_i)$ is the base rate of a positive test for HIV: $P(\text{positive test}) = 1\%$.
-The base rate of a positive test is known as the *positivity rate*.
-A base rate is often used as the "*prior probability*" in a Bayesian model.
+The base rate of a positive test is known as the *positivity rate* or [*selection ratio*](#selectionRatio).
 
 ##### Joint Probability {#jointProbability}
 
@@ -167,16 +167,16 @@ Thus, assuming the probabilities in the example above, the [conditional probabil
 Given a positive test, chances are higher than not that the person does not have HIV.
 
 Bayes' theorem can be depicted visually [@BallesterosPerez2018].
-If we have 100,000 people in our population, we would be able to fill out a 2-by-2 confusion matrix, as depicted in Figure \@ref(fig:bayesTheorem2x2).
+If we have 100,000 people in our population, we would be able to fill out a 2-by-2 [confusion matrix](#confusionMatrix), as depicted in Figure \@ref(fig:bayesTheorem2x2).
 
-```{r bayesTheorem2x2, out.width = "100%", fig.align = "center", fig.cap = "Confusion Matrix: 2x2 Prediction Matrix.", echo = FALSE}
+```{r bayesTheorem2x2, out.width = "100%", fig.align = "center", fig.cap = "[Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix.", echo = FALSE}
 knitr::include_graphics("./Images/bayesTheorem2x2.png")
 ```
 
 We know that .3% of the population contracts HIV, so 300 people in the population of 100,000 would contract HIV.
 Therefore, we put 300 in the marginal sum of those with HIV ($.003 \times 100,000 = 300$), i.e., the [base rate](#baseRate) of HIV.
-That means 99,700 people do not contract HIV ($100,000 - 300 = 99,700$.
-We know that 1% of the population tests positive for HIV, so we put 1,000 in the marginal sum of those who test positive $.01 \times 100,000 = 1,000$, i.e., the [base rate](#baseRate) of a positive test (the [selection ratio](#selectionRatio)).
+That means 99,700 people do not contract HIV ($100,000 - 300 = 99,700$).
+We know that 1% of the population tests positive for HIV, so we put 1,000 in the marginal sum of those who test positive $.01 \times 100,000 = 1,000$, i.e., the [marginal probability](#baseRate) of a positive test (the [selection ratio](#selectionRatio)).
 That means 99,000 people test negative for HIV ($100,000 - 1,000 = 99,000$).
 We also know that 95% of those who have HIV test positive for HIV.
 Three hundred people have HIV, so 95% of them (i.e., 285 people; $.95 \times 300 = 285$) tested positive for HIV ([true positives](#truePositive)).
@@ -188,11 +188,11 @@ So, to answer the question of what is the probability of having HIV if you have 
 This can be depicted visually in Figures \@ref(fig:bayesTheorem1) and \@ref(fig:bayesTheorem2).^[Please note that the areas in the figure are not drawn to scale.
 Otherwise, some regions would be too small to include text.]
 
-```{r bayesTheorem1, out.width = "100%", fig.align = "center", fig.cap = "Bayes' theorem (and confusion matrix) depicted visually, where the marginal probability is the base rate (BR). The four boxes represent the number of true positives (TP), true negatives (TN), false positives (FP), and false negatives (FN). Note: boxes are not drawn to scale. Otherwise, some regions would be too small to include text.", echo = FALSE}
+```{r bayesTheorem1, out.width = "100%", fig.align = "center", fig.cap = "Bayes' Theorem (and [Confusion Matrix](#confusionMatrix)) Depicted Visually, Where the Marginal Probability is the [Base Rate](#baseRate) (BR). The four boxes represent the number of [true positives](#truePositive) (TP), [true negatives](#trueNegative) (TN), [false positives](#falsePositive) (FP), and [false negatives](#falseNegative) (FN). Note: boxes are not drawn to scale. Otherwise, some regions would be too small to include text.", echo = FALSE}
 knitr::include_graphics("./Images/bayesTheorem1.png")
 ```
 
-```{r bayesTheorem2, out.width = "100%", fig.align = "center", fig.cap = "Bayes' theorem (and confusion matrix) depicted visually, where the marginal probability is the selection ratio (SR). The four boxes represent the number of true positives (TP), true negatives (TN), false positives (FP), and false negatives (FN). Note: boxes are not drawn to scale. Otherwise, some regions would be too small to include text.", echo = FALSE}
+```{r bayesTheorem2, out.width = "100%", fig.align = "center", fig.cap = "Bayes' Theorem (and [Confusion Matrix](#confusionMatrix)) Depicted Visually, where the Marginal Probability is the [Selection Ratio](#selectionRatio) (SR). The four boxes represent the number of [true positives](#truePositive) (TP), [true negatives](#trueNegative) (TN), [false positives](#falsePositive) (FP), and [false negatives](#falseNegative) (FN). Note: boxes are not drawn to scale. Otherwise, some regions would be too small to include text.", echo = FALSE}
 knitr::include_graphics("./Images/bayesTheorem2.png")
 ```
 
@@ -267,11 +267,12 @@ pB <- function(pBgivenA, pA, pBgivenNotA){
 
 ```{r}
 pB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
-pB(pBgivenA = .95, pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
+pB(pBgivenA = .95,
+   pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
    pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
-We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the errors of each test are independent, i.e., uncorrelated), as in Equation \@ref(eq:baseRateUpdated2):
+We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the [errors](#measurementError) of each test are independent, i.e., uncorrelated), as in Equation \@ref(eq:baseRateUpdated2):
 
 $$
 \begin{aligned}
@@ -346,7 +347,8 @@ pAgivenBalternative <- function(pBgivenA, pA, pBgivenNotA){
 }
 
 pAgivenBalternative(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
-pAgivenBalternative(pBgivenA = .95, pA = .003,
+pAgivenBalternative(pBgivenA = .95,
+                    pA = .003,
                     pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
@@ -377,14 +379,18 @@ $$
 The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.
 
 ```{r}
-pAgivenBalternative(pBgivenA = .95, pA = .285,
+pAgivenBalternative(pBgivenA = .95,
+                    pA = .285,
                     pBgivenNotA = .007171515)
-pAgivenBalternative(pBgivenA = .95, pA = .285,
+pAgivenBalternative(pBgivenA = .95,
+                    pA = .285,
                     pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 
-pAgivenB(pBgivenA = .95, pA = .285,
+pAgivenB(pBgivenA = .95,
+         pA = .285,
          pBgivenNotA = .007171515)
-pAgivenB(pBgivenA = .95, pA = .285,
+pAgivenB(pBgivenA = .95,
+         pA = .285,
          pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
 ```
 
@@ -424,13 +430,13 @@ A *false negative* is an incorrect judgment (or prediction) where the judgment w
 
 An example of a [confusion matrix](#confusionMatrix) is in Figure \@ref(fig:twoByTwoMatrix1).
 
-```{r twoByTwoMatrix1, out.width = "100%", fig.align = "center", fig.cap = "Confusion Matrix: 2x2 Prediction Matrix.", echo = FALSE}
+```{r twoByTwoMatrix1, out.width = "100%", fig.align = "center", fig.cap = "[Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix.", echo = FALSE}
 knitr::include_graphics("./Images/2x2-Matrix_2a.png")
 ```
 
-With the information in the [confusion matrix](#confusionMatrix), we can calculate the marginal sums, and the proportion of people in each cell (in parentheses), as depicted in Figure \@ref(fig:twoByTwoMatrix2).
+With the information in the [confusion matrix](#confusionMatrix), we can calculate the marginal sums and the proportion of people in each cell (in parentheses), as depicted in Figure \@ref(fig:twoByTwoMatrix2).
 
-```{r twoByTwoMatrix2, out.width = "100%", fig.align = "center", fig.cap = "Confusion Matrix: 2x2 Prediction Matrix With Marginal Sums.", echo = FALSE}
+```{r twoByTwoMatrix2, out.width = "100%", fig.align = "center", fig.cap = "[Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix With Marginal Sums.", echo = FALSE}
 knitr::include_graphics("./Images/2x2-Matrix_2b.png")
 ```
 
@@ -439,16 +445,16 @@ If we sum the column of predicted marginal sums ($508 + 1,492$) or the row of ac
 
 Based on the marginal sums, we can compute the [marginal probabilities](#baseRate), as depicted in Figure \@ref(fig:twoByTwoMatrix3).
 
-```{r twoByTwoMatrix3, out.width = "100%", fig.align = "center", fig.cap = "Confusion Matrix: 2x2 Prediction Matrix With Marginal Sums And Marginal Probabilities.", echo = FALSE}
+```{r twoByTwoMatrix3, out.width = "100%", fig.align = "center", fig.cap = "[Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix With Marginal Sums And Marginal Probabilities.", echo = FALSE}
 knitr::include_graphics("./Images/2x2-Matrix_2c.png")
 ```
 
 The [marginal probability](#baseRate) of the person having the characteristic of interest (i.e., showing poor adjustment) is called the [*base rate*](#baseRate) (BR).
-That is, the [*base rate*](#baseRate) is the proportion of people that have the characteristic.
+That is, the [base rate](#baseRate) is the proportion of people who have the characteristic.
 It is calculated by dividing the number of people with poor adjustment ($n = 100$) by the total number of people ($N = 2,000$): $BR = \frac{FN + TP}{N}$.
-Here, the [*base rate*](#baseRate) reflects the prevalence of poor adjustment.
-In this case, the [*base rate*](#baseRate) is .05, so there is a 5% chance that an applicant will be poorly adjusted.
-The [marginal probability](#baseRate) of good adjustment is equal to 1 minus the [*base rate*](#baseRate) of poor adjustment.
+Here, the [base rate](#baseRate) reflects the prevalence of poor adjustment.
+In this case, the [base rate](#baseRate) is .05, so there is a 5% chance that an applicant will be poorly adjusted.
+The [marginal probability](#baseRate) of good adjustment is equal to 1 minus the [base rate](#baseRate) of poor adjustment.
 
 The [marginal probability](#baseRate) of predicting that a person has the characteristic (i.e., rejecting a person) is called the [*selection ratio*](#selectionRatio) (SR).
 The [selection ratio](#selectionRatio) is the proportion of people who will be selected (in this case, rejected rather than retained); i.e., the proportion of people who are identified as having the characteristic.
@@ -464,7 +470,7 @@ For instance, when deciding whether to treat a client, the [selection ratio](#se
 
 Based on the [confusion matrix](#confusionMatrix), we can calculate the prediction accuracy based on the [percent accuracy](#percentAccuracy) of the predictions.
 The [percent accuracy](#percentAccuracy) is the number of correct predictions divided by the total number of predictions, and multiplied by 100.
-In the context of a confusion matrix, this is calculated as: $100\% \times \frac{\text{TP} + \text{TN}}{N}$.
+In the context of a [confusion matrix](#confusionMatrix), this is calculated as: $100\% \times \frac{\text{TP} + \text{TN}}{N}$.
 In this case, our [percent accuracy](#percentAccuracy) was 78%—that is, 78% of our predictions were accurate, and 22% of our predictions were inaccurate.
 
 #### Percent Accuracy by Chance {#accuracyByChance}
@@ -537,7 +543,7 @@ $$
 
 We sum the chance expectancies for the correct predictions ([TP](#truePositive) and [TN](#trueNegative)): $0 + .95 = .95$.
 Thus, our [percent accuracy](#percentAccuracy) by predicting from the [base rate](#baseRate) is 95%.
-This is damning to our measure because it is a much higher accruacy than the accuracy of our measure.
+This is damning to our measure because it is a much higher accuracy than the accuracy of our measure.
 That is, we can be much more accurate than our measure simply by predicting from the [base rate](#baseRate) and selecting no one to reject.
 
 Going with the most likely outcome in every prediction (predicting from the [base rate](#baseRate)) can be highly accurate as noted by @Meehl1955, especially when the [base rate](#baseRate) is very low or very high.
@@ -552,7 +558,7 @@ However, the value we place on different kinds of errors may be different, as de
 #### Different Kinds of Errors Have Different Costs {#differentErrorsDifferentCosts}
 
 Some errors have a high cost and some errors have a low cost.
-Among the four decision outcomes, there were two types of errors: [false positives](#falsePositive) and [false negatives](#falseNegative).
+Among the four decision outcomes, there are two types of errors: [false positives](#falsePositive) and [false negatives](#falseNegative).
 The extent to which [false positives](#falsePositive) and [false negatives](#falseNegative) are costly depends on the prediction problem.
 So, even though you can often be most accurate by going with the [base rate](#baseRate), it may be advantageous to using a screening instrument despite lower [overall accuracy](#percentAccuracy) because of the huge difference in costs of [false positives](#falsePositive) versus [false negatives](#falseNegative) in some cases.
 
@@ -569,7 +575,7 @@ In this case, a [false positive](#falsePositive) would be fine, but a [false neg
 
 How you weigh the costs of different errors depends considerably on the domain and context.
 Possible costs of [false positives](#falsePositive) to society include: unnecessary and costly treatment with side effects and sending an innocent person to jail (despite our presumption of innocence in the United States criminal justice system that a person is innocent until proven guilty).
-Possible costs of [Ffalse negatives](#falseNegative) to society include: setting a guilty person free, failing to detect a bomb or tumor, and preventing someone from getting treatment who needs it.
+Possible costs of [false negatives](#falseNegative) to society include: setting a guilty person free, failing to detect a bomb or tumor, and preventing someone from getting treatment who needs it.
 
 The differential costs of different errors also depends on how much flexibility you have in the [selection ratio](#selectionRatio) in being able to set a stringent versus loose [selection ratio](#selectionRatio).
 Consider if there is a high cost of getting rid of people during the selection process.
@@ -585,7 +591,7 @@ For instance, it is very challenging to predict low [base rate](#baseRate) behav
 The difficulty in predicting events with a low [base rate](#baseRate) is apparent with the true score formula from classical test theory: $X = T + e$.
 As described in Equation \@ref(eq:reliabilityRatio), [reliability](#reliability) is the ratio of true score variance to observed score variance.
 As true score variance increases, [reliability](#reliability) increases.
-If the [base rate](#baseRate) is .05, then the max variance of the true scores is .05.
+If the [base rate](#baseRate) is .05, the maximum variance of the true scores is .05.
 The lower true score variance makes the measure less [reliable](#reliability) and hard to make accurate predictions.
 
 #### Sensitivity, Specificity, PPV, and NPV {#sensitivitySpecificityPPVnpv}
@@ -594,12 +600,12 @@ As described earlier, [percent accuracy](#percentAccuracy) is not the only impor
 [Percent accuracy](#percentAccuracy) can be misleading because it is highly influenced by [base rates](#baseRate).
 You can have a high [percent accuracy](#percentAccuracy) by [predicting from the base rate](#predictingFromBaseRate) and saying that no one has the condition (if the [base rate](#baseRate) is low) or that everyone has the condition (if the [base rate](#baseRate) is high).
 Thus, it is also important to consider other aspects of accuracy, including [sensitivity](#sensitivity) (SN), [specificity](#specificity) (SP), [positive predictive value](#ppv) (PPV), and [negative predictive value](#npv) (NPV).
-We want our predictions to be [sensitive](#sensitity) to be able to detect the chararacteristic but also to be [specific](#specificity) so that we classify only the characteristic as having the characteristic.
+We want our predictions to be [sensitive](#sensitity) to be able to detect the chararacteristic but also to be [specific](#specificity) so that we classify only people actually with the characteristic as having the characteristic.
 
 Let us return to the [confusion matrix](#confusionMatrix) in Figure \@ref(fig:twoByTwoMatrix5).
 If we know the frequency of each of the four predicted-actual combinations of the [confusion matrix](#confusionMatrix) ([TP](#truePositive), [TN](#trueNegative), [FP](#falsePositive), [FN](#falseNegative)), we can calculate [sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv).
 
-```{r twoByTwoMatrix5, out.width = "100%", fig.align = "center", fig.cap = "Confusion Matrix: 2x2 Prediction Matrix.", echo = FALSE}
+```{r twoByTwoMatrix5, out.width = "100%", fig.align = "center", fig.cap = "[Cnfusion Matrix](#confusionMatrix): 2x2 Prediction Matrix.", echo = FALSE}
 knitr::include_graphics("./Images/2x2-Matrix_2e.png")
 ```
 
@@ -744,7 +750,7 @@ There are now fewer [false negatives](#falseNegative) (blue) and more [false pos
 If we lower the cutoff (to be more liberal), the number of [false negatives](#falseNegative) decreases and the number of [false positives](#falsePositive) increases.
 Consequently, as the cutoff decreases, [sensitivity](#sensitivity) and [NPV](#npv) increase (because we have fewer [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) decrease (because we have more [false positives](#falsePositive)).
 A lower cutoff could be optimal if the costs of [false negatives](#falseNegative) are considered greater than the costs of [false positives](#falsePositive).
-For instance, if the aliens cannot risk missing edible berries because they are in short supply relative to the size of alien colony, and eating the inedible berries would, at worst, lead to minor, temporary discomfort.
+For instance, if the aliens cannot risk missing edible berries because they are in short supply relative to the size of the alien colony, and eating the inedible berries would, at worst, lead to minor, temporary discomfort.
 
 ```{r classificationLowerCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Classifications based on lowering the cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
 #Lower the cutoff
@@ -793,8 +799,8 @@ If [false positives](#falsePositive) are more costly than [false negatives](#fal
 #### Signal Detection Theory {#sdt}
 
 Signal detection theory (SDT) is a probability-based theory for the detection of a given stimulus (signal) from a stimulus set that includes non-target stimuli (noise).
-SDT was developed research on radar (*RA*dio *D*etection *A*nd *R*anging) and sonar (*SO*und *N*avigation *A*nd *R*anging) in World War II based on research on sensory-perception research.
-The military wanted to be able to determine which objects on radar/sonar were enemy aircraft/submarines, and which were noise (e.g., different object in the environment or even just the weather itself).
+SDT arose through the development of radar (*RA*dio *D*etection *A*nd *R*anging) and sonar (*SO*und *N*avigation *A*nd *R*anging) in World War II based on research on sensory-perception research.
+The military wanted to determine which objects on radar/sonar were enemy aircraft/submarines, and which were noise (e.g., different object in the environment or even just the weather itself).
 SDT allowed determining how many errors operators made (how accurate they were) and decomposing errors into different kinds of errors.
 SDT distinguishes between sensitivity and bias.
 In SDT, *sensitivity* (or [discriminability](#discrimination)) is how well an assessment distinguishes between a target stimulus and non-target stimuli (i.e., how well the assessment detects the target stimulus amid non-target stimuli).
@@ -802,21 +808,21 @@ In SDT, *sensitivity* (or [discriminability](#discrimination)) is how well an as
 
 Some radar/sonar operators were not as sensitive to the differences between signal and noise, due to factors such as age, ability to distinguish gradations of a signal, etc.
 People who showed low sensitivity (i.e., who were not as successful at distinguishing between signal and noise) were screened out because the military perceived sensitivity as a skill that was not easily taught.
-By contrast, other operators could distinguish signal from noise, but their threshold was too low or high—they could take in information, but their decisions tended to be wrong due to systematic bias or poor calibration.
+By contrast, other operators could distinguish signal from noise, but their threshold was too low or high—they could take in information, but their decisions tended to be wrong due to systematic bias or poor [calibration](#calibration).
 That is, they systematically over-rejected or under-rejected stimuli.
 Over-rejecting leads to many [false negatives](#falseNegative) (i.e., saying that a stimulus is safe when it is not).
 Under-rejecting leads to many [false positives](#falsePositive) (i.e., saying that a stimulus is harmful when it is not).
 A person who showed good sensitivity but systematic bias was considered more teach-able than a person who showed low sensitivity.
-Thus, radar and sonar operators were selected based on their sensitivity to distinguish signal from noise, and then were trained to improve the calibration so they reduce their systematic bias and do not systematically over- or under-reject.
+Thus, radar and sonar operators were selected based on their sensitivity to distinguish signal from noise, and then were trained to improve the [calibration](#calibration) so they reduce their systematic bias and do not systematically over- or under-reject.
 
 Although SDT was originally developed for use in World War II, it now plays an important role in many areas of science and medicine.
 A medical application of SDT is tumor detection in radiology.
 SDT also plays an important role in psychology, especially cognitive psychology.
 For instance, research on social perception of sexual interest has shown that men tend to show lack of sensitivity to differences in women's affect—i.e., they have relative difficulties discriminating between friendliness and sexual interest [@Farris2008].
-Men also tend to show systematic bias (poor calibration) such that they tend to over-estimate women's sexual interest in them—i.e., men tend to have too low of a threshold for determining that a women is showing sexual interest in them [@Farris2006].
+Men also tend to show systematic bias (poor [calibration](#calibration)) such that they tend to over-estimate women's sexual interest in them—i.e., men tend to have too low of a threshold for determining that a women is showing sexual interest in them [@Farris2006].
 
-SDT metrics of sensitivity include [$d'$](#dPrimeSDT), [$A$](#aSDT) (or $A'$), and the [area under the receiver operating characteristic (ROC) curve](#auc).
-SDT metrics of bias include [$\beta$](#betaSDT), [$c$](#cSDT), and [$b$](#bSDT).
+SDT metrics of sensitivity include [$d'$](#dPrimeSDT) ("$d$-prime"), [$A$](#aSDT) (or $A'$), and the [area under the receiver operating characteristic (ROC) curve](#auc).
+SDT metrics of bias include [$\beta$](#betaSDT) (beta), [$c$](#cSDT), and [$b$](#bSDT).
 
 ##### Receiver Operating Characteristic (ROC) Curve {#roc}
 
@@ -825,10 +831,11 @@ The y-axis is the [hit rate](#sensitivity) or [true positive rate](#sensitivity)
 We can trace the ROC curve as the combination between [sensitivity](#sensitivity) and [specificity](#specificity) at every possible cutoff.
 At a cutoff of zero (top right of ROC curve), we calculate [sensitivity](#sensitivity) (1.0) and [specificity](#specificity) (0) and plot it.
 At a cutoff of zero, the assessment tell us to make an action for every stimulus (i.e., it is the most liberal).
-We then gradually increase the cutoff, and plot [sensitivity](#sensitivity) and [specificity](#specificity) As the cutoff increases, [sensitivity](#sensitivity) decreases and [specificity](#specificity) increases.
+We then gradually increase the cutoff, and plot [sensitivity](#sensitivity) and [specificity](#specificity) at each cutoff.
+As the cutoff increases, [sensitivity](#sensitivity) decreases and [specificity](#specificity) increases.
 We end at the highest possible cutoff, where the [sensitivity](#sensitivity) is 0 and the specificity is 1.0 (i.e., we never make an action; i.e., it is the most conservative).
 Each point on the ROC curve corresponds to a pair of [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates ([sensitivity](#sensitivity) and [specificity](#specificity)) resulting from a specific cutoff value.
-Then, we can draw a lines or a curve that connects the points.
+Then, we can draw lines or a curve to connect the points.
 
 Figure \@ref(fig:empiricalROC) depicts an empirical ROC plot where lines are drawn to connect the [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates.
 
@@ -853,7 +860,7 @@ If we randomly pick two observations, and we were right once and wrong once, we 
 But this would be a useless measure because it reflects chance responding.
 
 The geometrical area under the ROC curve reflects the [discriminative accuracy](#discrimination) of the measure.
-The index is called the area Under the [ROC](#roc) (AUC).
+The index is called the **a**rea **u**nder the [**R**OC](#roc) (AUC).
 AUC quantifies the [discriminative power](#discrimination) of an assessment.
 AUC is the probability that a randomly selected target and a randomly selected non-target is ranked correctly by the assessment method.
 AUC values range from 0.0 to 1.0, where chance accuracy is 0.5 as indicated by diagonal line in the ROC curve.
@@ -897,15 +904,16 @@ plot(roc(y ~ x, auc99, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, pri
 ```
 
 As an example, given an AUC of .75, this says that the overall score of an individual who has the characteristic in question will be higher 75% of the time than the overall score of an individual who does not have the characteristic.
-In lay terms, if we were to randomly pick one good and one bad outcome, what is the probability that we will classify correctly based on our instrument?
-AUC is better than [percent accuracy](#percentAccuracy), because you can have high [percent accuracy](#percentAccuracy) just by going with the [base rate](#baseRate).
+In lay terms, AUC provides the probability that we will classify correctly based on our instrument if we were to randomly pick one good and one bad outcome?
+AUC is a stronger index of accuracy than [percent accuracy](#percentAccuracy), because you can have high [percent accuracy](#percentAccuracy) just by going with the [base rate](#baseRate).
 AUC tells us how much better than chance a measure is at discriminating outcomes.
-AUC is useful as a measure of general [discriminative accuracy](#discrimination), and tells us how accurate a measure is at all possible cutoffs Knowing the accuracy of a measure at all possible cutoffs can be helpful for selecting the optimal cutoff, given the goals of the assessment.
+AUC is useful as a measure of general [discriminative accuracy](#discrimination), and it tells us how accurate a measure is at all possible cutoffs.
+Knowing the accuracy of a measure at all possible cutoffs can be helpful for selecting the optimal cutoff, given the goals of the assessment.
 In reality, however, we may not be interested in all cutoffs because not all errors are equal in their costs.
 
-If we lower the [base rate](#baseRate), we would need larger sample to get enough people to classify into each group.
+If we lower the [base rate](#baseRate), we would need a larger sample to get enough people to classify into each group.
 [SDT](#sdt)/[ROC](#roc) methods are traditionally about dichotomous decisions (yes/no), not graded judgments.
-[SDT](#sdt)/[ROC](#roc) methods can get messy with ordinal data that are more graded because you would have a a curve for each ordinal grouping.
+[SDT](#sdt)/[ROC](#roc) methods can get messy with ordinal data that are more graded because you would have an AUC curve for each ordinal grouping.
 
 ## Getting Started {#gettingStarted-prediction}
 
@@ -979,6 +987,7 @@ It depicts that, as the cutoff increases (i.e., becomes more conservative), [sen
 It also depicts that, as the cutoff decreases (i.e., becomes more liberal), [sensitivity](#sensitivity) increases and [specificity](#specificity) decreases.
 
 [Receiver operating characteristic (ROC) curves](#roc) were generated using the `pROC` package [@R-pROC].
+The examples depict ROC curves that demonstrate that the measure is moderately accurate—the measure is more accurate than chance but there remains considerable room for improvement in predictive accuracy.
 
 ### Empirical ROC Curve {#empiricalROC}
 
@@ -1066,7 +1075,7 @@ accuracyOverall(
 
 There are many metrics of general prediction accuracy.
 When thinking about which metric(s) may be best for a given problem, it is important to consider the purpose of the assessment.
-The estimates eneral prediction accuracy are separated below into [scale-dependent](#scaleDependentAccuracy) and [scale-independent](#scaleIndependentAccuracy) accuracy estimates.
+The estimates of general prediction accuracy are separated below into [scale-dependent](#scaleDependentAccuracy) and [scale-independent](#scaleIndependentAccuracy) accuracy estimates.
 
 #### Scale-Dependent Accuracy Estimates {#scaleDependentAccuracy}
 
@@ -1076,7 +1085,7 @@ These accuracy estimates depend on the unit of measurement and therefore cannot 
 ##### Mean Error {#meanError}
 
 Here, "error" ($e$) is the difference between the predicted and observed value for a given individual ($i$).
-Mean error (also known as bias, see Section \@ref(blandAltmanBias)) is the mean difference between the predicted and observed values across individuals ($i$), that is, the mean of the errors across individuals ($e_i$).
+Mean error (ME; also known as bias, see Section \@ref(blandAltmanBias)) is the mean difference between the predicted and observed values across individuals ($i$), that is, the mean of the errors across individuals ($e_i$).
 Values closer to zero reflect greater accuracy.
 If mean error is above zero, it indicates that predicted values are, on average, greater than observed values (i.e., over-estimating errors).
 If mean error is below zero, it indicates that predicted values are, on average, less than observed values (i.e., under-estimating errors).
@@ -1106,11 +1115,13 @@ meanError(mydataSDT$testScore, mydataSDT$disorder)
 meanErrorValue <- meanError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
+In this case, the mean error is negative, so the predictions systematically under-estimate the actual scores.
+
 ##### Mean Absolute Error (MAE) {#meanAbsoluteError}
 
 Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.
-Smaller values (closer to zero) reflect greater accuracy.
-The formula for mean absolute error is in Equation \@ref(eq:meanAbsoluteError):
+Smaller MAE values (closer to zero) reflect greater accuracy.
+The formula for MAE is in Equation \@ref(eq:meanAbsoluteError):
 
 $$
 \begin{aligned}
@@ -1135,8 +1146,9 @@ meanAbsoluteErrorValue <- meanAbsoluteError(mydataSDT$testScore, mydataSDT$disor
 
 ##### Mean Squared Error (MSE) {#meanSquaredError}
 
-Smaller mean squared error (MSE) values (closer to zero) reflect greater accuracy.
-The formula for mean squared error is in Equation \@ref(eq:meanSquaredError):
+Mean squared error (MSE) is the mean of the square of the differences between the predicted and observed values across individuals, that is, the mean of the squared value of errors.
+Smaller MSE values (closer to zero) reflect greater accuracy.
+The formula for MSE is in Equation \@ref(eq:meanSquaredError):
 
 $$
 \begin{aligned}
@@ -1161,9 +1173,10 @@ meanSquaredErrorValue <- meanSquaredError(mydataSDT$testScore, mydataSDT$disorde
 
 ##### Root Mean Squared Error (RMSE) {#rootMeanSquaredError}
 
-Smaller root mean squared error (RMSE) values (closer to zero) reflect greater accuracy.
-RMSE penalizes larger errors more so than MAE does.
-The formula for root mean squared error is in Equation \@ref(eq:rootMeanSquaredError):
+Root mean squared error (RMSE) is the square root of the mean of the square of the differences between the predicted and observed values across individuals, that is, the root mean squared value of errors.
+Smaller RMSE values (closer to zero) reflect greater accuracy.
+RMSE penalizes larger errors more so than [MAE](#meanAbsoluteError) does.
+The formula for RMSE is in Equation \@ref(eq:rootMeanSquaredError):
 
 $$
 \begin{aligned}
@@ -1202,8 +1215,8 @@ $$
 (\#eq:percentageError)
 $$
 
-We then take the mean of the percentage errors to get mean percentage error.
-The formula for mean percentage error is in Equation \@ref(eq:meanPercentageError):
+We then take the mean of the percentage errors to get MPE.
+The formula for MPE is in Equation \@ref(eq:meanPercentageError):
 
 $$
 \begin{aligned}
@@ -1214,7 +1227,7 @@ $$
 (\#eq:meanPercentageError)
 $$
 
-Note: mean percentage error is undefined when one or more of the observed values equals zero, due to division by zero.
+Note: MPE is undefined when one or more of the observed values equals zero, due to division by zero.
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.
 
 ```{r}
@@ -1240,7 +1253,7 @@ meanPercentageErrorValue <- meanPercentageError(mydataSDT$testScore, mydataSDT$d
 ##### Mean Absolute Percentage Error (MAPE) {#meanAbsolutePercentageError}
 
 Smaller mean absolute percentage error (MAPE) Values (closer to zero) reflect greater accuracy.
-The formula for mean absolute percentage error is in Equation \@ref(eq:meanAbsolutePercentageError):
+The formula for MAPE is in Equation \@ref(eq:meanAbsolutePercentageError):
 
 $$
 \begin{aligned}
@@ -1251,7 +1264,7 @@ $$
 (\#eq:meanAbsolutePercentageError)
 $$
 
-Note: mean absolute percentage error is undefined when one or more of the observed values equals zero, due to division by zero.
+Note: MAPE is undefined when one or more of the observed values equals zero, due to division by zero.
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.
 
 ```{r}
@@ -1277,7 +1290,7 @@ meanAbsolutePercentageErrorValue <- meanAbsolutePercentageError(mydataSDT$testSc
 ##### Symmetric Mean Absolute Percentage Error (sMAPE) {#symmetricMeanAbsolutePercentageError}
 
 Smaller symmetric mean asbolute percentage error (sMAPE) values (closer to zero) reflect greater accuracy.
-The formula for symmetric mean absolute percentage error is in Equation \@ref(eq:symmetricMeanAbsolutePercentageError):
+The formula for sMAPE is in Equation \@ref(eq:symmetricMeanAbsolutePercentageError):
 
 $$
 \small
@@ -1287,7 +1300,7 @@ $$
 (\#eq:symmetricMeanAbsolutePercentageError)
 $$
 
-Note: symmetric mean absolute percentage error is undefined when one or more of the individuals has a prediction–observed combination such that the sum of the absolute value of the predicted value and the absolute value of the observed value equals zero ($|\text{predicted}_i| + |\text{observed}_i|$), due to division by zero.
+Note: sMAPE is undefined when one or more of the individuals has a prediction–observed combination such that the sum of the absolute value of the predicted value and the absolute value of the observed value equals zero ($|\text{predicted}_i| + |\text{observed}_i|$), due to division by zero.
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.
 
 ```{r}
@@ -1325,7 +1338,7 @@ $$
 (\#eq:scaledError)
 $$
 
-Then, we calculate the mean of the absolute value of the scaled errors to get mean absolute scaled error, as in Equation \@ref(eq:meanAbsoluteScaledError):
+Then, we calculate the mean of the absolute value of the scaled errors to get MASE, as in Equation \@ref(eq:meanAbsoluteScaledError):
 
 $$
 \begin{aligned}
@@ -1360,7 +1373,7 @@ meanAbsoluteScaledErrorValue <- meanAbsoluteScaledError(mydataSDT$testScore, myd
 
 ##### Root Mean Squared Log of the Accuracy Ratio {#accuracyRatio}
 
-The squared log of the accuracy ratio is described by [@Tofallis2015].
+The squared log of the accuracy ratio is described by @Tofallis2015.
 The accuracy ratio is in Equation \@ref(eq:accuracyRatio):
 
 $$
@@ -1539,7 +1552,10 @@ Larger values reflect greater accuracy.
 Spearman's rho was estimated in the `rms` package [@R-rms].
 
 ```{r}
-cor(x = mydataSDT$testScore, y = mydataSDT$continuousOutcome, use = "pairwise.complete.obs", method = "spearman")
+cor(x = mydataSDT$testScore,
+    y = mydataSDT$continuousOutcome,
+    use = "pairwise.complete.obs",
+    method = "spearman")
 
 orm(continuousOutcome ~ testScore, data = mydataSDT)$stats["rho"]
 ```
@@ -1563,7 +1579,10 @@ Larger values reflect greater accuracy.
 Kendall's tau-a was estimated in the `rms` package [@R-rms].
 
 ```{r}
-cor(x = mydataSDT$testScore, y = mydataSDT$continuousOutcome, use = "pairwise.complete.obs", method = "kendall")
+cor(x = mydataSDT$testScore,
+    y = mydataSDT$continuousOutcome,
+    use = "pairwise.complete.obs",
+    method = "kendall")
 
 lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Tau-a"]
 ```
@@ -1581,7 +1600,7 @@ lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["C"]
 
 #### Effect Size ($\beta$) of Regression {#standardizedRegressionCoefficient}
 
-The effect size of a predictor, i.e., the standardized regression coefficient called beta ($\beta$), is a general index of [discrimination accuracy](#discrimination) for a continuous outcome.
+The effect size of a predictor, i.e., the standardized regression coefficient is called a beta ($\beta$) coefficient, is a general index of [discrimination accuracy](#discrimination) for a continuous outcome.
 Larger values reflect greater accuracy.
 We can obtain standardized regression coefficients by standardizing the predictors and outcome using the `scale()` function in R.
 
@@ -1599,15 +1618,15 @@ regressionBeta <- lm(scale(continuousOutcome) ~ scale(testScore), data = mydataS
 
 When dealing with a categorical outcome, calibration is the degree to which a probabilistic estimate of an event reflects the true underlying probability of the event.
 When dealing with a continuous outcome, calibration is the degree to which the predicted values are close in value to the outcome values.
-The importance of examining calibration (in addition to discrimination) is described by @Lindhiem2020.
+The importance of examining calibration (in addition to [discrimination](#discrimination)) is described by @Lindhiem2020.
 
 Calibration came to be considered a central aspect of weather forecast accuracy.
 For instance, on the days that the meteorologist says there is a 60% chance of rain, it should rain about 60% of the time.
 Through improvements in scientific understanding of weather systems, rain forecasts have become more accurate.
 For instance, rain forecasts from the National Weather Service are well calibrated [see Figure \@ref(fig:calibrationNWS), @Charba1980].
-However, forecasts of rain may be exaggerated by local TV meteoreologists to boost ratings [@Silver2012].
+However, forecasts of rain may be exaggerated by local TV meteorologists to boost ratings [@Silver2012].
 Interestingly, rain forecasts from The Weather Channel are somewhat miscalibrated under certain conditions.
-For instance, on days in which they forecast a 20% chance of rain, the actual chance of rain is around 5% [see Figure \@ref(fig:calibrationWeatherChannel), @Bickel2008].
+For instance, on days when they forecast a 20% chance of rain, the actual chance of rain is around 5% [see Figure \@ref(fig:calibrationWeatherChannel), @Bickel2008].
 However, this miscalibration is deliberate.
 People tend to be more angry when the meteorologist says it will not rain when it actually does ([false negative](#falseNegative)) compared to when the meteorologist says it will rain when it actually does not ([false positive](#falsePositive)).
 As @Silver2012 notes, "If it rains when it isn't supposed to, [people] curse the weatherman for ruining their picnic, whereas an unexpectedly sunny day is taken as a serendipitous bonus.
@@ -1640,10 +1659,10 @@ The predictions are binned into a certain number of groups (commonly 10).
 The diagonal line reflects predictions that are perfectly calibrated.
 To the extent that predictions deviate from the diagonal line, the predictions are miscalibrated.
 There are four general patterns of miscalibration: overextremity, underextremity, overprediction, and underprediction (see Figure \@ref(fig:miscalibrationPlots)).
-Overextremity exists when the predicted probabilites are too close to the extremes (zero or one).
-Underextremity exists when the predicted probabilities are too far away from the extremes.
-Overprediction exists when the predicted probabilities are consistently greater than the observed probabilities.
-Underprediction exists when the predicted probabilities are consistently less than the observed probabilities.
+*Overextremity* exists when the predicted probabilites are too close to the extremes (zero or one).
+*Underextremity* exists when the predicted probabilities are too far away from the extremes.
+*Overprediction* exists when the predicted probabilities are consistently greater than the observed probabilities.
+*Underprediction* exists when the predicted probabilities are consistently less than the observed probabilities.
 For a more thorough description of these types of miscalibration, see @Lindhiem2020.
 
 ```{r, include = FALSE}
@@ -1687,7 +1706,7 @@ plotCalibration(data = na.omit(myDataNoMissing),
 This calibration plot (and ROC curve) was generated using the `rms` package [@R-rms].
 The calibration plot is consistent with underprediction.
 That is, the predicted probabilities were consistently lower than the actual probabilities.
-To re-calibrate the predicted probabilities, it would be necessary to necessary to increase them so they are consistent with observed probabilties.
+To re-calibrate the predicted probabilities, it would be necessary to increase them so they are consistent with observed probabilties.
 
 ```{r calibrationPlot2, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = c("Calibration Plot 2.")}
 val.prob(mydataSDT$predictedProbability, mydataSDT$disorder)
@@ -1841,7 +1860,7 @@ With a plot of the predictions on the x-axis, and the outcomes on the y-axis (i.
 The intercept is also called "calibration-in-the-large", whereas "calibration-in-the-small" refers to the extent to which the predicted values match the observed values at a specific predicted value (e.g., when the weather forecaster says that there is a 10% chance of rain, does it actually rain 10% of the time?).
 For predictions to be well [calibrated](#calibration), the intercept should be close to zero and the slope should be close to one.
 If the slope is close to one but the intercept is not close to zero (or the intercept is close to zero but the slope is not close to one), the predictions would not be considered well [calibrated](#calibration).
-Likewise, if the intercept is close to zero but the slope is not closer to zero, the predictions would not be well [calibrated](#calibration).
+Likewise, if the intercept is close to zero but the slope is not close to zero, the predictions would not be well [calibrated](#calibration).
 The 95% confidence interval of the observed value, across all values of the predicted values, should include the diagonal reference line whose intercept is zero and whose slope is one.
 
 For instance, based on the intercept and slope of the [calibration plot](#calibrationPlot) in Figure \@ref(fig:calibrationContinuousOutcome), the predictions are not well calibrated, despite having a slope near one, because the 95% confidence interval of the intercept does not include zero.
@@ -1966,6 +1985,10 @@ accuracyAtCutoff(
 ```
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}
+
+A [confusion matrix](#confusionMatrix) is a matrix for categorical data that presents the predicted outcome on one dimension and the actual outcome (truth) on the other dimension.
+If the predictions and outcomes are dichotomous, the [confusion matrix](#confusionMatrix) is a 2x2 matrix with two rows and two columns that represent four possible predicted-actual combinations ([decision outcomes](#decisionOutcomes-overview)).
+In such a case, the confusion matrix provides a tabular count of each type of accurate cases ([true positives](#truePositive) and [true negatives](#trueNegative)) versus the number of each type of error ([false positives](#falsePositive) and [false negatives](#falseNegatives)).
 
 #### Number {#confusionMatrix-number}
 
