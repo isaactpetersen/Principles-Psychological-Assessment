@@ -868,13 +868,13 @@ plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc
 ###### Area Under the ROC Curve {#auc}
 
 [ROC](#roc) methods can be used to compare and compute the [discriminative](#discrimination) power of measurement devices free from the influence of [selection ratios](#selectionRatio), [base rates](#baseRate), and costs and benefits.
-A ROC analysis yields a quantitative index of how well an index predicts a signal of interest or can discriminate between different signals.
-ROC analysis can help tell us how often our assessment would be correct.
+An [ROC](#roc) analysis yields a quantitative index of how well an index predicts a signal of interest or can discriminate between different signals.
+[ROC](#roc) analysis can help tell us how often our assessment would be correct.
 If we randomly pick two observations, and we were right once and wrong once, we were 50% accurate.
 But this would be a useless measure because it reflects chance responding.
 
-The geometrical area under the ROC curve reflects the [discriminative accuracy](#discrimination) of the measure.
-The index is called the **a**rea **u**nder the [**R**OC](#roc) (AUC).
+The geometrical area under the [ROC curve](#roc) reflects the [discriminative accuracy](#discrimination) of the measure.
+The index is called the **a**rea **u**nder the **c**urve (AUC) of an [ROC curve](#roc).
 AUC quantifies the [discriminative power](#discrimination) of an assessment.
 AUC is the probability that a randomly selected target and a randomly selected non-target is ranked correctly by the assessment method.
 AUC values range from 0.0 to 1.0, where chance accuracy is 0.5 as indicated by diagonal line in the ROC curve.
@@ -1462,7 +1462,7 @@ summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
 rSquaredValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
 ```
 
-The predictor (`testScore`) explains $`r apa(rSquaredValue * 100, 2)`$% of the variance $(R^2 = `r apa(rSquaredValue, 2, leading = FALSE)`)$ in the outcome (`disorder` status).
+The predictor (`testScore`) explains $`r apa(rSquaredValue * 100, 2)`$% of the variance $(R^2 = `r apa(rSquaredValue, 4, leading = FALSE)`)$ in the outcome (`disorder` status).
 
 ###### Adjusted $R^2$ ($R^2_{adj}$) {#adjustedRsquared}
 
@@ -1649,7 +1649,7 @@ Rose at the Weather Channel acknowledged to [Mr.
 Silver]: 'If the forecast was objective, if it has zero [bias](#sdt) in precipitation, we'd probably be in trouble.' " (p.
 135).
 
-(ref:calibrationWeatherChannelCaption) Calibration Plot Of Same-Day Probability Of Precipitation (PoP) Forecasts From The Weather Channel. Figure reprinted from @Bickel2008, Figure 2, p. 4872. Bickel, J. E., \& Kim, S. D. (2008). Verification of the weather channel probability of precipitation forecasts. *Monthly Weather Review*, *136*(12), 4867–4881. doi: [https://doi.org/10.1175/2008MWR2547.1](https://doi.org/10.1175/2008MWR2547.1) Copyright (c) American Meteorological Society. Used with permission.
+(ref:calibrationWeatherChannelCaption) Calibration Plot Of Same-Day Probability Of Precipitation (PoP) Forecasts From The Weather Channel. The plot depicts that the rain forecasts are generally well calibrated, but shows some miscalibration. For instance, the forecasted probability of rain is lower than the actual probability of rain when the forecasted probability of rain is 20%. Figure reprinted from @Bickel2008, Figure 2, p. 4872. Bickel, J. E., \& Kim, S. D. (2008). Verification of the weather channel probability of precipitation forecasts. *Monthly Weather Review*, *136*(12), 4867–4881. doi: [https://doi.org/10.1175/2008MWR2547.1](https://doi.org/10.1175/2008MWR2547.1) Copyright (c) American Meteorological Society. Used with permission.
 
 ```{r calibrationWeatherChannel, out.width = "100%", fig.align = "center", fig.cap = "(ref:calibrationWeatherChannelCaption)", echo = FALSE}
 knitr::include_graphics("./Images/calibrationTWC.png")
@@ -1785,10 +1785,14 @@ brierValue <- val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = 
 
 #### Hosler-Lemeshow Test {#hoslerLemeshow}
 
-The Hosler-Lemeshow Goodness of Fit (GOF) test requires specifying how many groups/bins ($g$) to use to calculate quantiles.
-Smaller $\chi^2$ values reflect greater [calibration accuracy](#calibration).
+The Hosler-Lemeshow goodness of fit (GOF) test evaluates the null hypothesis that the there is no difference between the predicted versus observed frequencies of an event.
+The test requires specifying how many groups/bins ($g$) to use to calculate quantiles.
+Smaller $\chi^2$ values (and larger *p*-values) reflect greater [calibration accuracy](#calibration).
+A statistically significant $\chi^2$ (*p* < .05) indicates a significant degree of miscalibration.
 The Hosler-Lemeshow GOF test was calculated using the `ResourceSelection` package [@R-ResourceSelection].
-The table of predicted versus expected frequencies was generated using the `PredictABEL` package [@R-PredictABEL].
+The table of predicted versus observed frequencies was generated using the `PredictABEL` package [@R-PredictABEL].
+
+For each number of bins ($g$) specified below, the predictions show statistically significant miscalibration.
 
 $g = 2$
 
@@ -1854,6 +1858,9 @@ plotCalibration(data = na.omit(myDataNoMissing),
 
 Spiegelhalter's $z$ was calculated using the `rms` package [@R-rms].
 Smaller $z$ values (and larger associated $p$-values) reflect greater [calibration accuracy](#calibration).
+A statistically significant Spiegelhalter's $z$ (*p* < .05) indicates a significant degree of miscalibration.
+
+In this case, the predictions show statistically significant miscalibration.
 
 ```{r}
 val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:z"]; val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:p"]
@@ -1885,9 +1892,9 @@ The confidence interval of the observed value (i.e., the purple band) is the int
 The 95% prediction interval of the observed value (i.e., the dashed red lines) is the interval within which we would expect that 95% of future observations would lie for a given predicted value.
 The black diagonal line indicates the reference line with an intercept of zero and a slope of one.
 The predictions would be significantly [miscalibrated](#calibration) at a given level of the predicted values if the 95% confidence interval of the observed value does not include the reference line at that level of the predicted value.
-In this case, the 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at any level of the predicted values, so the predictions are [miscalibrated](#calibration) at every level of the predicted values.
+In this case, the 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) lower levels of the predicted values.
 
-(ref:calibrationContinuousOutcomeCaption) Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The yellow line is the best-fit line. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at any level of the predicted values, so the predictions are miscalibrated at every level of the predicted values.
+(ref:calibrationContinuousOutcomeCaption) Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The yellow line is the best-fit line. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
 ```{r calibrationContinuousOutcome, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = "(ref:calibrationContinuousOutcomeCaption)"}
 #95 prediction interval based on linear model
@@ -1927,7 +1934,7 @@ ggplot(mydataSDT, aes(x = testScore, y = continuousOutcome)) +
 
 Gold-standard recommendations include examining the predicted values in relation to the observed values using a LOESS smoother [@Austin2014], such as in Figure \@ref(fig:calibrationContinuousOutcomeLOESS).
 We can examine whether the LOESS-based 95% confidence interval of the observed value at every level of the predicted values includes the diagonal reference line (i.e., the actual observed value).
-In this case, the 95% confidence interval of the observed value does not include the reference line at any level of the predicted values, so the predictions are [miscalibrated](#calibration) at every level of the predicted values.
+In this case, the 95% confidence interval of the observed value does not include the reference line at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) at lower levels of the predicted values.
 
 (ref:calibrationContinuousOutcomeLOESSCaption) Calibration Plot for Predictions of a Continuous Outcome. The yellow line is the best-fit line based on a LOESS smoother. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
