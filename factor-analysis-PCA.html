@@ -6696,6 +6696,7 @@ $mean
 <div class="sourceCode" id="cb1044"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1044-1"><a href="factor-analysis-PCA.html#cb1044-1" aria-hidden="true" tabindex="-1"></a>cfaFactorScores <span class="ot">&lt;-</span> <span class="fu">lavPredict</span>(cfaModelFit)</span></code></pre></div>
 <div id="syntax-cfaEFA" class="section level5 hasAnchor" number="14.4.2.7.1">
 <h5><span class="header-section-number">14.4.2.7.1</span> Compare CFA factor scores to EFA factor scores<a href="factor-analysis-PCA.html#syntax-cfaEFA" class="anchor-section" aria-label="Anchor link to header"></a></h5>
+<p>As would be expected, the factor scores from the <a href="factor-analysis-PCA.html#cfa">CFA</a> model are highly correlated with the factor scores from the <a href="factor-analysis-PCA.html#efa">EFA</a> model.</p>
 <div class="sourceCode" id="cb1045"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1045-1"><a href="factor-analysis-PCA.html#cb1045-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> cfaFactorScores[,<span class="st">&quot;visual&quot;</span>], <span class="at">y =</span> fa3Orthogonal[,<span class="st">&quot;ML3&quot;</span>])</span></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -8359,7 +8360,8 @@ An analysis example of a higher-order factor model is provided in Section <a hre
 <h4><span class="header-section-number">14.4.2.12</span> Bifactor Model<a href="factor-analysis-PCA.html#bifactorModel" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>A bifactor model is a model in which both a general latent factor and specific latent factors are extracted from items <span class="citation">(<a href="#ref-Markon2019" role="doc-biblioref">Markon, 2019</a>)</span>.
 The general factor represents the common variance among all items, whereas the specific factor represents the common variance among the specific items that load on the specific factor, after extracting the general factor variance.
-As estimated, the general factor is orthogonal to the specific factors.</p>
+As estimated below, the general factor is orthogonal to the specific factors.
+Some modified versions of the bifactor allow the specific factors to inter-correlate (in addition to estimating the general factor).</p>
 <div id="bifactorModelSyntax" class="section level5 hasAnchor" number="14.4.2.12.1">
 <h5><span class="header-section-number">14.4.2.12.1</span> Specify the model<a href="factor-analysis-PCA.html#bifactorModelSyntax" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <div class="sourceCode" id="cb1183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1183-1"><a href="factor-analysis-PCA.html#cb1183-1" aria-hidden="true" tabindex="-1"></a>cfaModelBifactor_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
@@ -10503,6 +10505,7 @@ Figure 14.86: Equivalently Fitting Models to a Multitrait-Multimethod Model in C
 <h2><span class="header-section-number">14.5</span> Principal Component Analysis (PCA)<a href="factor-analysis-PCA.html#pcaAnalysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><a href="factor-analysis-PCA.html#pca">Principal component analysis</a> (PCA) is a technique for data reduction.
 <a href="factor-analysis-PCA.html#pca">PCA</a> seeks to identify the principal components of the data, so that data can be reduced to that smaller set of components.
+That is, <a href="factor-analysis-PCA.html#pca">PCA</a> seeks to identify the smalles set of components that explain the most variance in the variables.
 Although <a href="factor-analysis-PCA.html#pca">PCA</a> is sometimes referred to as <a href="factor-analysis-PCA.html#factorAnalysis">factor analysis</a>, <a href="factor-analysis-PCA.html#pca">PCA</a> is not <a href="factor-analysis-PCA.html#factorAnalysis">factor analysis</a> <span class="citation">(<a href="#ref-Lilienfeld2015" role="doc-biblioref">Lilienfeld et al., 2015</a>)</span>.
 <a href="factor-analysis-PCA.html#pca">PCA</a> uses the <em>total</em> variance of all variables whereas <a href="factor-analysis-PCA.html#factorAnalysis">factor analysis</a> uses the <em>common</em> variance among the variables.</p>
 <div id="pcaAnalysisDetermineNumberOfComponents" class="section level3 hasAnchor" number="14.5.1">
@@ -10513,6 +10516,10 @@ Although <a href="factor-analysis-PCA.html#pca">PCA</a> is sometimes referred to
 <p>Scree plots were generated using the <strong>psych</strong> <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span> and <strong>nFactors</strong> <span class="citation">(<a href="#ref-R-nFactors" role="doc-biblioref">Raiche &amp; Magis, 2020</a>)</span> packages.
 Note that eigenvalues of factors in <a href="factor-analysis-PCA.html#pca">PCA</a> models are higher than factors from <a href="factor-analysis-PCA.html#efa">EFA</a> models, because <a href="factor-analysis-PCA.html#pca">PCA</a> components include <em>common</em> variance among the indicators in addition to <em>error</em> variance, whereas <a href="factor-analysis-PCA.html#efa">EFA</a> factors include only the common variance among the indicators.
 A scree plot based on parallel analysis is in Figure <a href="factor-analysis-PCA.html#fig:screePlotPCAParallel">14.87</a>.</p>
+<p>The number of components to keep would depend on which criteria one uses.
+Based on the rule to keep components whose eigenvalues are greater than one and based on the parallel test, we would keep three factors.
+However, based on the Cattell scree test (as operationalized by the optimal coordinates and acceleration factor), we would keep one or three factors.
+Therefore, interpretability of the factors would be important for deciding between whether to keep one, two, or three factors.</p>
 <div class="sourceCode" id="cb1249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1249-1"><a href="factor-analysis-PCA.html#cb1249-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.parallel</span>(<span class="at">x =</span> HolzingerSwineford1939[,vars], <span class="at">fm =</span> <span class="st">&quot;ml&quot;</span>, <span class="at">fa =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:screePlotPCAParallel"></span>
 <img src="Book_files/figure-html/screePlotPCAParallel-1.png" alt="Scree Plot Based on Parallel Analysis in Principal Component Analysis." width="100%" />
@@ -10535,6 +10542,7 @@ Figure 14.88: Scree Plot in Principal Component Analysis.
 <p>Very simple structure (VSS) plots were generated using the <code>psych</code> package <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <div id="pcaAnalysisVSSplotOrthogonal" class="section level5 hasAnchor" number="14.5.1.2.1">
 <h5><span class="header-section-number">14.5.1.2.1</span> Orthogonal (Varimax) rotation<a href="factor-analysis-PCA.html#pcaAnalysisVSSplotOrthogonal" class="anchor-section" aria-label="Anchor link to header"></a></h5>
+<p>In the example with orthogonal rotation below, the VSS criterion is highest with 3 or 4 components.</p>
 <p>A VSS plot of PCA with orthogonal rotation is in Figure <a href="factor-analysis-PCA.html#fig:vssOrthogonalPCA">14.89</a>.</p>
 <div class="sourceCode" id="cb1252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1252-1"><a href="factor-analysis-PCA.html#cb1252-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars], <span class="at">rotate =</span> <span class="st">&quot;varimax&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:vssOrthogonalPCA"></span>
@@ -10575,6 +10583,7 @@ Statistics by number of factors
 </div>
 <div id="pcaAnalysisVSSplotOblique" class="section level5 hasAnchor" number="14.5.1.2.2">
 <h5><span class="header-section-number">14.5.1.2.2</span> Oblique (Oblimin) rotation<a href="factor-analysis-PCA.html#pcaAnalysisVSSplotOblique" class="anchor-section" aria-label="Anchor link to header"></a></h5>
+<p>In the example with orthogonal rotation below, the VSS criterion is highest with 2 components.</p>
 <p>A VSS plot of PCA with oblique rotation is in Figure <a href="factor-analysis-PCA.html#fig:vssObliquePCA">14.90</a>.</p>
 <div class="sourceCode" id="cb1254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1254-1"><a href="factor-analysis-PCA.html#cb1254-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars], <span class="at">rotate =</span> <span class="st">&quot;oblimin&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:vssObliquePCA"></span>
@@ -10615,6 +10624,7 @@ Statistics by number of factors
 </div>
 <div id="pcaAnalysisVSSplotNoRotation" class="section level5 hasAnchor" number="14.5.1.2.3">
 <h5><span class="header-section-number">14.5.1.2.3</span> No rotation<a href="factor-analysis-PCA.html#pcaAnalysisVSSplotNoRotation" class="anchor-section" aria-label="Anchor link to header"></a></h5>
+<p>In the example with no rotation below, the VSS criterion is highest with 3 or 4 components.</p>
 <p>A VSS plot of PCA with no rotation is in Figure <a href="factor-analysis-PCA.html#fig:vssUnrotatedPCA">14.91</a>.</p>
 <div class="sourceCode" id="cb1256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1256-1"><a href="factor-analysis-PCA.html#cb1256-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vss</span>(HolzingerSwineford1939[,vars], <span class="at">rotate =</span> <span class="st">&quot;none&quot;</span>, <span class="at">fm =</span> <span class="st">&quot;pc&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:vssUnrotatedPCA"></span>
