@@ -30,10 +30,14 @@ There is nothing special about this particular seed.
 ```{r}
 set.seed(52242)
 
-rawData <- rnorm(n = 1000, mean = 200, sd = 30)
+rawData <- rnorm(
+  n = 1000,
+  mean = 200,
+  sd = 30)
 
-scores <- data.frame(rawData = rawData,
-                     rawDataNoMissing = rawData)
+scores <- data.frame(
+  rawData = rawData,
+  rawDataNoMissing = rawData)
 ```
 
 #### Add Missing Data {#addMissingData-scoresScales}
@@ -223,7 +227,8 @@ Thus, percentile ranks stretch out differences for some people but constrict dif
 Here is an example of how to calculate percentile ranks using the `dplyr` package from the `tidyverse` [@R-tidyverse; @tidyverse2019]:\index{data!percentile rank}
 
 ```{r}
-scores$percentileRank <- percent_rank(scores$rawDataNoMissing) * 100
+scores$percentileRank <- 
+  percent_rank(scores$rawDataNoMissing) * 100
 ```
 
 A histogram of percentile rank scores is in Figure \@ref(fig:percentileRanks).\index{data!percentile rank}\index{histogram}
@@ -367,8 +372,10 @@ where $x$ is the observed score, $\mu$ is the mean observed score, and $\sigma$ 
 ```{r}
 scores$zScore <- scale(scores$rawData)
 
-all.equal(as.vector(scores$zScore),
-          (scores$rawData - mean(scores$rawData, na.rm = TRUE))/sd(scores$rawData, na.rm = TRUE))
+all.equal(
+  as.vector(scores$zScore),
+  (scores$rawData - mean(scores$rawData, na.rm = TRUE)) / 
+    sd(scores$rawData, na.rm = TRUE))
 ```
 
 An example histogram of *z* scores is in Figure \@ref(fig:zScores).\index{data!\textit{z} score}\index{histogram}
@@ -494,13 +501,20 @@ kable(stanineConverstionTable,
 ```{r}
 scores$stanineScore <- NA
 scores$stanineScore[which(scores$percentileRank <= 4)] <- 1
-scores$stanineScore[which(scores$percentileRank > 4 & scores$percentileRank <= 11)] <- 2
-scores$stanineScore[which(scores$percentileRank > 11 & scores$percentileRank <= 23)] <- 3
-scores$stanineScore[which(scores$percentileRank > 23 & scores$percentileRank <= 40)] <- 4
-scores$stanineScore[which(scores$percentileRank > 40 & scores$percentileRank <= 60)] <- 5
-scores$stanineScore[which(scores$percentileRank > 60 & scores$percentileRank <= 77)] <- 6
-scores$stanineScore[which(scores$percentileRank > 77 & scores$percentileRank <= 89)] <- 7
-scores$stanineScore[which(scores$percentileRank > 89 & scores$percentileRank <= 96)] <- 8
+scores$stanineScore[
+  which(scores$percentileRank > 4 & scores$percentileRank <= 11)] <- 2
+scores$stanineScore[
+  which(scores$percentileRank > 11 & scores$percentileRank <= 23)] <- 3
+scores$stanineScore[
+  which(scores$percentileRank > 23 & scores$percentileRank <= 40)] <- 4
+scores$stanineScore[
+  which(scores$percentileRank > 40 & scores$percentileRank <= 60)] <- 5
+scores$stanineScore[
+  which(scores$percentileRank > 60 & scores$percentileRank <= 77)] <- 6
+scores$stanineScore[
+  which(scores$percentileRank > 77 & scores$percentileRank <= 89)] <- 7
+scores$stanineScore[
+  which(scores$percentileRank > 89 & scores$percentileRank <= 96)] <- 8
 scores$stanineScore[which(scores$percentileRank > 96)] <- 9
 ```
 
