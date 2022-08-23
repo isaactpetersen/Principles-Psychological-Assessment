@@ -565,19 +565,32 @@ sampleSize <- 100
 set.seed(52242)
 
 rater1continuous <- rnorm(n = sampleSize, mean = 50, sd = 10)
-rater2continuous <- rater1continuous + rnorm(n = sampleSize, mean = 0, sd = 4)
-rater3continuous <- rater2continuous + rnorm(n = sampleSize, mean = 0, sd = 8)
+rater2continuous <- rater1continuous + 
+  rnorm(
+    n = sampleSize,
+    mean = 0,
+    sd = 4)
+rater3continuous <- rater2continuous + 
+  rnorm(
+    n = sampleSize,
+    mean = 0,
+    sd = 8)
 
-rater1categorical <- sample(c(0,1), size = sampleSize, replace = TRUE)
+rater1categorical <- sample(
+  c(0,1),
+  size = sampleSize,
+  replace = TRUE)
 rater2categorical <- rater1categorical
 rater3categorical <- rater1categorical
 
-rater2categorical[sample(1:length(rater2categorical),
-                         size = 10,
-                         replace = FALSE)] <- 0
-rater3categorical[sample(1:length(rater3categorical),
-                         size = 10,
-                         replace = FALSE)] <- 1
+rater2categorical[
+  sample(1:length(rater2categorical),
+         size = 10,
+         replace = FALSE)] <- 0
+rater3categorical[
+  sample(1:length(rater3categorical),
+         size = 10,
+         replace = FALSE)] <- 1
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
@@ -589,7 +602,8 @@ item3 <- item2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 item4 <- item3 + rnorm(n = sampleSize, mean = 0, sd = 12)
 
 Person <- as.factor(rep(1:6, each = 8))
-Occasion <- Rater <- as.factor(rep(1:2, each = 4, times = 6))
+Occasion <- Rater <- 
+  as.factor(rep(1:2, each = 4, times = 6))
 Item <- as.factor(rep(1:4, times = 12))
 Score <- c(9,9,7,4,9,8,5,5,9,8,4,6,
            6,5,3,3,8,8,6,2,8,7,3,2,
@@ -623,10 +637,11 @@ item4[c(10)] <- NA
 #### Combine Data Into Dataframe {#combineData-reliability}
 
 ```{r}
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
+mydata <- data.frame(
+  rater1continuous, rater2continuous, rater3continuous,
+  rater1categorical, rater2categorical, rater3categorical,
+  time1, time2, time3,
+  item1, item2, item3, item4)
 
 pio_cross_dat <- data.frame(Person, Item, Score, Occasion)
 ```
@@ -670,11 +685,14 @@ I estimate the coefficient of stability below:
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
-cor(mydata[,c("time1","time2","time3")], use = "pairwise.complete.obs")
+cor(mydata[,c("time1","time2","time3")],
+    use = "pairwise.complete.obs")
 ```
 
 ```{r, include = FALSE}
-corValue <- cor.test(x = mydata$time1, y = mydata$time2)$estimate
+corValue <- cor.test(
+  x = mydata$time1,
+  y = mydata$time2)$estimate
 ```
 
 The *r* value of $`r apa(corValue, 2, leading = FALSE)`$ indicates a strong positive association.
@@ -684,11 +702,13 @@ Figure \@ref(fig:testRetestScatterplot) depicts a scatterplot of the time 1 scor
 
 ```{r testRetestScatterplot, out.width = "100%", fig.align = "center", fig.cap = "(ref:testRetestScatterplotCaption)"}
 plot(mydata$time1, mydata$time2,
-     main = substitute(paste(italic(r), " = ", x, sep = ""),
-                       list(x = apa(corValue, 2, leading = FALSE))))
+     main = substitute(
+       paste(italic(r), " = ", x, sep = ""),
+       list(x = apa(corValue, 2, leading = FALSE))))
 abline(lm(time2 ~ time1, data = mydata), col = "black")
 mydataNoMissing <- na.omit(mydata[,c("time1","time2")])
-lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2), col = "red")
+lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2),
+      col = "red")
 ```
 
 ##### Considerations About the Correlation Coefficient {#correlationConsiderations}
@@ -919,42 +939,65 @@ Here is the correlation without and with restriction of range on $x$ (i.e., $x$ 
 
 ```{r restrictedRange, fig.cap = "Example of correlation without and with range restriction. Filled black points represent the points in common across the two scatterplots.", out.width = "100%", fig.align = "center", fig.width = 10, fig.height = 5, echo = FALSE}
 par(mfrow = c(1,2))
-par(mar = c(4, 0, 3, 0), oma = c(0, 4, 0, 0))
+par(mar = c(4, 0, 3, 0),
+    oma = c(0, 4, 0, 0))
 
 #Plot with no restricted range
-plot(mydata$time1, mydata$time3,
-     main = substitute(paste("No range restriction: ", italic(r), " = ", x, sep = ""),
-                       list(x = apa(cor.test(x = mydata$time1, y = mydata$time3)$estimate, 2, leading = FALSE))),
-     xlab = "time1",
-     ylab = "time3",
-     xlim = c(25,85),
-     ylim = c(25,85))
-points(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
-       mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)], pch = 19)
+plot(
+  mydata$time1, mydata$time3,
+  main = substitute(
+    paste("No range restriction: ", italic(r), " = ", x, sep = ""),
+    list(x = apa(cor.test(x = mydata$time1,
+                          y = mydata$time3)$estimate, 2, leading = FALSE))),
+  xlab = "time1",
+  ylab = "time3",
+  xlim = c(25,85),
+  ylim = c(25,85))
+points(
+  mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
+  mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
+  pch = 19)
 abline(lm(time3 ~ time1, data = mydata), col = "black")
 mydataNoMissing <- na.omit(mydata[,c("time1","time3")])
-lines(lowess(mydataNoMissing$time1, mydataNoMissing$time3), col = "red")
-
-#Plot with restricted range
-plot(mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
-     mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
-     main = substitute(paste("Restricted range for time1 (55-65): ", italic(r), " = ", x, sep = ""),
-                       list(x = apa(cor.test(x = mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)], y = mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)])$estimate, 2, leading = FALSE))),
-     xlab = "time1",
-     ylab = "time3",
-     xlim = c(25,85),
-     ylim = c(25,85),
-     yaxt = "n",
-     pch = 19)
-abline(lm(time3 ~ time1,
-          data = mydata[which(mydata$time1 > 55 & mydata$time1 < 65),]),
-       col = "black")
-mydataNoMissing <- na.omit(mydata[,c("time1","time3")])
-lines(lowess(mydataNoMissing$time1[which(mydataNoMissing$time1 > 55 & mydataNoMissing$time1 < 65)],
-             mydataNoMissing$time3[which(mydataNoMissing$time1 > 55 & mydataNoMissing$time1 < 65)]),
+lines(lowess(mydataNoMissing$time1, mydataNoMissing$time3),
       col = "red")
 
-mtext("time3", side = 2, outer = TRUE, line = 2.7, adj = 0.6)
+#Plot with restricted range
+plot(
+  mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
+  mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
+  main = substitute(
+    paste("Restricted range for time1 (55-65): ",
+          italic(r), " = ", x, sep = ""),
+    list(x = apa(cor.test(
+      x = mydata$time1[which(mydata$time1 > 55 & 
+                               mydata$time1 < 65)],
+      y = mydata$time3[which(mydata$time1 > 55 & 
+                               mydata$time1 < 65)])$estimate,
+      2, leading = FALSE))),
+  xlab = "time1",
+  ylab = "time3",
+  xlim = c(25,85),
+  ylim = c(25,85),
+  yaxt = "n",
+  pch = 19)
+abline(lm(time3 ~ time1,
+          data = mydata[which(mydata$time1 > 55 & 
+                                mydata$time1 < 65),]),
+       col = "black")
+mydataNoMissing <- na.omit(mydata[,c("time1","time3")])
+lines(lowess(
+  mydataNoMissing$time1[which(mydataNoMissing$time1 > 55 & 
+                                mydataNoMissing$time1 < 65)],
+  mydataNoMissing$time3[which(mydataNoMissing$time1 > 55 & 
+                                mydataNoMissing$time1 < 65)]),
+  col = "red")
+
+mtext("time3",
+      side = 2,
+      outer = TRUE,
+      line = 2.7,
+      adj = 0.6)
 ```
 
 The observed correlation became much weaker due to restriction of range.
@@ -1008,7 +1051,9 @@ coefficientOfRepeatability <- function(measure1, measure2){
   return(value)
 }
 
-coefficientOfRepeatability(measure1 = mydata$time1, measure2 = mydata$time2)
+coefficientOfRepeatability(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
 ```
 
 The `petersenlab` package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot) in Figure \@ref(fig:repeatability).
@@ -1043,7 +1088,9 @@ repeatability <- function(measure1, measure2){
 ```
 
 ```{r repeatability, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
-repeatability(measure1 = mydata$time1, measure2 = mydata$time2)
+repeatability(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
 ```
 
 ##### Bland-Altman Plot {#blandAltmanPlot}
@@ -1066,17 +1113,20 @@ The bottom dashed line reflects the lower LOA.
 The Bland-Altman plot was created using the `blandr` package [@R-blandr].
 
 ```{r}
-BAstats <- blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)
+BAstats <- blandr.statistics(
+  method1 = mydata$time1,
+  method2 = mydata$time2)
 BAplotlimits <- blandr.plot.limits(BAstats)
 ```
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
-blandr.plot.rplot(BAstats,
-                  plot.limits = BAplotlimits,
-                  annotate = TRUE,
-                  method1name = "T1",
-                  method2name = "T2",
-                  ciDisplay = FALSE)
+blandr.plot.rplot(
+  BAstats,
+  plot.limits = BAplotlimits,
+  annotate = TRUE,
+  method1name = "T1",
+  method2name = "T2",
+  ciDisplay = FALSE)
 ```
 
 ##### Bias {#blandAltmanBias}
@@ -1095,11 +1145,15 @@ bias <- function(measure1, measure2){
   return(value)
 }
 
-bias(measure1 = mydata$time1, measure2 = mydata$time2)
+bias(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
 ```
 
 ```{r, include = FALSE}
-biasValue <- bias(measure1 = mydata$time1, measure2 = mydata$time2)
+biasValue <- bias(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
 ```
 
 The bias of `r apa(biasValue, 2)` indicates that the scores at time 2 are somewhat larger, on average, than the scores at time 1.
@@ -1130,8 +1184,12 @@ upperLOA <- function(measure1, measure2){
   return(value)
 }
 
-lowerLOA(measure1 = mydata$time1, measure2 = mydata$time2)
-upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
+lowerLOA(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
+upperLOA(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
 ```
 
 ```{r, include = FALSE}
@@ -1168,7 +1226,9 @@ ICC ranges from 0–1, with higher scores indicating greater agreement.
 ICC was estimated using the `psych` package [@R-psych].
 
 ```{r}
-ICC(mydata[,c("rater1continuous","rater2continuous","rater3continuous")], missing = FALSE)
+ICC(mydata[,c(
+  "rater1continuous","rater2continuous","rater3continuous")],
+  missing = FALSE)
 ```
 
 There are various kinds of ICC coefficients.
@@ -1186,9 +1246,12 @@ Fleiss's kappa and Gwet's AC1 statistic were estimated using the `irrCAC` packag
 These estimates of inter-rater reliability range from 0–1, with higher scores indicating greater agreement.
 
 ```{r}
-cohen.kappa(mydata[,c("rater1categorical","rater2categorical","rater3categorical")])
-fleiss.kappa.raw(na.omit(mydata[,c("rater1categorical","rater2categorical","rater3categorical")]))
-gwet.ac1.raw(na.omit(mydata[,c("rater1categorical","rater2categorical","rater3categorical")]))
+cohen.kappa(mydata[,c(
+  "rater1categorical","rater2categorical","rater3categorical")])
+fleiss.kappa.raw(na.omit(mydata[,c(
+  "rater1categorical","rater2categorical","rater3categorical")]))
+gwet.ac1.raw(na.omit(mydata[,c(
+  "rater1categorical","rater2categorical","rater3categorical")]))
 ```
 
 ### Intra-Rater Reliability {#intrarater-reliability}
@@ -1248,17 +1311,21 @@ Internal consistency is helpful to a point, but you do not want items to be too 
 One estimate of internal consistency is the average (mean or median) inter-item correlation.
 
 ```{r}
-interItemCorrelations <- cor(mydata[,c("item1","item2","item3","item4")], use = "pairwise.complete.obs")
+interItemCorrelations <- cor(
+  mydata[,c("item1","item2","item3","item4")],
+  use = "pairwise.complete.obs")
 diag(interItemCorrelations) <- NA
 
 interItemCorrelations_nodiag <- interItemCorrelations
-interItemCorrelations_nodiag[upper.tri(interItemCorrelations_nodiag)] <- NA
+interItemCorrelations_nodiag[
+  upper.tri(interItemCorrelations_nodiag)] <- NA
 ```
 
 Here is the mean inter-item correlation for each item:
 
 ```{r}
-meanInterItemCorrelations <- colMeans(interItemCorrelations, na.rm = TRUE)
+meanInterItemCorrelations <- colMeans(
+  interItemCorrelations, na.rm = TRUE)
 meanInterItemCorrelations
 ```
 
@@ -1268,7 +1335,8 @@ Here is the mean inter-item correlation across all items:
 mean(meanInterItemCorrelations)
 mean(interItemCorrelations_nodiag, na.rm = TRUE)
 
-psych::alpha(mydata[,c("item1","item2","item3","item4")])$total$average_r
+psych::alpha(
+  mydata[,c("item1","item2","item3","item4")])$total$average_r
 ```
 
 Figure \@ref(fig:histogramITCs) is a histogram of the inter-item correlations.
@@ -1285,7 +1353,9 @@ abline(v = mean(meanInterItemCorrelations), lwd = 2)
 Here is the median inter-item correlation for each item:
 
 ```{r}
-medianInterItemCorrelations <- apply(interItemCorrelations, 2, function(x) median(x, na.rm = TRUE))
+medianInterItemCorrelations <- apply(
+  interItemCorrelations, 2,
+  function(x) median(x, na.rm = TRUE))
 medianInterItemCorrelations
 ```
 
@@ -1294,7 +1364,8 @@ Here is the median inter-item correlation across all items:
 ```{r}
 median(interItemCorrelations[lower.tri(interItemCorrelations)])
 
-psych::alpha(mydata[,c("item1","item2","item3","item4")])$total$median_r
+psych::alpha(mydata[,c(
+  "item1","item2","item3","item4")])$total$median_r
 ```
 
 #### Average Item–Total Correlation {#itemTotalCorrelation-reliability}
@@ -1331,16 +1402,18 @@ latentFactorModel_syntax <- '
  latentFactor =~ item1 + item2 + item3 + item4
 '
 
-latentFactorModel_fit <- cfa(latentFactorModel_syntax,
-                             data = mydata,
-                             missing = "ML",
-                             estimator = "MLR",
-                             std.lv = TRUE)
+latentFactorModel_fit <- cfa(
+  latentFactorModel_syntax,
+  data = mydata,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
 
-summary(latentFactorModel_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  latentFactorModel_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
 AVE(latentFactorModel_fit)
 ```
@@ -1377,7 +1450,9 @@ Modern computational software allows for estimating the mean reliability estimat
 Split-half reliability was estimated using the `psych` package [@R-psych].
 
 ```{r}
-splitHalf(mydata[,c("item1","item2","item3","item4")], brute = TRUE)
+splitHalf(mydata[,c(
+  "item1","item2","item3","item4")],
+  brute = TRUE)
 ```
 
 #### Cronbach's Alpha (Coefficient Alpha) {#cronbachAlpha}
@@ -1407,18 +1482,21 @@ However, Cronbach's alpha does not assess the dimensionality of the scale or any
 Cronbach's alpha ($\alpha$) was estimated using the `psych` package [@R-psych].
 
 ```{r}
-psych::alpha(mydata[,c("item1","item2","item3","item4")])$total$raw_alpha
+psych::alpha(mydata[,c(
+  "item1","item2","item3","item4")])$total$raw_alpha
 ```
 
 Standardized alpha (if the items are standardized before computing the scale score).
 ```{r}
-psych::alpha(mydata[,c("item1","item2","item3","item4")])$total$std.alpha
+psych::alpha(mydata[,c(
+  "item1","item2","item3","item4")])$total$std.alpha
 ```
 
 Item statistics:
 
 ```{r}
-psych::alpha(mydata[,c("item1","item2","item3","item4")])
+psych::alpha(mydata[,c(
+  "item1","item2","item3","item4")])
 ```
 
 However, because of the many weaknesses of Cronbach's alpha [@Cortina1993; @Dunn2014; @Flora2020; @Green2015; @Hayes2020; @Kelley2016; @McNeish2018; @Peters2014a; @Raykov2001; @Revelle2019; @Sijtsma2008; but see @Raykov2019], current recommendations are to use coefficient omega ($\omega$) instead, as described next.
@@ -1436,9 +1514,10 @@ Omega total ($\omega_t$) was calculated using the `MBESS` package [@R-MBESS].
 This code quickly calculates a point estimate for omega total:
 
 ```{r}
-ci.reliability(mydata[,c("item1","item2","item3","item4")],
-               type = "omega",
-               interval.type = "none")$est
+ci.reliability(
+  mydata[,c("item1","item2","item3","item4")],
+  type = "omega",
+  interval.type = "none")$est
 ```
 
 If you want to calculate a confidence interval for omega, you will need to specify an `interval.type` and specify how many bootstrap replications.
@@ -1457,10 +1536,11 @@ However, the number of bootstrap replications must be larger than the number of 
 
 ```{r omegaTotal, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
-ci.reliability(mydata[,c("item1","item2","item3","item4")],
-               type = "omega",
-               interval.type = "bca",
-               B = bootstrapReplications)
+ci.reliability(
+  mydata[,c("item1","item2","item3","item4")],
+  type = "omega",
+  interval.type = "bca",
+  B = bootstrapReplications)
 ```
 
 ##### Omega Hierarchical ($\omega_h$)
@@ -1473,9 +1553,10 @@ If the multi-dimensional items follow a higher-order structure, use omega higher
 Omega hierarchical was calculated using the `MBESS` package [@R-MBESS].
 
 ```{r}
-ci.reliability(mydata[,c("item1","item2","item3","item4")],
-               type = "hierarchical",
-               interval.type = "none")$est
+ci.reliability(
+  mydata[,c("item1","item2","item3","item4")],
+  type = "hierarchical",
+  interval.type = "none")$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.
@@ -1488,10 +1569,11 @@ However, the number of bootstrap replications must be larger than the number of 
 
 ```{r omegaHierarchical, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
-ci.reliability(mydata[,c("item1","item2","item3","item4")],
-               type = "hierarchical",
-               interval.type = "bca",
-               B = bootstrapReplications)
+ci.reliability(
+  mydata[,c("item1","item2","item3","item4")],
+  type = "hierarchical",
+  interval.type = "bca",
+  B = bootstrapReplications)
 ```
 
 ##### Omega Categorical ($\omega_C$)
@@ -1504,9 +1586,10 @@ If the categorical items are multi-dimensional, and they follow a higher-order s
 Omega categorical was calculated using the `MBESS` package [@R-MBESS].
 
 ```{r}
-ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
-               type = "categorical",
-               interval.type = "none")$est
+ci.reliability(
+  mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
+  type = "categorical",
+  interval.type = "none")$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.
@@ -1519,10 +1602,11 @@ However, the number of bootstrap replications must be larger than the number of 
 
 ```{r omegaCategorical, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
-ci.reliability(mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
-               type = "categorical",
-               interval.type = "bca",
-               B = bootstrapReplications)
+ci.reliability(
+  mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
+  type = "categorical",
+  interval.type = "bca",
+  B = bootstrapReplications)
 ```
 
 ### Comparison {#comparison-reliability}
@@ -1555,9 +1639,10 @@ We specify items 2 and 3 to have twice the weight as item 1 in the composite, an
 rxx <- c(0.70, 0.75, 0.80, 0.85) #reliability coefficients
 rho <- cor(mydata[,c("item1","item2","item3","item4")],
            use = "pairwise.complete.obs")
-sigma <- apply(mydata[,c("item1","item2","item3","item4")],
-               2,
-               function(x) sd(x, na.rm = TRUE)) #standard deviations
+sigma <- apply(
+  mydata[,c("item1","item2","item3","item4")],
+  2,
+  function(x) sd(x, na.rm = TRUE)) #standard deviations
 weights <- c(1, 2, 2, 1.5) #weights of each variable in the linear combination
 ```
 
@@ -1608,7 +1693,11 @@ reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY){
 ```
 
 ```{r}
-reliabilityOfDifferenceScore(x = mydata$item1, y = mydata$item2, reliabilityX = .95, reliabilityY = .95)
+reliabilityOfDifferenceScore(
+  x = mydata$item1,
+  y = mydata$item2,
+  reliabilityX = .95,
+  reliabilityY = .95)
 ```
 
 For instance, in this case, the reliability of the difference score is .26 even though the reliability of both indices is .95.
@@ -1697,13 +1786,16 @@ It is also below:
 $$
 \text{standard error of measurement (SEM)} = \sigma_x \sqrt{1 - r_{xx}}
 $$
+
 where $\sigma_x = \text{standard deviation of scores on measure } x$ and $r_{xx} = \text{reliability of measure } x$
 
 The reliability of the measure was estimated here based on the test–retest reliability of the measure at T1 with the measure at T2.
 
 ```{r}
-reliabilityOfMeasure <- as.numeric(cor.test(x = mydata$time1,
-                                            y = mydata$time2)$estimate)
+reliabilityOfMeasure <- as.numeric(
+  cor.test(
+    x = mydata$time1,
+    y = mydata$time2)$estimate)
 sem <- sd(mydata$time1, na.rm = TRUE) * sqrt(1 - reliabilityOfMeasure)
 sem
 ```
@@ -1736,23 +1828,30 @@ Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
 ```{r}
-#Simulate Data
+# Simulate Data
 set.seed(52242)
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
-time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
+time2 <- time1 + rnorm(
+  n = sampleSize,
+  mean = 0,
+  sd = 4)
+time3 <- time2 + rnorm(
+  n = sampleSize,
+  mean = 0,
+  sd = 8)
 
-#Add Missing Data
+# Add Missing Data
 time1[c(5,10)] <- NA
 time2[c(10,15)] <- NA
 time3[c(10)] <- NA
 
-#Combine data into data frame
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
+# Combine data into data frame
+mydata <- data.frame(
+  rater1continuous, rater2continuous, rater3continuous,
+  rater1categorical, rater2categorical, rater3categorical,
+  time1, time2, time3,
+  item1, item2, item3, item4)
 ```
 
 #### Coefficient of stability {#noError-stability}
@@ -1764,14 +1863,18 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#noError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1,
-                                   method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(
+  blandr.statistics(
+    method1 = mydata$time1,
+    method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
 #### Bias {#noError-bias}
 
 ```{r}
-blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
+blandr.statistics(
+  method1 = mydata$time1,
+  method2 = mydata$time2)$bias
 ```
 
 ### Add within-person random error {#withinPersonRandomError-example}
@@ -1784,28 +1887,31 @@ Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
 ```{r}
-#Simulate Data
+# Simulate Data
 set.seed(52242)
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
-#Add Missing Data
+# Add Missing Data
 time1[c(5,10)] <- NA
 time2[c(10,15)] <- NA
 time3[c(10)] <- NA
 
-#Combine data into data frame
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
+# Combine data into data frame
+mydata <- data.frame(
+  rater1continuous, rater2continuous, rater3continuous,
+  rater1categorical, rater2categorical, rater3categorical,
+  time1, time2, time3,
+  item1, item2, item3, item4)
 
-#Add error
+# Add error
 set.seed(12345)
 for(i in 1:nrow(mydata)){
-  mydata[i, c("time1","time2","time3")] <- mydata[i, c("time1","time2","time3")] + rnorm(3, mean = 0, sd = 3)
+  mydata[i, c("time1","time2","time3")] <- mydata[i, c(
+    "time1","time2","time3")] + 
+    rnorm(3, mean = 0, sd = 3)
 }
 ```
 
@@ -1818,13 +1924,19 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#withinPersonRandomError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(
+  blandr.statistics(
+    method1 = mydata$time1,
+    method2 = mydata$time2)$differences,
+  na.rm = TRUE)
 ```
 
 #### Bias {#withinPersonRandomError-bias}
 
 ```{r}
-blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
+blandr.statistics(
+  method1 = mydata$time1,
+  method2 = mydata$time2)$bias
 ```
 
 #### Findings {#withinPersonRandomError-findings}
@@ -1844,28 +1956,31 @@ Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
 ```{r}
-#Simulate Data
+# Simulate Data
 set.seed(52242)
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
-#Add Missing Data
+# Add Missing Data
 time1[c(5,10)] <- NA
 time2[c(10,15)] <- NA
 time3[c(10)] <- NA
 
-#Combine data into data frame
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
+# Combine data into data frame
+mydata <- data.frame(
+  rater1continuous, rater2continuous, rater3continuous,
+  rater1categorical, rater2categorical, rater3categorical,
+  time1, time2, time3,
+  item1, item2, item3, item4)
 
-#Add error
+# Add error
 set.seed(12345)
 for(i in 1:nrow(mydata)){
-  mydata[i, c("time1","time2","time3")] <- mydata[i, c("time1","time2","time3")] + rnorm(1, mean = 5, sd = 3)
+  mydata[i, c("time1","time2","time3")] <- mydata[i, c(
+    "time1","time2","time3")] + 
+    rnorm(1, mean = 5, sd = 3)
 }
 ```
 
@@ -1878,13 +1993,19 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#withinPersonSystematicError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(
+  blandr.statistics(
+    method1 = mydata$time1,
+    method2 = mydata$time2)$differences,
+  na.rm = TRUE)
 ```
 
 #### Bias {#withinPersonSystematicError-bias}
 
 ```{r}
-blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
+blandr.statistics(
+  method1 = mydata$time1,
+  method2 = mydata$time2)$bias
 ```
 
 #### Findings {#withinPersonSystematicError-findings}
@@ -1905,27 +2026,29 @@ Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
 ```{r}
-#Simulate Data
+# Simulate Data
 set.seed(52242)
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
-#Add Missing Data
+# Add Missing Data
 time1[c(5,10)] <- NA
 time2[c(10,15)] <- NA
 time3[c(10)] <- NA
 
-#Combine data into data frame
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
+# Combine data into data frame
+mydata <- data.frame(
+  rater1continuous, rater2continuous, rater3continuous,
+  rater1categorical, rater2categorical, rater3categorical,
+  time1, time2, time3,
+  item1, item2, item3, item4)
 
-#Add error
+# Add error
 set.seed(12345)
-mydata$time2 <- mydata$time2 + rnorm(sampleSize, mean = 0, sd = 3)
+mydata$time2 <- mydata$time2 + 
+  rnorm(sampleSize, mean = 0, sd = 3)
 ```
 
 #### Coefficient of stability {#betweenPersonRandomError-stability}
@@ -1937,13 +2060,19 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#betweenPersonRandomError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(
+  blandr.statistics(
+    method1 = mydata$time1,
+    method2 = mydata$time2)$differences,
+  na.rm = TRUE)
 ```
 
 #### Bias {#betweenPersonRandomError-bias}
 
 ```{r}
-blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
+blandr.statistics(
+  method1 = mydata$time1,
+  method2 = mydata$time2)$bias
 ```
 
 #### Findings {#betweenPersonRandomError-findings}
@@ -1964,45 +2093,53 @@ Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
 ```{r}
-#Simulate Data
+# Simulate Data
 set.seed(52242)
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
-#Add Missing Data
+# Add Missing Data
 time1[c(5,10)] <- NA
 time2[c(10,15)] <- NA
 time3[c(10)] <- NA
 
-#Combine data into data frame
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
+# Combine data into data frame
+mydata <- data.frame(
+  rater1continuous, rater2continuous, rater3continuous,
+  rater1categorical, rater2categorical, rater3categorical,
+  time1, time2, time3,
+  item1, item2, item3, item4)
 
-#Add error
+# Add error
 mydata$time2 <- mydata$time2 + 10
 ```
 
 #### Coefficient of stability {#betweenPersonSystematicError-stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
+cor.test(
+  x = mydata$time1,
+  y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#betweenPersonSystematicError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1,
-                                   method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(
+  blandr.statistics(
+    method1 = mydata$time1,
+    method2 = mydata$time2)$differences,
+  na.rm = TRUE)
 ```
 
 #### Bias {#betweenPersonSystematicError-bias}
 
 ```{r}
-blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
+blandr.statistics(
+  method1 = mydata$time1,
+  method2 = mydata$time2)$bias
 ```
 
 #### Findings {#betweenPersonSystematicError-findings}
@@ -2023,25 +2160,26 @@ Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
 ```{r}
-#Simulate Data
+# Simulate Data
 set.seed(52242)
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
-#Add Missing Data
+# Add Missing Data
 time1[c(5,10)] <- NA
 time2[c(10,15)] <- NA
 time3[c(10)] <- NA
 
-#Combine data into data frame
-mydata <- data.frame(rater1continuous, rater2continuous, rater3continuous,
-                     rater1categorical, rater2categorical, rater3categorical,
-                     time1, time2, time3,
-                     item1, item2, item3, item4)
+# Combine data into data frame
+mydata <- data.frame(
+  rater1continuous, rater2continuous, rater3continuous,
+  rater1categorical, rater2categorical, rater3categorical,
+  time1, time2, time3,
+  item1, item2, item3, item4)
 
-#Add error
+# Add error
 mydata$time1 <- mydata$time1 + 10
 mydata$time2 <- mydata$time2 + 10
 mydata$time3 <- mydata$time3 + 10
@@ -2050,20 +2188,25 @@ mydata$time3 <- mydata$time3 + 10
 #### Coefficient of stability {#constantVariance-stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
+cor.test(x = mydata$time1,
+         y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#constantVariance-repeatability}
 
 ```{r}
-qnorm(.975) * sd(blandr.statistics(method1 = mydata$time1,
-                                   method2 = mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) * sd(
+  blandr.statistics(
+    method1 = mydata$time1,
+    method2 = mydata$time2)$differences, na.rm = TRUE)
 ```
 
 #### Bias {#constantVariance-bias}
 
 ```{r}
-blandr.statistics(method1 = mydata$time1, method2 = mydata$time2)$bias
+blandr.statistics(
+  method1 = mydata$time1,
+  method2 = mydata$time2)$bias
 ```
 
 #### Findings {#constantVariance-findings}
@@ -2139,7 +2282,9 @@ Find the true correlation of the construct across two timepoints given an observ
 ```{r}
 reliabilityOfMeasure <- 0.9
 
-as.numeric(cor.test(x = mydata$time2, y = mydata$time3)$estimate)/reliabilityOfMeasure
+as.numeric(cor.test(
+  x = mydata$time2,
+  y = mydata$time3)$estimate) / reliabilityOfMeasure
 ```
 
 In the next section, I discuss [method biases](#methodBias), including what they are, why they are important, and how to account for them.
