@@ -2585,6 +2585,7 @@ Many people confuse [sensitivity](#sensitivity) ($P(R|C)$) with its inverse [con
 PPV is the [conditional probability](#conditionalProbability) of having the condition given a positive test: $P(C|R)$.
 Higher values reflect greater accuracy.
 The formula for calculating positive predictive value is in Equation \@ref(eq:positivePredictiveValue).
+
 PPV can be low even when [sensitivity](#sensitivity) is high because it depends not only on [sensitivity](#sensitivity), but also on [specificity](#specificity) and the [base rate](#baseRate).
 Because PPV depends on the [base rate](#baseRate), PPV is not an intrinsic property of a measure.
 The same measure will have a different PPV in different contexts with different [base rates](#baseRate) [@Treat2012].
@@ -2710,6 +2711,7 @@ Many people confuse [specificity](#specificity) ($P(\text{not } R|\text{not } C)
 NPV is the [conditional probability](#conditionalProbability) of not having the condition given a negative test: $P(\text{not } C| \text{not } R)$.
 Higher values reflect greater accuracy.
 The formula for calculating negative predictive value is in Equation \@ref(eq:negativePredictiveValue).
+
 NPV can be low even when [specificity](#specificity) is high because it depends not only on [specificity](#specificity), but also on [sensitivity](#sensitivity) and the [base rate](#baseRate).
 Because NPV depends on the [base rate](#baseRate), NPV is not an intrinsic property of a measure.
 The same measure will have a different NPV in different contexts with different [base rates](#baseRate) [@Treat2012].
@@ -2896,6 +2898,16 @@ $$
 (\#eq:FScore)
 $$
 
+The formula for calculating the $F_1$ score is in Equation \@ref(eq:F1Score).
+
+$$
+\begin{aligned}
+  F_1 &= \frac{2 \cdot \text{positive predictive value} \cdot \text{sensitivity}}{(\text{positive predictive value}) + \text{sensitivity}} \\
+  &= \frac{2 \cdot \text{TP}}{2 \cdot \text{TP} + \text{FN} + \text{FP}}
+\end{aligned}
+(\#eq:F1Score)
+$$
+
 ```{r}
 fScore <- function(TP, TN, FP, FN, beta = 1){
   value <- ((1 + beta^2) * TP) / ((1 + beta^2) * TP + beta^2 * FN + FP)
@@ -2950,7 +2962,6 @@ mccValue <- mcc(TP = TPvalue,
                 FP = FPvalue,
                 FN = FNvalue)
 ```
-
 
 ### Diagnostic Odds Ratio {#diagnosticOddsRatio}
 
@@ -3304,6 +3315,8 @@ A =
 (\#eq:aSDT)
 $$
 
+where $H$ is the hit rate and $F$ is the false alarm rate.
+
 ```{r}
 aSDT <- function(TP, TN, FP, FN){
   HR <- TP/(TP + FN)
@@ -3336,9 +3349,11 @@ Smaller values reflect greater accuracy.
 The formula for calculating $\beta$ is in Equation \@ref(eq:betaSDT).
 
 $$
-\beta =
+\beta = e^{\bigg\{\frac{\big[\phi^{-1}(F)\big]^2 - \big[\phi^{-1}(H)\big]}{2}\bigg\}^2} 
 (\#eq:betaSDT)
 $$
+
+where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.
 
 ```{r}
 betaSDT <- function(TP, TN, FP, FN){
@@ -3369,9 +3384,11 @@ Smaller values reflect greater accuracy.
 The formula for calculating $c$ is in Equation \@ref(eq:cSDT).
 
 $$
-c =
+c = - \frac{\phi^{-1}(H) + \phi^{-1}(F)}{2}
 (\#eq:cSDT)
 $$
+
+where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.
 
 ```{r}
 cSDT <- function(TP, TN, FP, FN){
@@ -3394,7 +3411,6 @@ cValue <- cSDT(TP = TPvalue,
                FP = FPvalue,
                FN = FNvalue)
 ```
-
 
 ### $b$ (Non-Parametric) Bias from Signal Detection Theory {#bSDT}
 
