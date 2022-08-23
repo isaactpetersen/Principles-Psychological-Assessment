@@ -415,19 +415,13 @@ They assume that items have the same [discrimination](#itemDiscrimination).
 ```{r, include = FALSE}
 library("tidyverse")
 
-onePLitems <- data.frame(theta = -4:4,
-                         item1 = fourPL(b = -2, theta = -4:4),
-                         item2 = fourPL(b = -1, theta = -4:4),
-                         item3 = fourPL(b = 0, theta = -4:4),
-                         item4 = fourPL(b = 1, theta = -4:4),
-                         item5 = fourPL(b = 2, theta = -4:4))
-
-#onePLitems <- data.frame(theta = -4:4,
-#                         item1 = psych::logistic(-4:4, d = -2),
-#                         item2 = psych::logistic(-4:4, d = -1),
-#                         item3 = psych::logistic(-4:4, d = 0),
-#                         item4 = psych::logistic(-4:4, d = 1),
-#                         item5 = psych::logistic(-4:4, d = 2))
+onePLitems <- data.frame(
+  theta = -4:4,
+  item1 = fourPL(b = -2, theta = -4:4),
+  item2 = fourPL(b = -1, theta = -4:4),
+  item3 = fourPL(b = 0, theta = -4:4),
+  item4 = fourPL(b = 1, theta = -4:4),
+  item5 = fourPL(b = 2, theta = -4:4))
 
 onePL_item1 <- nls(item1 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
 onePL_item2 <- nls(item2 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
@@ -530,13 +524,6 @@ twoPLitems <- data.frame(theta = -6:6,
                          item4 = fourPL(a = 1.5, b = 1, theta = -6:6),
                          item5 = fourPL(a = 2.3, b = 2, theta = -6:6))
 
-#twoPLitems <- data.frame(theta = -6:6,
-#                         item1 = psych::logistic(-6:6, d = -2, a = 1.3),
-#                         item2 = psych::logistic(-6:6, d = -1, a = 0.8),
-#                         item3 = psych::logistic(-6:6, d = 0, a = 0.6),
-#                         item4 = psych::logistic(-6:6, d = 1, a = 1.5),
-#                         item5 = psych::logistic(-6:6, d = 2, a = 2.3))
-
 twoPL_item1 <- nls(item1 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
 twoPL_item2 <- nls(item2 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
 twoPL_item3 <- nls(item3 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
@@ -603,13 +590,6 @@ threePLitems <- data.frame(theta = 1:13,
                            item3 = fourPL(a = 0.6, b = 0, c = .3, theta = -6:6),
                            item4 = fourPL(a = 1.5, b = 1, c = .15, theta = -6:6),
                            item5 = fourPL(a = 2.3, b = 2, c = 0, theta = -6:6))
-
-#threePLitems <- data.frame(theta = 1:13,
-#                           item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0),
-#                           item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25),
-#                           item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3),
-#                           item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15),
-#                           item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0))
 
 threePL_item1 <- drm(item1 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
 threePL_item2 <- drm(item2 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
@@ -678,13 +658,6 @@ fourPLitems <- data.frame(theta = 1:13,
                           item3 = fourPL(a = 0.6, b = 0, c = .3, d = 0.95, theta = -6:6),
                           item4 = fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = -6:6),
                           item5 = fourPL(a = 2.3, b = 2, c = 0, d = 0.98, theta = -6:6))
-
-#fourPLitems <- data.frame(theta = 1:13,
-#                          item1 = psych::logistic(-6:6, d = -2, a = 1.3, c = 0, z = 1),
-#                          item2 = psych::logistic(-6:6, d = -1, a = 0.8, c = .25, z = 0.9),
-#                          item3 = psych::logistic(-6:6, d = 0, a = 0.6, c = .3, z = 0.95),
-#                          item4 = psych::logistic(-6:6, d = 1, a = 1.5, c = .15, z = 0.85),
-#                          item5 = psych::logistic(-6:6, d = 2, a = 2.3, c = 0, z = 0.98))
 
 fourPL_item1 <- drm(item1 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
 fourPL_item2 <- drm(item2 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
@@ -1412,10 +1385,11 @@ Rasch models were fit using the `mirt` package [@R-mirt].
 ### Fit Model {#irt-onePLfit}
 
 ```{r, results = "hide"}
-raschModel <- mirt(data = mydataIRT,
-                   model = 1,
-                   itemtype = "Rasch",
-                   SE = TRUE)
+raschModel <- mirt(
+  data = mydataIRT,
+  model = 1,
+  itemtype = "Rasch",
+  SE = TRUE)
 ```
 
 ### Model Summary {#irt-onePLoutput}
@@ -1511,8 +1485,8 @@ The item factor analysis models were fit in the `lavaan` package [@R-lavaan].
 ```{r}
 onePLModel_cfa <- '
 # Factor Loadings (i.e., discrimination parameters)
-latent =~ loading*Item.1 + loading*Item.2 + loading*Item.3 + loading*Item.4 + 
-  loading*Item.5
+latent =~ loading*Item.1 + loading*Item.2 + loading*Item.3 + 
+  loading*Item.4 + loading*Item.5
 
 # Item Thresholds (i.e., difficulty parameters)
 Item.1 | threshold1*t1
@@ -1522,19 +1496,20 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-onePLModel_cfa_fit = sem(model = onePLModel_cfa,
-                         data = mydataIRT,
-                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4",
-                                     "Item.5"),
-                         mimic = "Mplus",
-                         estimator = "WLSMV",
-                         std.lv = TRUE,
-                         parameterization = "theta")
+onePLModel_cfa_fit = sem(
+  model = onePLModel_cfa,
+  data = mydataIRT,
+  ordered = c("Item.1", "Item.2", "Item.3", "Item.4","Item.5"),
+  mimic = "Mplus",
+  estimator = "WLSMV",
+  std.lv = TRUE,
+  parameterization = "theta")
 
-summary(onePLModel_cfa_fit,
-        fit.measures = TRUE,
-        rsquare = TRUE,
-        standardized = TRUE)
+summary(
+  onePLModel_cfa_fit,
+  fit.measures = TRUE,
+  rsquare = TRUE,
+  standardized = TRUE)
 
 fitMeasures(
   onePLModel_cfa_fit,
@@ -1554,10 +1529,11 @@ AVE(onePLModel_cfa_fit)
 A path diagram of the one-parameter item factor analysis is in Figure \@ref(fig:onePLifa).
 
 ```{r onePLifa, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of One-Parameter Logistic Model."}
-semPaths(onePLModel_cfa_fit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.5)
+semPaths(
+  onePLModel_cfa_fit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.5)
 ```
 
 ### Mixed Model {#irt-onePLmixed}
@@ -1569,18 +1545,21 @@ The Rasch model below was fit using the `lme4` package [@R-lme4].
 mydataIRT_long <- mydataIRT %>% 
   mutate(ID = 1:nrow(mydataIRT)) %>% 
   pivot_longer(cols = Item.1:Item.5) %>% 
-  rename(item = name,
-         response = value)
+  rename(
+    item = name,
+    response = value)
 
-raschModel_mixed_logit <- glmer(response ~ -1 + item + (1|ID),
-                                mydataIRT_long, 
-                                family = binomial(link = "logit"))
+raschModel_mixed_logit <- glmer(
+  response ~ -1 + item + (1|ID),
+  mydataIRT_long, 
+  family = binomial(link = "logit"))
 
 summary(raschModel_mixed_logit)
 
-raschModel_mixed_probit <- glmer(response ~ -1 + item + (1|ID),
-                                 mydataIRT_long, 
-                                 family = binomial(link = "probit"))
+raschModel_mixed_probit <- glmer(
+  response ~ -1 + item + (1|ID),
+  mydataIRT_long, 
+  family = binomial(link = "probit"))
 
 summary(raschModel_mixed_probit)
 ```
@@ -1594,10 +1573,11 @@ A two-parameter logistic (2PL) IRT model is a model fit to dichotomous data, whi
 ### Fit Model {#irt-twoPLfit}
 
 ```{r, results = "hide"}
-twoPLModel <- mirt(data = mydataIRT,
-                   model = 1,
-                   itemtype = "2PL",
-                   SE = TRUE)
+twoPLModel <- mirt(
+  data = mydataIRT,
+  model = 1,
+  itemtype = "2PL",
+  SE = TRUE)
 ```
 
 ### Model Summary {#irt-twoPLoutput}
@@ -1704,19 +1684,20 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-twoPLModel_cfa_fit = sem(model = twoPLModel_cfa,
-                         data = mydataIRT,
-                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4",
-                                     "Item.5"),
-                         mimic = "Mplus",
-                         estimator = "WLSMV",
-                         std.lv = TRUE,
-                         parameterization = "theta")
+twoPLModel_cfa_fit = sem(
+  model = twoPLModel_cfa,
+  data = mydataIRT,
+  ordered = c("Item.1", "Item.2", "Item.3", "Item.4","Item.5"),
+  mimic = "Mplus",
+  estimator = "WLSMV",
+  std.lv = TRUE,
+  parameterization = "theta")
 
-summary(twoPLModel_cfa_fit,
-        fit.measures = TRUE,
-        rsquare = TRUE,
-        standardized = TRUE)
+summary(
+  twoPLModel_cfa_fit,
+  fit.measures = TRUE,
+  rsquare = TRUE,
+  standardized = TRUE)
 
 fitMeasures(
   twoPLModel_cfa_fit,
@@ -1734,10 +1715,11 @@ AVE(twoPLModel_cfa_fit)
 ```
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of Two-Parameter Logistic Model."}
-semPaths(twoPLModel_cfa_fit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.5)
+semPaths(
+  twoPLModel_cfa_fit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.5)
 ```
 
 ## Two-Parameter Multi-Dimensional Logistic Model {#irt-twoPLmultidimensional}
@@ -1749,10 +1731,11 @@ In this example, I estimate a 2PL multi-dimensional IRT model by estimating two 
 ### Fit Model {#irt-twoPLmultidimensionalFit}
 
 ```{r, results = "hide"}
-twoPL2FactorModel <- mirt(data = mydataIRT,
-                          model = 2,
-                          itemtype = "2PL",
-                          SE = TRUE)
+twoPL2FactorModel <- mirt(
+  data = mydataIRT,
+  model = 2,
+  itemtype = "2PL",
+  SE = TRUE)
 ```
 
 ### Model Summary {#irt-twoPLmultidimensionalOutput}
@@ -1847,19 +1830,20 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-twoPLModelMultidimensional_cfa_fit = sem(model = twoPLModelMultidimensional_cfa,
-                         data = mydataIRT,
-                         ordered = c("Item.1", "Item.2", "Item.3", "Item.4",
-                                     "Item.5"),
-                         mimic = "Mplus",
-                         estimator = "WLSMV",
-                         std.lv = TRUE,
-                         parameterization = "theta")
+twoPLModelMultidimensional_cfa_fit = sem(
+  model = twoPLModelMultidimensional_cfa,
+  data = mydataIRT,
+  ordered = c("Item.1", "Item.2", "Item.3", "Item.4","Item.5"),
+  mimic = "Mplus",
+  estimator = "WLSMV",
+  std.lv = TRUE,
+  parameterization = "theta")
 
-summary(twoPLModelMultidimensional_cfa_fit,
-        fit.measures = TRUE,
-        rsquare = TRUE,
-        standardized = TRUE)
+summary(
+  twoPLModelMultidimensional_cfa_fit,
+  fit.measures = TRUE,
+  rsquare = TRUE,
+  standardized = TRUE)
 
 fitMeasures(
   twoPLModelMultidimensional_cfa_fit,
@@ -1877,10 +1861,11 @@ AVE(twoPLModelMultidimensional_cfa_fit)
 ```
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of Two-Parameter Multi-Dimensional Logistic Model."}
-semPaths(twoPLModelMultidimensional_cfa_fit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.5)
+semPaths(
+  twoPLModelMultidimensional_cfa_fit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.5)
 ```
 
 ## Three-Parameter Logistic Model {#irt-threePL}
@@ -1891,10 +1876,11 @@ A three-parameter logistic (2PL) IRT model is a model fit to dichotomous data, w
 ### Fit Model {#irt-threePLfit}
 
 ```{r, results = "hide"}
-threePLModel <- mirt(data = mydataIRT,
-                     model = 1,
-                     itemtype = "3PL",
-                     SE = TRUE)
+threePLModel <- mirt(
+  data = mydataIRT,
+  model = 1,
+  itemtype = "3PL",
+  SE = TRUE)
 ```
 
 ### Model Summary {#irt-threePLoutput}
@@ -1990,11 +1976,12 @@ A four-parameter logistic (2PL) IRT model is a model fit to dichotomous data, wh
 ### Fit Model {#irt-fourPLfit}
 
 ```{r, results = "hide"}
-fourPLModel <- mirt(data = mydataIRT,
-                    model = 1,
-                    itemtype = "4PL",
-                    SE = TRUE,
-                    technical = list(NCYCLES = 2000))
+fourPLModel <- mirt(
+  data = mydataIRT,
+  model = 1,
+  itemtype = "4PL",
+  SE = TRUE,
+  technical = list(NCYCLES = 2000))
 ```
 
 ### Model Summary {#irt-fourPLoutput}
@@ -2201,39 +2188,47 @@ A plot of item boundary characteristic curves is in Figure \@ref(fig:gradedRespo
 The plot of item boundary characteristic curves was adapted from an example by Aiden Loe: https://aidenloe.github.io/irtplots.html
 
 ```{r gradedResponseModelIOCC, out.width = "100%", fig.align = "center", fig.cap = "Item Boundary Category Characteristic Curves From Graded Response Model."}
-modelCoefficients <- coef(gradedResponseModel,
-                          IRTpars = TRUE,
-                          simplify = TRUE)$items
+modelCoefficients <- coef(
+  gradedResponseModel,
+  IRTpars = TRUE,
+  simplify = TRUE)$items
 
 theta <- seq(from = -6, to = 6, by = .1)
 
-difficultyThresholds <- grep("b",
-                             dimnames(modelCoefficients)[[2]],
-                             value = TRUE)
+difficultyThresholds <- grep(
+  "b",
+  dimnames(modelCoefficients)[[2]],
+  value = TRUE)
 numberDifficultyThresholds <- length(difficultyThresholds)
 items <- dimnames(modelCoefficients)[[1]]
 numberOfItems <- length(items)
 
-lst <- lapply(1:numberOfItems,
-              function(x) data.frame(matrix(ncol = numberDifficultyThresholds + 1,
-                                            nrow = length(theta),
-                                            dimnames = list(NULL, c("theta", difficultyThresholds)))))
+lst <- lapply(
+  1:numberOfItems,
+  function(x) data.frame(
+    matrix(ncol = numberDifficultyThresholds + 1,
+           nrow = length(theta),
+           dimnames = list(NULL, c("theta", difficultyThresholds)))))
 
 for(i in 1:numberOfItems){
   for(j in 1:numberDifficultyThresholds){
     lst[[i]][,1] <- theta
-    lst[[i]][,j + 1] <- fourPL(a = modelCoefficients[i,1],
-                               b = modelCoefficients[i,j + 1],
-                               theta = theta)
+    lst[[i]][,j + 1] <- fourPL(
+      a = modelCoefficients[i,1],
+      b = modelCoefficients[i,j + 1],
+      theta = theta)
   }
 }
 
 names(lst) <- items
 dat <- bind_rows(lst, .id = "item")
-longer_data <- pivot_longer(dat, cols = all_of(difficultyThresholds))
+longer_data <- pivot_longer(
+  dat,
+  cols = all_of(difficultyThresholds))
 
-ggplot(longer_data,
-       aes(theta, value, group = interaction(item, name), color = item)) +
+ggplot(
+  longer_data,
+  aes(theta, value, group = interaction(item, name), color = item)) +
   geom_line() +
   ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
   theme_bw() +
