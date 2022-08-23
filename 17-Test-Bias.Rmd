@@ -1027,7 +1027,11 @@ That is, one or more of the item parameters for an item differs across groups.
 For instance, the [severity](#itemDifficulty) or [discrimination](#itemDiscrimination) of an item could be higher in one group compared to another group.
 If an item functions differently across groups, it can lead to biased scores for particular groups.
 Thus, when observing group differences in level on the measure or group differences in the measure's association with other measures, it is unclear whether the observed group differences reflect true group differences or differences in the functioning of the measure across groups.
-[**GIVE EXAMPLE**] Tests of differential item functioning are equivalent to tests of [measurement invariance](#measurementInvariance).
+
+For instance, consider an item such as "disobedience to authority", which is thought to reflect externalizing behavior in childhood.
+However, in adulthood, disobedience to authority could reflect prosocial functions, such as protesting
+against societally unjust actions, and may show weaker [construct validity](#constructValidity) with respect to externalizing problems, as operationalized by a weaker [discrimination](#itemDiscrimination) coefficient in adulthood than in childhood. 
+Tests of differential item functioning are equivalent to tests of [measurement invariance](#measurementInvariance).
 
 When examining differential item functioning with many items across many groups, there can be many tests, which will make it likely that DIF will be detected, especially with a large sample.
 Some detected DIF may be artificial or trivial, but other DIF may be real and important.
@@ -1203,6 +1207,10 @@ Some researchers recommend using a simulation-based procedure to examine the imp
 empirical_ES(unconstrainedModel, DIF = FALSE)
 ```
 
+In general, the measure showed greater [difficulty](#itemDifficulty) for females than for males.
+That is, at a given construct level, males were more likely than females to endorse the items.
+Otherwise said, it takes a higher construct level for females to obtain the same score on the measure as males.
+
 ```{r dtf, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Differential Test Functioning by Sex."}
 empirical_ES(unconstrainedModel, DIF = FALSE, plot = TRUE)
 ```
@@ -1215,6 +1223,10 @@ empirical_ES(unconstrainedModel,
 ```
 
 [Differential item functioning](#dif) is depicted in Figure \@ref(fig:dif).
+
+The measure-level differences in functioning appear to be largely driven by greater [difficulty](#itemDifficulty) of items 4 and 5 for females than males.
+That is, at a given construct level, males were more likely than females to endorse items 4 and 5, in particular.
+Otherwise said, it takes a higher construct level for females than males to endorse items 4 and 5.
 
 ```{r dif, out.width = "100%", fig.align = "center", fig.cap = "Differential Item Functioning by Sex."}
 empirical_ES(unconstrainedModel,
@@ -1264,6 +1276,8 @@ itemplot(unconstrainedModel,
 ```
 
 Plots of item [information](#irtReliability) functions by sex are below.
+Items 1, 5, and 6 showed greater [information](#irtReliability) for females than for males.
+Items 2, 4, and 7 showed greater [information](#irtReliability) for females than for males.
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Item Information Functions by Sex."}
 itemplot(unconstrainedModel,
@@ -1346,7 +1360,7 @@ itemplot(unconstrainedModel,
 Based on the analyses above, item 5 shows the largest magnitude of [DIF](#dif).
 Specifically, item 5 has a stronger [discrimination](#itemDiscrimination) parameter for women than men.
 So, we should handle item 5 first.
-If we deem the [DIF](#dif) for item 5 to be non-negligible, we have three primary options: 1) drop item 5 for both men and women, 2) drop item 5 for men but keep it for women, or 3) freely estimate parameters for item 5 across groups.
+If we deem the [DIF](#dif) for item 5 to be non-negligible, we have three primary options: 1) drop item 5 for both men and women, 2) drop item 5 for men but keep it for women, or 3) freely estimate the parameters ([discrimination](#itemDiscrimination) and [difficulty](#itemDifficulty)) for item 5 across groups.
 
 #### Drop item for both groups {#dropItemForBothGroups}
 
@@ -1385,8 +1399,8 @@ coef(constrainedModelDropItem5ForMen, simplify = TRUE)
 
 #### Freely estimate item to have different parameters across groups {#resolveItemAcrossGroups}
 
-Alternatively, we can resolve [DIF](#dif) by allowing the item to have different parameters across both groups.
-You might do this if the item is [valid](#validity) for both men and women, but it has importantly different item parameters nonetheless.
+Alternatively, we can resolve [DIF](#dif) by allowing the item to have different parameters ([discrimination](#itemDiscrimination) and [difficulty](#itemDifficulty)) across both groups.
+You might do this if the item is [valid](#validity) for both men and women, and it has importantly different item parameters nonetheless.
 
 ```{r, results = "hide"}
 constrainedModelResolveItem5 <- multipleGroup(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
@@ -1892,6 +1906,11 @@ lavaan_dmacs(configuralInvarianceModel_fit)
 #### Equivalence Test {#measurementInvarianceConfiguralModelEquivalenceTest}
 
 The `petersenlab` package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
+An equivalence test evaluates the null hypothesis that a model is equivalent to another model.
+In this case, the equivalence test evaluates the null hypothesis that a model is equivalent to another model in terms of (poor) fit.
+Here, we operationalize a mediocre-fitting model as a model whose RMSEA is .08 or greater.
+So, the equivalence test evaluates whether our invariance model fits significantly better than a mediocre-fitting model.
+Thus, a statistically significant *p*-value indicates that our invariance model fits significantly better than the mediocre-fitting model (i.e., that invariance is established), whereas a non-significant *p*-value indicates that our invariance model does not fit significantly better than the mediocre-fitting model (i.e., that invariance is failed).
 
 ```{r, eval = FALSE}
 equiv_chi <- function(alpha = .05, chi, df, m, N_sample, popRMSEA = .08){
@@ -1904,7 +1923,8 @@ equiv_chi <- function(alpha = .05, chi, df, m, N_sample, popRMSEA = .08){
 }
 ```
 
-The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable.
+The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable (i.e., it is not better than the mediocre-fitting model).
+In other words, configural invariance failed.
 
 ```{r}
 equiv_chi(alpha = .05,
@@ -1918,6 +1938,9 @@ equiv_chi(alpha = .05,
 #### Permutation Test {#measurementInvarianceConfiguralModelPermutationTest}
 
 Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].
+The permutation test evaluates the null hypothesis that the model fit is not worse than the best-possible fitting model.
+A significant *p*-value indicates that the model fits significanlty worse than the best-possible fitting model.
+A non-significant *p*-value indicates that the model does not fit signficantly worse than the best-possible fitting model.
 
 ```{r numPermutations, cache = TRUE, cache.comments = FALSE}
 numPermutations <- 100
@@ -1948,6 +1971,9 @@ set.seed(52242)
 
 configuralInvarianceTest
 ```
+
+The *p*-values are non-significant, indicating that the model does not fit signficantly worse than the best-possible fitting model.
+In other words, configural invariance held.
 
 #### Internal Consistency Reliability {#measurementInvarianceReliability}
 
@@ -2071,7 +2097,7 @@ The metric invariance model did not fit significantly worse than the configural 
 This provides evidence of measurement invariance of factor loadings across groups.
 Measurement invariance of factor loadings across groups provides support for examining whether the groups show different associations of the factor with other constructs [@Little2007].
 
-Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.
+Below is a Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.
 
 ```{r}
 satorraBentlerScaledChiSquareDifferenceTestStatistic <- function(T0, c0, d0, T1, c1, d1){
@@ -2102,7 +2128,6 @@ round(metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices, dig
 
 The `petersenlab` package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.
-The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
 
 ```{r}
 equiv_chi(alpha = .05,
@@ -2111,7 +2136,12 @@ equiv_chi(alpha = .05,
           m = 2,
           N_sample = metricInvarianceModel_N,
           popRMSEA = .08)
+```
 
+Moreover, the equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
+In other words, metric invariance failed.
+
+```{r}
 metricInvarianceModel_dfDiff <- metricInvarianceModel_df - configuralInvarianceModel_df
 
 equiv_chi(alpha = .05,
@@ -2151,6 +2181,9 @@ set.seed(52242)
 
 metricInvarianceTest
 ```
+
+The *p*-values are non-significant, indicating that the model does not fit signficantly worse than the configural invariance model.
+In other words, metric invariance held.
 
 #### Internal Consistency Reliability {#measurementInvarianceMetricModelReliability}
 
@@ -2297,7 +2330,6 @@ round(scalarInvarianceModelFitIndices - metricInvarianceModelFitIndices,
 
 The `petersenlab` package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.
-The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
 
 ```{r}
 equiv_chi(alpha = .05,
@@ -2306,7 +2338,12 @@ equiv_chi(alpha = .05,
           m = 2,
           N_sample = scalarInvarianceModel_N,
           popRMSEA = .08)
+```
 
+Moreover, the equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
+In other words, scalar invariance failed.
+
+```{r}
 scalarInvarianceModel_dfDiff <- scalarInvarianceModel_df - metricInvarianceModel_df
 
 equiv_chi(alpha = .05,
@@ -2346,6 +2383,9 @@ set.seed(52242)
 
 scalarInvarianceTest
 ```
+
+The *p*-values are significant, indicating that the model fit signficantly worse than the metric invariance model.
+In other words, scalar invariance failed.
 
 #### Internal Consistency Reliability {#measurementInvarianceScalarModelReliability}
 
@@ -2500,7 +2540,12 @@ equiv_chi(alpha = .05,
           m = 2,
           N_sample = residualInvarianceModel_N,
           popRMSEA = .08)
+```
 
+Moreover, the equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.
+In other words, residual invariance failed.
+
+```{r}
 residualInvarianceModel_dfDiff <- residualInvarianceModel_df - scalarInvarianceModel_df
 
 equiv_chi(alpha = .05,
@@ -2541,6 +2586,8 @@ set.seed(52242)
 residualInvarianceTest
 ```
 
+The *p*-values are non-significant, indicating that the model did not fit signficantly worse than the scalar invariance model.
+
 #### Internal Consistency Reliability {#measurementInvarianceResidualModelReliability}
 
 [Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].
@@ -2576,7 +2623,7 @@ So, we will use the metric invariance model as the baseline model (in which item
 
 ##### Variable 1 {#measurementInvarianceAddConstraintsVariable1}
 
-Variable 1 does not have non-invariant intercepts
+Variable 1 does not have non-invariant intercepts.
 
 ```{r}
 cfaModel_metricInvarianceV1 <- '
@@ -3532,7 +3579,7 @@ anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV7_fit)
 ##### Variable 8 {#measurementInvarianceDropConstraintsVariable8}
 
 Measurement invariance continues to hold when freeing intercepts of variable 8 across groups.
-This suggests that variable 8 does not show invariant intercepts across groups, at least when the other intercepts have been freed.
+This suggests that variable 8 does not show non-invariant intercepts across groups, at least when the other intercepts have been freed.
 
 ```{r}
 cfaModel_scalarInvarianceV8 <- '
@@ -3591,7 +3638,7 @@ anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV8_fit)
 ##### Variable 9 {#measurementInvarianceDropConstraintsVariable9}
 
 Measurement invariance continues to hold when freeing intercepts of variable 9 across groups (even after constraining intercepts of variable 8 across groups).
-This suggests that variable 9 does not show invariant intercepts across groups, at least when the other intercepts have been freed.
+This suggests that variable 9 does not show non-invariant intercepts across groups, at least when the other intercepts have been freed.
 
 ```{r}
 cfaModel_scalarInvarianceV9 <- '
@@ -3650,7 +3697,7 @@ anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV9_fit)
 ##### Summary {#measurementInvarianceDropConstraintsSummary}
 
 When iteratively dropping constraints, measurement invariance became established when freeing the intercepts for items 1–7 across groups.
-This suggests that items 7 and 8 show measurement invariance of intercepts across groups.
+This suggests that items 7, 8, and 9 show measurement invariance of intercepts across groups.
 This could be due to the selection of starting with item 1 as the first constraint to be freed.
 We could try freeing constraints in a different order to see the extent to which the order influences which items are identified as showing measurement non-invariance.
 
