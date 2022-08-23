@@ -247,7 +247,7 @@ A test characteristic curve of the measure is in Figure \@ref(fig:tcc-cat).
 plot(mod)
 ```
 
-The test information and standard error as a function of the person's construct level (theta; $\theta$) is in Figure \@ref(fig:infoSE-cat). 
+The test information and [standard error of measurement](#standardErrorOfMeasurement) as a function of the person's construct level (theta; $\theta$) is in Figure \@ref(fig:infoSE-cat). 
 The test appears to measure theta ($\theta$) with $SE < .4$ within a range of -1.5 to 2.
 
 ```{r infoSE-cat, out.width = "100%", fig.align = "center", fig.cap = "Test Information and Standard Error of Measurement."}
@@ -310,14 +310,14 @@ df <- data.frame(Questions = questions,
 
 ### Run Computerized Adaptive Test (CAT) {#runCAT}
 
-Set the minimum standard error of measurement for the latent trait (theta; $\theta$) that must be reached before stopping the CAT.
-You can lengthen the CAT by lowering the minimum standard error of measurement, or can shorten the CAT by raising the minimum standard error of measurement.
+Set the minimum [standard error of measurement](#standardErrorOfMeasurement) for the latent trait (theta; $\theta$) that must be reached before stopping the CAT.
+You can lengthen the CAT by lowering the minimum [standard error of measurement](#standardErrorOfMeasurement), or you can shorten the CAT by raising the minimum [standard error of measurement](#standardErrorOfMeasurement).
 
 ```{r minimumSEM, cache = TRUE, cache.comments = FALSE}
 minimum_SEM <- .3
 ```
 
-Run the CAT and stop once the standard error of measurement for the latent trait (theta; $\theta$) becomes $`r minimum_SEM`$ or lower.
+Run the CAT and stop once the [standard error of measurement](#standardErrorOfMeasurement) for the latent trait (theta; $\theta$) becomes $`r minimum_SEM`$ or lower.
 
 ```{r, eval = FALSE}
 result <- mirtCAT(df,
@@ -343,9 +343,16 @@ print(result)
 summary(result)
 ```
 
+```{r, include = FALSE}
+resultTheta <- as.numeric(result$thetas)
+```
+
 #### CAT Standard Errors {#CATstandardErrors}
 
-Standard errors of a person's estimated construct level (theta; $\theta$) as a function of the item (presented in the order that items were administered as part of the CAT) are in Figure \@ref(fig:standardError-cat).
+[Standard errors of measurement](#standardErrorOfMeasurement) of a person's estimated construct level (theta; $\theta$) as a function of the item (presented in the order that items were administered as part of the CAT) are in Figure \@ref(fig:standardError-cat).
+
+Initially, the respondent got the first items correct, which raised the estimate of their construct level.
+However, as the respondent got more items incorrect, the CAT converged upon the estimate that the person has a construct level around $theta = `r apa(resultTheta, decimals = 2, leading = TRUE)`$, which means that the person scored slightly above average (i.e., `r apa(resultTheta, decimals = 2, leading = TRUE)` standard deviations above the mean).
 
 ```{r standardError-cat, out.width = "100%", fig.align = "center", fig.cap = "Standard Errors of Measurement Around Theta in a Computerized Adaptive Test."}
 plot(result, SE = 1)
