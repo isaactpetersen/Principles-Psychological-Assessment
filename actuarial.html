@@ -2352,8 +2352,10 @@ Machine learning may be most valuable when the data available are complex and th
 <span id="cb876-2"><a href="actuarial.html#cb876-2" aria-hidden="true" tabindex="-1"></a>mydataActuarial <span class="ot">&lt;-</span> aSAH</span>
 <span id="cb876-3"><a href="actuarial.html#cb876-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb876-4"><a href="actuarial.html#cb876-4" aria-hidden="true" tabindex="-1"></a>mydataActuarial<span class="sc">$</span>disorder <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb876-5"><a href="actuarial.html#cb876-5" aria-hidden="true" tabindex="-1"></a>mydataActuarial<span class="sc">$</span>disorder[<span class="fu">which</span>(mydataActuarial<span class="sc">$</span>outcome <span class="sc">==</span> <span class="st">&quot;Poor&quot;</span>)] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb876-6"><a href="actuarial.html#cb876-6" aria-hidden="true" tabindex="-1"></a>mydataActuarial<span class="sc">$</span>disorder[<span class="fu">which</span>(mydataActuarial<span class="sc">$</span>outcome <span class="sc">==</span> <span class="st">&quot;Good&quot;</span>)] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code></pre></div>
+<span id="cb876-5"><a href="actuarial.html#cb876-5" aria-hidden="true" tabindex="-1"></a>mydataActuarial<span class="sc">$</span>disorder[<span class="fu">which</span>(</span>
+<span id="cb876-6"><a href="actuarial.html#cb876-6" aria-hidden="true" tabindex="-1"></a>  mydataActuarial<span class="sc">$</span>outcome <span class="sc">==</span> <span class="st">&quot;Poor&quot;</span>)] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb876-7"><a href="actuarial.html#cb876-7" aria-hidden="true" tabindex="-1"></a>mydataActuarial<span class="sc">$</span>disorder[<span class="fu">which</span>(</span>
+<span id="cb876-8"><a href="actuarial.html#cb876-8" aria-hidden="true" tabindex="-1"></a>  mydataActuarial<span class="sc">$</span>outcome <span class="sc">==</span> <span class="st">&quot;Good&quot;</span>)] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -2668,7 +2670,9 @@ The final value used for the model was mtry = 2.</code></pre>
 <div id="kfoldCV" class="section level3 hasAnchor" number="10.6.6">
 <h3><span class="header-section-number">10.6.6</span> <em>k</em>-Fold Cross-Validation<a href="actuarial.html#kfoldCV" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The <em>k</em>-fold cross-validation models were fit in the <code>caret</code> package <span class="citation">(<a href="#ref-R-caret" role="doc-biblioref">Kuhn, 2022</a>)</span>.</p>
-<div class="sourceCode" id="cb897"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb897-1"><a href="actuarial.html#cb897-1" aria-hidden="true" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb897"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb897-1"><a href="actuarial.html#cb897-1" aria-hidden="true" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb897-2"><a href="actuarial.html#cb897-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;cv&quot;</span>,</span>
+<span id="cb897-3"><a href="actuarial.html#cb897-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">10</span>)</span></code></pre></div>
 <p>Dichotomous Outcome:</p>
 <div class="sourceCode" id="cb898"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb898-1"><a href="actuarial.html#cb898-1" aria-hidden="true" tabindex="-1"></a>cvModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
 <span id="cb898-2"><a href="actuarial.html#cb898-2" aria-hidden="true" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
@@ -2716,7 +2720,9 @@ Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code>
 <div id="looCV" class="section level3 hasAnchor" number="10.6.7">
 <h3><span class="header-section-number">10.6.7</span> Leave-One-Out (LOO) Cross-Validation<a href="actuarial.html#looCV" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The leave-one-out (LOO) cross-validation models were fit in the <code>caret</code> package <span class="citation">(<a href="#ref-R-caret" role="doc-biblioref">Kuhn, 2022</a>)</span>.</p>
-<div class="sourceCode" id="cb902"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb902-1"><a href="actuarial.html#cb902-1" aria-hidden="true" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;LOOCV&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb902"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb902-1"><a href="actuarial.html#cb902-1" aria-hidden="true" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb902-2"><a href="actuarial.html#cb902-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;LOOCV&quot;</span>,</span>
+<span id="cb902-3"><a href="actuarial.html#cb902-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">10</span>)</span></code></pre></div>
 <p>Dichotomous Outcome:</p>
 <div class="sourceCode" id="cb903"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb903-1"><a href="actuarial.html#cb903-1" aria-hidden="true" tabindex="-1"></a>loocvModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
 <span id="cb903-2"><a href="actuarial.html#cb903-2" aria-hidden="true" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
