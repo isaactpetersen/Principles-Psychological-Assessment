@@ -273,9 +273,17 @@ pB <- function(pBgivenA, pA, pBgivenNotA){
 
 ```{r}
 pB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
-pB(pBgivenA = .95,
-   pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
-   pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+
+pB(
+  pBgivenA = .95,
+  pA = pAgivenB(
+    pBgivenA = .95,
+    pA = .003,
+    pB = .01),
+  pBgivenNotA = pBgivenNotA(
+    pBgivenA = .95,
+    pA = .003,
+    pB = .01))
 ```
 
 We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the [errors](#measurementError) of each test are independent, i.e., uncorrelated), as in Equation \@ref(eq:baseRateUpdated2):
@@ -295,11 +303,23 @@ The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function th
 
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .285, pB = .2758776)
-pAgivenB(pBgivenA = .95,
-         pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
-         pB = pB(pBgivenA = .95,
-                 pA = pAgivenB(pBgivenA = .95, pA = .003, pB = .01),
-                 pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01)))
+
+pAgivenB(
+  pBgivenA = .95,
+  pA = pAgivenB(
+    pBgivenA = .95,
+    pA = .003,
+    pB = .01),
+  pB = pB(
+    pBgivenA = .95,
+    pA = pAgivenB(
+      pBgivenA = .95,
+      pA = .003,
+      pB = .01),
+    pBgivenNotA = pBgivenNotA(
+      pBgivenA = .95,
+      pA = .003,
+      pB = .01)))
 ```
 
 Thus, a second positive test greatly increases the posterior probability that the person has HIV from 28.5% to over 98%.
@@ -352,18 +372,30 @@ pAgivenBalternative <- function(pBgivenA, pA, pBgivenNotA){
   value
 }
 
-pAgivenBalternative(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
-pAgivenBalternative(pBgivenA = .95,
-                    pA = .003,
-                    pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+pAgivenBalternative(
+  pBgivenA = .95,
+  pA = .003,
+  pBgivenNotA = .007171515)
+
+pAgivenBalternative(
+  pBgivenA = .95,
+  pA = .003,
+  pBgivenNotA = pBgivenNotA(
+    pBgivenA = .95,
+    pA = .003,
+    pB = .01))
 ```
 
 The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.
 
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
-pAgivenB(pBgivenA = .95, pA = .003,
-         pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+pAgivenB(pBgivenA = .95,
+         pA = .003,
+         pBgivenNotA = pBgivenNotA(
+           pBgivenA = .95,
+           pA = .003,
+           pB = .01))
 ```
 
 To calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test, we update our priors because the person has now tested positive for HIV.
@@ -385,19 +417,31 @@ $$
 The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.
 
 ```{r}
-pAgivenBalternative(pBgivenA = .95,
-                    pA = .285,
-                    pBgivenNotA = .007171515)
-pAgivenBalternative(pBgivenA = .95,
-                    pA = .285,
-                    pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+pAgivenBalternative(
+  pBgivenA = .95,
+  pA = .285,
+  pBgivenNotA = .007171515)
 
-pAgivenB(pBgivenA = .95,
-         pA = .285,
-         pBgivenNotA = .007171515)
-pAgivenB(pBgivenA = .95,
-         pA = .285,
-         pBgivenNotA = pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01))
+pAgivenBalternative(
+  pBgivenA = .95,
+  pA = .285,
+  pBgivenNotA = pBgivenNotA(
+    pBgivenA = .95,
+    pA = .003,
+    pB = .01))
+
+pAgivenB(
+  pBgivenA = .95,
+  pA = .285,
+  pBgivenNotA = .007171515)
+
+pAgivenB(
+  pBgivenA = .95,
+  pA = .285,
+  pBgivenNotA = pBgivenNotA(
+    pBgivenA = .95,
+    pA = .003,
+    pB = .01))
 ```
 
 If we want to compare the relative probability of two outcomes, we can use the odds form of Bayes' theorem, as in Equation \@ref(eq:bayes5):
@@ -978,8 +1022,11 @@ mydataSDT$testScore <- mydataSDT$s100b
 mydataSDT <- mydataSDT %>%
   mutate(testScoreSimple = ntile(testScore, 10))
 
-mydataSDT$predictedProbability <- (mydataSDT$s100b - min(mydataSDT$s100b, na.rm = TRUE)) / (max(mydataSDT$s100b, na.rm = TRUE) - min(mydataSDT$s100b, na.rm = TRUE))
-mydataSDT$continuousOutcome <- mydataSDT$testScore + rnorm(nrow(mydataSDT), mean = 0.20, sd = 0.20)
+mydataSDT$predictedProbability <- 
+  (mydataSDT$s100b - min(mydataSDT$s100b, na.rm = TRUE)) / 
+  (max(mydataSDT$s100b, na.rm = TRUE) - min(mydataSDT$s100b, na.rm = TRUE))
+mydataSDT$continuousOutcome <- mydataSDT$testScore + 
+  rnorm(nrow(mydataSDT), mean = 0.20, sd = 0.20)
 mydataSDT$disorder <- NA
 mydataSDT$disorder[mydataSDT$outcome == "Good"] <- 0
 mydataSDT$disorder[mydataSDT$outcome == "Poor"] <- 1
@@ -1014,9 +1061,15 @@ plot(rocCurve, legacy.axes = TRUE, print.auc = TRUE)
 ```
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Empirical receiver operating characteristic curve with cutoffs overlaid."}
-pred <- prediction(na.omit(mydataSDT[,c("testScoreSimple","disorder")])$testScoreSimple, na.omit(mydataSDT[,c("testScoreSimple","disorder")])$disorder)
+pred <- prediction(na.omit(mydataSDT[,c(
+  "testScoreSimple","disorder")])$testScoreSimple,
+  na.omit(mydataSDT[,c("testScoreSimple","disorder")])$disorder)
 perf <- performance(pred, "tpr", "fpr")
-plot(perf, print.cutoffs.at = 1:11, text.adj = c(1, -1), ylim = c(0, 1.05))
+plot(
+  perf,
+  print.cutoffs.at = 1:11,
+  text.adj = c(1, -1),
+  ylim = c(0, 1.05))
 abline(coef = c(0,1))
 ```
 
@@ -1035,7 +1088,10 @@ plot(rocCurveSmooth, legacy.axes = TRUE, print.auc = TRUE)
 The threshold at the Youden's J statistic is the threshold where the test has the maximum combination (i.e., sum) of [sensitivity](#sensitivity) and [specificity](#specificity): $\text{max}(\text{sensitivity} + \text{specificity} - 1)$
 
 ```{r}
-youdenJ <- coords(rocCurve, x = "best", best.method = "youden")
+youdenJ <- coords(
+  rocCurve,
+  x = "best",
+  best.method = "youden")
 youdenJthreshold <- youdenJ$threshold
 youdenJspecificity <- youdenJ$specificity
 youdenJsensitivity <- youdenJ$sensitivity
@@ -1050,7 +1106,10 @@ For this test, the Youden's J Statistic is at a threshold of $`r youdenJthreshol
 The point closest to the top-left part of the ROC plot with perfect [sensitivity](#sensitivity) and [specificity](#specificity): $\text{min}[(1 - \text{sensitivity})^2 + (1 - \text{specificity})^2]$
 
 ```{r}
-closestTopLeft <- coords(rocCurve, x = "best", best.method = "closest.topleft")
+closestTopLeft <- coords(
+  rocCurve,
+  x = "best",
+  best.method = "closest.topleft")
 closestTopLeftthreshold <- closestTopLeft$threshold
 closestTopLeftspecificity <- closestTopLeft$specificity
 closestTopLeftsensitivity <- closestTopLeft$sensitivity
@@ -1256,8 +1315,14 @@ meanPercentageError = function(predicted, actual, dropUndefined = FALSE){
   return(value)
 }
 
-meanPercentageError(mydataSDT$testScore, mydataSDT$disorder)
-meanPercentageError(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
+meanPercentageError(
+  mydataSDT$testScore,
+  mydataSDT$disorder)
+
+meanPercentageError(
+  mydataSDT$testScore,
+  mydataSDT$disorder,
+  dropUndefined = TRUE)
 ```
 
 ```{r, include = FALSE}
@@ -1293,8 +1358,14 @@ meanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE)
   return(value)
 }
 
-meanAbsolutePercentageError(mydataSDT$testScore, mydataSDT$disorder)
-meanAbsolutePercentageError(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
+meanAbsolutePercentageError(
+  mydataSDT$testScore,
+  mydataSDT$disorder)
+
+meanAbsolutePercentageError(
+  mydataSDT$testScore,
+  mydataSDT$disorder,
+  dropUndefined = TRUE)
 ```
 
 ```{r, include = FALSE}
@@ -1329,7 +1400,9 @@ symmetricMeanAbsolutePercentageError = function(predicted, actual, dropUndefined
   return(value)
 }
 
-symmetricMeanAbsolutePercentageError(mydataSDT$testScore, mydataSDT$disorder)
+symmetricMeanAbsolutePercentageError(
+  mydataSDT$testScore,
+  mydataSDT$disorder)
 ```
 
 ```{r, include = FALSE}
@@ -1430,8 +1503,14 @@ rootMeanSquaredLogAccuracyRatio <- function(predicted, actual, dropUndefined = F
   return(value)
 }
 
-rootMeanSquaredLogAccuracyRatio(mydataSDT$testScore, mydataSDT$disorder)
-rootMeanSquaredLogAccuracyRatio(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
+rootMeanSquaredLogAccuracyRatio(
+  mydataSDT$testScore,
+  mydataSDT$disorder)
+
+rootMeanSquaredLogAccuracyRatio(
+  mydataSDT$testScore,
+  mydataSDT$disorder,
+  dropUndefined = TRUE)
 ```
 
 ```{r, include = FALSE}
@@ -1455,7 +1534,9 @@ knitr::include_graphics("./Images/multipleRegressionRSquared.png")
 $R^2$:
 
 ```{r}
-summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
+summary(lm(
+  disorder ~ testScore,
+  data = mydataSDT))$r.squared
 ```
 
 ```{r, include = FALSE}
@@ -1479,7 +1560,9 @@ $$
 where $p$ is the number of predictors in the model, and $n$ is the sample size.
 
 ```{r}
-summary(lm(disorder ~ testScore, data = mydataSDT))$adj.r.squared
+summary(lm(
+  disorder ~ testScore,
+  data = mydataSDT))$adj.r.squared
 ```
 
 ```{r, include = FALSE}
@@ -1555,8 +1638,11 @@ Larger values reflect greater accuracy.
 It was calculated using the `uroc` package [@Gneiting2020].
 
 ```{r}
-cpaNoMissing <- na.omit(mydataSDT[,c("testScore","continuousOutcome")])
-cpa(response = cpaNoMissing$continuousOutcome, predictor = cpaNoMissing$testScore)
+cpaNoMissing <- na.omit(
+  mydataSDT[,c("testScore","continuousOutcome")])
+cpa(
+  response = cpaNoMissing$continuousOutcome,
+  predictor = cpaNoMissing$testScore)
 ```
 
 #### Spearman's Rho ($\rho$) Rank Correlation {#spearmanRho}
@@ -1566,12 +1652,15 @@ Larger values reflect greater accuracy.
 Spearman's rho was estimated in the `rms` package [@R-rms].
 
 ```{r}
-cor(x = mydataSDT$testScore,
-    y = mydataSDT$continuousOutcome,
-    use = "pairwise.complete.obs",
-    method = "spearman")
+cor(
+  x = mydataSDT$testScore,
+  y = mydataSDT$continuousOutcome,
+  use = "pairwise.complete.obs",
+  method = "spearman")
 
-orm(continuousOutcome ~ testScore, data = mydataSDT)$stats["rho"]
+orm(
+  continuousOutcome ~ testScore,
+  data = mydataSDT)$stats["rho"]
 ```
 
 #### Somers' $D_{xy}$ Rank Correlation {#somersD}
@@ -1581,9 +1670,16 @@ Larger values reflect greater accuracy.
 Somers' $D_{xy}$ was estimated in the `rms` package [@R-rms].
 
 ```{r}
-lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Dxy"]
+lrm(
+  continuousOutcome ~ testScore,
+  data = mydataSDT)$stats["Dxy"]
 
-rms::validate(lrm(continuousOutcome ~ testScore, data = mydataSDT, x = TRUE, y = TRUE), group = mydataSDT$continuousOutcome)["Dxy","index.corrected"]
+rms::validate(lrm(
+  continuousOutcome ~ testScore,
+  data = mydataSDT,
+  x = TRUE,
+  y = TRUE),
+  group = mydataSDT$continuousOutcome)["Dxy","index.corrected"]
 ```
 
 #### Kendall's Tau-a ($\tau_A$) Rank Correlation {#kendallTau}
@@ -1593,12 +1689,14 @@ Larger values reflect greater accuracy.
 Kendall's tau-a was estimated in the `rms` package [@R-rms].
 
 ```{r}
-cor(x = mydataSDT$testScore,
-    y = mydataSDT$continuousOutcome,
-    use = "pairwise.complete.obs",
-    method = "kendall")
+cor(
+  x = mydataSDT$testScore,
+  y = mydataSDT$continuousOutcome,
+  use = "pairwise.complete.obs",
+  method = "kendall")
 
-lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Tau-a"]
+lrm(continuousOutcome ~ testScore,
+    data = mydataSDT)$stats["Tau-a"]
 ```
 
 #### $c$ Index {#concordanceProbability}
@@ -1609,7 +1707,9 @@ Larger values reflect greater accuracy.
 The Brown–Hollander–Korwar nonparametric test of association was estimated in the `rms` package [@R-rms].
 
 ```{r}
-lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["C"]
+lrm(
+  continuousOutcome ~ testScore,
+  data = mydataSDT)$stats["C"]
 ```
 
 #### Effect Size ($\beta$) of Regression {#standardizedRegressionCoefficient}
@@ -1621,7 +1721,9 @@ We can obtain standardized regression coefficients by standardizing the predicto
 $\beta$:
 
 ```{r}
-lm(scale(continuousOutcome) ~ scale(testScore), data = mydataSDT)$coef["scale(testScore)"]
+lm(
+  scale(continuousOutcome) ~ scale(testScore),
+  data = mydataSDT)$coef["scale(testScore)"]
 ```
 
 ```{r, include = FALSE}
@@ -1708,10 +1810,11 @@ myDataNoMissing <- na.omit(mydataSDT)
 ```
 
 ```{r calibrationPlot1, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = c("Calibration Plot 1.")}
-plotCalibration(data = na.omit(myDataNoMissing),
-                cOutcome = colNumberOutcome,
-                predRisk = myDataNoMissing$predictedProbability,
-                groups = 10)
+plotCalibration(
+  data = na.omit(myDataNoMissing),
+  cOutcome = colNumberOutcome,
+  predRisk = myDataNoMissing$predictedProbability,
+  groups = 10)
 ```
 
 This calibration plot (and ROC curve) was generated using the `rms` package [@R-rms].
@@ -1773,7 +1876,9 @@ Brier scores were calculated using the `rms` package [@R-rms].
 Smaller values reflect greater [calibration accuracy](#calibration).
 
 ```{r}
-val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["Brier"]
+val.prob(
+  mydataSDT$predictedProbability,
+  mydataSDT$disorder, pl = FALSE)["Brier"]
 ```
 
 ```{r, include = FALSE}
@@ -1796,11 +1901,16 @@ $g = 2$
 ```{r, fig.show = "hide"}
 gValue <- 2
 
-hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing),
-                cOutcome = colNumberOutcome,
-                predRisk = myDataNoMissing$predictedProbability,
-                groups = gValue)$Table_HLtest
+hoslem.test(
+  mydataSDT$disorder,
+  mydataSDT$predictedProbability,
+  g = gValue)
+
+plotCalibration(
+  data = na.omit(myDataNoMissing),
+  cOutcome = colNumberOutcome,
+  predRisk = myDataNoMissing$predictedProbability,
+  groups = gValue)$Table_HLtest
 ```
 
 $g = 4$
@@ -1808,11 +1918,16 @@ $g = 4$
 ```{r, fig.show = "hide"}
 gValue <- 4
 
-hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing),
-                cOutcome = colNumberOutcome,
-                predRisk = myDataNoMissing$predictedProbability,
-                groups = gValue)$Table_HLtest
+hoslem.test(
+  mydataSDT$disorder,
+  mydataSDT$predictedProbability,
+  g = gValue)
+
+plotCalibration(
+  data = na.omit(myDataNoMissing),
+  cOutcome = colNumberOutcome,
+  predRisk = myDataNoMissing$predictedProbability,
+  groups = gValue)$Table_HLtest
 ```
 
 $g = 6$
@@ -1820,11 +1935,16 @@ $g = 6$
 ```{r, fig.show = "hide"}
 gValue <- 6
 
-hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing),
-                cOutcome = colNumberOutcome,
-                predRisk = myDataNoMissing$predictedProbability,
-                groups = gValue)$Table_HLtest
+hoslem.test(
+  mydataSDT$disorder,
+  mydataSDT$predictedProbability,
+  g = gValue)
+
+plotCalibration(
+  data = na.omit(myDataNoMissing),
+  cOutcome = colNumberOutcome,
+  predRisk = myDataNoMissing$predictedProbability,
+  groups = gValue)$Table_HLtest
 ```
 
 $g = 8$
@@ -1832,11 +1952,16 @@ $g = 8$
 ```{r, fig.show = "hide"}
 gValue <- 8
 
-hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing),
-                cOutcome = colNumberOutcome,
-                predRisk = myDataNoMissing$predictedProbability,
-                groups = gValue)$Table_HLtest
+hoslem.test(
+  mydataSDT$disorder,
+  mydataSDT$predictedProbability,
+  g = gValue)
+
+plotCalibration(
+  data = na.omit(myDataNoMissing),
+  cOutcome = colNumberOutcome,
+  predRisk = myDataNoMissing$predictedProbability,
+  groups = gValue)$Table_HLtest
 ```
 
 $g = 10$
@@ -1844,11 +1969,16 @@ $g = 10$
 ```{r, fig.show = "hide"}
 gValue <- 10
 
-hoslem.test(mydataSDT$disorder, mydataSDT$predictedProbability, g = gValue)
-plotCalibration(data = na.omit(myDataNoMissing),
-                cOutcome = colNumberOutcome,
-                predRisk = myDataNoMissing$predictedProbability,
-                groups = gValue)$Table_HLtest
+hoslem.test(
+  mydataSDT$disorder,
+  mydataSDT$predictedProbability,
+  g = gValue)
+
+plotCalibration(
+  data = na.omit(myDataNoMissing),
+  cOutcome = colNumberOutcome,
+  predRisk = myDataNoMissing$predictedProbability,
+  groups = gValue)$Table_HLtest
 ```
 
 #### Spiegelhalter's z {#spiegelhalterZ}
@@ -1860,7 +1990,15 @@ A statistically significant Spiegelhalter's $z$ (*p* < .05) indicates a signific
 In this case, the predictions show statistically significant miscalibration.
 
 ```{r}
-val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:z"]; val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["S:p"]
+val.prob(
+  mydataSDT$predictedProbability,
+  mydataSDT$disorder,
+  pl = FALSE)["S:z"]
+
+val.prob(
+  mydataSDT$predictedProbability,
+  mydataSDT$disorder,
+  pl = FALSE)["S:p"]
 ```
 
 #### Calibration for predicting a continuous outcome {#calibrationContinuous}
@@ -1895,36 +2033,52 @@ In this case, the 95% confidence interval of the observed value does not include
 
 ```{r calibrationContinuousOutcome, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = "(ref:calibrationContinuousOutcomeCaption)"}
 #95 prediction interval based on linear model
-calibrationModel <- lm(continuousOutcome ~ testScore, data = mydataSDT)
-calibrationModelPredictionInterval <- expand.grid(testScore = seq(from = min(mydataSDT$testScore, na.rm = TRUE),
-                                                                  to = max(mydataSDT$testScore, na.rm = TRUE),
-                                                                  length.out = 1000))
-calibrationModelPredictionInterval <- cbind(calibrationModelPredictionInterval,
-                                            data.frame(predict(calibrationModel,
-                                                               newdata = calibrationModelPredictionInterval,
-                                                               interval = "predict",
-                                                               level = 0.95)))
+calibrationModel <- lm(
+  continuousOutcome ~ testScore,
+  data = mydataSDT)
+calibrationModelPredictionInterval <- expand.grid(
+  testScore = seq(from = min(mydataSDT$testScore, na.rm = TRUE),
+                  to = max(mydataSDT$testScore, na.rm = TRUE),
+                  length.out = 1000))
+calibrationModelPredictionInterval <- cbind(
+  calibrationModelPredictionInterval,
+  data.frame(predict(
+    calibrationModel,
+    newdata = calibrationModelPredictionInterval,
+    interval = "predict",
+    level = 0.95)))
 
-ggplot(mydataSDT, aes(x = testScore, y = continuousOutcome)) +
+ggplot(
+  mydataSDT,
+  aes(
+    x = testScore,
+    y = continuousOutcome)) +
   geom_point() +
-  geom_line(data = calibrationModelPredictionInterval,
-            aes(y = lwr),
-            color = "red",
-            linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
-  geom_line(data = calibrationModelPredictionInterval,
-            aes(y = upr),
-            color = "red",
-            linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
+  geom_line(
+    data = calibrationModelPredictionInterval,
+    aes(y = lwr),
+    color = "red",
+    linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
+  geom_line(
+    data = calibrationModelPredictionInterval,
+    aes(y = upr),
+    color = "red",
+    linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
   #geom_ribbon(data = calibrationModelPredictionInterval, aes(y = fit, ymin = lwr, ymax = upr), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
-  geom_smooth(method = "lm",
-              color = viridis(3)[3], fill = viridis(3)[1],
-              alpha = 0.7) + #95% confidence interval of linear model
-  geom_abline(slope = 1, intercept = 0) +
+  geom_smooth(
+    method = "lm",
+    color = viridis(3)[3], fill = viridis(3)[1],
+    alpha = 0.7) + #95% confidence interval of linear model
+  geom_abline(
+    slope = 1,
+    intercept = 0) +
   xlim(0,2.4) +
   ylim(0,2.4) +
   xlab("Predicted Value") +
   ylab("Observed Value") +
-  stat_cor(label.y = 2.2, aes(label = paste(..rr.label..))) +
+  stat_cor(
+    label.y = 2.2,
+    aes(label = paste(..rr.label..))) +
   stat_regline_equation(label.y = 2.0) +
   theme_bw()
 ```
@@ -1937,30 +2091,41 @@ In this case, the 95% confidence interval of the observed value does not include
 
 ```{r calibrationContinuousOutcomeLOESS, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = "(ref:calibrationContinuousOutcomeLOESSCaption)"}
 #95 prediction interval based on LOESS model
-calibrationLoessModel <- loess.sd(x = mydataSDT$testScore,
-                                  y = mydataSDT$continuousOutcome,
-                                  nsigma = qnorm(.975),
-                                  na.action = "na.exclude")
-calibrationLoessPredictionInterval <- data.frame(x = calibrationLoessModel$x,
-                                                 y = calibrationLoessModel$y,
-                                                 lower = calibrationLoessModel$lower,
-                                                 upper = calibrationLoessModel$upper)
+calibrationLoessModel <- loess.sd(
+  x = mydataSDT$testScore,
+  y = mydataSDT$continuousOutcome,
+  nsigma = qnorm(.975),
+  na.action = "na.exclude")
+calibrationLoessPredictionInterval <- data.frame(
+  x = calibrationLoessModel$x,
+  y = calibrationLoessModel$y,
+  lower = calibrationLoessModel$lower,
+  upper = calibrationLoessModel$upper)
 
-ggplot(mydataSDT, aes(x = testScore, y = continuousOutcome)) +
+ggplot(
+  mydataSDT,
+  aes(
+    x = testScore,
+    y = continuousOutcome)) +
   geom_point() +
-  geom_line(data = calibrationLoessPredictionInterval,
-            aes(x = x, y = lower),
-            color = "red",
-            linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
-  geom_line(data = calibrationLoessPredictionInterval,
-            aes(x = x, y = upper),
-            color = "red",
-            linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
+  geom_line(
+    data = calibrationLoessPredictionInterval,
+    aes(x = x, y = lower),
+    color = "red",
+    linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
+  geom_line(
+    data = calibrationLoessPredictionInterval,
+    aes(x = x, y = upper),
+    color = "red",
+    linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
   #geom_ribbon(data = calibrationLoessPredictionInterval, aes(x = x, y = y, ymin = lower, ymax = upper), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
-  geom_smooth(method = "loess",
-              color = viridis(3)[3], fill = viridis(3)[1],
-              alpha = 0.7) + #95% confidence interval of LOESS model
-  geom_abline(slope = 1, intercept = 0) +
+  geom_smooth(
+    method = "loess",
+    color = viridis(3)[3], fill = viridis(3)[1],
+    alpha = 0.7) + #95% confidence interval of LOESS model
+  geom_abline(
+    slope = 1,
+    intercept = 0) +
   xlim(0,2.4) +
   ylim(0,2.4) +
   xlab("Predicted Value") +
@@ -1981,12 +2146,15 @@ mydataSDT$diagnosis <- NA
 mydataSDT$diagnosis[mydataSDT$testScore < cutoff] <- 0
 mydataSDT$diagnosis[mydataSDT$testScore >= cutoff] <- 1
 
-mydataSDT$diagnosisFactor <- factor(mydataSDT$diagnosis,
-                                    levels = c(1, 0),
-                                    labels = c("Decision: Diagnosis", "Decision: No Diagnosis"))
-mydataSDT$disorderFactor <- factor(mydataSDT$disorder,
-                                   levels = c(1, 0),
-                                   labels = c("Truth: Disorder", "Truth: No Disorder"))
+mydataSDT$diagnosisFactor <- factor(
+  mydataSDT$diagnosis,
+  levels = c(1, 0),
+  labels = c("Decision: Diagnosis", "Decision: No Diagnosis"))
+
+mydataSDT$disorderFactor <- factor(
+  mydataSDT$disorder,
+  levels = c(1, 0),
+  labels = c("Truth: Disorder", "Truth: No Disorder"))
 ```
 
 ### Accuracy at a Given Cutoff {#accuracyAtCutoff}
@@ -2048,7 +2216,9 @@ $$
 $$
 
 ```{r}
-TPvalue <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1))
+TPvalue <- length(which(
+  mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1))
+
 TPvalue
 ```
 
@@ -2067,7 +2237,9 @@ $$
 $$
 
 ```{r}
-TNvalue <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0))
+TNvalue <- length(which(
+  mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0))
+
 TNvalue
 ```
 
@@ -2086,7 +2258,9 @@ $$
 $$
 
 ```{r}
-FPvalue <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0))
+FPvalue <- length(which(
+  mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0))
+
 FPvalue
 ```
 
@@ -2105,7 +2279,9 @@ $$
 $$
 
 ```{r}
-FNvalue <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
+FNvalue <- length(which(
+  mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
+
 FNvalue
 ```
 
@@ -2118,7 +2294,11 @@ sampleSize <- function(TP, TN, FP, FN){
   return(value)
 }
 
-sampleSize(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+sampleSize(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2146,7 +2326,11 @@ selectionRatio <- function(TP, TN, FP, FN){
   return(value)
 }
 
-selectionRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+selectionRatio(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2175,7 +2359,11 @@ baseRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+baseRate(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2208,15 +2396,17 @@ pretestOdds <- function(TP, TN, FP, FN, pretestProb = NULL){
   return(value)
 }
 
-pretestOdds(TP = TPvalue,
-            TN = TNvalue,
-            FP = FPvalue,
-            FN = FNvalue)
+pretestOdds(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 
-pretestOdds(pretestProb = baseRate(TP = TPvalue,
-                                   TN = TNvalue,
-                                   FP = FPvalue,
-                                   FN = FNvalue))
+pretestOdds(pretestProb = baseRate(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue))
 ```
 
 ```{r, include = FALSE}
@@ -2251,10 +2441,11 @@ percentAccuracy <- function(TP, TN, FP, FN){
   return(value)
 }
 
-percentAccuracy(TP = TPvalue,
-                TN = TNvalue,
-                FP = FPvalue,
-                FN = FNvalue)
+percentAccuracy(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2286,10 +2477,11 @@ percentAccuracyByChance <- function(TP, TN, FP, FN){
   return(value)
 }
 
-percentAccuracyByChance(TP = TPvalue,
-                        TN = TNvalue,
-                        FP = FPvalue,
-                        FN = FNvalue)
+percentAccuracyByChance(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2320,10 +2512,11 @@ percentAccuracyPredictingFromBaseRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-percentAccuracyPredictingFromBaseRate(TP = TPvalue,
-                                      TN = TNvalue,
-                                      FP = FPvalue,
-                                      FN = FNvalue)
+percentAccuracyPredictingFromBaseRate(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2356,10 +2549,11 @@ relativeImprovementOverChance <- function(TP, TN, FP, FN){
   return(value)
 }
 
-relativeImprovementOverChance(TP = TPvalue,
-                              TN = TNvalue,
-                              FP = FPvalue,
-                              FN = FNvalue)
+relativeImprovementOverChance(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2398,10 +2592,11 @@ relativeImprovementOverPredictingFromBaseRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-relativeImprovementOverPredictingFromBaseRate(TP = TPvalue,
-                                              TN = TNvalue,
-                                              FP = FPvalue,
-                                              FN = FNvalue)
+relativeImprovementOverPredictingFromBaseRate(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2436,7 +2631,9 @@ sensitivity <- function(TP, TN, FP, FN){
   return(value)
 }
 
-sensitivity(TP = TPvalue, FN = FNvalue)
+sensitivity(
+  TP = TPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2448,7 +2645,9 @@ Below I compute sensitivity and [specificity](#specificity) at every possible cu
 ```{r}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
-possibleCutoffs <- c(possibleCutoffs, max(possibleCutoffs, na.rm = TRUE) + 0.01)
+possibleCutoffs <- c(
+  possibleCutoffs,
+  max(possibleCutoffs, na.rm = TRUE) + 0.01)
 
 specificity <- function(TP, TN, FP, FN){
   value <- TN/(TN + FP)
@@ -2458,7 +2657,10 @@ specificity <- function(TP, TN, FP, FN){
 
 accuracyVariables <- c("cutoff", "TP", "TN", "FP", "FN")
 
-accuracyStats <- data.frame(matrix(nrow = length(possibleCutoffs), ncol = length(accuracyVariables)))
+accuracyStats <- data.frame(matrix(
+  nrow = length(possibleCutoffs),
+  ncol = length(accuracyVariables)))
+
 names(accuracyStats) <- accuracyVariables
 
 for(i in 1:length(possibleCutoffs)){
@@ -2469,20 +2671,40 @@ for(i in 1:length(possibleCutoffs)){
   mydataSDT$diagnosis[mydataSDT$testScore >= newCutoff] <- 1
   
   accuracyStats[i, "cutoff"] <- newCutoff
-  accuracyStats[i, "TP"] <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1))
-  accuracyStats[i, "TN"] <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0))
-  accuracyStats[i, "FP"] <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0))
-  accuracyStats[i, "FN"] <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
+  accuracyStats[i, "TP"] <- length(which(
+    mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1))
+  accuracyStats[i, "TN"] <- length(which(
+    mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0))
+  accuracyStats[i, "FP"] <- length(which(
+    mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0))
+  accuracyStats[i, "FN"] <- length(which(
+    mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
 }
 
-accuracyStats$sensitivity <- accuracyStats$TPrate <- sensitivity(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$specificity <- accuracyStats$TNrate <- specificity(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$sensitivity <- accuracyStats$TPrate <- sensitivity(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-sensitivitySpecificityData <- pivot_longer(accuracyStats, cols = all_of(c("sensitivity","specificity")))
+accuracyStats$specificity <- accuracyStats$TNrate <- specificity(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+
+sensitivitySpecificityData <- pivot_longer(
+  accuracyStats,
+  cols = all_of(c("sensitivity","specificity")))
 ```
 
 ```{r sensitivitySpecificity, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Sensitivity and Specificity as a Function of the Cutoff."}
-ggplot(sensitivitySpecificityData, aes(x = cutoff, y = value, color = name)) +
+ggplot(
+  sensitivitySpecificityData,
+  aes(
+    x = cutoff,
+    y = value,
+    color = name)) +
   geom_line(size = 2) +
   scale_x_continuous(name = "cutoff (liberal to conservative)") +
   scale_color_viridis_d(name = "") +
@@ -2517,7 +2739,9 @@ specificity(TN = TNvalue, FP = FPvalue)
 ```
 
 ```{r, include = FALSE}
-specificityValue <- specificity(TN = TNvalue, FP = FPvalue)
+specificityValue <- specificity(
+  TN = TNvalue,
+  FP = FPvalue)
 ```
 
 ### False Negative Rate (FNR) {#falseNegativeRate}
@@ -2542,7 +2766,9 @@ falseNegativeRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-falseNegativeRate(TP = TPvalue, FN = FNvalue)
+falseNegativeRate(
+  TP = TPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2571,7 +2797,9 @@ falsePositiveRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-falsePositiveRate(TN = TNvalue, FP = FPvalue)
+falsePositiveRate(
+  TN = TNvalue,
+  FP = FPvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2616,16 +2844,22 @@ positivePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
   return(value)
 }
 
-positivePredictiveValue(TP = TPvalue, FP = FPvalue)
+positivePredictiveValue(
+  TP = TPvalue,
+  FP = FPvalue)
 
-positivePredictiveValue(BR = baseRate(TP = TPvalue,
-                                      TN = TNvalue,
-                                      FP = FPvalue,
-                                      FN = FNvalue),
-                        SN = sensitivity(TP = TPvalue,
-                                         FN = FNvalue),
-                        SP = specificity(TN = TNvalue,
-                                         FP = FPvalue))
+positivePredictiveValue(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  SN = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  SP = specificity(
+    TN = TNvalue,
+    FP = FPvalue))
 ```
 
 ```{r, include = FALSE}
@@ -2647,21 +2881,27 @@ negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
 
 ppvNPVbaseRateData <- data.frame(
   BR = seq(from = 0, to = 1, by = .01),
-  SN = sensitivity(TP = TPvalue,
-                   FN = FNvalue),
-  SP = specificity(TN = TNvalue,
-                   FP = FPvalue))
+  SN = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  SP = specificity(
+    TN = TNvalue,
+    FP = FPvalue))
 
 ppvNPVbaseRateData$positivePredictiveValue <- positivePredictiveValue(
   BR = ppvNPVbaseRateData$BR,
   SN = ppvNPVbaseRateData$SN,
   SP = ppvNPVbaseRateData$SP)
+
 ppvNPVbaseRateData$negativePredictiveValue <- negativePredictiveValue(
   BR = ppvNPVbaseRateData$BR,
   SN = ppvNPVbaseRateData$SN,
   SP = ppvNPVbaseRateData$SP)
 
-ppvNPVbaseRateData_long <- pivot_longer(ppvNPVbaseRateData, cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
+ppvNPVbaseRateData_long <- pivot_longer(
+  ppvNPVbaseRateData,
+  cols = all_of(c(
+    "positivePredictiveValue","negativePredictiveValue")))
 ```
 
 ```{r ppvNPVbaseRate, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Positive Predictive Value and Negative Predictive Value as a Function of the Base Rate."}
@@ -2692,7 +2932,8 @@ accuracyStats$negativePredictiveValue <- negativePredictiveValue(
 
 ppvNPVcutoffData <- pivot_longer(
   accuracyStats,
-  cols = all_of(c("positivePredictiveValue","negativePredictiveValue")))
+  cols = all_of(c(
+    "positivePredictiveValue","negativePredictiveValue")))
 ```
 
 ```{r ppvNPVcutoff, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Positive Predictive Value and Negative Predictive Value as a Function of the Cutoff."}
@@ -2742,17 +2983,22 @@ negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
   return(value)
 }
 
-negativePredictiveValue(TN = TNvalue,
-                        FN = FNvalue)
+negativePredictiveValue(
+  TN = TNvalue,
+  FN = FNvalue)
 
-negativePredictiveValue(BR = baseRate(TP = TPvalue,
-                                      TN = TNvalue,
-                                      FP = FPvalue,
-                                      FN = FNvalue),
-                        SN = sensitivity(TP = TPvalue,
-                                         FN = FNvalue),
-                        SP = specificity(TN = TNvalue,
-                                         FP = FPvalue))
+negativePredictiveValue(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  SN = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  SP = specificity(
+    TN = TNvalue,
+    FP = FPvalue))
 ```
 
 ```{r, include = FALSE}
@@ -2782,7 +3028,9 @@ falseDiscoveryRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-falseDiscoveryRate(TP = TPvalue, FP = FPvalue)
+falseDiscoveryRate(
+  TP = TPvalue,
+  FP = FPvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2811,7 +3059,9 @@ falseOmissionRate <- function(TP, TN, FP, FN){
   return(value)
 }
 
-falseOmissionRate(TN = TNvalue, FN = FNvalue)
+falseOmissionRate(
+  TN = TNvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2841,7 +3091,11 @@ youdenJ <- function(TP, TN, FP, FN){
   return(value)
 }
 
-youdenJ(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+youdenJ(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2870,10 +3124,11 @@ balancedAccuracy <- function(TP, TN, FP, FN){
   return(value)
 }
 
-balancedAccuracy(TP = TPvalue,
-                 TN = TNvalue,
-                 FP = FPvalue,
-                 FN = FNvalue)
+balancedAccuracy(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2915,10 +3170,22 @@ fScore <- function(TP, TN, FP, FN, beta = 1){
   return(value)
 }
 
-fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue)
+fScore(
+  TP = TPvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 
-fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue, beta = 2)
-fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue, beta = 0.5)
+fScore(
+  TP = TPvalue,
+  FP = FPvalue,
+  FN = FNvalue,
+  beta = 2)
+
+fScore(
+  TP = TPvalue,
+  FP = FPvalue,
+  FN = FNvalue,
+  beta = 0.5)
 ```
 
 ```{r, include = FALSE}
@@ -2950,10 +3217,11 @@ mcc <- function(TP, TN, FP, FN){
   return(value)
 }
 
-mcc(TP = TPvalue,
-    TN = TNvalue,
-    FP = FPvalue,
-    FN = FNvalue)
+mcc(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -2993,10 +3261,11 @@ diagnosticOddsRatio <- function(TP, TN, FP, FN){
   return(value)
 }
 
-diagnosticOddsRatio(TP = TPvalue,
-                    TN = TNvalue,
-                    FP = FPvalue,
-                    FN = FNvalue)
+diagnosticOddsRatio(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3040,10 +3309,11 @@ positiveLikelihoodRatio <- function(TP, TN, FP, FN){
   return(value)
 }
 
-positiveLikelihoodRatio(TP = TPvalue,
-                        TN = TNvalue,
-                        FP = FPvalue,
-                        FN = FNvalue)
+positiveLikelihoodRatio(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3079,10 +3349,11 @@ negativeLikelihoodRatio <- function(TP, TN, FP, FN){
   return(value)
 }
 
-negativeLikelihoodRatio(TP = TPvalue,
-                        TN = TNvalue,
-                        FP = FPvalue,
-                        FN = FNvalue)
+negativeLikelihoodRatio(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3136,28 +3407,36 @@ posttestOdds <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, SP = NUL
   return(value)
 }
 
-posttestOdds(TP = TPvalue,
-             TN = TNvalue,
-             FP = FPvalue,
-             FN = FNvalue)
+posttestOdds(
+  TP = TPvalue,
+  TN = TNvalue,
+  P = FPvalue,
+  N = FNvalue)
 
 posttestOdds(
-  pretestProb = baseRate(TP = TPvalue,
-                         TN = TNvalue,
-                         FP = FPvalue,
-                         FN = FNvalue),
-  SN = sensitivity(TP = TPvalue, FN = FNvalue),
-  SP = specificity(TN = TNvalue, FP = FPvalue))
+  pretestProb = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  SN = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  SP = specificity(
+    TN = TNvalue,
+    FP = FPvalue))
 
 posttestOdds(
-  pretestProb = baseRate(TP = TPvalue,
-                         TN = TNvalue,
-                         FP = FPvalue,
-                         FN = FNvalue),
-  likelihoodRatio = positiveLikelihoodRatio(TP = TPvalue,
-                                            TN = TNvalue,
-                                            FP = FPvalue,
-                                            FN = FNvalue))
+  pretestProb = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  likelihoodRatio = positiveLikelihoodRatio(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue))
 ```
 
 ```{r, include = FALSE}
@@ -3208,28 +3487,36 @@ posttestProbability <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, S
   return(value)
 }
 
-posttestProbability(TP = TPvalue,
-                    TN = TNvalue,
-                    FP = FPvalue,
-                    FN = FNvalue)
+posttestProbability(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 
 posttestProbability(
-  pretestProb = baseRate(TP = TPvalue,
-                         TN = TNvalue,
-                         FP = FPvalue,
-                         FN = FNvalue),
-  SN = sensitivity(TP = TPvalue, FN = FNvalue),
-  SP = specificity(TN = TNvalue, FP = FPvalue))
+  pretestProb = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  SN = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  SP = specificity(
+    TN = TNvalue,
+    FP = FPvalue))
 
 posttestProbability(
-  pretestProb = baseRate(TP = TPvalue,
-                         TN = TNvalue,
-                         FP = FPvalue,
-                         FN = FNvalue),
-  likelihoodRatio = positiveLikelihoodRatio(TP = TPvalue,
-                                            TN = TNvalue,
-                                            FP = FPvalue,
-                                            FN = FNvalue))
+  pretestProb = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  likelihoodRatio = positiveLikelihoodRatio(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue))
 ```
 
 ```{r, include}
@@ -3284,10 +3571,11 @@ dPrimeSDT <- function(TP, TN, FP, FN){
   return(value)
 }
   
-dPrimeSDT(TP = TPvalue,
-          TN = TNvalue,
-          FP = FPvalue,
-          FN = FNvalue)
+dPrimeSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3329,10 +3617,11 @@ aSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-aSDT(TP = TPvalue,
-     TN = TNvalue,
-     FP = FPvalue,
-     FN = FNvalue)
+aSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3364,10 +3653,11 @@ betaSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-betaSDT(TP = TPvalue,
-        TN = TNvalue,
-        FP = FPvalue,
-        FN = FNvalue)
+betaSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3399,10 +3689,11 @@ cSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-cSDT(TP = TPvalue,
-     TN = TNvalue,
-     FP = FPvalue,
-     FN = FNvalue)
+cSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3440,10 +3731,11 @@ bSDT <- function(TP, TN, FP, FN){
   return(value)
 }
 
-bSDT(TP = TPvalue,
-     TN = TNvalue,
-     FP = FPvalue,
-     FN = FNvalue)
+bSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ```{r, include = FALSE}
@@ -3465,22 +3757,40 @@ Values below zero indicate that the observed values are, on average, greater tha
 miscalibration <- function(predicted, actual, cutoff, bins = 10){
   data <- data.frame(na.omit(cbind(predicted, actual)))
   
-  calibrationTable <- mutate(data, bin = cut_number(predicted, n = 10)) %>%
+  calibrationTable <- mutate(
+    data,
+    bin = cut_number(
+      predicted,
+      n = 10)) %>%
     group_by(bin) %>%
-    summarise(n = length(predicted),
-              meanPredicted = mean(predicted, na.rm = TRUE),
-              meanObserved = mean(actual, na.rm = TRUE),
-              .groups = "drop")
+    summarise(
+      n = length(predicted),
+      meanPredicted = mean(predicted, na.rm = TRUE),
+      meanObserved = mean(actual, na.rm = TRUE),
+      .groups = "drop")
   
-  calibrationTable$cutoffMin <- as.numeric(str_replace_all(str_split(calibrationTable$bin, pattern = ",", simplify = TRUE)[,1], "[^[:alnum:]\\-\\.]", ""))
-  calibrationTable$cutoffMax <- as.numeric(str_replace_all(str_split(calibrationTable$bin, pattern = ",", simplify = TRUE)[,2], "[^[:alnum:]\\-\\.]", ""))
+  calibrationTable$cutoffMin <- as.numeric(str_replace_all(str_split(
+    calibrationTable$bin,
+    pattern = ",",
+    simplify = TRUE)[,1],
+    "[^[:alnum:]\\-\\.]", ""))
+  calibrationTable$cutoffMax <- as.numeric(str_replace_all(str_split(
+    calibrationTable$bin,
+    pattern = ",",
+    simplify = TRUE)[,2],
+    "[^[:alnum:]\\-\\.]", ""))
 
-  calibrationTable$inRange <- with(calibrationTable, cutoff >= cutoffMin & cutoff <= cutoffMax)
+  calibrationTable$inRange <- with(
+    calibrationTable,
+    cutoff >= cutoffMin & cutoff <= cutoffMax)
   
   if(length(which(calibrationTable$inRange == TRUE)) > 0){
-    nearestCutoff <- calibrationTable$bin[min(which(calibrationTable$inRange == TRUE))]
-    calibrationAtNearestCutoff <- calibrationTable[which(calibrationTable$bin == nearestCutoff),]
-    calibrationAtNearestCutoff <- as.data.frame(calibrationTable[max(which(calibrationTable$inRange == TRUE)),])
+    nearestCutoff <- calibrationTable$bin[min(which(
+      calibrationTable$inRange == TRUE))]
+    calibrationAtNearestCutoff <- calibrationTable[which(
+      calibrationTable$bin == nearestCutoff),]
+    calibrationAtNearestCutoff <- as.data.frame(calibrationTable[max(which(
+      calibrationTable$inRange == TRUE)),])
     
     meanPredicted <- calibrationAtNearestCutoff[, "meanPredicted"]
     meanObserved <- calibrationAtNearestCutoff[, "meanObserved"]
@@ -3492,9 +3802,10 @@ miscalibration <- function(predicted, actual, cutoff, bins = 10){
   return(differenceBetweenPredictedAndObserved)
 }
 
-miscalibration(predicted = mydataSDT$predictedProbability,
-               actual = mydataSDT$disorder,
-               cutoff = cutoff)
+miscalibration(
+  predicted = mydataSDT$predictedProbability,
+  actual = mydataSDT$disorder,
+  cutoff = cutoff)
 ```
 
 ## Optimal Cutoff Specification {#optimalCutoff}
@@ -3536,44 +3847,56 @@ Uoverall <- function(BR, HR, FAR, UH, UM, UCR, UFA){
 ```
 
 ```{r}
-Uoverall(BR = baseRate(TP = TPvalue,
-                       TN = TNvalue,
-                       FP = FPvalue,
-                       FN = FNvalue),
-         HR = sensitivity(TP = TPvalue,
-                          FN = FNvalue),
-         FAR = falsePositiveRate(TN = TNvalue,
-                                 FP = FPvalue),
-         UH = 1,
-         UM = 0,
-         UCR = 0.75,
-         UFA = 0.25)
+Uoverall(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  HR = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  FAR = falsePositiveRate(
+    TN = TNvalue,
+    FP = FPvalue),
+  UH = 1,
+  UM = 0,
+  UCR = 0.75,
+  UFA = 0.25)
 
-Uoverall(BR = baseRate(TP = TPvalue,
-                       TN = TNvalue,
-                       FP = FPvalue,
-                       FN = FNvalue),
-         HR = sensitivity(TP = TPvalue,
-                          FN = FNvalue),
-         FAR = falsePositiveRate(TN = TNvalue,
-                                 FP = FPvalue),
-         UH = 1,
-         UM = 0,
-         UCR = 1,
-         UFA = 0)
+Uoverall(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  HR = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  FAR = falsePositiveRate(
+    TN = TNvalue,
+    FP = FPvalue),
+  UH = 1,
+  UM = 0,
+  UCR = 1,
+  UFA = 0)
 
-Uoverall(BR = baseRate(TP = TPvalue,
-                       TN = TNvalue,
-                       FP = FPvalue,
-                       FN = FNvalue),
-         HR = sensitivity(TP = TPvalue,
-                          FN = FNvalue),
-         FAR = falsePositiveRate(TN = TNvalue,
-                                 FP = FPvalue),
-         UH = 0.75,
-         UM = 0.25,
-         UCR = 1,
-         UFA = 0)
+Uoverall(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  HR = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  FAR = falsePositiveRate(
+    TN = TNvalue,
+    FP = FPvalue),
+  UH = 0.75,
+  UM = 0.25,
+  UCR = 1,
+  UFA = 0)
 ```
 
 #### Utility ratio {#utilityRatio}
@@ -3646,14 +3969,18 @@ Igain <- function(BR, HR, FAR){
 ```
 
 ```{r}
-Igain(BR = baseRate(TP = TPvalue,
-                    TN = TNvalue,
-                    FP = FPvalue,
-                    FN = FNvalue),
-      HR = sensitivity(TP = TPvalue,
-                       FN = FNvalue),
-      FAR = falsePositiveRate(TN = TNvalue,
-                              FP = FPvalue))
+Igain(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  HR = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  FAR = falsePositiveRate(
+    TN = TNvalue,
+    FP = FPvalue))
 ```
 
 ##### Alternative formula from @Metz1973 {#IgainMetz1973}
@@ -3683,14 +4010,18 @@ Igain2 <- function(BR, HR, FAR){
 ```
 
 ```{r}
-Igain2(BR = baseRate(TP = TPvalue,
-                     TN = TNvalue,
-                     FP = FPvalue,
-                     FN = FNvalue),
-       HR = sensitivity(TP = TPvalue,
-                        FN = FNvalue),
-       FAR = falsePositiveRate(TN = TNvalue,
-                               FP = FPvalue))
+Igain2(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  HR = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  FAR = falsePositiveRate(
+    TN = TNvalue,
+    FP = FPvalue))
 ```
 
 ##### Alternative formula from @Somoza1989 {#IgainSomoza1989}
@@ -3721,14 +4052,18 @@ Igain3 <- function(BR, HR, FAR){
 ```
 
 ```{r}
-Igain3(BR = baseRate(TP = TPvalue,
-                     TN = TNvalue,
-                     FP = FPvalue,
-                     FN = FNvalue),
-       HR = sensitivity(TP = TPvalue,
-                        FN = FNvalue),
-       FAR = falsePositiveRate(TN = TNvalue,
-                               FP = FPvalue))
+Igain3(
+  BR = baseRate(
+    TP = TPvalue,
+    TN = TNvalue,
+    FP = FPvalue,
+    FN = FNvalue),
+  HR = sensitivity(
+    TP = TPvalue,
+    FN = FNvalue),
+  FAR = falsePositiveRate(
+    TN = TNvalue,
+    FP = FPvalue))
 ```
 
 ##### Examples {#IgainExamples}
@@ -3826,11 +4161,16 @@ utilityFalseAlarms <- 0.25
 ```{r}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
-possibleCutoffs <- c(possibleCutoffs, max(possibleCutoffs, na.rm = TRUE) + 0.01)
+possibleCutoffs <- c(
+  possibleCutoffs, max(possibleCutoffs, na.rm = TRUE) + 0.01)
 
-accuracyVariables <- c("cutoff", "TP", "TN", "FP", "FN", "differenceBetweenPredictedAndObserved")
+accuracyVariables <- c(
+  "cutoff", "TP", "TN", "FP", "FN", "differenceBetweenPredictedAndObserved")
 
-accuracyStats <- data.frame(matrix(nrow = length(possibleCutoffs), ncol = length(accuracyVariables)))
+accuracyStats <- data.frame(
+  matrix(
+    nrow = length(possibleCutoffs),
+    ncol = length(accuracyVariables)))
 names(accuracyStats) <- accuracyVariables
 
 for(i in 1:length(possibleCutoffs)){
@@ -3841,60 +4181,195 @@ for(i in 1:length(possibleCutoffs)){
   mydataSDT$diagnosis[mydataSDT$testScore >= cutoff] <- 1
   
   accuracyStats[i, "cutoff"] <- cutoff
-  accuracyStats[i, "TP"] <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1))
-  accuracyStats[i, "TN"] <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0))
-  accuracyStats[i, "FP"] <- length(which(mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0))
-  accuracyStats[i, "FN"] <- length(which(mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
+  accuracyStats[i, "TP"] <- length(which(
+    mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1))
+  accuracyStats[i, "TN"] <- length(which(
+    mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0))
+  accuracyStats[i, "FP"] <- length(which(
+    mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0))
+  accuracyStats[i, "FN"] <- length(which(
+    mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1))
   
-  accuracyStats[i, "differenceBetweenPredictedAndObserved"] <- miscalibration(predicted = mydataSDT$testScore, actual = mydataSDT$disorder, cutoff = cutoff)
+  accuracyStats[i, "differenceBetweenPredictedAndObserved"] <- 
+    miscalibration(
+      predicted = mydataSDT$testScore,
+      actual = mydataSDT$disorder,
+      cutoff = cutoff)
 }
 
-accuracyStats$N <- sampleSize(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$N <- sampleSize(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$selectionRatio <- selectionRatio(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$baseRate <- baseRate(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$selectionRatio <- selectionRatio(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$baseRate <- baseRate(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$percentAccuracy <- percentAccuracy(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$percentAccuracyByChance <- percentAccuracyByChance(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$relativeImprovementOverChance <- relativeImprovementOverChance(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$relativeImprovementOverPredictingFromBaseRate <- relativeImprovementOverPredictingFromBaseRate(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$percentAccuracy <- percentAccuracy(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$percentAccuracyByChance <- percentAccuracyByChance(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$relativeImprovementOverChance <- relativeImprovementOverChance(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$relativeImprovementOverPredictingFromBaseRate <- 
+  relativeImprovementOverPredictingFromBaseRate(
+    TP = accuracyStats$TP,
+    TN = accuracyStats$TN,
+    FP = accuracyStats$FP,
+    FN = accuracyStats$FN)
 
-accuracyStats$sensitivity <- accuracyStats$TPrate <- sensitivity(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$specificity <- accuracyStats$TNrate <- specificity(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$FNrate <- falseNegativeRate(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$FPrate <- falsePositiveRate(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$sensitivity <- accuracyStats$TPrate <- sensitivity(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$specificity <- accuracyStats$TNrate <- specificity(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$FNrate <- falseNegativeRate(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$FPrate <- falsePositiveRate(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$youdenJ <- youdenJ(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$youdenJ <- youdenJ(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$positivePredictiveValue <- positivePredictiveValue(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$negativePredictiveValue <- negativePredictiveValue(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$falseDiscoveryRate <- falseDiscoveryRate(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$falseOmissionRate <- falseOmissionRate(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$positivePredictiveValue <- positivePredictiveValue(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$negativePredictiveValue <- negativePredictiveValue(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$falseDiscoveryRate <- falseDiscoveryRate(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$falseOmissionRate <- falseOmissionRate(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$balancedAccuracy <- balancedAccuracy(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$f1Score <- fScore(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$mcc <- mcc(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$balancedAccuracy <- balancedAccuracy(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$f1Score <- fScore(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$mcc <- mcc(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$diagnosticOddsRatio <- diagnosticOddsRatio(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$positiveLikelihoodRatio <- positiveLikelihoodRatio(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$negativeLikelihoodRatio <- negativeLikelihoodRatio(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$diagnosticOddsRatio <- diagnosticOddsRatio(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$positiveLikelihoodRatio <- positiveLikelihoodRatio(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$negativeLikelihoodRatio <- negativeLikelihoodRatio(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$dPrimeSDT <- dPrimeSDT(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$betaSDT <- betaSDT(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$cSDT <- cSDT(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$ASDT <- aSDT(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
-accuracyStats$bSDT <- bSDT(TP = accuracyStats$TP, TN = accuracyStats$TN, FP = accuracyStats$FP, FN = accuracyStats$FN)
+accuracyStats$dPrimeSDT <- dPrimeSDT(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$betaSDT <- betaSDT(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$cSDT <- cSDT(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$ASDT <- aSDT(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
+accuracyStats$bSDT <- bSDT(
+  TP = accuracyStats$TP,
+  TN = accuracyStats$TN,
+  FP = accuracyStats$FP,
+  FN = accuracyStats$FN)
 
-accuracyStats$overallUtility <- Uoverall(BR = accuracyStats$baseRate, HR = accuracyStats$TPrate, FAR = accuracyStats$FPrate, UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
-accuracyStats$utilityRatio <- utilityRatio(UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
-accuracyStats$informationGain <- Igain(BR = accuracyStats$baseRate, HR = accuracyStats$TPrate, FAR = accuracyStats$FPrate)
+accuracyStats$overallUtility <- Uoverall(
+  BR = accuracyStats$baseRate,
+  HR = accuracyStats$TPrate,
+  FAR = accuracyStats$FPrate,
+  UH = utilityHits,
+  UM = utilityMisses,
+  UCR = utilityCorrectRejections,
+  UFA = utilityFalseAlarms)
+accuracyStats$utilityRatio <- utilityRatio(
+  UH = utilityHits,
+  UM = utilityMisses,
+  UCR = utilityCorrectRejections,
+  UFA = utilityFalseAlarms)
+accuracyStats$informationGain <- Igain(
+  BR = accuracyStats$baseRate,
+  HR = accuracyStats$TPrate,
+  FAR = accuracyStats$FPrate)
 
 #Replace NaN and INF values with NA
 is.nan.data.frame <- function(x)
   do.call(cbind, lapply(x, is.nan))
 
 accuracyStats[is.nan.data.frame(accuracyStats)] <- NA
-accuracyStats <- do.call(data.frame, lapply(accuracyStats, function(x) replace(x, is.infinite(x), NA)))
+accuracyStats <- do.call(
+  data.frame,
+  lapply(
+    accuracyStats,
+    function(x) replace(x, is.infinite(x), NA)))
 ```
 
 ### All Accuracy Statistics {#allAccuracyStatistics}
@@ -3902,12 +4377,13 @@ accuracyStats <- do.call(data.frame, lapply(accuracyStats, function(x) replace(x
 The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at a every possible cutoff.
 
 ```{r}
-accuracyAtEachCutoff(predicted = mydataSDT$testScore,
-                     actual = mydataSDT$disorder,
-                     UH = utilityHits,
-                     UM = utilityMisses,
-                     UCR = utilityCorrectRejections,
-                     UFA = utilityFalseAlarms)
+accuracyAtEachCutoff(
+  predicted = mydataSDT$testScore,
+  actual = mydataSDT$disorder,
+  UH = utilityHits,
+  UM = utilityMisses,
+  UCR = utilityCorrectRejections,
+  UFA = utilityFalseAlarms)
 ```
 
 ```{r, eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
@@ -3955,8 +4431,10 @@ youdenIndex
 #### Accuracy statistics at cutoff of Youden's J Statistic {#allAccuracyStatistics-youdenJaccuracy}
 
 ```{r}
-accuracyStats[head(which(accuracyStats$cutoff >= youdenIndex), 1),]
-accuracyStats[which(accuracyStats$youdenJ == max(accuracyStats$youdenJ, na.rm = TRUE)),]
+accuracyStats[head(which(
+  accuracyStats$cutoff >= youdenIndex), 1),]
+accuracyStats[which(
+  accuracyStats$youdenJ == max(accuracyStats$youdenJ, na.rm = TRUE)),]
 ```
 
 ### Closest to the Top Left of the ROC Curve {#allAccuracyStatistics-topLeftROC}
@@ -3966,13 +4444,20 @@ accuracyStats[which(accuracyStats$youdenJ == max(accuracyStats$youdenJ, na.rm = 
 Threshold where the ROC plot is closest to the Top Left:
 
 ```{r}
-closestToTheTopLeft <- coords(roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE), x = "best", best.method = "closest.topleft")[[1]]
+closestToTheTopLeft <- coords(roc(
+  data = mydataSDT,
+  response = disorder,
+  predictor = testScore,
+  smooth = FALSE),
+  x = "best",
+  best.method = "closest.topleft")[[1]]
 ```
 
 #### Accuracy stats at cutoff where the ROC plot is closest to the Top Left {#allAccuracyStatistics-topLeftROCaccuracy}
 
 ```{r}
-accuracyStats[head(which(accuracyStats$cutoff >= closestToTheTopLeft), 1),]
+accuracyStats[head(which(
+  accuracyStats$cutoff >= closestToTheTopLeft), 1),]
 ```
 
 ### Cutoff that optimizes each of the following criteria: {#allAccuracyStatistics-cutoff}
@@ -3980,146 +4465,220 @@ accuracyStats[head(which(accuracyStats$cutoff >= closestToTheTopLeft), 1),]
 The `petersenlab` package [@R-petersenlab] contains an R function that identifes the cutoff that optimizes each of various accuracy estimates.
 
 ```{r}
-optimalCutoff(predicted = mydataSDT$testScore, actual = mydataSDT$disorder,
-              UH = utilityHits, UM = utilityMisses, UCR = utilityCorrectRejections, UFA = utilityFalseAlarms)
+optimalCutoff(
+  predicted = mydataSDT$testScore,
+  actual = mydataSDT$disorder,
+  UH = utilityHits,
+  UM = utilityMisses,
+  UCR = utilityCorrectRejections,
+  UFA = utilityFalseAlarms)
 ```
 
 #### Percent Accuracy {#allAccuracyStatistics-cutoffPercentAccuracy}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$percentAccuracy == max(accuracyStats$percentAccuracy, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$percentAccuracy == max(
+    accuracyStats$percentAccuracy,
+    na.rm = TRUE))]
 ```
 
 #### Percent Accuracy by Chance {#allAccuracyStatistics-cutoffPercentAccuracyByChance}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$percentAccuracyByChance == max(accuracyStats$percentAccuracyByChance, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$percentAccuracyByChance == max(
+    accuracyStats$percentAccuracyByChance,
+    na.rm = TRUE))]
 ```
 
 #### Relative Improvement Over Chance (ROIC) {#allAccuracyStatistics-cutoffROIC}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$relativeImprovementOverChance == max(accuracyStats$relativeImprovementOverChance, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$relativeImprovementOverChance == max(
+    accuracyStats$relativeImprovementOverChance,
+    na.rm = TRUE))]
 ```
 
 #### Relative Improvement Over Predicting from the Base Rate {#allAccuracyStatistics-cutoffRelativeImprovementOverPredictingFromBaseRate}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$relativeImprovementOverPredictingFromBaseRate == max(accuracyStats$relativeImprovementOverPredictingFromBaseRate, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$relativeImprovementOverPredictingFromBaseRate == max(
+    accuracyStats$relativeImprovementOverPredictingFromBaseRate,
+    na.rm = TRUE))]
 ```
 
 #### Sensitivity {#allAccuracyStatistics-cutoffSensitivity}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$sensitivity == max(accuracyStats$sensitivity, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$sensitivity == max(
+    accuracyStats$sensitivity,
+    na.rm = TRUE))]
 ```
 
 #### Specificity {#allAccuracyStatistics-cutoffSpecificity}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$specificity == max(accuracyStats$specificity, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$specificity == max(
+    accuracyStats$specificity,
+    na.rm = TRUE))]
 ```
 
 #### Positive Predictive Value {#allAccuracyStatistics-cutoffPPV}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$positivePredictiveValue == max(accuracyStats$positivePredictiveValue, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$positivePredictiveValue == max(
+    accuracyStats$positivePredictiveValue,
+    na.rm = TRUE))]
 ```
 
 #### Negative Predictive Value {#allAccuracyStatistics-cutoffNPV}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$negativePredictiveValue == max(accuracyStats$negativePredictiveValue, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$negativePredictiveValue == max(
+    accuracyStats$negativePredictiveValue,
+    na.rm = TRUE))]
 ```
 
 #### Youden's J Statistic {#allAccuracyStatistics-cutoffYoudenJ}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$youdenJ == max(accuracyStats$youdenJ, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$youdenJ == max(
+    accuracyStats$youdenJ,
+    na.rm = TRUE))]
 ```
 
 #### Balanced Accuracy {#allAccuracyStatistics-cutoffBalancedAccuracy}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$balancedAccuracy == max(accuracyStats$balancedAccuracy, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$balancedAccuracy == max(
+    accuracyStats$balancedAccuracy,
+    na.rm = TRUE))]
 ```
 
 #### F1 Score {#allAccuracyStatistics-cutoffF1}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$f1Score == max(accuracyStats$f1Score, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$f1Score == max(
+    accuracyStats$f1Score,
+    na.rm = TRUE))]
 ```
 
 #### Matthews Correlation Coefficient {#allAccuracyStatistics-cutoffMCC}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$mcc == max(accuracyStats$mcc, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$mcc == max(
+    accuracyStats$mcc,
+    na.rm = TRUE))]
 ```
 
 #### Diagnostic Odds Ratio {#allAccuracyStatistics-cutoffDOR}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$diagnosticOddsRatio == max(accuracyStats$diagnosticOddsRatio, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$diagnosticOddsRatio == max(
+    accuracyStats$diagnosticOddsRatio,
+    na.rm = TRUE))]
 ```
 
 #### Positive Likelihood Ratio {#allAccuracyStatistics-cutoffPLR}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$positiveLikelihoodRatio == max(accuracyStats$positiveLikelihoodRatio, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$positiveLikelihoodRatio == max(
+    accuracyStats$positiveLikelihoodRatio,
+    na.rm = TRUE))]
 ```
 
 #### Negative Likelihood Ratio {#allAccuracyStatistics-cutoffNLR}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$negativeLikelihoodRatio == min(accuracyStats$negativeLikelihoodRatio, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$negativeLikelihoodRatio == min(
+    accuracyStats$negativeLikelihoodRatio,
+    na.rm = TRUE))]
 ```
 
 #### $d'$ Sensitivity {#allAccuracyStatistics-cutoffDprime}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$dPrimeSDT == max(accuracyStats$dPrimeSDT, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$dPrimeSDT == max(
+    accuracyStats$dPrimeSDT,
+    na.rm = TRUE))]
 ```
 
 #### $A$ (Non-Parametric) Sensitivity {#allAccuracyStatistics-cutoffAsensitivity}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$ASDT == max(accuracyStats$ASDT, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$ASDT == max(
+    accuracyStats$ASDT,
+    na.rm = TRUE))]
 ```
 
 #### $\beta$ Bias {#allAccuracyStatistics-cutoffBetaBias}
 
 ```{r}
-accuracyStats$cutoff[which(abs(accuracyStats$betaSDT) == min(abs(accuracyStats$betaSDT), na.rm = TRUE))]
+accuracyStats$cutoff[which(abs(
+  accuracyStats$betaSDT) == min(abs(
+    accuracyStats$betaSDT),
+    na.rm = TRUE))]
 ```
 
 #### $c$ Bias {#allAccuracyStatistics-cutoffCbias}
 
 ```{r}
-accuracyStats$cutoff[which(abs(accuracyStats$cSDT) == min(abs(accuracyStats$cSDT), na.rm = TRUE))]
+accuracyStats$cutoff[which(abs(
+  accuracyStats$cSDT) == min(abs(
+    accuracyStats$cSDT),
+    na.rm = TRUE))]
 ```
 
 #### $b$ (Non-Parametric) Bias {#allAccuracyStatistics-cutoffBbias}
 
 ```{r}
-accuracyStats$cutoff[which(abs(accuracyStats$bSDT) == min(abs(accuracyStats$bSDT), na.rm = TRUE))]
+accuracyStats$cutoff[which(abs(
+  accuracyStats$bSDT) == min(abs(
+    accuracyStats$bSDT),
+    na.rm = TRUE))]
 ```
 
 #### Mean difference between predicted and observed values (Miscalibration) {#allAccuracyStatistics-cutoffMiscalibration}
 
 ```{r}
-accuracyStats$cutoff[which(abs(accuracyStats$differenceBetweenPredictedAndObserved) == min(abs(accuracyStats$differenceBetweenPredictedAndObserved), na.rm = TRUE))]
+accuracyStats$cutoff[which(abs(
+  accuracyStats$differenceBetweenPredictedAndObserved) == min(abs(
+    accuracyStats$differenceBetweenPredictedAndObserved),
+    na.rm = TRUE))]
 ```
 
 #### Overall Utility {#allAccuracyStatistics-cutoffOverallUtility}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$overallUtility == max(accuracyStats$overallUtility, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$overallUtility == max(
+    accuracyStats$overallUtility,
+    na.rm = TRUE))]
 ```
 
 #### Information Gain {#allAccuracyStatistics-cutoffIgain}
 
 ```{r}
-accuracyStats$cutoff[which(accuracyStats$informationGain == max(accuracyStats$informationGain, na.rm = TRUE))]
+accuracyStats$cutoff[which(
+  accuracyStats$informationGain == max(
+    accuracyStats$informationGain,
+    na.rm = TRUE))]
 ```
 
 ## Regression for Prediction of Continuous Outcomes {#regression-prediction}
@@ -4135,14 +4694,19 @@ $$
 where $y$ is the outcome, $b_0$ is the intercept, $b_1$ is the slope of the association between the predictor ($x_1$) and outcome, and $e$ is the error term.
 
 ```{r, echo = FALSE}
-regression1 <- data.frame("y" = c(7, 13, 29, 10),
-                          "x1" = c(1, 2, 7, 2))
+regression1 <- data.frame(
+  "y" = c(7, 13, 29, 10),
+  "x1" = c(1, 2, 7, 2))
 
-regression2 <- data.frame("y" = c(7, 13, 29, 10),
-                          "x1" = c(1, 2, 7, 2),
-                          "x2" = c(3, 5, 1, 2))
+regression2 <- data.frame(
+  "y" = c(7, 13, 29, 10),
+  "x1" = c(1, 2, 7, 2),
+  "x2" = c(3, 5, 1, 2))
 
-regression1_model <- lm(y ~ x1, data = regression1)
+regression1_model <- lm(
+  y ~ x1,
+  data = regression1)
+
 regression1_intercept <- regression1_model$coefficients[[1]]
 regression1_slope <- regression1_model$coefficients[[2]]
 regression1_rsquare <- summary(regression1_model)$r.squared
@@ -4219,9 +4783,10 @@ knitr::include_graphics("./Images/multipleRegressionMulticollinearity.png")
 Consider the following example where you have two predictors and one outcome, as shown in Table \@ref(tab:regression3).
 
 ```{r, echo = FALSE}
-regression3 <- data.frame("y" = c(9, 11, 17, 3, 21, 13),
-                          "x1" = c(2, 3, 4, 1, 5, 3.5),
-                          "x2" = c(4, 6, 8, 2, 10, 7))
+regression3 <- data.frame(
+  "y" = c(9, 11, 17, 3, 21, 13),
+  "x1" = c(2, 3, 4, 1, 5, 3.5),
+  "x2" = c(4, 6, 8, 2, 10, 7))
 ```
 
 ```{r regression3, echo = FALSE}
