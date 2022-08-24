@@ -236,7 +236,10 @@ mod <- generate.mirt_object(pars, "3PL")
 ```{r}
 summary(mod)
 coef(mod, simplify = TRUE, IRTpars = TRUE)
-modItemParameters <- coef(mod, simplify = TRUE, IRTpars = TRUE)$items
+modItemParameters <- coef(
+  mod,
+  simplify = TRUE,
+  IRTpars = TRUE)$items
 ```
 
 ### Model Plots {#modelPlots-cat}
@@ -302,10 +305,11 @@ for(i in 1:nitems){
   choices[i,] <- as.character(ch)
 }
 
-df <- data.frame(Questions = questions,
-                 Answer = answers,
-                 Option = choices,
-                 Type = "radio")
+df <- data.frame(
+  Questions = questions,
+  Answer = answers,
+  Option = choices,
+  Type = "radio")
 ```
 
 ### Run Computerized Adaptive Test (CAT) {#runCAT}
@@ -320,12 +324,13 @@ minimum_SEM <- .3
 Run the CAT and stop once the [standard error of measurement](#standardErrorOfMeasurement) for the latent trait (theta; $\theta$) becomes $`r minimum_SEM`$ or lower.
 
 ```{r, eval = FALSE}
-result <- mirtCAT(df,
-                  mod,
-                  start_item = "MI",
-                  method = "EAP",
-                  criteria = "MI",
-                  design = list(min_SEM = minimum_SEM))
+result <- mirtCAT(
+  df,
+  mod,
+  start_item = "MI",
+  method = "EAP",
+  criteria = "MI",
+  design = list(min_SEM = minimum_SEM))
 ```
 
 ```{r catModel, include = FALSE}
@@ -377,7 +382,10 @@ You can create a computerized adaptive test from any [item response theory](#irt
 For instance, below I create a matrix with the questions and response options from the [graded response model](#irt-gradedResponseModel) that I fit in Section in Chapter \@ref(irt) on [item response theory](#irt).
 
 ```{r}
-numItemsGRM <- nrow(coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)$items)
+numItemsGRM <- nrow(coef(
+  gradedResponseModel,
+  simplify = TRUE,
+  IRTpars = TRUE)$items)
 
 names(Science)
 
@@ -403,9 +411,10 @@ for(i in 1:numItemsGRM){
   choicesGRM[i,] <- responseOptionsGRM
 }
 
-dfGRM <- data.frame(Questions = questionsGRM,
-                    Option = choicesGRM,
-                    Type = "radio")
+dfGRM <- data.frame(
+  Questions = questionsGRM,
+  Option = choicesGRM,
+  Type = "radio")
 ```
 
 ### Run Computerized Adaptive Test {#cat-runModel}
@@ -413,12 +422,13 @@ dfGRM <- data.frame(Questions = questionsGRM,
 Then you can create and run the computerized adaptive model:
 
 ```{r, eval = FALSE}
-resultGRM <- mirtCAT(dfGRM,
-                     gradedResponseModel,
-                     start_item = "MI",
-                     method = "EAP",
-                     criteria = "MI",
-                     design = list(min_SEM = minimum_SEM))
+resultGRM <- mirtCAT(
+  dfGRM,
+  gradedResponseModel,
+  start_item = "MI",
+  method = "EAP",
+  criteria = "MI",
+  design = list(min_SEM = minimum_SEM))
 ```
 
 ## Conclusion {#conclusion-cat}
