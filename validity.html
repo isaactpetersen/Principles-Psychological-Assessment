@@ -2151,61 +2151,97 @@ There is nothing special about this particular seed.</p>
 <span id="cb178-7"><a href="validity.html#cb178-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb178-8"><a href="validity.html#cb178-8" aria-hidden="true" tabindex="-1"></a>correlationMatrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(.<span class="dv">7</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
 <span id="cb178-9"><a href="validity.html#cb178-9" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb178-10"><a href="validity.html#cb178-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;predictor&quot;</span>,<span class="st">&quot;criterion&quot;</span>)</span>
-<span id="cb178-11"><a href="validity.html#cb178-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-12"><a href="validity.html#cb178-12" aria-hidden="true" tabindex="-1"></a>covarianceMatrix <span class="ot">&lt;-</span> psych<span class="sc">::</span><span class="fu">cor2cov</span>(correlationMatrix, <span class="at">sigma =</span> standardDeviations)</span>
-<span id="cb178-13"><a href="validity.html#cb178-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-14"><a href="validity.html#cb178-14" aria-hidden="true" tabindex="-1"></a>mydataValidity <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(<span class="at">n =</span> sampleSize,</span>
-<span id="cb178-15"><a href="validity.html#cb178-15" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">mu =</span> means,</span>
-<span id="cb178-16"><a href="validity.html#cb178-16" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">Sigma =</span> covarianceMatrix,</span>
-<span id="cb178-17"><a href="validity.html#cb178-17" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">empirical =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb178-18"><a href="validity.html#cb178-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-19"><a href="validity.html#cb178-19" aria-hidden="true" tabindex="-1"></a>errorToAddToPredictor <span class="ot">&lt;-</span> <span class="fl">3.20</span></span>
-<span id="cb178-20"><a href="validity.html#cb178-20" aria-hidden="true" tabindex="-1"></a>errorToAddToCriterion <span class="ot">&lt;-</span> <span class="fl">6.15</span></span>
-<span id="cb178-21"><a href="validity.html#cb178-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-22"><a href="validity.html#cb178-22" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1 <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
-<span id="cb178-23"><a href="validity.html#cb178-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
-<span id="cb178-24"><a href="validity.html#cb178-24" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2 <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
-<span id="cb178-25"><a href="validity.html#cb178-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
-<span id="cb178-26"><a href="validity.html#cb178-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-27"><a href="validity.html#cb178-27" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1 <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
-<span id="cb178-28"><a href="validity.html#cb178-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
-<span id="cb178-29"><a href="validity.html#cb178-29" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2 <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
-<span id="cb178-30"><a href="validity.html#cb178-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
-<span id="cb178-31"><a href="validity.html#cb178-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-32"><a href="validity.html#cb178-32" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
-<span id="cb178-33"><a href="validity.html#cb178-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">7.5</span>)</span>
-<span id="cb178-34"><a href="validity.html#cb178-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-35"><a href="validity.html#cb178-35" aria-hidden="true" tabindex="-1"></a>latentCorrelation <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
-<span id="cb178-36"><a href="validity.html#cb178-36" aria-hidden="true" tabindex="-1"></a>reliabilityPredictor <span class="ot">&lt;-</span> .<span class="dv">9</span></span>
-<span id="cb178-37"><a href="validity.html#cb178-37" aria-hidden="true" tabindex="-1"></a>reliabilityCriterion <span class="ot">&lt;-</span> .<span class="dv">85</span></span>
-<span id="cb178-38"><a href="validity.html#cb178-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-39"><a href="validity.html#cb178-39" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(sampleSize, <span class="dv">0</span> , <span class="dv">1</span>)</span>
-<span id="cb178-40"><a href="validity.html#cb178-40" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="ot">&lt;-</span> latentCorrelation <span class="sc">*</span> </span>
-<span id="cb178-41"><a href="validity.html#cb178-41" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(sampleSize, <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> latentCorrelation <span class="sc">^</span> <span class="dv">2</span>))</span>
-<span id="cb178-42"><a href="validity.html#cb178-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-43"><a href="validity.html#cb178-43" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM <span class="ot">&lt;-</span> reliabilityPredictor <span class="sc">*</span> </span>
-<span id="cb178-44"><a href="validity.html#cb178-44" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(sampleSize, <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityPredictor <span class="sc">^</span> <span class="dv">2</span>))</span>
-<span id="cb178-45"><a href="validity.html#cb178-45" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM <span class="ot">&lt;-</span> reliabilityCriterion <span class="sc">*</span> </span>
-<span id="cb178-46"><a href="validity.html#cb178-46" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(sampleSize, <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityCriterion <span class="sc">^</span> <span class="dv">2</span>))</span></code></pre></div>
+<span id="cb178-10"><a href="validity.html#cb178-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(correlationMatrix) <span class="ot">&lt;-</span> </span>
+<span id="cb178-11"><a href="validity.html#cb178-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;predictor&quot;</span>,<span class="st">&quot;criterion&quot;</span>)</span>
+<span id="cb178-12"><a href="validity.html#cb178-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-13"><a href="validity.html#cb178-13" aria-hidden="true" tabindex="-1"></a>covarianceMatrix <span class="ot">&lt;-</span> psych<span class="sc">::</span><span class="fu">cor2cov</span>(</span>
+<span id="cb178-14"><a href="validity.html#cb178-14" aria-hidden="true" tabindex="-1"></a>  correlationMatrix,</span>
+<span id="cb178-15"><a href="validity.html#cb178-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma =</span> standardDeviations)</span>
+<span id="cb178-16"><a href="validity.html#cb178-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-17"><a href="validity.html#cb178-17" aria-hidden="true" tabindex="-1"></a>mydataValidity <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(</span>
+<span id="cb178-18"><a href="validity.html#cb178-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> sampleSize,</span>
+<span id="cb178-19"><a href="validity.html#cb178-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> means,</span>
+<span id="cb178-20"><a href="validity.html#cb178-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sigma =</span> covarianceMatrix,</span>
+<span id="cb178-21"><a href="validity.html#cb178-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb178-22"><a href="validity.html#cb178-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-23"><a href="validity.html#cb178-23" aria-hidden="true" tabindex="-1"></a>errorToAddToPredictor <span class="ot">&lt;-</span> <span class="fl">3.20</span></span>
+<span id="cb178-24"><a href="validity.html#cb178-24" aria-hidden="true" tabindex="-1"></a>errorToAddToCriterion <span class="ot">&lt;-</span> <span class="fl">6.15</span></span>
+<span id="cb178-25"><a href="validity.html#cb178-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-26"><a href="validity.html#cb178-26" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1 <span class="ot">&lt;-</span> </span>
+<span id="cb178-27"><a href="validity.html#cb178-27" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
+<span id="cb178-28"><a href="validity.html#cb178-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
+<span id="cb178-29"><a href="validity.html#cb178-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-30"><a href="validity.html#cb178-30" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2 <span class="ot">&lt;-</span> </span>
+<span id="cb178-31"><a href="validity.html#cb178-31" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
+<span id="cb178-32"><a href="validity.html#cb178-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
+<span id="cb178-33"><a href="validity.html#cb178-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-34"><a href="validity.html#cb178-34" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1 <span class="ot">&lt;-</span> </span>
+<span id="cb178-35"><a href="validity.html#cb178-35" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
+<span id="cb178-36"><a href="validity.html#cb178-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
+<span id="cb178-37"><a href="validity.html#cb178-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-38"><a href="validity.html#cb178-38" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2 <span class="ot">&lt;-</span> </span>
+<span id="cb178-39"><a href="validity.html#cb178-39" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
+<span id="cb178-40"><a href="validity.html#cb178-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
+<span id="cb178-41"><a href="validity.html#cb178-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-42"><a href="validity.html#cb178-42" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
+<span id="cb178-43"><a href="validity.html#cb178-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">7.5</span>)</span>
+<span id="cb178-44"><a href="validity.html#cb178-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-45"><a href="validity.html#cb178-45" aria-hidden="true" tabindex="-1"></a>latentCorrelation <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
+<span id="cb178-46"><a href="validity.html#cb178-46" aria-hidden="true" tabindex="-1"></a>reliabilityPredictor <span class="ot">&lt;-</span> .<span class="dv">9</span></span>
+<span id="cb178-47"><a href="validity.html#cb178-47" aria-hidden="true" tabindex="-1"></a>reliabilityCriterion <span class="ot">&lt;-</span> .<span class="dv">85</span></span>
+<span id="cb178-48"><a href="validity.html#cb178-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-49"><a href="validity.html#cb178-49" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(sampleSize, <span class="dv">0</span> , <span class="dv">1</span>)</span>
+<span id="cb178-50"><a href="validity.html#cb178-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-51"><a href="validity.html#cb178-51" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="ot">&lt;-</span> latentCorrelation <span class="sc">*</span> </span>
+<span id="cb178-52"><a href="validity.html#cb178-52" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb178-53"><a href="validity.html#cb178-53" aria-hidden="true" tabindex="-1"></a>    sampleSize,</span>
+<span id="cb178-54"><a href="validity.html#cb178-54" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>,</span>
+<span id="cb178-55"><a href="validity.html#cb178-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> latentCorrelation <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb178-56"><a href="validity.html#cb178-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-57"><a href="validity.html#cb178-57" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM <span class="ot">&lt;-</span> reliabilityPredictor <span class="sc">*</span> </span>
+<span id="cb178-58"><a href="validity.html#cb178-58" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb178-59"><a href="validity.html#cb178-59" aria-hidden="true" tabindex="-1"></a>    sampleSize,</span>
+<span id="cb178-60"><a href="validity.html#cb178-60" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>,</span>
+<span id="cb178-61"><a href="validity.html#cb178-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityPredictor <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb178-62"><a href="validity.html#cb178-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-63"><a href="validity.html#cb178-63" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM <span class="ot">&lt;-</span> reliabilityCriterion <span class="sc">*</span> </span>
+<span id="cb178-64"><a href="validity.html#cb178-64" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb178-65"><a href="validity.html#cb178-65" aria-hidden="true" tabindex="-1"></a>    sampleSize,</span>
+<span id="cb178-66"><a href="validity.html#cb178-66" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>,</span>
+<span id="cb178-67"><a href="validity.html#cb178-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityCriterion <span class="sc">^</span> <span class="dv">2</span>))</span></code></pre></div>
 </div>
 <div id="addMissingData-validity" class="section level4 hasAnchor" number="5.2.2.2">
 <h4><span class="header-section-number">5.2.2.2</span> Add Missing Data<a href="validity.html#addMissingData-validity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="validity.html#cb179-1" aria-hidden="true" tabindex="-1"></a>missingValuesPredictor <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>sampleSize, <span class="at">size =</span> <span class="dv">50</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb179-2"><a href="validity.html#cb179-2" aria-hidden="true" tabindex="-1"></a>missingValuesCriterion <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>sampleSize, <span class="at">size =</span> <span class="dv">50</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb179-3"><a href="validity.html#cb179-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb179-4"><a href="validity.html#cb179-4" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictor[missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-5"><a href="validity.html#cb179-5" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1[missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-6"><a href="validity.html#cb179-6" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2[missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-7"><a href="validity.html#cb179-7" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM[missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-8"><a href="validity.html#cb179-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb179-9"><a href="validity.html#cb179-9" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterion[missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-10"><a href="validity.html#cb179-10" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1[missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-11"><a href="validity.html#cb179-11" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2[missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-12"><a href="validity.html#cb179-12" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM[missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb179-13"><a href="validity.html#cb179-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb179-14"><a href="validity.html#cb179-14" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor[missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="validity.html#cb179-1" aria-hidden="true" tabindex="-1"></a>missingValuesPredictor <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb179-2"><a href="validity.html#cb179-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span>sampleSize,</span>
+<span id="cb179-3"><a href="validity.html#cb179-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">50</span>,</span>
+<span id="cb179-4"><a href="validity.html#cb179-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb179-5"><a href="validity.html#cb179-5" aria-hidden="true" tabindex="-1"></a>missingValuesCriterion <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb179-6"><a href="validity.html#cb179-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span>sampleSize,</span>
+<span id="cb179-7"><a href="validity.html#cb179-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">50</span>,</span>
+<span id="cb179-8"><a href="validity.html#cb179-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb179-9"><a href="validity.html#cb179-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb179-10"><a href="validity.html#cb179-10" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictor[</span>
+<span id="cb179-11"><a href="validity.html#cb179-11" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-12"><a href="validity.html#cb179-12" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1[</span>
+<span id="cb179-13"><a href="validity.html#cb179-13" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-14"><a href="validity.html#cb179-14" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2[</span>
+<span id="cb179-15"><a href="validity.html#cb179-15" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-16"><a href="validity.html#cb179-16" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM[</span>
+<span id="cb179-17"><a href="validity.html#cb179-17" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-18"><a href="validity.html#cb179-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb179-19"><a href="validity.html#cb179-19" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterion[</span>
+<span id="cb179-20"><a href="validity.html#cb179-20" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-21"><a href="validity.html#cb179-21" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1[</span>
+<span id="cb179-22"><a href="validity.html#cb179-22" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-23"><a href="validity.html#cb179-23" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2[</span>
+<span id="cb179-24"><a href="validity.html#cb179-24" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-25"><a href="validity.html#cb179-25" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM[</span>
+<span id="cb179-26"><a href="validity.html#cb179-26" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb179-27"><a href="validity.html#cb179-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb179-28"><a href="validity.html#cb179-28" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor[</span>
+<span id="cb179-29"><a href="validity.html#cb179-29" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -2623,9 +2659,10 @@ In this case, the HTMT values are less than .85, providing evidence of discrimin
 <span id="cb182-4"><a href="validity.html#cb182-4" aria-hidden="true" tabindex="-1"></a><span class="st">  speed   =~ x7 + x8 + x9</span></span>
 <span id="cb182-5"><a href="validity.html#cb182-5" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
 <span id="cb182-6"><a href="validity.html#cb182-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb182-7"><a href="validity.html#cb182-7" aria-hidden="true" tabindex="-1"></a><span class="fu">htmt</span>(modelCFA,</span>
-<span id="cb182-8"><a href="validity.html#cb182-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">data =</span> HolzingerSwineford1939,</span>
-<span id="cb182-9"><a href="validity.html#cb182-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
+<span id="cb182-7"><a href="validity.html#cb182-7" aria-hidden="true" tabindex="-1"></a><span class="fu">htmt</span>(</span>
+<span id="cb182-8"><a href="validity.html#cb182-8" aria-hidden="true" tabindex="-1"></a>  modelCFA,</span>
+<span id="cb182-9"><a href="validity.html#cb182-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
+<span id="cb182-10"><a href="validity.html#cb182-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 <pre><code>        visual textul speed
 visual  1.000              
 textual 0.384  1.000       
@@ -2671,11 +2708,12 @@ First, we simulate data for a MTMM model using a fixed model with population par
 <span id="cb184-21"><a href="validity.html#cb184-21" aria-hidden="true" tabindex="-1"></a><span class="st"> Spatial ~~ .5*Quant</span></span>
 <span id="cb184-22"><a href="validity.html#cb184-22" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
 <span id="cb184-23"><a href="validity.html#cb184-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb184-24"><a href="validity.html#cb184-24" aria-hidden="true" tabindex="-1"></a>MTMM_data <span class="ot">&lt;-</span> <span class="fu">sim_standardized</span>(model_fixed,</span>
-<span id="cb184-25"><a href="validity.html#cb184-25" aria-hidden="true" tabindex="-1"></a>                              <span class="at">n =</span> <span class="dv">10000</span>,</span>
-<span id="cb184-26"><a href="validity.html#cb184-26" aria-hidden="true" tabindex="-1"></a>                              <span class="at">observed =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb184-27"><a href="validity.html#cb184-27" aria-hidden="true" tabindex="-1"></a>                              <span class="at">latent =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb184-28"><a href="validity.html#cb184-28" aria-hidden="true" tabindex="-1"></a>                              <span class="at">errors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<span id="cb184-24"><a href="validity.html#cb184-24" aria-hidden="true" tabindex="-1"></a>MTMM_data <span class="ot">&lt;-</span> <span class="fu">sim_standardized</span>(</span>
+<span id="cb184-25"><a href="validity.html#cb184-25" aria-hidden="true" tabindex="-1"></a>  model_fixed,</span>
+<span id="cb184-26"><a href="validity.html#cb184-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb184-27"><a href="validity.html#cb184-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">observed =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb184-28"><a href="validity.html#cb184-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">latent =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb184-29"><a href="validity.html#cb184-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">errors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>A multitrait-multimethod matrix correlation matrix is below.</p>
 <div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="validity.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(MTMM_data), <span class="dv">2</span>)</span></code></pre></div>
 <div data-pagedtable="false">
@@ -2738,15 +2776,17 @@ Figure 5.13: Multitrait-Multimethod Model in Confirmatory Factor Analysis With T
 <span id="cb186-26"><a href="validity.html#cb186-26" aria-hidden="true" tabindex="-1"></a><span class="st">   QM1 + QM2 + QM3</span></span>
 <span id="cb186-27"><a href="validity.html#cb186-27" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
 <span id="cb186-28"><a href="validity.html#cb186-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb186-29"><a href="validity.html#cb186-29" aria-hidden="true" tabindex="-1"></a>MTMM.fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(modelMTMM,</span>
-<span id="cb186-30"><a href="validity.html#cb186-30" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> MTMM_data,</span>
-<span id="cb186-31"><a href="validity.html#cb186-31" aria-hidden="true" tabindex="-1"></a>                <span class="at">orthogonal =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb186-32"><a href="validity.html#cb186-32" aria-hidden="true" tabindex="-1"></a>                <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span>
-<span id="cb186-33"><a href="validity.html#cb186-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb186-34"><a href="validity.html#cb186-34" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(MTMM.fit,</span>
-<span id="cb186-35"><a href="validity.html#cb186-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb186-36"><a href="validity.html#cb186-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb186-37"><a href="validity.html#cb186-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb186-29"><a href="validity.html#cb186-29" aria-hidden="true" tabindex="-1"></a>MTMM.fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb186-30"><a href="validity.html#cb186-30" aria-hidden="true" tabindex="-1"></a>  modelMTMM,</span>
+<span id="cb186-31"><a href="validity.html#cb186-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> MTMM_data,</span>
+<span id="cb186-32"><a href="validity.html#cb186-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">orthogonal =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb186-33"><a href="validity.html#cb186-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span>
+<span id="cb186-34"><a href="validity.html#cb186-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb186-35"><a href="validity.html#cb186-35" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb186-36"><a href="validity.html#cb186-36" aria-hidden="true" tabindex="-1"></a>  MTMM.fit,</span>
+<span id="cb186-37"><a href="validity.html#cb186-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb186-38"><a href="validity.html#cb186-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb186-39"><a href="validity.html#cb186-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>lavaan 0.6-12 ended normally after 72 iterations
 
   Estimator                                         ML
@@ -2985,10 +3025,11 @@ R-Square:
     Spatial           0.588
     Quant             0.424</code></pre>
 <p>A path diagram of the model is depicted in Figure <a href="validity.html#fig:mtmmCFAFigure">5.14</a> using the <code>semPlot</code> package <span class="citation">(<a href="#ref-R-semPlot" role="doc-biblioref">Epskamp, 2022</a>)</span>.</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="validity.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(MTMM.fit,</span>
-<span id="cb188-2"><a href="validity.html#cb188-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;std&quot;</span>,</span>
-<span id="cb188-3"><a href="validity.html#cb188-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree3&quot;</span>,</span>
-<span id="cb188-4"><a href="validity.html#cb188-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">bifactor =</span> <span class="fu">c</span>(<span class="st">&quot;Verbal&quot;</span>,<span class="st">&quot;Spatial&quot;</span>,<span class="st">&quot;Quant&quot;</span>,<span class="st">&quot;g&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="validity.html#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb188-2"><a href="validity.html#cb188-2" aria-hidden="true" tabindex="-1"></a>  MTMM.fit,</span>
+<span id="cb188-3"><a href="validity.html#cb188-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;std&quot;</span>,</span>
+<span id="cb188-4"><a href="validity.html#cb188-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree3&quot;</span>,</span>
+<span id="cb188-5"><a href="validity.html#cb188-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bifactor =</span> <span class="fu">c</span>(<span class="st">&quot;Verbal&quot;</span>,<span class="st">&quot;Spatial&quot;</span>,<span class="st">&quot;Quant&quot;</span>,<span class="st">&quot;g&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mtmmCFAFigure"></span>
 <img src="Book_files/figure-html/mtmmCFAFigure-1.png" alt="Multitrait-Multimethod Model in Confirmatory Factor Analysis." width="100%" />
 <p class="caption">
@@ -3010,10 +3051,14 @@ Incremental validity demonstrates added value, unless the other measure is cheap
 Incremental validity is a specific kind of <a href="validity.html#criterionValidity">criterion-related validity</a>: significantly increased <span class="math inline">\(R^2\)</span> in hierarchical regression.
 The incremental validity of a measure can be evaluated by examining whether the measure explains significant unique variance in the criterion when accounting for other information, such as easily accessible information, traditionally available measures, or the current gold-standard measure.
 The extent of incremental validity of a measure can be quantified with the change in the coefficient of determination (<span class="math inline">\(\Delta R^2\)</span>) that compares (a) the model that includes the old predictor(s) to (b) the model that includes includes old predictors and the new predictor (measure).</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="validity.html#cb189-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(criterion <span class="sc">~</span> oldpredictor, <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
-<span id="cb189-2"><a href="validity.html#cb189-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(criterion <span class="sc">~</span> oldpredictor <span class="sc">+</span> predictor, <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
-<span id="cb189-3"><a href="validity.html#cb189-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb189-4"><a href="validity.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="validity.html#cb189-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb189-2"><a href="validity.html#cb189-2" aria-hidden="true" tabindex="-1"></a>  criterion <span class="sc">~</span> oldpredictor,</span>
+<span id="cb189-3"><a href="validity.html#cb189-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
+<span id="cb189-4"><a href="validity.html#cb189-4" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb189-5"><a href="validity.html#cb189-5" aria-hidden="true" tabindex="-1"></a>  criterion <span class="sc">~</span> oldpredictor <span class="sc">+</span> predictor,</span>
+<span id="cb189-6"><a href="validity.html#cb189-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
+<span id="cb189-7"><a href="validity.html#cb189-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb189-8"><a href="validity.html#cb189-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div>
 <pre><code>
 Call:
 lm(formula = criterion ~ oldpredictor, data = na.omit(mydataValidity))
@@ -3385,8 +3430,9 @@ Researchers recommend accounting for measurement <a href="reliability.html#relia
 <h3><span class="header-section-number">5.6.1</span> Test with Simulated Data<a href="validity.html#measurementErrorEffects-simulatedData" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="measurementErrorEffects-reliabilityPredictor" class="section level4 hasAnchor" number="5.6.1.1">
 <h4><span class="header-section-number">5.6.1.1</span> Reliability of Predictor<a href="validity.html#measurementErrorEffects-reliabilityPredictor" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="validity.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
-<span id="cb198-2"><a href="validity.html#cb198-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2)</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="validity.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb198-2"><a href="validity.html#cb198-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
+<span id="cb198-3"><a href="validity.html#cb198-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2)</span></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
 
@@ -3401,8 +3447,9 @@ sample estimates:
 </div>
 <div id="measurementErrorEffects-reliabilityCriterion" class="section level4 hasAnchor" number="5.6.1.2">
 <h4><span class="header-section-number">5.6.1.2</span> Reliability of Criterion<a href="validity.html#measurementErrorEffects-reliabilityCriterion" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="validity.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1,</span>
-<span id="cb200-2"><a href="validity.html#cb200-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2)</span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="validity.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb200-2"><a href="validity.html#cb200-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1,</span>
+<span id="cb200-3"><a href="validity.html#cb200-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2)</span></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
 
@@ -3417,7 +3464,9 @@ sample estimates:
 </div>
 <div id="measurementErrorEffects-trueAssociation" class="section level4 hasAnchor" number="5.6.1.3">
 <h4><span class="header-section-number">5.6.1.3</span> True Association<a href="validity.html#measurementErrorEffects-trueAssociation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="validity.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor, <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="validity.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb202-2"><a href="validity.html#cb202-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
+<span id="cb202-3"><a href="validity.html#cb202-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
 
@@ -3432,8 +3481,9 @@ sample estimates:
 </div>
 <div id="measurementErrorEffects-observedAssociation" class="section level4 hasAnchor" number="5.6.1.4">
 <h4><span class="header-section-number">5.6.1.4</span> Observed Association (after adding measurement error)<a href="validity.html#measurementErrorEffects-observedAssociation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="validity.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
-<span id="cb204-2"><a href="validity.html#cb204-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1)</span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="validity.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb204-2"><a href="validity.html#cb204-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
+<span id="cb204-3"><a href="validity.html#cb204-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1)</span></code></pre></div>
 <pre><code>
     Pearson&#39;s product-moment correlation
 
@@ -3487,8 +3537,9 @@ I extend it to a specific example in Equation <a href="validity.html#eq:disatten
 <div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="validity.html#cb208-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfPredictor <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
 <span id="cb208-2"><a href="validity.html#cb208-2" aria-hidden="true" tabindex="-1"></a>reliabilityOfCriterion <span class="ot">&lt;-</span> <span class="fl">0.85</span></span></code></pre></div>
 <p>The observed (attenuated) association is:</p>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="validity.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
-<span id="cb209-2"><a href="validity.html#cb209-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)<span class="sc">$</span>estimate</span></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="validity.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb209-2"><a href="validity.html#cb209-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
+<span id="cb209-3"><a href="validity.html#cb209-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)<span class="sc">$</span>estimate</span></code></pre></div>
 <pre><code>      cor 
 0.7079278 </code></pre>
 <p>The true (disattenuated) association is:</p>
@@ -3500,8 +3551,9 @@ I extend it to a specific example in Equation <a href="validity.html#eq:disatten
 <pre><code>[1] 0.8093908</code></pre>
 <p>The disattenuation of an observed correlation due to <a href="reliability.html#measurementError">measurement error</a> can be demonstrated using <a href="sem.html#sem">structural equation modeling</a>.
 For instance, consider the following observed association:</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="validity.html#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorObservedSEM,</span>
-<span id="cb213-2"><a href="validity.html#cb213-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionObservedSEM)<span class="sc">$</span>estimate</span></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="validity.html#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb213-2"><a href="validity.html#cb213-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorObservedSEM,</span>
+<span id="cb213-3"><a href="validity.html#cb213-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionObservedSEM)<span class="sc">$</span>estimate</span></code></pre></div>
 <pre><code>      cor 
 0.6118049 </code></pre>
 <p>The observed association can be estimated in <a href="sem.html#sem">structural equation modeling</a> in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan" role="doc-biblioref">Rosseel et al., 2022</a>)</span> using the following syntax:</p>
@@ -3513,13 +3565,15 @@ For instance, consider the following observed association:</p>
 <span id="cb215-6"><a href="validity.html#cb215-6" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ criterionObservedSEM</span></span>
 <span id="cb215-7"><a href="validity.html#cb215-7" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
 <span id="cb215-8"><a href="validity.html#cb215-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb215-9"><a href="validity.html#cb215-9" aria-hidden="true" tabindex="-1"></a>observedSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(observedSEM_syntax,</span>
-<span id="cb215-10"><a href="validity.html#cb215-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> mydataValidity,</span>
-<span id="cb215-11"><a href="validity.html#cb215-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
-<span id="cb215-12"><a href="validity.html#cb215-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb215-13"><a href="validity.html#cb215-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(observedSEM_fit,</span>
-<span id="cb215-14"><a href="validity.html#cb215-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb215-15"><a href="validity.html#cb215-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb215-9"><a href="validity.html#cb215-9" aria-hidden="true" tabindex="-1"></a>observedSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb215-10"><a href="validity.html#cb215-10" aria-hidden="true" tabindex="-1"></a>  observedSEM_syntax,</span>
+<span id="cb215-11"><a href="validity.html#cb215-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
+<span id="cb215-12"><a href="validity.html#cb215-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
+<span id="cb215-13"><a href="validity.html#cb215-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb215-14"><a href="validity.html#cb215-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb215-15"><a href="validity.html#cb215-15" aria-hidden="true" tabindex="-1"></a>  observedSEM_fit,</span>
+<span id="cb215-16"><a href="validity.html#cb215-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb215-17"><a href="validity.html#cb215-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>lavaan 0.6-12 ended normally after 9 iterations
 
   Estimator                                         ML
@@ -3605,13 +3659,15 @@ Thus, we can account for the <a href="reliability.html#reliability">(un)reliabil
 <span id="cb218-29"><a href="validity.html#cb218-29" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ (1 - .85^2)*criterionObservedSEM # where .85 is the reliability of the criterion</span></span>
 <span id="cb218-30"><a href="validity.html#cb218-30" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
 <span id="cb218-31"><a href="validity.html#cb218-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb218-32"><a href="validity.html#cb218-32" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(disattenuationSEM_syntax,</span>
-<span id="cb218-33"><a href="validity.html#cb218-33" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> mydataValidity,</span>
-<span id="cb218-34"><a href="validity.html#cb218-34" aria-hidden="true" tabindex="-1"></a>                             <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
-<span id="cb218-35"><a href="validity.html#cb218-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb218-36"><a href="validity.html#cb218-36" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(disattenuationSEM_fit,</span>
-<span id="cb218-37"><a href="validity.html#cb218-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb218-38"><a href="validity.html#cb218-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb218-32"><a href="validity.html#cb218-32" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb218-33"><a href="validity.html#cb218-33" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_syntax,</span>
+<span id="cb218-34"><a href="validity.html#cb218-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
+<span id="cb218-35"><a href="validity.html#cb218-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
+<span id="cb218-36"><a href="validity.html#cb218-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb218-37"><a href="validity.html#cb218-37" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb218-38"><a href="validity.html#cb218-38" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
+<span id="cb218-39"><a href="validity.html#cb218-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb218-40"><a href="validity.html#cb218-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>lavaan 0.6-12 ended normally after 14 iterations
 
   Estimator                                         ML
@@ -3665,10 +3721,11 @@ R-Square:
     crtrnObsrvdSEM    0.734
     criterionLatnt    0.632</code></pre>
 <p>A path diagram of the true association is depicted in Figure <a href="validity.html#fig:disattenuationSEM">5.22</a>.</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="validity.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(disattenuationSEM_fit,</span>
-<span id="cb220-2"><a href="validity.html#cb220-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
-<span id="cb220-3"><a href="validity.html#cb220-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
-<span id="cb220-4"><a href="validity.html#cb220-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="validity.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb220-2"><a href="validity.html#cb220-2" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
+<span id="cb220-3"><a href="validity.html#cb220-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
+<span id="cb220-4"><a href="validity.html#cb220-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb220-5"><a href="validity.html#cb220-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:disattenuationSEM"></span>
 <img src="Book_files/figure-html/disattenuationSEM-1.png" alt="Disattenuation of an Observed Association due to Measurement Error, as Depicted in a Structural Equation Model." width="100%" />
 <p class="caption">
