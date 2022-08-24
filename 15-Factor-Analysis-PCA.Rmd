@@ -591,8 +591,12 @@ set.seed(52242)
 varNames <- names(HolzingerSwineford1939)
 dimensionsDf <- dim(HolzingerSwineford1939)
 unlistedDf <- unlist(HolzingerSwineford1939)
-unlistedDf[sample(1:length(unlistedDf), size = .15 * length(unlistedDf))] <- NA
-HolzingerSwineford1939 <- as.data.frame(matrix(unlistedDf, ncol = dimensionsDf[2]))
+unlistedDf[sample(
+  1:length(unlistedDf),
+  size = .15 * length(unlistedDf))] <- NA
+HolzingerSwineford1939 <- as.data.frame(matrix(
+  unlistedDf,
+  ncol = dimensionsDf[2]))
 names(HolzingerSwineford1939) <- varNames
 vars <- c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 ```
@@ -622,23 +626,27 @@ kable(psych::describe(HolzingerSwineford1939[,vars]),
 ### Correlations {#correlations-factorAnalysis}
 
 ```{r}
-cor(HolzingerSwineford1939[,vars],
-    use = "pairwise.complete.obs")
+cor(
+  HolzingerSwineford1939[,vars],
+  use = "pairwise.complete.obs")
 ```
 
 Here are correlation matrices of various types from the `petersenlab` package [@R-petersenlab]:
 
 ```{r}
-cor.table(HolzingerSwineford1939[,vars],
-          dig = 2)
+cor.table(
+  HolzingerSwineford1939[,vars],
+  dig = 2)
 
-cor.table(HolzingerSwineford1939[,vars],
-          type = "manuscript",
-          dig = 2)
+cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscript",
+  dig = 2)
 
-cor.table(HolzingerSwineford1939[,vars],
-          type = "manuscriptBig",
-          dig = 2)
+cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscriptBig",
+  dig = 2)
 ```
 
 Pairs panel plots were generated using the `psych` package [@R-psych].
@@ -653,8 +661,9 @@ pairs.panels(HolzingerSwineford1939[,vars])
 A correlation plot is in Figure \@ref(fig:correlationPlot).
 
 ```{r correlationPlot, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot."}
-corrplot(cor(HolzingerSwineford1939[,vars],
-             use = "pairwise.complete.obs"))
+corrplot(cor(
+  HolzingerSwineford1939[,vars],
+  use = "pairwise.complete.obs"))
 ```
 
 ## Factor Analysis {#factorAnalysisExamples}
@@ -695,9 +704,10 @@ A scree plot from EFA is in Figure \@ref(fig:screePlotEFA).
 
 ```{r screePlotEFA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Exploratory Factor Analysis."}
 plot(
-  nScree(x = cor(HolzingerSwineford1939[,vars],
-                 use = "pairwise.complete.obs"),
-         model = "factors"))
+  nScree(x = cor(
+    HolzingerSwineford1939[,vars],
+    use = "pairwise.complete.obs"),
+    model = "factors"))
 ```
 
 ##### Very Simple Structure (VSS) Plot {#vssPlot}
@@ -719,17 +729,19 @@ A three-factor solution is supported by the lowest BIC, whereas a four-factor so
 A VSS plot is in Figure \@ref(fig:vssOrthogonal).
 
 ```{r vssOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
-vss(HolzingerSwineford1939[,vars],
-    rotate = "varimax",
-    fm = "ml")
+vss(
+  HolzingerSwineford1939[,vars],
+  rotate = "varimax",
+  fm = "ml")
 ```
 
 Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOrthogonal).
 
 ```{r vssComplexOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Orthogonal Rotation in Exploratory Factor Analysis."}
-nfactors(HolzingerSwineford1939[,vars],
-         rotate = "varimax",
-         fm = "ml")
+nfactors(
+  HolzingerSwineford1939[,vars],
+  rotate = "varimax",
+  fm = "ml")
 ```
 
 ###### Oblique (Oblimin) rotation {#oblique-vss}
@@ -740,17 +752,19 @@ A three-factor solution is supported by the lowest BIC.
 A VSS plot is in Figure \@ref(fig:vssOblique).
 
 ```{r vssOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."}
-vss(HolzingerSwineford1939[,vars],
-    rotate = "oblimin",
-    fm = "ml")
+vss(
+  HolzingerSwineford1939[,vars],
+  rotate = "oblimin",
+  fm = "ml")
 ```
 
 Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOblique).
 
 ```{r vssComplexOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Oblique Rotation in Exploratory Factor Analysis."}
-nfactors(HolzingerSwineford1939[,vars],
-         rotate = "oblimin",
-         fm = "ml")
+nfactors(
+  HolzingerSwineford1939[,vars],
+  rotate = "oblimin",
+  fm = "ml")
 ```
 
 ###### No rotation {#noRotation-vss}
@@ -761,17 +775,19 @@ A three-factor solution is supported by the lowest BIC, whereas a four-factor so
 A VSS plot is in Figure \@ref(fig:vssUnrotated).
 
 ```{r vssUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."}
-nfactors(HolzingerSwineford1939[,vars],
-         rotate = "none",
-         fm = "ml")
+nfactors(
+  HolzingerSwineford1939[,vars],
+  rotate = "none",
+  fm = "ml")
 ```
 
 Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexUnrotated).
 
 ```{r vssComplexUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With no Rotation in Exploratory Factor Analysis."}
-nfactors(HolzingerSwineford1939[,vars],
-         rotate = "none",
-         fm = "ml")
+nfactors(
+  HolzingerSwineford1939[,vars],
+  rotate = "none",
+  fm = "ml")
 ```
 
 #### Run factor analysis {#runFactorAnalysis-efa}
@@ -1089,13 +1105,14 @@ The models are fitted below:
 
 ```{r}
 mplusRotationArgs <- 
-  list(rstarts = 30,
-       row.weights = "none",
-       algorithm = "gpa",
-       orthogonal = FALSE,
-       jac.init.rot = TRUE,
-       std.ov = TRUE, # row standard = correlation
-       geomin.epsilon = 0.0001)
+  list(
+    rstarts = 30,
+    row.weights = "none",
+    algorithm = "gpa",
+    orthogonal = FALSE,
+    jac.init.rot = TRUE,
+    std.ov = TRUE, # row standard = correlation
+    geomin.epsilon = 0.0001)
 
 efa1factorObliqueLavaan_fit <- sem(
   efa1factorLavaan_syntax,
@@ -1222,50 +1239,59 @@ efa9factorOrthogonal
 The factor loadings and summaries of the model results are below:
 
 ```{r}
-summary(efa1factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa1factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa2factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa2factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa3factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa3factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa4factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa4factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa5factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa5factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa6factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa6factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa7factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa7factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa8factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa8factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa9factorOrthogonalLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa9factorOrthogonalLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ##### Oblique (Oblimin) rotation {#obliqueFactorLoadings-efa}
@@ -1291,50 +1317,59 @@ efa9factorOblique
 The factor loadings and summaries of the model results are below:
 
 ```{r}
-summary(efa1factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa1factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa2factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa2factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa3factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa3factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa4factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa4factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa5factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa5factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa6factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa6factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa7factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa7factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa8factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa8factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(efa9factorObliqueLavaan_fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  efa9factorObliqueLavaan_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 #### Factor Scores {#factorScores-efa}
@@ -1378,9 +1413,10 @@ Correlation plots were generated using the `corrplot` package [@R-corrplot].
 A scree plot from a model with oblique rotation is in Figure \@ref(fig:screePlotPsychOrthogonal).
 
 ```{r screePlotPsychOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: psych."}
-plot(efa9factorOrthogonal$e.values,
-     xlab = "Factor",
-     ylab = "Eigevalue")
+plot(
+  efa9factorOrthogonal$e.values,
+  xlab = "Factor",
+  ylab = "Eigevalue")
 ```
 
 A scree plot based on factor loadings from `lavaan` is in Figure \@ref(fig:screePlotLavaanOrthogonal).
@@ -1388,109 +1424,149 @@ When the factors are uncorrelated (orthogonal rotation), the eigenvalue for a fa
 
 ```{r screePlotLavaanOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: lavaan."}
 param1Factor <- parameterEstimates(
-    efa1factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa1factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param2Factor <- parameterEstimates(
-    efa2factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa2factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param3Factor <- parameterEstimates(
-    efa3factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa3factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param4Factor <- parameterEstimates(
-    efa4factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa4factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param5Factor <- parameterEstimates(
-    efa5factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa5factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param6Factor <- parameterEstimates(
-    efa6factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa6factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param7Factor <- parameterEstimates(
-    efa7factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa7factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param8Factor <- parameterEstimates(
-    efa8factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa8factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 param9Factor <- parameterEstimates(
-    efa9factorOrthogonalLavaan_fit,
-    standardized = TRUE)
+  efa9factorOrthogonalLavaan_fit,
+  standardized = TRUE)
 
 factorNames <- c("f1","f2","f3","f4","f5","f6","f7","f8","f9")
 vars
 
-loadings1Factor <- param1Factor[which(param1Factor$lhs %in% factorNames & param1Factor$rhs %in% vars), c("lhs","std.all")]
-loadings2Factor <- param2Factor[which(param2Factor$lhs %in% factorNames & param2Factor$rhs %in% vars), c("lhs","std.all")]
-loadings3Factor <- param3Factor[which(param3Factor$lhs %in% factorNames & param3Factor$rhs %in% vars), c("lhs","std.all")]
-loadings4Factor <- param4Factor[which(param4Factor$lhs %in% factorNames & param4Factor$rhs %in% vars), c("lhs","std.all")]
-loadings5Factor <- param5Factor[which(param5Factor$lhs %in% factorNames & param5Factor$rhs %in% vars), c("lhs","std.all")]
-loadings6Factor <- param6Factor[which(param6Factor$lhs %in% factorNames & param6Factor$rhs %in% vars), c("lhs","std.all")]
-loadings7Factor <- param7Factor[which(param7Factor$lhs %in% factorNames & param7Factor$rhs %in% vars), c("lhs","std.all")]
-loadings8Factor <- param8Factor[which(param8Factor$lhs %in% factorNames & param8Factor$rhs %in% vars), c("lhs","std.all")]
-loadings9Factor <- param9Factor[which(param9Factor$lhs %in% factorNames & param9Factor$rhs %in% vars), c("lhs","std.all")]
+loadings1Factor <- param1Factor[which(
+  param1Factor$lhs %in% factorNames &
+    param1Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings2Factor <- param2Factor[which(
+  param2Factor$lhs %in% factorNames &
+    param2Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings3Factor <- param3Factor[which(
+  param3Factor$lhs %in% factorNames &
+    param3Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings4Factor <- param4Factor[which(
+  param4Factor$lhs %in% factorNames &
+    param4Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings5Factor <- param5Factor[which(
+  param5Factor$lhs %in% factorNames &
+    param5Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings6Factor <- param6Factor[which(
+  param6Factor$lhs %in% factorNames &
+    param6Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings7Factor <- param7Factor[which(
+  param7Factor$lhs %in% factorNames &
+    param7Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings8Factor <- param8Factor[which(
+  param8Factor$lhs %in% factorNames &
+    param8Factor$rhs %in% vars),
+  c("lhs","std.all")]
+loadings9Factor <- param9Factor[which(
+  param9Factor$lhs %in% factorNames &
+    param9Factor$rhs %in% vars),
+  c("lhs","std.all")]
 
-eigenData <- data.frame(Factor = 1:9, Eigenvalue = NA)
+eigenData <- data.frame(
+  Factor = 1:9,
+  Eigenvalue = NA)
 
-eigenData$Eigenvalue[which(eigenData$Factor == 1)] <- sum(loadings1Factor$std.all^2)
+eigenData$Eigenvalue[which(
+  eigenData$Factor == 1)] <- sum(loadings1Factor$std.all^2)
 
 eigenData$Eigenvalue[which(eigenData$Factor == 2)] <- 
   loadings2Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 3)] <- 
   loadings3Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 4)] <- 
   loadings4Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 5)] <- 
   loadings5Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 6)] <- 
   loadings6Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 7)] <- 
   loadings7Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 8)] <- 
   loadings8Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 9)] <- 
   loadings9Factor %>% 
   group_by(lhs) %>% 
-  summarise(Eigenvalue = sum(std.all^2),
-            .groups = "drop") %>% 
+  summarise(
+    Eigenvalue = sum(std.all^2),
+    .groups = "drop") %>% 
   summarise(min(Eigenvalue))
 
-plot(eigenData$Factor, eigenData$Eigenvalue,
-     xlab = "Factor",
-     ylab = "Eigevalue")
+plot(
+  eigenData$Factor,
+  eigenData$Eigenvalue,
+  xlab = "Factor",
+  ylab = "Eigevalue")
 ```
 
 A biplot is in Figure \@ref(fig:biplotOrthogonal).
@@ -1521,7 +1597,9 @@ pairs.panels(fa3Orthogonal)
 A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonal).
 
 ```{r correlationPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
-corrplot(cor(fa3Orthogonal, use = "pairwise.complete.obs"))
+corrplot(cor(
+  fa3Orthogonal,
+  use = "pairwise.complete.obs"))
 ```
 
 ##### Oblique (Oblimin) rotation {#factorScoresPlotsOblique-efa}
@@ -1553,7 +1631,9 @@ pairs.panels(fa3Oblique)
 A correlation plot is in Figure \@ref(fig:correlationPlotOblique).
 
 ```{r correlationPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."}
-corrplot(cor(fa3Oblique, use = "pairwise.complete.obs"))
+corrplot(cor(
+  fa3Oblique,
+  use = "pairwise.complete.obs"))
 ```
 
 ### Confirmatory Factor Analysis (CFA) {#cfaExamples}
@@ -1628,30 +1708,34 @@ lavaanify(cfaModel_fullSyntax)
 #### Fit the model {#fit-cfa}
 
 ```{r}
-cfaModelFit <- cfa(cfaModel_syntax,
-                   data = HolzingerSwineford1939,
-                   missing = "ML",
-                   estimator = "MLR",
-                   std.lv = TRUE)
+cfaModelFit <- cfa(
+  cfaModel_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
 
-cfaModelFit_full <- lavaan(cfaModel_fullSyntax,
-                           data = HolzingerSwineford1939,
-                           missing = "ML",
-                           estimator = "MLR")
+cfaModelFit_full <- lavaan(
+  cfaModel_fullSyntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR")
 ```
 
 #### Display summary output {#output-cfa}
 
 ```{r}
-summary(cfaModelFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModelFit_full,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 #### Estimates of model fit {#fitCriteria-cfa}
@@ -1691,9 +1775,15 @@ cfaFactorScores <- lavPredict(cfaModelFit)
 As would be expected, the factor scores from the [CFA](#cfa) model are highly correlated with the factor scores from the [EFA](#efa) model.
 
 ```{r}
-cor.test(x = cfaFactorScores[,"visual"], y = fa3Orthogonal[,"ML3"])
-cor.test(x = cfaFactorScores[,"textual"], y = fa3Orthogonal[,"ML1"])
-cor.test(x = cfaFactorScores[,"speed"], y = fa3Orthogonal[,"ML2"])
+cor.test(
+  x = cfaFactorScores[,"visual"],
+  y = fa3Orthogonal[,"ML3"])
+cor.test(
+  x = cfaFactorScores[,"textual"],
+  y = fa3Orthogonal[,"ML1"])
+cor.test(
+  x = cfaFactorScores[,"speed"],
+  y = fa3Orthogonal[,"ML2"])
 ```
 
 #### Internal Consistency Reliability {#reliability-cfa}
@@ -1710,10 +1800,11 @@ AVE(cfaModelFit)
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagram).
 
 ```{r cfaPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model Diagram."}
-semPaths(cfaModelFit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.3)
+semPaths(
+  cfaModelFit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.3)
 ```
 
 #### Class Examples {#classExamples-cfa}
@@ -1730,10 +1821,12 @@ sampleSize <- 300
 ```{r}
 correlationMatrixModel1 <- matrix(.6, nrow = 6, ncol = 6)
 diag(correlationMatrixModel1) <- 1
-rownames(correlationMatrixModel1) <- colnames(correlationMatrixModel1) <- paste("V", 1:6, sep = "")
+rownames(correlationMatrixModel1) <- colnames(correlationMatrixModel1) <- 
+  paste("V", 1:6, sep = "")
 
-covarianceMatrixModel1 <- psych::cor2cov(correlationMatrixModel1,
-                                         sigma = standardDeviations)
+covarianceMatrixModel1 <- psych::cor2cov(
+  correlationMatrixModel1,
+  sigma = standardDeviations)
 covarianceMatrixModel1
 ```
 
@@ -1755,20 +1848,22 @@ lavaanify(cfaModel1)
 ###### Fit the model {#classExamplesModel1fit-cfa}
 
 ```{r}
-cfaModel1Fit <- cfa(cfaModel1,
-                    sample.cov = covarianceMatrixModel1,
-                    sample.nobs = sampleSize,
-                    estimator = "ML",
-                    std.lv = TRUE)
+cfaModel1Fit <- cfa(
+  cfaModel1,
+  sample.cov = covarianceMatrixModel1,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 ```
 
 ###### Display summary output {#classExamplesModel1output-cfa}
 
 ```{r}
-summary(cfaModel1Fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel1Fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ###### Estimates of model fit {#classExamplesModel1fitCriteria-cfa}
@@ -1807,10 +1902,11 @@ AVE(cfaModel1Fit)
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass1).
 
 ```{r cfaPathDiagramClass1, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 1 Diagram."}
-semPaths(cfaModel1Fit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.5)
+semPaths(
+  cfaModel1Fit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.5)
 ```
 
 ##### Model 2 {#classExamplesModel2-cfa}
@@ -1820,10 +1916,12 @@ semPaths(cfaModel1Fit,
 ```{r}
 correlationMatrixModel2 <- matrix(0, nrow = 6, ncol = 6)
 diag(correlationMatrixModel2) <- 1
-rownames(correlationMatrixModel2) <- colnames(correlationMatrixModel2) <- paste("V", 1:6, sep = "")
+rownames(correlationMatrixModel2) <- colnames(correlationMatrixModel2) <- 
+  paste("V", 1:6, sep = "")
 
-covarianceMatrixModel2 <- psych::cor2cov(correlationMatrixModel2,
-                                         sigma = standardDeviations)
+covarianceMatrixModel2 <- psych::cor2cov(
+  correlationMatrixModel2,
+  sigma = standardDeviations)
 covarianceMatrixModel2
 ```
 
@@ -1845,20 +1943,22 @@ lavaanify(cfaModel2)
 ###### Fit the model {#classExamplesModel2fit-cfa}
 
 ```{r}
-cfaModel2Fit <- cfa(cfaModel2,
-                    sample.cov = covarianceMatrixModel2,
-                    sample.nobs = sampleSize,
-                    estimator = "ML",
-                    std.lv = TRUE)
+cfaModel2Fit <- cfa(
+  cfaModel2,
+  sample.cov = covarianceMatrixModel2,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 ```
 
 ###### Display summary output {#classExamplesModel2output-cfa}
 
 ```{r}
-summary(cfaModel2Fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel2Fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ###### Estimates of model fit {#classExamplesModel2fitCriteria-cfa}
@@ -1897,10 +1997,11 @@ AVE(cfaModel2Fit)
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass2).
 
 ```{r cfaPathDiagramClass2, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 2 Diagram."}
-semPaths(cfaModel2Fit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.5)
+semPaths(
+  cfaModel2Fit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.5)
 ```
 
 ##### Model 3 {#classExamplesModel3-cfa}
@@ -1908,16 +2009,21 @@ semPaths(cfaModel2Fit,
 ###### Create the covariance matrix {#classExamplesModel3covarianceMatrix-cfa}
 
 ```{r}
-correlationMatrixModel3 <- matrix(c(1,.6,.6,0,0,0,
-                                    .6,1,.6,0,0,0,
-                                    0,0,1,0,0,0,
-                                    0,0,0,1,.6,.6,
-                                    0,0,0,.6,1,.6,
-                                    0,0,0,.6,.6,1), nrow = 6, ncol = 6)
-rownames(correlationMatrixModel3) <- colnames(correlationMatrixModel3) <- paste("V", 1:6, sep = "")
+correlationMatrixModel3 <- matrix(c(
+  1,.6,.6,0,0,0,
+  .6,1,.6,0,0,0,
+  0,0,1,0,0,0,
+  0,0,0,1,.6,.6,
+  0,0,0,.6,1,.6,
+  0,0,0,.6,.6,1),
+  nrow = 6,
+  ncol = 6)
+rownames(correlationMatrixModel3) <- colnames(correlationMatrixModel3) <- 
+  paste("V", 1:6, sep = "")
 
-covarianceMatrixModel3 <- psych::cor2cov(correlationMatrixModel3,
-                                         sigma = standardDeviations)
+covarianceMatrixModel3 <- psych::cor2cov(
+  correlationMatrixModel3,
+  sigma = standardDeviations)
 covarianceMatrixModel3
 ```
 
@@ -1946,31 +2052,35 @@ lavaanify(cfaModel3B)
 ###### Fit the model {#classExamplesModel3fit-cfa}
 
 ```{r}
-cfaModel3AFit <- cfa(cfaModel3A,
-                     sample.cov = covarianceMatrixModel3,
-                     sample.nobs = sampleSize,
-                     estimator = "ML",
-                     std.lv = TRUE)
+cfaModel3AFit <- cfa(
+  cfaModel3A,
+  sample.cov = covarianceMatrixModel3,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 
-cfaModel3BFit <- cfa(cfaModel3B,
-                     sample.cov = covarianceMatrixModel3,
-                     sample.nobs = sampleSize,
-                     estimator = "ML",
-                     std.lv = TRUE)
+cfaModel3BFit <- cfa(
+  cfaModel3B,
+  sample.cov = covarianceMatrixModel3,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 ```
 
 ###### Display summary output {#classExamplesModel3output-cfa}
 
 ```{r}
-summary(cfaModel3AFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel3AFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModel3BFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel3BFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ###### Estimates of model fit {#classExamplesModel3fitCriteria-cfa}
@@ -2047,16 +2157,21 @@ semPaths(cfaModel3BFit,
 ##### Create the covariance matrix {#classExamplesModel4-cfa}
 
 ```{r}
-correlationMatrixModel4 <- matrix(c(1,.6,.6,.3,.3,.3,
-                                    .6,1,.6,.3,.3,.3,
-                                    .3,.3,1,.3,.3,.3,
-                                    .3,.3,.3,1,.6,.6,
-                                    .3,.3,.3,.6,1,.6,
-                                    .3,.3,.3,.6,.6,1), nrow = 6, ncol = 6)
-rownames(correlationMatrixModel4) <- colnames(correlationMatrixModel4) <- paste("V", 1:6, sep = "")
+correlationMatrixModel4 <- matrix(c(
+  1,.6,.6,.3,.3,.3,
+  .6,1,.6,.3,.3,.3,
+  .3,.3,1,.3,.3,.3,
+  .3,.3,.3,1,.6,.6,
+  .3,.3,.3,.6,1,.6,
+  .3,.3,.3,.6,.6,1),
+  nrow = 6,
+  ncol = 6)
+rownames(correlationMatrixModel4) <- colnames(correlationMatrixModel4) <- 
+  paste("V", 1:6, sep = "")
 
-covarianceMatrixModel4 <- psych::cor2cov(correlationMatrixModel4,
-                                         sigma = standardDeviations)
+covarianceMatrixModel4 <- psych::cor2cov(
+  correlationMatrixModel4,
+  sigma = standardDeviations)
 covarianceMatrixModel4
 ```
 
@@ -2113,53 +2228,61 @@ lavaanify(cfaModel4D)
 ###### Fit the model {#classExamplesModel4fit-cfa}
 
 ```{r}
-cfaModel4AFit <- cfa(cfaModel4A,
-                     sample.cov = covarianceMatrixModel4,
-                     sample.nobs = sampleSize,
-                     estimator = "ML",
-                     std.lv = TRUE)
+cfaModel4AFit <- cfa(
+  cfaModel4A,
+  sample.cov = covarianceMatrixModel4,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 
-cfaModel4BFit <- cfa(cfaModel4B,
-                     sample.cov = covarianceMatrixModel4,
-                     sample.nobs = sampleSize,
-                     estimator = "ML",
-                     std.lv = TRUE)
+cfaModel4BFit <- cfa(
+  cfaModel4B,
+  sample.cov = covarianceMatrixModel4,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 
-cfaModel4CFit <- cfa(cfaModel4C,
-                     sample.cov = covarianceMatrixModel4,
-                     sample.nobs = sampleSize,
-                     estimator = "ML",
-                     std.lv = TRUE)
+cfaModel4CFit <- cfa(
+  cfaModel4C,
+  sample.cov = covarianceMatrixModel4,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 
-cfaModel4DFit <- cfa(cfaModel4D,
-                     sample.cov = covarianceMatrixModel4,
-                     sample.nobs = sampleSize,
-                     estimator = "ML",
-                     std.lv = TRUE)
+cfaModel4DFit <- cfa(
+  cfaModel4D,
+  sample.cov = covarianceMatrixModel4,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 ```
 
 ###### Display summary output {#classExamplesModel4output-cfa}
 
 ```{r}
-summary(cfaModel4AFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel4AFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModel4BFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel4BFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModel4CFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel4CFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModel4DFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel4DFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ###### Estimates of model fit {#classExamplesModel4fitCriteria-cfa}
@@ -2230,31 +2353,35 @@ AVE(cfaModel4DFit)
 Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaModel4AFit), \@ref(fig:cfaModel4BFit), \@ref(fig:cfaModel4CFit), and \@ref(fig:cfaModel4DFit).
 
 ```{r cfaModel4AFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4a Diagram."}
-semPaths(cfaModel4AFit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.3)
+semPaths(
+  cfaModel4AFit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.3)
 ```
 
 ```{r cfaModel4BFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4b Diagram."}
-semPaths(cfaModel4BFit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.3)
+semPaths(
+  cfaModel4BFit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.3)
 ```
 
 ```{r cfaModel4CFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4c Diagram."}
-semPaths(cfaModel4CFit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.3)
+semPaths(
+  cfaModel4CFit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.3)
 ```
 
 ```{r cfaModel4DFit, fig.height = 6, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4d Diagram."}
-semPaths(cfaModel4DFit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.3)
+semPaths(
+  cfaModel4DFit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.3)
 ```
 
 ###### Equivalently fitting models {#classExamplesModel4equivalent-cfa}
@@ -2428,31 +2555,35 @@ lavaanify(cfaModelBifactor_fullSyntax)
 ##### Fit the model {#bifactorModelFit}
 
 ```{r}
-cfaModelBifactorFit <- cfa(cfaModelBifactor_syntax,
-                           data = MTMM_data,
-                           orthogonal = TRUE,
-                           std.lv = TRUE,
-                           missing = "ML",
-                           estimator = "MLR")
+cfaModelBifactorFit <- cfa(
+  cfaModelBifactor_syntax,
+  data = MTMM_data,
+  orthogonal = TRUE,
+  std.lv = TRUE,
+  missing = "ML",
+  estimator = "MLR")
 
-cfaModelBifactorFit_full <- lavaan(cfaModelBifactor_fullSyntax,
-                                   data = MTMM_data,
-                                   missing = "ML",
-                                   estimator = "MLR")
+cfaModelBifactorFit_full <- lavaan(
+  cfaModelBifactor_fullSyntax,
+  data = MTMM_data,
+  missing = "ML",
+  estimator = "MLR")
 ```
 
 ##### Display summary output
 
 ```{r}
-summary(cfaModelBifactorFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelBifactorFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModelBifactorFit_full,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelBifactorFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ##### Estimates of model fit {#bifactorModelFitCriteria}
@@ -2495,11 +2626,12 @@ AVE(cfaModelBifactorFit)
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:bifactorModelPathDiagram).
 
 ```{r bifactorModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Bifactor Model."}
-semPaths(cfaModelBifactorFit,
-         what = "std",
-         layout = "tree3",
-         bifactor = c("g"),
-         edge.label.cex = 1.3)
+semPaths(
+  cfaModelBifactorFit,
+  what = "std",
+  layout = "tree3",
+  bifactor = c("g"),
+  edge.label.cex = 1.3)
 ```
 
 ##### Equivalently fitting models {#bifactorModelEquivalent}
@@ -2548,7 +2680,9 @@ anchors <- c(f1 = "x3", f2 = "x5", f3 = "x7")
 The `petersenlab` package [@R-petersenlab] includes the `make_esem_model()` function that creates `lavaan` syntax for an ESEM model from the factor loadings of an [EFA](#efa) model, as adapted from Mateus Silvestrin: https://msilvestrin.me/post/esem/
 
 ```{r}
-esemModel_syntax <- make_esem_model(esem_loadings, anchors)
+esemModel_syntax <- make_esem_model(
+  esem_loadings,
+  anchors)
 
 writeLines(esemModel_syntax)
 ```
@@ -2572,10 +2706,11 @@ esemModelFit <- sem(
 ##### Display summary output
 
 ```{r}
-summary(esemModelFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  esemModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ##### Estimates of model fit {#esemModelFitCriteria}
@@ -2626,10 +2761,11 @@ AVE(esemModelFit)
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram).
 
 ```{r esemModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With All Cross Loadings."}
-semPaths(esemModelFit,
-         what = "std",
-         layout = "tree3",
-         edge.label.cex = 1.3)
+semPaths(
+  esemModelFit,
+  what = "std",
+  layout = "tree3",
+  edge.label.cex = 1.3)
 ```
 
 ##### Equivalently fitting models {#esemModelEquivalent}
@@ -2644,7 +2780,10 @@ par(mfrow = c(2, 2))
 ```
 
 ```{r esemModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
-lapply(equivalentDAGs(dagModelESEM, n = 4), plot)
+lapply(equivalentDAGs(
+  dagModelESEM,
+  n = 4),
+  plot)
 ```
 
 #### Multitrait-Multimethod Model (MTMM) {#mtmmCFA}
@@ -2825,31 +2964,35 @@ lavaanify(cfaModelMTMM_fullSyntax)
 ##### Fit the model {#mtmmCFAfit}
 
 ```{r}
-cfaModelMTMMFit <- cfa(cfaModelMTMM_syntax,
-                        data = MTMM_data,
-                        orthogonal = TRUE,
-                        std.lv = TRUE,
-                        missing = "ML",
-                        estimator = "MLR")
+cfaModelMTMMFit <- cfa(
+  cfaModelMTMM_syntax,
+  data = MTMM_data,
+  orthogonal = TRUE,
+  std.lv = TRUE,
+  missing = "ML",
+  estimator = "MLR")
 
-cfaModelMTMMFit_full <- lavaan(cfaModelMTMM_fullSyntax,
-                               data = MTMM_data,
-                               missing = "ML",
-                               estimator = "MLR")
+cfaModelMTMMFit_full <- lavaan(
+  cfaModelMTMM_fullSyntax,
+  data = MTMM_data,
+  missing = "ML",
+  estimator = "MLR")
 ```
 
 ##### Display summary output {#mtmmCFAoutput}
 
 ```{r}
-summary(cfaModelMTMMFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelMTMMFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModelMTMMFit_full,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelMTMMFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ##### Estimates of model fit {#mtmmCFAfitCriteria}
@@ -2894,11 +3037,12 @@ AVE(cfaModelMTMMFit)
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:mtmmCFApathDiagram).
 
 ```{r mtmmCFApathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
-semPaths(cfaModelMTMMFit,
-         what = "std",
-         layout = "tree3",
-         bifactor = c("Verbal","Spatial","Quant","g"),
-         edge.label.cex = 1.3)
+semPaths(
+  cfaModelMTMMFit,
+  what = "std",
+  layout = "tree3",
+  bifactor = c("Verbal","Spatial","Quant","g"),
+  edge.label.cex = 1.3)
 ```
 
 ##### Equivalently fitting models {#mtmmCFAequivalent}
@@ -2913,7 +3057,10 @@ par(mfrow = c(2, 2))
 ```
 
 ```{r mtmmCFAequivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
-lapply(equivalentDAGs(dagModelMTMM, n = 4), plot)
+lapply(equivalentDAGs(
+  dagModelMTMM,
+  n = 4),
+  plot)
 ```
 
 ## Principal Component Analysis (PCA) {#pcaAnalysis}
@@ -2940,13 +3087,20 @@ However, based on the Cattell scree test (as operationalized by the optimal coor
 Therefore, interpretability of the factors would be important for deciding between whether to keep one, two, or three factors.
 
 ```{r screePlotPCAParallel, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot Based on Parallel Analysis in Principal Component Analysis."}
-fa.parallel(x = HolzingerSwineford1939[,vars], fm = "ml", fa = "pc")
+fa.parallel(
+  x = HolzingerSwineford1939[,vars],
+  fm = "ml",
+  fa = "pc")
 ```
 
 A scree plot is in Figure \@ref(fig:screePlotPCA).
 
 ```{r screePlotPCA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Principal Component Analysis."}
-plot(nScree(x = cor(HolzingerSwineford1939[,vars], use = "pairwise.complete.obs"), model = "components"))
+plot(nScree(
+  x = cor(
+    HolzingerSwineford1939[,vars],
+    use = "pairwise.complete.obs"),
+  model = "components"))
 ```
 
 #### Very Simple Structure (VSS) Plot {#pcaAnalysisVSSplot}
@@ -2960,7 +3114,10 @@ In the example with orthogonal rotation below, the VSS criterion is highest with
 A VSS plot of PCA with orthogonal rotation is in Figure \@ref(fig:vssOrthogonalPCA).
 
 ```{r vssOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(HolzingerSwineford1939[,vars], rotate = "varimax", fm = "pc")
+vss(
+  HolzingerSwineford1939[,vars],
+  rotate = "varimax",
+  fm = "pc")
 ```
 
 ##### Oblique (Oblimin) rotation {#pcaAnalysisVSSplotOblique}
@@ -2970,7 +3127,10 @@ In the example with orthogonal rotation below, the VSS criterion is highest with
 A VSS plot of PCA with oblique rotation is in Figure \@ref(fig:vssObliquePCA).
 
 ```{r vssObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(HolzingerSwineford1939[,vars], rotate = "oblimin", fm = "pc")
+vss(
+  HolzingerSwineford1939[,vars],
+  rotate = "oblimin",
+  fm = "pc")
 ```
 
 ##### No rotation {#pcaAnalysisVSSplotNoRotation}
@@ -2980,7 +3140,10 @@ In the example with no rotation below, the VSS criterion is highest with 3 or 4 
 A VSS plot of PCA with no rotation is in Figure \@ref(fig:vssUnrotatedPCA).
 
 ```{r vssUnrotatedPCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(HolzingerSwineford1939[,vars], rotate = "none", fm = "pc")
+vss(
+  HolzingerSwineford1939[,vars],
+  rotate = "none",
+  fm = "pc")
 ```
 
 ### Run the Principal Component Analysis {#pcaAnalysisFit}
@@ -2990,81 +3153,99 @@ vss(HolzingerSwineford1939[,vars], rotate = "none", fm = "pc")
 #### Orthogonal (Varimax) rotation {#pcaAnalysisFitOrthogonal}
 
 ```{r}
-pca1factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 1,
-                                  rotate = "varimax")
+pca1factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 1,
+  rotate = "varimax")
 
-pca2factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 2,
-                                  rotate = "varimax")
+pca2factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 2,
+  rotate = "varimax")
 
-pca3factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 3,
-                                  rotate = "varimax")
+pca3factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 3,
+  rotate = "varimax")
 
-pca4factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 4,
-                                  rotate = "varimax")
+pca4factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 4,
+  rotate = "varimax")
 
-pca5factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 5,
-                                  rotate = "varimax")
+pca5factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 5,
+  rotate = "varimax")
 
-pca6factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 6,
-                                  rotate = "varimax")
+pca6factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 6,
+  rotate = "varimax")
 
-pca7factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 7,
-                                  rotate = "varimax")
+pca7factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 7,
+  rotate = "varimax")
 
-pca8factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 8,
-                                  rotate = "varimax")
+pca8factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 8,
+  rotate = "varimax")
 
-pca9factorOrthogonal <- principal(HolzingerSwineford1939[,vars],
-                                  nfactors = 9,
-                                  rotate = "varimax")
+pca9factorOrthogonal <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 9,
+  rotate = "varimax")
 ```
 
 #### Oblique (Oblimin) rotation {#pcaAnalysisFitOblique}
 
 ```{r}
-pca1factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 1,
-                               rotate = "oblimin")
+pca1factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 1,
+  rotate = "oblimin")
 
-pca2factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 2,
-                               rotate = "oblimin")
+pca2factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 2,
+  rotate = "oblimin")
 
-pca3factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 3,
-                               rotate = "oblimin")
+pca3factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 3,
+  rotate = "oblimin")
 
-pca4factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 4,
-                               rotate = "oblimin")
+pca4factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 4,
+  rotate = "oblimin")
 
-pca5factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 5,
-                               rotate = "oblimin")
+pca5factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 5,
+  rotate = "oblimin")
 
-pca6factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 6,
-                               rotate = "oblimin")
+pca6factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 6,
+  rotate = "oblimin")
 
-pca7factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 7,
-                               rotate = "oblimin")
+pca7factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 7,
+  rotate = "oblimin")
 
-pca8factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 8,
-                               rotate = "oblimin")
+pca8factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 8,
+  rotate = "oblimin")
 
-pca9factorOblique <- principal(HolzingerSwineford1939[,vars],
-                               nfactors = 9,
-                               rotate = "oblimin")
+pca9factorOblique <- principal(
+  HolzingerSwineford1939[,vars],
+  nfactors = 9,
+  rotate = "oblimin")
 ```
 
 ### Component Loadings {#pcaLoadings}
@@ -3137,7 +3318,9 @@ pairs.panels(pca3Orthogonal)
 A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonalPCA).
 
 ```{r correlationPlotOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Orthogonal Rotation in Principal Component Analysis."}
-corrplot(cor(pca3Orthogonal, use = "pairwise.complete.obs"))
+corrplot(cor(
+  pca3Orthogonal,
+  use = "pairwise.complete.obs"))
 ```
 
 #### Oblique (Oblimin) rotation {#pcaAnalysisPlotsOblique}
@@ -3151,7 +3334,9 @@ pairs.panels(pca3Oblique)
 A correlation plot is in Figure \@ref(fig:correlationPlotObliquePCA).
 
 ```{r correlationPlotObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Oblique Rotation in Principal Component Analysis."}
-corrplot(cor(pca3Oblique, use = "pairwise.complete.obs"))
+corrplot(cor(
+  pca3Oblique,
+  use = "pairwise.complete.obs"))
 ```
 
 ## Conclusion {#conclusion-factorAnalysis}
