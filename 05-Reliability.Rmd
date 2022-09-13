@@ -700,7 +700,7 @@ Figure \@ref(fig:testRetestScatterplot) depicts a scatterplot of the time 1 scor
 
 (ref:testRetestScatterplotCaption) Test–retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit.
 
-```{r testRetestScatterplot, out.width = "100%", fig.align = "center", fig.cap = "(ref:testRetestScatterplotCaption)"}
+```{r testRetestScatterplot, out.width = "100%", fig.align = "center", class.source = "fold-hide", fig.cap = "(ref:testRetestScatterplotCaption)"}
 plot(mydata$time1, mydata$time2,
      main = substitute(
        paste(italic(r), " = ", x, sep = ""),
@@ -1044,13 +1044,15 @@ CR = `r qnorm(.975)` \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 (\#eq:coefficientOfRepeatability)
 $$
 
-```{r}
+```{r, class.source = "fold-hide"}
 coefficientOfRepeatability <- function(measure1, measure2){
   value <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
   
   return(value)
 }
+```
 
+```{r}
 coefficientOfRepeatability(
   measure1 = mydata$time1,
   measure2 = mydata$time2)
@@ -1058,7 +1060,7 @@ coefficientOfRepeatability(
 
 The `petersenlab` package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot) in Figure \@ref(fig:repeatability).
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, class.source = "fold-hide"}
 repeatability <- function(measure1, measure2){
   cr <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
   bias <- mean((measure2 - measure1), na.rm = TRUE)
@@ -1138,13 +1140,15 @@ Bias values closer to zero reflect stronger absolute test–retest reliability a
 However, (estimated) bias values can still be close to zero while individuals show large differences because large positive and negative differences could cancel each other out.
 As a result, it is also important to examine other indices of test–retest reliability, including the coefficient of stability and the coefficient of repeatability.
 
-```{r}
+```{r, class.source = "fold-hide"}
 bias <- function(measure1, measure2){
   value <- mean((measure2 - measure1), na.rm = TRUE)
   
   return(value)
 }
+```
 
+```{r}
 bias(
   measure1 = mydata$time1,
   measure2 = mydata$time2)
@@ -1171,7 +1175,7 @@ $$
 
 It is expected that the 95% limits of agreement (LOA) include 95% of differences between the two measurement methods (assuming the scores are normally distributed), based on how the coefficient of repeatability is calculated.
 
-```{r}
+```{r, class.source = "fold-hide"}
 lowerLOA <- function(measure1, measure2){
   value <- bias(measure1, measure2) - coefficientOfRepeatability(measure1, measure2)
   
@@ -1183,7 +1187,9 @@ upperLOA <- function(measure1, measure2){
   
   return(value)
 }
+```
 
+```{r}
 lowerLOA(
   measure1 = mydata$time1,
   measure2 = mydata$time2)
@@ -1343,7 +1349,7 @@ Figure \@ref(fig:histogramITCs) is a histogram of the inter-item correlations.
 
 (ref:histogramITCsCaption) Histogram of Inter-Item Correlations. The vertical black line reflects the mean inter-item correlation.
 
-```{r histogramITCs, out.width = "100%", fig.align = "center", fig.cap = "(ref:histogramITCsCaption)"}
+```{r histogramITCs, out.width = "100%", fig.align = "center", class.source = "fold-hide", fig.cap = "(ref:histogramITCsCaption)"}
 hist(meanInterItemCorrelations,
      xlab = "Inter-Item Correlations",
      main = "Histogram of Inter-Item Correlations")
@@ -1681,7 +1687,7 @@ $$
 
 The `petersenlab` package [@R-petersenlab] contains the `reliabilityOfDifferenceScore()` function to calculate the reliability of a difference score:
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, class.source = "fold-hide"}
 reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY){
   rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
   sigmaX <- sd(x, na.rm = TRUE)
@@ -1828,7 +1834,7 @@ For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r}
+```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
 
@@ -1887,7 +1893,7 @@ For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r}
+```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
 
@@ -1956,7 +1962,7 @@ For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r}
+```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
 
@@ -2026,7 +2032,7 @@ For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r}
+```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
 
@@ -2093,7 +2099,7 @@ For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r}
+```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
 
@@ -2160,7 +2166,7 @@ For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r}
+```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
 
