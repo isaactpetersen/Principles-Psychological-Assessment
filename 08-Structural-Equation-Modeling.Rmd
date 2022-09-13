@@ -153,7 +153,9 @@ As an example, there are 14 data points for a model with 4 indicators ($\frac{4(
 Here is the variance-covariance matrix:
 
 ```{r}
-vcovMatrix4measures <- cov(PoliticalDemocracy[,c("y1","y2","y3","y4")], use = "pairwise.complete.obs")
+vcovMatrix4measures <- cov(
+  PoliticalDemocracy[,c("y1","y2","y3","y4")],
+  use = "pairwise.complete.obs")
 
 vcovMatrix4measures[upper.tri(vcovMatrix4measures)] <- NA
 
@@ -179,7 +181,9 @@ covariances4measures
 Here are the means:
 
 ```{r}
-means4Measures <- apply(PoliticalDemocracy[,c("y1","y2","y3","y4")], 2, mean, na.rm = TRUE)
+means4Measures <- apply(
+  PoliticalDemocracy[,c("y1","y2","y3","y4")],
+  2, mean, na.rm = TRUE)
 
 means4Measures
 ```
@@ -193,13 +197,15 @@ reflectiveModel_syntax <- '
  reflective =~ y1 + y2 + y3 + y4
 '
 
-reflectiveModelFit <- sem(reflectiveModel_syntax,
-                          data = PoliticalDemocracy,
-                          missing = "ML",
-                          estimator = "MLR",
-                          std.lv = TRUE)
+reflectiveModelFit <- sem(
+  reflectiveModel_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
 
-reflectiveModelParameters <- parameterEstimates(reflectiveModelFit)[!is.na(parameterEstimates(reflectiveModelFit)$z),]
+reflectiveModelParameters <- parameterEstimates(
+  reflectiveModelFit)[!is.na(parameterEstimates(reflectiveModelFit)$z),]
 
 row.names(reflectiveModelParameters) <- NULL
 
@@ -215,10 +221,11 @@ fitMeasures(reflectiveModelFit, "df")
 Here is a model diagram:
 
 ```{r reflectiveModelFigure, out.width = "100%", fig.align = "center", fig.cap = "Depiction of a Reflective Model."}
-semPaths(reflectiveModelFit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 0.8)
+semPaths(
+  reflectiveModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
 ```
 
 Thus, for a [reflective model](#reflectiveConstruct), We only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious.
@@ -238,10 +245,11 @@ formativeModel_syntax <- '
  formative ~~ formative
 '
 
-formativeModelFit <- sem(formativeModel_syntax,
-                         data = PoliticalDemocracy,
-                         missing = "ML",
-                         estimator = "MLR")
+formativeModelFit <- sem(
+  formativeModel_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
 
 formativeModelParameters <- parameterEstimates(formativeModelFit)
 
@@ -257,10 +265,11 @@ formativeModelFit
 Here is a model diagram:
 
 ```{r formativeModelUnderidentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Depiction of an Under-Identified Formative Model."}
-semPaths(formativeModelFit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 0.8)
+semPaths(
+  formativeModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
 ```
 
 For a [formative model](#formativeConstruct) with 4 measures, the number of data points (14) is less than the number of parameters (19).
@@ -281,20 +290,22 @@ formativeModel2_syntax <- '
  reflective ~ formative
 '
 
-formativeModel2Fit <- sem(formativeModel2_syntax,
-                          data = PoliticalDemocracy,
-                          missing = "ML",
-                          estimator = "MLR")
+formativeModel2Fit <- sem(
+  formativeModel2_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
 
 formativeModel2Parameters <- parameterEstimates(formativeModel2Fit)
 formativeModel2Parameters
 
 fitMeasures(formativeModel2Fit, "df")
 
-semPaths(formativeModel2Fit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 0.8)
+semPaths(
+  formativeModel2Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
 ```
 
 Thus, [formative constructs](#formativeConstruct) are challenging to use in a SEM framework.
@@ -440,27 +451,44 @@ lavaanify(measurementModel_fullSyntax)
 ### Fit the model {#measurementModelFit-sem}
 
 ```{r}
-measurementModelFit <- cfa(measurementModel_syntax,
-                           data = mydataSEM,
-                           missing = "ML",
-                           estimator = "MLR",
-                           std.lv = TRUE)
+measurementModelFit <- cfa(
+  measurementModel_syntax,
+  data = mydataSEM,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
 
-measurementModelFit_full <- lavaan(measurementModel_fullSyntax,
-                                   data = mydataSEM,
-                                   missing = "ML",
-                                   estimator = "MLR")
+measurementModelFit_full <- lavaan(
+  measurementModel_fullSyntax,
+  data = mydataSEM,
+  missing = "ML",
+  estimator = "MLR")
 ```
 
 ### Display summary output {#measurementModelOutput-sem}
 
 ```{r, include = FALSE}
-measurementModelParameters <- parameterEstimates(measurementModelFit,
-                                                 standardized = TRUE)
+measurementModelParameters <- parameterEstimates(
+  measurementModelFit,
+  standardized = TRUE)
 
-measurementModelParameters_beta1 <- measurementModelParameters[which(measurementModelParameters$lhs == "latentFactor" & measurementModelParameters$rhs == "measure1"), "std.all"]
-measurementModelParameters_beta2 <- measurementModelParameters[which(measurementModelParameters$lhs == "latentFactor" & measurementModelParameters$rhs == "measure2"), "std.all"]
-measurementModelParameters_beta3 <- measurementModelParameters[which(measurementModelParameters$lhs == "latentFactor" & measurementModelParameters$rhs == "measure3"), "std.all"]
+measurementModelParameters_beta1 <- measurementModelParameters[
+  which(
+    measurementModelParameters$lhs == "latentFactor" & 
+      measurementModelParameters$rhs == "measure1"),
+  "std.all"]
+
+measurementModelParameters_beta2 <- measurementModelParameters[
+  which(
+    measurementModelParameters$lhs == "latentFactor" & 
+      measurementModelParameters$rhs == "measure2"),
+  "std.all"]
+
+measurementModelParameters_beta3 <- measurementModelParameters[
+  which(
+    measurementModelParameters$lhs == "latentFactor" & 
+      measurementModelParameters$rhs == "measure3"),
+  "std.all"]
 ```
 
 This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of data points, thus leaving zero degrees of freedom.
@@ -471,15 +499,17 @@ However, one of the estimated observed variances is negative, so the model is no
 Thus, we would need to make additional adjustments in order to estimate the model.
 
 ```{r}
-summary(measurementModelFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  measurementModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(measurementModelFit_full,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  measurementModelFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ### Estimates of model fit {#measurementModelFitCriteria-sem}
@@ -532,10 +562,11 @@ AVE(measurementModelFit)
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Measurement Model."}
-semPaths(measurementModelFit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 2)
+semPaths(
+  measurementModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 2)
 ```
 
 ## Confirmatory Factor Analysis (CFA) {#cfaExample-sem}
@@ -610,16 +641,18 @@ lavaanify(cfaModel_fullSyntax)
 ### Fit the model {#cfaModelFit-sem}
 
 ```{r}
-cfaModelFit <- cfa(cfaModel_syntax,
-                   data = HolzingerSwineford1939,
-                   missing = "ML",
-                   estimator = "MLR",
-                   std.lv = TRUE)
+cfaModelFit <- cfa(
+  cfaModel_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
 
-cfaModelFit_full <- lavaan(cfaModel_fullSyntax,
-                           data = HolzingerSwineford1939,
-                           missing = "ML",
-                           estimator = "MLR")
+cfaModelFit_full <- lavaan(
+  cfaModel_fullSyntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR")
 ```
 
 ### Display summary output {#cfaModelOutput-sem}
@@ -629,15 +662,17 @@ Thus, this measurement model would be defensible.
 In terms of interpretation, all indicators load positively on their respective latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.
 
 ```{r}
-summary(cfaModelFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModelFit_full,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModelFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ### Estimates of model fit {#cfaModelFitCriteria-sem}
@@ -695,10 +730,11 @@ AVE(cfaModelFit)
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model."}
-semPaths(cfaModelFit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 0.8)
+semPaths(
+  cfaModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
 ```
 
 ### Modify model based on modification indices {#cfaModelModification-sem}
@@ -766,30 +802,34 @@ cfaModel2_fullSyntax <- '
 #### Fit the model {#cfaModelModifiedFit-sem}
 
 ```{r}
-cfaModel2Fit <- cfa(cfaModel2_syntax,
-                    data = HolzingerSwineford1939,
-                    missing = "ML",
-                    estimator = "MLR",
-                    std.lv = TRUE)
+cfaModel2Fit <- cfa(
+  cfaModel2_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
 
-cfaModel2Fit_full <- lavaan(cfaModel2_fullSyntax,
-                            data = HolzingerSwineford1939,
-                            missing = "ML",
-                            estimator = "MLR")
+cfaModel2Fit_full <- lavaan(
+  cfaModel2_fullSyntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR")
 ```
 
 #### Display summary output {#cfaModelModifiedOutput-sem}
 
 ```{r}
-summary(cfaModel2Fit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel2Fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(cfaModel2Fit_full,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  cfaModel2Fit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 #### Estimates of model fit {#cfaModelModifiedFitCriteria-sem}
@@ -820,10 +860,11 @@ residuals(cfaModel2Fit, type = "cor")
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Modified Confirmatory Factor Analysis Model."}
-semPaths(cfaModel2Fit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 0.8)
+semPaths(
+  cfaModel2Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
 ```
 
 #### Compare model fit using chi-square difference test for nested models {#nestedModelComparison-sem}
@@ -933,16 +974,18 @@ lavaanify(semModel_fullSyntax)
 ### Fit the model {#semModelFit-sem}
 
 ```{r}
-semModelFit <- sem(semModel_syntax,
-                   data = PoliticalDemocracy,
-                   missing = "ML",
-                   estimator = "MLR",
-                   std.lv = TRUE)
+semModelFit <- sem(
+  semModel_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
 
-semModelFit_full <- lavaan(semModel_fullSyntax,
-                           data = PoliticalDemocracy,
-                           missing = "ML",
-                           estimator = "MLR")
+semModelFit_full <- lavaan(
+  semModel_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
 ```
 
 ### Display summary output {#semModelOutput-sem}
@@ -971,15 +1014,17 @@ Thus, the model fits significantly better than the worst-possible-fitting model.
 In terms of the model findings, `ind60` was significantly positively associated with `dem60`, `dem60` was significantly positively associated with `dem65`, and `ind60` was marginally significantly positively associated with `dem65`.
 
 ```{r}
-summary(semModelFit,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  semModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 
-summary(semModelFit_full,
-        fit.measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  semModelFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 ### Estimates of model fit {#semModelFitCriteria-sem}
@@ -1028,10 +1073,11 @@ AVE(semModelFit)
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Structural Equation Model."}
-semPaths(semModelFit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 0.7)
+semPaths(
+  semModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.7)
 ```
 
 ## Benefits of SEM {#benefits-sem}
@@ -1239,9 +1285,10 @@ numberOfIndicators <- length(fitted(populationModel_fit)$mean)
 ```
 
 ```{r powerAnalysisIndicatorDistributions, cache = TRUE, cache.comments = FALSE, cache.extra=list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), dependson = "powerAnalysisNumberIndicators"}
-indicatorDistributions <- bindDist(p = numberOfIndicators,
-                                   skewness = c(rep(1.3, 3), rep(2, 8)),
-                                   kurtosis = c(rep(1.8, 3), rep(4, 8)))
+indicatorDistributions <- bindDist(
+  p = numberOfIndicators,
+  skewness = c(rep(1.3, 3), rep(2, 8)),
+  kurtosis = c(rep(1.8, 3), rep(4, 8)))
 ```
 
 ### Specify extent and type of missing data {#monteCarloPowerAnalysis-missingness}
@@ -1274,7 +1321,9 @@ percentMissingByVariable <- '
 ```
 
 ```{r powerAnalysisMissingnessModel, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = "powerAnalysisMissingness"}
-missingnessModel <- miss(logit = percentMissingByVariable, m = 0)
+missingnessModel <- miss(
+  logit = percentMissingByVariable,
+  m = 0)
 ```
 
 #### Plot of extent of missing data specified {#monteCarloPowerAnalysis-missingDataPlot}
@@ -1302,17 +1351,20 @@ If you choose to do processing in serial rather than parallel (by setting `multi
 You can reduce the number of sample sizes and/or repetitions per sample size to be faster.
 
 ```{r powerAnalysis, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizes", "powerAnalysisPopulationModel", "powerAnalysisAnalysisModel", "powerAnalysisMissingnessModel", "powerAnalysisIndicatorDistributions")}
-output <- simsem::sim(n = rep(sampleSizes, each = repetitionsPerSampleSize),
-                      model = analysisModel_syntax,
-                      generate = populationModel,
-                      miss = missingnessModel,
-                      indDist = indicatorDistributions,
-                      lavaanfun = "lavaan",
-                      missing = "ML",
-                      estimator = "MLR",
-                      std.lv = TRUE,
-                      seed = 52242,
-                      multicore = TRUE)
+output <- simsem::sim(
+  n = rep(
+    sampleSizes,
+    each = repetitionsPerSampleSize),
+  model = analysisModel_syntax,
+  generate = populationModel,
+  miss = missingnessModel,
+  indDist = indicatorDistributions,
+  lavaanfun = "lavaan",
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE,
+  seed = 52242,
+  multicore = TRUE)
 ```
 
 Return the seed to the normal seed behavior so that future calls to `set.seed()` use the default settings:
@@ -1372,15 +1424,17 @@ At $\alpha = .05$; dashed horizontal line represents power ($1 - \beta$) of .8
 ```{r, out.width = "100%", fig.align = "center", fig.cap = "Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis."}
 par(mfrow = c(1,2))
 
-plotPower(output,
-          powerParam = "dem65~dem60",
-          alpha = .05)
+plotPower(
+  output,
+  powerParam = "dem65~dem60",
+  alpha = .05)
 
 abline(h = 0.8, lwd = 2, lty = 2)
 
-plotPower(output,
-          powerParam = "dem65~ind60",
-          alpha = .05)
+plotPower(
+  output,
+  powerParam = "dem65~ind60",
+  alpha = .05)
 
 abline(h = 0.8, lwd = 2, lty = 2)
 ```
