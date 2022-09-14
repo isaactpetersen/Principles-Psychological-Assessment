@@ -992,6 +992,7 @@ library("gridExtra")
 library("grid")
 library("ggpubr")
 library("msir")
+library("car")
 library("viridis")
 library("MOTE")
 library("tidyverse")
@@ -4804,7 +4805,7 @@ regression2_slope2 <- regression2_model$coefficients[[3]]
 regression2_rsquare <- summary(regression2_model)$r.squared
 ```
 
-### Pseudo-Prediction {#pseudoPrediction}
+## Pseudo-Prediction {#pseudoPrediction}
 
 Consider the following example where you have one predictor and one outcome, as shown in Table \@ref(tab:regression1).
 
@@ -4905,6 +4906,21 @@ Any predictors that have a correlation above ~ $r = .30$ with each other could h
 As the correlations among the predictors increase, the chance of getting an arbitrary answer increases.\index{multicollinearity}
 So, it is important to examine a correlation matrix of the predictors before putting them in the same regression model.\index{multicollinearity}
 You can also examine indices such as variance inflation factor (VIF).\index{multicollinearity}
+
+VIF values are estimated below using the `car` package [@R-car].\index{multicollinearity}
+
+```{r}
+set.seed(52242)
+mydataSDT$collinearPredictor <- mydataSDT$ndka + 
+rnorm(nrow(mydataSDT), sd = 20)
+
+collinearRegression_model <- lm(
+  s100b ~ ndka + gender + age + wfns + collinearPredictor,
+  data = mydataSDT)
+
+vif(collinearRegression_model)
+```
+
 To address multicollinearity, you can drop a redundant predictor or you can also use [principal component analysis](#pca) or [factor analysis](#factorAnalysis) of the predictors to reduce the predictors down to a smaller number of meaningful predictors.\index{multicollinearity}\index{factor analysis}\index{principal component analysis}
 For a meaningful answer in a regression framework that is precise and confident, you need a low level of intercorrelation among predictors.\index{multicollinearity}
 
