@@ -255,6 +255,9 @@ library("petersenlab") #to install: install.packages("remotes"); remotes::instal
 library("pROC")
 library("caret")
 library("randomForest")
+library("e1071")
+library("ranger")
+library("ordinalForest")
 library("elasticnet")
 library("LiblineaR")
 library("glmnet")
@@ -283,6 +286,24 @@ mydataActuarial$disorder[which(
   mydataActuarial$outcome == "Good")] <- 0
 ```
 
+#### Simulate Data {#simulateData-actuarial}
+
+For reproducibility, I set the seed below.
+Using the same seed will yield the same answer every time.
+There is nothing special about this particular seed.
+
+```{r}
+set.seed(52242)
+
+mydataActuarial$ordinal <- sample(
+  0:2,
+  nrow(mydataActuarial),
+  replace = TRUE)
+
+mydataActuarial$ordinalFactor <- 
+  factor(mydataActuarial$ordinal, ordered = TRUE)
+```
+
 ## Fitting the Statistical Models {#fittingModels-actuarial}
 
 ### Regression with One Predictor {#regressionOnePredictor}
@@ -293,6 +314,23 @@ Dichotomous Outcome:
 summary(
   glm(disorder ~ s100b,
   data = mydataActuarial))
+```
+
+Ordinal Outcome:
+
+```{r}
+orm(
+  ordinal ~ s100b,
+  data = mydataActuarial,
+  x = TRUE,
+  y = TRUE)
+
+ordinalModel <- train(
+  ordinalFactor ~ s100b,
+  data = mydataActuarial,
+  method = "polr")
+
+print(ordinalModel)
 ```
 
 Continuous Outcome:
@@ -311,6 +349,23 @@ Dichotomous Outcome:
 summary(
   glm(disorder ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial))
+```
+
+Ordinal Outcome:
+
+```{r}
+orm(
+  ordinal ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  x = TRUE,
+  y = TRUE)
+
+ordinalModelPredictors <- train(
+  ordinalFactor ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "polr")
+
+print(ordinalModelPredictors)
 ```
 
 Continuous Outcome:
@@ -386,6 +441,17 @@ rfModelDichotomous <- train(
   method = "rf")
 
 print(rfModelDichotomous)
+```
+
+Ordinal Outcome:
+
+```{r}
+rfModelOrdinal <- train(
+  ordinalFactor ~ s100b + ndka + gender + age + wfns,
+  data = mydataActuarial,
+  method = "ordinalRF")
+
+print(rfModelOrdinal)
 ```
 
 Continuous Outcome:
