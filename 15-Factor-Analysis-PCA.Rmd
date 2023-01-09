@@ -792,7 +792,7 @@ nfactors(
 
 #### Run factor analysis {#runFactorAnalysis-efa}
 
-[Exploratory factor analysis](#efa) (EFA) models were fit using the `fa()` function of the `psych` package [@R-psych] and the `sem()` function of the `lavaan` package [@R-lavaan].
+[Exploratory factor analysis](#efa) (EFA) models were fit using the `fa()` function of the `psych` package [@R-psych] and the `sem()` and `efa()` functions of the `lavaan` package [@R-lavaan].
 
 ##### Orthogonal (Varimax) rotation {#orthogonal-efa}
 
@@ -1037,6 +1037,80 @@ efa9factorOrthogonalLavaan_fit <- sem(
   rotation.args = list(orthogonal = TRUE))
 ```
 
+The `efa()` wrapper can fit multiple [EFA](#efa) models models in one function call:
+
+```{r}
+efaOrthogonalLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 1:5,
+  rotation = "varimax",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE)
+)
+```
+
+The `efa()` wrapper can also fit individual EFA models (with `output = "lavaan"`):
+
+```{r}
+efaFactor1OrthogonalLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 1,
+  rotation = "varimax",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE)
+)
+
+efaFactor2OrthogonalLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 2,
+  rotation = "varimax",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE)
+)
+
+efaFactor3OrthogonalLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 3,
+  rotation = "varimax",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE)
+)
+
+efaFactor4OrthogonalLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 4,
+  rotation = "varimax",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE)
+)
+
+efaFactor5OrthogonalLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 5,
+  rotation = "varimax",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE)
+)
+```
+
 ##### Oblique (Oblimin) rotation {#oblique-efa}
 
 ###### `psych` {#obliquePsych-efa}
@@ -1104,6 +1178,7 @@ efa9factorOblique <- fa(
 The models are fitted below:
 
 ```{r}
+# settings to mimic Mplus
 mplusRotationArgs <- 
   list(
     rstarts = 30,
@@ -1121,7 +1196,6 @@ efa1factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1132,7 +1206,6 @@ efa2factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1143,7 +1216,6 @@ efa3factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1154,7 +1226,6 @@ efa4factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1165,7 +1236,6 @@ efa5factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1176,7 +1246,6 @@ efa6factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1187,7 +1256,6 @@ efa7factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1198,7 +1266,6 @@ efa8factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
 
@@ -1209,9 +1276,87 @@ efa9factorObliqueLavaan_fit <- sem(
   missing = "ML",
   estimator = "MLR",
   rotation = "geomin",
-  # mimic Mplus
   meanstructure = TRUE,
   rotation.args = mplusRotationArgs)
+```
+
+The `efa()` wrapper can fit multiple [EFA](#efa) models models in one function call:
+
+```{r}
+efaObliqueLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 1:5,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs
+)
+```
+
+The `efa()` wrapper can also fit individual EFA models (with `output = "lavaan"`):
+
+```{r}
+efaFactor1ObliqueLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 1,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs,
+  output = "lavaan"
+)
+
+efaFactor2ObliqueLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 2,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs,
+  output = "lavaan"
+)
+
+efaFactor3ObliqueLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 3,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs,
+  output = "lavaan"
+)
+
+efaFactor4ObliqueLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 4,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs,
+  output = "lavaan"
+)
+
+efaFactor5ObliqueLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 5,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs,
+  output = "lavaan"
+)
 ```
 
 #### Factor Loadings {#factorLoadings-efa}
@@ -1239,6 +1384,9 @@ efa9factorOrthogonal
 The factor loadings and summaries of the model results are below:
 
 ```{r}
+summary(
+  efaOrthogonalLavaan_fit)
+
 summary(
   efa1factorOrthogonalLavaan_fit,
   fit.measures = TRUE,
@@ -1318,6 +1466,9 @@ The factor loadings and summaries of the model results are below:
 
 ```{r}
 summary(
+  efaObliqueLavaan_fit)
+
+summary(
   efa1factorObliqueLavaan_fit,
   fit.measures = TRUE,
   standardized = TRUE,
@@ -1370,6 +1521,36 @@ summary(
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
+```
+
+#### Estimates of Model Fit {#fitEstimates-efa}
+
+##### Orthogonal (Varimax) rotation {#fitEstimatesOrthogonal-efa}
+
+```{r}
+fitMeasures(
+  efaOrthogonalLavaan_fit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+##### Oblique (Oblimin) rotation {#fitEstimatesOblique-efa}
+
+```{r}
+fitMeasures(
+  efaObliqueLavaan_fit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 #### Factor Scores {#factorScores-efa}
@@ -2668,7 +2849,7 @@ lapply(equivalentDAGs(dagModelBifactor, n = 4), plot)
 
 ##### Specify the model {#esemModelSyntax}
 
-To specify an ESEM model, you use the factor loadings from an [EFA](#efa) model as the starting values.
+To specify an ESEM model, you use the factor loadings from an [EFA](#efa) model as the starting values in a [structural equation model](#sem).
 In this example, I use the factor loadings from the three-factor [EFA](#efa) model, as specified in Section \@ref(obliqueLavaan-efa).
 
 ```{r}
@@ -2692,7 +2873,7 @@ I specify an anchor item for each latent factor below:
 anchors <- c(f1 = "x3", f2 = "x5", f3 = "x7")
 ```
 
-The `petersenlab` package [@R-petersenlab] includes the `make_esem_model()` function that creates `lavaan` syntax for an ESEM model from the factor loadings of an [EFA](#efa) model, as adapted from Mateus Silvestrin: https://msilvestrin.me/post/esem/
+The `petersenlab` package [@R-petersenlab] includes the `make_esem_model()` function that creates `lavaan` syntax for an ESEM model from the factor loadings of an [EFA](#efa) model, as adapted from Mateus Silvestrin: https://msilvestrin.me/post/esem
 
 ```{r}
 esemModel_syntax <- make_esem_model(
