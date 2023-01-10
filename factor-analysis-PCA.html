@@ -11644,7 +11644,7 @@ Figure 14.76: Equivalently Fitting Models to a Bifactor Model.
 <h4><span class="header-section-number">14.4.2.13</span> Exploratory Structural Equation Model (ESEM)<a href="factor-analysis-PCA.html#esemModel" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <div id="esemModelSyntax" class="section level5 hasAnchor" number="14.4.2.13.1">
 <h5><span class="header-section-number">14.4.2.13.1</span> Specify the model<a href="factor-analysis-PCA.html#esemModelSyntax" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>To specify an ESEM model, you use the factor loadings from an <a href="factor-analysis-PCA.html#efa">EFA</a> model as the starting values in a <a href="sem.html#sem">structural equation model</a>.
+<p>To specify an <a href="factor-analysis-PCA.html#efa-cfa-esem">ESEM</a> model, you use the factor loadings from an <a href="factor-analysis-PCA.html#efa">EFA</a> model as the starting values in a <a href="sem.html#sem">structural equation model</a>.
 In this example, I use the factor loadings from the three-factor <a href="factor-analysis-PCA.html#efa">EFA</a> model, as specified in Section <a href="factor-analysis-PCA.html#obliqueLavaan-efa">14.4.1.2.2.2</a>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb1284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1284-1"><a href="factor-analysis-PCA.html#cb1284-1" aria-hidden="true" tabindex="-1"></a>esem_loadings <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(</span>
@@ -11662,14 +11662,14 @@ In this example, I use the factor loadings from the three-factor <a href="factor
 {"columns":[{"label":["latent"],"name":[1],"type":["chr"],"align":["left"]},{"label":["item"],"name":[2],"type":["chr"],"align":["left"]},{"label":["loading"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"f1","2":"x1","3":"0.731519509"},{"1":"f1","2":"x2","3":"0.583748282"},{"1":"f1","2":"x3","3":"0.847715845"},{"1":"f1","2":"x4","3":"0.006122473"},{"1":"f1","2":"x5","3":"-0.004982446"},{"1":"f1","2":"x6","3":"0.096622910"},{"1":"f1","2":"x7","3":"-0.001067819"},{"1":"f1","2":"x8","3":"0.283600590"},{"1":"f1","2":"x9","3":"0.496276959"},{"1":"f2","2":"x1","3":"0.139474774"},{"1":"f2","2":"x2","3":"-0.008009427"},{"1":"f2","2":"x3","3":"-0.145067356"},{"1":"f2","2":"x4","3":"0.990877219"},{"1":"f2","2":"x5","3":"1.127364599"},{"1":"f2","2":"x6","3":"0.804382015"},{"1":"f2","2":"x7","3":"0.060243761"},{"1":"f2","2":"x8","3":"-0.007532958"},{"1":"f2","2":"x9","3":"0.007823524"},{"1":"f3","2":"x1","3":"-0.042974101"},{"1":"f3","2":"x2","3":"-0.179604528"},{"1":"f3","2":"x3","3":"0.006362492"},{"1":"f3","2":"x4","3":"0.007369803"},{"1":"f3","2":"x5","3":"0.034100817"},{"1":"f3","2":"x6","3":"-0.001331345"},{"1":"f3","2":"x7","3":"0.755705724"},{"1":"f3","2":"x8","3":"0.638194651"},{"1":"f3","2":"x9","3":"0.432390908"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>In ESEM, you specify one anchor item for each latent factor.
+<p>In <a href="factor-analysis-PCA.html#efa-cfa-esem">ESEM</a>, you specify one anchor item for each latent factor.
 You want the anchor item to be an item that has a strong loading on one latent factor and to have weak loadings on every other latent factor.
 The cross loadings for the anchor item are fixed to the respective loadings from the original <a href="factor-analysis-PCA.html#efa">EFA</a> model.
 I specify an anchor item for each latent factor below:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb1285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1285-1"><a href="factor-analysis-PCA.html#cb1285-1" aria-hidden="true" tabindex="-1"></a>anchors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">f1 =</span> <span class="st">&quot;x3&quot;</span>, <span class="at">f2 =</span> <span class="st">&quot;x5&quot;</span>, <span class="at">f3 =</span> <span class="st">&quot;x7&quot;</span>)</span></code></pre></div>
 </details>
-<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2022</a>)</span> includes the <code>make_esem_model()</code> function that creates <code>lavaan</code> syntax for an ESEM model from the factor loadings of an <a href="factor-analysis-PCA.html#efa">EFA</a> model, as adapted from Mateus Silvestrin: <a href="https://msilvestrin.me/post/esem" class="uri">https://msilvestrin.me/post/esem</a></p>
+<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2022</a>)</span> includes the <code>make_esem_model()</code> function that creates <code>lavaan</code> syntax for an <a href="factor-analysis-PCA.html#efa-cfa-esem">ESEM</a> model from the factor loadings of an <a href="factor-analysis-PCA.html#efa">EFA</a> model, as adapted from Mateus Silvestrin: <a href="https://msilvestrin.me/post/esem" class="uri">https://msilvestrin.me/post/esem</a></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb1286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1286-1"><a href="factor-analysis-PCA.html#cb1286-1" aria-hidden="true" tabindex="-1"></a>esemModel_syntax <span class="ot">&lt;-</span> <span class="fu">make_esem_model</span>(</span>
 <span id="cb1286-2"><a href="factor-analysis-PCA.html#cb1286-2" aria-hidden="true" tabindex="-1"></a>  esem_loadings,</span>
@@ -11891,7 +11891,7 @@ chisq.scaling.factor       baseline.chisq          baseline.df
 </div>
 <div id="esemModelFitComparison" class="section level5 hasAnchor" number="14.4.2.13.6">
 <h5><span class="header-section-number">14.4.2.13.6</span> Nested model comparison<a href="factor-analysis-PCA.html#esemModelFitComparison" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>A nested model comparison indicates that the ESEM model fits significantly better than the <a href="factor-analysis-PCA.html#cfa">CFA</a> model.</p>
+<p>A nested model comparison indicates that the <a href="factor-analysis-PCA.html#efa-cfa-esem">ESEM</a> model fits significantly better than the <a href="factor-analysis-PCA.html#cfa">CFA</a> model.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb1294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1294-1"><a href="factor-analysis-PCA.html#cb1294-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cfaModelFit, esemModelFit)</span></code></pre></div>
 </details>
