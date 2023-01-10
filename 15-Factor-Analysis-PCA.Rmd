@@ -2850,143 +2850,6 @@ par(mfrow = c(2, 2))
 lapply(equivalentDAGs(dagModelBifactor, n = 4), plot)
 ```
 
-#### Exploratory Structural Equation Model (ESEM) {#esemModel}
-
-##### Specify the model {#esemModelSyntax}
-
-To specify an [ESEM](#efa-cfa-esem) model, you use the factor loadings from an [EFA](#efa) model as the starting values in a [structural equation model](#sem).
-In this example, I use the factor loadings from the three-factor [EFA](#efa) model, as specified in Section \@ref(obliqueLavaan-efa).
-
-```{r}
-esem_loadings <- parameterEstimates(
-  efa3factorObliqueLavaan_fit,
-  standardized = TRUE
-) %>% 
-  dplyr::filter(efa == "efa1") %>% 
-  dplyr::select(lhs, rhs, est) %>% 
-  dplyr::rename(item = rhs, latent = lhs, loading = est)
-
-esem_loadings
-```
-
-In [ESEM](#efa-cfa-esem), you specify one anchor item for each latent factor.
-You want the anchor item to be an item that has a strong loading on one latent factor and to have weak loadings on every other latent factor.
-The cross loadings for the anchor item are fixed to the respective loadings from the original [EFA](#efa) model.\index{cross loading}
-I specify an anchor item for each latent factor below:
-
-```{r}
-anchors <- c(f1 = "x3", f2 = "x5", f3 = "x7")
-```
-
-The `petersenlab` package [@R-petersenlab] includes the `make_esem_model()` function that creates `lavaan` syntax for an [ESEM](#efa-cfa-esem) model from the factor loadings of an [EFA](#efa) model, as adapted from Mateus Silvestrin: https://msilvestrin.me/post/esem
-
-```{r}
-esemModel_syntax <- make_esem_model(
-  esem_loadings,
-  anchors)
-
-writeLines(esemModel_syntax)
-```
-
-##### Model syntax in table form: {#esemModelTabular}
-
-```{r}
-lavaanify(esemModel_syntax)
-```
-
-##### Fit the model {#esemModelFit}
-
-```{r}
-esemModelFit <- sem(
-  esemModel_syntax,
-  data = HolzingerSwineford1939,
-  missing = "ML",
-  estimator = "MLR")
-```
-
-##### Display summary output
-
-```{r}
-summary(
-  esemModelFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-##### Estimates of model fit {#esemModelFitCriteria}
-
-```{r}
-fitMeasures(
-  esemModelFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
-    "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
-```
-
-##### Nested model comparison {#esemModelFitComparison}
-
-A nested model comparison indicates that the [ESEM](#efa-cfa-esem) model fits significantly better than the [CFA](#cfa) model.
-
-```{r}
-anova(cfaModelFit, esemModelFit)
-```
-
-##### Residuals {#esemModelResiduals}
-
-```{r}
-residuals(esemModelFit, type = "cor")
-```
-
-##### Modification indices {#esemModelModIndices}
-
-```{r}
-modificationindices(esemModelFit, sort. = TRUE)
-```
-
-##### Internal Consistency Reliability {#esemModelReliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].
-
-```{r}
-compRelSEM(esemModelFit)
-AVE(esemModelFit)
-```
-
-##### Path diagram {#esemModelPathDiagram}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram).
-
-```{r esemModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With All Cross Loadings."}
-semPaths(
-  esemModelFit,
-  what = "std",
-  layout = "tree3",
-  edge.label.cex = 1.3)
-```
-
-##### Equivalently fitting models {#esemModelEquivalent}
-
-Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].
-Path diagrams of equivalent models are below.
-
-```{r}
-dagModelESEM <- lavaanToGraph(esemModelFit)
-
-par(mfrow = c(2, 2))
-```
-
-```{r esemModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
-lapply(equivalentDAGs(
-  dagModelESEM,
-  n = 4),
-  plot)
-```
-
 #### Multitrait-Multimethod Model (MTMM) {#mtmmCFA}
 
 ##### Simulate the data {#mtmmSimulate}
@@ -3260,6 +3123,258 @@ par(mfrow = c(2, 2))
 ```{r mtmmCFAequivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
 lapply(equivalentDAGs(
   dagModelMTMM,
+  n = 4),
+  plot)
+```
+
+### Exploratory Structural Equation Model (ESEM) {#esemModel}
+
+#### Example 1
+
+##### Specify the model {#esemModelSyntax}
+
+To specify an [ESEM](#efa-cfa-esem) model, you use the factor loadings from an [EFA](#efa) model as the starting values in a [structural equation model](#sem).
+In this example, I use the factor loadings from the three-factor [EFA](#efa) model, as specified in Section \@ref(obliqueLavaan-efa).
+
+```{r}
+esem_loadings <- parameterEstimates(
+  efa3factorObliqueLavaan_fit,
+  standardized = TRUE
+) %>% 
+  dplyr::filter(efa == "efa1") %>% 
+  dplyr::select(lhs, rhs, est) %>% 
+  dplyr::rename(item = rhs, latent = lhs, loading = est)
+
+esem_loadings
+```
+
+In [ESEM](#efa-cfa-esem), you specify one anchor item for each latent factor.
+You want the anchor item to be an item that has a strong loading on one latent factor and to have weak loadings on every other latent factor.
+The cross loadings for the anchor item are fixed to the respective loadings from the original [EFA](#efa) model.\index{cross loading}
+I specify an anchor item for each latent factor below:
+
+```{r}
+anchors <- c(f1 = "x3", f2 = "x5", f3 = "x7")
+```
+
+The `petersenlab` package [@R-petersenlab] includes the `make_esem_model()` function that creates `lavaan` syntax for an [ESEM](#efa-cfa-esem) model from the factor loadings of an [EFA](#efa) model, as adapted from Mateus Silvestrin: https://msilvestrin.me/post/esem
+
+```{r}
+esemModel_syntax <- make_esem_model(
+  esem_loadings,
+  anchors)
+
+writeLines(esemModel_syntax)
+```
+
+##### Model syntax in table form: {#esemModelTabular}
+
+```{r}
+lavaanify(esemModel_syntax)
+```
+
+##### Fit the model {#esemModelFit}
+
+```{r}
+esemModelFit <- sem(
+  esemModel_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+##### Display summary output {#esemOutput}
+
+```{r}
+summary(
+  esemModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+##### Estimates of model fit {#esemModelFitCriteria}
+
+```{r}
+fitMeasures(
+  esemModelFit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+##### Nested model comparison {#esemModelFitComparison}
+
+A nested model comparison indicates that the [ESEM](#efa-cfa-esem) model fits significantly better than the [CFA](#cfa) model.
+
+```{r}
+anova(cfaModelFit, esemModelFit)
+```
+
+##### Residuals {#esemModelResiduals}
+
+```{r}
+residuals(esemModelFit, type = "cor")
+```
+
+##### Modification indices {#esemModelModIndices}
+
+```{r}
+modificationindices(esemModelFit, sort. = TRUE)
+```
+
+##### Internal Consistency Reliability {#esemModelReliability}
+
+[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].
+
+```{r}
+compRelSEM(esemModelFit)
+AVE(esemModelFit)
+```
+
+##### Path diagram {#esemModelPathDiagram}
+
+A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram).
+
+```{r esemModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With All Cross Loadings."}
+semPaths(
+  esemModelFit,
+  what = "std",
+  layout = "tree3",
+  edge.label.cex = 1.3)
+```
+
+##### Equivalently fitting models {#esemModelEquivalent}
+
+Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].
+Path diagrams of equivalent models are below.
+
+```{r}
+dagModelESEM <- lavaanToGraph(esemModelFit)
+
+par(mfrow = c(2, 2))
+```
+
+```{r esemModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
+lapply(equivalentDAGs(
+  dagModelESEM,
+  n = 4),
+  plot)
+```
+
+#### Example 2
+
+##### Specify the model {#esemModelSyntax2}
+
+Another way to fit a [ESEM](#efa-cfa-esem) model in `lavaan` is to fit exploratory factors, confirmatory factors, and structural components in the same model.
+For instance, below is the syntax for a model with exploratory factors, confirmatory factors, and structural components:
+
+```{r}
+esem_syntax <- '
+ # exploratory factors: EFA Block 1
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 =~ x1 + x2 + x3 + x4 + x5 + x6
+ 
+ # confirmatory factors
+ speed =~ x7 + x8 + x9
+ 
+ # regression paths
+ speed ~ f1 + f2
+'
+```
+
+##### Model syntax in table form: {#esemModelTabular2}
+
+```{r}
+lavaanify(esem_syntax)
+```
+
+##### Fit the model {#esemModelFit2}
+
+```{r}
+esem_fit <- sem(
+  esem_syntax,
+  data = HolzingerSwineford1939,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR")
+```
+
+##### Display summary output {#esemOutput2}
+
+```{r}
+summary(
+  esem_fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+##### Estimates of model fit {#esemModelFitCriteria2}
+
+```{r}
+fitMeasures(
+  esem_fit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+##### Residuals {#esemModelResiduals2}
+
+```{r}
+residuals(esem_fit, type = "cor")
+```
+
+##### Modification indices {#esemModelModIndices2}
+
+```{r}
+modificationindices(esem_fit, sort. = TRUE)
+```
+
+##### Internal Consistency Reliability {#esemModelReliability2}
+
+[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].
+
+```{r}
+compRelSEM(esem_fit)
+AVE(esem_fit)
+```
+
+##### Path diagram {#esemModelPathDiagram2}
+
+A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram2).
+
+```{r esemModelPathDiagram2, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With Exploratory Factors, Confirmatory Factors, and Regression Paths."}
+semPaths(
+  esem_fit,
+  what = "std",
+  layout = "tree3",
+  edge.label.cex = 1.3)
+```
+
+##### Equivalently fitting models {#esemModelEquivalent}
+
+Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].
+Path diagrams of equivalent models are below.
+
+```{r}
+dagModelESEM2 <- lavaanToGraph(esem_fit)
+
+par(mfrow = c(2, 2))
+```
+
+```{r esemModelEquivalent2, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
+lapply(equivalentDAGs(
+  dagModelESEM2,
   n = 4),
   plot)
 ```
