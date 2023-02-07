@@ -4483,6 +4483,15 @@ The greater the <a href="reliability.html#randomError">random measurement error<
 <span id="cb176-4"><a href="reliability.html#cb176-4" aria-hidden="true" tabindex="-1"></a>trueAssociation <span class="sc">*</span> reliabilityOfMeasure</span></code></pre></div>
 </details>
 <pre><code>[1] 0.63</code></pre>
+<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2023</a>)</span> contains the <code>attenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion.
+When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="reliability.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attenuationCorrelation</span>(</span>
+<span id="cb178-2"><a href="reliability.html#cb178-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">trueAssociation =</span> <span class="fl">0.7</span>, </span>
+<span id="cb178-3"><a href="reliability.html#cb178-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
+<span id="cb178-4"><a href="reliability.html#cb178-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span>)</span></code></pre></div>
+</details>
+<pre><code>Error in attenuationCorrelation(trueAssociation = 0.7, reliabilityOfPredictor = 0.9, : could not find function &quot;attenuationCorrelation&quot;</code></pre>
 </div>
 <div id="measurementErrorEffects-disattenuationTestRetestReliability" class="section level3 hasAnchor" number="4.10.2">
 <h3><span class="header-section-number">4.10.2</span> Disattenuation of Observed Test–Retest Reliability Due to Measurement Error<a href="reliability.html#measurementErrorEffects-disattenuationTestRetestReliability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -4497,13 +4506,24 @@ The greater the <a href="reliability.html#randomError">random measurement error<
 \]</span></p>
 <p>Find the true correlation of the construct across two time points given an observed correlation if the observed reliability of the measure is .9:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="reliability.html#cb178-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
-<span id="cb178-2"><a href="reliability.html#cb178-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-3"><a href="reliability.html#cb178-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(</span>
-<span id="cb178-4"><a href="reliability.html#cb178-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time2,</span>
-<span id="cb178-5"><a href="reliability.html#cb178-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time3)<span class="sc">$</span>estimate) <span class="sc">/</span> reliabilityOfMeasure</span></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="reliability.html#cb180-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb180-2"><a href="reliability.html#cb180-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-3"><a href="reliability.html#cb180-3" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(</span>
+<span id="cb180-4"><a href="reliability.html#cb180-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time2,</span>
+<span id="cb180-5"><a href="reliability.html#cb180-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time3)<span class="sc">$</span>estimate)</span>
+<span id="cb180-6"><a href="reliability.html#cb180-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-7"><a href="reliability.html#cb180-7" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="sc">/</span> reliabilityOfMeasure</span></code></pre></div>
 </details>
 <pre><code>[1] 0.8974584</code></pre>
+<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2023</a>)</span> contains the <code>disattenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion.
+When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="reliability.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">disattenuationCorrelation</span>(</span>
+<span id="cb182-2"><a href="reliability.html#cb182-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">observedAssociation =</span> observedAssociation, </span>
+<span id="cb182-3"><a href="reliability.html#cb182-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
+<span id="cb182-4"><a href="reliability.html#cb182-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span>)</span></code></pre></div>
+</details>
+<pre><code>Error in disattenuationCorrelation(observedAssociation = observedAssociation, : could not find function &quot;disattenuationCorrelation&quot;</code></pre>
 <p>In the next section, I discuss <a href="reliability.html#methodBias">method biases</a>, including what they are, why they are important, and how to account for them.</p>
 </div>
 </div>
