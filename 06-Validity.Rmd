@@ -1198,6 +1198,15 @@ reliabilityOfCriterion <- 0.85
 trueAssociation * sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
 ```
 
+The `petersenlab` package [@R-petersenlab] contains the `attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:
+
+```{r}
+attenuationCorrelation(
+  trueAssociation = 0.7, 
+  reliabilityOfPredictor = 0.9,
+  reliabilityOfCriterion = 0.85)
+```
+
 ```{r, include = FALSE}
 observedAssociation <- trueAssociation * 
   sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
@@ -1231,19 +1240,26 @@ reliabilityOfCriterion <- 0.85
 The observed (attenuated) association is as follows:
 
 ```{r}
-cor.test(
+observedAssociation <- cor.test(
   x = mydataValidity$predictor,
   y = mydataValidity$criterion)$estimate
+
+observedAssociation
 ```
 
 The true (disattenuated) association is as follows:
 
 ```{r}
-as.numeric(cor.test(
-  x = mydataValidity$predictor,
-  y = mydataValidity$criterion)$estimate) / 
-  sqrt(reliabilityOfPredictor * reliabilityOfCriterion
-)
+observedAssociation / sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
+```
+
+The `petersenlab` package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:
+
+```{r}
+disattenuationCorrelation(
+  observedAssociation = observedAssociation, 
+  reliabilityOfPredictor = 0.9,
+  reliabilityOfCriterion = 0.85)
 ```
 
 The disattenuation of an observed correlation due to [measurement error](#measurementError) can be demonstrated using [structural equation modeling](#sem).
