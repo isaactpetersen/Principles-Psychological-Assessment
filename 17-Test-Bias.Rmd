@@ -1474,7 +1474,7 @@ The constrained model is nested within the unconstrained model because the uncon
 Model fit of nested models can be compared with a chi-square difference test.
 
 ```{r}
-anova(unconstrainedModel, constrainedModel)
+anova(constrainedModel, unconstrainedModel)
 ```
 
 The constrained model fits significantly worse than the unconstrained model, which suggests that item parameters differ between males and females.
@@ -1483,7 +1483,6 @@ The constrained model fits significantly worse than the unconstrained model, whi
 
 #### Items that differ in discrimination and/or severity {#difRemoveConstraintsDiscrimationSeverity}
 
-Items 1, 3, 4, 5, 6, and 7 showed [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty).
 
 ```{r}
 difDropItems <- DIF(
@@ -1491,12 +1490,13 @@ difDropItems <- DIF(
   c("a1","d1","d2"),
   scheme = "drop",
   simplify = TRUE)
-difDropItems
+
+round(difDropItems, 2)
 ```
 
 #### Items that differ in discrimination {#difRemoveConstraintsDiscrimination}
 
-Items 1, 4, 5, and 7 showed [DIF](#dif) in [discrimination](#itemDiscrimination).
+Items 1, 3, 4, and 5 showed [DIF](#dif) in [discrimination](#itemDiscrimination).
 
 ```{r}
 difDropItemsDiscrimination <- DIF(
@@ -1504,7 +1504,8 @@ difDropItemsDiscrimination <- DIF(
   c("a1"),
   scheme = "drop",
   simplify = TRUE)
-difDropItemsDiscrimination
+
+round(difDropItemsDiscrimination, 2)
 ```
 
 #### Items that differ in severity {#difRemoveConstraintsSeverity}
@@ -1517,7 +1518,8 @@ difDropItemsSeverity <- DIF(
   c("d1","d2"),
   scheme = "drop",
   simplify = TRUE)
-difDropItemsSeverity
+
+round(difDropItemsSeverity, 2)
 ```
 
 ### Identify DIF by iteratively adding constraints to unconstrained model {#difAddConstraints}
@@ -1533,7 +1535,8 @@ difAddItems <- DIF(
   scheme = "add",
   simplify = TRUE,
   plotdif = TRUE)
-difAddItems
+
+round(difAddItems, 2)
 ```
 
 #### Items that differ in discrimination {#difAddConstraintsDiscrimination}
@@ -1547,7 +1550,8 @@ difAddItemsDiscrimination <- DIF(
   scheme = "add",
   simplify = TRUE,
   plotdif = TRUE)
-difAddItemsDiscrimination
+
+round(difAddItemsDiscrimination, 2)
 ```
 
 #### Items that differ in severity {#difAddConstraintsSeverity}
@@ -1561,7 +1565,8 @@ difAddItemsSeverity <- DIF(
   scheme = "add",
   simplify = TRUE,
   plotdif = TRUE)
-difAddItemsSeverity
+
+round(difAddItemsSeverity, 2)
 ```
 
 ### Compute effect size of DIF {#difEffectSize}
@@ -1595,7 +1600,8 @@ empirical_ES(
 ```{r}
 empirical_ES(
   unconstrainedModel,
-  DIF = TRUE)
+  DIF = TRUE) %>% 
+  round(., 2)
 ```
 
 [Differential item functioning](#dif) is depicted in Figure \@ref(fig:dif).
@@ -1839,9 +1845,9 @@ We can compare the model fit against the fully constrained model.
 In this case, all three of these approaches for handling [DIF](#dif) resulted in significant improvement in model fit.
 
 ```{r}
-anova(constrainedModelDropItem5, constrainedModel)
-anova(constrainedModelDropItem5ForMen, constrainedModel)
-anova(constrainedModelResolveItem5, constrainedModel)
+anova(constrainedModel, constrainedModelDropItem5)
+anova(constrainedModel, constrainedModelDropItem5ForMen)
+anova(constrainedModel, constrainedModelResolveItem5)
 ```
 
 #### Next steps {#difNextSteps}
@@ -1855,7 +1861,8 @@ difDropItemsNew <- DIF(
   c("a1","d1","d2"),
   scheme = "drop",
   simplify = TRUE)
-difDropItemsNew
+
+round(difDropItemsNew, 2)
 ```
 
 Of the remaining [DIF](#dif), item 4 appears to have the largest [DIF](#dif).
