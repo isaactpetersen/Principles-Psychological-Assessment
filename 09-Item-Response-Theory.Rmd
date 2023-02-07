@@ -1673,6 +1673,28 @@ plot(twoPLModel, type = "infotrace", facet_items = FALSE)
 plot(twoPLModel, type = "infotrace", facet_items = TRUE)
 ```
 
+#### Convert Discrimination To Factor Loading {#irt-twoPLdiscriminationFactorLoading}
+
+As described by [Aiden Loe](https://aidenloe.github.io/introToIRT.html#(alpha{})_par_to_std_loading), one can convert a discrimination parameter to a standardized factor loading using Equation \@ref(eq:discriminationFactorLoading):
+
+$$
+f = \frac{a}{\sqrt{1 + a^2}}
+(\#eq:discriminationFactorLoading)
+$$
+
+where $a$ is equal to: $\text{discrimination}/1.702$.
+
+The `petersenlab` package [@R-petersenlab] contains the `discriminationToFactorLoading()` function that converts discrimination parameters to standardized factor loadings.
+
+```{r}
+discriminationParameters <- coef(
+  twoPLModel,
+  simplify = TRUE)$items[,1]
+
+discriminationParameters
+discriminationToFactorLoading(discriminationParameters)
+```
+
 ### CFA {#irt-twoPLcfa}
 
 A two-parameter logistic model can also be fit in a [CFA](#cfa) framework, sometimes called item factor analysis.
