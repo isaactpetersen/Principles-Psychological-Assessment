@@ -2276,6 +2276,16 @@ reliabilityOfMeasure <- 0.9
 trueAssociation * reliabilityOfMeasure
 ```
 
+The `petersenlab` package [@R-petersenlab] contains the `attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.
+When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:
+
+```{r}
+attenuationCorrelation(
+  trueAssociation = 0.7, 
+  reliabilityOfPredictor = 0.9,
+  reliabilityOfCriterion = 0.9)
+```
+
 ### Disattenuation of Observed Test–Retest Reliability Due to Measurement Error {#measurementErrorEffects-disattenuationTestRetestReliability}
 
 Then, to disattenuate the observed [test–retest reliability](#testRetest-reliability) due to [random measurement error](#randomError), we can rearrange the terms in the formula above to estimate what the true stability of the construct is, according to Equation \@ref(eq:disattenuationRetestReliability):
@@ -2294,9 +2304,21 @@ Find the true correlation of the construct across two time points given an obser
 ```{r}
 reliabilityOfMeasure <- 0.9
 
-as.numeric(cor.test(
+observedAssociation <- as.numeric(cor.test(
   x = mydata$time2,
-  y = mydata$time3)$estimate) / reliabilityOfMeasure
+  y = mydata$time3)$estimate)
+
+observedAssociation / reliabilityOfMeasure
+```
+
+The `petersenlab` package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.
+When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:
+
+```{r}
+disattenuationCorrelation(
+  observedAssociation = observedAssociation, 
+  reliabilityOfPredictor = 0.9,
+  reliabilityOfCriterion = 0.9)
 ```
 
 In the next section, I discuss [method biases](#methodBias), including what they are, why they are important, and how to account for them.
