@@ -67,11 +67,13 @@ measure1[c(5,10)] <- NA
 measure2[c(10,15)] <- NA
 measure3[c(10)] <- NA
 PoliticalDemocracy <- 
-  as.data.frame(lapply(PoliticalDemocracy,
-                       function(cc) cc[ sample(c(TRUE, NA),
-                                               prob = c(0.9, 0.1),
-                                               size = length(cc),
-                                               replace = TRUE)]))
+  as.data.frame(lapply(
+    PoliticalDemocracy,
+    function(cc) cc[ sample(
+      c(TRUE, NA),
+      prob = c(0.9, 0.1),
+      size = length(cc),
+      replace = TRUE)]))
 ```
 
 #### Combine data into data frame {#combineData-sem}
@@ -137,7 +139,11 @@ If the model fit is unacceptable, you can try fitting a different model to see w
 Nevertheless, it is important to use theory as a guide when specifying and comparing competing models, and not just rely solely on model fit comparison.
 For example, the model you fit should depend on how you conceptualize each construct: as [reflective](#reflectiveConstruct) or [formative](#formativeConstruct).
 
-## Fitting Formative and Reflective Models {#formativeReflective-sem}
+## Estimating Latent Factors {#formativeReflective-sem}
+
+### Model Identification {#modelIdentification-sem}
+
+#### Types of Model Identification {#modelIdentificationTypes-sem}
 
 There are important practical issues to consider with both [reflective](#reflectiveConstruct) and [formative](#formativeConstruct) models.
 An important practical issue is model identification—adding enough constraints so that there is only one, best answer.
@@ -188,6 +194,215 @@ means4Measures <- apply(
 means4Measures
 ```
 
+#### Approaches to Model Identification {#modelIdentificationApproaches-sem}
+
+The three most widely used approaches to identifying latent factors are:
+
+1. [Marker variable](#markerVariable-sem)
+1. [Effects coding](#effectsCoding-sem)
+1. [Standardized latent factor](#standardizedLatent-sem)
+
+##### Marker Variable Method {#markerVariable-sem}
+
+In the marker variable method, one of the indicators is set to have a loading of 1.
+Here are examples of using the marker variable method for identification of a latent variable:
+
+```{r}
+markerVariable_syntax <- '
+ #Factor loadings
+ latentFactor =~ y1 + y2 + y3 + y4
+'
+
+markerVariable_fullSyntax <- '
+ #Factor loadings
+ latentFactor =~ 1*y1 + y2 + y3 + y4
+ 
+ #Latent variance
+ latentFactor ~~ latentFactor
+ 
+ #Estimate residual variances of manifest variables
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ 
+ #Estimate intercepts of manifest variables
+ y1 ~ 1
+ y2 ~ 1
+ y3 ~ 1
+ y4 ~ 1
+'
+
+markerVariableModelFit <- sem(
+  markerVariable_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+markerVariableModelFit_full <- lavaan(
+  markerVariable_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+```{r markerVariable, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Marker Variable Approach."}
+semPaths(
+  markerVariableModelFit,
+  what = "est",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+##### Effects Coding Method {#effectsCoding-sem}
+
+In the effects coding method, the average of the factor loadings is set to be 1.
+The effects coding method is useful if you are interested in the means or variances of the latent factor, because the metric of the latent factor is on the metric of the indicators.
+Here are examples of using the effects coding method for identification of a latent variable:
+
+```{r}
+effectsCoding_abbreviatedSyntax <- '
+ #Factor loadings
+ latentFactor =~ y1 + y2 + y3 + y4
+'
+
+effectsCoding_syntax <- '
+ #Factor loadings
+ latentFactor =~ NA*y1 + label1*y1 + label2*y2 + label3*y3 + label4*y4
+ 
+ #Constrain factor loadings
+ label1 == 4 - label2 - label3 - label4 # 4 = number of indicators
+'
+
+effectsCoding_fullSyntax <- '
+ #Factor loadings
+ latentFactor =~ label1*y1 + label2*y2 + label3*y3 + label4*y4
+ 
+ #Constrain factor loadings
+ label1 == 4 - label2 - label3 - label4 # 4 = number of indicators
+ 
+ #Latent variance
+ latentFactor ~~ latentFactor
+ 
+ #Estimate residual variances of manifest variables
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ 
+ #Estimate intercepts of manifest variables
+ y1 ~ 1
+ y2 ~ 1
+ y3 ~ 1
+ y4 ~ 1
+'
+
+effectsCodingModelFit_abbreviated <- sem(
+  effectsCoding_abbreviatedSyntax,
+  data = PoliticalDemocracy,
+  effect.coding = "loadings",
+  missing = "ML",
+  estimator = "MLR")
+
+effectsCodingModelFit <- sem(
+  effectsCoding_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+effectsCodingModelFit_full <- lavaan(
+  effectsCoding_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+```{r effectsCoding, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Effects Coding Approach."}
+semPaths(
+  effectsCodingModelFit,
+  what = "est",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+##### Standardized Latent Factor Method {#standardizedLatent-sem}
+
+In the standardized latent factor method, the latent factor is set to have a mean of 0 and a standard deviation of 1.
+The standardized latent factor method is a useful approach if you are not interested in the means or variances of the latent factors and want to freely estimate the factor loadings.
+Here are examples of using the standardized latent factor method for identification of a latent variable:
+
+```{r}
+standardizedLatent_abbreviatedsyntax <- '
+ #Factor loadings
+ latentFactor =~ y1 + y2 + y3 + y4
+'
+
+standardizedLatent_syntax <- '
+ #Factor loadings
+ latentFactor =~ NA*y1 + y2 + y3 + y4
+ 
+ #Latent mean
+ latentFactor ~ 0
+ 
+ #Latent variance
+ latentFactor ~~ 1*latentFactor
+'
+
+standardizedLatent_fullSyntax <- '
+ #Factor loadings
+ latentFactor =~ NA*y1 + y2 + y3 + y4
+ 
+ #Latent mean
+ latentFactor ~ 0
+ 
+ #Latent variance
+ latentFactor ~~ 1*latentFactor
+ 
+ #Estimate residual variances of manifest variables
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ 
+ #Estimate intercepts of manifest variables
+ y1 ~ 1
+ y2 ~ 1
+ y3 ~ 1
+ y4 ~ 1
+'
+
+standardizedLatentFit_abbreviated <- sem(
+  standardizedLatent_abbreviatedsyntax,
+  data = PoliticalDemocracy,
+  std.lv = TRUE,
+  missing = "ML",
+  estimator = "MLR")
+
+standardizedLatentFit <- sem(
+  standardizedLatent_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+standardizedLatentFit_full <- lavaan(
+  standardizedLatent_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+```{r standaredizedLatent, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Standardized Latent Factor Approach."}
+semPaths(
+  standardizedLatentFit,
+  what = "est",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+### Types of Latent Factors {#latentFactorTypes-sem}
+
+#### Reflective Latent Factors {#reflectiveFactors-sem}
+
 For a [reflective model](#reflectiveConstruct) with 4 indicators, we would need to estimate 12 parameters: a factor loading, error term, and intercept for each of the 4 indicators.
 Here are the parameters estimated:
 
@@ -233,6 +448,8 @@ With 4 indicators, the number of data points (14) is greater than the number of 
 We have two degrees of freedom ($14 - 12 = 2$).
 Because the degrees of freedom is greater than zero, it is easy to identify the model—the model is over-identified.
 A [reflective model](#reflectiveConstruct) with 3 indicators would have 9 data points ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.
+
+#### Formative Latent Factors {#formativeFactors-sem}
 
 However, for a [formative model](#formativeConstruct), we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters.
 Here are the parameters estimated:
