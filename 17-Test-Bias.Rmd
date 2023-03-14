@@ -772,6 +772,7 @@ library("semTools")
 library("semPlot")
 library("mirt")
 library("dmacs") #to install: install.packages("remotes"); remotes::install_github("ddueber/dmacs")
+library("strucchange")
 library("MOTE")
 library("tidyverse")
 library("here")
@@ -1880,14 +1881,14 @@ Measurement invariance can help provide greater confidence that the measure func
 For instance, If you observe differences between groups in level of depression without establishing measurement invariance across the groups, you do not know whether the differences observed reflect true group-related differences in depression or differences in the functioning of the measure across the groups.
 
 Measurement invariance can be tested using many methods, including [confirmatory factor analysis](#cfa) and [IRT](#irt).
-[CFA](#cfa) approaches to testing measurement invariance include multi-group [CFA](#cfa) (MGCFA), multiple-indicator, multiple-causes (MIMIC) models, moderated nonlinear factor analysis (MNLFA), and the alignment method [@Lai2021].
+[CFA](#cfa) approaches to testing measurement invariance include multi-group [CFA](#cfa) (MGCFA), multiple-indicator, multiple-causes (MIMIC) models, moderated nonlinear factor analysis (MNLFA), score-based tests [@Wang2014a], and the alignment method [@Lai2021].
 The [IRT](#irt) approach to testing measurement (non-)invariance is to examine whether items show [differential item functioning](#dif).
 
 The tests of measurement invariance in [confirmatory factor analysis](#cfa) (CFA) models were fit in the `lavaan` package [@R-lavaan].
 The examples were adapted from `lavaan` documentation: http://lavaan.ugent.be/tutorial/groups.html.
 Procedures for testing measurement invariance are outlined in @Putnick2016.
 In addition to nested chi-square difference tests ($\chi^2_{\text{diff}}$), I also demonstrate permutation procedures for testing measurement invariance, as described by @Jorgensen2018.
-Also, you are encouraged to read about MIMIC models [@Cheng2016; @Wang2009b] and MNLFA that allows for testing measurement invariance across continuous moderators [@Bauer2020; @Curran2014; @Gottfredson2019].
+Also, you are encouraged to read about MIMIC models [@Cheng2016; @Wang2009b], score-based tests [@Wang2014a], and MNLFA that allows for testing measurement invariance across continuous moderators [@Bauer2020; @Curran2014; @Gottfredson2019].
 MNLFA is implemented in the `mnlfa` package [@R-mnlfa].
 You can also generate syntax for conducting MNLFA in Mplus software [@Muthen2019] using the `aMNLFA` package [@R-aMNLFA].
 The alignment method allows many groups to be compared [@Han2019].
@@ -2593,6 +2594,21 @@ metricInvarianceModel_chisquareDiff
 round(metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices, digits = 3)
 ```
 
+##### Score-Based Test {#measurementInvarianceMetricModelScoreBasedTest}
+
+Score-based tests of measurement invariance are described by @Wang2014a.
+
+```{r}
+coef(metricInvarianceModel_fit)
+coef(metricInvarianceModel_fit)[1:9]
+
+sctest(
+  metricInvarianceModel_fit,
+  order.by = HolzingerSwineford1939$school,
+  parm = 1:9,
+  functional = "LMuo")
+```
+
 ##### Equivalence Test {#measurementInvarianceMetricModelEquivalenceTest}
 
 The `petersenlab` package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
@@ -2815,6 +2831,21 @@ round(
   digits = 3)
 ```
 
+##### Score-Based Test {#measurementInvarianceScalarScoreBasedTest}
+
+Score-based tests of measurement invariance are described by @Wang2014a.
+
+```{r}
+coef(scalarInvarianceModel_fit)
+coef(scalarInvarianceModel_fit)[10:18]
+
+sctest(
+  scalarInvarianceModel_fit,
+  order.by = HolzingerSwineford1939$school,
+  parm = 10:18,
+  functional = "LMuo")
+```
+
 ##### Equivalence Test {#measurementInvarianceScalarModelEquivalenceTest}
 
 The `petersenlab` package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test: https://osf.io/cqu8v.
@@ -3034,6 +3065,21 @@ residualInvarianceModel_chisquareDiff
 ```{r}
 round(residualInvarianceModelFitIndices - scalarInvarianceModelFitIndices,
       digits = 3)
+```
+
+##### Score-Based Test {#measurementInvarianceResidualModelScoreBasedTest}
+
+Score-based tests of measurement invariance are described by @Wang2014a.
+
+```{r}
+coef(residualInvarianceModel_fit)
+coef(residualInvarianceModel_fit)[19:27]
+
+sctest(
+  residualInvarianceModel_fit,
+  order.by = HolzingerSwineford1939$school,
+  parm = 19:27,
+  functional = "LMuo")
 ```
 
 ##### Equivalence Test {#measurementInvarianceResidualModelEquivalenceTest}
