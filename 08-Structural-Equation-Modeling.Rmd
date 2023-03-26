@@ -148,13 +148,19 @@ For example, the model you fit should depend on how you conceptualize each const
 There are important practical issues to consider with both [reflective](#reflectiveConstruct) and [formative](#formativeConstruct) models.
 An important practical issue is model identification—adding enough constraints so that there is only one, best answer.
 The model is identified when each of the estimated parameters has a unique solution.
-Based on the number of data points compared to the number of estimated parameters, a model can be considered either just identified, under-identified, or over-identified.
-The number of data points in a SEM model is the number of variances and covariances in the variance-covariance matrix in addition to the number of means, which can be calculated as: $\frac{m(m + 1)}{2} + m$, where $m = \text{the number of indicators}$.
-A *just identified model* is a model in which the number of data points is equal to the number of parameters to be estimated (degrees of freedom = 0).
-An *under-identified model* is a model in which the number of data points is less than the number of parameters to be estimated (degrees of freedom < 0).
-An *over-identified model* is a model in which the number of number of data points is greater than the number of parameters to be estimated (degrees of freedom > 0).
 
-As an example, there are 14 data points for a model with 4 indicators ($\frac{4(4 + 1)}{2} + 4 = 14$): 4 variances, 6 covariances, and 4 means.
+Degrees of freedom in a SEM model is the number of known values minus the number of estimated parameters.
+The number of known values in a SEM model is the number of variances and covariances in the variance-covariance matrix of the manifest (observed) variables in addition to the number of means (i.e., the number of manifest variables), which can be calculated as: $\frac{m(m + 1)}{2} + m$, where $m = \text{the number of manifest variables}$.
+You can never estimate more parameters than the number of known values.
+A model with zero degrees of freedom is considered "saturated"—it will have perfect fit because the model estimates as many parameters as there are known values.
+All things equal (i.e., in terms of model fit with the same number of manifest variables), a model with more degrees of freedom is preferred for its parsimony, because fewer parameters are estimated.
+
+Based on the number of known values compared to the number of estimated parameters, a model can be considered either just identified, under-identified, or over-identified.
+A *just identified model* is a model in which the number of known values is equal to the number of parameters to be estimated (degrees of freedom = 0).
+An *under-identified model* is a model in which the number of known values is less than the number of parameters to be estimated (degrees of freedom < 0).
+An *over-identified model* is a model in which the number of number of known values is greater than the number of parameters to be estimated (degrees of freedom > 0).
+
+As an example, there are 14 known values for a model with 4 manifest variables ($\frac{4(4 + 1)}{2} + 4 = 14$): 4 variances, 6 covariances, and 4 means.
 
 Here is the variance-covariance matrix:
 
@@ -204,7 +210,7 @@ The three most widely used approaches to identifying latent factors are:
 
 ##### Marker Variable Method {#markerVariable-sem}
 
-In the marker variable method, one of the indicators is set to have a loading of 1.
+In the marker variable method, one of the indicators (i.e., manifest variables) is set to have a loading of 1.
 Here are examples of using the marker variable method for identification of a latent variable:
 
 ```{r}
@@ -444,10 +450,10 @@ semPaths(
 ```
 
 Thus, for a [reflective model](#reflectiveConstruct), We only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious.
-With 4 indicators, the number of data points (14) is greater than the number of parameters (12).
+With 4 indicators, the number of known values (14) is greater than the number of parameters (12).
 We have two degrees of freedom ($14 - 12 = 2$).
 Because the degrees of freedom is greater than zero, it is easy to identify the model—the model is over-identified.
-A [reflective model](#reflectiveConstruct) with 3 indicators would have 9 data points ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.
+A [reflective model](#reflectiveConstruct) with 3 indicators would have 9 known values ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.
 
 #### Formative Latent Factors {#formativeFactors-sem}
 
@@ -489,7 +495,7 @@ semPaths(
   edge.label.cex = 0.8)
 ```
 
-For a [formative model](#formativeConstruct) with 4 measures, the number of data points (14) is less than the number of parameters (19).
+For a [formative model](#formativeConstruct) with 4 measures, the number of known values (14) is less than the number of parameters (19).
 The number of degrees of freedom is negative ($14 - 19 = -5$), thus the model is not able to be identified—the model is under-identified.
 
 Thus, for a [formative model](#formativeConstruct), we need more parameters than we have data—the model is under-identified.
@@ -712,7 +718,7 @@ measurementModelParameters_beta3 <- measurementModelParameters[
   "std.all"]
 ```
 
-This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of data points, thus leaving zero degrees of freedom.
+This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of known values, thus leaving zero degrees of freedom.
 In the model, all three indicators load strongly on the latent factor (measure 1: $\beta = `r apa(measurementModelParameters_beta1, 2)`$; measure 2: $\beta = `r apa(measurementModelParameters_beta2, 2)`$; measure 3: $\beta = `r apa(measurementModelParameters_beta3, 2)`$).
 Thus, the loadings of this measurement model would be consistent with a [reflective latent construct](#reflectiveConstruct).
 In terms of interpretation, all three indicators loaded positively on the latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.
