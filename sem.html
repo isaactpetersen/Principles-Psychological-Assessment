@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2023-03-14" />
+<meta name="date" content="2023-03-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -2291,13 +2291,17 @@ For example, the model you fit should depend on how you conceptualize each const
 <h4><span class="header-section-number">7.4.1.1</span> Types of Model Identification<a href="sem.html#modelIdentificationTypes-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>There are important practical issues to consider with both <a href="constructs.html#reflectiveConstruct">reflective</a> and <a href="constructs.html#formativeConstruct">formative</a> models.
 An important practical issue is model identification—adding enough constraints so that there is only one, best answer.
-The model is identified when each of the estimated parameters has a unique solution.
-Based on the number of data points compared to the number of estimated parameters, a model can be considered either just identified, under-identified, or over-identified.
-The number of data points in a SEM model is the number of variances and covariances in the variance-covariance matrix in addition to the number of means, which can be calculated as: <span class="math inline">\(\frac{m(m + 1)}{2} + m\)</span>, where <span class="math inline">\(m = \text{the number of indicators}\)</span>.
-A <em>just identified model</em> is a model in which the number of data points is equal to the number of parameters to be estimated (degrees of freedom = 0).
-An <em>under-identified model</em> is a model in which the number of data points is less than the number of parameters to be estimated (degrees of freedom &lt; 0).
-An <em>over-identified model</em> is a model in which the number of number of data points is greater than the number of parameters to be estimated (degrees of freedom &gt; 0).</p>
-<p>As an example, there are 14 data points for a model with 4 indicators (<span class="math inline">\(\frac{4(4 + 1)}{2} + 4 = 14\)</span>): 4 variances, 6 covariances, and 4 means.</p>
+The model is identified when each of the estimated parameters has a unique solution.</p>
+<p>Degrees of freedom in a SEM model is the number of known values minus the number of estimated parameters.
+The number of known values in a SEM model is the number of variances and covariances in the variance-covariance matrix of the manifest (observed) variables in addition to the number of means (i.e., the number of manifest variables), which can be calculated as: <span class="math inline">\(\frac{m(m + 1)}{2} + m\)</span>, where <span class="math inline">\(m = \text{the number of manifest variables}\)</span>.
+You can never estimate more parameters than the number of known values.
+A model with zero degrees of freedom is considered “saturated”—it will have perfect fit because the model estimates as many parameters as there are known values.
+All things equal (i.e., in terms of model fit with the same number of manifest variables), a model with more degrees of freedom is preferred for its parsimony, because fewer parameters are estimated.</p>
+<p>Based on the number of known values compared to the number of estimated parameters, a model can be considered either just identified, under-identified, or over-identified.
+A <em>just identified model</em> is a model in which the number of known values is equal to the number of parameters to be estimated (degrees of freedom = 0).
+An <em>under-identified model</em> is a model in which the number of known values is less than the number of parameters to be estimated (degrees of freedom &lt; 0).
+An <em>over-identified model</em> is a model in which the number of number of known values is greater than the number of parameters to be estimated (degrees of freedom &gt; 0).</p>
+<p>As an example, there are 14 known values for a model with 4 manifest variables (<span class="math inline">\(\frac{4(4 + 1)}{2} + 4 = 14\)</span>): 4 variances, 6 covariances, and 4 means.</p>
 <p>Here is the variance-covariance matrix:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="sem.html#cb254-1" aria-hidden="true" tabindex="-1"></a>vcovMatrix4measures <span class="ot">&lt;-</span> <span class="fu">cov</span>(</span>
@@ -2349,7 +2353,7 @@ y4 5.393572  9.910746  7.151898 11.22069</code></pre>
 </ol>
 <div id="markerVariable-sem" class="section level5 hasAnchor" number="7.4.1.2.1">
 <h5><span class="header-section-number">7.4.1.2.1</span> Marker Variable Method<a href="sem.html#markerVariable-sem" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>In the marker variable method, one of the indicators is set to have a loading of 1.
+<p>In the marker variable method, one of the indicators (i.e., manifest variables) is set to have a loading of 1.
 Here are examples of using the marker variable method for identification of a latent variable:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="sem.html#cb262-1" aria-hidden="true" tabindex="-1"></a>markerVariable_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
@@ -2610,10 +2614,10 @@ Figure 7.5: Depiction of a Reflective Model.
 </p>
 </div>
 <p>Thus, for a <a href="constructs.html#reflectiveConstruct">reflective model</a>, We only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious.
-With 4 indicators, the number of data points (14) is greater than the number of parameters (12).
+With 4 indicators, the number of known values (14) is greater than the number of parameters (12).
 We have two degrees of freedom (<span class="math inline">\(14 - 12 = 2\)</span>).
 Because the degrees of freedom is greater than zero, it is easy to identify the model—the model is over-identified.
-A <a href="constructs.html#reflectiveConstruct">reflective model</a> with 3 indicators would have 9 data points (<span class="math inline">\(\frac{3(3 + 1)}{2} + 3 = 9\)</span>), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.</p>
+A <a href="constructs.html#reflectiveConstruct">reflective model</a> with 3 indicators would have 9 known values (<span class="math inline">\(\frac{3(3 + 1)}{2} + 3 = 9\)</span>), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.</p>
 </div>
 <div id="formativeFactors-sem" class="section level4 hasAnchor" number="7.4.2.2">
 <h4><span class="header-section-number">7.4.2.2</span> Formative Latent Factors<a href="sem.html#formativeFactors-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -2675,7 +2679,7 @@ Model Test User Model:
 Figure 7.6: Depiction of an Under-Identified Formative Model.
 </p>
 </div>
-<p>For a <a href="constructs.html#formativeConstruct">formative model</a> with 4 measures, the number of data points (14) is less than the number of parameters (19).
+<p>For a <a href="constructs.html#formativeConstruct">formative model</a> with 4 measures, the number of known values (14) is less than the number of parameters (19).
 The number of degrees of freedom is negative (<span class="math inline">\(14 - 19 = -5\)</span>), thus the model is not able to be identified—the model is under-identified.</p>
 <p>Thus, for a <a href="constructs.html#formativeConstruct">formative model</a>, we need more parameters than we have data—the model is under-identified.
 Therefore, to estimate a formative model with 4 indicators, we must add assumptions and other variables that are consequences of the <a href="constructs.html#formativeConstruct">formative construct</a>.
@@ -2941,7 +2945,7 @@ In Section <a href="sem.html#cfaExample-sem">7.9</a>, I present a <a href="facto
 </div>
 <div id="measurementModelOutput-sem" class="section level3 hasAnchor" number="7.8.3">
 <h3><span class="header-section-number">7.8.3</span> Display summary output<a href="sem.html#measurementModelOutput-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of data points, thus leaving zero degrees of freedom.
+<p>This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of known values, thus leaving zero degrees of freedom.
 In the model, all three indicators load strongly on the latent factor (measure 1: <span class="math inline">\(\beta = 0.65\)</span>; measure 2: <span class="math inline">\(\beta = 0.75\)</span>; measure 3: <span class="math inline">\(\beta = 1.06\)</span>).
 Thus, the loadings of this measurement model would be consistent with a <a href="constructs.html#reflectiveConstruct">reflective latent construct</a>.
 In terms of interpretation, all three indicators loaded positively on the latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.
@@ -5292,22 +5296,22 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <pre><code>============ Wall Time ============
   1. Error Checking and setting up data-generation and analysis template:        0.000
   2. Set combinations of n, pmMCAR, and pmMAR:                                   0.001
-  3. Setting up simulation conditions for each replication:                      0.023
-  4. Total time elapsed running all replications:                             3284.570
-  5. Combining outputs from different replications:                              0.086
+  3. Setting up simulation conditions for each replication:                      0.022
+  4. Total time elapsed running all replications:                             3476.268
+  5. Combining outputs from different replications:                              0.088
 
 ============ Average Time in Each Replication ============
-  1. Data Generation:                                  0.083
+  1. Data Generation:                                  0.088
   2. Impose Missing Values:                            0.016
   3. User-defined Data-Transformation Function:        0.000
-  4. Main Data Analysis:                               3.479
-  5. Extracting Outputs:                               2.379
+  4. Main Data Analysis:                               3.589
+  5. Extracting Outputs:                               2.616
 
 ============ Summary ============
-  Start Time:                   2023-03-14 22:03:37
-  End Time:                     2023-03-14 22:58:22
-  Wall (Actual) Time:             3284.680
-  System (Processors) Time:       6564.342
+  Start Time:                   2023-03-27 11:05:17
+  End Time:                     2023-03-27 12:03:14
+  Wall (Actual) Time:             3476.379
+  System (Processors) Time:       6951.462
   Units:                        seconds</code></pre>
 </div>
 <div id="monteCarloPowerAnalysis-fitIndicesCutoffs" class="section level3 hasAnchor" number="7.12.11">
