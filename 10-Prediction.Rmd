@@ -6,65 +6,65 @@
 
 ## Overview of Prediction {#overview-prediction}
 
-In psychology, we are often interested in predicting behavior.
+In psychology, we are often interested in predicting behavior.\index{prediction}
 Behavior is complex.
 The same behavior can occur for different reasons.
 Behavior is probabilistically influenced by many processes, including processes internal to the person in addition to external processes.
 Moreover, people's behavior occurs in the context of a dynamic system with nonlinear, probabilistic, and cascading influences that change across time.
-The ever-changing system makes behavior challenging to predict.
+The ever-changing system makes behavior challenging to predict.\index{prediction}
 And, similar to chaos theory, one small change in the system can lead to large differences later on.
 
-Predictions can come in different types.
-Some predictions involve categorical data, whereas other predictions involve continuous data.
-When dealing with categorical data, we can evaluate predictions using a 2x2 table known as a [confusion matrix](#confusionMatrix) (see Figure \@ref(fig:twoByTwoMatrix1)), or with logistic regression models.
-When dealing with continuous data, we can evaluate predictions using multiple regression or similar variants such as [structural equation modeling](#sem) and [mixed models](#mixedModels).
+Predictions can come in different types.\index{prediction}
+Some predictions involve categorical data, whereas other predictions involve continuous data.\index{prediction}
+When dealing with categorical data, we can evaluate predictions using a 2x2 table known as a [confusion matrix](#confusionMatrix) (see Figure \@ref(fig:twoByTwoMatrix1)), or with logistic regression models.\index{confusion matrix}
+When dealing with continuous data, we can evaluate predictions using multiple regression or similar variants such as [structural equation modeling](#sem) and [mixed models](#mixedModels).\index{multiple regression}\index{structural equation modeling}\index{mixed model}
 
-Let's consider a prediction example, assuming the following probabilities:
+Let's consider a prediction example, assuming the following probabilities:\index{prediction}
 
 - The probability of contracting HIV is .3%
 - The probability of a positive test for HIV is 1%
 - The probability of a positive test if you have HIV is 95%
 
-What is the probability of HIV if you have a positive test?
+What is the probability of HIV if you have a positive test?\index{prediction}
 
-As we will see, the probability is: $\frac{95\% \times .3\%}{1\%} = 28.5\%$.
-So based on the above probabilities, if you have a positive test, the probability that you HIV is 28.5%.
+As we will see, the probability is: $\frac{95\% \times .3\%}{1\%} = 28.5\%$.\index{prediction}
+So based on the above probabilities, if you have a positive test, the probability that you HIV is 28.5%.\index{prediction}
 Most people tend to vastly over-estimate the likelihood that the person has HIV in this example.
 Why?
-Because they do not pay enough attention to the base rate.
+Because they do not pay enough attention to the base rate.\index{base rate!neglect}
 
 ### Issues Around Probability {#probability}
 
 #### Types of Probabilities {#probabilityTypes}
 
-It is important to distinguish between different types of probabilities: marginal probabilities, joint probabilities, and conditional probabilities.
+It is important to distinguish between different types of probabilities: marginal probabilities, joint probabilities, and conditional probabilities.\index{probability!types of}\index{probability!marginal}
 
 ##### Base Rate (Marginal Probability) {#baseRate}
 
-A *base rate* is the probability of an event.
-Base rates are marginal probabilities.
-A *marginal probability* is the probability of an event irrespective of the outcome of another variable.
-For instance, we can consider the following marginal probabilities:
+A *base rate* is the probability of an event.\index{base rate}
+Base rates are marginal probabilities.\index{base rate}\index{probability!marginal}
+A *marginal probability* is the probability of an event irrespective of the outcome of another variable.\index{probability!marginal}
+For instance, we can consider the following marginal probabilities:\index{probability!marginal}
 
-$P(C_i)$ is the probability (i.e., base rate) of a classification, $C$, independent of other things.
-A base rate is often used as the "*prior probability*" in a Bayesian model.
-In our example above, $P(C_i)$ is the base rate (i.e., prevalence) of HIV in the population: $P(\text{HIV}) = .3\%$.
-$P(R_i)$ is the probability (base rate) of a response, $R$, independent of other things.
-In the example above, $P(R_i)$ is the base rate of a positive test for HIV: $P(\text{positive test}) = 1\%$.
-The base rate of a positive test is known as the *positivity rate* or [*selection ratio*](#selectionRatio).
+$P(C_i)$ is the probability (i.e., base rate) of a classification, $C$, independent of other things.\index{probability!marginal}
+A base rate is often used as the "*prior probability*" in a Bayesian model.\index{base rate}
+In our example above, $P(C_i)$ is the base rate (i.e., prevalence) of HIV in the population: $P(\text{HIV}) = .3\%$.\index{base rate}
+$P(R_i)$ is the probability (base rate) of a response, $R$, independent of other things.\index{base rate}
+In the example above, $P(R_i)$ is the base rate of a positive test for HIV: $P(\text{positive test}) = 1\%$.\index{base rate}
+The base rate of a positive test is known as the *positivity rate* or [*selection ratio*](#selectionRatio).\index{base rate}\index{selection ratio}\index{positivity rate!zzzzz@\igobble|seealso{selection ratio}}
 
 ##### Joint Probability {#jointProbability}
 
-A *joint probability* is the probability of two (or more) events occurring simultaneously.
-For instance, the probability of events $A$ and $B$ both occurring together is $P(A, B)$.
-A joint probability can be calculated using the [marginal probability](#baseRate) of each event, as in Equation \@ref(eq:jointProbability):
+A *joint probability* is the probability of two (or more) events occurring simultaneously.\index{probability!joint}
+For instance, the probability of events $A$ and $B$ both occurring together is $P(A, B)$.\index{probability!joint}
+A joint probability can be calculated using the [marginal probability](#baseRate) of each event, as in Equation \@ref(eq:jointProbability):\index{probability!joint}\index{base rate}\index{probability!marginal}
 
 $$
 P(A, B) = P(A) \cdot P(B)
 (\#eq:jointProbability)
 $$
 
-Conversely (and rearranging the terms for the calculation of [conditional probability](#conditionalProbability)), a [joint probability](#jointProbability) can also be calculated using the [conditional probability](#conditionalProbability) and [marginal probability](#baseRate), as in Equation \@ref(eq:jointProbability2):
+Conversely (and rearranging the terms for the calculation of [conditional probability](#conditionalProbability)), a [joint probability](#jointProbability) can also be calculated using the [conditional probability](#conditionalProbability) and [marginal probability](#baseRate), as in Equation \@ref(eq:jointProbability2):\index{probability!joint}\index{base rate}\index{probability!marginal}\index{probability!conditional}
 
 $$
 P(A, B) = P(A | B) \cdot P(B)
@@ -73,17 +73,17 @@ $$
 
 ##### Conditional Probability {#conditionalProbability}
 
-A *conditional probability* is the probability of one event occurring given the occurrence of another event.
-Conditional probabilities are written as: $P(A | B)$.
-This is read as the probability that event $A$ occurs given that event $B$ occurred.
-For instance, we can consider the following conditional probabilities:
+A *conditional probability* is the probability of one event occurring given the occurrence of another event.\index{probability!conditional}
+Conditional probabilities are written as: $P(A | B)$.\index{probability!conditional}
+This is read as the probability that event $A$ occurs given that event $B$ occurred.\index{probability!conditional}
+For instance, we can consider the following conditional probabilities:\index{probability!conditional}
 
 $P(C | R)$ is the probability of a classification, $C$, given a response, $R$.
-In other words, $P(C | R)$ is the probability of having HIV given a positive test: $P(\text{HIV} | \text{positive test})$.
+In other words, $P(C | R)$ is the probability of having HIV given a positive test: $P(\text{HIV} | \text{positive test})$.\index{probability!conditional}
 $P(R | C)$ is the probability of a response, $R$, given a classification, $C$.
-In the example above, $P(R | C)$ is the probability of having a positive test given that a person has HIV: $P(\text{positive test} | \text{HIV}) = 95\%$.
+In the example above, $P(R | C)$ is the probability of having a positive test given that a person has HIV: $P(\text{positive test} | \text{HIV}) = 95\%$.\index{probability!conditional}
 
-A conditional probability can be calculated using the [joint probability](#jointProbability) and [marginal probability](#baseRate) (base rate), as in Equation \@ref(eq:conditionalProbability):
+A conditional probability can be calculated using the [joint probability](#jointProbability) and [marginal probability](#baseRate) (base rate), as in Equation \@ref(eq:conditionalProbability):\index{probability!joint}\index{base rate}\index{probability!marginal}\index{probability!conditional}
 
 $$
 P(A | B) = \frac{P(A, B)}{P(B)}
@@ -92,26 +92,26 @@ $$
 
 #### Confusion of the Inverse {#inverseFallacy}
 
-A [conditional probability](#conditionalProbability) is not the same thing as its reverse (or inverse) [conditional probability](#conditionalProbability).
-Unless the [base rate](#baseRate) of the two events ($C$ and $R$) are the same, $P(C | R) \neq P(R | C)$.
-However, people frequently make the mistake of thinking that two inverse [conditional probabilities](#conditionalProbability) are the same.
-This mistake is know as the "confusion of the inverse", or the "inverse fallacy", or the "conditional probability fallacy".
-The confusion of inverse probabilities is the logical error of representative thinking that leads people to assume that the probability of $C$ given $R$ is the same as the probability of $R$ given C, even though this is not true.
-As a few examples to demonstrate the logical fallacy, if 93% of breast cancers occur in high-risk women, this does not mean that 93% of high-risk women will eventually get breast cancer.
-As another example, if 77% of car accidents take place within 15 miles of a driver's home, this does not mean that you will get in an accident 77% of times you drive within 15 miles of your home.
+A [conditional probability](#conditionalProbability) is not the same thing as its reverse (or inverse) [conditional probability](#conditionalProbability).\index{probability!conditional}\index{confusion of the inverse}
+Unless the [base rate](#baseRate) of the two events ($C$ and $R$) are the same, $P(C | R) \neq P(R | C)$.\index{base rate}\index{probability!conditional}\index{confusion of the inverse}
+However, people frequently make the mistake of thinking that two inverse [conditional probabilities](#conditionalProbability) are the same.\index{probability!conditional}\index{confusion of the inverse}
+This mistake is know as the "confusion of the inverse", or the "inverse fallacy", or the "conditional probability fallacy".\index{probability!conditional}\index{confusion of the inverse}
+The confusion of inverse probabilities is the logical error of representative thinking that leads people to assume that the probability of $C$ given $R$ is the same as the probability of $R$ given C, even though this is not true.\index{probability!conditional}\index{confusion of the inverse}
+As a few examples to demonstrate the logical fallacy, if 93% of breast cancers occur in high-risk women, this does not mean that 93% of high-risk women will eventually get breast cancer.\index{confusion of the inverse}
+As another example, if 77% of car accidents take place within 15 miles of a driver's home, this does not mean that you will get in an accident 77% of times you drive within 15 miles of your home.\index{confusion of the inverse}
 
-Which car is the most frequently stolen?
-It is often the Honda Accord or Honda Civic—probably because they are among the most popular/commonly available cars.
-The probability that the car is a Honda Accord given that a car was stolen ($p(\text{Honda Accord } | \text{ Stolen})$) is what the media reports and what the police care about.
+Which car is the most frequently stolen?\index{confusion of the inverse}
+It is often the Honda Accord or Honda Civic—probably because they are among the most popular/commonly available cars.\index{confusion of the inverse}
+The probability that the car is a Honda Accord given that a car was stolen ($p(\text{Honda Accord } | \text{ Stolen})$) is what the media reports and what the police care about.\index{confusion of the inverse}
 However, that is not what buyers and car insurance companies should care about.
-Instead, they care about the probability that the car will be stolen given that it is a Honda Accord ($p(\text{Stolen } | \text{ Honda Accord})$).
+Instead, they care about the probability that the car will be stolen given that it is a Honda Accord ($p(\text{Stolen } | \text{ Honda Accord})$).\index{confusion of the inverse}
 
 #### Bayes' Theorem {#bayesTheorem}
 
-An alternative way of calculating a [conditional probability](#conditionalProbability) is using the inverse [conditional probability](#conditionalProbability) (instead of the [joint probability](#jointProbability)).
-This is known as Bayes' theorem.
-Bayes' theorem can help us calculate a [conditional probability](#conditionalProbability) of some classification, $C$, given some response, $R$, if we know the inverse [conditional probability](#conditionalProbability) and the [base rate](#baseRate) (marginal probability) of each.
-Bayes' theorem is in Equation \@ref(eq:bayes1):
+An alternative way of calculating a [conditional probability](#conditionalProbability) is using the inverse [conditional probability](#conditionalProbability) (instead of the [joint probability](#jointProbability)).\index{probability!conditional}\index{Bayes' theorem}
+This is known as Bayes' theorem.\index{Bayes' theorem}
+Bayes' theorem can help us calculate a [conditional probability](#conditionalProbability) of some classification, $C$, given some response, $R$, if we know the inverse [conditional probability](#conditionalProbability) and the [base rate](#baseRate) (marginal probability) of each.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+Bayes' theorem is in Equation \@ref(eq:bayes1):\index{Bayes' theorem}
 
 $$
 \begin{aligned}
@@ -121,22 +121,22 @@ $$
 (\#eq:bayes1)
 $$
 
-Or, equivalently (rearranging the terms):
+Or, equivalently (rearranging the terms):\index{Bayes' theorem}
 
 $$
 \frac{P(C | R)}{P(R | C)} = \frac{P(C_i)}{P(R_i)}
 (\#eq:bayes2)
 $$
 
-Or, equivalently (rearranging the terms):
+Or, equivalently (rearranging the terms):\index{Bayes' theorem}
 
 $$
 \frac{P(C | R)}{P(C_i)} = \frac{P(R | C)}{P(R_i)}
 (\#eq:bayes3)
 $$
 
-In the HIV example above, we can calculate the [conditional probability](#conditionalProbability) of HIV given a positive test using three terms: the [conditional probability](#conditionalProbability) of a positive test given HIV (i.e., the sensitivity of the test), the [base rate](#baseRate) of HIV, and the [base rate](#baseRate) of a positive test for HIV.
-The [conditional probability](#conditionalProbability) of HIV given a positive test is in Equation \@ref(eq:hivExample1):
+In the HIV example above, we can calculate the [conditional probability](#conditionalProbability) of HIV given a positive test using three terms: the [conditional probability](#conditionalProbability) of a positive test given HIV (i.e., the sensitivity of the test), the [base rate](#baseRate) of HIV, and the [base rate](#baseRate) of a positive test for HIV.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{sensitivity}
+The [conditional probability](#conditionalProbability) of HIV given a positive test is in Equation \@ref(eq:hivExample1):\index{Bayes' theorem}\index{probability!conditional}
 
 $$
 \begin{aligned}
@@ -149,7 +149,7 @@ $$
 (\#eq:hivExample1)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}
+The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}\index{Bayes' theorem}
 
 ```{r, eval = FALSE, class.source = "fold-hide"}
 pAgivenB <- function(pBgivenA, pA, pB){
@@ -163,11 +163,11 @@ pAgivenB <- function(pBgivenA, pA, pB){
 pAgivenB(pBgivenA = .95, pA = .003, pB = .01)
 ```
 
-Thus, assuming the probabilities in the example above, the [conditional probability](#conditionalProbability) of having HIV if a person has a positive test is 28.5%.
-Given a positive test, chances are higher than not that the person does not have HIV.
+Thus, assuming the probabilities in the example above, the [conditional probability](#conditionalProbability) of having HIV if a person has a positive test is 28.5%.\index{Bayes' theorem}\index{probability!conditional}
+Given a positive test, chances are higher than not that the person does not have HIV.\index{Bayes' theorem}
 
-Bayes' theorem can be depicted visually [@BallesterosPerez2018].
-If we have 100,000 people in our population, we would be able to fill out a 2-by-2 [confusion matrix](#confusionMatrix), as depicted in Figure \@ref(fig:bayesTheorem2x2).
+Bayes' theorem can be depicted visually [@BallesterosPerez2018].\index{Bayes' theorem}
+If we have 100,000 people in our population, we would be able to fill out a 2-by-2 [confusion matrix](#confusionMatrix), as depicted in Figure \@ref(fig:bayesTheorem2x2).\index{Bayes' theorem}\index{confusion matrix}
 
 (ref:bayesTheorem2x2) [Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix.
 
@@ -175,17 +175,17 @@ If we have 100,000 people in our population, we would be able to fill out a 2-by
 knitr::include_graphics("./Images/bayesTheorem2x2.png")
 ```
 
-We know that .3% of the population contracts HIV, so 300 people in the population of 100,000 would contract HIV.
-Therefore, we put 300 in the marginal sum of those with HIV ($.003 \times 100,000 = 300$), i.e., the [base rate](#baseRate) of HIV.
-That means 99,700 people do not contract HIV ($100,000 - 300 = 99,700$).
-We know that 1% of the population tests positive for HIV, so we put 1,000 in the marginal sum of those who test positive $.01 \times 100,000 = 1,000$, i.e., the [marginal probability](#baseRate) of a positive test (the [selection ratio](#selectionRatio)).
-That means 99,000 people test negative for HIV ($100,000 - 1,000 = 99,000$).
-We also know that 95% of those who have HIV test positive for HIV.
-Three hundred people have HIV, so 95% of them (i.e., 285 people; $.95 \times 300 = 285$) tested positive for HIV ([true positives](#truePositive)).
-Because we know that 300 people have HIV and that 285 of those with HIV tested positive, that means that 15 people with HIV tested negative ($300 - 15 = 285$; [false negatives](#falseNegative)).
-We know that 1,000 people tested positive for HIV, and 285 with HIV tested positive, so that means that 715 people without HIV tested positive ($1,000 - 285 = 715$; [false positives](#falsePositive)).
-We know that 99,000 people tested negative for HIV, and 15 with HIV tested negative, so that means that 98,985 people without HIV tested negative ($99,000 - 15 = 98,985$; [true negatives](#trueNegative)).
-So, to answer the question of what is the probability of having HIV if you have a positive test, we divide the number of people with HIV who had a positive test (285) by the total number of people who had a positive test (1000), which leads to a probability of 28.5%.
+We know that .3% of the population contracts HIV, so 300 people in the population of 100,000 would contract HIV.\index{Bayes' theorem}
+Therefore, we put 300 in the marginal sum of those with HIV ($.003 \times 100,000 = 300$), i.e., the [base rate](#baseRate) of HIV.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+That means 99,700 people do not contract HIV ($100,000 - 300 = 99,700$).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+We know that 1% of the population tests positive for HIV, so we put 1,000 in the marginal sum of those who test positive $.01 \times 100,000 = 1,000$, i.e., the [marginal probability](#baseRate) of a positive test (the [selection ratio](#selectionRatio)).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{selection ratio}
+That means 99,000 people test negative for HIV ($100,000 - 1,000 = 99,000$).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+We also know that 95% of those who have HIV test positive for HIV.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+Three hundred people have HIV, so 95% of them (i.e., 285 people; $.95 \times 300 = 285$) tested positive for HIV ([true positives](#truePositive)).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{true positive}
+Because we know that 300 people have HIV and that 285 of those with HIV tested positive, that means that 15 people with HIV tested negative ($300 - 15 = 285$; [false negatives](#falseNegative)).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{false negative}
+We know that 1,000 people tested positive for HIV, and 285 with HIV tested positive, so that means that 715 people without HIV tested positive ($1,000 - 285 = 715$; [false positives](#falsePositive)).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{false positive}
+We know that 99,000 people tested negative for HIV, and 15 with HIV tested negative, so that means that 98,985 people without HIV tested negative ($99,000 - 15 = 98,985$; [true negatives](#trueNegative)).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{true negative}
+So, to answer the question of what is the probability of having HIV if you have a positive test, we divide the number of people with HIV who had a positive test (285) by the total number of people who had a positive test (1000), which leads to a probability of 28.5%.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
 
 This can be depicted visually in Figures \@ref(fig:bayesTheorem1) and \@ref(fig:bayesTheorem2).^[Please note that the areas in the figure are not drawn to scale.
 Otherwise, some regions would be too small to include text.]
@@ -203,12 +203,12 @@ knitr::include_graphics("./Images/bayesTheorem2.png")
 ```
 
 Now let's see what happens if the person tests positive a second time.
-We would revise our "[prior probability](#baseRate)" for HIV from the general prevalence in the population (0.3%) to be the "posterior probability" of HIV given a first positive test (28.5%).
-This is known as [*Bayesian updating*](#bayesianUpdating).
-We would also update the "evidence" to be the [marginal probability](#baseRate) of getting a second positive test.
+We would revise our "[prior probability](#baseRate)" for HIV from the general prevalence in the population (0.3%) to be the "posterior probability" of HIV given a first positive test (28.5%).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{probability!prior}\index{probability!posterior}\index{Bayesian updating}
+This is known as [*Bayesian updating*](#bayesianUpdating).\index{Bayesian updating}
+We would also update the "evidence" to be the [marginal probability](#baseRate) of getting a second positive test.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
 
-If we do not know a [marginal probability](#baseRate) (i.e., base rate) of an event (e.g., getting a second positive test), we can calculate a [marginal probability](#baseRate) with the *law of total probability* using [conditional probabilities](#conditionalProbability) and the [marginal probability](#baseRate) of another event (e.g., having HIV).
-According to the law of total probability, the probability of getting a positive test is the probability that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity)) times the base rate of HIV plus the probability that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate)) times the [base rate](#baseRate) of not having HIV, as in Equation \@ref(eq:lawOfTotalProbability):
+If we do not know a [marginal probability](#baseRate) (i.e., base rate) of an event (e.g., getting a second positive test), we can calculate a [marginal probability](#baseRate) with the *law of total probability* using [conditional probabilities](#conditionalProbability) and the [marginal probability](#baseRate) of another event (e.g., having HIV).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{law of total probability}
+According to the law of total probability, the probability of getting a positive test is the probability that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity)) times the base rate of HIV plus the probability that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate)) times the [base rate](#baseRate) of not having HIV, as in Equation \@ref(eq:lawOfTotalProbability):\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{law of total probability}\index{sensitivity}\index{false positive rate}
 
 $$
 \begin{aligned}
@@ -219,7 +219,7 @@ $$
 (\#eq:lawOfTotalProbability)
 $$
 
-In this case, we know the [marginal probability](#baseRate) ($P(R_i)$), and we can use that to solve for the unknown [conditional probability](#conditionalProbability) that reflects the [false positive rate](#falsePositiveRate) ($P(R | \text{not } C)$), as in Equation \@ref(eq:conditionalProbabilityRevised):
+In this case, we know the [marginal probability](#baseRate) ($P(R_i)$), and we can use that to solve for the unknown [conditional probability](#conditionalProbability) that reflects the [false positive rate](#falsePositiveRate) ($P(R | \text{not } C)$), as in Equation \@ref(eq:conditionalProbabilityRevised):\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{false positive rate}
 
 $$
 \scriptsize
@@ -235,7 +235,7 @@ $$
 (\#eq:conditionalProbabilityRevised)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `pBgivenNotA()` function that estimates the probability of one event, $B$, given that another event, $A$, did not occur.\index{petersenlab}
+The `petersenlab` package [@R-petersenlab] contains the `pBgivenNotA()` function that estimates the probability of one event, $B$, given that another event, $A$, did not occur.\index{petersenlab}\index{Bayes' theorem}
 
 ```{r, eval = FALSE, class.source = "fold-hide"}
 pBgivenNotA <- function(pBgivenA, pA, pB){
@@ -249,8 +249,8 @@ pBgivenNotA <- function(pBgivenA, pA, pB){
 pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01)
 ```
 
-With this [conditional probability](#conditionalProbability) ($P(R | \text{not } C)$), the updated [marginal probability](#baseRate) of having HIV ($P(C_i)$), and the updated marginal probability of not having HIV ($P(\text{not } C_i)$), we can now calculate an updated estimate of the [marginal probability](#baseRate) of getting a second positive test.
-The probability of getting a second positive test is the probability that a person with HIV gets a second positive test (i.e., [sensitivity](#sensitivity)) times the updated probability of HIV plus the probability that a person without HIV gets a second positive test (i.e., [false positive rate](#falsePositiveRate)) times the updated probability of not having HIV, as in Equation \@ref(eq:baseRateUpdated):
+With this [conditional probability](#conditionalProbability) ($P(R | \text{not } C)$), the updated [marginal probability](#baseRate) of having HIV ($P(C_i)$), and the updated marginal probability of not having HIV ($P(\text{not } C_i)$), we can now calculate an updated estimate of the [marginal probability](#baseRate) of getting a second positive test.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{false positive rate}
+The probability of getting a second positive test is the probability that a person with HIV gets a second positive test (i.e., [sensitivity](#sensitivity)) times the updated probability of HIV plus the probability that a person without HIV gets a second positive test (i.e., [false positive rate](#falsePositiveRate)) times the updated probability of not having HIV, as in Equation \@ref(eq:baseRateUpdated):\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{sensitivity}\index{false positive rate}
 
 $$
 \begin{aligned}
@@ -261,7 +261,7 @@ $$
 (\#eq:baseRateUpdated)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `pB()` function that estimates the marginal probability of one event, $B$.\index{petersenlab}
+The `petersenlab` package [@R-petersenlab] contains the `pB()` function that estimates the marginal probability of one event, $B$.\index{petersenlab}\index{Bayes' theorem}
 
 ```{r, eval = FALSE, class.source = "fold-hide"}
 pB <- function(pBgivenA, pA, pBgivenNotA){
@@ -286,7 +286,7 @@ pB(
     pB = .01))
 ```
 
-We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the [errors](#measurementError) of each test are independent, i.e., uncorrelated), as in Equation \@ref(eq:baseRateUpdated2):
+We then substitute the updated [marginal probability](#baseRate) of HIV ($P(C_i)$) and the updated [marginal probability](#baseRate) of getting a second positive test ($P(R_i)$) into Bayes' theorem to get the probability that the person has HIV if they have a second positive test (assuming the [errors](#measurementError) of each test are independent, i.e., uncorrelated), as in Equation \@ref(eq:baseRateUpdated2):\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
 
 $$
 \begin{aligned}
@@ -299,7 +299,7 @@ $$
 (\#eq:baseRateUpdated2)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}
+The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}\index{Bayes' theorem}
 
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .285, pB = .2758776)
@@ -322,20 +322,20 @@ pAgivenB(
       pB = .01)))
 ```
 
-Thus, a second positive test greatly increases the posterior probability that the person has HIV from 28.5% to over 98%.
+Thus, a second positive test greatly increases the posterior probability that the person has HIV from 28.5% to over 98%.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{probability!posterior}
 
-As seen in the rearranged formula in Equation \@ref(eq:bayes2), the ratio of the [conditional probabilities](#conditionalProbability) is equal to the ratio of the [base rates](#baseRate).
-Thus, it is important to consider [base rates](#baseRate).
-People have a strong tendency to ignore (or give insufficient weight to) [base rates](#baseRate) when making predictions.
-The failure to consider the [base rate](#baseRate) when making predictions when given specific information about a case, is a cognitive bias known as the [base-rate](#baseRate) fallacy or as [base rate](#baseRate) neglect.
-For example, people tend to say that the probability of a rare event is more likely than it actually is given specific information.
+As seen in the rearranged formula in Equation \@ref(eq:bayes2), the ratio of the [conditional probabilities](#conditionalProbability) is equal to the ratio of the [base rates](#baseRate).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+Thus, it is important to consider [base rates](#baseRate).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+People have a strong tendency to ignore (or give insufficient weight to) [base rates](#baseRate) when making predictions.\index{base rate!neglect}
+The failure to consider the [base rate](#baseRate) when making predictions when given specific information about a case, is a cognitive bias known as the [base-rate](#baseRate) fallacy or as [base rate](#baseRate) neglect.\index{base rate!neglect}
+For example, people tend to say that the probability of a rare event is more likely than it actually is given specific information.\index{base rate!neglect}
 
-As seen in the rearranged formula in Equation \@ref(eq:bayes3), the inverse [conditional probabilities](#conditionalProbability) ($P(C | R)$ and $P(R | C)$) are not equal unless the [base rates](#baseRate) of $C$ and $R$ are the same.
-If the [base rates](#baseRate) are not equal, we are making at least some prediction errors.
-If $P(C_i) > P(R_i)$, our predictions must include some [false negatives](#falseNegative).
-If $P(R_i) > P(C_i)$, our predictions must include some [false positives](#falsePositive).
+As seen in the rearranged formula in Equation \@ref(eq:bayes3), the inverse [conditional probabilities](#conditionalProbability) ($P(C | R)$ and $P(R | C)$) are not equal unless the [base rates](#baseRate) of $C$ and $R$ are the same.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+If the [base rates](#baseRate) are not equal, we are making at least some prediction errors.\index{base rate}\index{prediction error}
+If $P(C_i) > P(R_i)$, our predictions must include some [false negatives](#falseNegative).\index{base rate}\index{false negative}
+If $P(R_i) > P(C_i)$, our predictions must include some [false positives](#falsePositive).\index{base rate}\index{false positive}
 
-Using the law of total probability, we can substitute the calculation of the [marginal probability](#baseRate) ($P(R_i)$) into Bayes' theorem to get an alternative formulation of Bayes' theorem, as in Equation \@ref(eq:baseRateUpdated3):
+Using the law of total probability, we can substitute the calculation of the [marginal probability](#baseRate) ($P(R_i)$) into Bayes' theorem to get an alternative formulation of Bayes' theorem, as in Equation \@ref(eq:baseRateUpdated3):\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{law of total probability}
 
 $$
 \begin{aligned}
@@ -346,13 +346,13 @@ $$
 (\#eq:baseRateUpdated3)
 $$
 
-Instead of using [marginal probability](#baseRate) ([base rate](#baseRate)) of $R$, as in the original formulation of Bayes' theorem, it uses the [conditional probability](#conditionalProbability), $P(R|\text{not } C)$.
-Thus, it uses three terms: two [conditional probabilities](#conditionalProbability)—$P(R|C)$ and $P(R|\text{not } C)$—and one [marginal probability](#baseRate), $P(C_i)$.
-This alternative formulation of Bayes' theorem can be used to calculate [positive predictive value](#ppv), based on [sensitivity](#sensitivity), [specificity](#specificity), and the [base rate](#baseRate), as presented in Equation \@ref(eq:positivePredictiveValue).
+Instead of using [marginal probability](#baseRate) ([base rate](#baseRate)) of $R$, as in the original formulation of Bayes' theorem, it uses the [conditional probability](#conditionalProbability), $P(R|\text{not } C)$.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+Thus, it uses three terms: two [conditional probabilities](#conditionalProbability)—$P(R|C)$ and $P(R|\text{not } C)$—and one [marginal probability](#baseRate), $P(C_i)$.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}
+This alternative formulation of Bayes' theorem can be used to calculate [positive predictive value](#ppv), based on [sensitivity](#sensitivity), [specificity](#specificity), and the [base rate](#baseRate), as presented in Equation \@ref(eq:positivePredictiveValue).\index{Bayes' theorem}\index{positive predictive value}\index{sensitivity}\index{base rate}
 
-Let us see how the alternative formulation of Bayes' theorem applies to the HIV example above.
-We can calculate the probability of HIV given a positive test using three terms: the [conditional probability](#conditionalProbability) that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity)), the [conditional probability](#conditionalProbability) that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate)), and the [base rate](#baseRate) of HIV.
-Using the $P(R|\text{not } C)$ calculated in Equation \@ref(eq:conditionalProbabilityRevised), the [conditional probability](#conditionalProbability) of HIV given a single positive test is in Equation \@ref(eq:bayes4):
+Let us see how the alternative formulation of Bayes' theorem applies to the HIV example above.\index{Bayes' theorem}
+We can calculate the probability of HIV given a positive test using three terms: the [conditional probability](#conditionalProbability) that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity)), the [conditional probability](#conditionalProbability) that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate)), and the [base rate](#baseRate) of HIV.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{sensitivity}\index{false positive rate}
+Using the $P(R|\text{not } C)$ calculated in Equation \@ref(eq:conditionalProbabilityRevised), the [conditional probability](#conditionalProbability) of HIV given a single positive test is in Equation \@ref(eq:bayes4):\index{Bayes' theorem}\index{probability!conditional}
 
 $$
 \small
@@ -388,7 +388,7 @@ pAgivenBalternative(
     pB = .01))
 ```
 
-The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}
+The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}\index{Bayes' theorem}
 
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
@@ -400,10 +400,10 @@ pAgivenB(pBgivenA = .95,
            pB = .01))
 ```
 
-To calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test, we update our priors because the person has now tested positive for HIV.
-We update the [prior probability](#baseRate) of HIV ($P(C_i)$) based on the posterior probability of HIV after a positive test ($P(C | R)$) that we calculated above.
-We can calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test using three terms: the [conditional probability](#conditionalProbability) that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity); which stays the same), the [conditional probability](#conditionalProbability) that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate); which stays the same), and the updated [marginal probability](#baseRate) of HIV.
-The [conditional probability](#conditionalProbability) of HIV given a second positive test is in Equation \@ref(eq:baseRateUpdated4):
+To calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test, we update our priors because the person has now tested positive for HIV.\index{Bayes' theorem}\index{probability!conditional}\index{probability!prior}
+We update the [prior probability](#baseRate) of HIV ($P(C_i)$) based on the posterior probability of HIV after a positive test ($P(C | R)$) that we calculated above.\index{Bayes' theorem}\index{probability!conditional}\index{probability!prior}\index{probability!posterior}
+We can calculate the [conditional probability](#conditionalProbability) of HIV given a second positive test using three terms: the [conditional probability](#conditionalProbability) that a person with HIV gets a positive test (i.e., [sensitivity](#sensitivity); which stays the same), the [conditional probability](#conditionalProbability) that a person without HIV gets a positive test (i.e., [false positive rate](#falsePositiveRate); which stays the same), and the updated [marginal probability](#baseRate) of HIV.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{sensitivity}\index{false positive rate}
+The [conditional probability](#conditionalProbability) of HIV given a second positive test is in Equation \@ref(eq:baseRateUpdated4):\index{Bayes' theorem}\index{probability!conditional}
 
 $$
 \scriptsize
@@ -416,7 +416,7 @@ $$
 (\#eq:baseRateUpdated4)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}
+The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab}\index{Bayes' theorem}
 
 ```{r}
 pAgivenBalternative(
@@ -446,7 +446,7 @@ pAgivenB(
     pB = .01))
 ```
 
-If we want to compare the relative probability of two outcomes, we can use the odds form of Bayes' theorem, as in Equation \@ref(eq:bayes5):
+If we want to compare the relative probability of two outcomes, we can use the odds form of Bayes' theorem, as in Equation \@ref(eq:bayes5):\index{Bayes' theorem}
 
 $$
 \begin{aligned}
@@ -460,8 +460,8 @@ $$
 (\#eq:bayes5)
 $$
 
-In sum, the [marginal probability](#baseRate), including the [prior probability](#baseRate) or [base rate](#baseRate), should be weighed heavily in predictions unless there are sufficient data to indicate otherwise, i.e., to update the posterior probability based on new evidence.
-Bayes' theorem provides a powerful tool to anchor predictions to the [base rate](#baseRate) unless sufficient evidence changes the posterior probability (by updating the evidence and [prior probability](#baseRate)).
+In sum, the [marginal probability](#baseRate), including the [prior probability](#baseRate) or [base rate](#baseRate), should be weighed heavily in predictions unless there are sufficient data to indicate otherwise, i.e., to update the posterior probability based on new evidence.\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{probability!prior}\index{probability!posterior}
+Bayes' theorem provides a powerful tool to anchor predictions to the [base rate](#baseRate) unless sufficient evidence changes the posterior probability (by updating the evidence and [prior probability](#baseRate)).\index{Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{probability!prior}\index{probability!posterior}
 
 ### Prediction Accuracy {#predictionAccuracy-overview}
 
@@ -469,18 +469,18 @@ Bayes' theorem provides a powerful tool to anchor predictions to the [base rate]
 
 To consider how we can evaluate the accuracy of predictions, consider an example adapted from @Meehl1955.
 The military conducts a test of its prospective members to screen out applicants who would likely fail basic training.
-To evaluate the accuracy of our predictions using the test, we can examine a [confusion matrix](#confusionMatrix).
-A [confusion matrix](#confusionMatrix) is a matrix that presents the predicted outcome on one dimension and the actual outcome (truth) on the other dimension.
-If the predictions and outcomes are dichotomous, the [confusion matrix](#confusionMatrix) is a 2x2 matrix with two rows and two columns that represent four possible predicted-actual combinations (decision outcomes): [true positives](#truePositive) (TP), [true negatives](#trueNegative) (TN), [false positives](#falsePositive) (FP), and [false negatives](#falseNegative) (FN).
+To evaluate the accuracy of our predictions using the test, we can examine a [confusion matrix](#confusionMatrix).\index{confusion matrix}
+A [confusion matrix](#confusionMatrix) is a matrix that presents the predicted outcome on one dimension and the actual outcome (truth) on the other dimension.\index{confusion matrix}
+If the predictions and outcomes are dichotomous, the [confusion matrix](#confusionMatrix) is a 2x2 matrix with two rows and two columns that represent four possible predicted-actual combinations (decision outcomes): [true positives](#truePositive) (TP), [true negatives](#trueNegative) (TN), [false positives](#falsePositive) (FP), and [false negatives](#falseNegative) (FN).\index{confusion matrix}\index{true positive}\index{true negative}\index{false positive}\index{false negative}
 
-When discussing the four decision outcomes, "true" means an accurate judgment, whereas "false" means an inaccurate judgment.
-"Positive" means that the judgment was that the person has the characteristic of interest, whereas "negative" means that the judgment was that the person does not have the characteristic of interest.
-A *true positive* is a correct judgment (or prediction) where the judgment was that the person has (or will have) the characteristic of interest, and, in truth, they actually have (or will have) the characteristic.
-A *true negative* is a correct judgment (or prediction) where the judgment was that the person does not have (or will not have) the characteristic of interest, and, in truth, they actually do not have (or will not have) the characteristic.
-A *false positive* is an incorrect judgment (or prediction) where the judgment was that the person has (or will have) the characteristic of interest, and, in truth, they actually do not have (or will not have) the characteristic.
-A *false negative* is an incorrect judgment (or prediction) where the judgment was that the person does not have (or will not have) the characteristic of interest, and, in truth, they actually do have (or will have) the characteristic.
+When discussing the four decision outcomes, "true" means an accurate judgment, whereas "false" means an inaccurate judgment.\index{confusion matrix}\index{true positive}\index{true negative}\index{false positive}\index{false negative}
+"Positive" means that the judgment was that the person has the characteristic of interest, whereas "negative" means that the judgment was that the person does not have the characteristic of interest.\index{confusion matrix}\index{true positive}\index{true negative}\index{false positive}\index{false negative}
+A *true positive* is a correct judgment (or prediction) where the judgment was that the person has (or will have) the characteristic of interest, and, in truth, they actually have (or will have) the characteristic.\index{confusion matrix}\index{true positive}
+A *true negative* is a correct judgment (or prediction) where the judgment was that the person does not have (or will not have) the characteristic of interest, and, in truth, they actually do not have (or will not have) the characteristic.\index{confusion matrix}\index{true negative}
+A *false positive* is an incorrect judgment (or prediction) where the judgment was that the person has (or will have) the characteristic of interest, and, in truth, they actually do not have (or will not have) the characteristic.\index{confusion matrix}\index{false positive}
+A *false negative* is an incorrect judgment (or prediction) where the judgment was that the person does not have (or will not have) the characteristic of interest, and, in truth, they actually do have (or will have) the characteristic.\index{confusion matrix}\index{false negative}
 
-An example of a [confusion matrix](#confusionMatrix) is in Figure \@ref(fig:twoByTwoMatrix1).
+An example of a [confusion matrix](#confusionMatrix) is in Figure \@ref(fig:twoByTwoMatrix1).\index{confusion matrix}
 
 (ref:twoByTwoMatrix1) [Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix.
 
@@ -488,7 +488,7 @@ An example of a [confusion matrix](#confusionMatrix) is in Figure \@ref(fig:twoB
 knitr::include_graphics("./Images/2x2-Matrix_2a.png")
 ```
 
-With the information in the [confusion matrix](#confusionMatrix), we can calculate the marginal sums and the proportion of people in each cell (in parentheses), as depicted in Figure \@ref(fig:twoByTwoMatrix2).
+With the information in the [confusion matrix](#confusionMatrix), we can calculate the marginal sums and the proportion of people in each cell (in parentheses), as depicted in Figure \@ref(fig:twoByTwoMatrix2).\index{confusion matrix}
 
 (ref:twoByTwoMatrix2) [Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix With Marginal Sums.
 
@@ -496,10 +496,10 @@ With the information in the [confusion matrix](#confusionMatrix), we can calcula
 knitr::include_graphics("./Images/2x2-Matrix_2b.png")
 ```
 
-That is, we can sum across the rows and columns to identify how many people actually showed poor adjustment ($n = 100$) versus good adjustment ($n = 1,900$), and how many people were selected to reject ($n = 508$) versus retain ($n = 1,492$).
-If we sum the column of predicted marginal sums ($508 + 1,492$) or the row of actual marginal sums ($100 + 1,900$), we get the total number of people ($N = 2,000$).
+That is, we can sum across the rows and columns to identify how many people actually showed poor adjustment ($n = 100$) versus good adjustment ($n = 1,900$), and how many people were selected to reject ($n = 508$) versus retain ($n = 1,492$).\index{confusion matrix}
+If we sum the column of predicted marginal sums ($508 + 1,492$) or the row of actual marginal sums ($100 + 1,900$), we get the total number of people ($N = 2,000$).\index{confusion matrix}
 
-Based on the marginal sums, we can compute the [marginal probabilities](#baseRate), as depicted in Figure \@ref(fig:twoByTwoMatrix3).
+Based on the marginal sums, we can compute the [marginal probabilities](#baseRate), as depicted in Figure \@ref(fig:twoByTwoMatrix3).\index{confusion matrix}\index{probability!marginal}\index{base rate}
 
 (ref:twoByTwoMatrix3) [Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix With Marginal Sums And Marginal Probabilities.
 
@@ -507,42 +507,42 @@ Based on the marginal sums, we can compute the [marginal probabilities](#baseRat
 knitr::include_graphics("./Images/2x2-Matrix_2c.png")
 ```
 
-The [marginal probability](#baseRate) of the person having the characteristic of interest (i.e., showing poor adjustment) is called the [*base rate*](#baseRate) (BR).
-That is, the [base rate](#baseRate) is the proportion of people who have the characteristic.
-It is calculated by dividing the number of people with poor adjustment ($n = 100$) by the total number of people ($N = 2,000$): $BR = \frac{FN + TP}{N}$.
+The [marginal probability](#baseRate) of the person having the characteristic of interest (i.e., showing poor adjustment) is called the [*base rate*](#baseRate) (BR).\index{confusion matrix}\index{probability!marginal}\index{base rate}
+That is, the [base rate](#baseRate) is the proportion of people who have the characteristic.\index{base rate}
+It is calculated by dividing the number of people with poor adjustment ($n = 100$) by the total number of people ($N = 2,000$): $BR = \frac{FN + TP}{N}$.\index{confusion matrix}\index{probability!marginal}\index{base rate}
 Here, the [base rate](#baseRate) reflects the prevalence of poor adjustment.
-In this case, the [base rate](#baseRate) is .05, so there is a 5% chance that an applicant will be poorly adjusted.
-The [marginal probability](#baseRate) of good adjustment is equal to 1 minus the [base rate](#baseRate) of poor adjustment.
+In this case, the [base rate](#baseRate) is .05, so there is a 5% chance that an applicant will be poorly adjusted.\index{confusion matrix}\index{probability!marginal}\index{base rate}
+The [marginal probability](#baseRate) of good adjustment is equal to 1 minus the [base rate](#baseRate) of poor adjustment.\index{confusion matrix}\index{probability!marginal}\index{base rate}
 
-The [marginal probability](#baseRate) of predicting that a person has the characteristic (i.e., rejecting a person) is called the [*selection ratio*](#selectionRatio) (SR).
-The [selection ratio](#selectionRatio) is the proportion of people who will be selected (in this case, rejected rather than retained); i.e., the proportion of people who are identified as having the characteristic.
-The [selection ratio](#selectionRatio) is calculated by dividing the number of people selected to reject ($n = 508$) by the total number of people ($N = 2,000$): $SR = \frac{TP + FP}{N}$.
-In this case, the [selection ratio](#selectionRatio) is .25, so 25% of people are rejected.
-The [marginal probability](#baseRate) of not selecting someone to reject (i.e., the [marginal probability](#baseRate) of retaining) is equal to 1 minus the [selection ratio](#selectionRatio).
+The [marginal probability](#baseRate) of predicting that a person has the characteristic (i.e., rejecting a person) is called the [*selection ratio*](#selectionRatio) (SR).\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
+The [selection ratio](#selectionRatio) is the proportion of people who will be selected (in this case, rejected rather than retained); i.e., the proportion of people who are identified as having the characteristic.\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
+The [selection ratio](#selectionRatio) is calculated by dividing the number of people selected to reject ($n = 508$) by the total number of people ($N = 2,000$): $SR = \frac{TP + FP}{N}$.\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
+In this case, the [selection ratio](#selectionRatio) is .25, so 25% of people are rejected.\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
+The [marginal probability](#baseRate) of not selecting someone to reject (i.e., the [marginal probability](#baseRate) of retaining) is equal to 1 minus the [selection ratio](#selectionRatio).\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
 
-The [selection ratio](#selectionRatio) might be something that the test dictates according to its cutoff score.
-Or, the [selection ratio](#selectionRatio) might be imposed by external factors that place limits on how many people you can assign a positive test value.
-For instance, when deciding whether to treat a client, the [selection ratio](#selectionRatio) may depend on how many therapists are available and how many cases can be treated.
+The [selection ratio](#selectionRatio) might be something that the test dictates according to its cutoff score.\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
+Or, the [selection ratio](#selectionRatio) might be imposed by external factors that place limits on how many people you can assign a positive test value.\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
+For instance, when deciding whether to treat a client, the [selection ratio](#selectionRatio) may depend on how many therapists are available and how many cases can be treated.\index{confusion matrix}\index{probability!marginal}\index{selection ratio}
 
 #### Percent Accuracy {#percentAccuracy-overview}
 
-Based on the [confusion matrix](#confusionMatrix), we can calculate the prediction accuracy based on the [percent accuracy](#percentAccuracy) of the predictions.
-The [percent accuracy](#percentAccuracy) is the number of correct predictions divided by the total number of predictions, and multiplied by 100.
-In the context of a [confusion matrix](#confusionMatrix), this is calculated as: $100\% \times \frac{\text{TP} + \text{TN}}{N}$.
-In this case, our [percent accuracy](#percentAccuracy) was 78%—that is, 78% of our predictions were accurate, and 22% of our predictions were inaccurate.
+Based on the [confusion matrix](#confusionMatrix), we can calculate the prediction accuracy based on the [percent accuracy](#percentAccuracy) of the predictions.\index{confusion matrix}\index{percent accuracy}
+The [percent accuracy](#percentAccuracy) is the number of correct predictions divided by the total number of predictions, and multiplied by 100.\index{confusion matrix}\index{percent accuracy}
+In the context of a [confusion matrix](#confusionMatrix), this is calculated as: $100\% \times \frac{\text{TP} + \text{TN}}{N}$.\index{confusion matrix}\index{percent accuracy}
+In this case, our [percent accuracy](#percentAccuracy) was 78%—that is, 78% of our predictions were accurate, and 22% of our predictions were inaccurate.\index{confusion matrix}\index{percent accuracy}
 
 #### Percent Accuracy by Chance {#accuracyByChance}
 
-78% sounds pretty accurate.
-And it is much higher than 50%, so we are doing a pretty good job, right?
-Well, it is important to compare our accuracy to what accuracy we would expect to get by chance alone, if predictions were made by a random process rather than using a test's scores.
-Our [selection ratio](#selectionRatio) was 25.4%.
-How accurate would we be if we randomly selected 25.4% of people to reject?
-To determine what accuracy we could get by chance alone given the [selection ratio](#selectionRatio) and the base rate, we can calculate the chance probability of [true positives](#truePositive) and the chance probability of [true negatives](#trueNegative).
-The probability of a given cell in the [confusion matrix](#confusionMatrix) is a [joint probability](#jointProbability)—the probability of two events occurring simultaneously.
-To calculate a [joint probability](#jointProbability), we multiply the probability of each event.
+78% sounds pretty accurate.\index{confusion matrix}\index{percent accuracy}\index{percent accuracy by chance}
+And it is much higher than 50%, so we are doing a pretty good job, right?\index{confusion matrix}\index{percent accuracy}\index{percent accuracy by chance}
+Well, it is important to compare our accuracy to what accuracy we would expect to get by chance alone, if predictions were made by a random process rather than using a test's scores.\index{confusion matrix}\index{percent accuracy}\index{percent accuracy by chance}
+Our [selection ratio](#selectionRatio) was 25.4%.\index{confusion matrix}\index{percent accuracy}\index{percent accuracy by chance}\index{selection ratio}
+How accurate would we be if we randomly selected 25.4% of people to reject?\index{confusion matrix}\index{percent accuracy}\index{percent accuracy by chance}
+To determine what accuracy we could get by chance alone given the [selection ratio](#selectionRatio) and the base rate, we can calculate the chance probability of [true positives](#truePositive) and the chance probability of [true negatives](#trueNegative).\index{confusion matrix}\index{percent accuracy}\index{percent accuracy by chance}\index{selection ratio}\index{true positive}\index{true negative}
+The probability of a given cell in the [confusion matrix](#confusionMatrix) is a [joint probability](#jointProbability)—the probability of two events occurring simultaneously.\index{confusion matrix}\index{probability!joint}\index{percent accuracy by chance}
+To calculate a [joint probability](#jointProbability), we multiply the probability of each event.\index{confusion matrix}\index{probability!joint}\index{percent accuracy by chance}
 
-So, to get the chance expectancies of [true positives](#truePositive), we would multiply the respective [marginal probabilities](#baseRate), as in Equation \@ref(eq:truePositivesByChanceExample):
+So, to get the chance expectancies of [true positives](#truePositive), we would multiply the respective [marginal probabilities](#baseRate), as in Equation \@ref(eq:truePositivesByChanceExample):\index{confusion matrix}\index{probability!joint}\index{probability!marginal}\index{true positive}\index{percent accuracy by chance}
 
 $$
 \begin{aligned}
@@ -554,7 +554,7 @@ $$
 (\#eq:truePositivesByChanceExample)
 $$
 
-To get the chance expectancies of [true negatives](#trueNegative), we would multiply the respective [marginal probabilities](#baseRate), as in Equation \@ref(eq:trueNegativesByChanceExample):
+To get the chance expectancies of [true negatives](#trueNegative), we would multiply the respective [marginal probabilities](#baseRate), as in Equation \@ref(eq:trueNegativesByChanceExample):\index{confusion matrix}\index{probability!joint}\index{probability!marginal}\index{true negative}\index{percent accuracy by chance}
 
 $$
 \begin{aligned}
@@ -566,13 +566,13 @@ $$
 (\#eq:trueNegativesByChanceExample)
 $$
 
-To get the [percent accuracy by chance](#percentAccuracyByChance), we sum the chance expectancies for the correct predictions ([TP](#truePositive) and [TN](#trueNegative)): $.0127 + .7087 = .7214$.
-Thus, the [percent accuracy you can get by chance alone](#percentAccuracyByChance) is 72%.
-This is because most of our predictions are to retain people, and the [base rate](#baseRate) of poor adjustment is quite low (.05).
-Our measure with 78% [accuracy](#percentAccuracy) provides only a 6% increment in correct predictions.
-Thus, you cannot judge how good your judgment or prediction is until you know how you would do by random chance.
+To get the [percent accuracy by chance](#percentAccuracyByChance), we sum the chance expectancies for the correct predictions ([TP](#truePositive) and [TN](#trueNegative)): $.0127 + .7087 = .7214$.\index{confusion matrix}\index{probability!joint}\index{probability!marginal}\index{true positive}\index{true negative}\index{percent accuracy by chance}
+Thus, the [percent accuracy you can get by chance alone](#percentAccuracyByChance) is 72%.\index{confusion matrix}\index{percent accuracy by chance}
+This is because most of our predictions are to retain people, and the [base rate](#baseRate) of poor adjustment is quite low (.05).\index{confusion matrix}\index{percent accuracy by chance}\index{base rate}
+Our measure with 78% [accuracy](#percentAccuracy) provides only a 6% increment in correct predictions.\index{confusion matrix}\index{percent accuracy}\index{percent accuracy by chance}
+Thus, you cannot judge how good your judgment or prediction is until you know how you would do by random chance.\index{confusion matrix}\index{percent accuracy by chance}
 
-The chance expectancies for each cell of the [confusion matrix](#confusionMatrix) are in Figure \@ref(fig:twoByTwoMatrix4).
+The chance expectancies for each cell of the [confusion matrix](#confusionMatrix) are in Figure \@ref(fig:twoByTwoMatrix4).\index{confusion matrix}\index{percent accuracy by chance}
 
 ```{r twoByTwoMatrix4, out.width = "100%", fig.align = "center", fig.cap = "Chance Expectancies in 2x2 Prediction Matrix.", echo = FALSE}
 knitr::include_graphics("./Images/2x2-Matrix_2d.png")
@@ -580,10 +580,10 @@ knitr::include_graphics("./Images/2x2-Matrix_2d.png")
 
 #### Predicting from the Base Rate {#predictingFromBaseRate}
 
-Now, let us consider how well you would do if you were to predict from the [base rate](#baseRate).
-Predicting from the [base rate](#baseRate) is also called "betting from the [base rate](#baseRate)," and it involves setting the [selection ratio](#selectioNRatio) by taking advantage of the [base rate](#baseRate) so that you go with the most likely outcome in every prediction.
-Because the [base rate](#baseRate) is quite low (.05), we could predict from the [base rate](#baseRate) by selecting no one to reject (i.e., setting the [selection ratio](#selectionRatio) at zero).
-Our [percent accuracy by chance](#percentAccuracyByChance) if we predict from the [base rate](#baseRate) would be calculated by multiplying the [marginal probabilities](#baseRate), as we did above, but with a new [selection ratio](#selectionRatio), as in Equation \@ref(eq:predictingFromBaseRateExample):
+Now, let us consider how well you would do if you were to predict from the [base rate](#baseRate).\index{base rate}\index{base rate!predicting from}
+Predicting from the [base rate](#baseRate) is also called "betting from the [base rate](#baseRate)," and it involves setting the [selection ratio](#selectioNRatio) by taking advantage of the [base rate](#baseRate) so that you go with the most likely outcome in every prediction.\index{base rate}\index{base rate!predicting from}\index{selection ratio}
+Because the [base rate](#baseRate) is quite low (.05), we could predict from the [base rate](#baseRate) by selecting no one to reject (i.e., setting the [selection ratio](#selectionRatio) at zero).\index{base rate}\index{base rate!predicting from}\index{selection ratio}
+Our [percent accuracy by chance](#percentAccuracyByChance) if we predict from the [base rate](#baseRate) would be calculated by multiplying the [marginal probabilities](#baseRate), as we did above, but with a new [selection ratio](#selectionRatio), as in Equation \@ref(eq:predictingFromBaseRateExample):\index{confusion matrix}\index{base rate}\index{base rate!predicting from}\index{selection ratio}\index{percent accuracy by chance}
 
 $$
 \begin{aligned}
@@ -599,69 +599,69 @@ $$
 (\#eq:predictingFromBaseRateExample)
 $$
 
-We sum the chance expectancies for the correct predictions ([TP](#truePositive) and [TN](#trueNegative)): $0 + .95 = .95$.
-Thus, our [percent accuracy](#percentAccuracy) by predicting from the [base rate](#baseRate) is 95%.
-This is damning to our measure because it is a much higher accuracy than the accuracy of our measure.
-That is, we can be much more accurate than our measure simply by predicting from the [base rate](#baseRate) and selecting no one to reject.
+We sum the chance expectancies for the correct predictions ([TP](#truePositive) and [TN](#trueNegative)): $0 + .95 = .95$.\index{confusion matrix}\index{base rate}\index{base rate!predicting from}\index{selection ratio}\index{percent accuracy by chance}\index{true positive}\index{true negative}
+Thus, our [percent accuracy](#percentAccuracy) by predicting from the [base rate](#baseRate) is 95%.\index{confusion matrix}\index{base rate}\index{base rate!predicting from}\index{selection ratio}\index{percent accuracy by chance}
+This is damning to our measure because it is a much higher accuracy than the accuracy of our measure.\index{confusion matrix}\index{base rate}\index{base rate!predicting from}\index{percent accuracy}
+That is, we can be much more accurate than our measure simply by predicting from the [base rate](#baseRate) and selecting no one to reject.\index{confusion matrix}\index{base rate}\index{base rate!predicting from}\index{percent accuracy}\index{selection ratio}
 
-Going with the most likely outcome in every prediction (predicting from the [base rate](#baseRate)) can be highly accurate as noted by @Meehl1955, especially when the [base rate](#baseRate) is very low or very high.
-This should serve as an important reminder that we need to compare the accuracy of our measures to the accuracy by (1) random chance and (2) predicting from the [base rate](#baseRate).
-There are several important implications of the impact of [base rates](#baseRate) on prediction accuracy.
-One implication is that using the same test in different settings with different [base rates](#baseRate) will markedly change the accuracy of the test.
-Oftentimes, using a test will actually *decrease* the predictive accuracy when the [base rate](#baseRate) deviates greatly from .50.
-But [percent accuracy](#percentAccuracy) is not everything.
-[Percent accuracy](#percentAccuracy) treats different kinds of errors as if they are equally important.
-However, the value we place on different kinds of errors may be different, as described next.
+Going with the most likely outcome in every prediction (predicting from the [base rate](#baseRate)) can be highly accurate(in terms of percent accuracy) as noted by @Meehl1955, especially when the [base rate](#baseRate) is very low or very high.\index{confusion matrix}\index{base rate}\index{base rate!predicting from}\index{percent accuracy}\index{selection ratio}
+This should serve as an important reminder that we need to compare the accuracy of our measures to the accuracy by (1) random chance and (2) predicting from the [base rate](#baseRate).\index{confusion matrix}\index{base rate}\index{base rate!predicting from}\index{percent accuracy}\index{percent accuracy by chance}\index{selection ratio}
+There are several important implications of the impact of [base rates](#baseRate) on prediction accuracy.\index{base rate}
+One implication is that using the same test in different settings with different [base rates](#baseRate) will markedly change the accuracy of the test.\index{base rate}\index{base rate!challenges}
+Oftentimes, using a test will actually *decrease* the predictive accuracy when the [base rate](#baseRate) deviates greatly from .50.\index{base rate}\index{base rate!challenges}
+But [percent accuracy](#percentAccuracy) is not everything.\index{percent accuracy}
+[Percent accuracy](#percentAccuracy) treats different kinds of errors as if they are equally important.\index{percent accuracy}
+However, the value we place on different kinds of errors may be different, as described next.\index{prediction error!costs of}
 
 #### Different Kinds of Errors Have Different Costs {#differentErrorsDifferentCosts}
 
-Some errors have a high cost and some errors have a low cost.
-Among the four decision outcomes, there are two types of errors: [false positives](#falsePositive) and [false negatives](#falseNegative).
-The extent to which [false positives](#falsePositive) and [false negatives](#falseNegative) are costly depends on the prediction problem.
-So, even though you can often be most accurate by going with the [base rate](#baseRate), it may be advantageous to using a screening instrument despite lower [overall accuracy](#percentAccuracy) because of the huge difference in costs of [false positives](#falsePositive) versus [false negatives](#falseNegative) in some cases.
+Some errors have a high cost and some errors have a low cost.\index{prediction error!costs of}
+Among the four decision outcomes, there are two types of errors: [false positives](#falsePositive) and [false negatives](#falseNegative).\index{prediction error!costs of}\index{false positive}\index{false negative}
+The extent to which [false positives](#falsePositive) and [false negatives](#falseNegative) are costly depends on the prediction problem.\index{prediction error!costs of}\index{false positive}\index{false negative}
+So, even though you can often be most accurate by going with the [base rate](#baseRate), it may be advantageous to using a screening instrument despite lower [overall accuracy](#percentAccuracy) because of the huge difference in costs of [false positives](#falsePositive) versus [false negatives](#falseNegative) in some cases.\index{prediction error!costs of}\index{false positive}\index{false negative}\index{base rate}\index{percent accuracy}
 
-Consider the example of a screening instrument for HIV.
-[False positives](#falsePositive) would be cases where we said that someone is at high risk of HIV when they are not, whereas [false negatives](#falseNegative) are cases where we said that someone is not at high risk when they actually are.
-The costs of [false positives](#falsePositive) include a shortage of blood, some follow-up testing, and potentially some anxiety, but that is about it.
-The costs of [false negatives](#falseNegative) may be people getting HIV.
-In this case, the costs of [false negatives](#falseNegative) greatly outweigh the costs of [false positives](#falsePositive), so we use a screening instrument to try to identify the cases at high risk for HIV because of the important consequences of failing to do so, even though using the screening instrument will lower our overall accuracy level.
+Consider the example of a screening instrument for HIV.\index{prediction error!costs of}
+[False positives](#falsePositive) would be cases where we said that someone is at high risk of HIV when they are not, whereas [false negatives](#falseNegative) are cases where we said that someone is not at high risk when they actually are.\index{prediction error!costs of}\index{false positive}\index{false negative}
+The costs of [false positives](#falsePositive) include a shortage of blood, some follow-up testing, and potentially some anxiety, but that is about it.\index{prediction error!costs of}\index{false positive}
+The costs of [false negatives](#falseNegative) may be people getting HIV.\index{prediction error!costs of}\index{false negative}
+In this case, the costs of [false negatives](#falseNegative) greatly outweigh the costs of [false positives](#falsePositive), so we use a screening instrument to try to identify the cases at high risk for HIV because of the important consequences of failing to do so, even though using the screening instrument will lower our overall accuracy level.\index{prediction error!costs of}\index{false positive}\index{false negative}
 
-Another example is when the Central Intelligence Agency (CIA) used a screen for protective typists during wartime to try to detect spies.
-[False positives](#falsePositive) would be cases where the CIA believes that a person is a spy when they are not, and the CIA does not hire them.
-[False negatives](#falseNegative) would be cases where the CIA believes that a person is not a spy when they actually are, and the CIA hires them.
-In this case, a [false positive](#falsePositive) would be fine, but a [false negative](#falseNegative) would be really bad.
+Another example is when the Central Intelligence Agency (CIA) used a screen for protective typists during wartime to try to detect spies.\index{prediction error!costs of}
+[False positives](#falsePositive) would be cases where the CIA believes that a person is a spy when they are not, and the CIA does not hire them.\index{prediction error!costs of}\index{false positive}
+[False negatives](#falseNegative) would be cases where the CIA believes that a person is not a spy when they actually are, and the CIA hires them.\index{prediction error!costs of}\index{false negative}
+In this case, a [false positive](#falsePositive) would be fine, but a [false negative](#falseNegative) would be really bad.\index{prediction error!costs of}\index{false positive}\index{false negative}
 
-How you weigh the costs of different errors depends considerably on the domain and context.
-Possible costs of [false positives](#falsePositive) to society include: unnecessary and costly treatment with side effects and sending an innocent person to jail (despite our presumption of innocence in the United States criminal justice system that a person is innocent until proven guilty).
-Possible costs of [false negatives](#falseNegative) to society include: setting a guilty person free, failing to detect a bomb or tumor, and preventing someone from getting treatment who needs it.
+How you weigh the costs of different errors depends considerably on the domain and context.\index{prediction error!costs of}
+Possible costs of [false positives](#falsePositive) to society include: unnecessary and costly treatment with side effects and sending an innocent person to jail (despite our presumption of innocence in the United States criminal justice system that a person is innocent until proven guilty).\index{prediction error!costs of}\index{false positive}
+Possible costs of [false negatives](#falseNegative) to society include: setting a guilty person free, failing to detect a bomb or tumor, and preventing someone from getting treatment who needs it.\index{prediction error!costs of}\index{false negative}
 
-The differential costs of different errors also depends on how much flexibility you have in the [selection ratio](#selectionRatio) in being able to set a stringent versus loose [selection ratio](#selectionRatio).
-Consider if there is a high cost of getting rid of people during the selection process.
-For example, if you must hire 100 poeple and only 100 people apply for the position, you cannot lose people, so you need to hire even high-risk people.
-However, if you do not need to hire many people, then you can hire more conservatively.
+The differential costs of different errors also depends on how much flexibility you have in the [selection ratio](#selectionRatio) in being able to set a stringent versus loose [selection ratio](#selectionRatio).\index{prediction error!costs of}\index{selection ratio}
+Consider if there is a high cost of getting rid of people during the selection process.\index{prediction error!costs of}\index{selection ratio}
+For example, if you must hire 100 poeple and only 100 people apply for the position, you cannot lose people, so you need to hire even high-risk people.\index{prediction error!costs of}\index{selection ratio}
+However, if you do not need to hire many people, then you can hire more conservatively.\index{prediction error!costs of}\index{selection ratio}
 
-Any time the [selection ratio](#selectionRatio) differs from the [base rate](#baseRate), you will make errors.
-For example, if you reject 25% of applicants, and the [base rate](#baseRate) of poor adjustment is 5%, then you are marking errors of over-rejecting ([false positives](#falsePositive)).
-By contrast, if you reject 1% of applicants and the [base rate](#baseRate) of poor adjustment is 5%, then you are making errors of under-rejecting or over-accepting ([false negatives](#falseNegative)).
+Any time the [selection ratio](#selectionRatio) differs from the [base rate](#baseRate), you will make errors.\index{base rate}\index{selection ratio}
+For example, if you reject 25% of applicants, and the [base rate](#baseRate) of poor adjustment is 5%, then you are marking errors of over-rejecting ([false positives](#falsePositive)).\index{base rate}\index{selection ratio}\index{false positive}
+By contrast, if you reject 1% of applicants and the [base rate](#baseRate) of poor adjustment is 5%, then you are making errors of under-rejecting or over-accepting ([false negatives](#falseNegative)).\index{base rate}\index{selection ratio}\index{false negative}
 
-A low [base rate](#baseRate) makes it harder to make predictions, and tends to lead to less accurate predictions.
-For instance, it is very challenging to predict low [base rate](#baseRate) behaviors, including suicide [@Kessler2020].
-The difficulty in predicting events with a low [base rate](#baseRate) is apparent with the true score formula from classical test theory: $X = T + e$.
-As described in Equation \@ref(eq:reliabilityRatio), [reliability](#reliability) is the ratio of true score variance to observed score variance.
-As true score variance increases, [reliability](#reliability) increases.
-If the [base rate](#baseRate) is .05, the maximum variance of the true scores is .05.
-The lower true score variance makes the measure less [reliable](#reliability) and hard to make accurate predictions.
+A low [base rate](#baseRate) makes it harder to make predictions, and tends to lead to less accurate predictions.\index{base rate!challenges}
+For instance, it is very challenging to predict low [base rate](#baseRate) behaviors, including suicide [@Kessler2020].\index{base rate!challenges}
+The difficulty in predicting events with a low [base rate](#baseRate) is apparent with the true score formula from classical test theory: $X = T + e$.\index{base rate!challenges}
+As described in Equation \@ref(eq:reliabilityRatio), [reliability](#reliability) is the ratio of true score variance to observed score variance.\index{reliability}\index{observed score}\index{true score}
+As true score variance increases, [reliability](#reliability) increases.\index{reliability}\index{true score}
+If the [base rate](#baseRate) is .05, the maximum variance of the true scores is .05.\index{base rate!challenges}
+The lower true score variance makes the measure less [reliable](#reliability) and hard to make accurate predictions.\index{base rate!challenges}\index{reliability}\index{true score}
 
 #### Sensitivity, Specificity, PPV, and NPV {#sensitivitySpecificityPPVnpv}
 
-As described earlier, [percent accuracy](#percentAccuracy) is not the only important aspect of accuracy.
-[Percent accuracy](#percentAccuracy) can be misleading because it is highly influenced by [base rates](#baseRate).
-You can have a high [percent accuracy](#percentAccuracy) by [predicting from the base rate](#predictingFromBaseRate) and saying that no one has the condition (if the [base rate](#baseRate) is low) or that everyone has the condition (if the [base rate](#baseRate) is high).
-Thus, it is also important to consider other aspects of accuracy, including [sensitivity](#sensitivity) (SN), [specificity](#specificity) (SP), [positive predictive value](#ppv) (PPV), and [negative predictive value](#npv) (NPV).
-We want our predictions to be [sensitive](#sensitity) to be able to detect the chararacteristic but also to be [specific](#specificity) so that we classify only people actually with the characteristic as having the characteristic.
+As described earlier, [percent accuracy](#percentAccuracy) is not the only important aspect of accuracy.\index{percent accuracy}
+[Percent accuracy](#percentAccuracy) can be misleading because it is highly influenced by [base rates](#baseRate).\index{percent accuracy}\index{base rate}
+You can have a high [percent accuracy](#percentAccuracy) by [predicting from the base rate](#predictingFromBaseRate) and saying that no one has the condition (if the [base rate](#baseRate) is low) or that everyone has the condition (if the [base rate](#baseRate) is high).\index{percent accuracy}\index{base rate!predicting from}\index{selection ratio}
+Thus, it is also important to consider other aspects of accuracy, including [sensitivity](#sensitivity) (SN), [specificity](#specificity) (SP), [positive predictive value](#ppv) (PPV), and [negative predictive value](#npv) (NPV).\index{sensitivity}\index{specificity}\index{positive predictive value}\index{negative predictive value}
+We want our predictions to be [sensitive](#sensitity) to be able to detect the chararacteristic but also to be [specific](#specificity) so that we classify only people actually with the characteristic as having the characteristic.\index{sensitivity}\index{specificity}
 
-Let us return to the [confusion matrix](#confusionMatrix) in Figure \@ref(fig:twoByTwoMatrix5).
-If we know the frequency of each of the four predicted-actual combinations of the [confusion matrix](#confusionMatrix) ([TP](#truePositive), [TN](#trueNegative), [FP](#falsePositive), [FN](#falseNegative)), we can calculate [sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv).
+Let us return to the [confusion matrix](#confusionMatrix) in Figure \@ref(fig:twoByTwoMatrix5).\index{confusion matrix}
+If we know the frequency of each of the four predicted-actual combinations of the [confusion matrix](#confusionMatrix) ([TP](#truePositive), [TN](#trueNegative), [FP](#falsePositive), [FN](#falseNegative)), we can calculate [sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv).\index{confusion matrix}\index{true positive}\index{false positive}index{true negative}\index{false negative}\index{sensitivity}\index{specificity}\index{positive predictive value}\index{negative predictive value}
 
 (ref:twoByTwoMatrix5) [Confusion Matrix](#confusionMatrix): 2x2 Prediction Matrix.
 
@@ -669,20 +669,20 @@ If we know the frequency of each of the four predicted-actual combinations of th
 knitr::include_graphics("./Images/2x2-Matrix_2e.png")
 ```
 
-[Sensitivity](#sensitivity) is the proportion of those with the characteristic ($\text{TP} + \text{FN}$) that we identified with our measure ($\text{TP}$): $\frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{86}{86 + 14} = .86$.
-[Specificity](#specificity) is the proportion of those who do not have the characteristic ($\text{TN} + \text{FP}$) that we correctly classify as not having the characteristic ($\text{TN}$): $\frac{\text{TN}}{\text{TN} + \text{FP}} = \frac{1,478}{1,478 + 422} = .78$.
-[PPV](#ppv) is the proportion of those who we classify as having the characteristic ($\text{TP} + \text{FP}$) who actually have the characteristic ($\text{TP}$): $\frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{86}{86 + 422} = .17$.
-[NPV](#npv) is the proportion of those we classify as not having the characteristic ($\text{TN} + \text{FN}$) who actually do not have the characteristic ($\text{TN}$): $\frac{\text{TN}}{\text{TN} + \text{FN}} = \frac{1,478}{1,478 + 14} = .99$.
+[Sensitivity](#sensitivity) is the proportion of those with the characteristic ($\text{TP} + \text{FN}$) that we identified with our measure ($\text{TP}$): $\frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{86}{86 + 14} = .86$.\index{sensitivity}
+[Specificity](#specificity) is the proportion of those who do not have the characteristic ($\text{TN} + \text{FP}$) that we correctly classify as not having the characteristic ($\text{TN}$): $\frac{\text{TN}}{\text{TN} + \text{FP}} = \frac{1,478}{1,478 + 422} = .78$.\index{specificity}
+[PPV](#ppv) is the proportion of those who we classify as having the characteristic ($\text{TP} + \text{FP}$) who actually have the characteristic ($\text{TP}$): $\frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{86}{86 + 422} = .17$.\index{positive predictive value}
+[NPV](#npv) is the proportion of those we classify as not having the characteristic ($\text{TN} + \text{FN}$) who actually do not have the characteristic ($\text{TN}$): $\frac{\text{TN}}{\text{TN} + \text{FN}} = \frac{1,478}{1,478 + 14} = .99$.\index{negative predictive value}
 
-[Sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv) are proportions, and their values therefore range from 0 to 1, where higher values reflect greater accuracy.
-With [sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv), we have a good snapshot of how accurate the measure is at a given cutoff.
-In our case, our measure is good at finding who to reject (high [sensitivity](#sensitivity)), but it is rejecting too many people who do not need to be rejected (lower [PPV](#ppv) due to many [FPs](#falsePositive)).
-Most people who we classify as having the characteristic do not actually have the characteristic.
-However, the fact that we are over-rejecting could be okay depending on our goals, for instance, if we do not care about over-dropping (i.e., the [PPV](#ppv) being low).
+[Sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv) are proportions, and their values therefore range from 0 to 1, where higher values reflect greater accuracy.\index{sensitivity}\index{specificity}\index{positive predictive value}\index{negative predictive value}
+With [sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv), we have a good snapshot of how accurate the measure is at a given cutoff.\index{sensitivity}\index{specificity}\index{positive predictive value}\index{negative predictive value}
+In our case, our measure is good at finding who to reject (high [sensitivity](#sensitivity)), but it is rejecting too many people who do not need to be rejected (lower [PPV](#ppv) due to many [FPs](#falsePositive)).\index{sensitivity}\index{positive predictive value}\index{false positive}
+Most people who we classify as having the characteristic do not actually have the characteristic.\index{positive predictive value}
+However, the fact that we are over-rejecting could be okay depending on our goals, for instance, if we do not care about over-dropping (i.e., the [PPV](#ppv) being low).\index{positive predictive value}
 
 ##### Some Accuracy Estimates Depend on the Cutoff {#accuracyCutoff}
 
-[Sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv) differ based on the cutoff (i.e., threshold) for classification.
+[Sensitivity](#sensitivity), [specificity](#specificity), [PPV](#ppv), and [NPV](#npv) differ based on the cutoff (i.e., threshold) for classification.\index{sensitivity}\index{specificity}\index{positive predictive value}\index{negative predictive value}\index{cutoff}
 Consider the following example.
 Aliens visit the earth and they develop a test to determine whether a berry is edible or inedible.
 
@@ -722,7 +722,7 @@ density_data$type <- factor(density_data$type, levels = c("edible_TN","inedible_
 Figure \@ref(fig:classificationDistributions) depicts the distributions of scores by berry type.
 Note how there are clearly two distinct distributions.
 However, the distributions overlap to some degree.
-Thus, any cutoff will have at least some inaccurate classifications.
+Thus, any cutoff will have at least some inaccurate classifications.\index{cutoff}
 
 ```{r classificationDistributions, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Distribution of Test Scores by Berry Type."}
 #No Cutoff
@@ -735,13 +735,13 @@ ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
         axis.ticks.y = element_blank())
 ```
 
-Figure \@ref(fig:classificationStandardCutoff) depicts the distributions of scores by berry type with a cutoff.
-The red line indicates the cutoff—the level above which berries are classified by the test as inedible.
-There are errors on each side of the cutoff.
-Below the cutoff, there are some [false negatives](#falseNegative) (blue): inedible berries that are inaccurately classified as edible.
-Above the cutoff, there are some [false positives](#falsePositive) (green): edible berries that are inaccurately classified as inedible.
-Costs of [false negatives](#falseNegative) could include sickness or death from eating the inedible berries.
-Costs of [false positives](#falsePositive) could include taking longer to find food, finding insufficient food, and starvation.
+Figure \@ref(fig:classificationStandardCutoff) depicts the distributions of scores by berry type with a cutoff.\index{cutoff}
+The red line indicates the cutoff—the level above which berries are classified by the test as inedible.\index{cutoff}
+There are errors on each side of the cutoff.\index{cutoff}
+Below the cutoff, there are some [false negatives](#falseNegative) (blue): inedible berries that are inaccurately classified as edible.\index{cutoff}\index{false negative}
+Above the cutoff, there are some [false positives](#falsePositive) (green): edible berries that are inaccurately classified as inedible.\index{cutoff}\index{false positive}
+Costs of [false negatives](#falseNegative) could include sickness or death from eating the inedible berries.\index{cutoff}\index{false negative}
+Costs of [false positives](#falsePositive) could include taking longer to find food, finding insufficient food, and starvation.\index{cutoff}\index{false positive}
 
 ```{r classificationStandardCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Classifications based on a cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
 #Standard Cutoff
@@ -760,12 +760,12 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
         axis.ticks.y = element_blank())
 ```
 
-Based on our assessment goals, we might use a different [selection ratio](#selectionRatio) by changing the cutoff.
-Figure \@ref(fig:classificationRaiseCutoff) depicts the distributions of scores by berry type when we raise the cutoff.
-There are now more [false negatives](#falseNegative) (blue) and fewer [false positives](#falsePositive) (green).
-If we raise the cutoff (to be more conservative), the number of [false negatives](#falseNegative) increases and the number of [false positives](#falsePositive) decreases.
-Consequently, as the cutoff increases, [sensitivity](#sensitivity) and [NPV](#npv) decrease (because we have more [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) increase (because we have fewer [false positives](#falsePositive)).
-A higher cutoff could be optimal if the costs of [false positives](#falsePositive) are considered greater than the costs of [false negatives](#falseNegative).
+Based on our assessment goals, we might use a different [selection ratio](#selectionRatio) by changing the cutoff.\index{cutoff}\index{selection ratio}
+Figure \@ref(fig:classificationRaiseCutoff) depicts the distributions of scores by berry type when we raise the cutoff.\index{cutoff}
+There are now more [false negatives](#falseNegative) (blue) and fewer [false positives](#falsePositive) (green).\index{false negative}\index{false positive}
+If we raise the cutoff (to be more conservative), the number of [false negatives](#falseNegative) increases and the number of [false positives](#falsePositive) decreases.\index{cutoff}\index{false negative}\index{false positive}
+Consequently, as the cutoff increases, [sensitivity](#sensitivity) and [NPV](#npv) decrease (because we have more [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) increase (because we have fewer [false positives](#falsePositive)).\index{cutoff}\index{false negative}\index{false positive}\index{sensitivity}\index{negative predictive value}\index{specificity}\index{positive predictive value}
+A higher cutoff could be optimal if the costs of [false positives](#falsePositive) are considered greater than the costs of [false negatives](#falseNegative).\index{cutoff}\index{false negative}\index{false positive}
 For instance, if the aliens cannot risk eating the inedible berries because the berries are fatal and there are sufficient edible berries that can be found to feed the alien colony.
 
 ```{r classificationRaiseCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Classifications based on raising the cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
@@ -805,11 +805,11 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
         axis.ticks.y = element_blank())
 ```
 
-Figure \@ref(fig:classificationLowerCutoff) depicts the distributions of scores by berry type when we lower the cutoff.
-There are now fewer [false negatives](#falseNegative) (blue) and more [false positives](#falsePositive) (green).
-If we lower the cutoff (to be more liberal), the number of [false negatives](#falseNegative) decreases and the number of [false positives](#falsePositive) increases.
-Consequently, as the cutoff decreases, [sensitivity](#sensitivity) and [NPV](#npv) increase (because we have fewer [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) decrease (because we have more [false positives](#falsePositive)).
-A lower cutoff could be optimal if the costs of [false negatives](#falseNegative) are considered greater than the costs of [false positives](#falsePositive).
+Figure \@ref(fig:classificationLowerCutoff) depicts the distributions of scores by berry type when we lower the cutoff.\index{cutoff}
+There are now fewer [false negatives](#falseNegative) (blue) and more [false positives](#falsePositive) (green).\index{cutoff}\index{false negative}\index{false positive}
+If we lower the cutoff (to be more liberal), the number of [false negatives](#falseNegative) decreases and the number of [false positives](#falsePositive) increases.\index{cutoff}\index{false negative}\index{false positive}
+Consequently, as the cutoff decreases, [sensitivity](#sensitivity) and [NPV](#npv) increase (because we have fewer [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) decrease (because we have more [false positives](#falsePositive)).\index{cutoff}\index{false negative}\index{false positive}\index{sensitivity}\index{negative predictive value}\index{specificity}\index{positive predictive value}
+A lower cutoff could be optimal if the costs of [false negatives](#falseNegative) are considered greater than the costs of [false positives](#falsePositive).\index{cutoff}\index{false negative}\index{false positive}
 For instance, if the aliens cannot risk missing edible berries because they are in short supply relative to the size of the alien colony, and eating the inedible berries would, at worst, lead to minor, temporary discomfort.
 
 ```{r classificationLowerCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Classifications based on lowering the cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
@@ -849,55 +849,55 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
         axis.ticks.y = element_blank())
 ```
 
-In sum, [sensitivity](#sensitivity) and [specificity](#specificty) differ based on the cutoff for classification.
-if we raise the cutoff, [sensitivity](#sensitivity) and [PPV](#ppv) increase (due to fewer [false positives](#falsePositive)), whereas and [sensitivity](#sensitivity) and [NPV](#npv) decrease (due to more [false negatives](#falseNegatives)).
-If we lower the cutoff, [sensitivity](#sensitivity) and [NPV](#npv) increase (due to fewer [false negatives](#falseNegatives)), whereas [specificity](#specificty) and [PPV](#ppv) decrease (due to more [false positives](#falsePositive)).
+In sum, [sensitivity](#sensitivity) and [specificity](#specificty) differ based on the cutoff for classification.\index{cutoff}\index{sensitivity}\index{specificity}
+if we raise the cutoff, [sensitivity](#sensitivity) and [PPV](#ppv) increase (due to fewer [false positives](#falsePositive)), whereas and [sensitivity](#sensitivity) and [NPV](#npv) decrease (due to more [false negatives](#falseNegatives)).\index{cutoff}\index{false negative}\index{false positive}\index{sensitivity}\index{negative predictive value}\index{specificity}\index{positive predictive value}
+If we lower the cutoff, [sensitivity](#sensitivity) and [NPV](#npv) increase (due to fewer [false negatives](#falseNegatives)), whereas [specificity](#specificty) and [PPV](#ppv) decrease (due to more [false positives](#falsePositive)).\index{cutoff}\index{false negative}\index{false positive}\index{sensitivity}\index{negative predictive value}\index{specificity}\index{positive predictive value}
 Thus, the optimal cutoff depends on how costly each type of error is: [false negatives](#falseNegatives) and [false positives](#falsePositive).
-If false negatives are more costly than [false positives](#falsePositive), we would set a low cutoff.
-If [false positives](#falsePositive) are more costly than [false negatives](#falseNegatives), we would set a high cutoff.
+If false negatives are more costly than [false positives](#falsePositive), we would set a low cutoff.\index{cutoff}\index{false negative}\index{false positive}\index{cutoff!optimal}
+If [false positives](#falsePositive) are more costly than [false negatives](#falseNegatives), we would set a high cutoff.\index{cutoff}\index{false negative}\index{false positive}\index{cutoff!optimal}
 
 #### Signal Detection Theory {#sdt}
 
-Signal detection theory (SDT) is a probability-based theory for the detection of a given stimulus (signal) from a stimulus set that includes non-target stimuli (noise).
-SDT arose through the development of radar (*RA*dio *D*etection *A*nd *R*anging) and sonar (*SO*und *N*avigation *A*nd *R*anging) in World War II based on research on sensory-perception research.
-The military wanted to determine which objects on radar/sonar were enemy aircraft/submarines, and which were noise (e.g., different object in the environment or even just the weather itself).
-SDT allowed determining how many errors operators made (how accurate they were) and decomposing errors into different kinds of errors.
-SDT distinguishes between sensitivity and bias.
-In SDT, *sensitivity* (or [discriminability](#discrimination)) is how well an assessment distinguishes between a target stimulus and non-target stimuli (i.e., how well the assessment detects the target stimulus amid non-target stimuli).
-*Bias* is the extent to which the probability of a selection decision from the assessment is higher or lower than the true rate of the target stimulus.
+Signal detection theory (SDT) is a probability-based theory for the detection of a given stimulus (signal) from a stimulus set that includes non-target stimuli (noise).\index{signal detection theory}
+SDT arose through the development of radar (*RA*dio *D*etection *A*nd *R*anging) and sonar (*SO*und *N*avigation *A*nd *R*anging) in World War II based on research on sensory-perception research.\index{signal detection theory}
+The military wanted to determine which objects on radar/sonar were enemy aircraft/submarines, and which were noise (e.g., different object in the environment or even just the weather itself).\index{signal detection theory}
+SDT allowed determining how many errors operators made (how accurate they were) and decomposing errors into different kinds of errors.\index{signal detection theory}
+SDT distinguishes between sensitivity and bias.\index{signal detection theory}\index{signal detection theory!sensitivity}\index{signal detection theory!bias}
+In SDT, *sensitivity* (or [discriminability](#discrimination)) is how well an assessment distinguishes between a target stimulus and non-target stimuli (i.e., how well the assessment detects the target stimulus amid non-target stimuli).\index{signal detection theory}\index{signal detection theory!sensitivity}\index{discrimination}
+*Bias* is the extent to which the probability of a selection decision from the assessment is higher or lower than the true rate of the target stimulus.\index{signal detection theory}\index{signal detection theory!bias}
 
-Some radar/sonar operators were not as sensitive to the differences between signal and noise, due to factors such as age, ability to distinguish gradations of a signal, etc.
-People who showed low sensitivity (i.e., who were not as successful at distinguishing between signal and noise) were screened out because the military perceived sensitivity as a skill that was not easily taught.
-By contrast, other operators could distinguish signal from noise, but their threshold was too low or high—they could take in information, but their decisions tended to be wrong due to systematic bias or poor [calibration](#calibration).
-That is, they systematically over-rejected or under-rejected stimuli.
-Over-rejecting leads to many [false negatives](#falseNegative) (i.e., saying that a stimulus is safe when it is not).
-Under-rejecting leads to many [false positives](#falsePositive) (i.e., saying that a stimulus is harmful when it is not).
-A person who showed good sensitivity but systematic bias was considered more teach-able than a person who showed low sensitivity.
-Thus, radar and sonar operators were selected based on their sensitivity to distinguish signal from noise, and then were trained to improve the [calibration](#calibration) so they reduce their systematic bias and do not systematically over- or under-reject.
+Some radar/sonar operators were not as sensitive to the differences between signal and noise, due to factors such as age, ability to distinguish gradations of a signal, etc.\index{signal detection theory}\index{signal detection theory!sensitivity}\index{discrimination}
+People who showed low sensitivity (i.e., who were not as successful at distinguishing between signal and noise) were screened out because the military perceived sensitivity as a skill that was not easily taught.\index{signal detection theory}\index{signal detection theory!sensitivity}\index{discrimination}
+By contrast, other operators could distinguish signal from noise, but their threshold was too low or high—they could take in information, but their decisions tended to be wrong due to systematic bias or poor [calibration](#calibration).\index{signal detection theory}\index{signal detection theory!bias}\index{calibration}\index{discrimination}
+That is, they systematically over-rejected or under-rejected stimuli.\index{signal detection theory}\index{signal detection theory!bias}
+Over-rejecting leads to many [false negatives](#falseNegative) (i.e., saying that a stimulus is safe when it is not).\index{signal detection theory}\index{false negative}
+Under-rejecting leads to many [false positives](#falsePositive) (i.e., saying that a stimulus is harmful when it is not).\index{signal detection theory}\index{false negative}
+A person who showed good sensitivity but systematic bias was considered more teach-able than a person who showed low sensitivity.\index{signal detection theory}\index{signal detection theory!sensitivity}\index{signal detection theory!bias}\index{discrimination}
+Thus, radar and sonar operators were selected based on their sensitivity to distinguish signal from noise, and then were trained to improve the [calibration](#calibration) so they reduce their systematic bias and do not systematically over- or under-reject.\index{signal detection theory}\index{signal detection theory!sensitivity}\index{signal detection theory!bias}\index{calibration}\index{discrimination}
 
-Although SDT was originally developed for use in World War II, it now plays an important role in many areas of science and medicine.
-A medical application of SDT is tumor detection in radiology.
-SDT also plays an important role in psychology, especially cognitive psychology.
-For instance, research on social perception of sexual interest has shown that men tend to show lack of sensitivity to differences in women's affect—i.e., they have relative difficulties discriminating between friendliness and sexual interest [@Farris2008].
-Men also tend to show systematic bias (poor [calibration](#calibration)) such that they tend to over-estimate women's sexual interest in them—i.e., men tend to have too low of a threshold for determining that a women is showing sexual interest in them [@Farris2006].
+Although SDT was originally developed for use in World War II, it now plays an important role in many areas of science and medicine.\index{signal detection theory}
+A medical application of SDT is tumor detection in radiology.\index{signal detection theory}
+SDT also plays an important role in psychology, especially cognitive psychology.\index{signal detection theory}
+For instance, research on social perception of sexual interest has shown that men tend to show lack of sensitivity to differences in women's affect—i.e., they have relative difficulties discriminating between friendliness and sexual interest [@Farris2008].\index{signal detection theory}\index{signal detection theory!sensitivity}
+Men also tend to show systematic bias (poor [calibration](#calibration)) such that they tend to over-estimate women's sexual interest in them—i.e., men tend to have too low of a threshold for determining that a women is showing sexual interest in them [@Farris2006].\index{signal detection theory}\index{signal detection theory!bias}
 
-SDT metrics of sensitivity include [$d'$](#dPrimeSDT) ("$d$-prime"), [$A$](#aSDT) (or $A'$), and the [area under the receiver operating characteristic (ROC) curve](#auc).
-SDT metrics of bias include [$\beta$](#betaSDT) (beta), [$c$](#cSDT), and [$b$](#bSDT).
+SDT metrics of sensitivity include [$d'$](#dPrimeSDT) ("$d$-prime"), [$A$](#aSDT) (or $A'$), and the [area under the receiver operating characteristic (ROC) curve](#auc).\index{signal detection theory}\index{signal detection theory!$d'$}\index{signal detection theory!$A$}\index{signal detection theory!$A'$}\index{receiver operating characteristic curve}\index{receiver operating characteristic curve!area under the curve}
+SDT metrics of bias include [$\beta$](#betaSDT) (beta), [$c$](#cSDT), and [$b$](#bSDT).\index{signal detection theory}\index{signal detection theory!beta}\index{signal detection theory!$c$}\index{signal detection theory!$b$}
 
 ##### Receiver Operating Characteristic (ROC) Curve {#roc}
 
 The x-axis of the ROC curve is the [false alarm rate](#falsePositiveRate) or [false positive rate](#falsePositiveRate) ($1 -$ [specificity](#specificity)).
-The y-axis is the [hit rate](#sensitivity) or [true positive rate](#sensitivity) ([sensitivity](#sensitivity)).
-We can trace the ROC curve as the combination between [sensitivity](#sensitivity) and [specificity](#specificity) at every possible cutoff.
-At a cutoff of zero (top right of ROC curve), we calculate [sensitivity](#sensitivity) (1.0) and [specificity](#specificity) (0) and plot it.
-At a cutoff of zero, the assessment tell us to make an action for every stimulus (i.e., it is the most liberal).
-We then gradually increase the cutoff, and plot [sensitivity](#sensitivity) and [specificity](#specificity) at each cutoff.
-As the cutoff increases, [sensitivity](#sensitivity) decreases and [specificity](#specificity) increases.
-We end at the highest possible cutoff, where the [sensitivity](#sensitivity) is 0 and the specificity is 1.0 (i.e., we never make an action; i.e., it is the most conservative).
-Each point on the ROC curve corresponds to a pair of [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates ([sensitivity](#sensitivity) and [specificity](#specificity)) resulting from a specific cutoff value.
-Then, we can draw lines or a curve to connect the points.
+The y-axis is the [hit rate](#sensitivity) or [true positive rate](#sensitivity) ([sensitivity](#sensitivity)).\index{false positive rate}\index{sensitivity}\index{true positive rate!zzzzz@\igobble|seealso{sensitivity}}\index{hit rate!zzzzz@\igobble|seealso{sensitivity}}\index{false alarm rate!zzzzz@\igobble|seealso{false positive rate}}\index{receiver operating characteristic curve}
+We can trace the ROC curve as the combination between [sensitivity](#sensitivity) and [specificity](#specificity) at every possible cutoff.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
+At a cutoff of zero (top right of ROC curve), we calculate [sensitivity](#sensitivity) (1.0) and [specificity](#specificity) (0) and plot it.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
+At a cutoff of zero, the assessment tell us to make an action for every stimulus (i.e., it is the most liberal).\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
+We then gradually increase the cutoff, and plot [sensitivity](#sensitivity) and [specificity](#specificity) at each cutoff.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
+As the cutoff increases, [sensitivity](#sensitivity) decreases and [specificity](#specificity) increases.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
+We end at the highest possible cutoff, where the [sensitivity](#sensitivity) is 0 and the specificity is 1.0 (i.e., we never make an action; i.e., it is the most conservative).\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
+Each point on the ROC curve corresponds to a pair of [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates ([sensitivity](#sensitivity) and [specificity](#specificity)) resulting from a specific cutoff value.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
+Then, we can draw lines or a curve to connect the points.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
 
-Figure \@ref(fig:empiricalROC) depicts an empirical ROC plot where lines are drawn to connect the [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates.
+Figure \@ref(fig:empiricalROC) depicts an empirical ROC plot where lines are drawn to connect the [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
 
 ```{r empiricalROC, echo = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Empirical Receiver Operating Characteristic Curve. AUC = Area under the receiver operating characteristic curve."}
 library("pROC")
@@ -905,7 +905,7 @@ library("pROC")
 plot(roc(aSAH$outcome, aSAH$s100b), legacy.axes = TRUE, print.auc = TRUE)
 ```
 
-Figure \@ref(fig:smoothROC) depicts an ROC curve where a smoothed and fitted curve is drawn to connect the [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates.
+Figure \@ref(fig:smoothROC) depicts an ROC curve where a smoothed and fitted curve is drawn to connect the [hit](#truePositiveRate) and [false alarm](#falsePositiveRate) rates.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
 
 ```{r smoothROC, echo = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Smooth Receiver Operating Characteristic Curve. AUC = Area under the receiver operating characteristic curve."}
 plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE)
@@ -913,18 +913,18 @@ plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc
 
 ###### Area Under the ROC Curve {#auc}
 
-[ROC](#roc) methods can be used to compare and compute the [discriminative](#discrimination) power of measurement devices free from the influence of [selection ratios](#selectionRatio), [base rates](#baseRate), and costs and benefits.
-An [ROC](#roc) analysis yields a quantitative index of how well an index predicts a signal of interest or can discriminate between different signals.
-[ROC](#roc) analysis can help tell us how often our assessment would be correct.
-If we randomly pick two observations, and we were right once and wrong once, we were 50% accurate.
-But this would be a useless measure because it reflects chance responding.
+[ROC](#roc) methods can be used to compare and compute the [discriminative](#discrimination) power of measurement devices free from the influence of [selection ratios](#selectionRatio), [base rates](#baseRate), and costs and benefits.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}\index{base rate}\index{selection ratio}
+An [ROC](#roc) analysis yields a quantitative index of how well an index predicts a signal of interest or can discriminate between different signals.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+[ROC](#roc) analysis can help tell us how often our assessment would be correct.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+If we randomly pick two observations, and we were right once and wrong once, we were 50% accurate.\index{receiver operating characteristic curve!area under the curve}
+But this would be a useless measure because it reflects chance responding.\index{receiver operating characteristic curve!area under the curve}
 
-The geometrical area under the [ROC curve](#roc) reflects the [discriminative accuracy](#discrimination) of the measure.
-The index is called the **a**rea **u**nder the **c**urve (AUC) of an [ROC curve](#roc).
-AUC quantifies the [discriminative power](#discrimination) of an assessment.
-AUC is the probability that a randomly selected target and a randomly selected non-target is ranked correctly by the assessment method.
-AUC values range from 0.0 to 1.0, where chance accuracy is 0.5 as indicated by diagonal line in the ROC curve.
-That is, a measure can be useful to the extent that its ROC curve is above the diagonal line (i.e., its [discriminative accuracy](#discrimination) is above chance).
+The geometrical area under the [ROC curve](#roc) reflects the [discriminative accuracy](#discrimination) of the measure.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+The index is called the **a**rea **u**nder the **c**urve (AUC) of an [ROC curve](#roc).\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+AUC quantifies the [discriminative power](#discrimination) of an assessment.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+AUC is the probability that a randomly selected target and a randomly selected non-target is ranked correctly by the assessment method.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+AUC values range from 0.0 to 1.0, where chance accuracy is 0.5 as indicated by diagonal line in the ROC curve.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+That is, a measure can be useful to the extent that its ROC curve is above the diagonal line (i.e., its [discriminative accuracy](#discrimination) is above chance).\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
 
 ```{r auc, echo = FALSE, results = "hide", fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Area Under The Receiver Operating Characteristic Curve (AUC)."}
 plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, auc.polygon = TRUE)
@@ -963,17 +963,17 @@ plot(roc(y ~ x, auc95, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, pri
 plot(roc(y ~ x, auc99, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, print.auc.x = .94, print.auc.y = .94, print.auc.pattern = "%.2f", add = TRUE)
 ```
 
-As an example, given an AUC of .75, this says that the overall score of an individual who has the characteristic in question will be higher 75% of the time than the overall score of an individual who does not have the characteristic.
-In lay terms, AUC provides the probability that we will classify correctly based on our instrument if we were to randomly pick one good and one bad outcome?
-AUC is a stronger index of accuracy than [percent accuracy](#percentAccuracy), because you can have high [percent accuracy](#percentAccuracy) just by going with the [base rate](#baseRate).
-AUC tells us how much better than chance a measure is at discriminating outcomes.
-AUC is useful as a measure of general [discriminative accuracy](#discrimination), and it tells us how accurate a measure is at all possible cutoffs.
-Knowing the accuracy of a measure at all possible cutoffs can be helpful for selecting the optimal cutoff, given the goals of the assessment.
-In reality, however, we may not be interested in all cutoffs because not all errors are equal in their costs.
+As an example, given an AUC of .75, this says that the overall score of an individual who has the characteristic in question will be higher 75% of the time than the overall score of an individual who does not have the characteristic.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+In lay terms, AUC provides the probability that we will classify correctly based on our instrument if we were to randomly pick one good and one bad outcome?\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+AUC is a stronger index of accuracy than [percent accuracy](#percentAccuracy), because you can have high [percent accuracy](#percentAccuracy) just by going with the [base rate](#baseRate).\index{receiver operating characteristic curve!area under the curve}\index{discrimination}\index{percent accuracy}\index{base rate!predicting from}
+AUC tells us how much better than chance a measure is at discriminating outcomes.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+AUC is useful as a measure of general [discriminative accuracy](#discrimination), and it tells us how accurate a measure is at all possible cutoffs.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}\index{cutoff}
+Knowing the accuracy of a measure at all possible cutoffs can be helpful for selecting the optimal cutoff, given the goals of the assessment.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}\index{cutoff!optimal}
+In reality, however, we may not be interested in all cutoffs because not all errors are equal in their costs.\index{receiver operating characteristic curve!area under the curve}\index{discrimination}\index{cutoff}
 
-If we lower the [base rate](#baseRate), we would need a larger sample to get enough people to classify into each group.
-[SDT](#sdt)/[ROC](#roc) methods are traditionally about dichotomous decisions (yes/no), not graded judgments.
-[SDT](#sdt)/[ROC](#roc) methods can get messy with ordinal data that are more graded because you would have an AUC curve for each ordinal grouping.
+If we lower the [base rate](#baseRate), we would need a larger sample to get enough people to classify into each group.\index{base rate}
+[SDT](#sdt)/[ROC](#roc) methods are traditionally about dichotomous decisions (yes/no), not graded judgments.\index{signal detection theory}\index{receiver operating characteristic curve}
+[SDT](#sdt)/[ROC](#roc) methods can get messy with ordinal data that are more graded because you would have an AUC curve for each ordinal grouping.\index{signal detection theory}\index{receiver operating characteristic curve}
 
 ## Getting Started {#gettingStarted-prediction}
 
