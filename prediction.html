@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2023-04-10" />
+<meta name="date" content="2023-04-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -4090,7 +4090,7 @@ In this case, the 95% confidence interval of the observed value does not include
 Figure 9.27: Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The yellow line is the best-fit line. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 </p>
 </div>
-<p>Gold-standard recommendations include examining the predicted values in relation to the observed values using a LOESS smoother <span class="citation">(<a href="#ref-Austin2014" role="doc-biblioref">Austin &amp; Steyerberg, 2014</a>)</span>, such as in Figure <a href="prediction.html#fig:calibrationContinuousOutcomeLOESS">9.28</a>.
+<p>Gold-standard recommendations include examining the predicted values in relation to the observed values using locally estimated scatterplot smoothing (LOESS) <span class="citation">(<a href="#ref-Austin2014" role="doc-biblioref">Austin &amp; Steyerberg, 2014</a>)</span>, such as in Figure <a href="prediction.html#fig:calibrationContinuousOutcomeLOESS">9.28</a>.
 We can examine whether the LOESS-based 95% confidence interval of the observed value at every level of the predicted values includes the diagonal reference line (i.e., the actual observed value).
 In this case, the 95% confidence interval of the observed value does not include the reference line at lower levels of the predicted values, so the predictions are <a href="prediction.html#calibration">miscalibrated</a> at lower levels of the predicted values.</p>
 
@@ -5291,7 +5291,7 @@ The formula for calculating the negative likelihood ratio is in Equation <a href
 </div>
 <div id="posttestOdds" class="section level3 hasAnchor" number="9.5.31">
 <h3><span class="header-section-number">9.5.31</span> Posttest Odds<a href="prediction.html#posttestOdds" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>As presented in Equation <a href="prediction.html#eq:bayes5">(9.15)</a>, the posttest (or posterior) odds are equal to the <a href="prediction.html#pretestOdds">pretest odds</a> multiplied by the likelihood ratio.
+<p>As presented in Equation <a href="prediction.html#eq:bayes5">(9.15)</a>, the posttest (or posterior) odds are equal to the <a href="prediction.html#pretestOdds">pretest odds</a> multiplied by the <a href="prediction.html#diagnosticLikelihoodRatio">likelihood ratio</a>.
 The posttest odds and <a href="prediction.html#posttestProbability">posttest probability</a> can be useful to calculate when the <a href="prediction.html#baseRate">pretest probability</a> is different from the <a href="prediction.html#baseRate">pretest probability</a> (or prevalence) of the classification.
 For instance, you might use a different <a href="prediction.html#baseRate">pretest probability</a> if a test result is already known and you want to know the updated <a href="prediction.html#posttestProbability">posttest probability</a> after conducting a second test.
 The formula for calculating posttest odds is in Equation <a href="prediction.html#eq:posttestOdds">(9.59)</a>.</p>
@@ -6215,7 +6215,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics" class="section level3 hasAnchor" number="9.7.3">
 <h3><span class="header-section-number">9.7.3</span> All Accuracy Statistics<a href="prediction.html#allAccuracyStatistics" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2023</a>)</span> contains an R function that estimates the prediction accuracy at a every possible cutoff.</p>
+<p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2023</a>)</span> contains an R function that estimates the prediction accuracy at every possible cutoff.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb890"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb890-1"><a href="prediction.html#cb890-1" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracyAtEachCutoff</span>(</span>
 <span id="cb890-2"><a href="prediction.html#cb890-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">predicted =</span> mydataSDT<span class="sc">$</span>testScore,</span>
@@ -6425,6 +6425,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 1                 0.22                  0.65</code></pre>
 <div id="allAccuracyStatistics-cutoffPercentAccuracy" class="section level4 hasAnchor" number="9.7.6.1">
 <h4><span class="header-section-number">9.7.6.1</span> Percent Accuracy<a href="prediction.html#allAccuracyStatistics-cutoffPercentAccuracy" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb900"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb900-1"><a href="prediction.html#cb900-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb900-2"><a href="prediction.html#cb900-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>percentAccuracy <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6435,6 +6436,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffPercentAccuracyByChance" class="section level4 hasAnchor" number="9.7.6.2">
 <h4><span class="header-section-number">9.7.6.2</span> Percent Accuracy by Chance<a href="prediction.html#allAccuracyStatistics-cutoffPercentAccuracyByChance" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb902"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb902-1"><a href="prediction.html#cb902-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb902-2"><a href="prediction.html#cb902-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>percentAccuracyByChance <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6445,6 +6447,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffROIC" class="section level4 hasAnchor" number="9.7.6.3">
 <h4><span class="header-section-number">9.7.6.3</span> Relative Improvement Over Chance (ROIC)<a href="prediction.html#allAccuracyStatistics-cutoffROIC" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb904"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb904-1"><a href="prediction.html#cb904-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb904-2"><a href="prediction.html#cb904-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>relativeImprovementOverChance <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6455,6 +6458,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffRelativeImprovementOverPredictingFromBaseRate" class="section level4 hasAnchor" number="9.7.6.4">
 <h4><span class="header-section-number">9.7.6.4</span> Relative Improvement Over Predicting from the Base Rate<a href="prediction.html#allAccuracyStatistics-cutoffRelativeImprovementOverPredictingFromBaseRate" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb906"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb906-1"><a href="prediction.html#cb906-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb906-2"><a href="prediction.html#cb906-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>relativeImprovementOverPredictingFromBaseRate <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6465,6 +6469,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffSensitivity" class="section level4 hasAnchor" number="9.7.6.5">
 <h4><span class="header-section-number">9.7.6.5</span> Sensitivity<a href="prediction.html#allAccuracyStatistics-cutoffSensitivity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb908"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb908-1"><a href="prediction.html#cb908-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb908-2"><a href="prediction.html#cb908-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>sensitivity <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6475,6 +6480,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffSpecificity" class="section level4 hasAnchor" number="9.7.6.6">
 <h4><span class="header-section-number">9.7.6.6</span> Specificity<a href="prediction.html#allAccuracyStatistics-cutoffSpecificity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb910"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb910-1"><a href="prediction.html#cb910-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb910-2"><a href="prediction.html#cb910-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>specificity <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6485,6 +6491,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffPPV" class="section level4 hasAnchor" number="9.7.6.7">
 <h4><span class="header-section-number">9.7.6.7</span> Positive Predictive Value<a href="prediction.html#allAccuracyStatistics-cutoffPPV" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb912"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb912-1"><a href="prediction.html#cb912-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb912-2"><a href="prediction.html#cb912-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>positivePredictiveValue <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6495,6 +6502,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffNPV" class="section level4 hasAnchor" number="9.7.6.8">
 <h4><span class="header-section-number">9.7.6.8</span> Negative Predictive Value<a href="prediction.html#allAccuracyStatistics-cutoffNPV" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb914"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb914-1"><a href="prediction.html#cb914-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb914-2"><a href="prediction.html#cb914-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>negativePredictiveValue <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6505,6 +6513,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffYoudenJ" class="section level4 hasAnchor" number="9.7.6.9">
 <h4><span class="header-section-number">9.7.6.9</span> Youden’s J Statistic<a href="prediction.html#allAccuracyStatistics-cutoffYoudenJ" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb916"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb916-1"><a href="prediction.html#cb916-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb916-2"><a href="prediction.html#cb916-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>youdenJ <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6515,6 +6524,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffBalancedAccuracy" class="section level4 hasAnchor" number="9.7.6.10">
 <h4><span class="header-section-number">9.7.6.10</span> Balanced Accuracy<a href="prediction.html#allAccuracyStatistics-cutoffBalancedAccuracy" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb918"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb918-1"><a href="prediction.html#cb918-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb918-2"><a href="prediction.html#cb918-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>balancedAccuracy <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6525,6 +6535,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffF1" class="section level4 hasAnchor" number="9.7.6.11">
 <h4><span class="header-section-number">9.7.6.11</span> F1 Score<a href="prediction.html#allAccuracyStatistics-cutoffF1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb920"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb920-1"><a href="prediction.html#cb920-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb920-2"><a href="prediction.html#cb920-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>f1Score <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6535,6 +6546,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffMCC" class="section level4 hasAnchor" number="9.7.6.12">
 <h4><span class="header-section-number">9.7.6.12</span> Matthews Correlation Coefficient<a href="prediction.html#allAccuracyStatistics-cutoffMCC" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb922"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb922-1"><a href="prediction.html#cb922-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb922-2"><a href="prediction.html#cb922-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>mcc <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6545,6 +6557,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffDOR" class="section level4 hasAnchor" number="9.7.6.13">
 <h4><span class="header-section-number">9.7.6.13</span> Diagnostic Odds Ratio<a href="prediction.html#allAccuracyStatistics-cutoffDOR" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb924"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb924-1"><a href="prediction.html#cb924-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb924-2"><a href="prediction.html#cb924-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>diagnosticOddsRatio <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6555,6 +6568,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffPLR" class="section level4 hasAnchor" number="9.7.6.14">
 <h4><span class="header-section-number">9.7.6.14</span> Positive Likelihood Ratio<a href="prediction.html#allAccuracyStatistics-cutoffPLR" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb926"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb926-1"><a href="prediction.html#cb926-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb926-2"><a href="prediction.html#cb926-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>positiveLikelihoodRatio <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6565,6 +6579,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffNLR" class="section level4 hasAnchor" number="9.7.6.15">
 <h4><span class="header-section-number">9.7.6.15</span> Negative Likelihood Ratio<a href="prediction.html#allAccuracyStatistics-cutoffNLR" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb928"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb928-1"><a href="prediction.html#cb928-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb928-2"><a href="prediction.html#cb928-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>negativeLikelihoodRatio <span class="sc">==</span> <span class="fu">min</span>(</span>
@@ -6575,6 +6590,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffDprime" class="section level4 hasAnchor" number="9.7.6.16">
 <h4><span class="header-section-number">9.7.6.16</span> <span class="math inline">\(d&#39;\)</span> Sensitivity<a href="prediction.html#allAccuracyStatistics-cutoffDprime" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb930"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb930-1"><a href="prediction.html#cb930-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb930-2"><a href="prediction.html#cb930-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>dPrimeSDT <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6585,6 +6601,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffAsensitivity" class="section level4 hasAnchor" number="9.7.6.17">
 <h4><span class="header-section-number">9.7.6.17</span> <span class="math inline">\(A\)</span> (Non-Parametric) Sensitivity<a href="prediction.html#allAccuracyStatistics-cutoffAsensitivity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb932"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb932-1"><a href="prediction.html#cb932-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb932-2"><a href="prediction.html#cb932-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>ASDT <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6595,6 +6612,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffBetaBias" class="section level4 hasAnchor" number="9.7.6.18">
 <h4><span class="header-section-number">9.7.6.18</span> <span class="math inline">\(\beta\)</span> Bias<a href="prediction.html#allAccuracyStatistics-cutoffBetaBias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb934"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb934-1"><a href="prediction.html#cb934-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(<span class="fu">abs</span>(</span>
 <span id="cb934-2"><a href="prediction.html#cb934-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>betaSDT) <span class="sc">==</span> <span class="fu">min</span>(<span class="fu">abs</span>(</span>
@@ -6605,6 +6623,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffCbias" class="section level4 hasAnchor" number="9.7.6.19">
 <h4><span class="header-section-number">9.7.6.19</span> <span class="math inline">\(c\)</span> Bias<a href="prediction.html#allAccuracyStatistics-cutoffCbias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb936"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb936-1"><a href="prediction.html#cb936-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(<span class="fu">abs</span>(</span>
 <span id="cb936-2"><a href="prediction.html#cb936-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>cSDT) <span class="sc">==</span> <span class="fu">min</span>(<span class="fu">abs</span>(</span>
@@ -6615,6 +6634,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffBbias" class="section level4 hasAnchor" number="9.7.6.20">
 <h4><span class="header-section-number">9.7.6.20</span> <span class="math inline">\(b\)</span> (Non-Parametric) Bias<a href="prediction.html#allAccuracyStatistics-cutoffBbias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb938"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb938-1"><a href="prediction.html#cb938-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(<span class="fu">abs</span>(</span>
 <span id="cb938-2"><a href="prediction.html#cb938-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>bSDT) <span class="sc">==</span> <span class="fu">min</span>(<span class="fu">abs</span>(</span>
@@ -6625,6 +6645,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffMiscalibration" class="section level4 hasAnchor" number="9.7.6.21">
 <h4><span class="header-section-number">9.7.6.21</span> Mean difference between predicted and observed values (Miscalibration)<a href="prediction.html#allAccuracyStatistics-cutoffMiscalibration" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb940"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb940-1"><a href="prediction.html#cb940-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(<span class="fu">abs</span>(</span>
 <span id="cb940-2"><a href="prediction.html#cb940-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>differenceBetweenPredictedAndObserved) <span class="sc">==</span> <span class="fu">min</span>(<span class="fu">abs</span>(</span>
@@ -6635,6 +6656,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffOverallUtility" class="section level4 hasAnchor" number="9.7.6.22">
 <h4><span class="header-section-number">9.7.6.22</span> Overall Utility<a href="prediction.html#allAccuracyStatistics-cutoffOverallUtility" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb942"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb942-1"><a href="prediction.html#cb942-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb942-2"><a href="prediction.html#cb942-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>overallUtility <span class="sc">==</span> <span class="fu">max</span>(</span>
@@ -6645,6 +6667,7 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 </div>
 <div id="allAccuracyStatistics-cutoffIgain" class="section level4 hasAnchor" number="9.7.6.23">
 <h4><span class="header-section-number">9.7.6.23</span> Information Gain<a href="prediction.html#allAccuracyStatistics-cutoffIgain" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb944"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb944-1"><a href="prediction.html#cb944-1" aria-hidden="true" tabindex="-1"></a>accuracyStats<span class="sc">$</span>cutoff[<span class="fu">which</span>(</span>
 <span id="cb944-2"><a href="prediction.html#cb944-2" aria-hidden="true" tabindex="-1"></a>  accuracyStats<span class="sc">$</span>informationGain <span class="sc">==</span> <span class="fu">max</span>(</span>
