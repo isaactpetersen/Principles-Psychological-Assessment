@@ -1046,12 +1046,12 @@ mydataSDT$disorder[c(10,15)] <- NA
 
 ## Receiver Operating Characteristic (ROC) Curve {#rocCurve}
 
-The [receiver operating characteristic (ROC) curve](#roc) shows the combination of [hit rate](#sensitivity) ([sensitivity](#sensitivity)) and [false alarm rate](#falsePositiveRate) ($1 - \text{specificity}$) at every possible cutoff.
-It depicts that, as the cutoff increases (i.e., becomes more conservative), [sensitivity](#sensitivity) decreases and [specificity](#specificity) increases.
-It also depicts that, as the cutoff decreases (i.e., becomes more liberal), [sensitivity](#sensitivity) increases and [specificity](#specificity) decreases.
+The [receiver operating characteristic (ROC) curve](#roc) shows the combination of [hit rate](#sensitivity) ([sensitivity](#sensitivity)) and [false alarm rate](#falsePositiveRate) ($1 - \text{specificity}$) at every possible cutoff.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{false positive rate}\index{cutoff}
+It depicts that, as the cutoff increases (i.e., becomes more conservative), [sensitivity](#sensitivity) decreases and [specificity](#specificity) increases.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{false positive rate}\index{cutoff}
+It also depicts that, as the cutoff decreases (i.e., becomes more liberal), [sensitivity](#sensitivity) increases and [specificity](#specificity) decreases.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{false positive rate}\index{cutoff}
 
 [Receiver operating characteristic (ROC) curves](#roc) were generated using the `pROC` package [@R-pROC].
-The examples depict ROC curves that demonstrate that the measure is moderately accurate—the measure is more accurate than chance but there remains considerable room for improvement in predictive accuracy.
+The examples depict ROC curves that demonstrate that the measure is moderately accurate—the measure is more accurate than chance but there remains considerable room for improvement in predictive accuracy.\index{receiver operating characteristic curve}
 
 ### Empirical ROC Curve {#empiricalROC}
 
@@ -1088,7 +1088,7 @@ plot(rocCurveSmooth, legacy.axes = TRUE, print.auc = TRUE)
 
 ### Youden's J Statistic {#youdenJ}
 
-The threshold at the Youden's J statistic is the threshold where the test has the maximum combination (i.e., sum) of [sensitivity](#sensitivity) and [specificity](#specificity): $\text{max}(\text{sensitivity} + \text{specificity} - 1)$
+The threshold at the Youden's J statistic is the threshold where the test has the maximum combination (i.e., sum) of [sensitivity](#sensitivity) and [specificity](#specificity): $\text{max}(\text{sensitivity} + \text{specificity} - 1)$\index{Youden's J statistic}\index{sensitivity}\index{specificity}
 
 ```{r}
 youdenJ <- coords(
@@ -1106,7 +1106,7 @@ For this test, the Youden's J Statistic is at a threshold of $`r youdenJthreshol
 
 ### The point closest to the top-left part of the ROC curve with perfect sensitivity and specificity {#topLeftROC}
 
-The point closest to the top-left part of the ROC plot with perfect [sensitivity](#sensitivity) and [specificity](#specificity): $\text{min}[(1 - \text{sensitivity})^2 + (1 - \text{specificity})^2]$
+The point closest to the top-left part of the ROC plot with perfect [sensitivity](#sensitivity) and [specificity](#specificity): $\text{min}[(1 - \text{sensitivity})^2 + (1 - \text{specificity})^2]$\index{sensitivity}\index{specificity}
 
 ```{r}
 closestTopLeft <- coords(
@@ -1124,13 +1124,13 @@ For this test, the combination of [sensitivity](#sensitivity) and [specificity](
 
 ## Prediction Accuracy Across Cutoffs {#predictionAccuracy}
 
-There are two primary dimensions of accuracy: (1) [discrimination](#discrimination) (e.g., [sensitivity](#sensitivity), [specificity](#specificity), [area under the ROC curve](#auc)) and (2) [calibration](#calibration).
-Some general indexes of accuracy combine [discrimination](#discrimination) and [calibration](#calibration), as described in Section \@ref(generalPredictionAccuracy).
-This section (\@ref(predictionAccuracy)) describes indexes of accuracy that span all possible cutoffs.
-That is, each index of accuracy described in this section provides a single numerical index of accuracy that aggregates the accuracy across all possible cutoffs.
-Aspects of accuracy at a particular cutoff are described in Section \@ref(cutoffAccuracy).
+There are two primary dimensions of accuracy: (1) [discrimination](#discrimination) (e.g., [sensitivity](#sensitivity), [specificity](#specificity), [area under the ROC curve](#auc)) and (2) [calibration](#calibration).\index{discrimination}\index{calibration}\index{sensitivity}\index{specificity}\index{receiver operating characteristic curve!area under the curve}
+Some general indexes of accuracy combine [discrimination](#discrimination) and [calibration](#calibration), as described in Section \@ref(generalPredictionAccuracy).\index{discrimination}\index{calibration}
+This section (\@ref(predictionAccuracy)) describes indexes of accuracy that span all possible cutoffs.\index{cutoff}
+That is, each index of accuracy described in this section provides a single numerical index of accuracy that aggregates the accuracy across all possible cutoffs.\index{cutoff}
+Aspects of accuracy at a particular cutoff are described in Section \@ref(cutoffAccuracy).\index{cutoff}
 
-The `petersenlab` package [@R-petersenlab] contains the `accuracyOverall()` function that estimates the prediction accuracy across cutoffs.\index{petersenlab}
+The `petersenlab` package [@R-petersenlab] contains the `accuracyOverall()` function that estimates the prediction accuracy across cutoffs.\index{petersenlab}\index{cutoff}
 
 ```{r}
 accuracyOverall(
@@ -1151,24 +1151,24 @@ accuracyOverall(
 
 There are many metrics of general prediction accuracy.
 When thinking about which metric(s) may be best for a given problem, it is important to consider the purpose of the assessment.
-The estimates of general prediction accuracy are separated below into [scale-dependent](#scaleDependentAccuracy) and [scale-independent](#scaleIndependentAccuracy) accuracy estimates.
+The estimates of general prediction accuracy are separated below into [scale-dependent](#scaleDependentAccuracy) and [scale-independent](#scaleIndependentAccuracy) accuracy estimates.\index{scale-dependent}\index{scale-independent}
 
 #### Scale-Dependent Accuracy Estimates {#scaleDependentAccuracy}
 
-The estimates of prediction accuracy described in this section are scale-dependent.
-These accuracy estimates depend on the unit of measurement and therefore cannot be compared across measures with different scales or across data sets.
+The estimates of prediction accuracy described in this section are scale-dependent.\index{scale-dependent}
+These accuracy estimates depend on the unit of measurement and therefore cannot be compared across measures with different scales or across data sets.\index{scale-dependent}
 
 ##### Mean Error {#meanError}
 
-Here, "error" ($e$) is the difference between the predicted and observed value for a given individual ($i$).
-Mean error (ME; also known as bias, see Section \@ref(blandAltmanBias)) is the mean difference between the predicted and observed values across individuals ($i$), that is, the mean of the errors across individuals ($e_i$).
-Values closer to zero reflect greater accuracy.
-If mean error is above zero, it indicates that predicted values are, on average, greater than observed values (i.e., over-estimating errors).
-If mean error is below zero, it indicates that predicted values are, on average, less than observed values (i.e., under-estimating errors).
-If both over-estimating and under-estimating errors are present, however, they can cancel each other out.
-As a result, even with a mean error of zero, there can still be considerable error present.
-Thus, although mean error can be helpful for examining whether predictions systematically under- or over-estimate the actual scores, other forms of accuracy are necessary to examine to examine the *extent* of error.
-The formula for mean error is in Equation \@ref(eq:meanError):
+Here, "error" ($e$) is the difference between the predicted and observed value for a given individual ($i$).\index{mean error}
+Mean error (ME; also known as bias, see Section \@ref(blandAltmanBias)) is the mean difference between the predicted and observed values across individuals ($i$), that is, the mean of the errors across individuals ($e_i$).\index{mean error}\index{bias}
+Values closer to zero reflect greater accuracy.\index{mean error}
+If mean error is above zero, it indicates that predicted values are, on average, greater than observed values (i.e., over-estimating errors).\index{mean error}
+If mean error is below zero, it indicates that predicted values are, on average, less than observed values (i.e., under-estimating errors).\index{mean error}
+If both over-estimating and under-estimating errors are present, however, they can cancel each other out.\index{mean error}
+As a result, even with a mean error of zero, there can still be considerable error present.\index{mean error}\index{measurement error}
+Thus, although mean error can be helpful for examining whether predictions systematically under- or over-estimate the actual scores, other forms of accuracy are necessary to examine to examine the *extent* of error.\index{mean error}\index{measurement error}
+The formula for mean error is in Equation \@ref(eq:meanError):\index{mean error}
 
 $$
 \begin{aligned}
@@ -1193,13 +1193,13 @@ meanError(mydataSDT$testScore, mydataSDT$disorder)
 meanErrorValue <- meanError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-In this case, the mean error is negative, so the predictions systematically under-estimate the actual scores.
+In this case, the mean error is negative, so the predictions systematically under-estimate the actual scores.\index{mean error}
 
 ##### Mean Absolute Error (MAE) {#meanAbsoluteError}
 
-Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.
-Smaller MAE values (closer to zero) reflect greater accuracy.
-The formula for MAE is in Equation \@ref(eq:meanAbsoluteError):
+Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.\index{median absolute error}
+Smaller MAE values (closer to zero) reflect greater accuracy.\index{median absolute error}
+The formula for MAE is in Equation \@ref(eq:meanAbsoluteError):\index{median absolute error}
 
 $$
 \begin{aligned}
@@ -1226,9 +1226,9 @@ meanAbsoluteErrorValue <- meanAbsoluteError(mydataSDT$testScore, mydataSDT$disor
 
 ##### Mean Squared Error (MSE) {#meanSquaredError}
 
-Mean squared error (MSE) is the mean of the square of the differences between the predicted and observed values across individuals, that is, the mean of the squared value of errors.
-Smaller MSE values (closer to zero) reflect greater accuracy.
-The formula for MSE is in Equation \@ref(eq:meanSquaredError):
+Mean squared error (MSE) is the mean of the square of the differences between the predicted and observed values across individuals, that is, the mean of the squared value of errors.\index{mean squared error}
+Smaller MSE values (closer to zero) reflect greater accuracy.\index{mean squared error}
+The formula for MSE is in Equation \@ref(eq:meanSquaredError):\index{mean squared error}
 
 $$
 \begin{aligned}
@@ -1255,10 +1255,10 @@ meanSquaredErrorValue <- meanSquaredError(mydataSDT$testScore, mydataSDT$disorde
 
 ##### Root Mean Squared Error (RMSE) {#rootMeanSquaredError}
 
-Root mean squared error (RMSE) is the square root of the mean of the square of the differences between the predicted and observed values across individuals, that is, the root mean squared value of errors.
-Smaller RMSE values (closer to zero) reflect greater accuracy.
-RMSE penalizes larger errors more so than [MAE](#meanAbsoluteError) does.
-The formula for RMSE is in Equation \@ref(eq:rootMeanSquaredError):
+Root mean squared error (RMSE) is the square root of the mean of the square of the differences between the predicted and observed values across individuals, that is, the root mean squared value of errors.\index{root mean squared error}
+Smaller RMSE values (closer to zero) reflect greater accuracy.\index{root mean squared error}
+RMSE penalizes larger errors more so than [MAE](#meanAbsoluteError) does.\index{root mean squared error}\index{mean absolute error}
+The formula for RMSE is in Equation \@ref(eq:rootMeanSquaredError):\index{root mean squared error}
 
 $$
 \begin{aligned}
@@ -1285,12 +1285,12 @@ rootMeanSquaredErrorValue <- rootMeanSquaredError(mydataSDT$testScore, mydataSDT
 
 #### Scale-Independent Accuracy Estimates {#scaleIndependentAccuracy}
 
-The estimates of prediction accuracy described in this section are intended to be scale-*independent* (unit-free) so the accuracy estimates can be compared across measures with different scales or across data sets [@Hyndman2018].
+The estimates of prediction accuracy described in this section are intended to be scale-*independent* (unit-free) so the accuracy estimates can be compared across measures with different scales or across data sets [@Hyndman2018].\index{scale-independent}
 
 ##### Mean Percentage Error (MPE) {#meanPercentageError}
 
-Mean percentage error (MPE) values closer to zero reflect greater accuracy.
-The formula for percentage error is in Equation \@ref(eq:percentageError):
+Mean percentage error (MPE) values closer to zero reflect greater accuracy.\index{mean percentage error}
+The formula for percentage error is in Equation \@ref(eq:percentageError):\index{mean percentage error}
 
 $$
 \begin{aligned}
@@ -1299,8 +1299,8 @@ $$
 (\#eq:percentageError)
 $$
 
-We then take the mean of the percentage errors to get MPE.
-The formula for MPE is in Equation \@ref(eq:meanPercentageError):
+We then take the mean of the percentage errors to get MPE.\index{mean percentage error}
+The formula for MPE is in Equation \@ref(eq:meanPercentageError):\index{mean percentage error}
 
 $$
 \begin{aligned}
@@ -1311,8 +1311,8 @@ $$
 (\#eq:meanPercentageError)
 $$
 
-Note: MPE is undefined when one or more of the observed values equals zero, due to division by zero.
-I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.
+Note: MPE is undefined when one or more of the observed values equals zero, due to division by zero.\index{mean percentage error}
+I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{mean percentage error}
 
 ```{r, class.source = "fold-hide"}
 meanPercentageError = function(predicted, actual, dropUndefined = FALSE){
@@ -1344,8 +1344,8 @@ meanPercentageErrorValue <- meanPercentageError(mydataSDT$testScore, mydataSDT$d
 
 ##### Mean Absolute Percentage Error (MAPE) {#meanAbsolutePercentageError}
 
-Smaller mean absolute percentage error (MAPE) Values (closer to zero) reflect greater accuracy.
-The formula for MAPE is in Equation \@ref(eq:meanAbsolutePercentageError):
+Smaller mean absolute percentage error (MAPE) Values (closer to zero) reflect greater accuracy.\index{mean absolute percentage error}
+The formula for MAPE is in Equation \@ref(eq:meanAbsolutePercentageError):\index{mean absolute percentage error}
 
 $$
 \begin{aligned}
@@ -1356,8 +1356,8 @@ $$
 (\#eq:meanAbsolutePercentageError)
 $$
 
-Note: MAPE is undefined when one or more of the observed values equals zero, due to division by zero.
-I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.
+Note: MAPE is undefined when one or more of the observed values equals zero, due to division by zero.\index{mean absolute percentage error}
+I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{mean absolute percentage error}
 
 ```{r, class.source = "fold-hide"}
 meanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
@@ -1389,8 +1389,8 @@ meanAbsolutePercentageErrorValue <- meanAbsolutePercentageError(mydataSDT$testSc
 
 ##### Symmetric Mean Absolute Percentage Error (sMAPE) {#symmetricMeanAbsolutePercentageError}
 
-Smaller symmetric mean asbolute percentage error (sMAPE) values (closer to zero) reflect greater accuracy.
-The formula for sMAPE is in Equation \@ref(eq:symmetricMeanAbsolutePercentageError):
+Smaller symmetric mean asbolute percentage error (sMAPE) values (closer to zero) reflect greater accuracy.\index{symmetric mean asbolute percentage error}
+The formula for sMAPE is in Equation \@ref(eq:symmetricMeanAbsolutePercentageError):\index{symmetric mean asbolute percentage error}
 
 $$
 \small
@@ -1400,8 +1400,8 @@ $$
 (\#eq:symmetricMeanAbsolutePercentageError)
 $$
 
-Note: sMAPE is undefined when one or more of the individuals has a prediction–observed combination such that the sum of the absolute value of the predicted value and the absolute value of the observed value equals zero ($|\text{predicted}_i| + |\text{observed}_i|$), due to division by zero.
-I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.
+Note: sMAPE is undefined when one or more of the individuals has a prediction–observed combination such that the sum of the absolute value of the predicted value and the absolute value of the observed value equals zero ($|\text{predicted}_i| + |\text{observed}_i|$), due to division by zero.\index{symmetric mean asbolute percentage error}
+I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{symmetric mean asbolute percentage error}
 
 ```{r, class.source = "fold-hide"}
 symmetricMeanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
@@ -1429,10 +1429,10 @@ symmetricMeanAbsolutePercentageErrorValue <- symmetricMeanAbsolutePercentageErro
 ##### Mean Absolute Scaled Error (MASE) {#meanAbsoluteScaledErrro}
 
 Mean absolute scaled error (MASE) is described by [@Hyndman2018].
-Values closer to zero reflect greater accuracy.
+Values closer to zero reflect greater accuracy.\index{mean asbolute scaled error}
 
-The adapted formula for MASE with non-time series data is described [here (https://stats.stackexchange.com/a/108963/20338)](https://stats.stackexchange.com/a/108963/20338).
-Scaled errors are calculated using Equation \@ref(eq:scaledError):
+The adapted formula for MASE with non-time series data is described [here (https://stats.stackexchange.com/a/108963/20338)](https://stats.stackexchange.com/a/108963/20338).\index{mean asbolute scaled error}
+Scaled errors are calculated using Equation \@ref(eq:scaledError):\index{mean asbolute scaled error}
 
 $$
 \begin{aligned}
@@ -1442,7 +1442,7 @@ $$
 (\#eq:scaledError)
 $$
 
-Then, we calculate the mean of the absolute value of the scaled errors to get MASE, as in Equation \@ref(eq:meanAbsoluteScaledError):
+Then, we calculate the mean of the absolute value of the scaled errors to get MASE, as in Equation \@ref(eq:meanAbsoluteScaledError):\index{mean asbolute scaled error}
 
 $$
 \begin{aligned}
@@ -1453,8 +1453,8 @@ $$
 (\#eq:meanAbsoluteScaledError)
 $$
 
-Note: MASE is undefined when the scaling factor is zero, due to division by zero.
-With non-time series data, the scaling factor is the average of the absolute value of individuals' observed scores minus the average observed score ($\frac{1}{n} \sum\limits_{i = 1}^n |\text{observed}_i - \overline{\text{observed}}|$).
+Note: MASE is undefined when the scaling factor is zero, due to division by zero.\index{mean asbolute scaled error}
+With non-time series data, the scaling factor is the average of the absolute value of individuals' observed scores minus the average observed score ($\frac{1}{n} \sum\limits_{i = 1}^n |\text{observed}_i - \overline{\text{observed}}|$).\index{mean asbolute scaled error}
 
 ```{r, class.source = "fold-hide"}
 meanAbsoluteScaledError <- function(predicted, actual){
@@ -1479,8 +1479,8 @@ meanAbsoluteScaledErrorValue <- meanAbsoluteScaledError(mydataSDT$testScore, myd
 
 ##### Root Mean Squared Log of the Accuracy Ratio {#accuracyRatio}
 
-The squared log of the accuracy ratio is described by @Tofallis2015.
-The accuracy ratio is in Equation \@ref(eq:accuracyRatio):
+The squared log of the accuracy ratio is described by @Tofallis2015.\index{log of the accuracy ratio}
+The accuracy ratio is in Equation \@ref(eq:accuracyRatio):\index{log of the accuracy ratio}
 
 $$
 \begin{aligned}
@@ -1489,8 +1489,8 @@ $$
 (\#eq:accuracyRatio)
 $$
 
-Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.
-Here, I take the mean of the squared log values, which keeps the values positive, and I calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric, as in Equation \@ref(eq:rootMeanSquaredLogAccuracyRatio):
+Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.\index{log of the accuracy ratio}
+Here, I take the mean of the squared log values, which keeps the values positive, and I calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric, as in Equation \@ref(eq:rootMeanSquaredLogAccuracyRatio):\index{log of the accuracy ratio}
 
 $$
 \begin{aligned}
@@ -1501,13 +1501,13 @@ $$
 (\#eq:rootMeanSquaredLogAccuracyRatio)
 $$
 
-There are other variations of prediction accuracy metrics that use the log of the accuracy ratio.
-One variation makes it similar to median symmetric percentage error [@Morley2018].
+There are other variations of prediction accuracy metrics that use the log of the accuracy ratio.\index{log of the accuracy ratio}
+One variation makes it similar to median symmetric percentage error [@Morley2018].\index{log of the accuracy ratio}
 
-Note: The log of the accuracy ratio is undefined when one or more predicted values or actual values equals zero.
-When predicted values are zero, there is a zero in the numerator of the accuracy ratio, which leads to $log(0)$, which is undefined.
+Note: The log of the accuracy ratio is undefined when one or more predicted values or actual values equals zero.\index{log of the accuracy ratio}
+When predicted values are zero, there is a zero in the numerator of the accuracy ratio, which leads to $log(0)$, which is undefined.\index{log of the accuracy ratio}
 When actual values are zero, there is division by zero in the accuracy ratio.
-I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.
+I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{log of the accuracy ratio}
 
 ```{r, class.source = "fold-hide"}
 rootMeanSquaredLogAccuracyRatio <- function(predicted, actual, dropUndefined = FALSE){
@@ -1540,13 +1540,13 @@ rootMeanSquaredLogAccuracyRatioValue <- rootMeanSquaredLogAccuracyRatio(mydataSD
 
 ##### Coefficient of Determination ($R^2$) {#coefficientOfDetermination}
 
-The coefficient of determination ($R^2$) is a general index of accuracy that combines both [discrimination](#discrimination) and [calibration](#calibration).
-It reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions: $R^2 = \frac{\text{variance explained in }Y}{\text{total variance in }Y}$.
-Larger values indicate greater accuracy.
+The coefficient of determination ($R^2$) is a general index of accuracy that combines both [discrimination](#discrimination) and [calibration](#calibration).\index{coefficient of determination}\index{discrimination}\index{calibration}
+It reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions: $R^2 = \frac{\text{variance explained in }Y}{\text{total variance in }Y}$.\index{coefficient of determination}
+Larger values indicate greater accuracy.\index{coefficient of determination}
 
-$R^2$ is commonly estimated in multiple regression, in which multiple predictors are allowed to predict one outcome.
-Multiple regression can be conceptualized with overlapping circles in what is called a [Ballantine graph](https://www.andrewheiss.com/blog/2021/08/21/r2-euler).
-$R^2$ in multiple regression is depicted conceptually with a Ballantine graph in Figure \@ref(fig:multipleRegressionRSquared).
+$R^2$ is commonly estimated in multiple regression, in which multiple predictors are allowed to predict one outcome.\index{coefficient of determination}\index{multiple regression}
+Multiple regression can be conceptualized with overlapping circles in what is called a [Ballantine graph](https://www.andrewheiss.com/blog/2021/08/21/r2-euler).\index{multiple regression}
+$R^2$ in multiple regression is depicted conceptually with a Ballantine graph in Figure \@ref(fig:multipleRegressionRSquared).\index{coefficient of determination}\index{multiple regression}
 
 ```{r multipleRegressionRSquared, out.width = "50%", fig.align = "center", fig.cap = "Conceptual depiction of proportion of variance explained ($R^2$) in an outcome variable ($Y$) by multiple predictors ($X1$ and $X2$) in multiple regression. The size of each circle represents the variable's variance. The proportion of variance in $Y$ that is explained by the predictors is depicted by the areas in orange. The dark orange space ($G$) is where multiple predictors explain overlapping variance in the outcome. Overlapping variance that is explained in the outcome ($G$) will not be recovered in the regression coefficients when both predictors are included in the regression model.", echo = FALSE}
 knitr::include_graphics("./Images/multipleRegressionRSquared.png")
@@ -1568,17 +1568,17 @@ The predictor (`testScore`) explains $`r apa(rSquaredValue * 100, 2)`$% of the v
 
 ###### Adjusted $R^2$ ($R^2_{adj}$) {#adjustedRsquared}
 
-Adjusted $R^2$ is similar to the [coefficient of determination](#coefficientOfDetermination), but it accounts for the number of predictors included in the regression model.
-Adjusted $R^2$ reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions over and above what would be expected to be accounted for by chance, given the number of predictors in the model.
-Larger values indicate greater accuracy.
-The formula for adjusted $R^2$ is in Equation \@ref(eq:adjustedRSquared):
+Adjusted $R^2$ is similar to the [coefficient of determination](#coefficientOfDetermination), but it accounts for the number of predictors included in the regression model.\index{adjusted $R^2$}\index{multiple regression}
+Adjusted $R^2$ reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions over and above what would be expected to be accounted for by chance, given the number of predictors in the model.\index{adjusted $R^2$}
+Larger values indicate greater accuracy.\index{adjusted $R^2$}
+The formula for adjusted $R^2$ is in Equation \@ref(eq:adjustedRSquared):\index{adjusted $R^2$}
 
 $$
 R^2_{adj} = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}
 (\#eq:adjustedRSquared)
 $$
 
-where $p$ is the number of predictors in the model, and $n$ is the sample size.
+where $p$ is the number of predictors in the model, and $n$ is the sample size.\index{adjusted $R^2$}
 
 ```{r}
 summary(lm(
@@ -1594,8 +1594,8 @@ Adjusted $R^2$ is described further in Section \@ref(pseudoPrediction).
 
 ###### Predictive $R^2$ {#predictiveRsquared}
 
-Predictive $R^2$ is described here: https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/.
-Larger values indicate greater accuracy.
+Predictive $R^2$ is described here:\index{predictive $R^2$} https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/.
+Larger values indicate greater accuracy.\index{predictive $R^2$}
 
 ```{r, class.source = "fold-hide"}
 #predictive residual sum of squares (PRESS)
@@ -1635,16 +1635,16 @@ predictiveRSquaredValue <- predictiveRSquared(mydataSDT$testScore, mydataSDT$dis
 
 ### Discrimination {#discrimination}
 
-When dealing with a categorical outcome, discrimination is the ability to separate events from non-events.
-When dealing with a continuous outcome, discrimination is the strength of the association between the predictor and the outcome.
-Aspects of [discrimination](#discrimination) at a particular cutoff (e.g., [sensitivity](#sensitivity), [specificity](#specificity)) are described in Section \@ref(cutoffAccuracy).
+When dealing with a categorical outcome, discrimination is the ability to separate events from non-events.\index{discrimination}
+When dealing with a continuous outcome, discrimination is the strength of the association between the predictor and the outcome.\index{discrimination}
+Aspects of [discrimination](#discrimination) at a particular cutoff (e.g., [sensitivity](#sensitivity), [specificity](#specificity)) are described in Section \@ref(cutoffAccuracy).\index{discrimination}\index{cutoff}\index{sensitivity}\index{specificity}
 
 #### Area under the ROC curve (AUC) {#aucROC}
 
-The [area under the ROC curve (AUC)](#auc) is a general index of discrimination accuracy for a categorical outcome.
-It is also called the concordance ($c$) statistic.
-Larger values reflect greater [discrimination accuracy](#discrimination).
-[AUC](#auc) was estimated using the `pROC` package [@R-pROC].
+The [area under the ROC curve (AUC)](#auc) is a general index of discrimination accuracy for a categorical outcome.\index{receiver operating characteristic curve!area under the curve}
+It is also called the concordance ($c$) statistic.\index{receiver operating characteristic curve!area under the curve}
+Larger values reflect greater [discrimination accuracy](#discrimination).\index{receiver operating characteristic curve!area under the curve}\index{discrimination}
+[AUC](#auc) was estimated using the `pROC` package [@R-pROC].\index{receiver operating characteristic curve!area under the curve}
 
 ```{r}
 rocCurve$auc
@@ -1656,9 +1656,9 @@ aucValue <- rocCurve$auc
 
 #### Coefficient of Predictive Ability (CPA) {#CPA}
 
-The coefficient of predictive ability (CPA) is a generalization of [AUC](#auc) to handle non-binary outcomes including ordinal and continuous outcomes [@Gneiting2020].
-Larger values reflect greater accuracy.
-It was calculated using the `uroc` package [@Gneiting2020].
+The coefficient of predictive ability (CPA) is a generalization of [AUC](#auc) to handle non-binary outcomes including ordinal and continuous outcomes [@Gneiting2020].\index{receiver operating characteristic curve!area under the curve}\index{coefficient of predictive ability}
+Larger values reflect greater accuracy.\index{coefficient of predictive ability}
+It was calculated using the `uroc` package [@Gneiting2020].\index{coefficient of predictive ability}
 
 ```{r}
 cpaNoMissing <- na.omit(
@@ -1671,9 +1671,9 @@ cpa(
 
 #### Spearman's Rho ($\rho$) Rank Correlation {#spearmanRho}
 
-When the coefficient of predictive ability is applied to an ordinal or continuous outcome, it is linearly related to Spearman's rho ($\rho$) rank correlation [@Gneiting2020].
-Larger values reflect greater accuracy.
-Spearman's rho was estimated in the `rms` package [@R-rms].
+When the coefficient of predictive ability is applied to an ordinal or continuous outcome, it is linearly related to Spearman's rho ($\rho$) rank correlation [@Gneiting2020].\index{Spearman's rho rank correlation}
+Larger values reflect greater accuracy.\index{Spearman's rho rank correlation}
+Spearman's rho was estimated in the `rms` package [@R-rms].\index{Spearman's rho rank correlation}
 
 ```{r}
 cor(
@@ -1689,9 +1689,9 @@ orm(
 
 #### Somers' $D_{xy}$ Rank Correlation {#somersD}
  
-Somers $D_{xy}$ is an index of [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].
-Larger values reflect greater accuracy.
-Somers' $D_{xy}$ was estimated in the `rms` package [@R-rms].
+Somers $D_{xy}$ is an index of [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].\index{Somers' $D_{xy}$ rank correlation}\index{discrimination}
+Larger values reflect greater accuracy.\index{Somers' $D_{xy}$ rank correlation}
+Somers' $D_{xy}$ was estimated in the `rms` package [@R-rms].\index{Somers' $D_{xy}$ rank correlation}
 
 ```{r}
 lrm(
@@ -1708,9 +1708,9 @@ rms::validate(lrm(
 
 #### Kendall's Tau-a ($\tau_A$) Rank Correlation {#kendallTau}
 
-Kendall's tau-a ($\tau_A$) is an index of the [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].
-Larger values reflect greater accuracy.
-Kendall's tau-a was estimated in the `rms` package [@R-rms].
+Kendall's tau-a ($\tau_A$) is an index of the [discrimination](#discrimination) for an ordinal outcome [@Harrell2015].\index{Kendall's $\tau_A$ rank correlation}\index{discrimination}
+Larger values reflect greater accuracy.\index{Kendall's $\tau_A$ rank correlation}
+Kendall's tau-a was estimated in the `rms` package [@R-rms].\index{Kendall's $\tau_A$ rank correlation}
 
 ```{r}
 cor(
@@ -1725,10 +1725,10 @@ lrm(continuousOutcome ~ testScore,
 
 #### $c$ Index {#concordanceProbability}
 
-The $c$ index, also called the concordance probability, is a generalization of the area under the [ROC curve](#roc) that applies to a continuous outcome [@Harrell2015].
-The $c$ index is the proportion of all pairs of predicted-actual values whose actual value can be ordered such that the pair with the higher predicted value is the one who had the higher actual value.
-Larger values reflect greater accuracy.
-The Brown–Hollander–Korwar nonparametric test of association was estimated in the `rms` package [@R-rms].
+The $c$ index, also called the concordance probability, is a generalization of the area under the [ROC curve](#roc) that applies to a continuous outcome [@Harrell2015].\index{receiver operating characteristic curve!area under the curve}\index{receiver operating characteristic curve!$c$ index}
+The $c$ index is the proportion of all pairs of predicted-actual values whose actual value can be ordered such that the pair with the higher predicted value is the one who had the higher actual value.\index{receiver operating characteristic curve!$c$ index}
+Larger values reflect greater accuracy.\index{receiver operating characteristic curve!$c$ index}
+The Brown–Hollander–Korwar nonparametric test of association was estimated in the `rms` package [@R-rms].\index{receiver operating characteristic curve!$c$ index}
 
 ```{r}
 lrm(
@@ -1738,9 +1738,9 @@ lrm(
 
 #### Effect Size ($\beta$) of Regression {#standardizedRegressionCoefficient}
 
-The effect size of a predictor, i.e., the standardized regression coefficient is called a beta ($\beta$) coefficient, is a general index of [discrimination accuracy](#discrimination) for a continuous outcome.
-Larger values reflect greater accuracy.
-We can obtain standardized regression coefficients by standardizing the predictors and outcome using the `scale()` function in R.
+The effect size of a predictor, i.e., the standardized regression coefficient is called a beta ($\beta$) coefficient, is a general index of [discrimination accuracy](#discrimination) for a continuous outcome.\index{multiple regression}\index{effect size}\index{standardized regression coefficient}\index{beta!zzzzz@\igobble|seealso{standardized regression coefficient}}
+Larger values reflect greater accuracy.\index{standardized regression coefficient}
+We can obtain standardized regression coefficients by standardizing the predictors and outcome using the `scale()` function in R.\index{standardized regression coefficient}
 
 $\beta$:
 
@@ -1756,21 +1756,21 @@ regressionBeta <- lm(scale(continuousOutcome) ~ scale(testScore), data = mydataS
 
 ### Calibration {#calibration}
 
-When dealing with a categorical outcome, calibration is the degree to which a probabilistic estimate of an event reflects the true underlying probability of the event.
-When dealing with a continuous outcome, calibration is the degree to which the predicted values are close in value to the outcome values.
-The importance of examining calibration (in addition to [discrimination](#discrimination)) is described by @Lindhiem2020.
+When dealing with a categorical outcome, calibration is the degree to which a probabilistic estimate of an event reflects the true underlying probability of the event.\index{calibration}
+When dealing with a continuous outcome, calibration is the degree to which the predicted values are close in value to the outcome values.\index{calibration}
+The importance of examining calibration (in addition to [discrimination](#discrimination)) is described by @Lindhiem2020.\index{calibration}\index{discrimination}
 
-Calibration came to be considered a central aspect of weather forecast accuracy.
-For instance, on the days that the meteorologist says there is a 60% chance of rain, it should rain about 60% of the time.
-Through improvements in scientific understanding of weather systems, rain forecasts have become more accurate.
-For instance, rain forecasts from the National Weather Service are well calibrated [see Figure \@ref(fig:calibrationNWS), @Charba1980].
-However, forecasts of rain may be exaggerated by local TV meteorologists to boost ratings [@Silver2012].
-Interestingly, rain forecasts from The Weather Channel are somewhat miscalibrated under certain conditions.
-For instance, on days when they forecast a 20% chance of rain, the actual chance of rain is around 5% [see Figure \@ref(fig:calibrationWeatherChannel), @Bickel2008].
-However, this miscalibration is deliberate.
-People tend to be more angry when the meteorologist says it will not rain when it actually does ([false negative](#falseNegative)) compared to when the meteorologist says it will rain when it actually does not ([false positive](#falsePositive)).
-As @Silver2012 notes, "If it rains when it isn't supposed to, [people] curse the weatherman for ruining their picnic, whereas an unexpectedly sunny day is taken as a serendipitous bonus.
-It isn't good science, but as Dr. Rose at the Weather Channel acknowledged to [Mr. Silver]: 'If the forecast was objective, if it has zero [bias](#sdt) in precipitation, we'd probably be in trouble.' " (p. 135).
+Calibration came to be considered a central aspect of weather forecast accuracy.\index{calibration}
+For instance, on the days that the meteorologist says there is a 60% chance of rain, it should rain about 60% of the time.\index{calibration}
+Through improvements in scientific understanding of weather systems, rain forecasts have become more accurate.\index{calibration}
+For instance, rain forecasts from the National Weather Service are well calibrated [see Figure \@ref(fig:calibrationNWS), @Charba1980].\index{calibration}
+However, forecasts of rain may be exaggerated by local TV meteorologists to boost ratings [@Silver2012].\index{calibration}
+Interestingly, rain forecasts from The Weather Channel are somewhat miscalibrated under certain conditions.\index{calibration}
+For instance, on days when they forecast a 20% chance of rain, the actual chance of rain is around 5% [see Figure \@ref(fig:calibrationWeatherChannel), @Bickel2008].\index{calibration}
+However, this miscalibration is deliberate.\index{calibration}
+People tend to be more angry when the meteorologist says it will not rain when it actually does ([false negative](#falseNegative)) compared to when the meteorologist says it will rain when it actually does not ([false positive](#falsePositive)).\index{calibration}\index{false negative}\index{false positive}
+As @Silver2012 notes, "If it rains when it isn't supposed to, [people] curse the weatherman for ruining their picnic, whereas an unexpectedly sunny day is taken as a serendipitous bonus.\index{calibration}
+It isn't good science, but as Dr. Rose at the Weather Channel acknowledged to [Mr. Silver]: 'If the forecast was objective, if it has zero [bias](#sdt) in precipitation, we'd probably be in trouble.' " (p. 135).\index{calibration}\index{bias}
 
 (ref:calibrationWeatherChannelCaption) Calibration Plot Of Same-Day Probability Of Precipitation (PoP) Forecasts From The Weather Channel. The plot depicts that the rain forecasts are generally well calibrated, but shows some miscalibration. For instance, the forecasted probability of rain is lower than the actual probability of rain when the forecasted probability of rain is 20%. Figure reprinted from @Bickel2008, Figure 2, p. 4872. Bickel, J. E., \& Kim, S. D. (2008). Verification of the weather channel probability of precipitation forecasts. *Monthly Weather Review*, *136*(12), 4867–4881. doi: [https://doi.org/10.1175/2008MWR2547.1](https://doi.org/10.1175/2008MWR2547.1) Copyright (c) American Meteorological Society. Used with permission.
 
@@ -1784,23 +1784,23 @@ knitr::include_graphics("./Images/calibrationTWC.png")
 knitr::include_graphics("./Images/calibrationNWS.png")
 ```
 
-Calibration is not just important for weather forecasts.
-It is also important for psychological assessment.
-Calibration can be examined in several ways, including [Brier Scores](#brierScores) (see Section \@ref(brierScores)), the [Hosler-Lemeshow test](#hoslerLemeshow) (see Section \@ref(hoslerLemeshow)), [Spiegelhalter's $z$](#spiegelhalterZ) (see Section \@ref(spiegelhalterZ)), and the [mean difference between predicted and observed values](#miscalibration) at different binned thresholds as depicted graphically with a [calibration plot](#calibrationPlot) (see Figure \@ref(fig:calibrationPlot1)).
+Calibration is not just important for weather forecasts.\index{calibration}
+It is also important for psychological assessment.\index{calibration}
+Calibration can be examined in several ways, including [Brier Scores](#brierScores) (see Section \@ref(brierScores)), the [Hosler-Lemeshow test](#hoslerLemeshow) (see Section \@ref(hoslerLemeshow)), [Spiegelhalter's $z$](#spiegelhalterZ) (see Section \@ref(spiegelhalterZ)), and the [mean difference between predicted and observed values](#miscalibration) at different binned thresholds as depicted graphically with a [calibration plot](#calibrationPlot) (see Figure \@ref(fig:calibrationPlot1)).\index{calibration}\index{Brier scores}\index{Hosler-Lemeshow test}\index{Spiegelhalter's $z$}\index{calibration!plot}
 
 #### Calibration Plot {#calibrationPlot}
 
-Calibration plots can be helpful for identifying miscalibration.
-A calibration plot depicts the predicted probability of an event on the x-axis, and the actual (observed) probability of the event on the y-axis.
-The predictions are binned into a certain number of groups (commonly 10).
-The diagonal line reflects predictions that are perfectly calibrated.
-To the extent that predictions deviate from the diagonal line, the predictions are miscalibrated.
-There are four general patterns of miscalibration: overextremity, underextremity, overprediction, and underprediction (see Figure \@ref(fig:miscalibrationPlots)).
-*Overextremity* exists when the predicted probabilites are too close to the extremes (zero or one).
-*Underextremity* exists when the predicted probabilities are too far away from the extremes.
-*Overprediction* exists when the predicted probabilities are consistently greater than the observed probabilities.
-*Underprediction* exists when the predicted probabilities are consistently less than the observed probabilities.
-For a more thorough description of these types of miscalibration, see @Lindhiem2020.
+Calibration plots can be helpful for identifying miscalibration.\index{calibration}\index{calibration!plot}
+A calibration plot depicts the predicted probability of an event on the x-axis, and the actual (observed) probability of the event on the y-axis.\index{calibration}\index{calibration!plot}
+The predictions are binned into a certain number of groups (commonly 10).\index{calibration}\index{calibration!plot}
+The diagonal line reflects predictions that are perfectly calibrated.\index{calibration}\index{calibration!plot}
+To the extent that predictions deviate from the diagonal line, the predictions are miscalibrated.\index{calibration}\index{calibration!plot}
+There are four general patterns of miscalibration: overextremity, underextremity, overprediction, and underprediction (see Figure \@ref(fig:miscalibrationPlots)).\index{calibration}\index{calibration!plot}
+*Overextremity* exists when the predicted probabilites are too close to the extremes (zero or one).\index{calibration}\index{calibration!plot}
+*Underextremity* exists when the predicted probabilities are too far away from the extremes.\index{calibration}\index{calibration!plot}
+*Overprediction* exists when the predicted probabilities are consistently greater than the observed probabilities.\index{calibration}\index{calibration!plot}
+*Underprediction* exists when the predicted probabilities are consistently less than the observed probabilities.\index{calibration}\index{calibration!plot}
+For a more thorough description of these types of miscalibration, see @Lindhiem2020.\index{calibration}
 
 ```{r, include = FALSE}
 # Specify Data ------------------------------------------------------------
@@ -1841,16 +1841,16 @@ plotCalibration(
   groups = 10)
 ```
 
-This calibration plot (and ROC curve) was generated using the `rms` package [@R-rms].
-The calibration plot is consistent with underprediction.
-That is, the predicted probabilities were consistently lower than the actual probabilities.
-To re-calibrate the predicted probabilities, it would be necessary to increase them so they are consistent with observed probabilties.
+This calibration plot (and ROC curve) was generated using the `rms` package [@R-rms].\index{calibration!plot}
+The calibration plot is consistent with underprediction.\index{calibration!plot}
+That is, the predicted probabilities were consistently lower than the actual probabilities.\index{calibration!plot}
+To re-calibrate the predicted probabilities, it would be necessary to increase them so they are consistent with observed probabilties.\index{calibration!plot}
 
 ```{r calibrationPlot2, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = c("Calibration Plot 2.")}
 val.prob(mydataSDT$predictedProbability, mydataSDT$disorder)
 ```
 
-This calibration plot was adapted from Darren Dahly's example here: https://darrendahly.github.io/post/homr/
+This calibration plot was adapted from Darren Dahly's example here:\index{calibration!plot} https://darrendahly.github.io/post/homr/
 
 ```{r, class.source = "fold-hide"}
 g1 <- mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) %>%
@@ -1896,8 +1896,8 @@ grid.arrange(g)
 
 #### Brier Scores {#brierScores}
 
-Brier scores were calculated using the `rms` package [@R-rms].
-Smaller values reflect greater [calibration accuracy](#calibration).
+Brier scores were calculated using the `rms` package [@R-rms].\index{Brier scores}
+Smaller values reflect greater [calibration accuracy](#calibration).\index{Brier scores}\index{calibration}
 
 ```{r}
 val.prob(
@@ -1911,14 +1911,14 @@ brierValue <- val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = 
 
 #### Hosler-Lemeshow Test {#hoslerLemeshow}
 
-The Hosler-Lemeshow goodness of fit (GOF) test evaluates the null hypothesis that the there is no difference between the predicted versus observed frequencies of an event.
-The test requires specifying how many groups/bins ($g$) to use to calculate quantiles.
-Smaller $\chi^2$ values (and larger *p*-values) reflect greater [calibration accuracy](#calibration).
-A statistically significant $\chi^2$ (*p* < .05) indicates a significant degree of miscalibration.
-The Hosler-Lemeshow GOF test was calculated using the `ResourceSelection` package [@R-ResourceSelection].
-The table of predicted versus observed frequencies was generated using the `PredictABEL` package [@R-PredictABEL].
+The Hosler-Lemeshow goodness of fit (GOF) test evaluates the null hypothesis that the there is no difference between the predicted versus observed frequencies of an event.\index{Hosler-Lemeshow test}
+The test requires specifying how many groups/bins ($g$) to use to calculate quantiles.\index{Hosler-Lemeshow test}
+Smaller $\chi^2$ values (and larger *p*-values) reflect greater [calibration accuracy](#calibration).\index{Hosler-Lemeshow test}\index{calibration}
+A statistically significant $\chi^2$ (*p* < .05) indicates a significant degree of miscalibration.\index{Hosler-Lemeshow test}\index{calibration}
+The Hosler-Lemeshow GOF test was calculated using the `ResourceSelection` package [@R-ResourceSelection].\index{Hosler-Lemeshow test}
+The table of predicted versus observed frequencies was generated using the `PredictABEL` package [@R-PredictABEL].\index{Hosler-Lemeshow test}
 
-For each number of bins ($g$) specified below, the predictions show statistically significant miscalibration.
+For each number of bins ($g$) specified below, the predictions show statistically significant miscalibration.\index{Hosler-Lemeshow test}
 
 $g = 2$
 
@@ -2008,10 +2008,10 @@ plotCalibration(
 #### Spiegelhalter's z {#spiegelhalterZ}
 
 Spiegelhalter's $z$ was calculated using the `rms` package [@R-rms].
-Smaller $z$ values (and larger associated $p$-values) reflect greater [calibration accuracy](#calibration).
-A statistically significant Spiegelhalter's $z$ (*p* < .05) indicates a significant degree of miscalibration.
+Smaller $z$ values (and larger associated $p$-values) reflect greater [calibration accuracy](#calibration).\index{Spiegelhalter's $z$}\index{calibration}
+A statistically significant Spiegelhalter's $z$ (*p* < .05) indicates a significant degree of miscalibration.\index{Spiegelhalter's $z$}\index{calibration}
 
-In this case, the predictions show statistically significant miscalibration.
+In this case, the predictions show statistically significant miscalibration.\index{Spiegelhalter's $z$}
 
 ```{r}
 val.prob(
@@ -2027,31 +2027,31 @@ val.prob(
 
 #### Calibration for predicting a continuous outcome {#calibrationContinuous}
 
-When predicting a continuous outcome, [calibration](#calibration) of the predicted values in relation to the outcome values can be examined in multiple ways including:
+When predicting a continuous outcome, [calibration](#calibration) of the predicted values in relation to the outcome values can be examined in multiple ways including:\index{calibration}
 
-- in a [calibration plot](#calibration), the extent to which the intercept is near zero and the slope is near one
-- in a [calibration plot](#calibration), the extent to which the 95% confidence interval of the observed value, across all values of the predicted values, includes the diagonal reference line with an intercept of zero and a slope of one.
-- [mean error](#meanError)
-- [mean absolute error](#meanAbsoluteError)
-- [mean squared error](#meanSquaredError)
-- [root mean squared error](#rootMeanSquaredError)
+- in a [calibration plot](#calibration), the extent to which the intercept is near zero and the slope is near one\index{calibration!plot}
+- in a [calibration plot](#calibration), the extent to which the 95% confidence interval of the observed value, across all values of the predicted values, includes the diagonal reference line with an intercept of zero and a slope of one.\index{calibration!plot}
+- [mean error](#meanError)\index{mean error}
+- [mean absolute error](#meanAbsoluteError)\index{mean absolute error}
+- [mean squared error](#meanSquaredError)\index{mean squared error}
+- [root mean squared error](#rootMeanSquaredError)\index{root mean squared error}
 
-With a plot of the predictions on the x-axis, and the outcomes on the y-axis (i.e., a [calibration plot](#calibrationPlot)), [calibration](#calibration) can be examined graphically as the extent to which the best-fit regression line has an intercept (alpha) close to zero and a slope (beta) close to one [@Steyerberg2014; @Stevens2020].
-The intercept is also called "calibration-in-the-large", whereas "calibration-in-the-small" refers to the extent to which the predicted values match the observed values at a specific predicted value (e.g., when the weather forecaster says that there is a 10% chance of rain, does it actually rain 10% of the time?).
-For predictions to be well [calibrated](#calibration), the intercept should be close to zero and the slope should be close to one.
-If the slope is close to one but the intercept is not close to zero (or the intercept is close to zero but the slope is not close to one), the predictions would not be considered well [calibrated](#calibration).
-Likewise, if the intercept is close to zero but the slope is not close to zero, the predictions would not be well [calibrated](#calibration).
-The 95% confidence interval of the observed value, across all values of the predicted values, should include the diagonal reference line whose intercept is zero and whose slope is one.
+With a plot of the predictions on the x-axis, and the outcomes on the y-axis (i.e., a [calibration plot](#calibrationPlot)), [calibration](#calibration) can be examined graphically as the extent to which the best-fit regression line has an intercept (alpha) close to zero and a slope (beta) close to one [@Steyerberg2014; @Stevens2020].\index{calibration!plot}
+The intercept is also called "calibration-in-the-large", whereas "calibration-in-the-small" refers to the extent to which the predicted values match the observed values at a specific predicted value (e.g., when the weather forecaster says that there is a 10% chance of rain, does it actually rain 10% of the time?).\index{calibration!plot}\index{calibration!in the small}\index{calibration!in the large}
+For predictions to be well [calibrated](#calibration), the intercept should be close to zero and the slope should be close to one.\index{calibration!plot}
+If the slope is close to one but the intercept is not close to zero (or the intercept is close to zero but the slope is not close to one), the predictions would not be considered well [calibrated](#calibration).\index{calibration!plot}
+Likewise, if the intercept is close to zero but the slope is not close to zero, the predictions would not be well [calibrated](#calibration).\index{calibration!plot}
+The 95% confidence interval of the observed value, across all values of the predicted values, should include the diagonal reference line whose intercept is zero and whose slope is one.\index{calibration!plot}
 
-For instance, based on the intercept and slope of the [calibration plot](#calibrationPlot) in Figure \@ref(fig:calibrationContinuousOutcome), the predictions are not well calibrated, despite having a slope near one, because the 95% confidence interval of the intercept does not include zero.
-The best-fit line is the yellow line.
-The intercept from the best-fit line is positive, as shown in the regression equation.
-This is a case of underprediction, where the predicted values are consistently less than the observed values.
-The confidence interval of the observed value (i.e., the purple band) is the interval within which we have 95% confidence that the true observed value would lie for a given predicted value, based on the model.
-The 95% prediction interval of the observed value (i.e., the dashed red lines) is the interval within which we would expect that 95% of future observations would lie for a given predicted value.
-The black diagonal line indicates the reference line with an intercept of zero and a slope of one.
-The predictions would be significantly [miscalibrated](#calibration) at a given level of the predicted values if the 95% confidence interval of the observed value does not include the reference line at that level of the predicted value.
-In this case, the 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) lower levels of the predicted values.
+For instance, based on the intercept and slope of the [calibration plot](#calibrationPlot) in Figure \@ref(fig:calibrationContinuousOutcome), the predictions are not well calibrated, despite having a slope near one, because the 95% confidence interval of the intercept does not include zero.\index{calibration!plot}
+The best-fit line is the yellow line.\index{calibration!plot}
+The intercept from the best-fit line is positive, as shown in the regression equation.\index{calibration!plot}
+This is a case of underprediction, where the predicted values are consistently less than the observed values.\index{calibration!plot}
+The confidence interval of the observed value (i.e., the purple band) is the interval within which we have 95% confidence that the true observed value would lie for a given predicted value, based on the model.\index{calibration!plot}
+The 95% prediction interval of the observed value (i.e., the dashed red lines) is the interval within which we would expect that 95% of future observations would lie for a given predicted value.\index{calibration!plot}
+The black diagonal line indicates the reference line with an intercept of zero and a slope of one.\index{calibration!plot}
+The predictions would be significantly [miscalibrated](#calibration) at a given level of the predicted values if the 95% confidence interval of the observed value does not include the reference line at that level of the predicted value.\index{calibration!plot}
+In this case, the 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) lower levels of the predicted values.\index{calibration!plot}
 
 (ref:calibrationContinuousOutcomeCaption) Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The yellow line is the best-fit line. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
@@ -2107,9 +2107,9 @@ ggplot(
   theme_bw()
 ```
 
-Gold-standard recommendations include examining the predicted values in relation to the observed values using a LOESS smoother [@Austin2014], such as in Figure \@ref(fig:calibrationContinuousOutcomeLOESS).
-We can examine whether the LOESS-based 95% confidence interval of the observed value at every level of the predicted values includes the diagonal reference line (i.e., the actual observed value).
-In this case, the 95% confidence interval of the observed value does not include the reference line at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) at lower levels of the predicted values.
+Gold-standard recommendations include examining the predicted values in relation to the observed values using locally estimated scatterplot smoothing (LOESS) [@Austin2014], such as in Figure \@ref(fig:calibrationContinuousOutcomeLOESS).\index{calibration!plot}\index{locally estimated scatterplot smoothing}
+We can examine whether the LOESS-based 95% confidence interval of the observed value at every level of the predicted values includes the diagonal reference line (i.e., the actual observed value).\index{calibration!plot}\index{locally estimated scatterplot smoothing}
+In this case, the 95% confidence interval of the observed value does not include the reference line at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) at lower levels of the predicted values.\index{calibration!plot}\index{locally estimated scatterplot smoothing}
 
 (ref:calibrationContinuousOutcomeLOESSCaption) Calibration Plot for Predictions of a Continuous Outcome. The yellow line is the best-fit line based on a LOESS smoother. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
@@ -2161,7 +2161,7 @@ ggplot(
 
 ### Set a Cutoff {#setCutoff}
 
-Here, I set a cutoff at the Youden's J Statistic to calculate the accuracy statistics at that cutoff:
+Here, I set a cutoff at the Youden's J Statistic to calculate the accuracy statistics at that cutoff:\index{cutoff}
 
 ```{r}
 cutoff <- 0.205
@@ -2196,10 +2196,10 @@ accuracyAtCutoff(
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}
 
-A [confusion matrix](#confusionMatrix) (aka 2x2 accuracy table, cross-tabulation table, or contigency table) is a matrix for categorical data that presents the predicted outcome on one dimension and the actual outcome (truth) on the other dimension.
-If the predictions and outcomes are dichotomous, the [confusion matrix](#confusionMatrix) is a 2x2 matrix with two rows and two columns that represent four possible predicted-actual combinations ([decision outcomes](#decisionOutcomes-overview)).
-In such a case, the confusion matrix provides a tabular count of each type of accurate cases ([true positives](#truePositive) and [true negatives](#trueNegative)) versus the number of each type of error ([false positives](#falsePositive) and [false negatives](#falseNegatives)), as shown in Figure \@ref(fig:confusionMatrix).
-An example of a [confusion matrix](#confusionMatrix) is in Figure \@ref(fig:twoByTwoMatrix1).
+A [confusion matrix](#confusionMatrix) (aka 2x2 accuracy table, cross-tabulation table, or contigency table) is a matrix for categorical data that presents the predicted outcome on one dimension and the actual outcome (truth) on the other dimension.\index{confusion matrix}
+If the predictions and outcomes are dichotomous, the [confusion matrix](#confusionMatrix) is a 2x2 matrix with two rows and two columns that represent four possible predicted-actual combinations ([decision outcomes](#decisionOutcomes-overview)).\index{confusion matrix}
+In such a case, the confusion matrix provides a tabular count of each type of accurate cases ([true positives](#truePositive) and [true negatives](#trueNegative)) versus the number of each type of error ([false positives](#falsePositive) and [false negatives](#falseNegatives)), as shown in Figure \@ref(fig:confusionMatrix).\index{confusion matrix}\index{true positive}\index{true negative}\index{false positive}\index{false negative}
+An example of a [confusion matrix](#confusionMatrix) is in Figure \@ref(fig:twoByTwoMatrix1).\index{confusion matrix}
 
 (ref:confusionMatrix) [Confusion Matrix](#confusionMatrix).
 
@@ -2233,10 +2233,10 @@ addmargins(prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)
 
 ### True Positives (TP) {#truePositive}
 
-True positives (TPs) are instances in which a positive classification (e.g., a disorder present) is correct—that is, the test says that a classification is present, and the classification is present.
-True positives are also called valid positives (VPs) or hits.
-Higher values reflect greater accuracy.
-The formula for true positives is in Equation \@ref(eq:truePositive):
+True positives (TPs) are instances in which a positive classification (e.g., a disorder present) is correct—that is, the test says that a classification is present, and the classification is present.\index{true positive}
+True positives are also called valid positives (VPs) or hits.\index{true positive}
+Higher values reflect greater accuracy.\index{true positive}
+The formula for true positives is in Equation \@ref(eq:truePositive):\index{true positive}
 
 $$
 \begin{aligned}
@@ -2254,10 +2254,10 @@ TPvalue
 
 ### True Negatives (TN) {#trueNegative}
 
-True negatives (TNs) are instances in which a negative classification (e.g., absence of a disorder) is correct—that is, the test says that a classification is not present, and the classification is not present.
-True negatives are also called valid negatives (VNs) or correct rejections.
-Higher values reflect greater accuracy.
-The formula for true negatives is in Equation \@ref(eq:trueNegative):
+True negatives (TNs) are instances in which a negative classification (e.g., absence of a disorder) is correct—that is, the test says that a classification is not present, and the classification is not present.\index{true negative}
+True negatives are also called valid negatives (VNs) or correct rejections.\index{true negative}
+Higher values reflect greater accuracy.\index{true negative}
+The formula for true negatives is in Equation \@ref(eq:trueNegative):\index{true negative}
 
 $$
 \begin{aligned}
@@ -2275,10 +2275,10 @@ TNvalue
 
 ### False Positives (FP) {#falsePositive}
 
-False positives (FPs) are instances in which a positive classification (e.g., a disorder present) is incorrect—that is, the test says that a classification is present, and the classification is not present.
-False positives are also called false alarms (FAs).
-Lower values reflect greater accuracy.
-The formula for false positives is in Equation \@ref(eq:falsePositive):
+False positives (FPs) are instances in which a positive classification (e.g., a disorder present) is incorrect—that is, the test says that a classification is present, and the classification is not present.\index{false positive}
+False positives are also called false alarms (FAs).\index{false positive}
+Lower values reflect greater accuracy.\index{false positive}
+The formula for false positives is in Equation \@ref(eq:falsePositive):\index{false positive}
 
 $$
 \begin{aligned}
@@ -2296,10 +2296,10 @@ FPvalue
 
 ### False Negatives (FN) {#falseNegative}
 
-False negatives (FNs) are instances in which a negative classification (e.g., absence of a disorder) is incorrect—that is, the test says that a classification is not present, and the classification is present.
-False negatives are also called misses.
-Lower values reflect greater accuracy.
-The formula for false negatives is in Equation \@ref(eq:falseNegative):
+False negatives (FNs) are instances in which a negative classification (e.g., absence of a disorder) is incorrect—that is, the test says that a classification is not present, and the classification is present.\index{false negative}
+False negatives are also called misses.\index{false negative}
+Lower values reflect greater accuracy.\index{false negative}
+The formula for false negatives is in Equation \@ref(eq:falseNegative):\index{false negative}
 
 $$
 \begin{aligned}
@@ -2339,8 +2339,8 @@ sampleSizeValue <- sampleSize(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNv
 
 ### Selection Ratio (SR) {#selectionRatio}
 
-The selection ratio is the marginal probability of selection, independent of other things: $P(R_i)$.
-In clinical psychology, the selection ratio is the proportion of people who test positive for the disorder, as in Equation \@ref(eq:selectionRatio):
+The selection ratio is the marginal probability of selection, independent of other things: $P(R_i)$.\index{selection ratio}\index{probability!marginal}
+In clinical psychology, the selection ratio is the proportion of people who test positive for the disorder, as in Equation \@ref(eq:selectionRatio):\index{selection ratio}
 
 $$
 \begin{aligned}
@@ -2373,9 +2373,9 @@ selectionRatioValue <- selectionRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, 
 
 ### Base Rate (BR) {#pretestProbability}
 
-The [base rate](#baseRate) of a classification is its [marginal probability](#baseRate), independent of other things: $P(C_i)$.
-In clinical psychology, the base rate of a disorder is its prevalence in the population, as in Equation \@ref(eq:baseRate).
-Without additional information, the [base rate](#baseRate) is used as the initial *pretest probability*.
+The [base rate](#baseRate) of a classification is its [marginal probability](#baseRate), independent of other things: $P(C_i)$.\index{base rate}\index{probability!marginal}
+In clinical psychology, the base rate of a disorder is its prevalence in the population, as in Equation \@ref(eq:baseRate).\index{base rate}\index{probability!marginal}
+Without additional information, the [base rate](#baseRate) is used as the initial *pretest probability*.\index{base rate}\index{probability!marginal}\index{probability!pretest}
 
 $$
 \begin{aligned}
@@ -2408,8 +2408,8 @@ baseRateValue <- baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue
 
 ### Pretest Odds {#pretestOdds}
 
-The pretest odds of a classification can be estimated using the pretest probability (i.e., [base rate](#baseRate)).
-To convert a probability to odds, divide the probability by one minus that probability, as in Equation \@ref(eq:pretestOdds).
+The pretest odds of a classification can be estimated using the pretest probability (i.e., [base rate](#baseRate)).\index{odds!pretest}\index{probability!pretest}
+To convert a probability to odds, divide the probability by one minus that probability, as in Equation \@ref(eq:pretestOdds).\index{probability}\index{odds}
 
 $$
 \begin{aligned}
@@ -2456,14 +2456,14 @@ pretestOddsValue <- pretestOdds(TP = TPvalue,
 
 ### Percent Accuracy {#percentAccuracy}
 
-Percent Accuracy is also called overall accuracy.
-Higher values reflect greater accuracy.
-The formula for percent accuracy is in Equation \@ref(eq:percentAccuracy).
-Percent accuracy has several problems.
-First, it treats all errors ([FP](#falsePositive) and [FN](#falseNegative)) as equally important.
-However, in practice, it is rarely the case that [false positives](#falsePositive) and [false negatives](#falseNegative) are equally important.
-Second, percent accuracy can be misleading because it is highly influenced by [base rates](#baseRate).
-You can have a high percent accuracy by predicting from the [base rate](#baseRate) and saying that no one has the characteristic (if the [base rate](#baseRate) is low) or that everyone has the characteristic (if the [base rate](#baseRate) is high).
+Percent Accuracy is also called overall accuracy.\index{percent accuracy}
+Higher values reflect greater accuracy.\index{percent accuracy}
+The formula for percent accuracy is in Equation \@ref(eq:percentAccuracy).\index{percent accuracy}
+Percent accuracy has several problems.\index{percent accuracy}
+First, it treats all errors ([FP](#falsePositive) and [FN](#falseNegative)) as equally important.\index{percent accuracy}\index{false positive}\index{false negative}
+However, in practice, it is rarely the case that [false positives](#falsePositive) and [false negatives](#falseNegative) are equally important.\index{percent accuracy}\index{false positive}\index{false negative}
+Second, percent accuracy can be misleading because it is highly influenced by [base rates](#baseRate).\index{percent accuracy}\index{base rate}
+You can have a high percent accuracy by predicting from the [base rate](#baseRate) and saying that no one has the characteristic (if the [base rate](#baseRate) is low) or that everyone has the characteristic (if the [base rate](#baseRate) is high).\index{percent accuracy}\index{base rate}\index{base rate!predicting from}\index{selection ratio}
 Thus, it is also important to consider other aspects of accuracy.
 
 $$
@@ -2497,7 +2497,7 @@ percentAccuracyValue <- percentAccuracy(TP = TPvalue,
 
 ### Percent Accuracy by Chance {#percentAccuracyByChance}
 
-The formula for calculating percent accuracy by chance is in Equation \@ref(eq:PercentAccuracyByChance).
+The formula for calculating percent accuracy by chance is in Equation \@ref(eq:PercentAccuracyByChance).\index{percent accuracy by chance}
 
 $$
 \begin{aligned}
@@ -2535,11 +2535,11 @@ percentAccuracyByChanceValue <- percentAccuracyByChance(TP = TPvalue,
 
 ### Percent Accuracy Predicting from the Base Rate {#percentAccuracyPredictingFromBaseRate}
 
-[*Predicting from the base rate*](#predictingFromBaseRate) is going with the most likely outcome in every prediction.
-It is also called "betting from the base rate."
-If the [base rate](#baseRate) is less than .50, it would involve predicting that the condition is absent for every case.
-If the [base rate](#baseRate) is .50 or above, it would involve predicting that the condition is present for every case.
-[Predicting from the base rate](#predictingFromBaseRate) is a special case of [percent accuracy by chance](#percentAccuracyByChance) when the [selection ratio](#selectionRatio) is set to either one (if the [base rate](#baseRate) $\geq$ .5) or zero (if the [base rate](#baseRate) < .5).
+[*Predicting from the base rate*](#predictingFromBaseRate) is going with the most likely outcome in every prediction.\index{base rate!predicting from}
+It is also called "betting from the base rate."\index{base rate!predicting from}
+If the [base rate](#baseRate) is less than .50, it would involve predicting that the condition is absent for every case.\index{base rate!predicting from}\index{selection ratio}
+If the [base rate](#baseRate) is .50 or above, it would involve predicting that the condition is present for every case.\index{base rate!predicting from}\index{selection ratio}
+[Predicting from the base rate](#predictingFromBaseRate) is a special case of [percent accuracy by chance](#percentAccuracyByChance) when the [selection ratio](#selectionRatio) is set to either one (if the [base rate](#baseRate) $\geq$ .5) or zero (if the [base rate](#baseRate) < .5).\index{base rate!predicting from}\index{selection ratio}\index{percent accuracy by chance}\index{base rate}
 
 ```{r, class.source = "fold-hide"}
 percentAccuracyPredictingFromBaseRate <- function(TP, TN, FP, FN){
@@ -2572,9 +2572,9 @@ percentAccuracyPredictingFromBaseRateValue <- percentAccuracyPredictingFromBaseR
 
 ### Relative Improvement Over Chance (RIOC) {#relativeImprovementOverChance}
 
-Relative improvement over chance (RIOC) is a prediction's improvement over chance as a proportion of the maximum possible improvement over chance, as described by [@Farrington1989].
-Higher values reflect greater accuracy.
-The formula for calculating RIOC is in Equation \@ref(eq:relativeImprovementOverChance).
+Relative improvement over chance (RIOC) is a prediction's improvement over chance as a proportion of the maximum possible improvement over chance, as described by [@Farrington1989].\index{relative improvement over chance}
+Higher values reflect greater accuracy.\index{relative improvement over chance}
+The formula for calculating RIOC is in Equation \@ref(eq:relativeImprovementOverChance).\index{relative improvement over chance}
 
 $$
 \begin{aligned}
@@ -2611,9 +2611,9 @@ relativeImprovementOverChanceValue <- relativeImprovementOverChance(TP = TPvalue
 
 ### Relative Improvement Over Predicting from the Base Rate {#relativeImprovementOverPredictingFromBaseRate}
 
-Relative improvement over [predicting from the base rate](#predictingFromBaseRate) is a prediction's improvement over [predicting from the base rate](#predictingFromBaseRate) as a proportion of the maximum possible improvement over [predicting from the base rate](#predictingFromBaseRate).
-Higher values reflect greater accuracy.
-The formula for calculating relative improvement over predicting from the base rate is in Equation \@ref(eq:relativeImprovementOverPredictingFromBaseRate).
+Relative improvement over [predicting from the base rate](#predictingFromBaseRate) is a prediction's improvement over [predicting from the base rate](#predictingFromBaseRate) as a proportion of the maximum possible improvement over [predicting from the base rate](#predictingFromBaseRate).\index{relative improvement over predicting from the base rate}
+Higher values reflect greater accuracy.\index{relative improvement over predicting from the base rate}
+The formula for calculating relative improvement over predicting from the base rate is in Equation \@ref(eq:relativeImprovementOverPredictingFromBaseRate).\index{relative improvement over predicting from the base rate}
 
 $$
 \scriptsize
@@ -2657,12 +2657,12 @@ relativeImprovementOverPredictingFromBaseRateValue <- relativeImprovementOverPre
 
 ### Sensitivity (SN) {#sensitivity}
 
-Sensitivity (SN) is also called true positive rate (TPR), hit rate (HR), or recall.
-Sensitivity is the [conditional probability](#conditionalProbability) of a positive test given that the person has the condition: $P(R|C)$.
-Higher values reflect greater accuracy.
-The formula for calculating sensitivity is in Equation \@ref(eq:sensitivity).
-As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), sensitivity decreases.
-As the cutoff decreases, sensitivity increases.
+Sensitivity (SN) is also called true positive rate (TPR), hit rate (HR), or recall.\index{sensitivity}\index{recall!zzzzz@\igobble|seealso{sensitivity}}
+Sensitivity is the [conditional probability](#conditionalProbability) of a positive test given that the person has the condition: $P(R|C)$.\index{sensitivity}\index{probability!conditional}
+Higher values reflect greater accuracy.\index{sensitivity}
+The formula for calculating sensitivity is in Equation \@ref(eq:sensitivity).\index{sensitivity}
+As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), sensitivity decreases.\index{sensitivity}\index{cutoff}
+As the cutoff decreases, sensitivity increases.\index{sensitivity}\index{cutoff}
 
 $$
 \begin{aligned}
@@ -2690,7 +2690,7 @@ sensitivity(
 sensitivityValue <- sensitivity(TP = TPvalue, FN = FNvalue)
 ```
 
-Below I compute sensitivity and [specificity](#specificity) at every possible cutoff.
+Below I compute sensitivity and [specificity](#specificity) at every possible cutoff.\index{sensitivity}\index{specificity}\index{cutoff}
 
 ```{r, class.source = "fold-hide"}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
@@ -2763,12 +2763,12 @@ ggplot(
 
 ### Specificity (SP) {#specificity}
 
-Specificity is also called true negative rate (TNR) or selectivity.
-Specificity is the [conditional probability](#conditionalProbability) of a negative test given that the person does not have the condition: $P(\text{not } R|\text{not } C)$.
-Higher values reflect greater accuracy.
+Specificity is also called true negative rate (TNR) or selectivity.\index{specificity}\index{true negative rate!zzzzz@\igobble|seealso{specificity}}\index{selectivity!zzzzz@\igobble|seealso{specificity}}
+Specificity is the [conditional probability](#conditionalProbability) of a negative test given that the person does not have the condition: $P(\text{not } R|\text{not } C)$.\index{specificity}\index{probability!conditional}
+Higher values reflect greater accuracy.\index{specificity}
 The formula for calculating specificity is in Equation \@ref(eq:specificity).
-As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), specificity increases.
-As the cutoff decreases, specificity decreases.
+As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:sensitivitySpecificity), as the cutoff increases (becomes more conservative), specificity increases.\index{specificity}\index{cutoff}
+As the cutoff decreases, specificity decreases.\index{specificity}\index{cutoff}
 
 $$
 \begin{aligned}
@@ -2798,10 +2798,10 @@ specificityValue <- specificity(
 
 ### False Negative Rate (FNR) {#falseNegativeRate}
 
-The false negative rate (FNR) is also called the miss rate.
-The false negative rate is the [conditional probability](#conditionalProbability) of a negative test given that the person has the condition: $P(\text{not } R|C)$.
-Lower values reflect greater accuracy.
-The formula for calculating false negative rate is in Equation \@ref(eq:falseNegativeRate).
+The false negative rate (FNR) is also called the miss rate.\index{false negative rate}\index{miss rate!zzzzz@\igobble|seealso{false negative rate}}
+The false negative rate is the [conditional probability](#conditionalProbability) of a negative test given that the person has the condition: $P(\text{not } R|C)$.\index{false negative rate}\index{probability!conditional}
+Lower values reflect greater accuracy.\index{false negative rate}
+The formula for calculating false negative rate is in Equation \@ref(eq:falseNegativeRate).\index{false negative rate}
 
 $$
 \begin{aligned}
@@ -2831,10 +2831,10 @@ falseNegativeRate(TP = TPvalue, FN = FNvalue)
 
 ### False Positive Rate (FPR) {#falsePositiveRate}
 
-The false positive rate (FPR) is also called the false alarm rate (FAR) or fall-out.
-The false positive rate is the [conditional probability](#conditionalProbability) of a positive test given that the person does not have the condition: $P(R|\text{not } C)$.
-Lower values reflect greater accuracy.
-The formula for calculating false positive rate is in Equation \@ref(eq:falsePositiveRate):
+The false positive rate (FPR) is also called the false alarm rate (FAR) or fall-out.\index{false positive rate}\index{fall-out!zzzzz@\igobble|seealso{false positive rate}}
+The false positive rate is the [conditional probability](#conditionalProbability) of a positive test given that the person does not have the condition: $P(R|\text{not } C)$.\index{false positive rate}\index{probability!conditional}
+Lower values reflect greater accuracy.\index{false positive rate}
+The formula for calculating false positive rate is in Equation \@ref(eq:falsePositiveRate):\index{false positive rate}
 
 $$
 \begin{aligned}
@@ -2864,20 +2864,20 @@ falsePositiveRateValue <- falsePositiveRate(TN = TNvalue, FP = FPvalue)
 
 ### Positive Predictive Value (PPV) {#ppv}
 
-The positive predictive value (PPV) is also called the positive predictive power (PPP) or precision.
-Many people confuse [sensitivity](#sensitivity) ($P(R|C)$) with its inverse [conditional probability](#conditionalProbability), PPV ($P(C|R)$).
-PPV is the [conditional probability](#conditionalProbability) of having the condition given a positive test: $P(C|R)$.
-Higher values reflect greater accuracy.
-The formula for calculating positive predictive value is in Equation \@ref(eq:positivePredictiveValue).
+The positive predictive value (PPV) is also called the positive predictive power (PPP) or precision.\index{positive predictive value}
+Many people confuse [sensitivity](#sensitivity) ($P(R|C)$) with its inverse [conditional probability](#conditionalProbability), PPV ($P(C|R)$).\index{positive predictive value}\index{sensitivity}\index{probability!conditional}\index{confusion of the inverse}
+PPV is the [conditional probability](#conditionalProbability) of having the condition given a positive test: $P(C|R)$.\index{positive predictive value}\index{probability!conditional}
+Higher values reflect greater accuracy.\index{positive predictive value}
+The formula for calculating positive predictive value is in Equation \@ref(eq:positivePredictiveValue).\index{positive predictive value}
 
-PPV can be low even when [sensitivity](#sensitivity) is high because it depends not only on [sensitivity](#sensitivity), but also on [specificity](#specificity) and the [base rate](#baseRate).
-Because PPV depends on the [base rate](#baseRate), PPV is not an intrinsic property of a measure.
-The same measure will have a different PPV in different contexts with different [base rates](#baseRate) [@Treat2012].
-As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVbaseRate), as the [base rate](#baseRate) increases, PPV increases.
-As the [base rate](#baseRate) decreases, PPV decreases.
-PPV also differs as a function of the cutoff.
-As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVcutoff), as the cutoff increases (becomes more conservative), PPV increases.
-As the cutoff decreases (becomes more liberal), PPV decreases.
+PPV can be low even when [sensitivity](#sensitivity) is high because it depends not only on [sensitivity](#sensitivity), but also on [specificity](#specificity) and the [base rate](#baseRate).\index{positive predictive value}\index{sensitivity}\index{specificity}\index{base rate}
+Because PPV depends on the [base rate](#baseRate), PPV is not an intrinsic property of a measure.\index{positive predictive value}\index{base rate}
+The same measure will have a different PPV in different contexts with different [base rates](#baseRate) [@Treat2012].\index{positive predictive value}\index{base rate}
+As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVbaseRate), as the [base rate](#baseRate) increases, PPV increases.\index{positive predictive value}\index{base rate}
+As the [base rate](#baseRate) decreases, PPV decreases.\index{positive predictive value}\index{base rate}
+PPV also differs as a function of the cutoff.\index{positive predictive value}\index{cutoff}
+As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVcutoff), as the cutoff increases (becomes more conservative), PPV increases.\index{positive predictive value}\index{cutoff}
+As the cutoff decreases (becomes more liberal), PPV decreases.\index{positive predictive value}\index{cutoff}
 
 $$
 \small
@@ -2924,7 +2924,7 @@ positivePredictiveValue(
 positivePredictivevalueValue <- positivePredictiveValue(TP = TPvalue, FP = FPvalue)
 ```
 
-Below I compute PPV and NPV at every possible base rate given the [sensitivity](#sensitivity) and [specificity](#specificity) at the current cutoff.
+Below I compute PPV and NPV at every possible base rate given the [sensitivity](#sensitivity) and [specificity](#specificity) at the current cutoff.\index{positive predictive value}\index{negative predictive value}\index{sensitivity}\index{specificity}\index{cutoff}
 
 ```{r, class.source = "fold-hide"}
 negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
@@ -2973,7 +2973,7 @@ ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
   theme_bw()
 ```
 
-Below I compute PPV and [NPV](#npv) at every possible cutoff.
+Below I compute PPV and [NPV](#npv) at every possible cutoff.\index{positive predictive value}\index{negative predictive value}\index{cutoff}
 
 ```{r, class.source = "fold-hide"}
 accuracyStats$positivePredictiveValue <- positivePredictiveValue(
@@ -3005,20 +3005,20 @@ ggplot(ppvNPVcutoffData, aes(x = cutoff, y = value, color = name)) +
 
 ### Negative Predictive Value (NPV) {#npv}
 
-The negative predictive value (NPV) is also called the negative predictive power (NPP).
-Many people confuse [specificity](#specificity) ($P(\text{not } R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), NPV ($P(\text{not } C| \text{not } R)$).
-NPV is the [conditional probability](#conditionalProbability) of not having the condition given a negative test: $P(\text{not } C| \text{not } R)$.
-Higher values reflect greater accuracy.
-The formula for calculating negative predictive value is in Equation \@ref(eq:negativePredictiveValue).
+The negative predictive value (NPV) is also called the negative predictive power (NPP).\index{negative predictive value}
+Many people confuse [specificity](#specificity) ($P(\text{not } R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), NPV ($P(\text{not } C| \text{not } R)$).\index{negative predictive value}\index{specificity}\index{probability!conditional}\index{confusion of the inverse}
+NPV is the [conditional probability](#conditionalProbability) of not having the condition given a negative test: $P(\text{not } C| \text{not } R)$.\index{negative predictive value}\index{probability!conditional}
+Higher values reflect greater accuracy.\index{negative predictive value}
+The formula for calculating negative predictive value is in Equation \@ref(eq:negativePredictiveValue).\index{negative predictive value}
 
-NPV can be low even when [specificity](#specificity) is high because it depends not only on [specificity](#specificity), but also on [sensitivity](#sensitivity) and the [base rate](#baseRate).
-Because NPV depends on the [base rate](#baseRate), NPV is not an intrinsic property of a measure.
-The same measure will have a different NPV in different contexts with different [base rates](#baseRate) [@Treat2012].
-As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVbaseRate), as the [base rate](#baseRate) increases, NPV decreases.
-As the [base rate](#baseRate) decreases, NPV increases.
-NPV also differs as a function of the cutoff.
-As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVcutoff), as the cutoff increases (becomes more conservative), NPV decreases.
-As the cutoff decreases (becomes more liberal), NPV decreases.
+NPV can be low even when [specificity](#specificity) is high because it depends not only on [specificity](#specificity), but also on [sensitivity](#sensitivity) and the [base rate](#baseRate).\index{negative predictive value}\index{specificity}\index{sensitivity}\index{base rate}
+Because NPV depends on the [base rate](#baseRate), NPV is not an intrinsic property of a measure.\index{negative predictive value}\index{base rate}
+The same measure will have a different NPV in different contexts with different [base rates](#baseRate) [@Treat2012].\index{negative predictive value}\index{base rate}
+As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVbaseRate), as the [base rate](#baseRate) increases, NPV decreases.\index{negative predictive value}\index{base rate}
+As the [base rate](#baseRate) decreases, NPV increases.\index{negative predictive value}\index{base rate}
+NPV also differs as a function of the cutoff.\index{negative predictive value}\index{cutoff}
+As described in Section \@ref(accuracyCutoff) and as depicted in Figure \@ref(fig:ppvNPVcutoff), as the cutoff increases (becomes more conservative), NPV decreases.\index{negative predictive value}\index{cutoff}
+As the cutoff decreases (becomes more liberal), NPV decreases.\index{negative predictive value}\index{cutoff}
 
 $$
 \small
@@ -3068,10 +3068,10 @@ negativePredictiveValueValue <- negativePredictiveValue(TN = TNvalue,
 
 ### False Discovery Rate (FDR) {#falseDiscoveryRate}
 
-Many people confuse the false positive rate ($P(R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), the false discovery rate ($P(\text{not } C| R)$).
-The false discovery rate is the [conditional probability](#conditionalProbability) of not having the condition given a positive test: $P(\text{not } C| R)$.
-Lower values reflect greater accuracy.
-The formula for calculating false discovery rate is in Equation \@ref(eq:falseDiscoveryRate).
+Many people confuse the false positive rate ($P(R|\text{not } C)$) with its inverse [conditional probability](#conditionalProbability), the false discovery rate ($P(\text{not } C| R)$).\index{false discovery rate}\index{false positive rate}\index{probability!conditional}\index{confusion of the inverse}
+The false discovery rate is the [conditional probability](#conditionalProbability) of not having the condition given a positive test: $P(\text{not } C| R)$.\index{false discovery rate}\index{probability!conditional}
+Lower values reflect greater accuracy.\index{false discovery rate}
+The formula for calculating false discovery rate is in Equation \@ref(eq:falseDiscoveryRate).\index{false discovery rate}
 
 $$
 \begin{aligned}
@@ -3101,10 +3101,10 @@ falseDiscoveryRateValue <- falseDiscoveryRate(TP = TPvalue, FP = FPvalue)
 
 ### False Omission Rate (FOR) {#falseOmissionRate}
 
-Many people confuse the false negative rate ($P(\text{not } R|C)$) with its inverse [conditional probability](#conditionalProbability), the false omission rate ($P(C|\text{not } R)$).
-The false omission rate is the conditional probability of having the condition given a negative test: $P(C|\text{not } R)$.
-Lower values reflect greater accuracy.
-The formula for calculating false omission rate is in Equation \@ref(eq:falseOmissionRate).
+Many people confuse the false negative rate ($P(\text{not } R|C)$) with its inverse [conditional probability](#conditionalProbability), the false omission rate ($P(C|\text{not } R)$).\index{false omission rate}\index{false negative rate}\index{probability!conditional}\index{confusion of the inverse}
+The false omission rate is the conditional probability of having the condition given a negative test: $P(C|\text{not } R)$.\index{false omission rate}\index{probability!conditional}
+Lower values reflect greater accuracy.\index{false omission rate}
+The formula for calculating false omission rate is in Equation \@ref(eq:falseOmissionRate).\index{false omission rate}
 
 $$
 \begin{aligned}
@@ -3135,9 +3135,9 @@ falseOmissionRateValue <- falseOmissionRate(TN = TNvalue, FN = FNvalue)
 ### Youden's J Statistic {#youdenJ-example}
 
 Youden's J statistic is also called Youden's Index or informedness.
-Youden's J statistic is the sum of [sensitivity](#sensitivity) and [specificity](#specificity) (and subtracting one).
-Higher values reflect greater accuracy.
-The formula for calculating Youden's J statistic is in Equation \@ref(eq:youdenIndex).
+Youden's J statistic is the sum of [sensitivity](#sensitivity) and [specificity](#specificity) (and subtracting one).\index{Youden's J statistic}\index{sensitivity}\index{specificity}
+Higher values reflect greater accuracy.\index{Youden's J statistic}
+The formula for calculating Youden's J statistic is in Equation \@ref(eq:youdenIndex).\index{Youden's J statistic}
 
 $$
 \begin{aligned}
@@ -3170,9 +3170,9 @@ youdenJValue <- youdenJ(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
 
 ### Balanced Accuracy {#balancedAccuracy}
 
-Balanced accuracy is the average of [sensitivity](#sensitivity) and [specificity](#specificity).
-Higher values reflect greater accuracy.
-The formula for calculating balanced accuracy is in Equation \@ref(eq:balancedAccuracy).
+Balanced accuracy is the average of [sensitivity](#sensitivity) and [specificity](#specificity).\index{balanced accuracy}
+Higher values reflect greater accuracy.\index{balanced accuracy}
+The formula for calculating balanced accuracy is in Equation \@ref(eq:balancedAccuracy).\index{balanced accuracy}
 
 $$
 \begin{aligned}
@@ -3208,10 +3208,10 @@ balancedAccuracyValue <- balancedAccuracy(TP = TPvalue,
 
 ### F-Score {#fScore}
 
-The F-score combines [precision](#ppv) ([positive predictive value](#ppv)) and [recall](#sensitivity) ([sensitivity](#sensitivity)), where $\beta$ indicates how many times more important [sensitivity](#sensitivity) is than the [positive predictive value](#ppv).
-If [sensitivity](#sensitivity) and the [positive predictive value](#ppv) are equally important, $\beta = 1$, and the F-score is called the $F_1$ score.
-Higher values reflect greater accuracy.
-The formula for calculating the F-score is in Equation \@ref(eq:FScore).
+The F-score combines [precision](#ppv) ([positive predictive value](#ppv)) and [recall](#sensitivity) ([sensitivity](#sensitivity)), where $\beta$ indicates how many times more important [sensitivity](#sensitivity) is than the [positive predictive value](#ppv).\index{F-score}\index{positive predictive value}\index{sensitivity}
+If [sensitivity](#sensitivity) and the [positive predictive value](#ppv) are equally important, $\beta = 1$, and the F-score is called the $F_1$ score.\index{F-score}\index{positive predictive value}\index{sensitivity}
+Higher values reflect greater accuracy.\index{F-score}
+The formula for calculating the F-score is in Equation \@ref(eq:FScore).\index{F-score}
 
 $$
 \begin{aligned}
@@ -3221,7 +3221,7 @@ $$
 (\#eq:FScore)
 $$
 
-The formula for calculating the $F_1$ score is in Equation \@ref(eq:F1Score).
+The formula for calculating the $F_1$ score is in Equation \@ref(eq:F1Score).\index{F-score}
 
 $$
 \begin{aligned}
@@ -3264,10 +3264,10 @@ f1ScoreValue <- fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue)
 
 ### Matthews Correlation Coefficient (MCC) {#matthewsCorrelationCoefficient}
 
-The Matthews correlation coefficient (MCC) is also called the phi coefficient.
-It is a correlation coefficient between predicted and observed values from a binary classification.
-Higher values reflect greater accuracy.
-The formula for calculating the MCC is in Equation \@ref(eq:matthewsCorrelationCoefficient).
+The Matthews correlation coefficient (MCC) is also called the phi coefficient.\index{Matthews correlation coefficient}
+It is a correlation coefficient between predicted and observed values from a binary classification.\index{Matthews correlation coefficient}
+Higher values reflect greater accuracy.\index{Matthews correlation coefficient}
+The formula for calculating the MCC is in Equation \@ref(eq:matthewsCorrelationCoefficient).\index{Matthews correlation coefficient}
 
 $$
 \begin{aligned}
@@ -3305,16 +3305,16 @@ mccValue <- mcc(TP = TPvalue,
 
 ### Diagnostic Odds Ratio {#diagnosticOddsRatio}
 
-The diagnostic odds ratio is the odds of a positive test in those with the condition relative to the odds of a positive test in those without the condition.
-Higher values reflect greater accuracy.
-The formula for calculating the diagnostic odds ratio is in Equation \@ref(eq:diagnosticOddsRatio).
-If the predictor is bad, the diagnostic odds ratio could be less than one, and values can go up from there.
-If the diagnostic odds ratio is greater than 2, we take the odds ratio seriously because we are twice as likely to predict accurately than inaccurately.
-However, the diagnostic odds ratio ignores/hides [base rates](#baseRate).
-When interpreting the diagnostic odds ratio, it is important to keep in mind the clinical significance, because otherwise it is not very meaningful.
-Consider a risk factor that has a diagnostic odds ratio of 3 for tuberculosis, i.e., it puts you at 3 times as likely to develop tuberculosis.
-The prevalence of tuberculosis is relatively low.
-Assuming the prevalence of tuberculosis is less than 1/10th of 1%, your risk of developing tuberculosis is still very low even if the risk factor (with a diagnostic odds ratio of 3) is present.
+The diagnostic odds ratio is the odds of a positive test in those with the condition relative to the odds of a positive test in those without the condition.\index{diagnostic odds ratio}
+Higher values reflect greater accuracy.\index{diagnostic odds ratio}
+The formula for calculating the diagnostic odds ratio is in Equation \@ref(eq:diagnosticOddsRatio).\index{diagnostic odds ratio}
+If the predictor is bad, the diagnostic odds ratio could be less than one, and values can go up from there.\index{diagnostic odds ratio}
+If the diagnostic odds ratio is greater than 2, we take the odds ratio seriously because we are twice as likely to predict accurately than inaccurately.\index{diagnostic odds ratio}
+However, the diagnostic odds ratio ignores/hides [base rates](#baseRate).\index{diagnostic odds ratio}\index{base rate}
+When interpreting the diagnostic odds ratio, it is important to keep in mind the clinical significance, because otherwise it is not very meaningful.\index{diagnostic odds ratio}
+Consider a risk factor that has a diagnostic odds ratio of 3 for tuberculosis, i.e., it puts you at 3 times as likely to develop tuberculosis.\index{diagnostic odds ratio}
+The prevalence of tuberculosis is relatively low.\index{diagnostic odds ratio}
+Assuming the prevalence of tuberculosis is less than 1/10th of 1%, your risk of developing tuberculosis is still very low even if the risk factor (with a diagnostic odds ratio of 3) is present.\index{diagnostic odds ratio}
 
 $$
 \begin{aligned}
@@ -3351,17 +3351,17 @@ diagnosticOddsRatioValue <- diagnosticOddsRatio(TP = TPvalue,
 
 ### Diagnostic Likelihood Ratio {#diagnosticLikelihoodRatio}
 
-A likelihood ratio is the ratio of two probabilities.
-It can be used to compare the likelihood of two possibilities.
-The diagnostic likelihood ratio is an index of the predictive validity of an instrument: it is the ratio of the probability that a test result is correct to the probability that the test result is incorrect.
-The diagnostic likelihood ratio is also called the risk ratio.
-There are two types of diagnostic likelihood ratios: the [positive likelihood ratio](#positiveLikelihoodRatio) and the [negative likelihood ratio](#negativeLikelihoodRatio).
+A likelihood ratio is the ratio of two probabilities.\index{diagnostic likelihood ratio}
+It can be used to compare the likelihood of two possibilities.\index{diagnostic likelihood ratio}
+The diagnostic likelihood ratio is an index of the predictive validity of an instrument: it is the ratio of the probability that a test result is correct to the probability that the test result is incorrect.\index{diagnostic likelihood ratio}
+The diagnostic likelihood ratio is also called the risk ratio.\index{diagnostic likelihood ratio}
+There are two types of diagnostic likelihood ratios: the [positive likelihood ratio](#positiveLikelihoodRatio) and the [negative likelihood ratio](#negativeLikelihoodRatio).\index{diagnostic likelihood ratio}\index{positive likelihood ratio}\index{negative likelihood ratio}
 
 #### Positive Likelihood Ratio {#positiveLikelihoodRatio}
 
-The positive likelihood ratio compares the [true positive rate](#sensitivity) to the [false positive rate](#falsePositiveRate).
-Higher values reflect greater accuracy because it indicates the degree to which a [true positive](#truePositive) is more likely than a [false positive](#falsePositive).
-The formula for calculating the positive likelihood ratio is in Equation \@ref(eq:positiveLikelihoodRatio).
+The positive likelihood ratio compares the [true positive rate](#sensitivity) to the [false positive rate](#falsePositiveRate).\index{positive likelihood ratio}\index{sensitivity}\index{false positive rate}
+Higher values reflect greater accuracy because it indicates the degree to which a [true positive](#truePositive) is more likely than a [false positive](#falsePositive).\index{positive likelihood ratio}\index{true positive}\index{false positive}
+The formula for calculating the positive likelihood ratio is in Equation \@ref(eq:positiveLikelihoodRatio).\index{positive likelihood ratio}
 
 $$
 \begin{aligned}
@@ -3401,9 +3401,9 @@ positiveLikelihoodRatioValue <- positiveLikelihoodRatio(TP = TPvalue,
 
 #### Negative Likelihood Ratio {#negativeLikelihoodRatio}
 
-The negative likelihood ratio compares the [false negative rate](#falseNegativeRate) to the [true negative rate](#specificity).
-Smaller values reflect greater accuracy because it indicates that a [false negative](#falseNegative) is less likely than a [true negative](#trueNegative).
-The formula for calculating the negative likelihood ratio is in Equation \@ref(eq:negativeLikelihoodRatio).
+The negative likelihood ratio compares the [false negative rate](#falseNegativeRate) to the [true negative rate](#specificity).\index{negative likelihood ratio}\index{false negative rate}\index{specificity}
+Smaller values reflect greater accuracy because it indicates that a [false negative](#falseNegative) is less likely than a [true negative](#trueNegative).\index{negative likelihood ratio}\index{false negative}\index{true negative}
+The formula for calculating the negative likelihood ratio is in Equation \@ref(eq:negativeLikelihoodRatio).\index{negative likelihood ratio}
 
 $$
 \begin{aligned}
@@ -3443,10 +3443,10 @@ negativeLikelihoodRatioValue <- negativeLikelihoodRatio(TP = TPvalue,
 
 ### Posttest Odds {#posttestOdds}
 
-As presented in Equation \@ref(eq:bayes5), the posttest (or posterior) odds are equal to the [pretest odds](#pretestOdds) multiplied by the likelihood ratio.
-The posttest odds and [posttest probability](#posttestProbability) can be useful to calculate when the [pretest probability](#baseRate) is different from the [pretest probability](#baseRate) (or prevalence) of the classification.
-For instance, you might use a different [pretest probability](#baseRate) if a test result is already known and you want to know the updated [posttest probability](#posttestProbability) after conducting a second test.
-The formula for calculating posttest odds is in Equation \@ref(eq:posttestOdds).
+As presented in Equation \@ref(eq:bayes5), the posttest (or posterior) odds are equal to the [pretest odds](#pretestOdds) multiplied by the [likelihood ratio](#diagnosticLikelihoodRatio).\index{odds!posttest}\index{diagnostic likelihood ratio}
+The posttest odds and [posttest probability](#posttestProbability) can be useful to calculate when the [pretest probability](#baseRate) is different from the [pretest probability](#baseRate) (or prevalence) of the classification.\index{odds!posttest}\index{probability!posttest}\index{probability!pretest}\index{base rate}
+For instance, you might use a different [pretest probability](#baseRate) if a test result is already known and you want to know the updated [posttest probability](#posttestProbability) after conducting a second test.\index{odds!posttest}\index{probability!posttest}\index{probability!pretest}
+The formula for calculating posttest odds is in Equation \@ref(eq:posttestOdds).\index{odds!posttest}
 
 $$
 \begin{aligned}
@@ -3455,8 +3455,8 @@ $$
 (\#eq:posttestOdds)
 $$
 
-For calculating the posttest odds of a [true positive](#truePositive) compared to a [false positive](#falsePositive), we use the [positive likelihood ratio](#positiveLikelihoodRatio) below.
-We would use the [negative likelihood ratio](#negativeLikelihoodRatio) if we wanted to calculate the posttest odds of a [false negative](#falseNegative) compared to a [true negative](#trueNegative).
+For calculating the posttest odds of a [true positive](#truePositive) compared to a [false positive](#falsePositive), we use the [positive likelihood ratio](#positiveLikelihoodRatio) below.\index{odds!posttest}\index{positive likelihood ratio}\index{true positive}\index{false positive}
+We would use the [negative likelihood ratio](#negativeLikelihoodRatio) if we wanted to calculate the posttest odds of a [false negative](#falseNegative) compared to a [true negative](#trueNegative).\index{odds!posttest}\index{positive likelihood ratio}\index{false negative}\index{true negative}
 
 ```{r, class.source = "fold-hide"}
 posttestOdds <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, SP = NULL, likelihoodRatio = NULL){
@@ -3528,9 +3528,9 @@ posttestOddsValue <- posttestOdds(TP = TPvalue,
 
 ### Posttest Probability {#posttestProbability}
 
-The posttest probability is the probability of having the disorder given a test result.
-When the [base rate](#baseRate) is used as the [pretest probability](#baseRate), the posttest probability given a positive test is equal to [positive predictive value](#ppv).
-To convert odds to a probability, divide the odds by one plus the odds, as is in Equation \@ref(eq:posttestProbability).
+The posttest probability is the probability of having the disorder given a test result.\index{probability!posttest}
+When the [base rate](#baseRate) is used as the [pretest probability](#baseRate), the posttest probability given a positive test is equal to [positive predictive value](#ppv).\index{probability!posttest}\index{base rate}\index{probability!pretest}\index{positive predictive value}
+To convert odds to a probability, divide the odds by one plus the odds, as is in Equation \@ref(eq:posttestProbability).\index{probability!posttest}
 
 $$
 \begin{aligned}
@@ -3608,12 +3608,12 @@ posttestProbabilityValue <- posttestProbability(TP = TPvalue,
                                                 FN = FNvalue)
 ```
 
-Consider the following example: Assume the [base rate](#baseRate) of the condition is .03%.
-We have two tests.
-Test A has a [sensitivity](#sensitivity) of .95 and a [specificity](#specificity) of .80.
-Test B has a [sensitivity](#sensitivity) of .70 and a [specificity](#specificity) of .90.
-What is the probability of having the condition if a person has a positive test on Test A?
-Assuming the errors of the two tests are independent, what is the probability of having the condition if the person has a positive test on Test B after having a positive test on Test A?
+Consider the following example: Assume the [base rate](#baseRate) of the condition is .03%.\index{probability!posttest}\index{base rate}
+We have two tests.\index{probability!posttest}
+Test A has a [sensitivity](#sensitivity) of .95 and a [specificity](#specificity) of .80.\index{probability!posttest}\index{sensitivity}\index{specificity}
+Test B has a [sensitivity](#sensitivity) of .70 and a [specificity](#specificity) of .90.\index{probability!posttest}\index{sensitivity}\index{specificity}
+What is the probability of having the condition if a person has a positive test on Test A?\index{probability!posttest}
+Assuming the errors of the two tests are independent, what is the probability of having the condition if the person has a positive test on Test B after having a positive test on Test A?\index{probability!posttest}
 
 ```{r}
 probGivenTestA <- posttestProbability(
@@ -3630,14 +3630,14 @@ probGivenTestA
 probGivenTestAthenB
 ```
 
-The probability of having the condition if a person has a positive test on Test A is $`r apa(probGivenTestA * 100, decimals = 1)`$%.
-The probability of having the condition if the person has a positive test on Test B after having a positive test on Test A is $`r apa(probGivenTestAthenB * 100, decimals = 1)`$%.
+The probability of having the condition if a person has a positive test on Test A is $`r apa(probGivenTestA * 100, decimals = 1)`$%.\index{probability!posttest}
+The probability of having the condition if the person has a positive test on Test B after having a positive test on Test A is $`r apa(probGivenTestAthenB * 100, decimals = 1)`$%.\index{probability!posttest}
 
 ### $d'$ Sensitivity from Signal Detection Theory {#dPrimeSDT}
 
-$d'$ ($d$ prime) is an index of sensitivity from [signal detection theory](#sdt), as described by [@Stanislaw1999].
-Higher values reflect greater accuracy.
-The formula for calculating $d'$ is in Equation \@ref(eq:dPrimeSDT).
+$d'$ ($d$ prime) is an index of sensitivity from [signal detection theory](#sdt), as described by [@Stanislaw1999].\index{signal detection theory!$d'$}\index{signal detection theory!sensitivity}
+Higher values reflect greater accuracy.\index{signal detection theory!$d'$}
+The formula for calculating $d'$ is in Equation \@ref(eq:dPrimeSDT).\index{signal detection theory!$d'$}
 
 $$
 d' = z(\text{hit rate}) − z(\text{false alarm rate})
@@ -3671,9 +3671,9 @@ dPrimeValue <- dPrimeSDT(TP = TPvalue,
 
 ### $A$ (Non-Parametric) Sensitivity from Signal Detection Theory {#aSDT}
 
-$A$ is a non-parametric index of sensitivity from [signal detection theory](#sdt), as described by [@Zhang2005].
-Higher values reflect greater accuracy.
-The formula for calculating $A$ is in Equation \@ref(eq:aSDT).
+$A$ is a non-parametric index of sensitivity from [signal detection theory](#sdt), as described by [@Zhang2005].\index{signal detection theory!$A$}\index{signal detection theory!sensitivity}
+Higher values reflect greater accuracy.\index{signal detection theory!$A$}
+The formula for calculating $A$ is in Equation \@ref(eq:aSDT).\index{signal detection theory!$A$}
 
 https://sites.google.com/a/mtu.edu/whynotaprime/
 
@@ -3687,7 +3687,7 @@ A =
 (\#eq:aSDT)
 $$
 
-where $H$ is the hit rate and $F$ is the false alarm rate.
+where $H$ is the hit rate and $F$ is the false alarm rate.\index{signal detection theory!$A$}\index{sensitivity}\index{false positive rate}
 
 ```{r, class.source = "fold-hide"}
 aSDT <- function(TP, TN, FP, FN){
@@ -3719,16 +3719,16 @@ Avalue <- aSDT(TP = TPvalue,
 
 ### $\beta$ Bias from Signal Detection Theory {#betaSDT}
 
-$\beta$ is an index of bias from [signal detection theory](#sdt), as described by [@Stanislaw1999].
-Smaller values reflect greater accuracy.
-The formula for calculating $\beta$ is in Equation \@ref(eq:betaSDT).
+$\beta$ is an index of bias from [signal detection theory](#sdt), as described by [@Stanislaw1999].\index{signal detection theory!$\beta$}\index{signal detection theory!bias}
+Smaller values reflect greater accuracy.\index{signal detection theory!$\beta$}
+The formula for calculating $\beta$ is in Equation \@ref(eq:betaSDT).\index{signal detection theory!$\beta$}
 
 $$
 \beta = e^{\bigg\{\frac{\big[\phi^{-1}(F)\big]^2 - \big[\phi^{-1}(H)\big]}{2}\bigg\}^2} 
 (\#eq:betaSDT)
 $$
 
-where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.
+where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.\index{signal detection theory!$\beta$}\index{sensitivity}\index{false positive rate}
 
 ```{r, class.source = "fold-hide"}
 betaSDT <- function(TP, TN, FP, FN){
@@ -3757,16 +3757,16 @@ betaValue <- betaSDT(TP = TPvalue,
 
 ### $c$ Bias from Signal Detection Theory {#cSDT}
 
-$c$ is an index of bias from [signal detection theory](#sdt), as described by [@Stanislaw1999].
-Smaller values reflect greater accuracy.
-The formula for calculating $c$ is in Equation \@ref(eq:cSDT).
+$c$ is an index of bias from [signal detection theory](#sdt), as described by [@Stanislaw1999].\index{signal detection theory!$c$}\index{signal detection theory!bias}
+Smaller values reflect greater accuracy.\index{signal detection theory!$c$}
+The formula for calculating $c$ is in Equation \@ref(eq:cSDT).\index{signal detection theory!$c$}
 
 $$
 c = - \frac{\phi^{-1}(H) + \phi^{-1}(F)}{2}
 (\#eq:cSDT)
 $$
 
-where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.
+where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.\index{signal detection theory!$c$}\index{sensitivity}\index{false positive rate}
 
 ```{r, class.source = "fold-hide"}
 cSDT <- function(TP, TN, FP, FN){
@@ -3795,9 +3795,9 @@ cValue <- cSDT(TP = TPvalue,
 
 ### $b$ (Non-Parametric) Bias from Signal Detection Theory {#bSDT}
 
-$b$ is a non-parametric index of bias from [signal detection theory](#sdt), as described by [@Zhang2005].
-Smaller values reflect greater accuracy.
-The formula for calculating $b$ is in Equation \@ref(eq:bSDT).
+$b$ is a non-parametric index of bias from [signal detection theory](#sdt), as described by [@Zhang2005].\index{signal detection theory!$b$}\index{signal detection theory!bias}
+Smaller values reflect greater accuracy.\index{signal detection theory!$b$}
+The formula for calculating $b$ is in Equation \@ref(eq:bSDT).\index{signal detection theory!$b$}
 
 $$
 b = 
@@ -3839,11 +3839,11 @@ bValue <- bSDT(TP = TPvalue,
 
 ### Mean Difference between Predicted versus Observed Values (Miscalibration) {#miscalibration}
 
-The mean difference between predicted values versus expected values at a given cutoff is an index of [miscalibration](#calibration) of predictions at that cutoff.
-It is called "calibration-in-the-small" (as opposed to calibration-in-the-large, which spans all cutoffs).
-Values closer to zero reflect greater accuracy.
-Values above zero indicate that the predicted values are, on average, greater than the observed values.
-Values below zero indicate that the observed values are, on average, greater than the predicted values.
+The mean difference between predicted values versus expected values at a given cutoff is an index of [miscalibration](#calibration) of predictions at that cutoff.\index{calibration}
+It is called "calibration-in-the-small" (as opposed to calibration-in-the-large, which spans all cutoffs).\index{calibration}\index{calibration!in the small}\index{calibration!in the large}
+Values closer to zero reflect greater accuracy.\index{calibration}
+Values above zero indicate that the predicted values are, on average, greater than the observed values.\index{calibration}
+Values below zero indicate that the observed values are, on average, greater than the predicted values.\index{calibration}
 
 ```{r, fig.show = "hide", class.source = "fold-hide"}
 miscalibration <- function(predicted, actual, cutoff, bins = 10){
