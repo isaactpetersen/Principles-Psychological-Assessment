@@ -919,7 +919,7 @@ div.csl-indent {
 <li class="chapter" data-level="9.4.1.2.2" data-path="prediction.html"><a href="prediction.html#meanAbsolutePercentageError"><i class="fa fa-check"></i><b>9.4.1.2.2</b> Mean Absolute Percentage Error (MAPE)</a></li>
 <li class="chapter" data-level="9.4.1.2.3" data-path="prediction.html"><a href="prediction.html#symmetricMeanAbsolutePercentageError"><i class="fa fa-check"></i><b>9.4.1.2.3</b> Symmetric Mean Absolute Percentage Error (sMAPE)</a></li>
 <li class="chapter" data-level="9.4.1.2.4" data-path="prediction.html"><a href="prediction.html#meanAbsoluteScaledErrro"><i class="fa fa-check"></i><b>9.4.1.2.4</b> Mean Absolute Scaled Error (MASE)</a></li>
-<li class="chapter" data-level="9.4.1.2.5" data-path="prediction.html"><a href="prediction.html#accuracyRatio"><i class="fa fa-check"></i><b>9.4.1.2.5</b> Root Mean Squared Log of the Accuracy Ratio</a></li>
+<li class="chapter" data-level="9.4.1.2.5" data-path="prediction.html"><a href="prediction.html#accuracyRatio"><i class="fa fa-check"></i><b>9.4.1.2.5</b> Root Mean Squared Log Error</a></li>
 <li class="chapter" data-level="9.4.1.2.6" data-path="prediction.html"><a href="prediction.html#coefficientOfDetermination"><i class="fa fa-check"></i><b>9.4.1.2.6</b> Coefficient of Determination (<span class="math inline">\(R^2\)</span>)</a></li>
 </ul></li>
 </ul></li>
@@ -2452,7 +2452,7 @@ If <span class="math inline">\(P(R_i) &gt; P(C_i)\)</span>, our predictions must
 \]</span></p>
 <p>Instead of using <a href="prediction.html#baseRate">marginal probability</a> (<a href="prediction.html#baseRate">base rate</a>) of <span class="math inline">\(R\)</span>, as in the original formulation of Bayes’ theorem, it uses the <a href="prediction.html#conditionalProbability">conditional probability</a>, <span class="math inline">\(P(R|\text{not } C)\)</span>.
 Thus, it uses three terms: two <a href="prediction.html#conditionalProbability">conditional probabilities</a>—<span class="math inline">\(P(R|C)\)</span> and <span class="math inline">\(P(R|\text{not } C)\)</span>—and one <a href="prediction.html#baseRate">marginal probability</a>, <span class="math inline">\(P(C_i)\)</span>.
-This alternative formulation of Bayes’ theorem can be used to calculate <a href="prediction.html#ppv">positive predictive value</a>, based on <a href="prediction.html#sensitivity">sensitivity</a>, <a href="prediction.html#specificity">specificity</a>, and the <a href="prediction.html#baseRate">base rate</a>, as presented in Equation <a href="prediction.html#eq:positivePredictiveValue">(9.47)</a>.</p>
+This alternative formulation of Bayes’ theorem can be used to calculate <a href="prediction.html#ppv">positive predictive value</a>, based on <a href="prediction.html#sensitivity">sensitivity</a>, <a href="prediction.html#specificity">specificity</a>, and the <a href="prediction.html#baseRate">base rate</a>, as presented in Equation <a href="prediction.html#eq:positivePredictiveValue">(9.48)</a>.</p>
 <p>Let us see how the alternative formulation of Bayes’ theorem applies to the HIV example above.
 We can calculate the probability of HIV given a positive test using three terms: the <a href="prediction.html#conditionalProbability">conditional probability</a> that a person with HIV gets a positive test (i.e., <a href="prediction.html#sensitivity">sensitivity</a>), the <a href="prediction.html#conditionalProbability">conditional probability</a> that a person without HIV gets a positive test (i.e., <a href="prediction.html#falsePositiveRate">false positive rate</a>), and the <a href="prediction.html#baseRate">base rate</a> of HIV.
 Using the <span class="math inline">\(P(R|\text{not } C)\)</span> calculated in Equation <a href="prediction.html#eq:conditionalProbabilityRevised">(9.9)</a>, the <a href="prediction.html#conditionalProbability">conditional probability</a> of HIV given a single positive test is in Equation <a href="prediction.html#eq:bayes4">(9.13)</a>:</p>
@@ -3097,19 +3097,19 @@ Aspects of accuracy at a particular cutoff are described in Section <a href="pre
 <span id="cb617-4"><a href="prediction.html#cb617-4" aria-hidden="true" tabindex="-1"></a>  t <span class="sc">%&gt;%</span></span>
 <span id="cb617-5"><a href="prediction.html#cb617-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(., <span class="dv">2</span>)</span></code></pre></div>
 </details>
-<pre><code>                     [,1]
-ME                  -0.11
-MAE                  0.34
-MSE                  0.21
-RMSE                 0.46
-MPE                  -Inf
-MAPE                  Inf
-sMAPE               82.46
-MASE                 0.74
-rmsLogAccuracyRatio   Inf
-rsquared             0.18
-rsquaredAdj          0.17
-rsquaredPredictive   0.12</code></pre>
+<pre><code>                    [,1]
+ME                 -0.11
+MAE                 0.34
+MSE                 0.21
+RMSE                0.46
+MPE                 -Inf
+MAPE                 Inf
+sMAPE              82.46
+MASE                0.74
+RMSLE               0.30
+rsquared            0.18
+rsquaredAdj         0.17
+rsquaredPredictive  0.12</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb619"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb619-1"><a href="prediction.html#cb619-1" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracyOverall</span>(</span>
 <span id="cb619-2"><a href="prediction.html#cb619-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">predicted =</span> mydataSDT<span class="sc">$</span>testScore, </span>
@@ -3118,19 +3118,19 @@ rsquaredPredictive   0.12</code></pre>
 <span id="cb619-5"><a href="prediction.html#cb619-5" aria-hidden="true" tabindex="-1"></a>  t <span class="sc">%&gt;%</span></span>
 <span id="cb619-6"><a href="prediction.html#cb619-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(., <span class="dv">2</span>)</span></code></pre></div>
 </details>
-<pre><code>                     [,1]
-ME                  -0.11
-MAE                  0.34
-MSE                  0.21
-RMSE                 0.46
-MPE                 59.62
-MAPE                64.97
-sMAPE               82.46
-MASE                 0.74
-rmsLogAccuracyRatio  1.61
-rsquared             0.18
-rsquaredAdj          0.17
-rsquaredPredictive   0.12</code></pre>
+<pre><code>                    [,1]
+ME                 -0.11
+MAE                 0.34
+MSE                 0.21
+RMSE                0.46
+MPE                59.62
+MAPE               64.97
+sMAPE              82.46
+MASE                0.74
+RMSLE               0.30
+rsquared            0.18
+rsquaredAdj         0.17
+rsquaredPredictive  0.12</code></pre>
 <div id="generalPredictionAccuracy" class="section level3 hasAnchor" number="9.4.1">
 <h3><span class="header-section-number">9.4.1</span> General Prediction Accuracy<a href="prediction.html#generalPredictionAccuracy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There are many metrics of general prediction accuracy.
@@ -3174,6 +3174,7 @@ The formula for mean error is in Equation <a href="prediction.html#eq:meanError"
 <h5><span class="header-section-number">9.4.1.1.2</span> Mean Absolute Error (MAE)<a href="prediction.html#meanAbsoluteError" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.
 Smaller MAE values (closer to zero) reflect greater accuracy.
+MAE is preferred over <a href="prediction.html#rootMeanSquaredError">root mean squared error</a> (RMSE) when you want to give equal weight to all errors and when the outliers have considerable impact.
 The formula for MAE is in Equation <a href="prediction.html#eq:meanAbsoluteError">(9.20)</a>:</p>
 <p><span class="math display" id="eq:meanAbsoluteError">\[
 \begin{aligned}
@@ -3197,6 +3198,8 @@ The formula for MAE is in Equation <a href="prediction.html#eq:meanAbsoluteError
 <h5><span class="header-section-number">9.4.1.1.3</span> Mean Squared Error (MSE)<a href="prediction.html#meanSquaredError" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Mean squared error (MSE) is the mean of the square of the differences between the predicted and observed values across individuals, that is, the mean of the squared value of errors.
 Smaller MSE values (closer to zero) reflect greater accuracy.
+MSE penalizes larger errors more heavily than smaller errors (unlike <a href="prediction.html#meanAbsoluteError">MAE</a>).
+However, MSE is sensitive to outliers and can be impacted if the errors are skewed.
 The formula for MSE is in Equation <a href="prediction.html#eq:meanSquaredError">(9.21)</a>:</p>
 <p><span class="math display" id="eq:meanSquaredError">\[
 \begin{aligned}
@@ -3220,7 +3223,8 @@ The formula for MSE is in Equation <a href="prediction.html#eq:meanSquaredError"
 <h5><span class="header-section-number">9.4.1.1.4</span> Root Mean Squared Error (RMSE)<a href="prediction.html#rootMeanSquaredError" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Root mean squared error (RMSE) is the square root of the mean of the square of the differences between the predicted and observed values across individuals, that is, the root mean squared value of errors.
 Smaller RMSE values (closer to zero) reflect greater accuracy.
-RMSE penalizes larger errors more so than <a href="prediction.html#meanAbsoluteError">MAE</a> does.
+RMSE penalizes larger errors more heavily than smaller errors (unlike <a href="prediction.html#meanAbsoluteError">MAE</a>).
+However, RMSE is sensitive to outliers and can be impacted if the errors are skewed.
 The formula for RMSE is in Equation <a href="prediction.html#eq:rootMeanSquaredError">(9.22)</a>:</p>
 <p><span class="math display" id="eq:rootMeanSquaredError">\[
 \begin{aligned}
@@ -3295,7 +3299,9 @@ I provide the option in the function to drop undefined values so you can still g
 <div id="meanAbsolutePercentageError" class="section level5 hasAnchor" number="9.4.1.2.2">
 <h5><span class="header-section-number">9.4.1.2.2</span> Mean Absolute Percentage Error (MAPE)<a href="prediction.html#meanAbsolutePercentageError" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>Smaller mean absolute percentage error (MAPE) Values (closer to zero) reflect greater accuracy.
-The formula for MAPE is in Equation <a href="prediction.html#eq:meanAbsolutePercentageError">(9.25)</a>:</p>
+The formula for MAPE is in Equation <a href="prediction.html#eq:meanAbsolutePercentageError">(9.25)</a>:
+MAPE is asymmetric because it overweights underestimates and underweights overestimates.
+MAPE can be preferable to <a href="prediction.html#symmetricMeanAbsolutePercentageError">symmetric mean absolute percentage error</a> (sMAPE) if there are no observed values of zero and if you want to emphasize the importance of underestimates (relative to overestimates).</p>
 <p><span class="math display" id="eq:meanAbsolutePercentageError">\[
 \begin{aligned}
   \text{mean absolute percentage error (MAPE)} &amp;= \frac{100\%}{n} \sum\limits_{i = 1}^n \Bigg|\frac{\text{observed}_i - \text{predicted}_i}{\text{observed}_i}\Bigg| \\
@@ -3334,7 +3340,8 @@ I provide the option in the function to drop undefined values so you can still g
 </div>
 <div id="symmetricMeanAbsolutePercentageError" class="section level5 hasAnchor" number="9.4.1.2.3">
 <h5><span class="header-section-number">9.4.1.2.3</span> Symmetric Mean Absolute Percentage Error (sMAPE)<a href="prediction.html#symmetricMeanAbsolutePercentageError" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>Smaller symmetric mean asbolute percentage error (sMAPE) values (closer to zero) reflect greater accuracy.
+<p>Unlike MAPE, symmetric mean asbolute percentage error (sMAPE) is symmetric because it equally weights underestimates and overestimates.
+Smaller sMAPE values (closer to zero) reflect greater accuracy.
 The formula for sMAPE is in Equation <a href="prediction.html#eq:symmetricMeanAbsolutePercentageError">(9.26)</a>:</p>
 <p><span class="math display" id="eq:symmetricMeanAbsolutePercentageError">\[
 \small
@@ -3406,57 +3413,70 @@ With non-time series data, the scaling factor is the average of the absolute val
 <pre><code>[1] 0.7362143</code></pre>
 </div>
 <div id="accuracyRatio" class="section level5 hasAnchor" number="9.4.1.2.5">
-<h5><span class="header-section-number">9.4.1.2.5</span> Root Mean Squared Log of the Accuracy Ratio<a href="prediction.html#accuracyRatio" class="anchor-section" aria-label="Anchor link to header"></a></h5>
+<h5><span class="header-section-number">9.4.1.2.5</span> Root Mean Squared Log Error<a href="prediction.html#accuracyRatio" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <p>The squared log of the accuracy ratio is described by <span class="citation">Tofallis (<a href="#ref-Tofallis2015" role="doc-biblioref">2015</a>)</span>.
-The accuracy ratio is in Equation <a href="prediction.html#eq:accuracyRatio">(9.29)</a>:</p>
-<p><span class="math display" id="eq:accuracyRatio">\[
+The accuracy ratio is in Equation <a href="prediction.html#eq:accuracyRatio1">(9.29)</a>:</p>
+<p><span class="math display" id="eq:accuracyRatio1">\[
 \begin{aligned}
   \text{accuracy ratio} &amp;= \frac{\text{predicted}_i}{\text{observed}_i}
 \end{aligned}
 \tag{9.29}
 \]</span></p>
-<p>Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.
-Here, I take the mean of the squared log values, which keeps the values positive, and I calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric, as in Equation <a href="prediction.html#eq:rootMeanSquaredLogAccuracyRatio">(9.30)</a>:</p>
-<p><span class="math display" id="eq:rootMeanSquaredLogAccuracyRatio">\[
+<p>However, the accuracy ratio is undefined with observed or predicted values of zero, so it is common to modify it by adding 1 to the predictor and denominator, as in Equation <a href="prediction.html#eq:accuracyRatio2">(9.30)</a>:</p>
+<p><span class="math display" id="eq:accuracyRatio2">\[
 \begin{aligned}
-  \text{root mean squared log of the accuracy ratio} &amp;= \sqrt{\sum\limits_{i = 1}^n log\bigg(\frac{\text{predicted}_i}{\text{observed}_i}\bigg)^2} \\
-  &amp;= \sqrt{\text{mean}\Bigg[log\bigg(\frac{\text{predicted}_i}{\text{observed}_i}\bigg)^2\Bigg]} \\
-  &amp;= \sqrt{\text{mean}\big[log(\text{accuracy ratio})^2\big]}
+  \text{accuracy ratio} &amp;= \frac{\text{predicted}_i + 1}{\text{observed}_i + 1}
 \end{aligned}
 \tag{9.30}
 \]</span></p>
+<p>Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.
+Then we take the mean of the squared log values, which keeps the values positive, and calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric.
+This is known as the root mean squared log error (RMSLE).
+Division inside the log is equal to subtraction outside the log.
+So, the formula can be reformulated with the subtraction of two logs, as in Equation <a href="prediction.html#eq:rootMeanSquaredLogError">(9.31)</a>:</p>
+<p><span class="math display" id="eq:rootMeanSquaredLogError">\[
+\begin{aligned}
+  \text{root mean squared log error (RMSLE)} &amp;= \sqrt{\sum\limits_{i = 1}^n log\bigg(\frac{\text{predicted}_i + 1}{\text{observed}_i + 1}\bigg)^2} \\
+  &amp;= \sqrt{\text{mean}\Bigg[log\bigg(\frac{\text{predicted}_i + 1}{\text{observed}_i + 1}\bigg)^2\Bigg]} \\
+  &amp;= \sqrt{\text{mean}\big[log(\text{accuracy ratio})^2\big]} = \sqrt{\text{mean}\Big\{\big[log(\text{predicted}_i + 1) - log(\text{actual}_i + 1)\big]^2\Big\}}
+\end{aligned}
+\tag{9.31}
+\]</span></p>
+<p>RMSLE can be preferable when the scores have a wide range of values and are skewed.
+RMSLE can help to reduce the impact of outliers.
+RMSLE gives more weight to smaller errors in the prediction of small observed values, while also penalizing larger errors in the prediction of larger observed values.
+It overweights underestimates and underweights overestimates.</p>
 <p>There are other variations of prediction accuracy metrics that use the log of the accuracy ratio.
 One variation makes it similar to median symmetric percentage error <span class="citation">(<a href="#ref-Morley2018" role="doc-biblioref">Morley et al., 2018</a>)</span>.</p>
-<p>Note: The log of the accuracy ratio is undefined when one or more predicted values or actual values equals zero.
-When predicted values are zero, there is a zero in the numerator of the accuracy ratio, which leads to <span class="math inline">\(log(0)\)</span>, which is undefined.
-When actual values are zero, there is division by zero in the accuracy ratio.
+<p>Note: Root mean squared log error is undefined when one or more predicted values or actual values equals -1.
+When predicted or actual values are -1, this leads to <span class="math inline">\(log(0)\)</span>, which is undefined.
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb649"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb649-1"><a href="prediction.html#cb649-1" aria-hidden="true" tabindex="-1"></a>rootMeanSquaredLogAccuracyRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(predicted, actual, <span class="at">dropUndefined =</span> <span class="cn">FALSE</span>){</span>
-<span id="cb649-2"><a href="prediction.html#cb649-2" aria-hidden="true" tabindex="-1"></a>  logAccuracyRatio <span class="ot">&lt;-</span> <span class="fu">log</span>(predicted <span class="sc">/</span> actual)</span>
+<div class="sourceCode" id="cb649"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb649-1"><a href="prediction.html#cb649-1" aria-hidden="true" tabindex="-1"></a>rootMeanSquaredLogError <span class="ot">&lt;-</span> <span class="cf">function</span>(predicted, actual, <span class="at">dropUndefined =</span> <span class="cn">FALSE</span>){</span>
+<span id="cb649-2"><a href="prediction.html#cb649-2" aria-hidden="true" tabindex="-1"></a>  logError <span class="ot">&lt;-</span> <span class="fu">log</span>(predicted <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">-</span> <span class="fu">log</span>(actual <span class="sc">+</span> <span class="dv">1</span>)</span>
 <span id="cb649-3"><a href="prediction.html#cb649-3" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb649-4"><a href="prediction.html#cb649-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(dropUndefined <span class="sc">==</span> <span class="cn">TRUE</span>){</span>
-<span id="cb649-5"><a href="prediction.html#cb649-5" aria-hidden="true" tabindex="-1"></a>    logAccuracyRatio[<span class="sc">!</span><span class="fu">is.finite</span>(logAccuracyRatio)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb649-5"><a href="prediction.html#cb649-5" aria-hidden="true" tabindex="-1"></a>    logError[<span class="sc">!</span><span class="fu">is.finite</span>(logError)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb649-6"><a href="prediction.html#cb649-6" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb649-7"><a href="prediction.html#cb649-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb649-8"><a href="prediction.html#cb649-8" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(logAccuracyRatio<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb649-8"><a href="prediction.html#cb649-8" aria-hidden="true" tabindex="-1"></a>  value <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(logError<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb649-9"><a href="prediction.html#cb649-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb649-10"><a href="prediction.html#cb649-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(value)</span>
 <span id="cb649-11"><a href="prediction.html#cb649-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb650"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb650-1"><a href="prediction.html#cb650-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rootMeanSquaredLogAccuracyRatio</span>(</span>
+<div class="sourceCode" id="cb650"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb650-1"><a href="prediction.html#cb650-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rootMeanSquaredLogError</span>(</span>
 <span id="cb650-2"><a href="prediction.html#cb650-2" aria-hidden="true" tabindex="-1"></a>  mydataSDT<span class="sc">$</span>testScore,</span>
 <span id="cb650-3"><a href="prediction.html#cb650-3" aria-hidden="true" tabindex="-1"></a>  mydataSDT<span class="sc">$</span>disorder)</span></code></pre></div>
 </details>
-<pre><code>[1] Inf</code></pre>
+<pre><code>[1] 0.303727</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb652"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb652-1"><a href="prediction.html#cb652-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rootMeanSquaredLogAccuracyRatio</span>(</span>
+<div class="sourceCode" id="cb652"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb652-1"><a href="prediction.html#cb652-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rootMeanSquaredLogError</span>(</span>
 <span id="cb652-2"><a href="prediction.html#cb652-2" aria-hidden="true" tabindex="-1"></a>  mydataSDT<span class="sc">$</span>testScore,</span>
 <span id="cb652-3"><a href="prediction.html#cb652-3" aria-hidden="true" tabindex="-1"></a>  mydataSDT<span class="sc">$</span>disorder,</span>
 <span id="cb652-4"><a href="prediction.html#cb652-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dropUndefined =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
-<pre><code>[1] 1.606175</code></pre>
+<pre><code>[1] 0.303727</code></pre>
 </div>
 <div id="coefficientOfDetermination" class="section level5 hasAnchor" number="9.4.1.2.6">
 <h5><span class="header-section-number">9.4.1.2.6</span> Coefficient of Determination (<span class="math inline">\(R^2\)</span>)<a href="prediction.html#coefficientOfDetermination" class="anchor-section" aria-label="Anchor link to header"></a></h5>
@@ -3482,13 +3502,13 @@ Figure 9.20: Conceptual depiction of proportion of variance explained (<span cla
 <p>The predictor (<code>testScore</code>) explains <span class="math inline">\(17.79\)</span>% of the variance <span class="math inline">\((R^2 = .1779)\)</span> in the outcome (<code>disorder</code> status).</p>
 <div id="adjustedRsquared" class="section level6 hasAnchor" number="9.4.1.2.6.1">
 <h6><span class="header-section-number">9.4.1.2.6.1</span> Adjusted <span class="math inline">\(R^2\)</span> (<span class="math inline">\(R^2_{adj}\)</span>)<a href="prediction.html#adjustedRsquared" class="anchor-section" aria-label="Anchor link to header"></a></h6>
-<p>Adjusted <span class="math inline">\(R^2\)</span> is similar to the <a href="prediction.html#coefficientOfDetermination">coefficient of determination</a>, but it accounts for the number of predictors included in the regression model.
+<p>Adjusted <span class="math inline">\(R^2\)</span> is similar to the <a href="prediction.html#coefficientOfDetermination">coefficient of determination</a>, but it accounts for the number of predictors included in the regression model to penalize <a href="validity.html#overfitting">overfitting</a>.
 Adjusted <span class="math inline">\(R^2\)</span> reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions over and above what would be expected to be accounted for by chance, given the number of predictors in the model.
 Larger values indicate greater accuracy.
-The formula for adjusted <span class="math inline">\(R^2\)</span> is in Equation <a href="prediction.html#eq:adjustedRSquared">(9.31)</a>:</p>
+The formula for adjusted <span class="math inline">\(R^2\)</span> is in Equation <a href="prediction.html#eq:adjustedRSquared">(9.32)</a>:</p>
 <p><span class="math display" id="eq:adjustedRSquared">\[
 R^2_{adj} = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}
-\tag{9.31}
+\tag{9.32}
 \]</span></p>
 <p>where <span class="math inline">\(p\)</span> is the number of predictors in the model, and <span class="math inline">\(n\)</span> is the sample size.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -3502,6 +3522,7 @@ R^2_{adj} = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}
 <div id="predictiveRsquared" class="section level6 hasAnchor" number="9.4.1.2.6.2">
 <h6><span class="header-section-number">9.4.1.2.6.2</span> Predictive <span class="math inline">\(R^2\)</span><a href="prediction.html#predictiveRsquared" class="anchor-section" aria-label="Anchor link to header"></a></h6>
 <p>Predictive <span class="math inline">\(R^2\)</span> is described here: <a href="https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/" class="uri">https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/</a>.
+Predictive <span class="math inline">\(R^2\)</span> penalizes <a href="validity.html#overfitting">overfitting</a>, unlike traditional <span class="math inline">\(R^2\)</span>.
 Larger values indicate greater accuracy.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb658"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb658-1"><a href="prediction.html#cb658-1" aria-hidden="true" tabindex="-1"></a><span class="co">#predictive residual sum of squares (PRESS)</span></span>
@@ -4281,12 +4302,12 @@ Figure 9.29: <a href="prediction.html#confusionMatrix">Confusion Matrix</a>.
 <p>True positives (TPs) are instances in which a positive classification (e.g., a disorder present) is correct—that is, the test says that a classification is present, and the classification is present.
 True positives are also called valid positives (VPs) or hits.
 Higher values reflect greater accuracy.
-The formula for true positives is in Equation <a href="prediction.html#eq:truePositive">(9.32)</a>:</p>
+The formula for true positives is in Equation <a href="prediction.html#eq:truePositive">(9.33)</a>:</p>
 <p><span class="math display" id="eq:truePositive">\[
 \begin{aligned}
   \text{TP} &amp;= \text{BR} \times \text{SR} \times N
 \end{aligned}
-\tag{9.32}
+\tag{9.33}
 \]</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb727"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb727-1"><a href="prediction.html#cb727-1" aria-hidden="true" tabindex="-1"></a>TPvalue <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(</span>
@@ -4301,12 +4322,12 @@ The formula for true positives is in Equation <a href="prediction.html#eq:truePo
 <p>True negatives (TNs) are instances in which a negative classification (e.g., absence of a disorder) is correct—that is, the test says that a classification is not present, and the classification is not present.
 True negatives are also called valid negatives (VNs) or correct rejections.
 Higher values reflect greater accuracy.
-The formula for true negatives is in Equation <a href="prediction.html#eq:trueNegative">(9.33)</a>:</p>
+The formula for true negatives is in Equation <a href="prediction.html#eq:trueNegative">(9.34)</a>:</p>
 <p><span class="math display" id="eq:trueNegative">\[
 \begin{aligned}
   \text{TN} &amp;= (1 - \text{BR}) \times (1 - \text{SR}) \times N
 \end{aligned}
-\tag{9.33}
+\tag{9.34}
 \]</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb729"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb729-1"><a href="prediction.html#cb729-1" aria-hidden="true" tabindex="-1"></a>TNvalue <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(</span>
@@ -4321,12 +4342,12 @@ The formula for true negatives is in Equation <a href="prediction.html#eq:trueNe
 <p>False positives (FPs) are instances in which a positive classification (e.g., a disorder present) is incorrect—that is, the test says that a classification is present, and the classification is not present.
 False positives are also called false alarms (FAs).
 Lower values reflect greater accuracy.
-The formula for false positives is in Equation <a href="prediction.html#eq:falsePositive">(9.34)</a>:</p>
+The formula for false positives is in Equation <a href="prediction.html#eq:falsePositive">(9.35)</a>:</p>
 <p><span class="math display" id="eq:falsePositive">\[
 \begin{aligned}
   \text{FP} &amp;= (1 - \text{BR}) \times \text{SR} \times N
 \end{aligned}
-\tag{9.34}
+\tag{9.35}
 \]</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb731"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb731-1"><a href="prediction.html#cb731-1" aria-hidden="true" tabindex="-1"></a>FPvalue <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(</span>
@@ -4341,12 +4362,12 @@ The formula for false positives is in Equation <a href="prediction.html#eq:false
 <p>False negatives (FNs) are instances in which a negative classification (e.g., absence of a disorder) is incorrect—that is, the test says that a classification is not present, and the classification is present.
 False negatives are also called misses.
 Lower values reflect greater accuracy.
-The formula for false negatives is in Equation <a href="prediction.html#eq:falseNegative">(9.35)</a>:</p>
+The formula for false negatives is in Equation <a href="prediction.html#eq:falseNegative">(9.36)</a>:</p>
 <p><span class="math display" id="eq:falseNegative">\[
 \begin{aligned}
   \text{FN} &amp;= \text{BR} \times (1 - \text{SR}) \times N
 \end{aligned}
-\tag{9.35}
+\tag{9.36}
 \]</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb733"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb733-1"><a href="prediction.html#cb733-1" aria-hidden="true" tabindex="-1"></a>FNvalue <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(</span>
@@ -4377,13 +4398,13 @@ The formula for false negatives is in Equation <a href="prediction.html#eq:false
 <div id="selectionRatio" class="section level3 hasAnchor" number="9.5.9">
 <h3><span class="header-section-number">9.5.9</span> Selection Ratio (SR)<a href="prediction.html#selectionRatio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The selection ratio is the marginal probability of selection, independent of other things: <span class="math inline">\(P(R_i)\)</span>.
-In clinical psychology, the selection ratio is the proportion of people who test positive for the disorder, as in Equation <a href="prediction.html#eq:selectionRatio">(9.36)</a>:</p>
+In clinical psychology, the selection ratio is the proportion of people who test positive for the disorder, as in Equation <a href="prediction.html#eq:selectionRatio">(9.37)</a>:</p>
 <p><span class="math display" id="eq:selectionRatio">\[
 \begin{aligned}
   \text{SR} &amp;= P(R_i) \\
   &amp;= \frac{\text{TP} + \text{FP}}{N}
 \end{aligned}
-\tag{9.36}
+\tag{9.37}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb738"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb738-1"><a href="prediction.html#cb738-1" aria-hidden="true" tabindex="-1"></a>selectionRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4405,14 +4426,14 @@ In clinical psychology, the selection ratio is the proportion of people who test
 <div id="pretestProbability" class="section level3 hasAnchor" number="9.5.10">
 <h3><span class="header-section-number">9.5.10</span> Base Rate (BR)<a href="prediction.html#pretestProbability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The <a href="prediction.html#baseRate">base rate</a> of a classification is its <a href="prediction.html#baseRate">marginal probability</a>, independent of other things: <span class="math inline">\(P(C_i)\)</span>.
-In clinical psychology, the base rate of a disorder is its prevalence in the population, as in Equation <a href="prediction.html#eq:baseRate">(9.37)</a>.
+In clinical psychology, the base rate of a disorder is its prevalence in the population, as in Equation <a href="prediction.html#eq:baseRate">(9.38)</a>.
 Without additional information, the <a href="prediction.html#baseRate">base rate</a> is used as the initial <em>pretest probability</em>.</p>
 <p><span class="math display" id="eq:baseRate">\[
 \begin{aligned}
   \text{BR} &amp;= P(C_i) \\
   &amp;= \frac{\text{TP} + \text{FN}}{N}
 \end{aligned}
-\tag{9.37}
+\tag{9.38}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb741"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb741-1"><a href="prediction.html#cb741-1" aria-hidden="true" tabindex="-1"></a>baseRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4434,12 +4455,12 @@ Without additional information, the <a href="prediction.html#baseRate">base rate
 <div id="pretestOdds" class="section level3 hasAnchor" number="9.5.11">
 <h3><span class="header-section-number">9.5.11</span> Pretest Odds<a href="prediction.html#pretestOdds" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The pretest odds of a classification can be estimated using the pretest probability (i.e., <a href="prediction.html#baseRate">base rate</a>).
-To convert a probability to odds, divide the probability by one minus that probability, as in Equation <a href="prediction.html#eq:pretestOdds">(9.38)</a>.</p>
+To convert a probability to odds, divide the probability by one minus that probability, as in Equation <a href="prediction.html#eq:pretestOdds">(9.39)</a>.</p>
 <p><span class="math display" id="eq:pretestOdds">\[
 \begin{aligned}
   \text{pretest odds} &amp;= \frac{\text{pretest probability}}{1 - \text{pretest probability}} \\
 \end{aligned}
-\tag{9.38}
+\tag{9.39}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb744"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb744-1"><a href="prediction.html#cb744-1" aria-hidden="true" tabindex="-1"></a>pretestOdds <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">pretestProb =</span> <span class="cn">NULL</span>){</span>
@@ -4476,7 +4497,7 @@ To convert a probability to odds, divide the probability by one minus that proba
 <h3><span class="header-section-number">9.5.12</span> Percent Accuracy<a href="prediction.html#percentAccuracy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Percent Accuracy is also called overall accuracy.
 Higher values reflect greater accuracy.
-The formula for percent accuracy is in Equation <a href="prediction.html#eq:percentAccuracy">(9.39)</a>.
+The formula for percent accuracy is in Equation <a href="prediction.html#eq:percentAccuracy">(9.40)</a>.
 Percent accuracy has several problems.
 First, it treats all errors (<a href="prediction.html#falsePositive">FP</a> and <a href="prediction.html#falseNegative">FN</a>) as equally important.
 However, in practice, it is rarely the case that <a href="prediction.html#falsePositive">false positives</a> and <a href="prediction.html#falseNegative">false negatives</a> are equally important.
@@ -4485,7 +4506,7 @@ You can have a high percent accuracy by predicting from the <a href="prediction.
 Thus, it is also important to consider other aspects of accuracy.</p>
 <p><span class="math display" id="eq:percentAccuracy">\[
 \text{Percent Accuracy} = 100\% \times \frac{\text{TP} + \text{TN}}{N}
-\tag{9.39}
+\tag{9.40}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb749"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb749-1"><a href="prediction.html#cb749-1" aria-hidden="true" tabindex="-1"></a>percentAccuracy <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4506,13 +4527,13 @@ Thus, it is also important to consider other aspects of accuracy.</p>
 </div>
 <div id="percentAccuracyByChance" class="section level3 hasAnchor" number="9.5.13">
 <h3><span class="header-section-number">9.5.13</span> Percent Accuracy by Chance<a href="prediction.html#percentAccuracyByChance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The formula for calculating percent accuracy by chance is in Equation <a href="prediction.html#eq:PercentAccuracyByChance">(9.40)</a>.</p>
+<p>The formula for calculating percent accuracy by chance is in Equation <a href="prediction.html#eq:PercentAccuracyByChance">(9.41)</a>.</p>
 <p><span class="math display" id="eq:PercentAccuracyByChance">\[
 \begin{aligned}
   \text{Percent Accuracy by Chance} &amp;= 100\% \times [P(\text{TP}) + P(\text{TN})] \\
   &amp;= 100\% \times \{(\text{BR} \times {\text{SR}}) + [(1 - \text{BR}) \times (1 - \text{SR})]\}
 \end{aligned}
-\tag{9.40}
+\tag{9.41}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb752"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb752-1"><a href="prediction.html#cb752-1" aria-hidden="true" tabindex="-1"></a>percentAccuracyByChance <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4566,12 +4587,12 @@ If the <a href="prediction.html#baseRate">base rate</a> is .50 or above, it woul
 <h3><span class="header-section-number">9.5.15</span> Relative Improvement Over Chance (RIOC)<a href="prediction.html#relativeImprovementOverChance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Relative improvement over chance (RIOC) is a prediction’s improvement over chance as a proportion of the maximum possible improvement over chance, as described by <span class="citation">(<a href="#ref-Farrington1989" role="doc-biblioref">Farrington &amp; Loeber, 1989</a>)</span>.
 Higher values reflect greater accuracy.
-The formula for calculating RIOC is in Equation <a href="prediction.html#eq:relativeImprovementOverChance">(9.41)</a>.</p>
+The formula for calculating RIOC is in Equation <a href="prediction.html#eq:relativeImprovementOverChance">(9.42)</a>.</p>
 <p><span class="math display" id="eq:relativeImprovementOverChance">\[
 \begin{aligned}
   \text{relative improvement over chance (RIOC)} &amp;= \frac{\text{total correct} - \text{chance correct}}{\text{maximum correct} - \text{chance correct}} \\
 \end{aligned}
-\tag{9.41}
+\tag{9.42}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb758"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb758-1"><a href="prediction.html#cb758-1" aria-hidden="true" tabindex="-1"></a>relativeImprovementOverChance <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4596,13 +4617,13 @@ The formula for calculating RIOC is in Equation <a href="prediction.html#eq:rela
 <h3><span class="header-section-number">9.5.16</span> Relative Improvement Over Predicting from the Base Rate<a href="prediction.html#relativeImprovementOverPredictingFromBaseRate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Relative improvement over <a href="prediction.html#predictingFromBaseRate">predicting from the base rate</a> is a prediction’s improvement over <a href="prediction.html#predictingFromBaseRate">predicting from the base rate</a> as a proportion of the maximum possible improvement over <a href="prediction.html#predictingFromBaseRate">predicting from the base rate</a>.
 Higher values reflect greater accuracy.
-The formula for calculating relative improvement over predicting from the base rate is in Equation <a href="prediction.html#eq:relativeImprovementOverPredictingFromBaseRate">(9.42)</a>.</p>
+The formula for calculating relative improvement over predicting from the base rate is in Equation <a href="prediction.html#eq:relativeImprovementOverPredictingFromBaseRate">(9.43)</a>.</p>
 <p><span class="math display" id="eq:relativeImprovementOverPredictingFromBaseRate">\[
 \scriptsize
 \begin{aligned}
   \text{relative improvement over predicting from base rate} &amp;= \frac{\text{total correct} - \text{correct by predicting from base rate}}{\text{maximum correct} - \text{correct by predicting from base rate}} \\
 \end{aligned}
-\tag{9.42}
+\tag{9.43}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb761"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb761-1"><a href="prediction.html#cb761-1" aria-hidden="true" tabindex="-1"></a>relativeImprovementOverPredictingFromBaseRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4633,7 +4654,7 @@ The formula for calculating relative improvement over predicting from the base r
 <p>Sensitivity (SN) is also called true positive rate (TPR), hit rate (HR), or recall.
 Sensitivity is the <a href="prediction.html#conditionalProbability">conditional probability</a> of a positive test given that the person has the condition: <span class="math inline">\(P(R|C)\)</span>.
 Higher values reflect greater accuracy.
-The formula for calculating sensitivity is in Equation <a href="prediction.html#eq:sensitivity">(9.43)</a>.
+The formula for calculating sensitivity is in Equation <a href="prediction.html#eq:sensitivity">(9.44)</a>.
 As described in Section <a href="prediction.html#accuracyCutoff">9.1.2.6.1</a> and as depicted in Figure <a href="prediction.html#fig:sensitivitySpecificity">9.30</a>, as the cutoff increases (becomes more conservative), sensitivity decreases.
 As the cutoff decreases, sensitivity increases.</p>
 <p><span class="math display" id="eq:sensitivity">\[
@@ -4641,7 +4662,7 @@ As the cutoff decreases, sensitivity increases.</p>
   \text{sensitivity (SN)} &amp;= P(R|C) \\
   &amp;= \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{\text{TP}}{N \times \text{BR}} = 1 - \text{FNR}
 \end{aligned}
-\tag{9.43}
+\tag{9.44}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb764"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb764-1"><a href="prediction.html#cb764-1" aria-hidden="true" tabindex="-1"></a>sensitivity <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4724,7 +4745,7 @@ Figure 9.30: Sensitivity and Specificity as a Function of the Cutoff.
 <p>Specificity is also called true negative rate (TNR) or selectivity.
 Specificity is the <a href="prediction.html#conditionalProbability">conditional probability</a> of a negative test given that the person does not have the condition: <span class="math inline">\(P(\text{not } R|\text{not } C)\)</span>.
 Higher values reflect greater accuracy.
-The formula for calculating specificity is in Equation <a href="prediction.html#eq:specificity">(9.44)</a>.
+The formula for calculating specificity is in Equation <a href="prediction.html#eq:specificity">(9.45)</a>.
 As described in Section <a href="prediction.html#accuracyCutoff">9.1.2.6.1</a> and as depicted in Figure <a href="prediction.html#fig:sensitivitySpecificity">9.30</a>, as the cutoff increases (becomes more conservative), specificity increases.
 As the cutoff decreases, specificity decreases.</p>
 <p><span class="math display" id="eq:specificity">\[
@@ -4732,7 +4753,7 @@ As the cutoff decreases, specificity decreases.</p>
   \text{specificity (SP)} &amp;= P(\text{not } R|\text{not } C) \\
   &amp;= \frac{\text{TN}}{\text{TN} + \text{FP}} = \frac{\text{TN}}{N (1 - \text{BR})} = 1 - \text{FPR}
 \end{aligned}
-\tag{9.44}
+\tag{9.45}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb768"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb768-1"><a href="prediction.html#cb768-1" aria-hidden="true" tabindex="-1"></a>specificity <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4751,13 +4772,13 @@ As the cutoff decreases, specificity decreases.</p>
 <p>The false negative rate (FNR) is also called the miss rate.
 The false negative rate is the <a href="prediction.html#conditionalProbability">conditional probability</a> of a negative test given that the person has the condition: <span class="math inline">\(P(\text{not } R|C)\)</span>.
 Lower values reflect greater accuracy.
-The formula for calculating false negative rate is in Equation <a href="prediction.html#eq:falseNegativeRate">(9.45)</a>.</p>
+The formula for calculating false negative rate is in Equation <a href="prediction.html#eq:falseNegativeRate">(9.46)</a>.</p>
 <p><span class="math display" id="eq:falseNegativeRate">\[
 \begin{aligned}
   \text{false negative rate (FNR)} &amp;= P(\text{not } R|C) \\
   &amp;= \frac{\text{FN}}{\text{FN} + \text{TP}} = \frac{\text{FN}}{N \times \text{BR}} = 1 - \text{TPR}
 \end{aligned}
-\tag{9.45}
+\tag{9.46}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb771"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb771-1"><a href="prediction.html#cb771-1" aria-hidden="true" tabindex="-1"></a>falseNegativeRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4778,13 +4799,13 @@ The formula for calculating false negative rate is in Equation <a href="predicti
 <p>The false positive rate (FPR) is also called the false alarm rate (FAR) or fall-out.
 The false positive rate is the <a href="prediction.html#conditionalProbability">conditional probability</a> of a positive test given that the person does not have the condition: <span class="math inline">\(P(R|\text{not } C)\)</span>.
 Lower values reflect greater accuracy.
-The formula for calculating false positive rate is in Equation <a href="prediction.html#eq:falsePositiveRate">(9.46)</a>:</p>
+The formula for calculating false positive rate is in Equation <a href="prediction.html#eq:falsePositiveRate">(9.47)</a>:</p>
 <p><span class="math display" id="eq:falsePositiveRate">\[
 \begin{aligned}
   \text{false positive rate (FPR)} &amp;= P(R|\text{not } C) \\
   &amp;= \frac{\text{FP}}{\text{FP} + \text{TN}} = \frac{\text{FP}}{N (1 - \text{BR})} = 1 - \text{TNR}
 \end{aligned}
-\tag{9.46}
+\tag{9.47}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb774"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb774-1"><a href="prediction.html#cb774-1" aria-hidden="true" tabindex="-1"></a>falsePositiveRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -4806,7 +4827,7 @@ The formula for calculating false positive rate is in Equation <a href="predicti
 Many people confuse <a href="prediction.html#sensitivity">sensitivity</a> (<span class="math inline">\(P(R|C)\)</span>) with its inverse <a href="prediction.html#conditionalProbability">conditional probability</a>, PPV (<span class="math inline">\(P(C|R)\)</span>).
 PPV is the <a href="prediction.html#conditionalProbability">conditional probability</a> of having the condition given a positive test: <span class="math inline">\(P(C|R)\)</span>.
 Higher values reflect greater accuracy.
-The formula for calculating positive predictive value is in Equation <a href="prediction.html#eq:positivePredictiveValue">(9.47)</a>.</p>
+The formula for calculating positive predictive value is in Equation <a href="prediction.html#eq:positivePredictiveValue">(9.48)</a>.</p>
 <p>PPV can be low even when <a href="prediction.html#sensitivity">sensitivity</a> is high because it depends not only on <a href="prediction.html#sensitivity">sensitivity</a>, but also on <a href="prediction.html#specificity">specificity</a> and the <a href="prediction.html#baseRate">base rate</a>.
 Because PPV depends on the <a href="prediction.html#baseRate">base rate</a>, PPV is not an intrinsic property of a measure.
 The same measure will have a different PPV in different contexts with different <a href="prediction.html#baseRate">base rates</a> <span class="citation">(<a href="#ref-Treat2012" role="doc-biblioref">Treat &amp; Viken, 2012</a>)</span>.
@@ -4822,7 +4843,7 @@ As the cutoff decreases (becomes more liberal), PPV decreases.</p>
   &amp;= \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{\text{TP}}{N \times \text{SR}}\\
   &amp;= \frac{\text{sensitivity} \times {\text{BR}}}{\text{sensitivity} \times {\text{BR}} + [(1 - \text{specificity}) \times (1 - \text{BR})]}
 \end{aligned}
-\tag{9.47}
+\tag{9.48}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb777"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb777-1"><a href="prediction.html#cb777-1" aria-hidden="true" tabindex="-1"></a>positivePredictiveValue <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">BR =</span> <span class="cn">NULL</span>, SN, SP){</span>
@@ -4930,7 +4951,7 @@ Figure 9.32: Positive Predictive Value and Negative Predictive Value as a Functi
 Many people confuse <a href="prediction.html#specificity">specificity</a> (<span class="math inline">\(P(\text{not } R|\text{not } C)\)</span>) with its inverse <a href="prediction.html#conditionalProbability">conditional probability</a>, NPV (<span class="math inline">\(P(\text{not } C| \text{not } R)\)</span>).
 NPV is the <a href="prediction.html#conditionalProbability">conditional probability</a> of not having the condition given a negative test: <span class="math inline">\(P(\text{not } C| \text{not } R)\)</span>.
 Higher values reflect greater accuracy.
-The formula for calculating negative predictive value is in Equation <a href="prediction.html#eq:negativePredictiveValue">(9.48)</a>.</p>
+The formula for calculating negative predictive value is in Equation <a href="prediction.html#eq:negativePredictiveValue">(9.49)</a>.</p>
 <p>NPV can be low even when <a href="prediction.html#specificity">specificity</a> is high because it depends not only on <a href="prediction.html#specificity">specificity</a>, but also on <a href="prediction.html#sensitivity">sensitivity</a> and the <a href="prediction.html#baseRate">base rate</a>.
 Because NPV depends on the <a href="prediction.html#baseRate">base rate</a>, NPV is not an intrinsic property of a measure.
 The same measure will have a different NPV in different contexts with different <a href="prediction.html#baseRate">base rates</a> <span class="citation">(<a href="#ref-Treat2012" role="doc-biblioref">Treat &amp; Viken, 2012</a>)</span>.
@@ -4946,7 +4967,7 @@ As the cutoff decreases (becomes more liberal), NPV decreases.</p>
   &amp;= \frac{\text{TN}}{\text{TN} + \text{FN}} = \frac{\text{TN}}{N(\text{1 - SR})}\\
   &amp;= \frac{\text{specificity} \times (1-{\text{BR}})}{\text{specificity} \times (1-{\text{BR}}) + [(1 - \text{sensitivity}) \times \text{BR})]}
 \end{aligned}
-\tag{9.48}
+\tag{9.49}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb784"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb784-1"><a href="prediction.html#cb784-1" aria-hidden="true" tabindex="-1"></a>negativePredictiveValue <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">BR =</span> <span class="cn">NULL</span>, SN, SP){</span>
@@ -4986,13 +5007,13 @@ As the cutoff decreases (becomes more liberal), NPV decreases.</p>
 <p>Many people confuse the false positive rate (<span class="math inline">\(P(R|\text{not } C)\)</span>) with its inverse <a href="prediction.html#conditionalProbability">conditional probability</a>, the false discovery rate (<span class="math inline">\(P(\text{not } C| R)\)</span>).
 The false discovery rate is the <a href="prediction.html#conditionalProbability">conditional probability</a> of not having the condition given a positive test: <span class="math inline">\(P(\text{not } C| R)\)</span>.
 Lower values reflect greater accuracy.
-The formula for calculating false discovery rate is in Equation <a href="prediction.html#eq:falseDiscoveryRate">(9.49)</a>.</p>
+The formula for calculating false discovery rate is in Equation <a href="prediction.html#eq:falseDiscoveryRate">(9.50)</a>.</p>
 <p><span class="math display" id="eq:falseDiscoveryRate">\[
 \begin{aligned}
   \text{false discovery rate (FDR)} &amp;= P(\text{not } C|R) \\
   &amp;= \frac{\text{FP}}{\text{FP} + \text{TP}} = 1 - \text{PPV}
 \end{aligned}
-\tag{9.49}
+\tag{9.50}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb789"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb789-1"><a href="prediction.html#cb789-1" aria-hidden="true" tabindex="-1"></a>falseDiscoveryRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5013,13 +5034,13 @@ The formula for calculating false discovery rate is in Equation <a href="predict
 <p>Many people confuse the false negative rate (<span class="math inline">\(P(\text{not } R|C)\)</span>) with its inverse <a href="prediction.html#conditionalProbability">conditional probability</a>, the false omission rate (<span class="math inline">\(P(C|\text{not } R)\)</span>).
 The false omission rate is the conditional probability of having the condition given a negative test: <span class="math inline">\(P(C|\text{not } R)\)</span>.
 Lower values reflect greater accuracy.
-The formula for calculating false omission rate is in Equation <a href="prediction.html#eq:falseOmissionRate">(9.50)</a>.</p>
+The formula for calculating false omission rate is in Equation <a href="prediction.html#eq:falseOmissionRate">(9.51)</a>.</p>
 <p><span class="math display" id="eq:falseOmissionRate">\[
 \begin{aligned}
   \text{false omission rate (FOR)} &amp;= P(C|\text{not } R) \\
   &amp;= \frac{\text{FN}}{\text{FN} + \text{TN}} = 1 - \text{NPV}
 \end{aligned}
-\tag{9.50}
+\tag{9.51}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb792"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb792-1"><a href="prediction.html#cb792-1" aria-hidden="true" tabindex="-1"></a>falseOmissionRate <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5040,12 +5061,12 @@ The formula for calculating false omission rate is in Equation <a href="predicti
 <p>Youden’s J statistic is also called Youden’s Index or informedness.
 Youden’s J statistic is the sum of <a href="prediction.html#sensitivity">sensitivity</a> and <a href="prediction.html#specificity">specificity</a> (and subtracting one).
 Higher values reflect greater accuracy.
-The formula for calculating Youden’s J statistic is in Equation <a href="prediction.html#eq:youdenIndex">(9.51)</a>.</p>
+The formula for calculating Youden’s J statistic is in Equation <a href="prediction.html#eq:youdenIndex">(9.52)</a>.</p>
 <p><span class="math display" id="eq:youdenIndex">\[
 \begin{aligned}
   \text{Youden&#39;s J statistic} &amp;= \text{sensitivity} + \text{specificity} - 1
 \end{aligned}
-\tag{9.51}
+\tag{9.52}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb795"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb795-1"><a href="prediction.html#cb795-1" aria-hidden="true" tabindex="-1"></a>youdenJ <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5069,12 +5090,12 @@ The formula for calculating Youden’s J statistic is in Equation <a href="predi
 <h3><span class="header-section-number">9.5.26</span> Balanced Accuracy<a href="prediction.html#balancedAccuracy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Balanced accuracy is the average of <a href="prediction.html#sensitivity">sensitivity</a> and <a href="prediction.html#specificity">specificity</a>.
 Higher values reflect greater accuracy.
-The formula for calculating balanced accuracy is in Equation <a href="prediction.html#eq:balancedAccuracy">(9.52)</a>.</p>
+The formula for calculating balanced accuracy is in Equation <a href="prediction.html#eq:balancedAccuracy">(9.53)</a>.</p>
 <p><span class="math display" id="eq:balancedAccuracy">\[
 \begin{aligned}
   \text{balanced accuracy} &amp;= \frac{\text{sensitivity} + \text{specificity}}{2}
 \end{aligned}
-\tag{9.52}
+\tag{9.53}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb798"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb798-1"><a href="prediction.html#cb798-1" aria-hidden="true" tabindex="-1"></a>balancedAccuracy <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5099,21 +5120,21 @@ The formula for calculating balanced accuracy is in Equation <a href="prediction
 <p>The F-score combines <a href="prediction.html#ppv">precision</a> (<a href="prediction.html#ppv">positive predictive value</a>) and <a href="prediction.html#sensitivity">recall</a> (<a href="prediction.html#sensitivity">sensitivity</a>), where <span class="math inline">\(\beta\)</span> indicates how many times more important <a href="prediction.html#sensitivity">sensitivity</a> is than the <a href="prediction.html#ppv">positive predictive value</a>.
 If <a href="prediction.html#sensitivity">sensitivity</a> and the <a href="prediction.html#ppv">positive predictive value</a> are equally important, <span class="math inline">\(\beta = 1\)</span>, and the F-score is called the <span class="math inline">\(F_1\)</span> score.
 Higher values reflect greater accuracy.
-The formula for calculating the F-score is in Equation <a href="prediction.html#eq:FScore">(9.53)</a>.</p>
+The formula for calculating the F-score is in Equation <a href="prediction.html#eq:FScore">(9.54)</a>.</p>
 <p><span class="math display" id="eq:FScore">\[
 \begin{aligned}
   F_\beta &amp;= (1 + \beta^2) \cdot \frac{\text{positive predictive value} \cdot \text{sensitivity}}{(\beta^2 \cdot \text{positive predictive value}) + \text{sensitivity}} \\
   &amp;= \frac{(1 + \beta^2) \cdot \text{TP}}{(1 + \beta^2) \cdot \text{TP} + \beta^2 \cdot \text{FN} + \text{FP}}
 \end{aligned}
-\tag{9.53}
+\tag{9.54}
 \]</span></p>
-<p>The formula for calculating the <span class="math inline">\(F_1\)</span> score is in Equation <a href="prediction.html#eq:F1Score">(9.54)</a>.</p>
+<p>The formula for calculating the <span class="math inline">\(F_1\)</span> score is in Equation <a href="prediction.html#eq:F1Score">(9.55)</a>.</p>
 <p><span class="math display" id="eq:F1Score">\[
 \begin{aligned}
   F_1 &amp;= \frac{2 \cdot \text{positive predictive value} \cdot \text{sensitivity}}{(\text{positive predictive value}) + \text{sensitivity}} \\
   &amp;= \frac{2 \cdot \text{TP}}{2 \cdot \text{TP} + \text{FN} + \text{FP}}
 \end{aligned}
-\tag{9.54}
+\tag{9.55}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb801"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb801-1"><a href="prediction.html#cb801-1" aria-hidden="true" tabindex="-1"></a>fScore <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">beta =</span> <span class="dv">1</span>){</span>
@@ -5151,12 +5172,12 @@ The formula for calculating the F-score is in Equation <a href="prediction.html#
 <p>The Matthews correlation coefficient (MCC) is also called the phi coefficient.
 It is a correlation coefficient between predicted and observed values from a binary classification.
 Higher values reflect greater accuracy.
-The formula for calculating the MCC is in Equation <a href="prediction.html#eq:matthewsCorrelationCoefficient">(9.55)</a>.</p>
+The formula for calculating the MCC is in Equation <a href="prediction.html#eq:matthewsCorrelationCoefficient">(9.56)</a>.</p>
 <p><span class="math display" id="eq:matthewsCorrelationCoefficient">\[
 \begin{aligned}
   \text{MCC} &amp;= \frac{\text{TP} \times \text{TN} - \text{FP} \times \text{FN}}{\sqrt{(\text{TP} + \text{FP})(\text{TP} + \text{FN})(\text{TN} + \text{FP})(\text{TN} + \text{FN})}}
 \end{aligned}
-\tag{9.55}
+\tag{9.56}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb808"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb808-1"><a href="prediction.html#cb808-1" aria-hidden="true" tabindex="-1"></a>mcc <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5182,7 +5203,7 @@ The formula for calculating the MCC is in Equation <a href="prediction.html#eq:m
 <h3><span class="header-section-number">9.5.29</span> Diagnostic Odds Ratio<a href="prediction.html#diagnosticOddsRatio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The diagnostic odds ratio is the odds of a positive test in those with the condition relative to the odds of a positive test in those without the condition.
 Higher values reflect greater accuracy.
-The formula for calculating the diagnostic odds ratio is in Equation <a href="prediction.html#eq:diagnosticOddsRatio">(9.56)</a>.
+The formula for calculating the diagnostic odds ratio is in Equation <a href="prediction.html#eq:diagnosticOddsRatio">(9.57)</a>.
 If the predictor is bad, the diagnostic odds ratio could be less than one, and values can go up from there.
 If the diagnostic odds ratio is greater than 2, we take the odds ratio seriously because we are twice as likely to predict accurately than inaccurately.
 However, the diagnostic odds ratio ignores/hides <a href="prediction.html#baseRate">base rates</a>.
@@ -5197,7 +5218,7 @@ Assuming the prevalence of tuberculosis is less than 1/10th of 1%, your risk of 
   &amp;= \frac{\text{PPV} \times \text{NPV}}{(1 - \text{PPV}) \times (1 - \text{NPV})} \\
   &amp;= \frac{\text{LR+}}{\text{LR}-}
 \end{aligned}
-\tag{9.56}
+\tag{9.57}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb811"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb811-1"><a href="prediction.html#cb811-1" aria-hidden="true" tabindex="-1"></a>diagnosticOddsRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5226,7 +5247,7 @@ There are two types of diagnostic likelihood ratios: the <a href="prediction.htm
 <h4><span class="header-section-number">9.5.30.1</span> Positive Likelihood Ratio<a href="prediction.html#positiveLikelihoodRatio" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The positive likelihood ratio compares the <a href="prediction.html#sensitivity">true positive rate</a> to the <a href="prediction.html#falsePositiveRate">false positive rate</a>.
 Higher values reflect greater accuracy because it indicates the degree to which a <a href="prediction.html#truePositive">true positive</a> is more likely than a <a href="prediction.html#falsePositive">false positive</a>.
-The formula for calculating the positive likelihood ratio is in Equation <a href="prediction.html#eq:positiveLikelihoodRatio">(9.57)</a>.</p>
+The formula for calculating the positive likelihood ratio is in Equation <a href="prediction.html#eq:positiveLikelihoodRatio">(9.58)</a>.</p>
 <p><span class="math display" id="eq:positiveLikelihoodRatio">\[
 \begin{aligned}
   \text{positive likelihood ratio (LR+)} &amp;= \frac{\text{TPR}}{\text{FPR}} \\
@@ -5234,7 +5255,7 @@ The formula for calculating the positive likelihood ratio is in Equation <a href
   &amp;= \frac{P(R|C)}{1 - P(\text{not } R|\text{not } C)} \\
   &amp;= \frac{\text{sensitivity}}{1 - \text{specificity}}
 \end{aligned}
-\tag{9.57}
+\tag{9.58}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb814"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb814-1"><a href="prediction.html#cb814-1" aria-hidden="true" tabindex="-1"></a>positiveLikelihoodRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5259,7 +5280,7 @@ The formula for calculating the positive likelihood ratio is in Equation <a href
 <h4><span class="header-section-number">9.5.30.2</span> Negative Likelihood Ratio<a href="prediction.html#negativeLikelihoodRatio" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The negative likelihood ratio compares the <a href="prediction.html#falseNegativeRate">false negative rate</a> to the <a href="prediction.html#specificity">true negative rate</a>.
 Smaller values reflect greater accuracy because it indicates that a <a href="prediction.html#falseNegative">false negative</a> is less likely than a <a href="prediction.html#trueNegative">true negative</a>.
-The formula for calculating the negative likelihood ratio is in Equation <a href="prediction.html#eq:negativeLikelihoodRatio">(9.58)</a>.</p>
+The formula for calculating the negative likelihood ratio is in Equation <a href="prediction.html#eq:negativeLikelihoodRatio">(9.59)</a>.</p>
 <p><span class="math display" id="eq:negativeLikelihoodRatio">\[
 \begin{aligned}
   \text{negative likelihood ratio } (\text{LR}-) &amp;= \frac{\text{FNR}}{\text{TNR}} \\
@@ -5267,7 +5288,7 @@ The formula for calculating the negative likelihood ratio is in Equation <a href
   &amp;= \frac{1 - P(R|C)}{P(\text{not } R|\text{not } C)} \\
   &amp;= \frac{1 - \text{sensitivity}}{\text{specificity}}
 \end{aligned}
-\tag{9.58}
+\tag{9.59}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb817"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb817-1"><a href="prediction.html#cb817-1" aria-hidden="true" tabindex="-1"></a>negativeLikelihoodRatio <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5294,12 +5315,12 @@ The formula for calculating the negative likelihood ratio is in Equation <a href
 <p>As presented in Equation <a href="prediction.html#eq:bayes5">(9.15)</a>, the posttest (or posterior) odds are equal to the <a href="prediction.html#pretestOdds">pretest odds</a> multiplied by the <a href="prediction.html#diagnosticLikelihoodRatio">likelihood ratio</a>.
 The posttest odds and <a href="prediction.html#posttestProbability">posttest probability</a> can be useful to calculate when the <a href="prediction.html#baseRate">pretest probability</a> is different from the <a href="prediction.html#baseRate">pretest probability</a> (or prevalence) of the classification.
 For instance, you might use a different <a href="prediction.html#baseRate">pretest probability</a> if a test result is already known and you want to know the updated <a href="prediction.html#posttestProbability">posttest probability</a> after conducting a second test.
-The formula for calculating posttest odds is in Equation <a href="prediction.html#eq:posttestOdds">(9.59)</a>.</p>
+The formula for calculating posttest odds is in Equation <a href="prediction.html#eq:posttestOdds">(9.60)</a>.</p>
 <p><span class="math display" id="eq:posttestOdds">\[
 \begin{aligned}
   \text{posttest odds} &amp;= \text{pretest odds} \times \text{likelihood ratio} \\
 \end{aligned}
-\tag{9.59}
+\tag{9.60}
 \]</span></p>
 <p>For calculating the posttest odds of a <a href="prediction.html#truePositive">true positive</a> compared to a <a href="prediction.html#falsePositive">false positive</a>, we use the <a href="prediction.html#positiveLikelihoodRatio">positive likelihood ratio</a> below.
 We would use the <a href="prediction.html#negativeLikelihoodRatio">negative likelihood ratio</a> if we wanted to calculate the posttest odds of a <a href="prediction.html#falseNegative">false negative</a> compared to a <a href="prediction.html#trueNegative">true negative</a>.</p>
@@ -5372,12 +5393,12 @@ We would use the <a href="prediction.html#negativeLikelihoodRatio">negative like
 <h3><span class="header-section-number">9.5.32</span> Posttest Probability<a href="prediction.html#posttestProbability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The posttest probability is the probability of having the disorder given a test result.
 When the <a href="prediction.html#baseRate">base rate</a> is used as the <a href="prediction.html#baseRate">pretest probability</a>, the posttest probability given a positive test is equal to <a href="prediction.html#ppv">positive predictive value</a>.
-To convert odds to a probability, divide the odds by one plus the odds, as is in Equation <a href="prediction.html#eq:posttestProbability">(9.60)</a>.</p>
+To convert odds to a probability, divide the odds by one plus the odds, as is in Equation <a href="prediction.html#eq:posttestProbability">(9.61)</a>.</p>
 <p><span class="math display" id="eq:posttestProbability">\[
 \begin{aligned}
   \text{posttest probability} &amp;= \frac{\text{posttest odds}}{1 + \text{posttest odds}}
 \end{aligned}
-\tag{9.60}
+\tag{9.61}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb827"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb827-1"><a href="prediction.html#cb827-1" aria-hidden="true" tabindex="-1"></a>posttestProbability <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN, <span class="at">pretestProb =</span> <span class="cn">NULL</span>, <span class="at">SN =</span> <span class="cn">NULL</span>, <span class="at">SP =</span> <span class="cn">NULL</span>, <span class="at">likelihoodRatio =</span> <span class="cn">NULL</span>){</span>
@@ -5481,10 +5502,10 @@ The probability of having the condition if the person has a positive test on Tes
 <h3><span class="header-section-number">9.5.33</span> <span class="math inline">\(d&#39;\)</span> Sensitivity from Signal Detection Theory<a href="prediction.html#dPrimeSDT" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><span class="math inline">\(d&#39;\)</span> (<span class="math inline">\(d\)</span> prime) is an index of sensitivity from <a href="prediction.html#sdt">signal detection theory</a>, as described by <span class="citation">(<a href="#ref-Stanislaw1999" role="doc-biblioref">Stanislaw &amp; Todorov, 1999</a>)</span>.
 Higher values reflect greater accuracy.
-The formula for calculating <span class="math inline">\(d&#39;\)</span> is in Equation <a href="prediction.html#eq:dPrimeSDT">(9.61)</a>.</p>
+The formula for calculating <span class="math inline">\(d&#39;\)</span> is in Equation <a href="prediction.html#eq:dPrimeSDT">(9.62)</a>.</p>
 <p><span class="math display" id="eq:dPrimeSDT">\[
 d&#39; = z(\text{hit rate}) − z(\text{false alarm rate})
-\tag{9.61}
+\tag{9.62}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb839"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb839-1"><a href="prediction.html#cb839-1" aria-hidden="true" tabindex="-1"></a>dPrimeSDT <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5508,7 +5529,7 @@ d&#39; = z(\text{hit rate}) − z(\text{false alarm rate})
 <h3><span class="header-section-number">9.5.34</span> <span class="math inline">\(A\)</span> (Non-Parametric) Sensitivity from Signal Detection Theory<a href="prediction.html#aSDT" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><span class="math inline">\(A\)</span> is a non-parametric index of sensitivity from <a href="prediction.html#sdt">signal detection theory</a>, as described by <span class="citation">(<a href="#ref-Zhang2005" role="doc-biblioref">Zhang &amp; Mueller, 2005</a>)</span>.
 Higher values reflect greater accuracy.
-The formula for calculating <span class="math inline">\(A\)</span> is in Equation <a href="prediction.html#eq:aSDT">(9.62)</a>.</p>
+The formula for calculating <span class="math inline">\(A\)</span> is in Equation <a href="prediction.html#eq:aSDT">(9.63)</a>.</p>
 <p><a href="https://sites.google.com/a/mtu.edu/whynotaprime/" class="uri">https://sites.google.com/a/mtu.edu/whynotaprime/</a></p>
 <p><span class="math display" id="eq:aSDT">\[
 A =
@@ -5517,7 +5538,7 @@ A =
 \frac{3}{4} + \frac{H - F}{4} - \frac{F}{4H} &amp; \text{if } F \leq H \leq 0.5 ;\\
 \frac{3}{4} + \frac{H - F}{4} - \frac{1 - H}{4(1 - F)} &amp; \text{if } 0.5 \leq F \leq H .
 \end{cases}
-\tag{9.62}
+\tag{9.63}
 \]</span></p>
 <p>where <span class="math inline">\(H\)</span> is the hit rate and <span class="math inline">\(F\)</span> is the false alarm rate.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -5545,10 +5566,10 @@ A =
 <h3><span class="header-section-number">9.5.35</span> <span class="math inline">\(\beta\)</span> Bias from Signal Detection Theory<a href="prediction.html#betaSDT" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><span class="math inline">\(\beta\)</span> is an index of bias from <a href="prediction.html#sdt">signal detection theory</a>, as described by <span class="citation">(<a href="#ref-Stanislaw1999" role="doc-biblioref">Stanislaw &amp; Todorov, 1999</a>)</span>.
 Smaller values reflect greater accuracy.
-The formula for calculating <span class="math inline">\(\beta\)</span> is in Equation <a href="prediction.html#eq:betaSDT">(9.63)</a>.</p>
+The formula for calculating <span class="math inline">\(\beta\)</span> is in Equation <a href="prediction.html#eq:betaSDT">(9.64)</a>.</p>
 <p><span class="math display" id="eq:betaSDT">\[
 \beta = e^{\bigg\{\frac{\big[\phi^{-1}(F)\big]^2 - \big[\phi^{-1}(H)\big]}{2}\bigg\}^2}
-\tag{9.63}
+\tag{9.64}
 \]</span></p>
 <p>where <span class="math inline">\(H\)</span> is the hit rate, <span class="math inline">\(F\)</span> is the false alarm rate, and <span class="math inline">\(\phi\)</span> (phi) is a mathematical function that converts a <em>z</em> score to a probability by determining the portion of the normal distribution that lies to the left of the <em>z</em> score.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -5573,10 +5594,10 @@ The formula for calculating <span class="math inline">\(\beta\)</span> is in Equ
 <h3><span class="header-section-number">9.5.36</span> <span class="math inline">\(c\)</span> Bias from Signal Detection Theory<a href="prediction.html#cSDT" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><span class="math inline">\(c\)</span> is an index of bias from <a href="prediction.html#sdt">signal detection theory</a>, as described by <span class="citation">(<a href="#ref-Stanislaw1999" role="doc-biblioref">Stanislaw &amp; Todorov, 1999</a>)</span>.
 Smaller values reflect greater accuracy.
-The formula for calculating <span class="math inline">\(c\)</span> is in Equation <a href="prediction.html#eq:cSDT">(9.64)</a>.</p>
+The formula for calculating <span class="math inline">\(c\)</span> is in Equation <a href="prediction.html#eq:cSDT">(9.65)</a>.</p>
 <p><span class="math display" id="eq:cSDT">\[
 c = - \frac{\phi^{-1}(H) + \phi^{-1}(F)}{2}
-\tag{9.64}
+\tag{9.65}
 \]</span></p>
 <p>where <span class="math inline">\(H\)</span> is the hit rate, <span class="math inline">\(F\)</span> is the false alarm rate, and <span class="math inline">\(\phi\)</span> (phi) is a mathematical function that converts a <em>z</em> score to a probability by determining the portion of the normal distribution that lies to the left of the <em>z</em> score.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -5601,7 +5622,7 @@ c = - \frac{\phi^{-1}(H) + \phi^{-1}(F)}{2}
 <h3><span class="header-section-number">9.5.37</span> <span class="math inline">\(b\)</span> (Non-Parametric) Bias from Signal Detection Theory<a href="prediction.html#bSDT" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><span class="math inline">\(b\)</span> is a non-parametric index of bias from <a href="prediction.html#sdt">signal detection theory</a>, as described by <span class="citation">(<a href="#ref-Zhang2005" role="doc-biblioref">Zhang &amp; Mueller, 2005</a>)</span>.
 Smaller values reflect greater accuracy.
-The formula for calculating <span class="math inline">\(b\)</span> is in Equation <a href="prediction.html#eq:bSDT">(9.65)</a>.</p>
+The formula for calculating <span class="math inline">\(b\)</span> is in Equation <a href="prediction.html#eq:bSDT">(9.66)</a>.</p>
 <p><span class="math display" id="eq:bSDT">\[
 b =
 \begin{cases}
@@ -5609,7 +5630,7 @@ b =
 \frac{H^2 + H}{H^2 + F} &amp; \text{if } F \leq H \leq 0.5 ;\\
 \frac{(1 - F)^2 + (1 - H)}{(1 - F)^2 + (1 - F)} &amp; \text{if } 0.5 \leq F \leq H .
 \end{cases}
-\tag{9.65}
+\tag{9.66}
 \]</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb851"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb851-1"><a href="prediction.html#cb851-1" aria-hidden="true" tabindex="-1"></a>bSDT <span class="ot">&lt;-</span> <span class="cf">function</span>(TP, TN, FP, FN){</span>
@@ -5713,7 +5734,7 @@ According to the decision theory approach, the optimal cutoff is the cutoff with
 <p>The overall utility of a specific cutoff value is a utilities-weighted sum of the probabilities of the four decision-making outcomes (<a href="prediction.html#truePositive">hits</a>, <a href="prediction.html#falseNegative">misses</a>, <a href="prediction.html#trueNegative">correct rejections</a>, <a href="prediction.html#falsePositive">false alarms</a>).
 That is, overall utility is the sum of the product of the probability of a particular outcome (e.g., <span class="math inline">\(\text{BR} \times \text{TP rate}\)</span>) and the utility of that outcome (e.g., how much we value <a href="prediction.html#truePositive">TPs</a> relative to other outcomes).
 Higher values reflect greater utility, so you would pick the cutoff with the highest overall utility.
-The formula for calculating overall utility is in Equation <a href="prediction.html#eq:overallUtility">(9.66)</a>:</p>
+The formula for calculating overall utility is in Equation <a href="prediction.html#eq:overallUtility">(9.67)</a>:</p>
 <p><span class="math display" id="eq:overallUtility">\[
 \begin{aligned}
   U_\text{overall} = \ &amp; (\text{BR})(\text{HR})(U_\text{H}) \\
@@ -5721,7 +5742,7 @@ The formula for calculating overall utility is in Equation <a href="prediction.h
   &amp;+ (1 - \text{BR})(\text{FAR})(U_\text{FA}) \\
   &amp;+ (1 - \text{BR})(1 - \text{FAR})(U_\text{CR})
 \end{aligned}
-\tag{9.66}
+\tag{9.67}
 \]</span></p>
 <p>where <span class="math inline">\(\text{BR} = \text{base rate}\)</span>, <span class="math inline">\(\text{HR} = \text{hit rate (true positive rate)}\)</span>, <span class="math inline">\(\text{FAR} = \text{false alarm rate (false positive rate)}\)</span>, <span class="math inline">\(U_\text{H} = \text{utility of hits (true positives)}\)</span>, <span class="math inline">\(U_\text{M} = \text{utility of misses (false negatives)}\)</span>, <span class="math inline">\(U_\text{FA} = \text{utility of false alarms (false positives)}\)</span>, <span class="math inline">\(U_\text{CR} = \text{utility of correct rejections (true negatives)}\)</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -5794,10 +5815,10 @@ If the utility ratio value is one, it indicates that identifying negative cases 
 Values above one indicate greater relative importance of identifying negative cases than positive cases.
 Values below one indicate greater relative importance of identifying positive cases than negative cases.
 Values of one indicate that you are maximizing percent accuracy.
-The formula for calculating the utility ratio is in Equation <a href="prediction.html#eq:utilityRatio">(9.67)</a>:</p>
+The formula for calculating the utility ratio is in Equation <a href="prediction.html#eq:utilityRatio">(9.68)</a>:</p>
 <p><span class="math display" id="eq:utilityRatio">\[
 \text{Utility Ratio} = \frac{U_\text{CR} - U_\text{FA}}{U_\text{H} - U_\text{M}}
-\tag{9.67}
+\tag{9.68}
 \]</span></p>
 <p>where <span class="math inline">\(U_\text{H} = \text{utility of hits (true positives)}\)</span>, <span class="math inline">\(U_\text{M} = \text{utility of misses (false negatives)}\)</span>, <span class="math inline">\(U_\text{FA} = \text{utility of false alarms (false positives)}\)</span>, <span class="math inline">\(U_\text{CR} = \text{utility of correct rejections (true negatives)}\)</span></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -5832,7 +5853,7 @@ According to the information theory approach, the optimal cutoff is the cutoff t
 Greater values reflect greater reduction of uncertainty, so the optimal cutoff can be specified as the cutoff with the highest information gain.</p>
 <div id="IgainTreat2012" class="section level5 hasAnchor" number="9.6.2.1.1">
 <h5><span class="header-section-number">9.6.2.1.1</span> Formula from <span class="citation">Treat &amp; Viken (<a href="#ref-Treat2012" role="doc-biblioref">2012</a>)</span><a href="prediction.html#IgainTreat2012" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>The formula from <span class="citation">Treat &amp; Viken (<a href="#ref-Treat2012" role="doc-biblioref">2012</a>)</span> for calculating information gain is in Equation <a href="prediction.html#eq:informationGain1">(9.68)</a>:</p>
+<p>The formula from <span class="citation">Treat &amp; Viken (<a href="#ref-Treat2012" role="doc-biblioref">2012</a>)</span> for calculating information gain is in Equation <a href="prediction.html#eq:informationGain1">(9.69)</a>:</p>
 <p><span class="math display" id="eq:informationGain1">\[
 \begin{aligned}
   I_\text{gain} = \ &amp; (\text{BR})(\text{HR})\bigg[\log_2\bigg(\frac{\text{HR}}{G}\bigg)\bigg] \\
@@ -5840,7 +5861,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
   &amp;+ (1 - \text{BR})(\text{FAR})\bigg[\log_2\bigg(\frac{\text{FAR}}{G}\bigg)\bigg] \\
   &amp;+ (1 - \text{BR})(1 - FAR)\bigg[\log_2\bigg(\frac{1 - \text{FAR}}{1 - G}\bigg)\bigg]
 \end{aligned}
-\tag{9.68}
+\tag{9.69}
 \]</span></p>
 <p>where <span class="math inline">\(\text{BR} =\)</span> <a href="prediction.html#baseRate">base rate</a>, <span class="math inline">\(\text{HR} =\)</span> <a href="prediction.html#sensitivity">hit rate</a> (<a href="prediction.html#sensitivity">true positive rate</a>), <span class="math inline">\(\text{FAR} =\)</span> <a href="prediction.html#falsePositiveRate">false alarm rate</a> (<a href="prediction.html#falsePositiveRate">false positive rate</a>), <span class="math inline">\(G =\)</span> <a href="#selectionRation">selection ratio</a> <span class="math inline">\(= \text{BR} (\text{HR}) + (1 - \text{BR}) (\text{FAR})\)</span>, as reported in <span class="citation">Somoza et al. (<a href="#ref-Somoza1989" role="doc-biblioref">1989</a>)</span> (see below).</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -5871,7 +5892,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
 </div>
 <div id="IgainMetz1973" class="section level5 hasAnchor" number="9.6.2.1.2">
 <h5><span class="header-section-number">9.6.2.1.2</span> Alternative formula from <span class="citation">Metz et al. (<a href="#ref-Metz1973" role="doc-biblioref">1973</a>)</span><a href="prediction.html#IgainMetz1973" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>The alternative formula from <span class="citation">Metz et al. (<a href="#ref-Metz1973" role="doc-biblioref">1973</a>)</span> for calculating information gain is in Equation <a href="prediction.html#eq:informationGain2">(9.69)</a>:</p>
+<p>The alternative formula from <span class="citation">Metz et al. (<a href="#ref-Metz1973" role="doc-biblioref">1973</a>)</span> for calculating information gain is in Equation <a href="prediction.html#eq:informationGain2">(9.70)</a>:</p>
 <p><span class="math display" id="eq:informationGain2">\[
 \begin{aligned}
   I_\text{gain} = \ &amp; p(S|s) \cdot p(s) \cdot log_2\Bigg\{\frac{p(S|s)}{p(S|s) \cdot p(s) + p(S|n)[1 - p(s)]}\Bigg\} \\
@@ -5879,7 +5900,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
   &amp;+ [1 - p(S|s)] \cdot p(s) \times log_2\Bigg\{\frac{1 - p(S|s)}{1 - p(S|s) \cdot p(s) - p(S|n)[1 - p(s)]}\Bigg\} \\
   &amp;+ [1 - p(S|n)][1 - p(s)] \times log_2\Bigg\{\frac{1 - p(S|n)}{1 - p(S|s) \cdot p(s) - p(S|n)[1 - p(s)]}\Bigg\}
 \end{aligned}
-\tag{9.69}
+\tag{9.70}
 \]</span></p>
 <p>where <span class="math inline">\(p(S|s) =\)</span> <a href="prediction.html#sensitivity">sensitivity</a> (<a href="prediction.html#sensitivity">hit rate</a> or <a href="prediction.html#sensitivity">true positive rate</a>); i.e., the <a href="prediction.html#conditionalProbability">conditional probability</a> of deciding a signal is present (<span class="math inline">\(S\)</span>) when the signal is in fact present(<span class="math inline">\(s\)</span>), <span class="math inline">\(p(S|n) =\)</span> <a href="prediction.html#falsePositiveRate">false positive rate</a> (<a href="prediction.html#falsePositiveRate">false alarm rate</a>); i.e., the <a href="prediction.html#conditionalProbability">conditional probability</a> of deciding a signal is present (<span class="math inline">\(S\)</span>) when the signal is in fact absent (<span class="math inline">\(n\)</span>), <span class="math inline">\(p(s) =\)</span> <a href="prediction.html#baseRate">base rate</a>, i.e., the probability that the signal is in fact present (<span class="math inline">\(s\)</span>).</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -5908,7 +5929,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
 </div>
 <div id="IgainSomoza1989" class="section level5 hasAnchor" number="9.6.2.1.3">
 <h5><span class="header-section-number">9.6.2.1.3</span> Alternative formula from <span class="citation">Somoza et al. (<a href="#ref-Somoza1989" role="doc-biblioref">1989</a>)</span><a href="prediction.html#IgainSomoza1989" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>The alternative formula from <span class="citation">Somoza et al. (<a href="#ref-Somoza1989" role="doc-biblioref">1989</a>)</span> for calculating information gain is in Equation <a href="prediction.html#eq:informationGain3">(9.70)</a>:</p>
+<p>The alternative formula from <span class="citation">Somoza et al. (<a href="#ref-Somoza1989" role="doc-biblioref">1989</a>)</span> for calculating information gain is in Equation <a href="prediction.html#eq:informationGain3">(9.71)</a>:</p>
 <p><span class="math display" id="eq:informationGain3">\[
 \begin{aligned}
   I_\text{gain} = \ &amp; [(\text{TPR})(\text{Pr})] \times \log_2(\text{TPR}/G) \\
@@ -5916,7 +5937,7 @@ Greater values reflect greater reduction of uncertainty, so the optimal cutoff c
   &amp;+ [(1 - \text{TPR})(\text{Pr})] \times \log_2\bigg(\frac{1 - \text{TPR}}{1 - G}\bigg) \\
   &amp;+ [(1 - FPR)(1 - \text{Pr})] \times \log_2\bigg(\frac{1 - \text{FPR}}{1 - G}\bigg)
 \end{aligned}
-\tag{9.70}
+\tag{9.71}
 \]</span></p>
 <p>where <span class="math inline">\(\text{TP} =\)</span> <a href="prediction.html#sensitivity">true positive rate</a> (<a href="prediction.html#sensitivity">hit rate</a>), <span class="math inline">\(\text{Pr} =\)</span> <a href="prediction.html#baseRate">prevalence</a> (<a href="prediction.html#baseRate">base rate</a>), <span class="math inline">\(\text{FP} =\)</span> <a href="prediction.html#falsePositiveRate">false positive rate</a> (<a href="prediction.html#falsePositiveRate">false alarm rate</a>), <span class="math inline">\(G = \text{Pr} (\text{TP}) + (1 - \text{Pr}) (\text{FP}) =\)</span> <a href="prediction.html#selectionRatio">selection ratio</a></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -6681,10 +6702,10 @@ Figure 9.33: Information Gain as a Function of the Base Rate.
 <div id="regression-prediction" class="section level2 hasAnchor" number="9.8">
 <h2><span class="header-section-number">9.8</span> Regression for Prediction of Continuous Outcomes<a href="prediction.html#regression-prediction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>When predicting a continuous outcome, regression is particularly relevant (or multiple regression, when dealing with multiple predictors).
-Regression takes the general form in Equation <a href="prediction.html#eq:regression">(9.71)</a>:</p>
+Regression takes the general form in Equation <a href="prediction.html#eq:regression">(9.72)</a>:</p>
 <p><span class="math display" id="eq:regression">\[
 y = b_0 + b_1 \cdot x_1 + e
-\tag{9.71}
+\tag{9.72}
 \]</span></p>
 <p>where <span class="math inline">\(y\)</span> is the outcome, <span class="math inline">\(b_0\)</span> is the intercept, <span class="math inline">\(b_1\)</span> is the slope of the association between the predictor (<span class="math inline">\(x_1\)</span>) and outcome, and <span class="math inline">\(e\)</span> is the error term.</p>
 </div>
@@ -6813,10 +6834,10 @@ In this example, the <span class="math inline">\(R^2\)</span> is <span class="ma
 The equation with the second predictor provides a perfect prediction of the outcome.</p>
 <p>Providing perfect prediction with the right set of predictors is the dream of multiple regression.
 So, in psychology, we often add predictors to incrementally improve prediction.
-Knowing how much variance would be accounted for by random chance follows Equation <a href="prediction.html#eq:predictionByChance">(9.72)</a>:</p>
+Knowing how much variance would be accounted for by random chance follows Equation <a href="prediction.html#eq:predictionByChance">(9.73)</a>:</p>
 <p><span class="math display" id="eq:predictionByChance">\[
 E(R^2) = \frac{K}{n-1}
-\tag{9.72}
+\tag{9.73}
 \]</span></p>
 <p>where <span class="math inline">\(E(R^2)\)</span> is the expected value of <span class="math inline">\(R^2\)</span> (the proportion of variance explained), <span class="math inline">\(K\)</span> is the number of predictors, and <span class="math inline">\(n\)</span> is the sample size.
 The formula demonstrates that the more predictors in the regression model, the more variance will be accounted for by chance.
@@ -6929,7 +6950,7 @@ x2
 </tbody>
 </table>
 <p>The second measure is not very good—it is exactly twice the value of the first measure.
-This means that there are different prediction equation possibilities that are equally good (see Equations in <a href="prediction.html#eq:multicollinearity">(9.73)</a>:</p>
+This means that there are different prediction equation possibilities that are equally good (see Equations in <a href="prediction.html#eq:multicollinearity">(9.74)</a>:</p>
 <p><span class="math display" id="eq:multicollinearity">\[
 \begin{aligned}
   2x_2 &amp;= y \\
@@ -6941,7 +6962,7 @@ This means that there are different prediction equation possibilities that are e
   ...
 &amp;= y
 \end{aligned}
-\tag{9.73}
+\tag{9.74}
 \]</span></p>
 <p>Then, what are the regression coefficients?
 We do not know, and we could come up with arbitrary estimates with enormous standard error around each estimate.
@@ -7064,7 +7085,7 @@ What is an example of an index that combines both main types of prediction accur
 <li>Mean absolute percentage error (MAPE)</li>
 <li>Symmetric mean absolute percentage error (sMAPE)</li>
 <li>Mean absolute scaled error (MASE)</li>
-<li>Root mean squared log of the accuracy ratio</li>
+<li>Root mean squared log error (RMSLE)</li>
 <li>Coefficient of determination (<span class="math inline">\(R^2\)</span>)</li>
 <li>Adjusted <span class="math inline">\(R^2\)</span> (<span class="math inline">\(R^2_{adj}\)</span>)</li>
 <li>Predictive <span class="math inline">\(R^2\)</span></li>
@@ -7196,7 +7217,7 @@ You can quantify degree of (poor) calibration with Spiegelhalter’s <span class
 <li>Mean absolute percentage error (MAPE): undefined, but when dropping undefined values: <span class="math inline">\(36.74%\)</span></li>
 <li>Symmetric mean absolute percentage error (sMAPE): <span class="math inline">\(70.16%\)</span></li>
 <li>Mean absolute scaled error (MASE): <span class="math inline">\(0.62\)</span></li>
-<li>Root mean squared log of the accuracy ratio: undefined, but when dropping undefined values: <span class="math inline">\(0.96\)</span></li>
+<li>Root mean squared log error (RMSLE): <span class="math inline">\(0.27\)</span></li>
 <li>Coefficient of determination (<span class="math inline">\(R^2\)</span>): <span class="math inline">\(.37\)</span></li>
 <li>Adjusted <span class="math inline">\(R^2\)</span> (<span class="math inline">\(R^2_{adj}\)</span>): <span class="math inline">\(.37\)</span></li>
 <li>Predictive <span class="math inline">\(R^2\)</span>: <span class="math inline">\(.37\)</span></li>
