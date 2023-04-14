@@ -1197,9 +1197,10 @@ In this case, the mean error is negative, so the predictions systematically unde
 
 ##### Mean Absolute Error (MAE) {#meanAbsoluteError}
 
-Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.\index{median absolute error}
-Smaller MAE values (closer to zero) reflect greater accuracy.\index{median absolute error}
-The formula for MAE is in Equation \@ref(eq:meanAbsoluteError):\index{median absolute error}
+Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.\index{mean absolute error}
+Smaller MAE values (closer to zero) reflect greater accuracy.\index{mean absolute error}
+MAE is preferred over [root mean squared error](#rootMeanSquaredError) (RMSE) when you want to give equal weight to all errors and when the outliers have considerable impact.\index{mean absolute error}\index{root mean absolute error}
+The formula for MAE is in Equation \@ref(eq:meanAbsoluteError):\index{mean absolute error}
 
 $$
 \begin{aligned}
@@ -1228,6 +1229,8 @@ meanAbsoluteErrorValue <- meanAbsoluteError(mydataSDT$testScore, mydataSDT$disor
 
 Mean squared error (MSE) is the mean of the square of the differences between the predicted and observed values across individuals, that is, the mean of the squared value of errors.\index{mean squared error}
 Smaller MSE values (closer to zero) reflect greater accuracy.\index{mean squared error}
+MSE penalizes larger errors more heavily than smaller errors (unlike [MAE](#meanAbsoluteError)).\index{mean squared error}\index{mean average error}
+However, MSE is sensitive to outliers and can be impacted if the errors are skewed.\index{mean squared error}
 The formula for MSE is in Equation \@ref(eq:meanSquaredError):\index{mean squared error}
 
 $$
@@ -1257,7 +1260,8 @@ meanSquaredErrorValue <- meanSquaredError(mydataSDT$testScore, mydataSDT$disorde
 
 Root mean squared error (RMSE) is the square root of the mean of the square of the differences between the predicted and observed values across individuals, that is, the root mean squared value of errors.\index{root mean squared error}
 Smaller RMSE values (closer to zero) reflect greater accuracy.\index{root mean squared error}
-RMSE penalizes larger errors more so than [MAE](#meanAbsoluteError) does.\index{root mean squared error}\index{mean absolute error}
+RMSE penalizes larger errors more heavily than smaller errors (unlike [MAE](#meanAbsoluteError)).\index{root mean squared error}\index{mean average error}
+However, RMSE is sensitive to outliers and can be impacted if the errors are skewed.\index{root mean squared error}
 The formula for RMSE is in Equation \@ref(eq:rootMeanSquaredError):\index{root mean squared error}
 
 $$
@@ -1346,6 +1350,8 @@ meanPercentageErrorValue <- meanPercentageError(mydataSDT$testScore, mydataSDT$d
 
 Smaller mean absolute percentage error (MAPE) Values (closer to zero) reflect greater accuracy.\index{mean absolute percentage error}
 The formula for MAPE is in Equation \@ref(eq:meanAbsolutePercentageError):\index{mean absolute percentage error}
+MAPE is asymmetric because it overweights underestimates and underweights overestimates.\index{mean absolute percentage error}
+MAPE can be preferable to [symmetric mean absolute percentage error](#symmetricMeanAbsolutePercentageError) (sMAPE) if there are no observed values of zero and if you want to emphasize the importance of underestimates (relative to overestimates).\index{mean absolute percentage error}\index{symmetric mean absolute percentage error}
 
 $$
 \begin{aligned}
@@ -1389,7 +1395,8 @@ meanAbsolutePercentageErrorValue <- meanAbsolutePercentageError(mydataSDT$testSc
 
 ##### Symmetric Mean Absolute Percentage Error (sMAPE) {#symmetricMeanAbsolutePercentageError}
 
-Smaller symmetric mean asbolute percentage error (sMAPE) values (closer to zero) reflect greater accuracy.\index{symmetric mean asbolute percentage error}
+Unlike MAPE, symmetric mean asbolute percentage error (sMAPE) is symmetric because it equally weights underestimates and overestimates.\index{symmetric mean asbolute percentage error}
+Smaller sMAPE values (closer to zero) reflect greater accuracy.\index{symmetric mean asbolute percentage error}
 The formula for sMAPE is in Equation \@ref(eq:symmetricMeanAbsolutePercentageError):\index{symmetric mean asbolute percentage error}
 
 $$
@@ -1477,65 +1484,81 @@ meanAbsoluteScaledError(mydataSDT$testScore, mydataSDT$disorder)
 meanAbsoluteScaledErrorValue <- meanAbsoluteScaledError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-##### Root Mean Squared Log of the Accuracy Ratio {#accuracyRatio}
+##### Root Mean Squared Log Error {#accuracyRatio}
 
-The squared log of the accuracy ratio is described by @Tofallis2015.\index{log of the accuracy ratio}
-The accuracy ratio is in Equation \@ref(eq:accuracyRatio):\index{log of the accuracy ratio}
+The squared log of the accuracy ratio is described by @Tofallis2015.\index{root mean squared log error}
+The accuracy ratio is in Equation \@ref(eq:accuracyRatio1):\index{root mean squared log error}
 
 $$
 \begin{aligned}
   \text{accuracy ratio} &= \frac{\text{predicted}_i}{\text{observed}_i}
 \end{aligned}
-(\#eq:accuracyRatio)
+(\#eq:accuracyRatio1)
 $$
 
-Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.\index{log of the accuracy ratio}
-Here, I take the mean of the squared log values, which keeps the values positive, and I calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric, as in Equation \@ref(eq:rootMeanSquaredLogAccuracyRatio):\index{log of the accuracy ratio}
+However, the accuracy ratio is undefined with observed or predicted values of zero, so it is common to modify it by adding 1 to the predictor and denominator, as in Equation \@ref(eq:accuracyRatio2):
 
 $$
 \begin{aligned}
-  \text{root mean squared log of the accuracy ratio} &= \sqrt{\sum\limits_{i = 1}^n log\bigg(\frac{\text{predicted}_i}{\text{observed}_i}\bigg)^2} \\
-  &= \sqrt{\text{mean}\Bigg[log\bigg(\frac{\text{predicted}_i}{\text{observed}_i}\bigg)^2\Bigg]} \\
-  &= \sqrt{\text{mean}\big[log(\text{accuracy ratio})^2\big]}
+  \text{accuracy ratio} &= \frac{\text{predicted}_i + 1}{\text{observed}_i + 1}
 \end{aligned}
-(\#eq:rootMeanSquaredLogAccuracyRatio)
+(\#eq:accuracyRatio2)
 $$
 
-There are other variations of prediction accuracy metrics that use the log of the accuracy ratio.\index{log of the accuracy ratio}
-One variation makes it similar to median symmetric percentage error [@Morley2018].\index{log of the accuracy ratio}
+Squaring the log values keeps the values positive, such that smaller values (values closer to zero) reflect greater accuracy.\index{root mean squared log error}
+Here, I take the mean of the squared log values, which keeps the values positive, and I calculate the square root of the mean squared log values to put them back on the (pre-squared) log metric.
+This is known as the root mean squared log error (RMSLE), and is in Equation \@ref(eq:rootMeanSquaredLogError):\index{root mean squared log error}
 
-Note: The log of the accuracy ratio is undefined when one or more predicted values or actual values equals zero.\index{log of the accuracy ratio}
-When predicted values are zero, there is a zero in the numerator of the accuracy ratio, which leads to $log(0)$, which is undefined.\index{log of the accuracy ratio}
-When actual values are zero, there is division by zero in the accuracy ratio.
-I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{log of the accuracy ratio}
+$$
+\begin{aligned}
+  \text{root mean squared log error (RMSLE)} &= \sqrt{\sum\limits_{i = 1}^n log\bigg(\frac{\text{predicted}_i + 1}{\text{observed}_i + 1}\bigg)^2} \\
+  &= \sqrt{\text{mean}\Bigg[log\bigg(\frac{\text{predicted}_i + 1}{\text{observed}_i + 1}\bigg)^2\Bigg]} \\
+  &= \sqrt{\text{mean}\big[log(\text{accuracy ratio})^2\big]}
+\end{aligned}
+(\#eq:rootMeanSquaredLogError)
+$$
+
+RMSLE can be preferable when the scores have a wide range of values and are skewed.\index{root mean squared log error}
+RMSLE can help to reduce the impact of outliers.\index{root mean squared log error}
+RMSLE gives more weight to smaller errors in the prediction of small observed values, while also penalizing larger errors in the prediction of larger observed values.
+It overweights underestimates and underweights overestimates.\index{root mean squared log error}
+
+There are other variations of prediction accuracy metrics that use the log of the accuracy ratio.\index{root mean squared log error}
+One variation makes it similar to median symmetric percentage error [@Morley2018].\index{root mean squared log error}
+
+Note: Root mean squared log error is undefined when one or more predicted values or actual values equals -1.\index{root mean squared log error}
+When predicted values are -1, there is a zero in the numerator of the accuracy ratio, which leads to $log(0)$, which is undefined.\index{root mean squared log error}
+When actual values are -1, there is division by zero in the accuracy ratio.
+I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{root mean squared log error}
 
 ```{r, class.source = "fold-hide"}
-rootMeanSquaredLogAccuracyRatio <- function(predicted, actual, dropUndefined = FALSE){
-  logAccuracyRatio <- log(predicted / actual)
-  
-  if(dropUndefined == TRUE){
-    logAccuracyRatio[!is.finite(logAccuracyRatio)] <- NA
-  }
-  
-  value <- sqrt(mean(logAccuracyRatio^2, na.rm = TRUE))
-  
-  return(value)
+rootMeanSquaredLogError <- function(predicted, actual, dropUndefined = dropUndefined){
+    accuracyRatio <- (predicted + 1) / (actual + 1)
+    logAccuracyRatio <- log(accuracyRatio)
+
+    if(dropUndefined == TRUE){
+      logAccuracyRatio[!is.finite(logAccuracyRatio)] <- NA
+    }
+
+    value <- sqrt(mean(logAccuracyRatio^2, na.rm = TRUE))
+
+    return(value)
 }
 ```
 
 ```{r}
-rootMeanSquaredLogAccuracyRatio(
+rootMeanSquaredLogError(
   mydataSDT$testScore,
   mydataSDT$disorder)
 
-rootMeanSquaredLogAccuracyRatio(
+rootMeanSquaredLogError(
   mydataSDT$testScore,
   mydataSDT$disorder,
   dropUndefined = TRUE)
 ```
 
 ```{r, include = FALSE}
-rootMeanSquaredLogAccuracyRatioValue <- rootMeanSquaredLogAccuracyRatio(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
+rootMeanSquaredLogErrorValue <- rootMeanSquaredLogError(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
 ```
 
 ##### Coefficient of Determination ($R^2$) {#coefficientOfDetermination}
@@ -1568,7 +1591,7 @@ The predictor (`testScore`) explains $`r apa(rSquaredValue * 100, 2)`$% of the v
 
 ###### Adjusted $R^2$ ($R^2_{adj}$) {#adjustedRsquared}
 
-Adjusted $R^2$ is similar to the [coefficient of determination](#coefficientOfDetermination), but it accounts for the number of predictors included in the regression model.\index{adjusted $R^2$}\index{multiple regression}
+Adjusted $R^2$ is similar to the [coefficient of determination](#coefficientOfDetermination), but it accounts for the number of predictors included in the regression model to penalize [overfitting](#overfitting).\index{adjusted $R^2$}\index{multiple regression}\index{overfitting}
 Adjusted $R^2$ reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions over and above what would be expected to be accounted for by chance, given the number of predictors in the model.\index{adjusted $R^2$}
 Larger values indicate greater accuracy.\index{adjusted $R^2$}
 The formula for adjusted $R^2$ is in Equation \@ref(eq:adjustedRSquared):\index{adjusted $R^2$}
@@ -1595,6 +1618,7 @@ Adjusted $R^2$ is described further in Section \@ref(pseudoPrediction).
 ###### Predictive $R^2$ {#predictiveRsquared}
 
 Predictive $R^2$ is described here:\index{predictive $R^2$} https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/.
+Predictive $R^2$ penalizes [overfitting](#overfitting), unlike traditional $R^2$.\index{predictive $R^2$}\index{coefficient of determination}\index{overfitting}
 Larger values indicate greater accuracy.\index{predictive $R^2$}
 
 ```{r, class.source = "fold-hide"}
@@ -5081,7 +5105,7 @@ meanPercentageError_ex <- meanPercentageError(predicted = titanic$prediction, ac
 meanAbsolutePercentageError_ex <- meanAbsolutePercentageError(predicted = titanic$prediction, actual = titanic$survived, dropUndefined = TRUE)
 symmetricMeanAbsolutePercentageError_ex <- symmetricMeanAbsolutePercentageError(predicted = titanic$prediction, actual = titanic$survived)
 meanAbsoluteScaledError_ex <- meanAbsoluteScaledError(predicted = titanic$prediction, actual = titanic$survived)
-rootMeanSquaredLogAccuracyRatio_ex <- rootMeanSquaredLogAccuracyRatio(predicted = titanic$prediction, actual = titanic$survived, dropUndefined = TRUE)
+rootMeanSquaredLogError_ex <- rootMeanSquaredLogError(predicted = titanic$prediction, actual = titanic$survived, dropUndefined = TRUE)
 
 summary(lm(survived ~ prediction, data = titanic))
 rsquared_ex <- summary(lm(survived ~ prediction, data = titanic))$r.squared
@@ -5444,7 +5468,7 @@ What is an example of an index that combines both main types of prediction accur
     f. Mean absolute percentage error (MAPE)
     g. Symmetric mean absolute percentage error (sMAPE)
     h. Mean absolute scaled error (MASE)
-    i. Root mean squared log of the accuracy ratio
+    i. Root mean squared log error (RMSLE)
     j. Coefficient of determination ($R^2$)
     k. Adjusted $R^2$ ($R^2_{adj}$)
     l. Predictive $R^2$
@@ -5565,7 +5589,7 @@ $R^2$ is an overall index of accuracy that combines both discrimination and cali
     f. Mean absolute percentage error (MAPE): undefined, but when dropping undefined values: $`r apa(meanAbsolutePercentageError_ex, decimals = 2)`%$
     g. Symmetric mean absolute percentage error (sMAPE): $`r apa(symmetricMeanAbsolutePercentageError_ex, decimals = 2)`%$
     h. Mean absolute scaled error (MASE): $`r apa(meanAbsoluteScaledError_ex, decimals = 2)`$
-    i. Root mean squared log of the accuracy ratio: undefined, but when dropping undefined values: $`r apa(rootMeanSquaredLogAccuracyRatio_ex, decimals = 2)`$
+    i. Root mean squared log error (RMSLE): $`r apa(rootMeanSquaredLogError_ex, decimals = 2)`$
     j. Coefficient of determination ($R^2$): $`r apa(rsquared_ex, decimals = 2, leading = FALSE)`$
     k. Adjusted $R^2$ ($R^2_{adj}$): $`r apa(rsquaredAdj_ex, decimals = 2, leading = FALSE)`$
     l. Predictive $R^2$: $`r apa(predictiveRsquaredValue_ex, decimals = 2, leading = FALSE)`$
