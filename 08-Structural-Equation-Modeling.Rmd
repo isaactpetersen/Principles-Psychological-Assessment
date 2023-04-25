@@ -21,6 +21,7 @@ library("simsem")
 library("snow")
 library("mice")
 library("quantreg")
+library("nonnest2")
 library("MOTE")
 library("tidyverse")
 library("here")
@@ -1096,7 +1097,7 @@ semPaths(
   edge.label.cex = 0.8)
 ```
 
-#### Compare model fit using chi-square difference test for nested models {#nestedModelComparison-sem}
+#### Compare model fit {#nestedModelComparison-sem}
 
 The modified model with the cross loading and the original model are considered "nested" models.\index{nested model}\index{cross loading}
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.\index{nested model}
@@ -1107,6 +1108,38 @@ anova(cfaModelFit, cfaModel2Fit)
 ```
 
 In this case, the model with the cross loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross loading.\index{cross loading}\index{structural equation modeling!model comparison}
+
+One can also used a robust likelihood ratio test using a Vuong test:
+
+```{r}
+cfaModelFitML <- cfa(
+  cfaModel_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "ML",
+  std.lv = TRUE)
+
+cfaModel2FitML <- cfa(
+  cfaModel2_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "ML",
+  std.lv = TRUE)
+
+vuongtest(
+  cfaModelFitML,
+  cfaModel2FitML,
+  nested = TRUE)
+```
+
+For non-nested models, one can compare model fit with AIC, BIC, or the Vuong test.\index{structural equation modeling!model comparison}
+
+```{r}
+vuongtest(
+  cfaModelFitML,
+  cfaModel2FitML,
+  nested = FALSE)
+```
 
 ## Structural Equation Model (SEM) {#semModelExample-sem}
 
