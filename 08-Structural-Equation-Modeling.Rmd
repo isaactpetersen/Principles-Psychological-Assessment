@@ -1101,15 +1101,15 @@ semPaths(
 
 The modified model with the cross loading and the original model are considered "nested" models.\index{nested model}\index{cross loading}
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.\index{nested model}
-Model fit of nested models can be compared with a chi-square difference test.\index{chi-square!difference test}\index{structural equation modeling!model comparison}
+Model fit of nested models can be compared with a chi-square difference test.\index{chi-square!difference test}\index{structural equation modeling!model comparison}\index{nested model}
 
 ```{r}
 anova(cfaModelFit, cfaModel2Fit)
 ```
 
-In this case, the model with the cross loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross loading.\index{cross loading}\index{structural equation modeling!model comparison}
+In this case, the model with the cross loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross loading.\index{cross loading}\index{structural equation modeling!model comparison}\index{nested model}
 
-One can also used a robust likelihood ratio test using a Vuong test:
+One can also compare nested models using a robust likelihood ratio test:\index{structural equation modeling!model comparison}\index{nested model}
 
 ```{r}
 cfaModelFitML <- cfa(
@@ -1135,6 +1135,16 @@ vuongtest(
 For non-nested models, one can compare model fit with AIC, BIC, or the Vuong test.\index{structural equation modeling!model comparison}
 
 ```{r}
+fitMeasures(
+  cfaModelFitML,
+  fit.measures = c(
+    "aic","bic","bic2"))
+
+fitMeasures(
+  cfaModel2FitML,
+  fit.measures = c(
+    "aic","bic","bic2"))
+
 vuongtest(
   cfaModelFitML,
   cfaModel2FitML,
