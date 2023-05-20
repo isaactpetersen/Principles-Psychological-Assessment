@@ -11,7 +11,7 @@ The book is located here: **https://isaactpetersen.github.io/Principles-Psycholo
 
 The APA-style citation for the book is:
 
-Petersen, I. T. (2023). *Principles of psychological assessment: With applied examples in R*. Version 1.0.4. University of Iowa Libraries. https://isaactpetersen.github.io/Principles-Psychological-Assessment. https://doi.org/10.5281/zenodo.6466589
+Petersen, I. T. (2023). *Principles of psychological assessment: With applied examples in R*. Version 1.0.5. University of Iowa Libraries. https://isaactpetersen.github.io/Principles-Psychological-Assessment. https://doi.org/10.5281/zenodo.6466589
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6466589.svg)](https://doi.org/10.5281/zenodo.6466589)
 
@@ -25,7 +25,7 @@ The BibTeX citation for the book is:
   author = {Petersen, Isaac T.},
   year = {2023},
   publisher = {{University of Iowa Libraries}},
-  note = {Version 1.0.4},
+  note = {Version 1.0.5},
   doi = {10.5281/zenodo.6466589},
   isbn = {9780984037827},
   url = {https://isaactpetersen.github.io/Principles-Psychological-Assessment}
