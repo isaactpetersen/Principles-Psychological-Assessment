@@ -118,18 +118,18 @@ newdata$itemTotal <- rowSums(newdata[,paste("item", 1:10, sep = "")])
 
 ```{r modelImpliedICC, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Level on the Latent Construct."}
 plot(newdata$itemSum, newdata$item1, type = "n", ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
-lines(newdata$itemSum, newdata$item1, type = "l", lwd = 2, col = viridis(10)[1])
-lines(newdata$itemSum, newdata$item2, type = "l", lwd = 2, col = viridis(10)[2])
-lines(newdata$itemSum, newdata$item3, type = "l", lwd = 2, col = viridis(10)[3])
-lines(newdata$itemSum, newdata$item4, type = "l", lwd = 2, col = viridis(10)[4])
-lines(newdata$itemSum, newdata$item5, type = "l", lwd = 2, col = viridis(10)[5])
-lines(newdata$itemSum, newdata$item6, type = "l", lwd = 2, col = viridis(10)[6])
-lines(newdata$itemSum, newdata$item7, type = "l", lwd = 2, col = viridis(10)[7])
-lines(newdata$itemSum, newdata$item8, type = "l", lwd = 2, col = viridis(10)[8])
-lines(newdata$itemSum, newdata$item9, type = "l", lwd = 2, col = viridis(10)[9])
-lines(newdata$itemSum, newdata$item10, type = "l", lwd = 2, col = viridis(10)[10])
+lines(newdata$itemSum, newdata$item1, type = "l", lwd = 2, col = gray.colors(10)[1])
+lines(newdata$itemSum, newdata$item2, type = "l", lwd = 2, col = gray.colors(10)[2])
+lines(newdata$itemSum, newdata$item3, type = "l", lwd = 2, col = gray.colors(10)[3])
+lines(newdata$itemSum, newdata$item4, type = "l", lwd = 2, col = gray.colors(10)[4])
+lines(newdata$itemSum, newdata$item5, type = "l", lwd = 2, col = gray.colors(10)[5])
+lines(newdata$itemSum, newdata$item6, type = "l", lwd = 2, col = gray.colors(10)[6])
+lines(newdata$itemSum, newdata$item7, type = "l", lwd = 2, col = gray.colors(10)[7])
+lines(newdata$itemSum, newdata$item8, type = "l", lwd = 2, col = gray.colors(10)[8])
+lines(newdata$itemSum, newdata$item9, type = "l", lwd = 2, col = gray.colors(10)[9])
+lines(newdata$itemSum, newdata$item10, type = "l", lwd = 2, col = gray.colors(10)[10])
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
-legend("topleft", legend = paste("item", 1:10, sep = " "), col = viridis(10), lwd = 2, cex = 0.6)
+legend("topleft", legend = paste("item", 1:10, sep = " "), col = gray.colors(10), lwd = 2, cex = 0.6)
 ```
 
 ICCs can be summed across items to get the test characteristic curve (TCC):\index{item response theory!item characteristic curve}\index{item response theory!test characteristic curve}
@@ -248,10 +248,10 @@ difficulty_long$Difficulty[which(difficulty_long$item == "highDifficulty")] <- "
 ```{r iccDifficulty, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "(ref:iccDifficulty)"}
 ggplot(difficulty_long, aes(theta, value, group = Difficulty, color = Difficulty)) +
   geom_line(linewidth = 1.5) +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   geom_hline(yintercept = 0.5, linetype = "dashed") +
-  geom_segment(aes(x = midpoint_lowDifficulty, xend = midpoint_lowDifficulty, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_highDifficulty, xend = midpoint_highDifficulty, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_lowDifficulty, xend = midpoint_lowDifficulty, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_highDifficulty, xend = midpoint_highDifficulty, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -301,7 +301,7 @@ discrimination_long$Discrimination[which(discrimination_long$item == "highDiscri
 ```{r iccDiscrimination, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item characteristic curves of an item with low discrimination versus high discrimination. The discrimination of an item is the slope of the line at its inflection point."}
 ggplot(discrimination_long, aes(theta, value, group = Discrimination, color = Discrimination)) +
   geom_line(linewidth = 1.5) +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -458,7 +458,7 @@ onePLitems_long$Item[which(onePLitems_long$item == "item5")] <- 5
 ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -559,7 +559,7 @@ twoPLitems_long$Item[which(twoPLitems_long$item == "item5")] <- 5
 ggplot(twoPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -629,7 +629,7 @@ threePLitems_long$Item[which(threePLitems_long$item == "item5")] <- 5
 ggplot(threePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -697,7 +697,7 @@ fourPLitems_long$Item[which(fourPLitems_long$item == "item5")] <- 5
 ggplot(fourPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -780,7 +780,7 @@ polytomousItemResponseCategory_long$responseCategory[which(polytomousItemRespons
 ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), color = factor(boundary))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Boundary") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
   theme_bw() +
@@ -791,7 +791,7 @@ ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), 
 ggplot(polytomousItemResponseCategory_long, aes(theta, value, group = factor(responseCategory), color = factor(responseCategory))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Response Category") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Response Category Endorsement") +
   theme_bw()
@@ -1021,12 +1021,12 @@ irtInformation_long$Item[which(irtInformation_long$item == "information4")] <- 4
 ggplot(irtReliability_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   geom_hline(yintercept = 0.5, linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item1, xend = midpoint_item1, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item2, xend = midpoint_item2, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item3, xend = midpoint_item3, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item4, xend = midpoint_item4, y = 0, yend = 0.5), size = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item1, xend = midpoint_item1, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item2, xend = midpoint_item2, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item3, xend = midpoint_item3, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
+  geom_segment(aes(x = midpoint_item4, xend = midpoint_item4, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -1040,7 +1040,7 @@ The higher the [discrimination](#itemDiscrimination), the higher the information
 ggplot(irtInformation_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   geom_vline(xintercept = midpoint_item1, linetype = "dashed") +
   geom_vline(xintercept = midpoint_item2, linetype = "dashed") +
   geom_vline(xintercept = midpoint_item3, linetype = "dashed") +
@@ -1058,7 +1058,7 @@ Having 10 items with a 5-level response scale yields as much information as 40 d
 ```{r reliabilityIRTtestInformation, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Two-Parameter Logistic Model in Item Response Theory."}
 ggplot(irtInformation, aes(theta, testInformation)) +
   geom_line(linewidth = 1.5) +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Test Information", limits = c(0,2)) +
   theme_bw()
@@ -1070,7 +1070,7 @@ Notice how the degree of [(un)reliability](#reliability) differs at different co
 ```{r reliabilityIRTtestSE, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Two-Parameter Logistic Model in Item Response Theory."}
 ggplot(irtInformation, aes(theta, standardError)) +
   geom_line(linewidth = 1.5) +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Standard Error of Measurement", limits = c(0,4)) +
   theme_bw()
@@ -1082,7 +1082,7 @@ Notice how the degree of [(un)reliability](#reliability) differs at different co
 ```{r reliabilityIRTtestReliability, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Two-Parameter Logistic Model in Item Response Theory."}
 ggplot(irtInformation, aes(theta, reliability)) +
   geom_line(linewidth = 1.5) +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Reliability", limits = c(0,1)) +
   theme_bw()
@@ -1115,7 +1115,7 @@ efficientAssessment_long$Item[which(efficientAssessment_long$item == "item2")] <
 ggplot(efficientAssessment_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -1213,7 +1213,7 @@ badMeasure_long$Item[which(badMeasure_long$item == "item10")] <- 10
 ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -1222,7 +1222,7 @@ ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(I
 ```{r badMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual Representation of a Bad Measure Based on the Test Information Curve."}
 ggplot(badMeasureInfo, aes(theta, information)) +
   geom_line(linewidth = 1.5) +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Information") +
   theme_bw()
@@ -1308,7 +1308,7 @@ goodMeasure_long$Item[which(goodMeasure_long$item == "item20")] <- 20
 ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
@@ -1317,7 +1317,7 @@ ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(
 ```{r goodMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual Representation of a Good Measure Based on the Test Information Curve."}
 ggplot(goodMeasureInfo, aes(theta, information)) +
   geom_line(linewidth = 1.5) +
-  scale_color_viridis_d() +
+  scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Information") +
   theme_bw()
