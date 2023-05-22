@@ -994,6 +994,7 @@ library("ggpubr")
 library("msir")
 library("car")
 library("viridis")
+library("ggrepel")
 library("MOTE")
 library("tidyverse")
 library("here")
@@ -4218,7 +4219,7 @@ If the [base rate](#baseRate) is 0.3 or 0.7, we can do better than [going with t
 If the [base rate](#baseRate) is 0.9 or 0.1, it is difficult for our measure to do better than [going with the base rate](#predictingFromBaseRate).\index{cutoff!optimal}\index{information!theory}\index{base rate}\index{base rate!predicting from}\index{information!gain}
 If the [base rate](#baseRate) is 0.05 of 0.95 (or more extreme), it is likely that our measure will do almost nothing in terms of information gain.\index{cutoff!optimal}\index{information!theory}\index{base rate}\index{information!gain}
 
-```{r informationGainBaseRate, echo = FALSE, results = "hide", fig.height = 4, out.width = "100%", fig.align = "center", fig.cap = "Information Gain as a Function of the Base Rate."}
+```{r informationGainBaseRate, echo = FALSE, results = "hide", fig.height = 4, out.width = "100%", fig.align = "center", fig.cap = "Information Gain as a Function of the Base Rate (BR)."}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(possibleCutoffs, max(possibleCutoffs, na.rm = TRUE) + 0.01)
@@ -4254,12 +4255,28 @@ informationGainStats$FPrate <- falsePositiveRate(TP = informationGainStats$TP, T
 informationGainStats$informationGain <- Igain(BR = informationGainStats$baseRate, HR = informationGainStats$TPrate, FAR = informationGainStats$FPrate)
 informationGainStats <- na.omit(informationGainStats)
 
-ggplot(informationGainStats, aes(x = cutoff, y = informationGain, group = as.factor(baseRate), color = as.factor(baseRate))) +
+ggplot(
+  data = informationGainStats,
+  aes(
+    x = cutoff,
+    y = informationGain,
+    group = as.factor(baseRate),
+    color = as.factor(baseRate))) +
   geom_line(linewidth = 2) +
   scale_x_continuous(name = "Cutoff") +
   scale_y_continuous(name = "Information Gain") +
-  scale_color_viridis(name = "Base Rate", discrete = TRUE, option = "H") +
-  theme_bw()
+  scale_color_viridis(
+    name = "Base Rate",
+    discrete = TRUE,
+    option = "H") +
+  geom_label_repel(
+    data = informationGainStats %>% 
+      filter(cutoff == 0.5), 
+    aes(label = paste("BR = ", baseRate, sep = "")),
+    nudge_x = 0.10,
+    na.rm = TRUE) +
+  theme_bw() +
+  theme(legend.position = "none")
 ```
 
 ## Accuracy at Every Possible Cutoff {#accuracyAtEveryPossibleCutoff}
