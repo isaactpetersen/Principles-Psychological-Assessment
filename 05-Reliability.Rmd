@@ -281,11 +281,18 @@ addRandomError <- data.frame(score = rawMeasure$score + rnorm(sampleSize), measu
 errorList <- list(rawMeasure, addSystematicError, addRandomError)
 errorData <- bind_rows(errorList)
 
-ggplot(errorData %>% filter(measure != "addRandomError"), aes(x = score, fill = measure)) +
-  geom_density(alpha = 0.25) +
-  scale_fill_viridis_d(name = "",
-                       breaks = c("rawMeasure", "addSystematicError"),
-                       labels = c("Raw Measure", "Measure with Systematic Error Added")) +
+ggplot(
+  data = errorData %>% 
+    filter(measure != "addRandomError"),
+  aes(
+    x = score,
+    fill = measure)) +
+  geom_density(alpha = 0.75) + #
+  scale_fill_manual(
+    name = "",
+    values = c("#bdbdbd","black"),
+    breaks = c("rawMeasure", "addSystematicError"),
+    labels = c("Raw Measure", "Measure with Systematic Error Added")) +
   theme_bw() +
   theme(legend.position = "top")
 ```
@@ -304,11 +311,18 @@ As depicted in Figure \@ref(fig:unsystematicError), random error does not affect
 In other words, the group-level mean is still accurate, but individuals' scores are less precise.\index{measurement error!random error}\index{reliability!precision}
 
 ```{r unsystematicError, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Random Error."}
-ggplot(errorData %>% filter(measure != "addSystematicError"), aes(x = score, fill = measure)) +
-  geom_density(alpha = 0.25) +
-  scale_fill_viridis_d(name = "",
-                       breaks = c("rawMeasure", "addRandomError"),
-                       labels = c("Raw Measure", "Measure with Random Error Added")) +
+ggplot(
+  data = errorData %>% 
+    filter(measure != "addSystematicError"),
+  aes(
+    x = score,
+    fill = measure)) +
+  geom_density(alpha = 0.75) +
+  scale_fill_manual(
+    name = "",
+    values = c("#bdbdbd","black"),
+    breaks = c("rawMeasure", "addRandomError"),
+    labels = c("Raw Measure", "Measure with Random Error Added")) +
   theme_bw() +
   theme(legend.position = "top")
 ```
@@ -477,19 +491,34 @@ The standard error of measurement as a function of reliability of the measure an
 ```{r standardErrorOfMeasurementPlot, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.height = 4, fig.cap = "Standard Error of Measurement as a Function of Reliability."}
 library("ggplot2")
 
-standardErrorOfMeasurementData <- expand.grid(reliability = seq(0, 1, by = 0.01),
-                                              sd = c(1, 3, 5, 10))
+standardErrorOfMeasurementData <- expand.grid(
+  reliability = seq(
+    from = 0,
+    to = 1,
+    by = 0.01),
+  sd = c(1, 3, 5, 10))
 
 standardErrorOfMeasurementData$sem <- standardErrorOfMeasurementData$sd * sqrt(1 - standardErrorOfMeasurementData$reliability)
 
-ggplot(standardErrorOfMeasurementData, aes(reliability, sem, group = as.factor(sd), color = as.factor(sd))) +
-  geom_line(size = 1.5) +
+ggplot(
+  data = standardErrorOfMeasurementData,
+  aes(
+    reliability,
+    sem,
+    group = as.factor(sd),
+    color = as.factor(sd))) +
+  geom_line(linewidth = 1.5) +
   theme_bw() +
   xlab("Reliability") +
   ylab("Standard Error of Measurement") +
-  scale_color_viridis_d(name = "Standard Deviation of Scores") +
-  theme(legend.justification = c(1,1), legend.position = c(1,1)) +
-  theme(legend.background = element_rect(color = "black", fill = "white", linetype = "solid"))
+  scale_color_grey(name = "Standard Deviation of Scores") +
+  theme(
+    legend.justification = c(1,1),
+    legend.position = c(1,1),
+    legend.background = element_rect(
+      color = "black",
+      fill = "white",
+      linetype = "solid"))
 ```
 
 The derivation of the SEM (from W. Joel Schneider) is in Equation \@ref(eq:standardErrorOfMeasurementDerivation):\index{reliability!standard error of measurement}
@@ -712,8 +741,8 @@ plot(mydata$time1, mydata$time2,
        list(x = apa(corValue, 2, leading = FALSE))))
 abline(lm(time2 ~ time1, data = mydata), col = "black")
 mydataNoMissing <- na.omit(mydata[,c("time1","time2")])
-lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2),
-      col = "red")
+#lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2),
+#      col = "red")
 ```
 
 ##### Considerations About the Correlation Coefficient {#correlationConsiderations}
@@ -767,128 +796,128 @@ par(mfrow = c(7,3), mar = c(1, 0, 1, 0))
 # -1.0
 plot(correlations$criterion, correlations$v1, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v1)$estimate, 2))))
-abline(lm(v1 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v1), col = "red")
+abline(lm(v1 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v1), col = "gray")
 
 # -.9
 plot(correlations$criterion, correlations$v2, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v2)$estimate, 2))))
-abline(lm(v2 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v2), col = "red")
+abline(lm(v2 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v2), col = "gray")
 
 # -.8
 plot(correlations$criterion, correlations$v3, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v3)$estimate, 2))))
-abline(lm(v3 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v3), col = "red")
+abline(lm(v3 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v3), col = "gray")
 
 # -.7
 plot(correlations$criterion, correlations$v4, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v4)$estimate, 2))))
-abline(lm(v4 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v4), col = "red")
+abline(lm(v4 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v4), col = "gray")
 
 # -.6
 plot(correlations$criterion, correlations$v5, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v5)$estimate, 2))))
-abline(lm(v5 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v5), col = "red")
+abline(lm(v5 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v5), col = "gray")
 
 # -.5
 plot(correlations$criterion, correlations$v6, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v6)$estimate, 2))))
-abline(lm(v6 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v6), col = "red")
+abline(lm(v6 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v6), col = "gray")
 
 # -.4
 plot(correlations$criterion, correlations$v7, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v7)$estimate, 2))))
-abline(lm(v7 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v7), col = "red")
+abline(lm(v7 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v7), col = "gray")
 
 # -.3
 plot(correlations$criterion, correlations$v8, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v8)$estimate, 2))))
-abline(lm(v8 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v8), col = "red")
+abline(lm(v8 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v8), col = "gray")
 
 # -.2
 plot(correlations$criterion, correlations$v9, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v9)$estimate, 2))))
-abline(lm(v9 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v9), col = "red")
+abline(lm(v9 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v9), col = "gray")
 
 # -.1
 plot(correlations$criterion, correlations$v10, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v10)$estimate, 2))))
-abline(lm(v10 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v10), col = "red")
+abline(lm(v10 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v10), col = "gray")
 
 # 0.0
 plot(correlations$criterion, correlations$v11, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v11)$estimate, 2))))
-abline(lm(v11 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v11), col = "red")
+abline(lm(v11 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v11), col = "gray")
 
 # 0.1
 plot(correlations$criterion, correlations$v12, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v12)$estimate, 2))))
-abline(lm(v12 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v12), col = "red")
+abline(lm(v12 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v12), col = "gray")
 
 # 0.2
 plot(correlations$criterion, correlations$v13, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v13)$estimate, 2))))
-abline(lm(v13 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v13), col = "red")
+abline(lm(v13 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v13), col = "gray")
 
 # 0.3
 plot(correlations$criterion, correlations$v14, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v14)$estimate, 2))))
-abline(lm(v14 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v14), col = "red")
+abline(lm(v14 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v14), col = "gray")
 
 # 0.4
 plot(correlations$criterion, correlations$v15, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v15)$estimate, 2))))
-abline(lm(v15 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v15), col = "red")
+abline(lm(v15 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v15), col = "gray")
 
 # 0.5
 plot(correlations$criterion, correlations$v16, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v16)$estimate, 2))))
-abline(lm(v16 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v16), col = "red")
+abline(lm(v16 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v16), col = "gray")
 
 # 0.6
 plot(correlations$criterion, correlations$v17, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v17)$estimate, 2))))
-abline(lm(v17 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v17), col = "red")
+abline(lm(v17 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v17), col = "gray")
 
 # 0.7
 plot(correlations$criterion, correlations$v18, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v18)$estimate, 2))))
-abline(lm(v18 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v18), col = "red")
+abline(lm(v18 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v18), col = "gray")
 
 # 0.8
 plot(correlations$criterion, correlations$v19, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v19)$estimate, 2))))
-abline(lm(v19 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v19), col = "red")
+abline(lm(v19 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v19), col = "gray")
 
 # 0.9
 plot(correlations$criterion, correlations$v20, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v20)$estimate, 2))))
-abline(lm(v20 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v20), col = "red")
+abline(lm(v20 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v20), col = "gray")
 
 # 1.0
 plot(correlations$criterion, correlations$v21, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
      main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v21)$estimate, 2))))
-abline(lm(v21 ~ criterion, data = correlations), col = "black")
-lines(lowess(correlations$criterion, correlations$v21), col = "red")
+abline(lm(v21 ~ criterion, data = correlations), col = "gray")
+#lines(lowess(correlations$criterion, correlations$v21), col = "gray")
 
 dev.off() #par(mfrow = c(1,1))
 ```
