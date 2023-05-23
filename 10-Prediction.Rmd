@@ -726,9 +726,14 @@ Thus, any cutoff will have at least some inaccurate classifications.\index{cutof
 
 ```{r classificationDistributions, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Distribution of Test Scores by Berry Type."}
 #No Cutoff
-ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
+ggplot(
+  data = edibleData,
+  aes(
+    x = score,
+    ymin = 0,
+    fill = type)) +
   geom_density(alpha = .5) +
-  scale_fill_manual(name = "Berry Type", values = c(viridis(2)[1], viridis(2)[2])) +
+  scale_fill_grey(name = "Berry Type") +
   scale_y_continuous(name = "Frequency") +
   theme_bw() +
   theme(axis.text.y = element_blank(),
@@ -736,23 +741,36 @@ ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
 ```
 
 Figure \@ref(fig:classificationStandardCutoff) depicts the distributions of scores by berry type with a cutoff.\index{cutoff}
-The red line indicates the cutoff—the level above which berries are classified by the test as inedible.\index{cutoff}
+The black line indicates the cutoff—the level above which berries are classified by the test as inedible.\index{cutoff}
 There are errors on each side of the cutoff.\index{cutoff}
-Below the cutoff, there are some [false negatives](#falseNegative) (blue): inedible berries that are inaccurately classified as edible.\index{cutoff}\index{false negative}
-Above the cutoff, there are some [false positives](#falsePositive) (green): edible berries that are inaccurately classified as inedible.\index{cutoff}\index{false positive}
+Below the cutoff, there are some [false negatives](#falseNegative): inedible berries that are inaccurately classified as edible.\index{cutoff}\index{false negative}
+Above the cutoff, there are some [false positives](#falsePositive): edible berries that are inaccurately classified as inedible.\index{cutoff}\index{false positive}
 Costs of [false negatives](#falseNegative) could include sickness or death from eating the inedible berries.\index{cutoff}\index{false negative}
 Costs of [false positives](#falsePositive) could include taking longer to find food, finding insufficient food, and starvation.\index{cutoff}\index{false positive}
 
 ```{r classificationStandardCutoff, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Classifications based on a cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."}
 #Standard Cutoff
-ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
+ggplot(
+  data = density_data,
+  aes(
+    x = x,
+    ymin = 0,
+    ymax = y,
+    fill = type)) +
   geom_ribbon(alpha = 1) +
-  scale_fill_manual(name = "Berry Type",
-                    values = c(viridis(4)[4], viridis(4)[1], viridis(4)[3], viridis(4)[2]),
-                    breaks = c("edible_TN","inedible_TP","edible_FP","inedible_FN"),
-                    labels = c("Edible: TN","Inedible: TP","Edible: FP","Inedible: FN")) +
+  scale_fill_grey(
+    name = "Berry Type",
+    breaks = c("edible_TN","inedible_TP","edible_FP","inedible_FN"),
+    labels = c("Edible: TN","Inedible: TP","Edible: FP","Inedible: FN")) +
+  annotate("text", x = 50, y = .01, label = "TN", size = 5) + 
+  annotate("text", x = 68, y = .001, label = "FN", size = 5) + 
+  annotate("text", x = 82, y = .001, label = "FP", size = 5) + 
+  annotate("text", x = 100, y = .01, label = "TP", size = 5) + 
   geom_line(aes(y = y)) +
-  geom_vline(xintercept = cutoff, color = "red", linewidth = 2) +
+  geom_vline(
+    xintercept = cutoff,
+    color = "black",
+    linewidth = 2) +
   scale_x_continuous(name = "score") +
   scale_y_continuous(name = "Frequency") +
   theme_bw() +
@@ -762,7 +780,7 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
 
 Based on our assessment goals, we might use a different [selection ratio](#selectionRatio) by changing the cutoff.\index{cutoff}\index{selection ratio}
 Figure \@ref(fig:classificationRaiseCutoff) depicts the distributions of scores by berry type when we raise the cutoff.\index{cutoff}
-There are now more [false negatives](#falseNegative) (blue) and fewer [false positives](#falsePositive) (green).\index{false negative}\index{false positive}
+There are now more [false negatives](#falseNegative) and fewer [false positives](#falsePositive).\index{false negative}\index{false positive}
 If we raise the cutoff (to be more conservative), the number of [false negatives](#falseNegative) increases and the number of [false positives](#falsePositive) decreases.\index{cutoff}\index{false negative}\index{false positive}
 Consequently, as the cutoff increases, [sensitivity](#sensitivity) and [NPV](#npv) decrease (because we have more [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) increase (because we have fewer [false positives](#falsePositive)).\index{cutoff}\index{false negative}\index{false positive}\index{sensitivity}\index{negative predictive value}\index{specificity}\index{positive predictive value}
 A higher cutoff could be optimal if the costs of [false positives](#falsePositive) are considered greater than the costs of [false negatives](#falseNegative).\index{cutoff}\index{false negative}\index{false positive}
@@ -790,14 +808,24 @@ density_data <- bind_rows(hist_edible, hist_inedible)
 
 density_data$type <- factor(density_data$type, levels = c("edible_TN","inedible_TP","edible_FP","inedible_FN"))
 
-ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
+ggplot(
+  data = density_data,
+  aes(
+    x = x,
+    ymin = 0,
+    ymax = y,
+    fill = type)) +
   geom_ribbon(alpha = 1) +
-  scale_fill_manual(name = "Berry Type",
-                    values = c(viridis(4)[4], viridis(4)[1], viridis(4)[3], viridis(4)[2]),
-                    breaks = c("edible_TN","inedible_TP","edible_FP","inedible_FN"),
-                    labels = c("Edible: TN","Inedible: TP","Edible: FP","Inedible: FN")) +
+  scale_fill_grey(
+    name = "Berry Type",
+    breaks = c("edible_TN","inedible_TP","edible_FP","inedible_FN"),
+    labels = c("Edible: TN","Inedible: TP","Edible: FP","Inedible: FN")) +
+  annotate("text", x = 50, y = .01, label = "TN", size = 5) + 
+  annotate("text", x = 75, y = .0005, label = "FN", size = 5) + 
+  annotate("text", x = 88.1, y = .0005, label = "FP", size = 5) + 
+  annotate("text", x = 100, y = .01, label = "TP", size = 5) +
   geom_line(aes(y = y)) +
-  geom_vline(xintercept = cutoff, color = "red", linewidth = 2) +
+  geom_vline(xintercept = cutoff, color = "black", linewidth = 2) +
   scale_x_continuous(name = "score") +
   scale_y_continuous(name = "Frequency") +
   theme_bw() +
@@ -806,7 +834,7 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
 ```
 
 Figure \@ref(fig:classificationLowerCutoff) depicts the distributions of scores by berry type when we lower the cutoff.\index{cutoff}
-There are now fewer [false negatives](#falseNegative) (blue) and more [false positives](#falsePositive) (green).\index{cutoff}\index{false negative}\index{false positive}
+There are now fewer [false negatives](#falseNegative) and more [false positives](#falsePositive).\index{cutoff}\index{false negative}\index{false positive}
 If we lower the cutoff (to be more liberal), the number of [false negatives](#falseNegative) decreases and the number of [false positives](#falsePositive) increases.\index{cutoff}\index{false negative}\index{false positive}
 Consequently, as the cutoff decreases, [sensitivity](#sensitivity) and [NPV](#npv) increase (because we have fewer [false negatives](#falseNegative)), whereas [specificity](#specificity) and [PPV](#ppv) decrease (because we have more [false positives](#falsePositive)).\index{cutoff}\index{false negative}\index{false positive}\index{sensitivity}\index{negative predictive value}\index{specificity}\index{positive predictive value}
 A lower cutoff could be optimal if the costs of [false negatives](#falseNegative) are considered greater than the costs of [false positives](#falsePositive).\index{cutoff}\index{false negative}\index{false positive}
@@ -834,14 +862,24 @@ density_data <- bind_rows(hist_edible, hist_inedible)
 
 density_data$type <- factor(density_data$type, levels = c("edible_TN","inedible_TP","edible_FP","inedible_FN"))
 
-ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
+ggplot(
+  data = density_data,
+  aes(
+    x = x,
+    ymin = 0,
+    ymax = y,
+    fill = type)) +
   geom_ribbon(alpha = 1) +
-  scale_fill_manual(name = "Berry Type",
-                    values = c(viridis(4)[4], viridis(4)[1], viridis(4)[3], viridis(4)[2]),
-                    breaks = c("edible_TN","inedible_TP","edible_FP","inedible_FN"),
-                    labels = c("Edible: TN","Inedible: TP","Edible: FP","Inedible: FN")) +
+  scale_fill_grey(
+    name = "Berry Type",
+    breaks = c("edible_TN","inedible_TP","edible_FP","inedible_FN"),
+    labels = c("Edible: TN","Inedible: TP","Edible: FP","Inedible: FN")) +
+  annotate("text", x = 50, y = .01, label = "TN", size = 5) + 
+  annotate("text", x = 61.8, y = .0005, label = "FN", size = 5) + 
+  annotate("text", x = 77, y = .0005, label = "FP", size = 5) + 
+  annotate("text", x = 100, y = .01, label = "TP", size = 5) +
   geom_line(aes(y = y)) +
-  geom_vline(xintercept = cutoff, color = "red", linewidth = 2) +
+  geom_vline(xintercept = cutoff, color = "black", linewidth = 2) +
   scale_x_continuous(name = "score") +
   scale_y_continuous(name = "Frequency") +
   theme_bw() +
@@ -2078,7 +2116,7 @@ The black diagonal line indicates the reference line with an intercept of zero a
 The predictions would be significantly [miscalibrated](#calibration) at a given level of the predicted values if the 95% confidence interval of the observed value does not include the reference line at that level of the predicted value.\index{calibration!plot}
 In this case, the 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) lower levels of the predicted values.\index{calibration!plot}
 
-(ref:calibrationContinuousOutcomeCaption) Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The yellow line is the best-fit line. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
+(ref:calibrationContinuousOutcomeCaption) Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The white line is the best-fit line. The gray band is the 95% confidence interval of the observed value. The dashed black lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
 ```{r calibrationContinuousOutcome, fig.height = 8, fig.width = 8, fig.align = "center", class.source = "fold-hide", fig.cap = "(ref:calibrationContinuousOutcomeCaption)"}
 #95 prediction interval based on linear model
@@ -2106,17 +2144,17 @@ ggplot(
   geom_line(
     data = calibrationModelPredictionInterval,
     aes(y = lwr),
-    color = "red",
+    color = "gray",
     linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
   geom_line(
     data = calibrationModelPredictionInterval,
     aes(y = upr),
-    color = "red",
+    color = "gray",
     linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
   #geom_ribbon(data = calibrationModelPredictionInterval, aes(y = fit, ymin = lwr, ymax = upr), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
   geom_smooth(
     method = "lm",
-    color = viridis(3)[3], fill = viridis(3)[1],
+    color = "white", fill = "gray",
     alpha = 0.7) + #95% confidence interval of linear model
   geom_abline(
     slope = 1,
@@ -2136,7 +2174,7 @@ Gold-standard recommendations include examining the predicted values in relation
 We can examine whether the LOESS-based 95% confidence interval of the observed value at every level of the predicted values includes the diagonal reference line (i.e., the actual observed value).\index{calibration!plot}\index{locally estimated scatterplot smoothing}
 In this case, the 95% confidence interval of the observed value does not include the reference line at lower levels of the predicted values, so the predictions are [miscalibrated](#calibration) at lower levels of the predicted values.\index{calibration!plot}\index{locally estimated scatterplot smoothing}
 
-(ref:calibrationContinuousOutcomeLOESSCaption) Calibration Plot for Predictions of a Continuous Outcome. The yellow line is the best-fit line based on a LOESS smoother. The purple band is the 95% confidence interval of the observed value. The dashed red lines are the 95% prediction interval of the observed value. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
+(ref:calibrationContinuousOutcomeLOESSCaption) Calibration Plot for Predictions of a Continuous Outcome. The white line is the best-fit line based on a LOESS smoother. The gray band is the 95% confidence interval of the observed value. The dashed black lines are the 95% prediction interval of the observed value. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
 ```{r calibrationContinuousOutcomeLOESS, fig.height = 8, fig.width = 8, fig.align = "center", class.source = "fold-hide", fig.cap = "(ref:calibrationContinuousOutcomeLOESSCaption)"}
 #95 prediction interval based on LOESS model
@@ -2157,20 +2195,20 @@ ggplot(
     x = testScore,
     y = continuousOutcome)) +
   geom_point() +
-  geom_line(
+    geom_line(
     data = calibrationLoessPredictionInterval,
     aes(x = x, y = lower),
-    color = "red",
+    color = "black",
     linetype = "dashed") + #Lower estimate of 95% prediction interval of linear model
   geom_line(
     data = calibrationLoessPredictionInterval,
     aes(x = x, y = upper),
-    color = "red",
+    color = "black",
     linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
   #geom_ribbon(data = calibrationLoessPredictionInterval, aes(x = x, y = y, ymin = lower, ymax = upper), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
   geom_smooth(
     method = "loess",
-    color = viridis(3)[3], fill = viridis(3)[1],
+    color = "white", fill = "gray",
     alpha = 0.7) + #95% confidence interval of LOESS model
   geom_abline(
     slope = 1,
