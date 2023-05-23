@@ -490,6 +490,8 @@ The standard error of measurement as a function of reliability of the measure an
 
 ```{r standardErrorOfMeasurementPlot, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.height = 4, fig.cap = "Standard Error of Measurement as a Function of Reliability."}
 library("ggplot2")
+library("ggrepel")
+library("tidyverse")
 
 standardErrorOfMeasurementData <- expand.grid(
   reliability = seq(
@@ -512,6 +514,11 @@ ggplot(
   xlab("Reliability") +
   ylab("Standard Error of Measurement") +
   scale_color_grey(name = "Standard Deviation of Scores") +
+  geom_label_repel(
+    data = filter(standardErrorOfMeasurementData, reliability == 0),
+    aes(label = paste("SD = ", sd, sep = "")),
+    nudge_x = -0.05
+  ) + 
   theme(
     legend.justification = c(1,1),
     legend.position = c(1,1),
@@ -1764,8 +1771,9 @@ reliabilityOfDifferenceScoreEqualVariancesValues <- function(correlation, reliab
   return(reliability)
 }
 
-newDataDifferenceScore <- expand.grid(reliability = seq(0, 1, by = 0.01),
-                                      correlation = c(0, .1, .3, .5, .7, .9))
+newDataDifferenceScore <- expand.grid(
+  reliability = seq(0, 1, by = 0.01),
+  correlation = c(0, .1, .3, .5, .7, .9))
 
 newDataDifferenceScore$reliabilityOfDifferenceScore <- reliabilityOfDifferenceScoreEqualVariancesValues(correlation = newDataDifferenceScore$correlation, reliabilityX = newDataDifferenceScore$reliability, reliabilityY = newDataDifferenceScore$reliability)
 
@@ -1794,12 +1802,24 @@ ggplot(
     legend.background = element_rect(
       color = "black",
       fill = "white",
-      linetype = "solid"))
+      linetype = "solid")) +
+  geom_label_repel(
+    data = newDataDifferenceScore %>% 
+      filter(reliabilityOfDifferenceScore >= 0) %>% 
+      group_by(correlation) %>% 
+      slice(1) %>% 
+      ungroup(),
+    aes(label = paste("r = ", correlation, sep = "")),
+    nudge_x = 0,
+    nudge_y = .01,
+    show.legend = FALSE
+  )
 ```
 
 ```{r reliabilityOfDifferenceScore2, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.height = 4, fig.cap = "Reliability of Difference Score as a Function of Correlation Between Indices and Reliability of Indices."}
-newDataDifferenceScore2 <- expand.grid(reliability = c(0, .1, .3, .5, .7, .9),
-                                       correlation = seq(0, 1, by = 0.01))
+newDataDifferenceScore2 <- expand.grid(
+  reliability = c(0, .1, .3, .5, .7, .9),
+  correlation = seq(0, 1, by = 0.01))
 
 newDataDifferenceScore2$reliabilityOfDifferenceScore <- reliabilityOfDifferenceScoreEqualVariancesValues(correlation = newDataDifferenceScore2$correlation, reliabilityX = newDataDifferenceScore2$reliability, reliabilityY = newDataDifferenceScore2$reliability)
 
