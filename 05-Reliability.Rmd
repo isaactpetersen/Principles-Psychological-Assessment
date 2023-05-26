@@ -1079,6 +1079,20 @@ CR = `r qnorm(.975)` \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 (\#eq:coefficientOfRepeatability)
 $$
 
+```{r}
+coefficientOfRepeatability <- function(measure1, measure2){
+  value <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
+  
+  return(value)
+}
+```
+
+```{r}
+coefficientOfRepeatability(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
+```
+
 The `petersenlab` package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot) in Figure \@ref(fig:repeatability).\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{petersenlab package}
 
 ```{r repeatability, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
