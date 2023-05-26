@@ -598,9 +598,7 @@ library("bookdown")
 
 #### Simulate Data {#simulateData-reliability}
 
-For reproducibility, I set the seed below.\index{simulate data}
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
+\index{simulate data}
 
 ```{r}
 sampleSize <- 100
@@ -750,8 +748,6 @@ plot(mydata$time1, mydata$time2,
        list(x = apa(corValue, 2, leading = FALSE))))
 abline(lm(time2 ~ time1, data = mydata), col = "black")
 mydataNoMissing <- na.omit(mydata[,c("time1","time2")])
-#lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2),
-#      col = "red")
 ```
 
 ##### Considerations About the Correlation Coefficient {#correlationConsiderations}
@@ -1072,10 +1068,6 @@ The coefficient of repeatability ($CR$), also known as the "smallest real differ
 That is, it reflects the consistency of scores across time within a person.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
 It is calculated as ~1.96 times the standard deviation of the mean differences between the two measurements ($d_1$ and $d_2$), as in Equation \@ref(eq:coefficientOfRepeatability): [https://www.medcalc.org/manual/bland-altman-plot.php](https://www.medcalc.org/manual/bland-altman-plot.php) (archived at https://perma.cc/MEH3-3TGN) [@Bland1986; @Bland1999].\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
 The $CR$ is used for determining the lower and upper limits of agreement because it defines the range within which 95% of differences between the two measurement methods are expected to be.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
-The precise value is $`r qnorm(.975)`$ (not 1.96) times the standard deviation of the within-subject differences between the two measurements.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
-This precise value is based on the fact that 95% of the area under a standard normal distribution lies within $\pm `r qnorm(.975)`$ standard deviations of the mean.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
-This is based on the quantile of the 2.5th ($`r qnorm(.025)`$) and 97.5th ($`r qnorm(.975)`$) percentile of the standard normal distribution (the 95% confidence interval spans the 92.5th percentile to the 97.5th percentile).\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
-However, some researchers have rounded $`r qnorm(.975)`$ to 1.96 or to 2 for simplicity.
 
 The minimum possible coefficient of repeatability is zero, but there is no theoretical limit on the maximum possible coefficient of repeatability.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
 The smaller the coefficient of repeatability (i.e., the closer to zero), the more consistent the scores are across time within a person.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}
@@ -1087,50 +1079,7 @@ CR = `r qnorm(.975)` \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 (\#eq:coefficientOfRepeatability)
 $$
 
-```{r, class.source = "fold-hide"}
-coefficientOfRepeatability <- function(measure1, measure2){
-  value <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
-  
-  return(value)
-}
-```
-
-```{r}
-coefficientOfRepeatability(
-  measure1 = mydata$time1,
-  measure2 = mydata$time2)
-```
-
 The `petersenlab` package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot) in Figure \@ref(fig:repeatability).\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{petersenlab package}
-
-```{r, eval = FALSE, class.source = "fold-hide"}
-repeatability <- function(measure1, measure2){
-  cr <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
-  bias <- mean((measure2 - measure1), na.rm = TRUE)
-  lowerLOA <- bias - cr
-  upperLOA <- bias + cr
-
-  means <- rowMeans(cbind(measure1, measure2), na.rm = TRUE)
-  differences <- measure2 - measure1
-
-  output <- data.frame(
-    cr = cr,
-    bias = bias,
-    lowerLOA = lowerLOA,
-    upperLOA = upperLOA
-  )
-
-  plot(means, differences,
-       xlab = "Mean of measurements (measure2 and measure1)",
-       ylab = "Difference of measurements (measure2 − measure1)")
-  abline(h = 0)
-  abline(h = bias, lty = 2, col = "red")
-  abline(h = lowerLOA, lty = 2, col = "blue")
-  abline(h = upperLOA, lty = 2, col = "blue")
-
-  return(output)
-}
-```
 
 ```{r repeatability, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
 repeatability(
@@ -1183,18 +1132,12 @@ Estimated (test–retest) bias values that are closer to zero reflect stronger a
 However, (estimated) bias values can still be close to zero while individuals show large differences because large positive and negative differences could cancel each other out.\index{reliability!test–retest}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}
 As a result, it is also important to examine other indices of test–retest reliability, including the coefficient of stability and the coefficient of repeatability.\index{reliability!test–retest}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}\index{reliability!test–retest!coefficient of stability}\index{reliability!test–retest!coefficient of repeatability}
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 bias <- function(measure1, measure2){
   value <- mean((measure2 - measure1), na.rm = TRUE)
   
   return(value)
 }
-```
-
-```{r}
-bias(
-  measure1 = mydata$time1,
-  measure2 = mydata$time2)
 ```
 
 ```{r, include = FALSE}
@@ -1219,7 +1162,7 @@ $$
 
 It is expected that the 95% limits of agreement (LOA) include 95% of differences between the two measurement methods (assuming the scores are normally distributed), based on how the coefficient of repeatability is calculated.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!bias}\index{reliability!test–retest!limits of agreement}
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 lowerLOA <- function(measure1, measure2){
   value <- bias(measure1, measure2) - coefficientOfRepeatability(measure1, measure2)
   
@@ -1233,15 +1176,6 @@ upperLOA <- function(measure1, measure2){
 }
 ```
 
-```{r}
-lowerLOA(
-  measure1 = mydata$time1,
-  measure2 = mydata$time2)
-upperLOA(
-  measure1 = mydata$time1,
-  measure2 = mydata$time2)
-```
-
 ```{r, include = FALSE}
 lowerLOAvalue <- lowerLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 upperLOAvalue <- upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
@@ -1253,12 +1187,6 @@ The limits of agreement indicate that 95% of scores at time 2 are expected to fa
 
 ```{r}
 BAstats$regression.fixed.slope
-```
-
-##### Bland-Altman Statistics {#blandAltmanStats}
-
-```{r}
-BAstats
 ```
 
 ### Inter-Rater Reliability {#interrater-reliability}
@@ -1365,10 +1293,6 @@ interItemCorrelations <- cor(
   mydata[,c("item1","item2","item3","item4")],
   use = "pairwise.complete.obs")
 diag(interItemCorrelations) <- NA
-
-interItemCorrelations_nodiag <- interItemCorrelations
-interItemCorrelations_nodiag[
-  upper.tri(interItemCorrelations_nodiag)] <- NA
 ```
 
 Here is the mean inter-item correlation for each item:\index{reliability!internal consistency!average inter–item correlation}
@@ -1383,7 +1307,6 @@ Here is the mean inter-item correlation across all items:\index{reliability!inte
 
 ```{r}
 mean(meanInterItemCorrelations)
-mean(interItemCorrelations_nodiag, na.rm = TRUE)
 
 psych::alpha(
   mydata[,c("item1","item2","item3","item4")])$total$average_r
@@ -1448,7 +1371,7 @@ When using standardized estimates, AVE is the average indicator reliability [@Ro
 AVE is equivalent to the communality of a latent factor.\index{reliability!internal consistency}\index{reliability!internal consistency!average variance extracted}\index{communality}
 AVE was estimated using a [confirmatory factor analysis](#cfa) model using the `lavaan` [@R-lavaan] and `semTools` [@R-semTools] packages.\index{reliability!internal consistency}\index{reliability!internal consistency!average variance extracted}
 
-```{r}
+```{r, results = "hide"}
 latentFactorModel_syntax <- '
  #Factor loadings
  latentFactor =~ item1 + item2 + item3 + item4
@@ -1466,7 +1389,9 @@ summary(
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
+```
 
+```{r}
 AVE(latentFactorModel_fit)
 ```
 
@@ -1580,12 +1505,6 @@ bootstrapReplications <- 1000
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-For reproducibility, I set the seed below.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-Using the same seed will yield the same answer every time.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-There is nothing special about this particular seed.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-**Warning**: This code takes a while to run based on $`r bootstrapReplications`$ bootstrap replications.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-You can reduce the number of replications to be faster.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-However, the number of bootstrap replications must be larger than the number of rows in the data.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
 ```{r omegaTotal, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
@@ -1613,12 +1532,6 @@ ci.reliability(
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-For reproducibility, I set the seed below.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-Using the same seed will yield the same answer every time.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-There is nothing special about this particular seed.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-**Warning**: This code takes a while to run based on $`r bootstrapReplications`$ bootstrap replications.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-You can reduce the number of replications to be faster.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-However, the number of bootstrap replications must be larger than the number of rows in the data.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
 ```{r omegaHierarchical, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
@@ -1646,12 +1559,6 @@ ci.reliability(
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-For reproducibility, I set the seed below.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-Using the same seed will yield the same answer every time.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-There is nothing special about this particular seed.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-**Warning**: This code takes a while to run based on $`r bootstrapReplications`$ bootstrap replications.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-You can reduce the number of replications to be faster.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-However, the number of bootstrap replications must be larger than the number of rows in the data.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
 ```{r omegaCategorical, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
 set.seed(52242)
@@ -1736,18 +1643,6 @@ r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\
 $$
 
 The `petersenlab` package [@R-petersenlab] contains the `reliabilityOfDifferenceScore()` function to calculate the reliability of a difference score:\index{reliability!difference score}\index{difference score!reliability}\index{petersenlab package}
-
-```{r, eval = FALSE, class.source = "fold-hide"}
-reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY){
-  rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
-  sigmaX <- sd(x, na.rm = TRUE)
-  sigmaY <- sd(y, na.rm = TRUE)
-  
-  reliability <- (sigmaX^2 * reliabilityX + sigmaY^2 * reliabilityY - (2 * rxy * sigmaX * sigmaY)) / (sigmaX^2 + sigmaY^2 - (2 * rxy * sigmaX * sigmaY))
-  
-  return(reliability)
-}
-```
 
 ```{r}
 reliabilityOfDifferenceScore(
@@ -1902,6 +1797,7 @@ reliabilityOfMeasure <- as.numeric(
   cor.test(
     x = mydata$time1,
     y = mydata$time2)$estimate)
+
 sem <- sd(mydata$time1, na.rm = TRUE) * sqrt(1 - reliabilityOfMeasure)
 sem
 ```
@@ -1931,9 +1827,6 @@ However, error scores can include multiple errors simultaneously.\index{measurem
 ### No Error {#noError}
 
 This section provides the coefficients of [stability](#stability), [repeatability](#repeatability), and [bias](#blandAltmanBias) that are used as a comparison when [measurement error](#measurementError) is added.\index{measurement error}\index{reliability!test–retest!coefficient of stability}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!bias}
-For reproducibility, I set the seed below.
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
 
 ```{r, class.source = "fold-hide"}
 # Simulate Data
@@ -1989,10 +1882,6 @@ blandr.statistics(
 
 In the example below, I added [within-person random error](#withinPersonRandomError).\index{measurement error!random error}\index{measurement error!within person}
 Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at all time points.\index{measurement error!random error}\index{measurement error!within person}
-
-For reproducibility, I set the seed below.
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
 
 ```{r, class.source = "fold-hide"}
 # Simulate Data
@@ -2058,10 +1947,6 @@ Adding [within-person random error](#withinPersonRandomError) led to\index{measu
 
 In the example below, I added [within-person systematic error](#withinPersonSystematicError).\index{measurement error!systematic error}\index{measurement error!within person}
 Specifically, to all participants, I added error that is consistent across time for a given participant: pulled from a distribution with a mean of 5 and a standard deviation of 3.\index{measurement error!systematic error}\index{measurement error!within person}
-
-For reproducibility, I set the seed below.
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
 
 ```{r, class.source = "fold-hide"}
 # Simulate Data
@@ -2129,10 +2014,6 @@ Adding [within-person systematic error](#withinPersonSystematicError) led to\ind
 In the example below, I added [between-person random error](#betweenPersonRandomError).\index{measurement error!random error}\index{measurement error!between person}
 Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at time 2 (see below).\index{measurement error!random error}\index{measurement error!between person}
 
-For reproducibility, I set the seed below.
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
-
 ```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
@@ -2196,10 +2077,6 @@ Adding [between-person random error](#betweenPersonRandomError) led to\index{mea
 In the example below, I added [between-person systematic error](#betweenPersonSystematicError).\index{measurement error!systematic error}\index{measurement error!between person}
 Specifically, I added constant variance of 10 to all participants' scores at T2\index{measurement error!systematic error}\index{measurement error!between person}
 
-For reproducibility, I set the seed below.
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
-
 ```{r, class.source = "fold-hide"}
 # Simulate Data
 set.seed(52242)
@@ -2262,10 +2139,6 @@ Adding [between-person systematic error](#betweenPersonSystematicError) led to\i
 
 In the example below, I added constant variance to all participants' scores at all time points.\index{measurement error}
 Specifically I added 10 to all participants' scores at all time points.\index{measurement error}
-
-For reproducibility, I set the seed below.
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
 
 ```{r, class.source = "fold-hide"}
 # Simulate Data
@@ -2352,7 +2225,7 @@ The greater the [random measurement error](#randomError), the weaker the associa
 In the context of examining the association between test and retest (i.e., [test–retest reliability](#testRetest-reliability)), the estimate of the stability of the construct (i.e., true test–retest association) is attenuated to the extent that the measure is unreliable, as described in Equation \@ref(eq:attenuationRetestReliability):\index{reliability!test–retest}\index{measurement error!attenuation of association}
 
 $$
-\small
+\scriptsize
 \begin{aligned}
   r_{x_1x_2} &= r_{x_{1_t}x_{2_t}} \sqrt{r_{xx} r_{xx}} \\
   &= r_{x_{1_t}x_{2_t}} \sqrt{{r_{xx}}^2} \\
@@ -2390,7 +2263,7 @@ $$
 \small
 \begin{aligned}
   r_{x_{1_t}x_{2_t}} &= \frac{r_{x_1x_2}}{r_{xx}} \\
-  \text{true correlation of construct across two time points} &= \frac{\text{test–retest correlation of measure}}{\text{reliability of measure}}
+  \text{true correlation of construct across time points} &= \frac{\text{test–retest correlation of measure}}{\text{reliability of measure}}
 \end{aligned}
 (\#eq:disattenuationRetestReliability)
 $$

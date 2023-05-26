@@ -43,9 +43,7 @@ library("DT")
 
 #### Simulate Data {#simulateData-validity}
 
-For reproducibility, I set the seed below.\index{simulate data}
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
+\index{simulate data}
 
 ```{r}
 sampleSize <- 1000
@@ -541,7 +539,7 @@ Several aspects of psychometrics can be evaluated with an MTMM, including [relia
 The [reliability](#reliability) diagonal of an MTMM is the correlation of variable with itself, i.e., the [test–retest reliability](#testRetest-reliability) or monotrait-monomethod correlations.\index{multitrait-multimethod matrix}\index{validity!construct}\index{reliability}\index{reliability!test–retest}
 The [reliability](#reliability) coefficients should be the highest values in the matrix because each measure should be more correlated with itself than with anything else.\index{multitrait-multimethod matrix}\index{validity!construct}\index{reliability}\index{reliability!test–retest}
 
-(ref:campbellFiskeCaption) Multitrait-Multimethod Matrix. Figure reprinted from Campbell and Fiske [-@Campbell1959], Table 1, p. 82. Campbell, D. T., \& Fiske, D. W. (1959). Convergent and discriminant validation by the multitrait-multimethod matrix. *Psychological Bulletin*, *56*, 81-105. [https://doi.org/10.1037/h0046016](https://doi.org/10.1037/h0046016)
+(ref:campbellFiskeCaption) Multitrait-Multimethod Matrix. Figure reprinted from Campbell and Fiske [-@Campbell1959], Table 1, p. 82. Campbell, D. T., \& Fiske, D. W. (1959). Convergent and discriminant validation by the multitrait-multimethod matrix. *Psychological Bulletin*, *56*, 81-105. [https://doi.org/10.1037/h0046016](https://doi.org/10.1037/h0046016). The content is in the public domain.
 
 ```{r campbellFiske, out.width = "100%", fig.align = "center", fig.cap = "(ref:campbellFiskeCaption)", echo = FALSE}
 knitr::include_graphics("./Images/campbellFiske.png")
@@ -588,7 +586,7 @@ For example, if extraversion and anxiety are moderately correlated with each oth
 
 You can estimate a measure's degree of discriminant validity based on the *heterotrait-monotrait ratio* [HTMT; @Henseler2015; @Roemer2021].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
 HTMT is the average of the heterotrait-heteromethod correlations (i.e., the correlations of measures from different measurement methods that assess different constructs), relative to the average of the monotrait-heteromethod correlations (i.e., the correlations of measures from different measurement methods that assess the same construct).\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}\index{methods!multiple}
-As described [here (http://www.henseler.com/htmt.html)](http://www.henseler.com/htmt.html) (archived at https://perma.cc/A9DU-WZWQ) based on evidence from @Voorhees2016,\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+As described here (http://www.henseler.com/htmt.html; archived at https://perma.cc/A9DU-WZWQ) based on evidence from @Voorhees2016,\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
 
 > If the HTMT is clearly smaller than one, discriminant validity can be regarded as established.
 > In many practical situations, a threshold of 0.85 reliably distinguishes between those pairs of latent variables that are discriminant valid and those that are not.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
@@ -750,11 +748,9 @@ MTMM.fit <- cfa(
   orthogonal = TRUE,
   missing = "ml")
 
-summary(
+parameterEstimates(
   MTMM.fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
+  standardized = TRUE)
 ```
 
 A path diagram of the model is depicted in Figure \@ref(fig:mtmmCFAFigure) using the `semPlot` package [@R-semPlot].\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
@@ -1193,7 +1189,7 @@ The attenuation formula is presented in Equation \@ref(eq:attenuationFormula).
 I extend it to a specific example in Equation \@ref(eq:attenuationFormulaExample):\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
 
 $$
-\small
+\tiny
 \begin{aligned}
   r_{xy} &= r_{x_ty_t} \sqrt{r_{xx} r_{yy}} \\
   \text{observed correlation between }x \text{ and } y &= \text{(true association between construct } A \text{ and construct } B) \times \\ & \;\;\; \sqrt{\text{reliability of } x \times \text{reliability of } y}
@@ -1235,7 +1231,7 @@ The disattenuation formula is presented in Equation \@ref(eq:disattenuationFormu
 I extend it to a specific example in Equation \@ref(eq:disattenuationFormulaExample):\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
 
 $$
-\small
+\tiny
 \begin{aligned}
   r_{x_ty_t} &= \frac{r_{xy}}{\sqrt{r_{xx} r_{yy}}} \\
   \text{true association between construct } A \text{ and construct } B &= \frac{\text{observed correlation between } x \text{ and } y}{\sqrt{\text{reliability of } x \times \text{reliability of } y}}
@@ -1302,10 +1298,9 @@ observedSEM_fit <- sem(
   data = mydataValidity,
   missing = "ML")
 
-summary(
+parameterEstimates(
   observedSEM_fit,
-  standardized = TRUE,
-  rsquare = TRUE)
+  standardized = TRUE)
 ```
 
 ```{r, include = FALSE}
@@ -1334,7 +1329,6 @@ As described in Section \@ref(exampleFactorModelsFromCorrelationMatrices) of the
 Thus, we can account for the [(un)reliability](#reliability) of each measure by specifying the residual errors as $1 - \text{reliability}^2$, as below:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
 
 ```{r}
-# Syntax that specifies the reliability programmatically
 disattenuationSEM_syntax <- 
   paste(
     '
@@ -1351,29 +1345,14 @@ disattenuationSEM_syntax <-
     ',
     sep = "")
 
-# Syntax that substitutes in the reliability values
-disattenuationTraditionalSEM_syntax <- '
-  # Factor loadings
-  predictorLatent =~ 1*predictorObservedSEM
-  criterionLatent =~ 1*criterionObservedSEM
-  
-  # Factor correlation
-  criterionLatent ~ predictorLatent
-  
-  # Specify residual errors (measurement error)
-  predictorObservedSEM ~~ (1 - .9^2)*predictorObservedSEM # where .9 is the reliability of the predictor
-  criterionObservedSEM ~~ (1 - .85^2)*criterionObservedSEM # where .85 is the reliability of the criterion
-'
-
 disattenuationSEM_fit <- sem(
   disattenuationSEM_syntax,
   data = mydataValidity,
   missing = "ML")
 
-summary(
+parameterEstimates(
   disattenuationSEM_fit,
-  standardized = TRUE,
-  rsquare = TRUE)
+  standardized = TRUE)
 ```
 
 ```{r, include = FALSE}
