@@ -151,14 +151,6 @@ $$
 
 The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
-pAgivenB <- function(pBgivenA, pA, pB){
-  value <- pBgivenA * pA / pB
-  
-  value
-}
-```
-
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .003, pB = .01)
 ```
@@ -237,14 +229,6 @@ $$
 
 The `petersenlab` package [@R-petersenlab] contains the `pBgivenNotA()` function that estimates the probability of one event, $B$, given that another event, $A$, did not occur.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
-pBgivenNotA <- function(pBgivenA, pA, pB){
-  value <- (pB - (pBgivenA * pA)) / (1 - pA)
-  
-  value
-}
-```
-
 ```{r}
 pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01)
 ```
@@ -262,14 +246,6 @@ $$
 $$
 
 The `petersenlab` package [@R-petersenlab] contains the `pB()` function that estimates the marginal probability of one event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
-
-```{r, eval = FALSE, class.source = "fold-hide"}
-pB <- function(pBgivenA, pA, pBgivenNotA){
-  value <- (pBgivenA * pA) + pBgivenNotA * (1 - pA)
-  
-  value
-}
-```
 
 ```{r}
 pB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
@@ -298,8 +274,6 @@ $$
 \end{aligned}
 (\#eq:baseRateUpdated2)
 $$
-
-The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .285, pB = .2758776)
@@ -365,31 +339,6 @@ $$
 (\#eq:bayes4)
 $$
 
-```{r, class.source = "fold-hide"}
-pAgivenBalternative <- function(pBgivenA, pA, pBgivenNotA){
-  value <- (pBgivenA * pA) / ((pBgivenA * pA) + (pBgivenNotA * (1 - pA)))
-  
-  value
-}
-```
-
-```{r}
-pAgivenBalternative(
-  pBgivenA = .95,
-  pA = .003,
-  pBgivenNotA = .007171515)
-
-pAgivenBalternative(
-  pBgivenA = .95,
-  pA = .003,
-  pBgivenNotA = pBgivenNotA(
-    pBgivenA = .95,
-    pA = .003,
-    pB = .01))
-```
-
-The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
-
 ```{r}
 pAgivenB(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
 pAgivenB(pBgivenA = .95,
@@ -416,22 +365,7 @@ $$
 (\#eq:baseRateUpdated4)
 $$
 
-The `petersenlab` package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
-
 ```{r}
-pAgivenBalternative(
-  pBgivenA = .95,
-  pA = .285,
-  pBgivenNotA = .007171515)
-
-pAgivenBalternative(
-  pBgivenA = .95,
-  pA = .285,
-  pBgivenNotA = pBgivenNotA(
-    pBgivenA = .95,
-    pA = .003,
-    pB = .01))
-
 pAgivenB(
   pBgivenA = .95,
   pA = .285,
@@ -1171,12 +1105,6 @@ The `petersenlab` package [@R-petersenlab] contains the `accuracyOverall()` func
 
 ```{r}
 accuracyOverall(
-  predicted = mydataSDT$testScore,
-  actual = mydataSDT$disorder) %>%
-  t %>%
-  round(., 2)
-
-accuracyOverall(
   predicted = mydataSDT$testScore, 
   actual = mydataSDT$disorder,
   dropUndefined = TRUE) %>%
@@ -1215,7 +1143,7 @@ $$
 (\#eq:meanError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
 meanError <- function(predicted, actual){
   value <- mean(predicted - actual, na.rm = TRUE)
   return(value)
@@ -1247,7 +1175,7 @@ $$
 (\#eq:meanAbsoluteError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
 meanAbsoluteError <- function(predicted, actual){
   value <- mean(abs(predicted - actual), na.rm = TRUE)
   return(value)
@@ -1278,7 +1206,7 @@ $$
 (\#eq:meanSquaredError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
 meanSquaredError = function(predicted, actual){
   value <- mean((predicted - actual)^2, na.rm = TRUE)
   return(value)
@@ -1309,7 +1237,7 @@ $$
 (\#eq:rootMeanSquaredError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
 rootMeanSquaredError = function(predicted, actual){
   value <- sqrt(mean((predicted - actual)^2, na.rm = TRUE))
   return(value)
@@ -1355,7 +1283,7 @@ $$
 Note: MPE is undefined when one or more of the observed values equals zero, due to division by zero.\index{mean percentage error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{mean percentage error}
 
-```{r, class.source = "fold-hide"}
+```{r}
 meanPercentageError = function(predicted, actual, dropUndefined = FALSE){
   percentageError <- 100 * (actual - predicted) / actual
   
@@ -1402,7 +1330,7 @@ $$
 Note: MAPE is undefined when one or more of the observed values equals zero, due to division by zero.\index{mean absolute percentage error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{mean absolute percentage error}
 
-```{r, class.source = "fold-hide"}
+```{r}
 meanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
   percentageError <- 100 * (actual - predicted) / actual
   
@@ -1447,7 +1375,7 @@ $$
 Note: sMAPE is undefined when one or more of the individuals has a prediction–observed combination such that the sum of the absolute value of the predicted value and the absolute value of the observed value equals zero ($|\text{predicted}_i| + |\text{observed}_i|$), due to division by zero.\index{symmetric mean absolute percentage error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{symmetric mean absolute percentage error}
 
-```{r, class.source = "fold-hide"}
+```{r}
 symmetricMeanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
   relativeError <- abs(predicted - actual)/(abs(predicted) + abs(actual))
   
@@ -1500,7 +1428,7 @@ $$
 Note: MASE is undefined when the scaling factor is zero, due to division by zero.\index{mean absolute scaled error}
 With non-time series data, the scaling factor is the average of the absolute value of individuals' observed scores minus the average observed score ($\frac{1}{n} \sum\limits_{i = 1}^n |\text{observed}_i - \overline{\text{observed}}|$).\index{mean absolute scaled error}
 
-```{r, class.source = "fold-hide"}
+```{r}
 meanAbsoluteScaledError <- function(predicted, actual){
   mydata <- data.frame(na.omit(cbind(predicted, actual)))
   
@@ -1549,6 +1477,7 @@ Division inside the log is equal to subtraction outside the log.\index{root mean
 So, the formula can be reformulated with the subtraction of two logs, as in Equation \@ref(eq:rootMeanSquaredLogError):\index{root mean squared log error}
 
 $$
+\tiny
 \begin{aligned}
   \text{root mean squared log error (RMSLE)} &= \sqrt{\sum\limits_{i = 1}^n log\bigg(\frac{\text{predicted}_i + 1}{\text{observed}_i + 1}\bigg)^2} \\
   &= \sqrt{\text{mean}\Bigg[log\bigg(\frac{\text{predicted}_i + 1}{\text{observed}_i + 1}\bigg)^2\Bigg]} \\
@@ -1569,7 +1498,7 @@ Note: Root mean squared log error is undefined when one or more predicted values
 When predicted or actual values are -1, this leads to $log(0)$, which is undefined.\index{root mean squared log error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{root mean squared log error}
 
-```{r, class.source = "fold-hide"}
+```{r}
 rootMeanSquaredLogError <- function(predicted, actual, dropUndefined = FALSE){
   logError <- log(predicted + 1) - log(actual + 1)
   
@@ -1698,7 +1627,7 @@ predictiveRSquaredValue <- predictiveRSquared(mydataSDT$testScore, mydataSDT$dis
 
 When dealing with a categorical outcome, discrimination is the ability to separate events from non-events.\index{discrimination}
 When dealing with a continuous outcome, discrimination is the strength of the association between the predictor and the outcome.\index{discrimination}
-Aspects of [discrimination](#discrimination) at a particular cutoff (e.g., [sensitivity](#sensitivity), [specificity](#specificity)) are described in Section \@ref(cutoffAccuracy).\index{discrimination}\index{cutoff}\index{sensitivity}\index{specificity}
+Aspects of discrimination at a particular cutoff (e.g., [sensitivity](#sensitivity), [specificity](#specificity)) are described in Section \@ref(cutoffAccuracy).\index{discrimination}\index{cutoff}\index{sensitivity}\index{specificity}
 
 #### Area under the ROC curve (AUC) {#aucROC}
 
@@ -1979,79 +1908,11 @@ A statistically significant $\chi^2$ (*p* < .05) indicates a significant degree 
 The Hosler-Lemeshow GOF test was calculated using the `ResourceSelection` package [@R-ResourceSelection].\index{Hosler-Lemeshow test}
 The table of predicted versus observed frequencies was generated using the `PredictABEL` package [@R-PredictABEL].\index{Hosler-Lemeshow test}
 
-For each number of bins ($g$) specified below, the predictions show statistically significant miscalibration.\index{Hosler-Lemeshow test}
-
-$g = 2$
-
-```{r, fig.show = "hide"}
-gValue <- 2
-
-hoslem.test(
-  mydataSDT$disorder,
-  mydataSDT$predictedProbability,
-  g = gValue)
-
-plotCalibration(
-  data = na.omit(myDataNoMissing),
-  cOutcome = colNumberOutcome,
-  predRisk = myDataNoMissing$predictedProbability,
-  groups = gValue)$Table_HLtest
-```
-
-$g = 4$
-
-```{r, fig.show = "hide"}
-gValue <- 4
-
-hoslem.test(
-  mydataSDT$disorder,
-  mydataSDT$predictedProbability,
-  g = gValue)
-
-plotCalibration(
-  data = na.omit(myDataNoMissing),
-  cOutcome = colNumberOutcome,
-  predRisk = myDataNoMissing$predictedProbability,
-  groups = gValue)$Table_HLtest
-```
-
-$g = 6$
-
-```{r, fig.show = "hide"}
-gValue <- 6
-
-hoslem.test(
-  mydataSDT$disorder,
-  mydataSDT$predictedProbability,
-  g = gValue)
-
-plotCalibration(
-  data = na.omit(myDataNoMissing),
-  cOutcome = colNumberOutcome,
-  predRisk = myDataNoMissing$predictedProbability,
-  groups = gValue)$Table_HLtest
-```
-
-$g = 8$
-
-```{r, fig.show = "hide"}
-gValue <- 8
-
-hoslem.test(
-  mydataSDT$disorder,
-  mydataSDT$predictedProbability,
-  g = gValue)
-
-plotCalibration(
-  data = na.omit(myDataNoMissing),
-  cOutcome = colNumberOutcome,
-  predRisk = myDataNoMissing$predictedProbability,
-  groups = gValue)$Table_HLtest
-```
+For the number of bins ($g$) specified below, the predictions show statistically significant miscalibration.\index{Hosler-Lemeshow test}
 
 $g = 10$
 
-```{r, fig.show = "hide"}
+```{r}
 gValue <- 10
 
 hoslem.test(
@@ -2149,7 +2010,6 @@ ggplot(
     aes(y = upr),
     color = "gray",
     linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
-  #geom_ribbon(data = calibrationModelPredictionInterval, aes(y = fit, ymin = lwr, ymax = upr), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
   geom_smooth(
     method = "lm",
     color = "white", fill = "gray",
@@ -2203,7 +2063,6 @@ ggplot(
     aes(x = x, y = upper),
     color = "black",
     linetype = "dashed") + #Upper estimate of 95% prediction interval of linear model
-  #geom_ribbon(data = calibrationLoessPredictionInterval, aes(x = x, y = y, ymin = lower, ymax = upper), fill = viridis(3)[1], alpha = 0.7) + #95% prediction interval of linear model
   geom_smooth(
     method = "loess",
     color = "white", fill = "gray",
@@ -2677,7 +2536,7 @@ Higher values reflect greater accuracy.\index{relative improvement!over predicti
 The formula for calculating relative improvement over predicting from the base rate is in Equation \@ref(eq:relativeImprovementOverPredictingFromBaseRate).\index{relative improvement!over predicting from the base rate}
 
 $$
-\scriptsize
+\tiny
 \begin{aligned}
   \text{relative improvement over predicting from base rate} &= \frac{\text{total correct} - \text{correct by predicting from base rate}}{\text{maximum correct} - \text{correct by predicting from base rate}} \\
 \end{aligned}
@@ -2751,9 +2610,9 @@ sensitivity(
 sensitivityValue <- sensitivity(TP = TPvalue, FN = FNvalue)
 ```
 
-Below I compute sensitivity and [specificity](#specificity) at every possible cutoff.\index{sensitivity}\index{specificity}\index{cutoff}
+Below I present sensitivity and [specificity](#specificity) at every possible cutoff.\index{sensitivity}\index{specificity}\index{cutoff}
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(
@@ -2985,9 +2844,9 @@ positivePredictiveValue(
 positivePredictivevalueValue <- positivePredictiveValue(TP = TPvalue, FP = FPvalue)
 ```
 
-Below I compute PPV and NPV at every possible base rate given the [sensitivity](#sensitivity) and [specificity](#specificity) at the current cutoff.\index{positive predictive value}\index{negative predictive value}\index{sensitivity}\index{specificity}\index{cutoff}
+Below I present PPV and NPV at every possible base rate given the [sensitivity](#sensitivity) and [specificity](#specificity) at the current cutoff.\index{positive predictive value}\index{negative predictive value}\index{sensitivity}\index{specificity}\index{cutoff}
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
   if(is.null(BR)){
     value <- TN/(TN + FN)
@@ -3034,9 +2893,9 @@ ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
   theme_bw()
 ```
 
-Below I compute PPV and [NPV](#npv) at every possible cutoff.\index{positive predictive value}\index{negative predictive value}\index{cutoff}
+Below I present PPV and [NPV](#npv) at every possible cutoff.\index{positive predictive value}\index{negative predictive value}\index{cutoff}
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 accuracyStats$positivePredictiveValue <- positivePredictiveValue(
   TP = accuracyStats$TP,
   TN = accuracyStats$TN,
@@ -4138,88 +3997,6 @@ Igain(
     FP = FPvalue))
 ```
 
-##### Alternative formula from @Metz1973 {#IgainMetz1973}
-
-The alternative formula from @Metz1973 for calculating information gain is in Equation \@ref(eq:informationGain2):\index{cutoff!optimal}\index{information!theory}\index{information!gain}
-
-$$
-\begin{aligned}
-  I_\text{gain} = \ & p(S|s) \cdot p(s) \cdot log_2\Bigg\{\frac{p(S|s)}{p(S|s) \cdot p(s) + p(S|n)[1 - p(s)]}\Bigg\} \\
-  &+ p(S|n)[1 - p(s)] \times log_2\Bigg\{\frac{p(S|n)}{p(S|s) \cdot p(s) + p(S|n)[1 - p(s)]}\Bigg\} \\
-  &+ [1 - p(S|s)] \cdot p(s) \times log_2\Bigg\{\frac{1 - p(S|s)}{1 - p(S|s) \cdot p(s) - p(S|n)[1 - p(s)]}\Bigg\} \\
-  &+ [1 - p(S|n)][1 - p(s)] \times log_2\Bigg\{\frac{1 - p(S|n)}{1 - p(S|s) \cdot p(s) - p(S|n)[1 - p(s)]}\Bigg\}
-\end{aligned}
-(\#eq:informationGain2)
-$$
-
-where $p(S|s) =$ [sensitivity](#sensitivity) ([hit rate](#sensitivity) or [true positive rate](#sensitivity)); i.e., the [conditional probability](#conditionalProbability) of deciding a signal is present ($S$) when the signal is in fact present($s$), $p(S|n) =$ [false positive rate](#falsePositiveRate) ([false alarm rate](#falsePositiveRate)); i.e., the [conditional probability](#conditionalProbability) of deciding a signal is present ($S$) when the signal is in fact absent ($n$), $p(s) =$ [base rate](#baseRate), i.e., the probability that the signal is in fact present ($s$).\index{cutoff!optimal}\index{information!theory}\index{base rate}\index{sensitivity}\index{false positive!rate}\index{information!gain}
-
-```{r, class.source = "fold-hide"}
-Igain2 <- function(BR, HR, FAR){
-  HR * BR * log2(HR / ((HR * BR) + (FAR * (1 - BR)))) +
-    FAR * (1 - BR) * log2(FAR / ((HR * BR) + (FAR * (1 - BR)))) +
-    (1 - HR) * BR * log2((1 - HR) / (1 - (HR * BR) - (FAR * (1 - BR)))) +
-    (1 - FAR) * (1 - BR) * log2((1 - FAR) / (1 - (HR * BR) - (FAR * (1 - BR))))
-}
-```
-
-```{r}
-Igain2(
-  BR = baseRate(
-    TP = TPvalue,
-    TN = TNvalue,
-    FP = FPvalue,
-    FN = FNvalue),
-  HR = sensitivity(
-    TP = TPvalue,
-    FN = FNvalue),
-  FAR = falsePositiveRate(
-    TN = TNvalue,
-    FP = FPvalue))
-```
-
-##### Alternative formula from @Somoza1989 {#IgainSomoza1989}
-
-The alternative formula from @Somoza1989 for calculating information gain is in Equation \@ref(eq:informationGain3):\index{cutoff!optimal}\index{information!theory}\index{information!gain}
-
-$$
-\begin{aligned}
-  I_\text{gain} = \ & [(\text{TPR})(\text{Pr})] \times \log_2(\text{TPR}/G) \\
-  &+ [(\text{FPR})(1 - \text{Pr})] \times \log_2(\text{FPR}/G) \\
-  &+ [(1 - \text{TPR})(\text{Pr})] \times \log_2\bigg(\frac{1 - \text{TPR}}{1 - G}\bigg) \\
-  &+ [(1 - FPR)(1 - \text{Pr})] \times \log_2\bigg(\frac{1 - \text{FPR}}{1 - G}\bigg)
-\end{aligned}
-(\#eq:informationGain3)
-$$
-
-where $\text{TP} =$ [true positive rate](#sensitivity) ([hit rate](#sensitivity)), $\text{Pr} =$ [prevalence](#baseRate) ([base rate](#baseRate)), $\text{FP} =$ [false positive rate](#falsePositiveRate) ([false alarm rate](#falsePositiveRate)), $G = \text{Pr} (\text{TP}) + (1 - \text{Pr}) (\text{FP}) =$ [selection ratio](#selectionRatio)\index{cutoff!optimal}\index{information!theory}\index{base rate}\index{sensitivity}\index{false positive!rate}\index{selection ratio}\index{information!gain}
-
-```{r, class.source = "fold-hide"}
-Igain3 <- function(BR, HR, FAR){
-  G <- BR*(HR) + (1 - BR)*(FAR)
-  
-  ((HR)*(BR))*log2((HR/G)) + 
-    ((FAR)*(1-BR))*log2((FAR/G)) + 
-    ((1-HR)*(BR))*log2((1-HR)/(1-G)) + 
-    ((1-FAR)*(1-BR))*log2((1-FAR)/(1-G))
-}
-```
-
-```{r}
-Igain3(
-  BR = baseRate(
-    TP = TPvalue,
-    TN = TNvalue,
-    FP = FPvalue,
-    FN = FNvalue),
-  HR = sensitivity(
-    TP = TPvalue,
-    FN = FNvalue),
-  FAR = falsePositiveRate(
-    TN = TNvalue,
-    FP = FPvalue))
-```
-
 ##### Examples {#IgainExamples}
 
 Case A from Exhibit 37.2 [@Treat2012]:\index{cutoff!optimal}\index{information!theory}\index{information!gain}
@@ -4325,7 +4102,7 @@ utilityFalseAlarms <- 0.25
 
 ### Calculate Accuracy {#calculateAccuracyAtEveryPossibleCutoff}
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(
@@ -4539,11 +4316,9 @@ accuracyStats <- do.call(
     function(x) replace(x, is.infinite(x), NA)))
 ```
 
-### All Accuracy Statistics {#allAccuracyStatistics}
-
 The `petersenlab` package [@R-petersenlab] contains an R function that estimates the prediction accuracy at every possible cutoff.\index{petersenlab package}\index{cutoff}
 
-```{r}
+```{r, eval = FALSE}
 accuracyAtEachCutoff(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
@@ -4627,11 +4402,11 @@ accuracyStats[head(which(
   accuracyStats$cutoff >= closestToTheTopLeft), 1),]
 ```
 
-### Cutoff that optimizes each of the following criteria: {#allAccuracyStatistics-cutoff}
+### Cutoff that optimizes each of various accuracy estimates {#allAccuracyStatistics-cutoff}
 
 The `petersenlab` package [@R-petersenlab] contains an R function that identifes the cutoff that optimizes each of various accuracy estimates.\index{petersenlab package}
 
-```{r}
+```{r, eval = FALSE}
 optimalCutoff(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
