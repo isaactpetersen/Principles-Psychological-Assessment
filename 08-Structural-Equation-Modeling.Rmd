@@ -219,45 +219,11 @@ markerVariable_syntax <- '
  latentFactor =~ y1 + y2 + y3 + y4
 '
 
-markerVariable_fullSyntax <- '
- #Factor loadings
- latentFactor =~ 1*y1 + y2 + y3 + y4
- 
- #Latent variance
- latentFactor ~~ latentFactor
- 
- #Estimate residual variances of manifest variables
- y1 ~~ y1
- y2 ~~ y2
- y3 ~~ y3
- y4 ~~ y4
- 
- #Estimate intercepts of manifest variables
- y1 ~ 1
- y2 ~ 1
- y3 ~ 1
- y4 ~ 1
-'
-
 markerVariableModelFit <- sem(
   markerVariable_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR")
-
-markerVariableModelFit_full <- lavaan(
-  markerVariable_fullSyntax,
-  data = PoliticalDemocracy,
-  missing = "ML",
-  estimator = "MLR")
-```
-
-```{r markerVariable, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Marker Variable Approach."}
-semPaths(
-  markerVariableModelFit,
-  what = "est",
-  layout = "tree2",
-  edge.label.cex = 0.8)
 ```
 
 ##### Effects Coding Method {#effectsCoding-sem}
@@ -272,63 +238,12 @@ effectsCoding_abbreviatedSyntax <- '
  latentFactor =~ y1 + y2 + y3 + y4
 '
 
-effectsCoding_syntax <- '
- #Factor loadings
- latentFactor =~ NA*y1 + label1*y1 + label2*y2 + label3*y3 + label4*y4
- 
- #Constrain factor loadings
- label1 == 4 - label2 - label3 - label4 # 4 = number of indicators
-'
-
-effectsCoding_fullSyntax <- '
- #Factor loadings
- latentFactor =~ label1*y1 + label2*y2 + label3*y3 + label4*y4
- 
- #Constrain factor loadings
- label1 == 4 - label2 - label3 - label4 # 4 = number of indicators
- 
- #Latent variance
- latentFactor ~~ latentFactor
- 
- #Estimate residual variances of manifest variables
- y1 ~~ y1
- y2 ~~ y2
- y3 ~~ y3
- y4 ~~ y4
- 
- #Estimate intercepts of manifest variables
- y1 ~ 1
- y2 ~ 1
- y3 ~ 1
- y4 ~ 1
-'
-
 effectsCodingModelFit_abbreviated <- sem(
   effectsCoding_abbreviatedSyntax,
   data = PoliticalDemocracy,
   effect.coding = "loadings",
   missing = "ML",
   estimator = "MLR")
-
-effectsCodingModelFit <- sem(
-  effectsCoding_syntax,
-  data = PoliticalDemocracy,
-  missing = "ML",
-  estimator = "MLR")
-
-effectsCodingModelFit_full <- lavaan(
-  effectsCoding_fullSyntax,
-  data = PoliticalDemocracy,
-  missing = "ML",
-  estimator = "MLR")
-```
-
-```{r effectsCoding, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Effects Coding Approach."}
-semPaths(
-  effectsCodingModelFit,
-  what = "est",
-  layout = "tree2",
-  edge.label.cex = 0.8)
 ```
 
 ##### Standardized Latent Factor Method {#standardizedLatent-sem}
@@ -343,66 +258,12 @@ standardizedLatent_abbreviatedsyntax <- '
  latentFactor =~ y1 + y2 + y3 + y4
 '
 
-standardizedLatent_syntax <- '
- #Factor loadings
- latentFactor =~ NA*y1 + y2 + y3 + y4
- 
- #Latent mean
- latentFactor ~ 0
- 
- #Latent variance
- latentFactor ~~ 1*latentFactor
-'
-
-standardizedLatent_fullSyntax <- '
- #Factor loadings
- latentFactor =~ NA*y1 + y2 + y3 + y4
- 
- #Latent mean
- latentFactor ~ 0
- 
- #Latent variance
- latentFactor ~~ 1*latentFactor
- 
- #Estimate residual variances of manifest variables
- y1 ~~ y1
- y2 ~~ y2
- y3 ~~ y3
- y4 ~~ y4
- 
- #Estimate intercepts of manifest variables
- y1 ~ 1
- y2 ~ 1
- y3 ~ 1
- y4 ~ 1
-'
-
 standardizedLatentFit_abbreviated <- sem(
   standardizedLatent_abbreviatedsyntax,
   data = PoliticalDemocracy,
   std.lv = TRUE,
   missing = "ML",
   estimator = "MLR")
-
-standardizedLatentFit <- sem(
-  standardizedLatent_syntax,
-  data = PoliticalDemocracy,
-  missing = "ML",
-  estimator = "MLR")
-
-standardizedLatentFit_full <- lavaan(
-  standardizedLatent_fullSyntax,
-  data = PoliticalDemocracy,
-  missing = "ML",
-  estimator = "MLR")
-```
-
-```{r standaredizedLatent, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Standardized Latent Factor Approach."}
-semPaths(
-  standardizedLatentFit,
-  what = "est",
-  layout = "tree2",
-  edge.label.cex = 0.8)
 ```
 
 ### Types of Latent Factors {#latentFactorTypes-sem}
@@ -429,24 +290,12 @@ reflectiveModelParameters <- parameterEstimates(
   reflectiveModelFit)[!is.na(parameterEstimates(reflectiveModelFit)$z),]
 
 row.names(reflectiveModelParameters) <- NULL
-
-reflectiveModelParameters
 ```
 
 Here are the degrees of freedom:\index{structural equation modeling!degrees of freedom}
 
 ```{r}
 fitMeasures(reflectiveModelFit, "df")
-```
-
-Here is a model diagram:
-
-```{r reflectiveModelFigure, out.width = "100%", fig.align = "center", fig.cap = "Depiction of a Reflective Model."}
-semPaths(
-  reflectiveModelFit,
-  what = "Std.all",
-  layout = "tree2",
-  edge.label.cex = 0.8)
 ```
 
 Thus, for a [reflective model](#reflectiveConstruct), we only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious.\index{construct!reflective}\index{structural equation modeling!degrees of freedom}
@@ -475,24 +324,12 @@ formativeModelFit <- sem(
   estimator = "MLR")
 
 formativeModelParameters <- parameterEstimates(formativeModelFit)
-
-formativeModelParameters
 ```
 
 Here are the degrees of freedom:\index{structural equation modeling!degrees of freedom}
 
 ```{r}
-formativeModelFit
-```
-
-Here is a model diagram:
-
-```{r formativeModelUnderidentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Depiction of an Under-Identified Formative Model."}
-semPaths(
-  formativeModelFit,
-  what = "Std.all",
-  layout = "tree2",
-  edge.label.cex = 0.8)
+fitMeasures(formativeModelFit, "df")
 ```
 
 For a [formative model](#formativeConstruct) with 4 measures, the number of known values (14) is less than the number of parameters (19).\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
@@ -520,15 +357,8 @@ formativeModel2Fit <- sem(
   estimator = "MLR")
 
 formativeModel2Parameters <- parameterEstimates(formativeModel2Fit)
-formativeModel2Parameters
 
 fitMeasures(formativeModel2Fit, "df")
-
-semPaths(
-  formativeModel2Fit,
-  what = "Std.all",
-  layout = "tree2",
-  edge.label.cex = 0.8)
 ```
 
 Thus, [formative constructs](#formativeConstruct) are challenging to use in a SEM framework.\index{construct!formative}\index{structural equation modeling!model identification}
@@ -613,10 +443,6 @@ If the two variables are connected by only indirect pathways, it may be helpful 
 
 ## Correlation Matrix {#correlationMatrix-sem}
 
-```{r}
-cor(mydataSEM, use = "pairwise.complete.obs")
-```
-
 Here are correlation matrices of various types using the `cor.table()` function from the `petersenlab` package [@R-petersenlab]:\index{petersenlab package}
 
 ```{r}
@@ -643,43 +469,6 @@ measurementModel_syntax <- '
  #Factor loadings
  latentFactor =~ measure1 + measure2 + measure3
 '
-
-measurementModel_fullSyntax <- '
- #Factor loadings (free the factor loading of the first indicator)
- latentFactor =~ NA*measure1 + measure2 + measure3
- 
- #Fix latent mean to zero
- latentFactor ~ 0
- 
- #Fix latent variance to one
- latentFactor ~~ 1*latentFactor
-
- #Estimate covariances among latent variables (not applicable because there is only one latent variable)
- 
- #Estimate residual variances of manifest variables
- measure1 ~~ measure1
- measure2 ~~ measure2
- measure3 ~~ measure3
- 
- #Free intercepts of manifest variables
- measure1 ~ int1*1
- measure2 ~ int2*1
- measure3 ~ int3*1
-'
-```
-
-#### Summary of Model Features {#measurementModelSummary-sem}
-
-```{r}
-summary(measurementModel_syntax)
-summary(measurementModel_fullSyntax)
-```
-
-#### Model Syntax in Table Form: {#measurementModelTabular-sem}
-
-```{r}
-lavaanify(measurementModel_syntax)
-lavaanify(measurementModel_fullSyntax)
 ```
 
 ### Fit the model {#measurementModelFit-sem}
@@ -691,12 +480,6 @@ measurementModelFit <- cfa(
   missing = "ML",
   estimator = "MLR",
   std.lv = TRUE)
-
-measurementModelFit_full <- lavaan(
-  measurementModel_fullSyntax,
-  data = mydataSEM,
-  missing = "ML",
-  estimator = "MLR")
 ```
 
 ### Display summary output {#measurementModelOutput-sem}
@@ -731,56 +514,7 @@ Thus, the loadings of this measurement model would be consistent with a [reflect
 In terms of interpretation, all three indicators loaded positively on the latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.\index{structural equation modeling!measurement model}\index{structural equation modeling!factor loading}
 However, one of the estimated observed variances is negative, so the model is not able to be estimated accurately.
 Thus, we would need to make additional adjustments in order to estimate the model.
-
-```{r}
-summary(
-  measurementModelFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  measurementModelFit_full,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-### Estimates of model fit {#measurementModelFitCriteria-sem}
-
-You can extract specific fit indices using the following syntax:\index{structural equation modeling!fit index}
-
-```{r}
-fitMeasures(
-  measurementModelFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
-    "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
-```
-
 Because the model is just-identified, many fit statistics are not able to be estimated.\index{structural equation modeling!model identification}
-
-### Residuals {#measurementModelResiduals-sem}
-
-```{r}
-residuals(measurementModelFit, type = "cor")
-```
-
-### Modification indices {#measurementModelModIndices-sem}
-
-```{r}
-modificationindices(measurementModelFit, sort. = TRUE)
-```
-
-### Factor scores {#measurementModelFactorScores-sem}
-
-```{r}
-measurementModelFit_factorScores <- lavPredict(measurementModelFit)
-```
 
 ### Internal Consistency Reliability {#measurementModelReliability-sem}
 
@@ -789,18 +523,6 @@ measurementModelFit_factorScores <- lavPredict(measurementModelFit)
 ```{r}
 compRelSEM(measurementModelFit)
 AVE(measurementModelFit)
-```
-
-### Path diagram {#measurementModelPathDiagram-sem}
-
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
-
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Measurement Model."}
-semPaths(
-  measurementModelFit,
-  what = "Std.all",
-  layout = "tree2",
-  edge.label.cex = 2)
 ```
 
 ## Confirmatory Factor Analysis (CFA) {#cfaExample-sem}
@@ -819,57 +541,12 @@ cfaModel_syntax <- '
  textual =~ x4 + x5 + x6
  speed   =~ x7 + x8 + x9
 '
-
-cfaModel_fullSyntax <- '
- #Factor loadings (free the factor loading of the first indicator)
- visual  =~ NA*x1 + x2 + x3
- textual =~ NA*x4 + x5 + x6
- speed   =~ NA*x7 + x8 + x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one
- visual ~~ 1*visual
- textual ~~ 1*textual
- speed ~~ 1*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Free intercepts of manifest variables
- x1 ~ int1*1
- x2 ~ int2*1
- x3 ~ int3*1
- x4 ~ int4*1
- x5 ~ int5*1
- x6 ~ int6*1
- x7 ~ int7*1
- x8 ~ int8*1
- x9 ~ int9*1
-'
 ```
 
 #### Model Syntax in Table Form: {#cfaModelTabular-sem}
 
 ```{r}
 lavaanify(cfaModel_syntax)
-lavaanify(cfaModel_fullSyntax)
 ```
 
 ### Fit the model {#cfaModelFit-sem}
@@ -881,12 +558,6 @@ cfaModelFit <- cfa(
   missing = "ML",
   estimator = "MLR",
   std.lv = TRUE)
-
-cfaModelFit_full <- lavaan(
-  cfaModel_fullSyntax,
-  data = HolzingerSwineford1939,
-  missing = "ML",
-  estimator = "MLR")
 ```
 
 ### Display summary output {#cfaModelOutput-sem}
@@ -898,12 +569,6 @@ In terms of interpretation, all indicators load positively on their respective l
 ```{r}
 summary(
   cfaModelFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModelFit_full,
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
@@ -944,12 +609,6 @@ Rather, it is generally advised to consider modification indices in light of the
 modificationindices(cfaModelFit, sort. = TRUE)
 ```
 
-### Factor scores {#cfaModelFactorScores-sem}
-
-```{r}
-cfaModelFit_factorScores <- lavPredict(cfaModelFit)
-```
-
 ### Internal Consistency Reliability {#cfaModelReliability-sem}
 
 [Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
@@ -957,18 +616,6 @@ cfaModelFit_factorScores <- lavPredict(cfaModelFit)
 ```{r}
 compRelSEM(cfaModelFit)
 AVE(cfaModelFit)
-```
-
-### Path Diagram {#cfaModelPathDiagram-sem}
-
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
-
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model."}
-semPaths(
-  cfaModelFit,
-  what = "Std.all",
-  layout = "tree2",
-  edge.label.cex = 0.8)
 ```
 
 ### Modify model based on modification indices {#cfaModelModification-sem}
@@ -987,50 +634,6 @@ cfaModel2_syntax <- '
  visual  =~ x1 + x2 + x3 + x9
  speed   =~ x7 + x8 + x9
 '
-
-cfaModel2_fullSyntax <- '
- #Factor loadings (free the factor loading of the first indicator)
- textual =~ NA*x4 + x5 + x6
- visual  =~ NA*x1 + x2 + x3 + x9
- speed   =~ NA*x7 + x8 + x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one
- visual ~~ 1*visual
- textual ~~ 1*textual
- speed ~~ 1*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Free intercepts of manifest variables
- x1 ~ int1*1
- x2 ~ int2*1
- x3 ~ int3*1
- x4 ~ int4*1
- x5 ~ int5*1
- x6 ~ int6*1
- x7 ~ int7*1
- x8 ~ int8*1
- x9 ~ int9*1
-'
 ```
 
 #### Fit the model {#cfaModelModifiedFit-sem}
@@ -1042,12 +645,6 @@ cfaModel2Fit <- cfa(
   missing = "ML",
   estimator = "MLR",
   std.lv = TRUE)
-
-cfaModel2Fit_full <- lavaan(
-  cfaModel2_fullSyntax,
-  data = HolzingerSwineford1939,
-  missing = "ML",
-  estimator = "MLR")
 ```
 
 #### Display summary output {#cfaModelModifiedOutput-sem}
@@ -1055,12 +652,6 @@ cfaModel2Fit_full <- lavaan(
 ```{r}
 summary(
   cfaModel2Fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModel2Fit_full,
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
@@ -1081,24 +672,6 @@ fitMeasures(
     "baseline.chisq","baseline.df","baseline.pvalue",
     "rmsea", "cfi", "tli", "srmr",
     "rmsea.robust", "cfi.robust", "tli.robust"))
-```
-
-#### Residuals {#cfaModelModifiedResiduals-sem}
-
-```{r}
-residuals(cfaModel2Fit, type = "cor")
-```
-
-#### Path diagram {#cfaModelModifiedPathDiagram-sem}
-
-Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
-
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Modified Confirmatory Factor Analysis Model."}
-semPaths(
-  cfaModel2Fit,
-  what = "Std.all",
-  layout = "tree2",
-  edge.label.cex = 0.8)
 ```
 
 #### Compare model fit {#nestedModelComparison-sem}
@@ -1182,69 +755,6 @@ semModel_syntax <- '
  y4 ~~ y8
  y6 ~~ y8
 '
-
-semModel_fullSyntax <- '
- #Measurement model factor loadings (free the factor loading of the first indicator)
- ind60 =~ NA*x1 + x2 + x3
- dem60 =~ NA*y1 + y2 + y3 + y4
- dem65 =~ NA*y5 + y6 + y7 + y8
-
- #Regression paths
- dem60 ~ ind60
- dem65 ~ ind60 + dem60
- 
- #Covariances among residual variances (correlated errors)
- y1 ~~ y5
- y2 ~~ y4 + y6
- y3 ~~ y7
- y4 ~~ y8
- y6 ~~ y8
- 
- #Fix latent means to zero
- ind60 ~ 0
- dem60 ~ 0
- dem65 ~ 0
- 
- #Fix latent variances to one
- ind60 ~~ 1*ind60
- dem60 ~~ 1*dem60
- dem65 ~~ 1*dem65
- 
- #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- y1 ~~ y1
- y2 ~~ y2
- y3 ~~ y3
- y4 ~~ y4
- y5 ~~ y5
- y6 ~~ y6
- y7 ~~ y7
- y8 ~~ y8
- 
- #Free intercepts of manifest variables
- x1 ~ intx1*1
- x2 ~ intx2*1
- x3 ~ intx3*1
- y1 ~ inty1*1
- y2 ~ inty2*1
- y3 ~ inty3*1
- y4 ~ inty4*1
- y5 ~ inty5*1
- y6 ~ inty6*1
- y7 ~ inty7*1
- y8 ~ inty8*1
-'
-```
-
-#### Model Syntax in Table Form: {#semModelTabular-sem}
-
-```{r}
-lavaanify(semModel_syntax)
-lavaanify(semModel_fullSyntax)
 ```
 
 ### Fit the model {#semModelFit-sem}
@@ -1256,12 +766,6 @@ semModelFit <- sem(
   missing = "ML",
   estimator = "MLR",
   std.lv = TRUE)
-
-semModelFit_full <- lavaan(
-  semModel_fullSyntax,
-  data = PoliticalDemocracy,
-  missing = "ML",
-  estimator = "MLR")
 ```
 
 ### Display summary output {#semModelOutput-sem}
@@ -1295,15 +799,11 @@ summary(
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
-
-summary(
-  semModelFit_full,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
 ```
 
 ### Estimates of model fit {#semModelFitCriteria-sem}
+
+You can extract specific fit indices using the following syntax:\index{structural equation modeling!fit index}
 
 ```{r}
 fitMeasures(
@@ -1327,12 +827,6 @@ residuals(semModelFit, type = "cor")
 
 ```{r}
 modificationindices(semModelFit, sort. = TRUE)
-```
-
-### Factor scores {#semModelFactorScores-sem}
-
-```{r}
-semModelFit_factorScores <- lavPredict(semModelFit)
 ```
 
 ### Internal Consistency Reliability {#semModelReliability-sem}
