@@ -606,31 +606,7 @@ vars <- c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 
 Before conducting a [factor analysis](#factorAnalysis), it is important examine descriptive statistics and correlations among variables.\index{correlation}
 
-### Descriptive Statistics {#descriptiveStats-factorAnalysis}
-
-```{r, eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
-paged_table(psych::describe(HolzingerSwineford1939[,vars]))
-```
-
-```{r, eval = knitr::is_latex_output(), echo = knitr::is_latex_output()}
-kable(psych::describe(HolzingerSwineford1939[,vars]),
-      format = "latex",
-      booktabs = TRUE) %>%
-  kable_styling(latex_options = "scale_down")
-```
-
-```{r, eval = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm")), echo = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm"))}
-kable(psych::describe(HolzingerSwineford1939[,vars]),
-      booktabs = TRUE)
-```
-
 ### Correlations {#correlations-factorAnalysis}
-
-```{r}
-cor(
-  HolzingerSwineford1939[,vars],
-  use = "pairwise.complete.obs")
-```
 
 Here are correlation matrices of various types using the `cor.table()` from the `petersenlab` package [@R-petersenlab]:\index{petersenlab package}\index{correlation}
 
@@ -722,8 +698,6 @@ Very simple structure (VSS) plots were generated using the `psych` package [@R-p
 
 The output also provides additional criteria by which to determine the optimal number of factors, each for which lower values are better, including the Velicer minimum average partial (MAP) test, the Bayesian information criterion (BIC), the sample size-adjusted BIC (SABIC), and the root mean square error of approximation (RMSEA).\index{very simple structure plot}
 
-###### Orthogonal (Varimax) rotation {#orthogonal-vss}
-
 In the example with orthogonal rotation below, the VSS criterion is highest with 3 or 4 factors.\index{very simple structure plot}\index{orthogonal rotation}
 A three-factor solution is supported by the lowest BIC, whereas a four-factor solution is supported by the lowest SABIC.\index{very simple structure plot}\index{orthogonal rotation}
 
@@ -745,298 +719,11 @@ nfactors(
   fm = "ml")
 ```
 
-###### Oblique (Oblimin) rotation {#oblique-vss}
-
-In the example with oblique rotation below, the VSS criterion is highest with 3 factors.\index{very simple structure plot}\index{oblique rotation}
-A three-factor solution is supported by the lowest BIC.\index{very simple structure plot}\index{oblique rotation}
-
-A VSS plot is in Figure \@ref(fig:vssOblique).\index{very simple structure plot}\index{oblique rotation}
-
-```{r vssOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."}
-vss(
-  HolzingerSwineford1939[,vars],
-  rotate = "oblimin",
-  fm = "ml")
-```
-
-Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOblique).\index{very simple structure plot}\index{oblique rotation}
-
-```{r vssComplexOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Oblique Rotation in Exploratory Factor Analysis."}
-nfactors(
-  HolzingerSwineford1939[,vars],
-  rotate = "oblimin",
-  fm = "ml")
-```
-
-###### No rotation {#noRotation-vss}
-
-In the example with no rotation below, the VSS criterion is highest with 3 or 4 factors.\index{very simple structure plot}
-A three-factor solution is supported by the lowest BIC, whereas a four-factor solution is supported by the lowest SABIC.\index{very simple structure plot}
-
-A VSS plot is in Figure \@ref(fig:vssUnrotated).\index{very simple structure plot}
-
-```{r vssUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."}
-nfactors(
-  HolzingerSwineford1939[,vars],
-  rotate = "none",
-  fm = "ml")
-```
-
-Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexUnrotated).\index{very simple structure plot}
-
-```{r vssComplexUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With no Rotation in Exploratory Factor Analysis."}
-nfactors(
-  HolzingerSwineford1939[,vars],
-  rotate = "none",
-  fm = "ml")
-```
-
 #### Run factor analysis {#runFactorAnalysis-efa}
 
 [Exploratory factor analysis](#efa) (EFA) models were fit using the `fa()` function of the `psych` package [@R-psych] and the `sem()` and `efa()` functions of the `lavaan` package [@R-lavaan].\index{factor analysis!exploratory}
 
 ##### Orthogonal (Varimax) rotation {#orthogonal-efa}
-
-###### `psych` {#orthogonalPsych-efa}
-
-Fit a different model with each number of possible factors:\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r}
-efa1factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 1,
-  rotate = "varimax",
-  fm = "ml")
-
-efa2factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 2,
-  rotate = "varimax",
-  fm = "ml")
-
-efa3factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 3,
-  rotate = "varimax",
-  fm = "ml")
-
-efa4factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 4,
-  rotate = "varimax",
-  fm = "ml")
-
-efa5factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 5,
-  rotate = "varimax",
-  fm = "ml")
-
-efa6factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 6,
-  rotate = "varimax",
-  fm = "ml")
-
-efa7factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 7,
-  rotate = "varimax",
-  fm = "ml")
-
-efa8factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 8,
-  rotate = "varimax",
-  fm = "ml")
-
-efa9factorOrthogonal <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 9,
-  rotate = "varimax",
-  fm = "ml")
-```
-
-###### `lavaan` {#orthogonalLavaan-efa}
-
-Model syntax is specified below:\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r}
-efa1factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa2factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa3factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 + 
- efa("efa1")*f3 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa4factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 + 
- efa("efa1")*f3 + 
- efa("efa1")*f4 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa5factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 + 
- efa("efa1")*f3 + 
- efa("efa1")*f4 + 
- efa("efa1")*f5 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa6factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 + 
- efa("efa1")*f3 + 
- efa("efa1")*f4 + 
- efa("efa1")*f5 + 
- efa("efa1")*f6 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa7factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 + 
- efa("efa1")*f3 + 
- efa("efa1")*f4 + 
- efa("efa1")*f5 + 
- efa("efa1")*f6 + 
- efa("efa1")*f7 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa8factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 + 
- efa("efa1")*f3 + 
- efa("efa1")*f4 + 
- efa("efa1")*f5 + 
- efa("efa1")*f6 + 
- efa("efa1")*f7 + 
- efa("efa1")*f8 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-
-efa9factorLavaan_syntax <- '
- # EFA Factor Loadings
- efa("efa1")*f1 + 
- efa("efa1")*f2 + 
- efa("efa1")*f3 + 
- efa("efa1")*f4 + 
- efa("efa1")*f5 + 
- efa("efa1")*f6 + 
- efa("efa1")*f7 + 
- efa("efa1")*f8 + 
- efa("efa1")*f9 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-'
-```
-
-The models are fitted below:\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r}
-efa1factorOrthogonalLavaan_fit <- sem(
-  efa1factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa2factorOrthogonalLavaan_fit <- sem(
-  efa2factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa3factorOrthogonalLavaan_fit <- sem(
-  efa3factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa4factorOrthogonalLavaan_fit <- sem(
-  efa4factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa5factorOrthogonalLavaan_fit <- sem(
-  efa5factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa6factorOrthogonalLavaan_fit <- sem(
-  efa6factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa7factorOrthogonalLavaan_fit <- sem(
-  efa7factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa8factorOrthogonalLavaan_fit <- sem(
-  efa8factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-
-efa9factorOrthogonalLavaan_fit <- sem(
-  efa9factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "varimax",
-  meanstructure = TRUE,
-  rotation.args = list(orthogonal = TRUE))
-```
 
 The `efa()` wrapper can fit multiple [EFA](#efa) models models in one function call:\index{factor analysis!exploratory}\index{orthogonal rotation}
 
@@ -1115,73 +802,97 @@ efaFactor5OrthogonalLavaan_fit <- efa(
   rotation.args = list(orthogonal = TRUE),
   output = "lavaan"
 )
+
+efaFactor6Lavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efaFactor7Lavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 + 
+ efa("efa1")*f7 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efaFactor8Lavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 + 
+ efa("efa1")*f7 + 
+ efa("efa1")*f8 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efaFactor9Lavaan_syntax <- '
+ # EFA Factor Loadings
+ efa("efa1")*f1 + 
+ efa("efa1")*f2 + 
+ efa("efa1")*f3 + 
+ efa("efa1")*f4 + 
+ efa("efa1")*f5 + 
+ efa("efa1")*f6 + 
+ efa("efa1")*f7 + 
+ efa("efa1")*f8 + 
+ efa("efa1")*f9 =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+
+efaFactor6OrthogonalLavaan_fit <- sem(
+  efaFactor6Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
+
+efaFactor7OrthogonalLavaan_fit <- sem(
+  efaFactor7Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
+
+efaFactor8OrthogonalLavaan_fit <- sem(
+  efaFactor8Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
+
+efaFactor9OrthogonalLavaan_fit <- sem(
+  efaFactor9Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE))
 ```
 
 ##### Oblique (Oblimin) rotation {#oblique-efa}
 
-###### `psych` {#obliquePsych-efa}
-
-Fit a different model with each number of possible factors:\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r}
-efa1factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 1,
-  rotate = "oblimin",
-  fm = "ml")
-
-efa2factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 2,
-  rotate = "oblimin",
-  fm = "ml")
-
-efa3factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 3,
-  rotate = "oblimin",
-  fm = "ml")
-
-efa4factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 4,
-  rotate = "oblimin",
-  fm = "ml")
-
-efa5factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 5,
-  rotate = "oblimin",
-  fm = "ml")
-
-efa6factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 6,
-  rotate = "oblimin",
-  fm = "ml")
-
-efa7factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 7,
-  rotate = "oblimin",
-  fm = "ml")
-
-efa8factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 8,
-  rotate = "oblimin",
-  fm = "ml") #no convergence
-
-efa9factorOblique <- fa(
-  r = HolzingerSwineford1939[,vars],
-  nfactors = 9,
-  rotate = "oblimin",
-  fm = "ml")
-```
-
-###### `lavaan` {#obliqueLavaan-efa}
-
-The models are fitted below:\index{factor analysis!exploratory}\index{oblique rotation}
+The `efa()` wrapper can fit multiple [EFA](#efa) models models in one function call:\index{factor analysis!exploratory}\index{oblique rotation}
 
 ```{r}
 # settings to mimic Mplus
@@ -1195,100 +906,6 @@ mplusRotationArgs <-
     std.ov = TRUE, # row standard = correlation
     geomin.epsilon = 0.0001)
 
-efa1factorObliqueLavaan_fit <- sem(
-  efa1factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa2factorObliqueLavaan_fit <- sem(
-  efa2factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa3factorObliqueLavaan_fit <- sem(
-  efa3factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa4factorObliqueLavaan_fit <- sem(
-  efa4factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa5factorObliqueLavaan_fit <- sem(
-  efa5factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa6factorObliqueLavaan_fit <- sem(
-  efa6factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa7factorObliqueLavaan_fit <- sem(
-  efa7factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa8factorObliqueLavaan_fit <- sem(
-  efa8factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-
-efa9factorObliqueLavaan_fit <- sem(
-  efa9factorLavaan_syntax,
-  data = HolzingerSwineford1939,
-  information = "observed",
-  missing = "ML",
-  estimator = "MLR",
-  rotation = "geomin",
-  meanstructure = TRUE,
-  rotation.args = mplusRotationArgs)
-```
-
-The `efa()` wrapper can fit multiple [EFA](#efa) models models in one function call:\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r}
 efaObliqueLavaan_fit <- efa(
   data = HolzingerSwineford1939,
   ov.names = vars,
@@ -1363,29 +980,51 @@ efaFactor5ObliqueLavaan_fit <- efa(
   rotation.args = mplusRotationArgs,
   output = "lavaan"
 )
+
+efaFactor6ObliqueLavaan_fit <- sem(
+  efaFactor6Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs)
+
+efaFactor7ObliqueLavaan_fit <- sem(
+  efaFactor7Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs)
+
+efaFactor8ObliqueLavaan_fit <- sem(
+  efaFactor8Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs)
+
+efaFactor9ObliqueLavaan_fit <- sem(
+  efaFactor9Lavaan_syntax,
+  data = HolzingerSwineford1939,
+  information = "observed",
+  missing = "ML",
+  estimator = "MLR",
+  rotation = "varimax",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs)
 ```
 
 #### Factor Loadings {#factorLoadings-efa}
 
 ##### Orthogonal (Varimax) rotation {#orthogonalFactorLoadings-efa}
-
-###### `psych` {#orthogonalFactorLoadingsPsych-efa}
-
-The factor loadings and summaries of the model results are below:\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r}
-efa1factorOrthogonal
-efa2factorOrthogonal
-efa3factorOrthogonal
-efa4factorOrthogonal
-efa5factorOrthogonal
-efa6factorOrthogonal
-efa7factorOrthogonal
-efa8factorOrthogonal
-efa9factorOrthogonal
-```
-
-###### `lavaan` {#orthogonalFactorLoadingsLavaan-efa}
 
 The factor loadings and summaries of the model results are below:\index{factor analysis!exploratory}\index{orthogonal rotation}
 
@@ -1394,79 +1033,13 @@ summary(
   efaOrthogonalLavaan_fit)
 
 summary(
-  efa1factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa2factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa3factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa4factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa5factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa6factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa7factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa8factorOrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa9factorOrthogonalLavaan_fit,
+  efaFactor3OrthogonalLavaan_fit,
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
 ```
 
 ##### Oblique (Oblimin) rotation {#obliqueFactorLoadings-efa}
-
-###### `psych` {#obliqueFactorLoadingsPsych-efa}
-
-The factor loadings and summaries of the model results are below:\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r}
-efa1factorOblique
-efa2factorOblique
-efa3factorOblique
-efa4factorOblique
-efa5factorOblique
-efa6factorOblique
-efa7factorOblique
-efa8factorOblique
-efa9factorOblique
-```
-
-###### `lavaan` {#obliqueFactorLoadingsLavaan-efa}
 
 The factor loadings and summaries of the model results are below:\index{factor analysis!exploratory}\index{oblique rotation}
 
@@ -1475,55 +1048,7 @@ summary(
   efaObliqueLavaan_fit)
 
 summary(
-  efa1factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa2factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa3factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa4factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa5factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa6factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa7factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa8factorObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  efa9factorObliqueLavaan_fit,
+  efaFactor3ObliqueLavaan_fit,
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
@@ -1567,38 +1092,18 @@ fitMeasures(
 
 ##### Orthogonal (Varimax) rotation {#factorScoresOrthogonal-efa}
 
-###### `psych` {#factorScoresOrthogonalPsych-efa}
-
 \index{factor analysis!exploratory}\index{orthogonal rotation}
 
 ```{r}
-fa3Orthogonal <- efa3factorOrthogonal$scores
-```
-
-###### `lavaan` {#factorScoresOrthogonalLavaan-efa}
-
-\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r}
-fa3Orthogonal_lavaan <- lavPredict(efa3factorOrthogonalLavaan_fit)
+fa3Orthogonal_lavaan <- lavPredict(efaFactor3OrthogonalLavaan_fit)
 ```
 
 ##### Oblique (Oblimin) rotation {#factorScoresOblique-efa}
 
-###### `psych` {#factorScoresObliquePsych-efa}
-
 \index{factor analysis!exploratory}\index{oblique rotation}
 
 ```{r}
-fa3Oblique <- efa3factorOblique$scores
-```
-
-###### `lavaan` {#factorScoresObliqueLavaan-efa}
-
-\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r}
-fa3Oblique_lavaan <- lavPredict(efa3factorObliqueLavaan_fit)
+fa3Oblique_lavaan <- lavPredict(efaFactor3ObliqueLavaan_fit)
 ```
 
 #### Plots {#factorScoresPlots-efa}
@@ -1609,53 +1114,44 @@ Correlation plots were generated using the `corrplot` package [@R-corrplot].\ind
 
 ##### Orthogonal (Varimax) rotation {#factorScoresPlotsOrthogonal-efa}
 
-A scree plot from a model with orthogonal rotation is in Figure \@ref(fig:screePlotPsychOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}
-
-```{r screePlotPsychOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: psych."}
-plot(
-  efa9factorOrthogonal$e.values,
-  xlab = "Factor",
-  ylab = "Eigevalue")
-```
-
 A scree plot based on factor loadings from `lavaan` is in Figure \@ref(fig:screePlotLavaanOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}
 When the factors are uncorrelated (orthogonal rotation), the eigenvalue for a factor is calculated as the sum of squared factor loadings across all items, as described in Section \@ref(pca).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}\index{eigenvalue}
 
-```{r screePlotLavaanOrthogonal, out.width = "100%", fig.align = "center", class.source = "fold-hide", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: lavaan."}
+```{r screePlotLavaanOrthogonal, out.width = "100%", fig.align = "center", echo = FALSE, fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis"}
 param1Factor <- parameterEstimates(
-  efa1factorOrthogonalLavaan_fit,
+  efaFactor1OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param2Factor <- parameterEstimates(
-  efa2factorOrthogonalLavaan_fit,
+  efaFactor2OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param3Factor <- parameterEstimates(
-  efa3factorOrthogonalLavaan_fit,
+  efaFactor3OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param4Factor <- parameterEstimates(
-  efa4factorOrthogonalLavaan_fit,
+  efaFactor4OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param5Factor <- parameterEstimates(
-  efa5factorOrthogonalLavaan_fit,
+  efaFactor5OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param6Factor <- parameterEstimates(
-  efa6factorOrthogonalLavaan_fit,
+  efaFactor6OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param7Factor <- parameterEstimates(
-  efa7factorOrthogonalLavaan_fit,
+  efaFactor7OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param8Factor <- parameterEstimates(
-  efa8factorOrthogonalLavaan_fit,
+  efaFactor8OrthogonalLavaan_fit,
   standardized = TRUE)
 
 param9Factor <- parameterEstimates(
-  efa9factorOrthogonalLavaan_fit,
+  efaFactor9OrthogonalLavaan_fit,
   standardized = TRUE)
 
 factorNames <- c("f1","f2","f3","f4","f5","f6","f7","f8","f9")
@@ -1780,81 +1276,55 @@ plot(
   eigenData$Factor,
   eigenData$Eigenvalue,
   xlab = "Factor",
-  ylab = "Eigevalue")
-```
-
-A biplot is in Figure \@ref(fig:biplotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
-
-```{r biplotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Exploratory Factor Analysis."}
-biplot(efa2factorOrthogonal)
-abline(h = 0, v = 0, lty = 2)
+  ylab = "Eigevalue",
+  type = "b")
 ```
 
 A factor plot is in Figure \@ref(fig:factorPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}
 
 ```{r factorPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
-factor.plot(efa3factorOrthogonal, cut = 0.5)
-```
-
-A factor diagram is in Figure \@ref(fig:factorDiagramOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r factorDiagramOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Orthogonal Rotation in Exploratory Factor Analysis."}
-fa.diagram(efa3factorOrthogonal, digits = 2)
+factor.plot(fa3Orthogonal_lavaan, cut = 0.5)
 ```
 
 A pairs panel plot is in Figure \@ref(fig:pairsPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
 
 ```{r pairsPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
-pairs.panels(fa3Orthogonal)
+pairs.panels(fa3Orthogonal_lavaan)
 ```
 
 A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
 
 ```{r correlationPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
 corrplot(cor(
-  fa3Orthogonal,
+  fa3Orthogonal_lavaan,
   use = "pairwise.complete.obs"),
   col = c("gray","black"))
 ```
 
 ##### Oblique (Oblimin) rotation {#factorScoresPlotsOblique-efa}
 
-A biplot is in Figure \@ref(fig:biplotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
-
-```{r biplotOblique, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Oblique Rotation in Exploratory Factor Analysis."}
-biplot(efa2factorOblique)
-```
-
 A factor plot is in Figure \@ref(fig:factorPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}
 
 ```{r factorPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Oblique Rotation in Exploratory Factor Analysis."}
-factor.plot(efa3factorOblique, cut = 0.5)
-```
-
-A factor diagram is in Figure \@ref(fig:factorDiagramOblique).\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r factorDiagramOblique, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Oblique Rotation in Exploratory Factor Analysis."}
-fa.diagram(efa3factorOblique, digits = 2)
+factor.plot(fa3Oblique_lavaan, cut = 0.5)
 ```
 
 A pairs panel plot is in Figure \@ref(fig:pairsPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
 
 ```{r pairsPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Oblique Rotation in Exploratory Factor Analysis."}
-pairs.panels(fa3Oblique)
+pairs.panels(fa3Oblique_lavaan)
 ```
 
 A correlation plot is in Figure \@ref(fig:correlationPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
 
 ```{r correlationPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."}
 corrplot(cor(
-  fa3Oblique,
+  fa3Oblique_lavaan,
   use = "pairwise.complete.obs"),
   col = c("gray","black"))
 ```
 
 ### Confirmatory Factor Analysis (CFA) {#cfaExamples}
-
-I introduced [confirmatory factor analysis](#cfa) (CFA) models in Section \@ref(cfa-sem) in the chapter on [structural equation models](#sem).\index{factor analysis!confirmatory}
 
 The [CFA](#cfa) models were fit in the `lavaan` package [@R-lavaan].\index{factor analysis!confirmatory}
 The examples were adapted from the `lavaan` documentation:\index{factor analysis!confirmatory} https://lavaan.ugent.be/tutorial/cfa.html (archived at https://perma.cc/GKY3-9YE4)
@@ -1868,57 +1338,6 @@ cfaModel_syntax <- '
  textual =~ x4 + x5 + x6
  speed   =~ x7 + x8 + x9
 '
-
-cfaModel_fullSyntax <- '
- #Factor loadings (free the factor loading of the first indicator)
- visual  =~ NA*x1 + x2 + x3
- textual =~ NA*x4 + x5 + x6
- speed   =~ NA*x7 + x8 + x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one
- visual ~~ 1*visual
- textual ~~ 1*textual
- speed ~~ 1*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Free intercepts of manifest variables
- x1 ~ int1*1
- x2 ~ int2*1
- x3 ~ int3*1
- x4 ~ int4*1
- x5 ~ int5*1
- x6 ~ int6*1
- x7 ~ int7*1
- x8 ~ int8*1
- x9 ~ int9*1
-'
-```
-
-##### Model syntax in table form: {#tabular-cfa}
-
-```{r}
-lavaanify(cfaModel_syntax)
-lavaanify(cfaModel_fullSyntax)
 ```
 
 #### Fit the model {#fit-cfa}
@@ -1930,12 +1349,6 @@ cfaModelFit <- cfa(
   missing = "ML",
   estimator = "MLR",
   std.lv = TRUE)
-
-cfaModelFit_full <- lavaan(
-  cfaModel_fullSyntax,
-  data = HolzingerSwineford1939,
-  missing = "ML",
-  estimator = "MLR")
 ```
 
 #### Display summary output {#output-cfa}
@@ -1943,12 +1356,6 @@ cfaModelFit_full <- lavaan(
 ```{r}
 summary(
   cfaModelFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModelFit_full,
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
@@ -1993,13 +1400,13 @@ As would be expected, the factor scores from the [CFA](#cfa) model are highly co
 ```{r}
 cor.test(
   x = cfaFactorScores[,"visual"],
-  y = fa3Orthogonal[,"ML3"])
+  y = fa3Orthogonal_lavaan[,"f1"])
 cor.test(
   x = cfaFactorScores[,"textual"],
-  y = fa3Orthogonal[,"ML1"])
+  y = fa3Orthogonal_lavaan[,"f2"])
 cor.test(
   x = cfaFactorScores[,"speed"],
-  y = fa3Orthogonal[,"ML2"])
+  y = fa3Orthogonal_lavaan[,"f3"])
 ```
 
 #### Internal Consistency Reliability {#reliability-cfa}
@@ -2023,201 +1430,11 @@ semPaths(
   edge.label.cex = 1.3)
 ```
 
-#### Class Examples {#classExamples-cfa}
+#### Examples {#classExamples-cfa}
 
 ```{r}
 standardDeviations <- rep(1, 6)
 sampleSize <- 300
-```
-
-##### Model 1 {#classExamplesModel1-cfa}
-
-###### Create the covariance matrix {#classExamplesModel1covarianceMatrix-cfa}
-
-```{r}
-correlationMatrixModel1 <- matrix(.6, nrow = 6, ncol = 6)
-diag(correlationMatrixModel1) <- 1
-rownames(correlationMatrixModel1) <- colnames(correlationMatrixModel1) <- 
-  paste("V", 1:6, sep = "")
-
-covarianceMatrixModel1 <- psych::cor2cov(
-  correlationMatrixModel1,
-  sigma = standardDeviations)
-covarianceMatrixModel1
-```
-
-###### Specify the model {#classExamplesModel1syntax-cfa}
-
-```{r}
-cfaModel1 <- '
- #Factor loadings
- f1 =~ V1 + V2 + V3 + V4 + V5 + V6
-'
-```
-
-###### Model syntax in table form: {#classExamplesModel1tabular-cfa}
-
-```{r}
-lavaanify(cfaModel1)
-```
-
-###### Fit the model {#classExamplesModel1fit-cfa}
-
-```{r}
-cfaModel1Fit <- cfa(
-  cfaModel1,
-  sample.cov = covarianceMatrixModel1,
-  sample.nobs = sampleSize,
-  estimator = "ML",
-  std.lv = TRUE)
-```
-
-###### Display summary output {#classExamplesModel1output-cfa}
-
-```{r}
-summary(
-  cfaModel1Fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-###### Estimates of model fit {#classExamplesModel1fitCriteria-cfa}
-
-```{r}
-fitMeasures(
-  cfaModel1Fit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
-```
-
-###### Residuals {#classExamplesModel1residuals-cfa}
-
-```{r}
-residuals(cfaModel1Fit, type = "cor")
-```
-
-###### Modification indices {#classExamplesModel1modIndices-cfa}
-
-```{r}
-modificationindices(cfaModel1Fit, sort. = TRUE)
-```
-
-###### Internal Consistency Reliability {#classExamplesModel1reliability-cfa}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{factor analysis!confirmatory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(cfaModel1Fit)
-AVE(cfaModel1Fit)
-```
-
-###### Path diagram {#classExamplesModel1pathDiagram-cfa}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass1).\index{factor analysis!confirmatory}
-
-```{r cfaPathDiagramClass1, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 1 Diagram."}
-semPaths(
-  cfaModel1Fit,
-  what = "std",
-  layout = "tree2",
-  edge.label.cex = 1.5)
-```
-
-##### Model 2 {#classExamplesModel2-cfa}
-
-###### Create the covariance matrix {#classExamplesModel2covarianceMatrix-cfa}
-
-```{r}
-correlationMatrixModel2 <- matrix(0, nrow = 6, ncol = 6)
-diag(correlationMatrixModel2) <- 1
-rownames(correlationMatrixModel2) <- colnames(correlationMatrixModel2) <- 
-  paste("V", 1:6, sep = "")
-
-covarianceMatrixModel2 <- psych::cor2cov(
-  correlationMatrixModel2,
-  sigma = standardDeviations)
-covarianceMatrixModel2
-```
-
-###### Specify the model {#classExamplesModel2syntax-cfa}
-
-```{r}
-cfaModel2 <- '
- #Factor loadings
- f1 =~ V1 + V2 + V3 + V4 + V5 + V6
-'
-```
-
-###### Model syntax in table form: {#classExamplesModel2tabular-cfa}
-
-```{r}
-lavaanify(cfaModel2)
-```
-
-###### Fit the model {#classExamplesModel2fit-cfa}
-
-```{r}
-cfaModel2Fit <- cfa(
-  cfaModel2,
-  sample.cov = covarianceMatrixModel2,
-  sample.nobs = sampleSize,
-  estimator = "ML",
-  std.lv = TRUE)
-```
-
-###### Display summary output {#classExamplesModel2output-cfa}
-
-```{r}
-summary(
-  cfaModel2Fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-###### Estimates of model fit {#classExamplesModel2fitCriteria-cfa}
-
-```{r}
-fitMeasures(
-  cfaModel2Fit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
-```
-
-###### Residuals {#classExamplesModel2residuals-cfa}
-
-```{r}
-residuals(cfaModel2Fit, type = "cor")
-```
-
-###### Modification indices {#classExamplesModel2modIndices-cfa}
-
-```{r}
-modificationindices(cfaModel1Fit, sort. = TRUE)
-```
-
-###### Internal Consistency Reliability {#classExamplesModel2reliability-cfa}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{factor analysis!confirmatory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(cfaModel2Fit)
-AVE(cfaModel2Fit)
-```
-
-###### Path diagram {#classExamplesModel2pathDiagram-cfa}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass2).\index{factor analysis!confirmatory}
-
-```{r cfaPathDiagramClass2, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 2 Diagram."}
-semPaths(
-  cfaModel2Fit,
-  what = "std",
-  layout = "tree2",
-  edge.label.cex = 1.5)
 ```
 
 ##### Model 3 {#classExamplesModel3-cfa}
@@ -2258,13 +1475,6 @@ cfaModel3B <- '
 '
 ```
 
-###### Model syntax in table form: {#classExamplesModel3tabular-cfa}
-
-```{r}
-lavaanify(cfaModel3A)
-lavaanify(cfaModel3B)
-```
-
 ###### Fit the model {#classExamplesModel3fit-cfa}
 
 ```{r}
@@ -2272,31 +1482,17 @@ cfaModel3AFit <- cfa(
   cfaModel3A,
   sample.cov = covarianceMatrixModel3,
   sample.nobs = sampleSize,
-  estimator = "ML",
+  missing = "ML",
+  estimator = "MLR",
   std.lv = TRUE)
 
 cfaModel3BFit <- cfa(
   cfaModel3B,
   sample.cov = covarianceMatrixModel3,
   sample.nobs = sampleSize,
-  estimator = "ML",
+  missing = "ML",
+  estimator = "MLR",
   std.lv = TRUE)
-```
-
-###### Display summary output {#classExamplesModel3output-cfa}
-
-```{r}
-summary(
-  cfaModel3AFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModel3BFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
 ```
 
 ###### Estimates of model fit {#classExamplesModel3fitCriteria-cfa}
@@ -2324,51 +1520,26 @@ Significant chi-square difference test indicates that two-factor model fits sign
 anova(cfaModel3BFit, cfaModel3AFit)
 ```
 
-###### Residuals {#classExamplesModel3residuals-cfa}
+###### Equivalently fitting models {#classExamplesModel4equivalent-cfa}
+
+Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].\index{factor analysis!confirmatory}
+Path diagrams of equivalent models are below.\index{factor analysis!confirmatory}
 
 ```{r}
-residuals(cfaModel3AFit, type = "cor")
-residuals(cfaModel3BFit, type = "cor")
+dagModel <- lavaanToGraph(cfaModel3BFit)
+
+par(mfrow = c(4, 4))
 ```
 
-###### Modification indices {#classExamplesModel3modIndices-cfa}
-
-```{r}
-modificationindices(cfaModel3AFit, sort. = TRUE)
-modificationindices(cfaModel3BFit, sort. = TRUE)
+```{r cfaModel4equivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to Confirmatory Factor Analysis Model."}
+lapply(equivalentDAGs(dagModel, n = 16), plot)
 ```
 
-###### Internal Consistency Reliability {#classExamplesModel3reliability-cfa}
+#### Higher-Order Factor Model {#higherOrderModel}
 
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{factor analysis!confirmatory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(cfaModel3AFit)
-compRelSEM(cfaModel3BFit)
-
-AVE(cfaModel3AFit)
-AVE(cfaModel3BFit)
-```
-
-###### Path diagram {#classExamplesModel3pathDiagram-cfa}
-
-Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaPathDiagramClass3A) and \@ref(fig:cfaPathDiagramClass3B).\index{factor analysis!confirmatory}
-
-```{r cfaPathDiagramClass3A, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 3a Diagram."}
-semPaths(cfaModel3AFit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.5)
-```
-
-```{r cfaPathDiagramClass3B, out.width = "100%", fig.cap = "Confirmatory Factor Analysis Model 3b Diagram."}
-semPaths(cfaModel3BFit,
-         what = "std",
-         layout = "tree2",
-         edge.label.cex = 1.5)
-```
-
-##### Model 4 {#model4Examples}
+A higher-order (or hierarchical) factor model is a model in which a higher-order latent factor is thought to influence lower-order latent factors.\index{factor analysis!higher-order}
+Higher-order factor models are depicted in Figures \@ref(fig:factorAnalysis6) and \@ref(fig:cfaModel4CFit).\index{factor analysis!higher-order}
+An analysis example of a higher-order factor model is below.\index{factor analysis!higher-order}
 
 ##### Create the covariance matrix {#classExamplesModel4-cfa}
 
@@ -2391,24 +1562,9 @@ covarianceMatrixModel4 <- psych::cor2cov(
 covarianceMatrixModel4
 ```
 
-###### Specify the model {#classExamplesModel4syntax-cfa}
+##### Specify the model {#classExamplesModel4syntax-cfa}
 
 ```{r}
-cfaModel4A <- '
- #Factor loadings
- f1 =~ V1 + V2 + V3
- f2 =~ V4 + V5 + V6
-'
-
-cfaModel4B <- '
- #Factor loadings
- f1 =~ V1 + V2 + V3
- f2 =~ V4 + V5 + V6
- 
- #Regression path
- f2 ~ f1
-'
-
 cfaModel4C <- '
  #Factor loadings
  f1 =~ V1 + V2 + V3
@@ -2417,209 +1573,19 @@ cfaModel4C <- '
  #Higher-order factor
  A1 = ~ fixloading*f1 + fixloading*f2
 '
-
-cfaModel4D <- '
- #Factor loadings
- f1 =~ V1 + V2 + V3 + V4 + V5 + V6
- 
- #Correlated residuals/errors
- V1 ~~ fixcor*V2
- V2 ~~ fixcor*V3
- V1 ~~ fixcor*V3
- V4 ~~ fixcor*V5
- V5 ~~ fixcor*V6
- V4 ~~ fixcor*V6
-'
-```
-
-###### Model syntax in table form: {#classExamplesModel4tabular-cfa}
-
-```{r}
-lavaanify(cfaModel4A)
-lavaanify(cfaModel4B)
-lavaanify(cfaModel4C)
-lavaanify(cfaModel4D)
 ```
 
 ###### Fit the model {#classExamplesModel4fit-cfa}
 
 ```{r}
-cfaModel4AFit <- cfa(
-  cfaModel4A,
-  sample.cov = covarianceMatrixModel4,
-  sample.nobs = sampleSize,
-  estimator = "ML",
-  std.lv = TRUE)
-
-cfaModel4BFit <- cfa(
-  cfaModel4B,
-  sample.cov = covarianceMatrixModel4,
-  sample.nobs = sampleSize,
-  estimator = "ML",
-  std.lv = TRUE)
-
 cfaModel4CFit <- cfa(
   cfaModel4C,
   sample.cov = covarianceMatrixModel4,
   sample.nobs = sampleSize,
-  estimator = "ML",
-  std.lv = TRUE)
-
-cfaModel4DFit <- cfa(
-  cfaModel4D,
-  sample.cov = covarianceMatrixModel4,
-  sample.nobs = sampleSize,
-  estimator = "ML",
+  missing = "ML",
+  estimator = "MLR",
   std.lv = TRUE)
 ```
-
-###### Display summary output {#classExamplesModel4output-cfa}
-
-```{r}
-summary(
-  cfaModel4AFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModel4BFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModel4CFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModel4DFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-###### Estimates of model fit {#classExamplesModel4fitCriteria-cfa}
-
-```{r}
-fitMeasures(
-  cfaModel4AFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
-
-fitMeasures(
-  cfaModel4BFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
-
-fitMeasures(
-  cfaModel4CFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
-
-fitMeasures(
-  cfaModel4DFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
-```
-
-###### Residuals {#classExamplesModel4residuals-cfa}
-
-```{r}
-residuals(cfaModel4AFit, type = "cor")
-residuals(cfaModel4BFit, type = "cor")
-residuals(cfaModel4CFit, type = "cor")
-residuals(cfaModel4DFit, type = "cor")
-```
-
-###### Modification indices {#classExamplesModel4modIndices-cfa}
-
-```{r}
-modificationindices(cfaModel4AFit, sort. = TRUE)
-modificationindices(cfaModel4BFit, sort. = TRUE)
-modificationindices(cfaModel4CFit, sort. = TRUE)
-modificationindices(cfaModel4DFit, sort. = TRUE)
-```
-
-###### Internal Consistency Reliability {#classExamplesModel4reliability-cfa}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{factor analysis!confirmatory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(cfaModel4AFit)
-compRelSEM(cfaModel4BFit)
-compRelSEM(cfaModel4CFit)
-compRelSEM(cfaModel4CFit, higher = "A1")
-compRelSEM(cfaModel4DFit)
-
-AVE(cfaModel4AFit)
-AVE(cfaModel4BFit)
-AVE(cfaModel4CFit)
-AVE(cfaModel4DFit)
-```
-
-###### Path diagram {#classExamplesModel4pathDiagram-cfa}
-
-Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaModel4AFit), \@ref(fig:cfaModel4BFit), \@ref(fig:cfaModel4CFit), and \@ref(fig:cfaModel4DFit).\index{factor analysis!confirmatory}
-
-```{r cfaModel4AFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4a Diagram."}
-semPaths(
-  cfaModel4AFit,
-  what = "std",
-  layout = "tree2",
-  edge.label.cex = 1.3)
-```
-
-```{r cfaModel4BFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4b Diagram."}
-semPaths(
-  cfaModel4BFit,
-  what = "std",
-  layout = "tree2",
-  edge.label.cex = 1.3)
-```
-
-```{r cfaModel4CFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4c Diagram."}
-semPaths(
-  cfaModel4CFit,
-  what = "std",
-  layout = "tree2",
-  edge.label.cex = 1.3)
-```
-
-```{r cfaModel4DFit, fig.height = 6, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4d Diagram."}
-semPaths(
-  cfaModel4DFit,
-  what = "std",
-  layout = "tree2",
-  edge.label.cex = 1.3)
-```
-
-###### Equivalently fitting models {#classExamplesModel4equivalent-cfa}
-
-Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].\index{factor analysis!confirmatory}
-Path diagrams of equivalent models are below.\index{factor analysis!confirmatory}
-
-```{r}
-dagModel <- lavaanToGraph(cfaModel4AFit)
-
-par(mfrow = c(4, 4))
-```
-
-```{r cfaModel4equivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to Confirmatory Factor Analysis Model 4."}
-lapply(equivalentDAGs(dagModel, n = 16), plot)
-```
-
-#### Higher-Order Factor Model {#higherOrderModel}
-
-A higher-order (or hierarchical) factor model is a model in which a higher-order latent factor is thought to influence lower-order latent factors.\index{factor analysis!higher-order}
-Higher-order factor models are depicted in Figures \@ref(fig:factorAnalysis6) and \@ref(fig:cfaModel4CFit).\index{factor analysis!higher-order}
-An analysis example of a higher-order factor model is provided in Section \@ref(model4Examples).\index{factor analysis!higher-order}
 
 #### Bifactor Model {#bifactorModel}
 
@@ -2655,117 +1621,6 @@ cfaModelBifactor_syntax <- '
    QW1 + QW2 + QW3 + 
    QM1 + QM2 + QM3
 '
-
-cfaModelBifactor_fullSyntax <- '
- #Factor loadings (free the factor loading of the first indicator)
- Verbal =~ 
-   NA*VO1 + VO2 + VO3 + 
-   VW1 + VW2 + VW3 + 
-   VM1 + VM2 + VM3
- Spatial =~ 
-   NA*SO1 + SO2 + SO3 + 
-   SW1 + SW2 + SW3 + 
-   SM1 + SM2 + SM3
- Quant =~ 
-   NA*QO1 + QO2 + QO3 + 
-   QW1 + QW2 + QW3 + 
-   QM1 + QM2 + QM3
- g =~ 
-   NA*VO1 + VO2 + VO3 + 
-   VW1 + VW2 + VW3 + 
-   VM1 + VM2 + VM3 +
-   SO1 + SO2 + SO3 + 
-   SW1 + SW2 + SW3 + 
-   SM1 + SM2 + SM3 +
-   QO1 + QO2 + QO3 + 
-   QW1 + QW2 + QW3 + 
-   QM1 + QM2 + QM3
-   
- #Fix latent means to zero
- Verbal ~ 0
- Spatial ~ 0
- Quant ~ 0
- g ~ 0
- 
- #Fix latent variances to one
- Verbal ~~ 1*Verbal
- Spatial ~~ 1*Spatial
- Quant ~~ 1*Quant
- g ~~ 1*g
- 
- #Fix covariances among latent variables at zero
- Verbal ~~ 0*Spatial
- Verbal ~~ 0*Quant
- Spatial ~~ 0*Quant
- g ~~ 0*Verbal
- g ~~ 0*Spatial
- g ~~ 0*Quant
- 
- #Estimate residual variances of manifest variables
- VO1 ~~ VO1
- VO2 ~~ VO2
- VO3 ~~ VO3
- VW1 ~~ VW1
- VW2 ~~ VW2
- VW3 ~~ VW3
- VM1 ~~ VM1
- VM2 ~~ VM2
- VM3 ~~ VM3
- SO1 ~~ SO1
- SO2 ~~ SO2
- SO3 ~~ SO3
- SW1 ~~ SW1
- SW2 ~~ SW2
- SW3 ~~ SW3
- SM1 ~~ SM1
- SM2 ~~ SM2
- SM3 ~~ SM3
- QO1 ~~ QO1
- QO2 ~~ QO2
- QO3 ~~ QO3
- QW1 ~~ QW1
- QW2 ~~ QW2
- QW3 ~~ QW3
- QM1 ~~ QM1
- QM2 ~~ QM2
- QM3 ~~ QM3
- 
- #Free intercepts of manifest variables
- VO1 ~ intVO1*1
- VO2 ~ intVO2*1
- VO3 ~ intVO3*1
- VW1 ~ intVW1*1
- VW2 ~ intVW2*1
- VW3 ~ intVW3*1
- VM1 ~ intVM1*1
- VM2 ~ intVM2*1
- VM3 ~ intVM3*1
- SO1 ~ intSO1*1
- SO2 ~ intSO2*1
- SO3 ~ intSO3*1
- SW1 ~ intSW1*1
- SW2 ~ intSW2*1
- SW3 ~ intSW3*1
- SM1 ~ intSM1*1
- SM2 ~ intSM2*1
- SM3 ~ intSM3*1
- QO1 ~ intQO1*1
- QO2 ~ intQO2*1
- QO3 ~ intQO3*1
- QW1 ~ intQW1*1
- QW2 ~ intQW2*1
- QW3 ~ intQW3*1
- QM1 ~ intQM1*1
- QM2 ~ intQM2*1
- QM3 ~ intQM3*1
-'
-```
-
-##### Model syntax in table form: {#bifactorModelTabular}
-
-```{r}
-lavaanify(cfaModelBifactor_syntax)
-lavaanify(cfaModelBifactor_fullSyntax)
 ```
 
 ##### Fit the model {#bifactorModelFit}
@@ -2778,12 +1633,6 @@ cfaModelBifactorFit <- cfa(
   std.lv = TRUE,
   missing = "ML",
   estimator = "MLR")
-
-cfaModelBifactorFit_full <- lavaan(
-  cfaModelBifactor_fullSyntax,
-  data = MTMM_data,
-  missing = "ML",
-  estimator = "MLR")
 ```
 
 ##### Display summary output
@@ -2794,47 +1643,6 @@ summary(
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
-
-summary(
-  cfaModelBifactorFit_full,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-##### Estimates of model fit {#bifactorModelFitCriteria}
-
-```{r}
-fitMeasures(
-  cfaModelBifactorFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
-    "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
-```
-
-##### Residuals {#bifactorModelResiduals}
-
-```{r}
-residuals(cfaModelBifactorFit, type = "cor")
-```
-
-##### Modification indices {#bifactorModelModIndices}
-
-```{r}
-modificationindices(cfaModelBifactorFit, sort. = TRUE)
-```
-
-##### Internal Consistency Reliability {#bifactorModelReliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{factor analysis!bifactor}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(cfaModelBifactorFit)
-AVE(cfaModelBifactorFit)
 ```
 
 ##### Path diagram {#bifactorModelPathDiagram}
@@ -2848,21 +1656,6 @@ semPaths(
   layout = "tree3",
   bifactor = c("g"),
   edge.label.cex = 1.3)
-```
-
-##### Equivalently fitting models {#bifactorModelEquivalent}
-
-Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].\index{factor analysis!bifactor}
-Path diagrams of equivalent models are below.\index{factor analysis!bifactor}
-
-```{r}
-dagModelBifactor <- lavaanToGraph(cfaModelBifactorFit)
-
-par(mfrow = c(2, 2))
-```
-
-```{r bifactorModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Bifactor Model."}
-lapply(equivalentDAGs(dagModelBifactor, n = 4), plot)
 ```
 
 #### Multitrait-Multimethod Model (MTMM) {#mtmmCFA}
@@ -2903,141 +1696,6 @@ cfaModelMTMM_syntax <- '
    SM1 + SM2 + SM3 + 
    QM1 + QM2 + QM3
 '
-
-cfaModelMTMM_fullSyntax <- '
- #Factor loadings (free the factor loading of the first indicator)
- g =~ NA*Verbal + Spatial + Quant
- Verbal =~ 
-  NA*VO1 + VO2 + VO3 + 
-  VW1 + VW2 + VW3 + 
-  VM1 + VM2 + VM3
- Spatial =~ 
-  NA*SO1 + SO2 + SO3 + 
-  SW1 + SW2 + SW3 + 
-  SM1 + SM2 + SM3
- Quant =~ 
-  NA*QO1 + QO2 + QO3 + 
-  QW1 + QW2 + QW3 + 
-  QM1 + QM2 + QM3
- Oral =~ 
-  NA*VO1 + VO2 + VO3 + 
-  SO1 + SO2 + SO3 + 
-  QO1 + QO2 + QO3
- Written =~ 
-  NA*VW1 + VW2 + VW3 + 
-  SW1 + SW2 + SW3 + 
-  QW1 + QW2 + QW3
- Manipulative =~ 
-  NA*VM1 + VM2 + VM3 + 
-  SM1 + SM2 + SM3 + 
-  QM1 + QM2 + QM3
-  
- #Fix latent means to zero
- Verbal ~ 0
- Spatial ~ 0
- Quant ~ 0
- Oral ~ 0
- Written ~ 0
- Manipulative ~ 0
- g ~ 0
- 
- #Fix latent variances to one
- Verbal ~~ 1*Verbal
- Spatial ~~ 1*Spatial
- Quant ~~ 1*Quant
- Oral ~~ 1*Oral
- Written ~~ 1*Written
- Manipulative ~~ 1*Manipulative
- g ~~ 1*g
- 
- #Fix covariances among latent variables at zero
- Verbal ~~ 0*Spatial
- Verbal ~~ 0*Quant
- Verbal ~~ 0*Oral
- Verbal ~~ 0*Written
- Verbal ~~ 0*Manipulative
- Spatial ~~ 0*Quant
- Spatial ~~ 0*Oral
- Spatial ~~ 0*Written
- Spatial ~~ 0*Manipulative
- Quant ~~ 0*Oral
- Quant ~~ 0*Written
- Quant ~~ 0*Manipulative
- Oral ~~ 0*Written
- Oral ~~ 0*Manipulative
- Written ~~ 0*Manipulative
- g ~~ 0*Verbal
- g ~~ 0*Spatial
- g ~~ 0*Quant
- g ~~ 0*Oral
- g ~~ 0*Written
- g ~~ 0*Manipulative
- 
- #Estimate residual variances of manifest variables
- VO1 ~~ VO1
- VO2 ~~ VO2
- VO3 ~~ VO3
- VW1 ~~ VW1
- VW2 ~~ VW2
- VW3 ~~ VW3
- VM1 ~~ VM1
- VM2 ~~ VM2
- VM3 ~~ VM3
- SO1 ~~ SO1
- SO2 ~~ SO2
- SO3 ~~ SO3
- SW1 ~~ SW1
- SW2 ~~ SW2
- SW3 ~~ SW3
- SM1 ~~ SM1
- SM2 ~~ SM2
- SM3 ~~ SM3
- QO1 ~~ QO1
- QO2 ~~ QO2
- QO3 ~~ QO3
- QW1 ~~ QW1
- QW2 ~~ QW2
- QW3 ~~ QW3
- QM1 ~~ QM1
- QM2 ~~ QM2
- QM3 ~~ QM3
- 
- #Free intercepts of manifest variables
- VO1 ~ intVO1*1
- VO2 ~ intVO2*1
- VO3 ~ intVO3*1
- VW1 ~ intVW1*1
- VW2 ~ intVW2*1
- VW3 ~ intVW3*1
- VM1 ~ intVM1*1
- VM2 ~ intVM2*1
- VM3 ~ intVM3*1
- SO1 ~ intSO1*1
- SO2 ~ intSO2*1
- SO3 ~ intSO3*1
- SW1 ~ intSW1*1
- SW2 ~ intSW2*1
- SW3 ~ intSW3*1
- SM1 ~ intSM1*1
- SM2 ~ intSM2*1
- SM3 ~ intSM3*1
- QO1 ~ intQO1*1
- QO2 ~ intQO2*1
- QO3 ~ intQO3*1
- QW1 ~ intQW1*1
- QW2 ~ intQW2*1
- QW3 ~ intQW3*1
- QM1 ~ intQM1*1
- QM2 ~ intQM2*1
- QM3 ~ intQM3*1
-'
-```
-
-##### Model syntax in table form: {#mtmmCFAtabular}
-
-```{r}
-lavaanify(cfaModelMTMM_syntax)
-lavaanify(cfaModelMTMM_fullSyntax)
 ```
 
 ##### Fit the model {#mtmmCFAfit}
@@ -3050,65 +1708,6 @@ cfaModelMTMMFit <- cfa(
   std.lv = TRUE,
   missing = "ML",
   estimator = "MLR")
-
-cfaModelMTMMFit_full <- lavaan(
-  cfaModelMTMM_fullSyntax,
-  data = MTMM_data,
-  missing = "ML",
-  estimator = "MLR")
-```
-
-##### Display summary output {#mtmmCFAoutput}
-
-```{r}
-summary(
-  cfaModelMTMMFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-
-summary(
-  cfaModelMTMMFit_full,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-##### Estimates of model fit {#mtmmCFAfitCriteria}
-
-```{r}
-fitMeasures(
-  cfaModelMTMMFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
-    "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
-```
-
-##### Residuals {#mtmmCFAresiduals}
-
-```{r}
-residuals(cfaModelMTMMFit, type = "cor")
-```
-
-##### Modification indices {#mtmmCFAmodIndices}
-
-```{r}
-modificationindices(cfaModelMTMMFit, sort. = TRUE)
-```
-
-##### Internal Consistency Reliability {#mtmmCFAreliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{multitrait-multimethod matrix}\index{factor analysis!confirmatory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(cfaModelMTMMFit)
-compRelSEM(cfaModelMTMMFit, higher = "g")
-
-AVE(cfaModelMTMMFit)
 ```
 
 ##### Path diagram {#mtmmCFApathDiagram}
@@ -3124,24 +1723,6 @@ semPaths(
   edge.label.cex = 1.3)
 ```
 
-##### Equivalently fitting models {#mtmmCFAequivalent}
-
-Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].\index{multitrait-multimethod matrix}\index{factor analysis!confirmatory}
-Path diagrams of equivalently fitting models are below.\index{multitrait-multimethod matrix}\index{factor analysis!confirmatory}
-
-```{r}
-dagModelMTMM <- lavaanToGraph(cfaModelMTMMFit)
-
-par(mfrow = c(2, 2))
-```
-
-```{r mtmmCFAequivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
-lapply(equivalentDAGs(
-  dagModelMTMM,
-  n = 4),
-  plot)
-```
-
 ### Exploratory Structural Equation Model (ESEM) {#esemModel}
 
 #### Example 1 {#esemModelExample1}
@@ -3153,10 +1734,10 @@ In this example, I use the factor loadings from the three-factor [EFA](#efa) mod
 
 ```{r}
 esem_loadings <- parameterEstimates(
-  efa3factorObliqueLavaan_fit,
+  efaFactor3ObliqueLavaan_fit,
   standardized = TRUE
 ) %>% 
-  dplyr::filter(efa == "efa1") %>% 
+  dplyr::filter(efa == "efa") %>% 
   dplyr::select(lhs, rhs, est) %>% 
   dplyr::rename(item = rhs, latent = lhs, loading = est)
 
@@ -3230,27 +1811,6 @@ A nested model comparison indicates that the [ESEM](#efa-cfa-esem) model fits si
 anova(cfaModelFit, esemModelFit)
 ```
 
-##### Residuals {#esemModelResiduals}
-
-```{r}
-residuals(esemModelFit, type = "cor")
-```
-
-##### Modification indices {#esemModelModIndices}
-
-```{r}
-modificationindices(esemModelFit, sort. = TRUE)
-```
-
-##### Internal Consistency Reliability {#esemModelReliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{structural equation modeling!exploratory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(esemModelFit)
-AVE(esemModelFit)
-```
-
 ##### Path diagram {#esemModelPathDiagram}
 
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram).\index{structural equation modeling!exploratory}
@@ -3261,24 +1821,6 @@ semPaths(
   what = "std",
   layout = "tree3",
   edge.label.cex = 1.3)
-```
-
-##### Equivalently fitting models {#esemModelEquivalent}
-
-Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].\index{structural equation modeling!exploratory}
-Path diagrams of equivalent models are below.\index{structural equation modeling!exploratory}
-
-```{r}
-dagModelESEM <- lavaanToGraph(esemModelFit)
-
-par(mfrow = c(2, 2))
-```
-
-```{r esemModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
-lapply(equivalentDAGs(
-  dagModelESEM,
-  n = 4),
-  plot)
 ```
 
 #### Example 2 {#esemModelExample2}
@@ -3302,12 +1844,6 @@ esem_syntax <- '
 '
 ```
 
-##### Model syntax in table form: {#esemModelTabular2}
-
-```{r}
-lavaanify(esem_syntax)
-```
-
 ##### Fit the model {#esemModelFit2}
 
 ```{r}
@@ -3317,51 +1853,6 @@ esem_fit <- sem(
   rotation = "geomin",
   missing = "ML",
   estimator = "MLR")
-```
-
-##### Display summary output {#esemOutput2}
-
-```{r}
-summary(
-  esem_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-##### Estimates of model fit {#esemModelFitCriteria2}
-
-```{r}
-fitMeasures(
-  esem_fit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
-    "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
-```
-
-##### Residuals {#esemModelResiduals2}
-
-```{r}
-residuals(esem_fit, type = "cor")
-```
-
-##### Modification indices {#esemModelModIndices2}
-
-```{r}
-modificationindices(esem_fit, sort. = TRUE)
-```
-
-##### Internal Consistency Reliability {#esemModelReliability2}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{structural equation modeling!exploratory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(esem_fit)
-AVE(esem_fit)
 ```
 
 ##### Path diagram {#esemModelPathDiagram2}
@@ -3374,24 +1865,6 @@ semPaths(
   what = "std",
   layout = "tree3",
   edge.label.cex = 1.3)
-```
-
-##### Equivalently fitting models {#esemModelEquivalent2}
-
-Markov equivalent directed acyclic graphs (DAGs) were depicted using the `dagitty` package [@R-dagitty].\index{structural equation modeling!exploratory}
-Path diagrams of equivalent models are below.\index{structural equation modeling!exploratory}
-
-```{r}
-dagModelESEM2 <- lavaanToGraph(esem_fit)
-
-par(mfrow = c(2, 2))
-```
-
-```{r esemModelEquivalent2, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
-lapply(equivalentDAGs(
-  dagModelESEM2,
-  n = 4),
-  plot)
 ```
 
 ## Principal Component Analysis (PCA) {#pcaAnalysis}
