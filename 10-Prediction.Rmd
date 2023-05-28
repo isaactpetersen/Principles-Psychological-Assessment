@@ -1474,7 +1474,7 @@ Predictive $R^2$ is described here:\index{predictive $R^2$} https://tomhopper.me
 Predictive $R^2$ penalizes [overfitting](#overfitting), unlike traditional $R^2$.\index{predictive $R^2$}\index{coefficient of determination}\index{over-fitting}
 Larger values indicate greater accuracy.\index{predictive $R^2$}
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 #predictive residual sum of squares (PRESS)
 PRESS <- function(linear.model) {
   #calculate the predictive residuals
@@ -1500,10 +1500,6 @@ predictiveRSquared <- function(predicted, actual){
   
   return(value)
 }
-```
-
-```{r}
-predictiveRSquared(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
 ```{r, include = FALSE}
@@ -1729,7 +1725,7 @@ val.prob(mydataSDT$predictedProbability, mydataSDT$disorder)
 
 This calibration plot was adapted from Darren Dahly's example here:\index{calibration!plot} https://darrendahly.github.io/post/homr/ (archived at https://perma.cc/6J3J-69G7)
 
-```{r, class.source = "fold-hide"}
+```{r, include = FALSE}
 g1 <- mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) %>%
   # Bin prediction into 10ths
   group_by(bin) %>%
@@ -1767,7 +1763,7 @@ g2 <- ggplot(mydataSDT, aes(x = predictedProbability)) +
 g <- arrangeGrob(g1, g2, respect = TRUE, heights = c(1, 0.25), ncol = 1)
 ```
 
-```{r calibrationPlot3, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = "Calibration Plot 3."}
+```{r calibrationPlot3, fig.height = 8, fig.width = 8, fig.align = "center", fig.cap = "Calibration Plot 3.", echo = FALSE}
 grid.arrange(g)
 ```
 
@@ -1864,7 +1860,7 @@ In this case, the 95% confidence interval of the observed value does not include
 
 (ref:calibrationContinuousOutcomeCaption) Calibration Plot for Predictions of a Continuous Outcome. The black diagonal line indicates the reference line with an intercept of zero and a slope of one. The white line is the best-fit line. The gray band is the 95% confidence interval of the observed value. The dashed black lines are the 95% prediction interval of the observed value. The predictions are not well calibrated because the 95% confidence interval of the intercept does not include zero (even though the 95% confidence interval of the slope includes one). The intercept from the best-fit line is positive, as shown in the regression equation. This is a case of underprediction, where the predicted values are consistently less than the observed values. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
-```{r calibrationContinuousOutcome, fig.height = 8, fig.width = 8, fig.align = "center", class.source = "fold-hide", fig.cap = "(ref:calibrationContinuousOutcomeCaption)"}
+```{r calibrationContinuousOutcome, fig.height = 8, fig.width = 8, fig.align = "center", echo = FALSE, fig.cap = "(ref:calibrationContinuousOutcomeCaption)"}
 #95 prediction interval based on linear model
 calibrationModel <- lm(
   continuousOutcome ~ testScore,
@@ -1921,7 +1917,7 @@ In this case, the 95% confidence interval of the observed value does not include
 
 (ref:calibrationContinuousOutcomeLOESSCaption) Calibration Plot for Predictions of a Continuous Outcome. The white line is the best-fit line based on a LOESS smoother. The gray band is the 95% confidence interval of the observed value. The dashed black lines are the 95% prediction interval of the observed value. The 95% confidence interval of the observed value does not include the reference line (i.e., the actual observed value) at lower levels of the predicted values, so the predictions are miscalibrated at lower levels of the predicted values.
 
-```{r calibrationContinuousOutcomeLOESS, fig.height = 8, fig.width = 8, fig.align = "center", class.source = "fold-hide", fig.cap = "(ref:calibrationContinuousOutcomeLOESSCaption)"}
+```{r calibrationContinuousOutcomeLOESS, fig.height = 8, fig.width = 8, fig.align = "center", echo = FALSE, fig.cap = "(ref:calibrationContinuousOutcomeLOESSCaption)"}
 #95 prediction interval based on LOESS model
 calibrationLoessModel <- loess.sd(
   x = mydataSDT$testScore,
