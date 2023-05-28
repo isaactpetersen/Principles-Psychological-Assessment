@@ -1143,6 +1143,13 @@ $$
 (\#eq:meanError)
 $$
 
+```{r, include = FALSE}
+meanError <- function(predicted, actual){
+  value <- mean(predicted - actual, na.rm = TRUE)
+  return(value)
+}
+```
+
 ##### Mean Absolute Error (MAE) {#meanAbsoluteError}
 
 Mean absolute error (MAE) is the mean of the absolute value of differences between the predicted and observed values across individuals, that is, the mean of the absolute value of errors.\index{mean absolute error}
@@ -1157,6 +1164,13 @@ $$
 \end{aligned}
 (\#eq:meanAbsoluteError)
 $$
+
+```{r, include = FALSE}
+meanAbsoluteError <- function(predicted, actual){
+  value <- mean(abs(predicted - actual), na.rm = TRUE)
+  return(value)
+}
+```
 
 ##### Mean Squared Error (MSE) {#meanSquaredError}
 
@@ -1174,6 +1188,13 @@ $$
 (\#eq:meanSquaredError)
 $$
 
+```{r, include = FALSE}
+meanSquaredError = function(predicted, actual){
+  value <- mean((predicted - actual)^2, na.rm = TRUE)
+  return(value)
+}
+```
+
 ##### Root Mean Squared Error (RMSE) {#rootMeanSquaredError}
 
 Root mean squared error (RMSE) is the square root of the mean of the square of the differences between the predicted and observed values across individuals, that is, the root mean squared value of errors.\index{root mean squared error}
@@ -1189,6 +1210,13 @@ $$
 \end{aligned}
 (\#eq:rootMeanSquaredError)
 $$
+
+```{r}
+rootMeanSquaredError = function(predicted, actual){
+  value <- sqrt(mean((predicted - actual)^2, na.rm = TRUE))
+  return(value)
+}
+```
 
 #### Scale-Independent Accuracy Estimates {#scaleIndependentAccuracy}
 
@@ -1218,6 +1246,19 @@ $$
 (\#eq:meanPercentageError)
 $$
 
+```{r, include = FALSE}
+meanPercentageError = function(predicted, actual, dropUndefined = FALSE){
+  percentageError <- 100 * (actual - predicted) / actual
+  
+  if(dropUndefined == TRUE){
+    percentageError[!is.finite(percentageError)] <- NA
+  }
+  
+  value <- mean(percentageError, na.rm = TRUE)
+  return(value)
+}
+```
+
 ##### Mean Absolute Percentage Error (MAPE) {#meanAbsolutePercentageError}
 
 Smaller mean absolute percentage error (MAPE) Values (closer to zero) reflect greater accuracy.\index{mean absolute percentage error}
@@ -1234,6 +1275,19 @@ $$
 (\#eq:meanAbsolutePercentageError)
 $$
 
+```{r, include = FALSE}
+meanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
+  percentageError <- 100 * (actual - predicted) / actual
+  
+  if(dropUndefined == TRUE){
+    percentageError[!is.finite(percentageError)] <- NA
+  }
+  
+  value <- mean(abs(percentageError), na.rm = TRUE)
+  return(value)
+}
+```
+
 ##### Symmetric Mean Absolute Percentage Error (sMAPE) {#symmetricMeanAbsolutePercentageError}
 
 Unlike MAPE, symmetric mean absolute percentage error (sMAPE) is symmetric because it equally weights underestimates and overestimates.\index{symmetric mean absolute percentage error}
@@ -1247,6 +1301,19 @@ $$
 \end{aligned}
 (\#eq:symmetricMeanAbsolutePercentageError)
 $$
+
+```{r, include = FALSE}
+symmetricMeanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
+  relativeError <- abs(predicted - actual)/(abs(predicted) + abs(actual))
+  
+  if(dropUndefined == TRUE){
+    relativeError[!is.finite(relativeError)] <- NA
+  }
+  
+  value <- 100 * mean(abs(relativeError), na.rm = TRUE)
+  return(value)
+}
+```
 
 ##### Mean Absolute Scaled Error (MASE) {#meanAbsoluteScaledErrro}
 
@@ -1274,6 +1341,19 @@ $$
 \end{aligned}
 (\#eq:meanAbsoluteScaledError)
 $$
+
+```{r, include = FALSE}
+meanAbsoluteScaledError <- function(predicted, actual){
+  mydata <- data.frame(na.omit(cbind(predicted, actual)))
+  
+  errors <- mydata$actual - mydata$predicted
+  scalingFactor <- mean(abs(mydata$actual - mean(mydata$actual)))
+  scaledErrors <- errors/scalingFactor
+  
+  value <- mean(abs(scaledErrors))
+  return(value)
+}
+```
 
 ##### Root Mean Squared Log Error {#accuracyRatio}
 
@@ -1311,6 +1391,20 @@ $$
 \end{aligned}
 (\#eq:rootMeanSquaredLogError)
 $$
+
+```{r, include = FALSE}
+rootMeanSquaredLogError <- function(predicted, actual, dropUndefined = FALSE){
+  logError <- log(predicted + 1) - log(actual + 1)
+  
+  if(dropUndefined == TRUE){
+    logError[!is.finite(logError)] <- NA
+  }
+  
+  value <- sqrt(mean(logError^2, na.rm = TRUE))
+  
+  return(value)
+}
+```
 
 RMSLE can be preferable when the scores have a wide range of values and are skewed.\index{root mean squared log error}
 RMSLE can help to reduce the impact of outliers.\index{root mean squared log error}
@@ -2036,6 +2130,14 @@ $$
 \end{aligned}
 (\#eq:sampleSize)
 $$
+
+```{r, include = FALSE}
+sampleSize <- function(TP, TN, FP, FN){
+  value <- TP + TN + FP + FN
+  
+  return(value)
+}
+```
 
 ### Selection Ratio (SR) {#selectionRatio}
 
