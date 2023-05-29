@@ -2007,13 +2007,59 @@ accuracyEstimatesAtCutoff <- accuracyAtCutoff(
 ```
 
 ```{r, echo = FALSE}
-accuracyEstimatesAtCutoff %>% 
-  t %>% 
-  round(., 2) %>% 
+accuracyEstimatesAtCutoffTable <- accuracyEstimatesAtCutoff %>% 
+  t() %>% 
+  round(., 2) %>%
+  data.frame
+
+accuracyEstimatesAtCutoffTable$label <- row.names(accuracyEstimatesAtCutoffTable)
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "TP")] <- "True Positives"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "TN")] <- "True Negatives"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "FP")] <- "False Positives"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "FN")] <- "False Negatives"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "SR")] <- "Selection Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "BR")] <- "Base Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "percentAccuracy")] <- "Percent Accuracy"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "percentAccuracyByChance")] <- "Percent Accuracy By Chance"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "percentAccuracyPredictingFromBaseRate")] <- "Percent Accuracy Predicting from the Base Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "RIOC")] <- "Relative Improvement Over Chance"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "relativeImprovementOverPredictingFromBaseRate")] <- "Relative Improvement Over Predicting from the Base Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "SN")] <- "Sensitivity"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "SP")] <- "Specificity"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "TPrate")] <- "True Positive Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "TNrate")] <- "True Negative Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "FNrate")] <- "False Negative Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "FPrate")] <- "False Positive Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "HR")] <- "Hit Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "FAR")] <- "False Alarm Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "PPV")] <- "Positive Predictive Value"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "NPV")] <- "Negative Predictive Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "FDR")] <- "False Discovery Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "FOR")] <- "False Omission Rate"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "youdenJ")] <- "Youden's J index"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "balancedAccuracy")] <- "Balanced Accuracy"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "f1Score")] <- "F-1 score"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "mcc")] <- "Matthews Correlation Coefficient"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "diagnosticOddsRatio")] <- "Diagnostic Odds Ratio"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "positiveLikelihoodRatio")] <- "Positive Likelihood Ratio"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "negativeLikelihoodRatio")] <- "Negative Likelihood Ratio"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "dPrimeSDT")] <- "d-Prime from SDT"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "betaSDT")] <- "Beta from SDT"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "cSDT")] <- "c from SDT"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "aSDT")] <- "a from SDT"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "bSDT")] <- "b from SDT"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "differenceBetweenPredictedAndObserved")] <- "Difference Between Predicted And Observed Value"
+accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "informationGain")] <- "Information Gain"
+
+row.names(accuracyEstimatesAtCutoffTable) <- NULL
+names(accuracyEstimatesAtCutoffTable) <- c("value","index")
+accuracyEstimatesAtCutoffTable <- accuracyEstimatesAtCutoffTable %>% 
+  select(index, value)
+
+accuracyEstimatesAtCutoffTable %>%
   kable(.,
   format = "latex",
-  booktabs = TRUE) %>%
-  kable_styling(latex_options = "scale_down")
+  booktabs = TRUE)
 ```
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}

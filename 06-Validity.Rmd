@@ -1112,9 +1112,10 @@ Researchers recommend accounting for measurement [reliability](#reliability), to
 #### Reliability of Predictor {#measurementErrorEffects-reliabilityPredictor}
 
 ```{r}
-cor.test(
+cor(
   x = mydataValidity$predictorWithMeasurementErrorT1,
-  y = mydataValidity$predictorWithMeasurementErrorT2)
+  y = mydataValidity$predictorWithMeasurementErrorT2,
+  use = "pairwise.complete.obs")
 ```
 
 ```{r, include = FALSE}
@@ -1127,9 +1128,10 @@ reliabilityPredictor_sim <-
 #### Reliability of Criterion {#measurementErrorEffects-reliabilityCriterion}
 
 ```{r}
-cor.test(
+cor(
   x = mydataValidity$criterionWithMeasurementErrorT1,
-  y = mydataValidity$criterionWithMeasurementErrorT2)
+  y = mydataValidity$criterionWithMeasurementErrorT2,
+  use = "pairwise.complete.obs")
 ```
 
 ```{r, include = FALSE}
@@ -1142,9 +1144,10 @@ reliabilityCriterion_sim <-
 #### True Association {#measurementErrorEffects-trueAssociation}
 
 ```{r}
-cor.test(
+cor(
   x = mydataValidity$predictor,
-  y = mydataValidity$criterion)
+  y = mydataValidity$criterion,
+  use = "pairwise.complete.obs")
 ```
 
 ```{r, include = FALSE}
@@ -1157,9 +1160,10 @@ trueAssociation_sim <-
 #### Observed Association (After Adding Measurement Error) {#measurementErrorEffects-observedAssociation}
 
 ```{r}
-cor.test(
+cor(
   x = mydataValidity$predictorWithMeasurementErrorT1,
-  y = mydataValidity$criterionWithMeasurementErrorT1)
+  y = mydataValidity$criterionWithMeasurementErrorT1,
+  use = "pairwise.complete.obs")
 ```
 
 ```{r, include = FALSE}
@@ -1265,9 +1269,10 @@ The disattenuation of an observed correlation due to [measurement error](#measur
 For instance, consider the following observed association:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
 
 ```{r}
-cor.test(
+cor(
   x = mydataValidity$predictorObservedSEM,
-  y = mydataValidity$criterionObservedSEM)$estimate
+  y = mydataValidity$criterionObservedSEM,
+  use = "pairwise.complete.obs")
 ```
 
 The observed association can be estimated in [structural equation modeling](#sem) in the `lavaan` package [@R-lavaan] using the following syntax:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
@@ -1285,10 +1290,16 @@ observedSEM_fit <- sem(
   observedSEM_syntax,
   data = mydataValidity,
   missing = "ML")
+```
 
+```{r, echo = FALSE}
 parameterEstimates(
   observedSEM_fit,
-  standardized = TRUE)
+  standardized = TRUE) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ```{r, include = FALSE}
@@ -1300,15 +1311,6 @@ observedBeta <- observedSEM_parameters[
   which(observedSEM_parameters$lhs == "criterionObservedSEM" &
           observedSEM_parameters$rhs == "predictorObservedSEM"),
   "std.all"]
-```
-
-A path diagram of the observed association is depicted in Figure \@ref(fig:observedSEM).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
-
-```{r observedSEM, out.width = "100%", fig.align = "center", fig.cap = "Observed Association, as Depicted in a Structural Equation Model."}
-semPaths(observedSEM_fit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 2)
 ```
 
 Now consider when we account for the degree of [unreliability](#measurementError) of each measure.\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
@@ -1337,10 +1339,16 @@ disattenuationSEM_fit <- sem(
   disattenuationSEM_syntax,
   data = mydataValidity,
   missing = "ML")
+```
 
+```{r, echo = FALSE}
 parameterEstimates(
   disattenuationSEM_fit,
-  standardized = TRUE)
+  standardized = TRUE) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ```{r, include = FALSE}
@@ -1352,16 +1360,6 @@ trueBeta <- disattenuationSEM_parameters[
   which(disattenuationSEM_parameters$lhs == "criterionLatent" &
           disattenuationSEM_parameters$rhs == "predictorLatent"),
   "std.all"]
-```
-
-A path diagram of the true association is depicted in Figure \@ref(fig:disattenuationSEM).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
-
-```{r disattenuationSEM, out.width = "100%", fig.align = "center", fig.cap = "Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model."}
-semPaths(
-  disattenuationSEM_fit,
-  what = "Std.all",
-  layout = "tree2",
-  edge.label.cex = 2)
 ```
 
 The observed association ($\beta = `r apa(observedBeta, 2)`$) becomes $\beta = `r apa(trueBeta, 2)`$ when it is disattenuated for [measurement error](#measurementError).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
