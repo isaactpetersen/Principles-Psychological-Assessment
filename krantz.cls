@@ -1092,7 +1092,7 @@
 \newlength\SectionTOCWidth
 \SectionTOCWidth2.3em
 \newcommand*\l@section{\@dottedtocline{1}{1.5em}{2.3em}}
-\newcommand*\l@subsection{\@dottedtocline{2}{3.8em}{3.2em}}
+\newcommand*\l@subsection{\@dottedtocline{2}{5.0em}{3.2em}}
 \newcommand*\l@subsubsection{\@dottedtocline{3}{7.0em}{4.1em}}
 \newlength\subsection@toc@skip
 \subsection@toc@skip\section@toc@skip
