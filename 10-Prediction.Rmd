@@ -1107,12 +1107,20 @@ Aspects of accuracy at a particular cutoff are described in Section \@ref(cutoff
 The `petersenlab` package [@R-petersenlab] contains the `accuracyOverall()` function that estimates the prediction accuracy across cutoffs.\index{petersenlab package}\index{cutoff}
 
 ```{r}
-accuracyOverall(
+accuracyEstimates <- accuracyOverall(
   predicted = mydataSDT$testScore, 
   actual = mydataSDT$disorder,
-  dropUndefined = TRUE) %>%
+  dropUndefined = TRUE)
+```
+
+```{r, echo = FALSE}
+accuracyEstimates  %>%
   t %>%
-  round(., 2)
+  round(., 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ### General Prediction Accuracy {#generalPredictionAccuracy}
@@ -1992,12 +2000,20 @@ mydataSDT$disorderFactor <- factor(
 The `petersenlab` package [@R-petersenlab] contains the `accuracyAtCutoff()` function that estimates the prediction accuracy at a given cutoff.\index{petersenlab package}
 
 ```{r}
-accuracyAtCutoff(
+accuracyEstimatesAtCutoff <- accuracyAtCutoff(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
-  cutoff = cutoff) %>% 
+  cutoff = cutoff)
+```
+
+```{r, echo = FALSE}
+accuracyEstimatesAtCutoff %>% 
   t %>% 
-  round(., 2)
+  round(., 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ### Confusion Matrix aka 2x2 Accuracy Table aka Cross-Tabulation aka Contingency Table {#confusionMatrix}
@@ -3073,10 +3089,11 @@ posttestProbability <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, S
 ```
 
 ```{r, include}
-posttestProbabilityValue <- posttestProbability(TP = TPvalue,
-                                                TN = TNvalue,
-                                                FP = FPvalue,
-                                                FN = FNvalue)
+posttestProbabilityValue <- posttestProbability(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 Consider the following example: Assume the [base rate](#baseRate) of the condition is .03%.\index{probability!posttest}\index{base rate}

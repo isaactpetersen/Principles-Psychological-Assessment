@@ -1062,7 +1062,7 @@ summary(
 \index{factor analysis!exploratory}\index{orthogonal rotation}
 
 ```{r}
-fitMeasures(
+efaOrthogonalLavaan_fitIndices <- fitMeasures(
   efaOrthogonalLavaan_fit,
   fit.measures = c(
     "chisq", "df", "pvalue",
@@ -1073,12 +1073,20 @@ fitMeasures(
     "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
+```{r, echo = FALSE}
+efaOrthogonalLavaan_fitIndices %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+```
+
 ##### Oblique (Oblimin) rotation {#fitEstimatesOblique-efa}
 
 \index{factor analysis!exploratory}\index{oblique rotation}
 
 ```{r}
-fitMeasures(
+efaObliqueLavaan_fitIndices <- fitMeasures(
   efaObliqueLavaan_fit,
   fit.measures = c(
     "chisq", "df", "pvalue",
@@ -1087,6 +1095,14 @@ fitMeasures(
     "baseline.chisq","baseline.df","baseline.pvalue",
     "rmsea", "cfi", "tli", "srmr",
     "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+```{r, echo = FALSE}
+efaObliqueLavaan_fitIndices %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 #### Factor Scores {#factorScores-efa}
@@ -1385,7 +1401,17 @@ residuals(cfaModelFit, type = "cor")
 #### Modification indices {#modIndices-cfa}
 
 ```{r}
-modificationindices(cfaModelFit, sort. = TRUE)
+cfaModelFitModIndices <- modificationindices(
+  cfaModelFit,
+  sort. = TRUE)
+```
+
+```{r, echo = FALSE}
+cfaModelFitModIndices %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 #### Factor scores {#factorScores-cfa}
@@ -1483,16 +1509,14 @@ cfaModel3AFit <- cfa(
   cfaModel3A,
   sample.cov = covarianceMatrixModel3,
   sample.nobs = sampleSize,
-  missing = "ML",
-  estimator = "MLR",
+  estimator = "ML",
   std.lv = TRUE)
 
 cfaModel3BFit <- cfa(
   cfaModel3B,
   sample.cov = covarianceMatrixModel3,
   sample.nobs = sampleSize,
-  missing = "ML",
-  estimator = "MLR",
+  estimator = "ML",
   std.lv = TRUE)
 ```
 
@@ -1741,8 +1765,14 @@ esem_loadings <- parameterEstimates(
   dplyr::filter(efa == "efa") %>% 
   dplyr::select(lhs, rhs, est) %>% 
   dplyr::rename(item = rhs, latent = lhs, loading = est)
+```
 
-esem_loadings
+```{r, echo = FALSE}
+esem_loadings %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 In [ESEM](#efa-cfa-esem), you specify one anchor item for each latent factor.\index{structural equation modeling!exploratory}
@@ -1760,14 +1790,6 @@ The `petersenlab` package [@R-petersenlab] includes the `make_esem_model()` func
 esemModel_syntax <- make_esem_model(
   esem_loadings,
   anchors)
-
-writeLines(esemModel_syntax)
-```
-
-##### Model syntax in table form: {#esemModelTabular}
-
-```{r}
-lavaanify(esemModel_syntax)
 ```
 
 ##### Fit the model {#esemModelFit}

@@ -1840,120 +1840,9 @@ As discussed in Section \@ref(measurementError), a given error can be either [sy
 In addition, error can be [within-person](#withinPersonError), [between-person](#betweenPersonError), or both.\index{measurement error}\index{measurement error!systematic error}\index{measurement error!random error}\index{measurement error!within person}\index{measurement error!between person}
 However, error scores can include multiple errors simultaneously.\index{measurement error}
 
-### No Error {#noError}
-
-This section provides the coefficients of [stability](#stability), [repeatability](#repeatability), and [bias](#blandAltmanBias) that are used as a comparison when [measurement error](#measurementError) is added.\index{measurement error}\index{reliability!test–retest!coefficient of stability}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!bias}
-
-```{r}
-# Simulate Data
-set.seed(52242)
-
-time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(
-  n = sampleSize,
-  mean = 0,
-  sd = 4)
-time3 <- time2 + rnorm(
-  n = sampleSize,
-  mean = 0,
-  sd = 8)
-
-# Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
-time3[c(10)] <- NA
-
-# Combine data into data frame
-mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
-```
-
-#### Coefficient of stability {#noError-stability}
-
-```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
-```
-
-#### Coefficient of repeatability {#noError-repeatability}
-
-```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    method1 = mydata$time1,
-    method2 = mydata$time2)$differences, na.rm = TRUE)
-```
-
-#### Bias {#noError-bias}
-
-```{r}
-blandr.statistics(
-  method1 = mydata$time1,
-  method2 = mydata$time2)$bias
-```
-
 ### Add within-person random error {#withinPersonRandomError-example}
 
-In the example below, I added [within-person random error](#withinPersonRandomError).\index{measurement error!random error}\index{measurement error!within person}
-Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at all time points.\index{measurement error!random error}\index{measurement error!within person}
-
-```{r}
-# Simulate Data
-set.seed(52242)
-
-time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
-time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
-
-# Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
-time3[c(10)] <- NA
-
-# Combine data into data frame
-mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
-
-# Add error
-set.seed(12345)
-for(i in 1:nrow(mydata)){
-  mydata[i, c("time1","time2","time3")] <- mydata[i, c(
-    "time1","time2","time3")] + 
-    rnorm(3, mean = 0, sd = 3)
-}
-```
-
-#### Coefficient of stability {#withinPersonRandomError-stability}
-
-```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
-```
-
-#### Coefficient of repeatability {#withinPersonRandomError-repeatability}
-
-```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    method1 = mydata$time1,
-    method2 = mydata$time2)$differences,
-  na.rm = TRUE)
-```
-
-#### Bias {#withinPersonRandomError-bias}
-
-```{r}
-blandr.statistics(
-  method1 = mydata$time1,
-  method2 = mydata$time2)$bias
-```
-
-#### Findings {#withinPersonRandomError-findings}
-
+To add [within-person random error](#withinPersonRandomError), I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at all time points.\index{measurement error!random error}\index{measurement error!within person}
 Adding [within-person random error](#withinPersonRandomError) led to\index{measurement error!random error}\index{measurement error!within person}
 
 - weaker (lower) [stability](#stability) coefficient\index{reliability!test–retest!coefficient of stability}\index{measurement error!random error}\index{measurement error!within person}
@@ -1961,64 +1850,7 @@ Adding [within-person random error](#withinPersonRandomError) led to\index{measu
 
 ### Add within-person systematic error {#witinPersonSystematicError-example}
 
-In the example below, I added [within-person systematic error](#withinPersonSystematicError).\index{measurement error!systematic error}\index{measurement error!within person}
-Specifically, to all participants, I added error that is consistent across time for a given participant: pulled from a distribution with a mean of 5 and a standard deviation of 3.\index{measurement error!systematic error}\index{measurement error!within person}
-
-```{r}
-# Simulate Data
-set.seed(52242)
-
-time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
-time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
-
-# Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
-time3[c(10)] <- NA
-
-# Combine data into data frame
-mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
-
-# Add error
-set.seed(12345)
-for(i in 1:nrow(mydata)){
-  mydata[i, c("time1","time2","time3")] <- mydata[i, c(
-    "time1","time2","time3")] + 
-    rnorm(1, mean = 5, sd = 3)
-}
-```
-
-#### Coefficient of stability {#withinPersonSystematicError-stability}
-
-```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
-```
-
-#### Coefficient of repeatability {#withinPersonSystematicError-repeatability}
-
-```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    method1 = mydata$time1,
-    method2 = mydata$time2)$differences,
-  na.rm = TRUE)
-```
-
-#### Bias {#withinPersonSystematicError-bias}
-
-```{r}
-blandr.statistics(
-  method1 = mydata$time1,
-  method2 = mydata$time2)$bias
-```
-
-#### Findings {#withinPersonSystematicError-findings}
-
+To add [within-person systematic error](#withinPersonSystematicError) to all participants, I added error that is consistent across time for a given participant: pulled from a distribution with a mean of 5 and a standard deviation of 3.\index{measurement error!systematic error}\index{measurement error!within person}
 Adding [within-person systematic error](#withinPersonSystematicError) led to\index{measurement error!systematic error}\index{measurement error!within person}
 
 - artificially stronger (higher) [stability](#stability) coefficient\index{reliability!test–retest!coefficient of stability}\index{measurement error!systematic error}\index{measurement error!within person}
@@ -2027,61 +1859,7 @@ Adding [within-person systematic error](#withinPersonSystematicError) led to\ind
 
 ### Add between-person random error at T2 {#betweenPersonRandomError-example}
 
-In the example below, I added [between-person random error](#betweenPersonRandomError).\index{measurement error!random error}\index{measurement error!between person}
-Specifically, I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at time 2 (see below).\index{measurement error!random error}\index{measurement error!between person}
-
-```{r}
-# Simulate Data
-set.seed(52242)
-
-time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
-time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
-
-# Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
-time3[c(10)] <- NA
-
-# Combine data into data frame
-mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
-
-# Add error
-set.seed(12345)
-mydata$time2 <- mydata$time2 + 
-  rnorm(sampleSize, mean = 0, sd = 3)
-```
-
-#### Coefficient of stability {#betweenPersonRandomError-stability}
-
-```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
-```
-
-#### Coefficient of repeatability {#betweenPersonRandomError-repeatability}
-
-```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    method1 = mydata$time1,
-    method2 = mydata$time2)$differences,
-  na.rm = TRUE)
-```
-
-#### Bias {#betweenPersonRandomError-bias}
-
-```{r}
-blandr.statistics(
-  method1 = mydata$time1,
-  method2 = mydata$time2)$bias
-```
-
-#### Findings {#betweenPersonRandomError-findings}
-
+To add [between-person random error](#betweenPersonRandomError), I added error that is randomly distributed around a mean of 0 and a standard deviation of 3 to all participants' scores at time 2 (see below).\index{measurement error!random error}\index{measurement error!between person}
 Adding [between-person random error](#betweenPersonRandomError) led to\index{measurement error!random error}\index{measurement error!between person}
 
 - weaker (lower) [stability](#stability) coefficient\index{reliability!test–retest!coefficient of stability}\index{measurement error!random error}\index{measurement error!between person}
@@ -2090,61 +1868,7 @@ Adding [between-person random error](#betweenPersonRandomError) led to\index{mea
 
 ### Add between-person systematic error at T2 {#betweenPersonSystematicError-example}
 
-In the example below, I added [between-person systematic error](#betweenPersonSystematicError).\index{measurement error!systematic error}\index{measurement error!between person}
-Specifically, I added constant variance of 10 to all participants' scores at T2\index{measurement error!systematic error}\index{measurement error!between person}
-
-```{r}
-# Simulate Data
-set.seed(52242)
-
-time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
-time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
-
-# Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
-time3[c(10)] <- NA
-
-# Combine data into data frame
-mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
-
-# Add error
-mydata$time2 <- mydata$time2 + 10
-```
-
-#### Coefficient of stability {#betweenPersonSystematicError-stability}
-
-```{r}
-cor.test(
-  x = mydata$time1,
-  y = mydata$time2)
-```
-
-#### Coefficient of repeatability {#betweenPersonSystematicError-repeatability}
-
-```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    method1 = mydata$time1,
-    method2 = mydata$time2)$differences,
-  na.rm = TRUE)
-```
-
-#### Bias {#betweenPersonSystematicError-bias}
-
-```{r}
-blandr.statistics(
-  method1 = mydata$time1,
-  method2 = mydata$time2)$bias
-```
-
-#### Findings {#betweenPersonSystematicError-findings}
-
+To add [between-person systematic error](#betweenPersonSystematicError), I added constant variance of 10 to all participants' scores at T2\index{measurement error!systematic error}\index{measurement error!between person}
 Adding [between-person systematic error](#betweenPersonSystematicError) led to\index{measurement error!systematic error}\index{measurement error!between person}
 
 - no effect on [stability](#stability) coefficient\index{reliability!test–retest!coefficient of stability}\index{measurement error!systematic error}\index{measurement error!between person}
@@ -2153,62 +1877,7 @@ Adding [between-person systematic error](#betweenPersonSystematicError) led to\i
 
 ### Add constant variance of 10 to all participants at all time points {#constantVariance-example}
 
-In the example below, I added constant variance to all participants' scores at all time points.\index{measurement error}
-Specifically I added 10 to all participants' scores at all time points.\index{measurement error}
-
-```{r}
-# Simulate Data
-set.seed(52242)
-
-time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
-time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
-
-# Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
-time3[c(10)] <- NA
-
-# Combine data into data frame
-mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
-
-# Add error
-mydata$time1 <- mydata$time1 + 10
-mydata$time2 <- mydata$time2 + 10
-mydata$time3 <- mydata$time3 + 10
-```
-
-#### Coefficient of stability {#constantVariance-stability}
-
-```{r}
-cor.test(x = mydata$time1,
-         y = mydata$time2)
-```
-
-#### Coefficient of repeatability {#constantVariance-repeatability}
-
-```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    method1 = mydata$time1,
-    method2 = mydata$time2)$differences, na.rm = TRUE)
-```
-
-#### Bias {#constantVariance-bias}
-
-```{r}
-blandr.statistics(
-  method1 = mydata$time1,
-  method2 = mydata$time2)$bias
-```
-
-#### Findings {#constantVariance-findings}
-
-Adding constant variance to all participants' scores at all time points led to\index{measurement error}
+Adding constant variance (10) to all participants' scores at all time points led to\index{measurement error}
 
 - no effect on [stability](#stability) coefficient\index{reliability!test–retest!coefficient of stability}\index{measurement error}
 - no effect on [repeatability](#repeatability) coefficient\index{reliability!test–retest!coefficient of repeatability}
@@ -2451,8 +2120,6 @@ To account for method biases in a mixed model, you could use scores from multipl
 For instance, your mixed model could examine the association between income and optimism, where optimism is assessed by self-report, parent-report, and a performance-based measure.\index{method bias}\index{mixed model}\index{nonindependent data}
 In the model, you could include, as a *fixed effect*, a factor that indicates the method of the measure, in addition to its interaction with income, to account for systematic ways in which the measurement method influences scores on the measures across the participants as a whole.\index{method bias}\index{mixed model}\index{nonindependent data}
 You could also include a *random effect* of measurement method if you wanted to allow the effect of measurement method on the scores to differ from person to person.\index{method bias}\index{mixed model}\index{nonindependent data}
-
-[*INCLUDE EXAMPLE*]
 
 ## Generalizability Theory (G-Theory) {#gTheoryReliability}
 
