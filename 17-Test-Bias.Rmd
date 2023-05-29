@@ -2026,36 +2026,6 @@ Thus, a significant chi-square equivalence test suggests that the equality const
 
 ### Specify Models {#measurementInvarianceModels}
 
-#### Null Model {#measurementInvarianceNullModelSyntax}
-
-Fix residual variances and intercepts of manifest variables to be equal across groups.\index{structural equation modeling!measurement invariance}
-
-```{r nullModel, cache = TRUE}
-nullModel <- '
-#Fix residual variances of manifest variables to be equal across groups
-x1 ~~ c(psi1, psi1)*x1
-x2 ~~ c(psi2, psi2)*x2
-x3 ~~ c(psi3, psi3)*x3
-x4 ~~ c(psi4, psi4)*x4
-x5 ~~ c(psi5, psi5)*x5
-x6 ~~ c(psi6, psi6)*x6
-x7 ~~ c(psi7, psi7)*x7
-x8 ~~ c(psi8, psi8)*x8
-x9 ~~ c(psi9, psi9)*x9
-
-#Fix intercepts of manifest variables to be equal across groups
-x1 ~ c(tau1, tau1)*1
-x2 ~ c(tau2, tau2)*1
-x3 ~ c(tau3, tau3)*1
-x4 ~ c(tau4, tau4)*1
-x5 ~ c(tau5, tau5)*1
-x6 ~ c(tau6, tau6)*1
-x7 ~ c(tau7, tau7)*1
-x8 ~ c(tau8, tau8)*1
-x9 ~ c(tau9, tau9)*1
-'
-```
-
 #### CFA Model {#measurementInvarianceCFAsyntax}
 
 ```{r cfaModelChunk, cache = TRUE}
@@ -2064,206 +2034,6 @@ cfaModel <- '
  visual  =~ x1 + x2 + x3
  textual =~ x4 + x5 + x6
  speed   =~ x7 + x8 + x9
-'
-```
-
-#### Configural Invariance {#measurementInvarianceConfiguralSyntax}
-
-Specify the same number of factors in each group, and which indicators load on which factors are the same in each group.\index{structural equation modeling!measurement invariance!configural}
-
-```{r configuralInvarianceModel, cache = TRUE}
-cfaModel_configuralInvariance <- '
- #Factor loadings (free the factor loading of the first indicator)
- visual  =~ NA*x1 + x2 + x3
- textual =~ NA*x4 + x5 + x6
- speed   =~ NA*x7 + x8 + x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one
- visual ~~ 1*visual
- textual ~~ 1*textual
- speed ~~ 1*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Free intercepts of manifest variables
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-```
-
-#### Metric ("Weak Factorial") Invariance {#measurementInvarianceMetricSyntax}
-
-Specify invariance of factor loadings across groups.\index{structural equation modeling!measurement invariance!metric}\index{structural equation modeling!factor loading}
-
-```{r metricInvarianceModel, cache = TRUE}
-cfaModel_metricInvariance <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Free intercepts of manifest variables
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-```
-
-#### Scalar ("Strong Factorial") Invariance {#measurementInvarianceScalarSyntax}
-
-Specify invariance of factor loadings and intercepts across groups.\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!factor loading}\index{structural equation modeling!intercept}
-
-```{r scalarInvarianceModel, cache = TRUE}
-cfaModel_scalarInvariance <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero in group 1; free latent means in group 2
- visual ~ c(0, NA)*1
- textual ~ c(0, NA)*1
- speed ~ c(0, NA)*1
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ c(intx2, intx2)*1
- x3 ~ c(intx3, intx3)*1
- x4 ~ c(intx4, intx4)*1
- x5 ~ c(intx5, intx5)*1
- x6 ~ c(intx6, intx6)*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-```
-
-#### Residual ("Strict Factorial") Invariance {#measurementInvarianceResidualSyntax}
-
-Specify invariance of factor loadings, intercepts, and residuals across groups.\index{structural equation modeling!measurement invariance!residual}\index{structural equation modeling!factor loading}\index{structural equation modeling!intercept}\index{structural equation modeling!residual}
-
-```{r residualInvarianceModel, cache = TRUE}
-cfaModel_residualInvariance <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ c(0, NA)*1
- textual ~ c(0, NA)*1
- speed ~ c(0, NA)*1
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Fix residual variances of manifest variables across groups
- x1 ~~ c(residx1, residx1)*x1
- x2 ~~ c(residx2, residx2)*x2
- x3 ~~ c(residx3, residx3)*x3
- x4 ~~ c(residx4, residx4)*x4
- x5 ~~ c(residx5, residx5)*x5
- x6 ~~ c(residx6, residx6)*x6
- x7 ~~ c(residx7, residx7)*x7
- x8 ~~ c(residx8, residx8)*x8
- x9 ~~ c(residx9, residx9)*x9
- 
- #Fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ c(intx2, intx2)*1
- x3 ~ c(intx3, intx3)*1
- x4 ~ c(intx4, intx4)*1
- x5 ~ c(intx5, intx5)*1
- x6 ~ c(intx6, intx6)*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
 '
 ```
 
@@ -2543,7 +2313,7 @@ equiv_chi(
 
 ##### Permutation Test {#measurementInvarianceMetricModelPermutationTest}
 
-Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].\index{structural equation modeling!measurement invariance!metric}
+\index{structural equation modeling!measurement invariance!metric}
 
 ```{r metricInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","metricInvarianceModelFit","configuralInvarianceModelFit","fitIndices")}
 set.seed(52242)
@@ -2723,7 +2493,7 @@ equiv_chi(
 
 ##### Permutation Test {#measurementInvarianceScalarModelPermutationTest}
 
-Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].\index{structural equation modeling!measurement invariance!scalar}
+\index{structural equation modeling!measurement invariance!scalar}
 
 ```{r scalarInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","scalarInvarianceModelFit","metricInvarianceModelFit","fitIndices")}
 set.seed(52242)
@@ -2896,7 +2666,7 @@ equiv_chi(
 
 ##### Permutation Test {#measurementInvarianceResidualModelPermutationTest}
 
-Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
+\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
 
 ```{r residualInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","residualInvarianceModelFit","scalarInvarianceModelFit","fitIndices")}
 set.seed(52242)
