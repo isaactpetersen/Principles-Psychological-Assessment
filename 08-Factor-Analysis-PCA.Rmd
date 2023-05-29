@@ -611,7 +611,7 @@ Before conducting a [factor analysis](#factorAnalysis), it is important examine 
 
 Here are correlation matrices of various types using the `cor.table()` from the `petersenlab` package [@R-petersenlab]:\index{petersenlab package}\index{correlation}
 
-```{r}
+```{r, eval = FALSE}
 cor.table(
   HolzingerSwineford1939[,vars],
   dig = 2)
@@ -625,6 +625,34 @@ cor.table(
   HolzingerSwineford1939[,vars],
   type = "manuscriptBig",
   dig = 2)
+```
+
+```{r, echo = FALSE}
+cor.table(
+  HolzingerSwineford1939[,vars],
+  dig = 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+
+cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscript",
+  dig = 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+
+cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscriptBig",
+  dig = 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 Pairs panel plots were generated using the `psych` package [@R-psych].\index{correlation}
@@ -1032,7 +1060,11 @@ The factor loadings and summaries of the model results are below:\index{factor a
 ```{r}
 summary(
   efaOrthogonalLavaan_fit)
+```
 
+The model results for the three-factor model are below:\index{factor analysis!exploratory}\index{orthogonal rotation}
+
+```{r}
 summary(
   efaFactor3OrthogonalLavaan_fit,
   fit.measures = TRUE,
@@ -1042,12 +1074,16 @@ summary(
 
 ##### Oblique (Oblimin) rotation {#obliqueFactorLoadings-efa}
 
-The factor loadings and summaries of the model results are below:\index{factor analysis!exploratory}\index{oblique rotation}
+The factor loadings and summaries of the model results can be generated with the following syntax:\index{factor analysis!exploratory}\index{oblique rotation}
 
-```{r}
+```{r, eval = FALSE}
 summary(
   efaObliqueLavaan_fit)
+```
 
+The model results for a given model can be generated using the following syntax:\index{factor analysis!exploratory}\index{oblique rotation}
+
+```{r, eval = FALSE}
 summary(
   efaFactor3ObliqueLavaan_fit,
   fit.measures = TRUE,
@@ -1085,7 +1121,7 @@ efaOrthogonalLavaan_fitIndices %>%
 
 \index{factor analysis!exploratory}\index{oblique rotation}
 
-```{r}
+```{r, eval = FALSE}
 efaObliqueLavaan_fitIndices <- fitMeasures(
   efaObliqueLavaan_fit,
   fit.measures = c(
@@ -1425,15 +1461,20 @@ cfaFactorScores <- lavPredict(cfaModelFit)
 As would be expected, the factor scores from the [CFA](#cfa) model are highly correlated with the factor scores from the [EFA](#efa) model.\index{factor analysis!confirmatory}\index{factor analysis!exploratory}
 
 ```{r}
-cor.test(
+cor(
   x = cfaFactorScores[,"visual"],
-  y = fa3Orthogonal_lavaan[,"f1"])
-cor.test(
+  y = fa3Orthogonal_lavaan[,"f1"],
+  use = "pairwise.complete.obs")
+
+cor(
   x = cfaFactorScores[,"textual"],
-  y = fa3Orthogonal_lavaan[,"f2"])
-cor.test(
+  y = fa3Orthogonal_lavaan[,"f2"],
+  use = "pairwise.complete.obs")
+
+cor(
   x = cfaFactorScores[,"speed"],
-  y = fa3Orthogonal_lavaan[,"f3"])
+  y = fa3Orthogonal_lavaan[,"f3"],
+  use = "pairwise.complete.obs")
 ```
 
 #### Internal Consistency Reliability {#reliability-cfa}
@@ -1654,16 +1695,6 @@ cfaModelBifactorFit <- cfa(
   estimator = "MLR")
 ```
 
-##### Display summary output
-
-```{r}
-summary(
-  cfaModelBifactorFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
 ##### Path diagram {#bifactorModelPathDiagram}
 
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:bifactorModelPathDiagram).\index{factor analysis!bifactor}
@@ -1793,30 +1824,6 @@ esemModelFit <- sem(
   data = HolzingerSwineford1939,
   missing = "ML",
   estimator = "MLR")
-```
-
-##### Display summary output {#esemOutput}
-
-```{r}
-summary(
-  esemModelFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-##### Estimates of model fit {#esemModelFitCriteria}
-
-```{r}
-fitMeasures(
-  esemModelFit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
-    "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
 ##### Nested model comparison {#esemModelFitComparison}
@@ -2086,7 +2093,7 @@ pca9factorOrthogonal
 
 #### Oblique (Oblimin) rotation {#pcaAnalysisLoadingsOblique}
 
-```{r}
+```{r, eval = FALSE}
 pca1factorOblique
 pca2factorOblique
 pca3factorOblique
