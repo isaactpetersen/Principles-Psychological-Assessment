@@ -1483,7 +1483,11 @@ difDropItems <- DIF(
   scheme = "drop",
   simplify = TRUE)
 
-round(difDropItems, 2)
+round(difDropItems, 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 #### Items that differ in discrimination {#difRemoveConstraintsDiscrimination}
@@ -1497,7 +1501,11 @@ difDropItemsDiscrimination <- DIF(
   scheme = "drop",
   simplify = TRUE)
 
-round(difDropItemsDiscrimination, 2)
+round(difDropItemsDiscrimination, 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 #### Items that differ in severity {#difRemoveConstraintsSeverity}
@@ -1511,7 +1519,11 @@ difDropItemsSeverity <- DIF(
   scheme = "drop",
   simplify = TRUE)
 
-round(difDropItemsSeverity, 2)
+round(difDropItemsSeverity, 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ### Identify DIF by iteratively adding constraints to unconstrained model {#difAddConstraints}
@@ -1521,7 +1533,7 @@ round(difDropItemsSeverity, 2)
 Items 1, 2, 3, 4, 5, and 6 showed [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}\index{chi-square!difference test}
 The [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty) is depicted in Figure \@ref(fig:difAddDiscriminationSeverity).\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}
 
-```{r}
+```{r difAddDiscriminationSeverity, out.width = "100%", fig.align = "center", fig.cap = "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination and/or Severity."}
 difAddItems <- DIF(
   unconstrainedModel,
   c("a1","d1","d2"),
@@ -1531,7 +1543,7 @@ difAddItems <- DIF(
   par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r difAddDiscriminationSeverity, out.width = "100%", fig.align = "center", fig.cap = "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination and/or Severity."}
+```{r, echo = FALSE}
 round(difAddItems, 2) %>% 
   kable(.,
   format = "latex",
@@ -1552,8 +1564,14 @@ difAddItemsDiscrimination <- DIF(
   simplify = TRUE,
   plotdif = TRUE,
   par.settings = standard.theme("pdf", color = FALSE))
+```
 
-round(difAddItemsDiscrimination, 2)
+```{r, echo = FALSE}
+round(difAddItemsDiscrimination, 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 #### Items that differ in severity {#difAddConstraintsSeverity}
@@ -1569,8 +1587,14 @@ difAddItemsSeverity <- DIF(
   simplify = TRUE,
   plotdif = TRUE,
   par.settings = standard.theme("pdf", color = FALSE))
+```
 
-round(difAddItemsSeverity, 2)
+```{r, echo = FALSE}
+round(difAddItemsSeverity, 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 ### Compute effect size of DIF {#difEffectSize}
@@ -2225,29 +2249,6 @@ myAFIs <- c("chisq", "chisq.scaled",
 moreAFIs <- NULL # c("gammaHat","gammaHat.scaled")
 ```
 
-### Null Model {#measurementInvarianceNullModel}
-
-#### Fit the Model {#measurementInvarianceNullModelFit}
-
-```{r nullFit, cache = TRUE, cache.comments = FALSE}
-nullModelFit <- lavaan(
-  nullModel,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-```
-
-#### Model Summary {#measurementInvarianceNullModelSummary}
-
-```{r}
-summary(
-  nullModelFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
 ### Configural Invariance {#measurementInvarianceConfigural}
 
 Specify the same number of factors in each group, and which indicators load on which factors are the same in each group.\index{structural equation modeling!measurement invariance!configural}
@@ -2262,24 +2263,8 @@ configuralInvarianceModel <- measEq.syntax(
   group = "school")
 ```
 
-```{r}
-cat(as.character(configuralInvarianceModel))
-```
-
 ```{r configuralInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "configuralInvarianceModelSyntax1"}
 configuralInvarianceSyntax <- as.character(configuralInvarianceModel)
-```
-
-##### Summary of Model Features {#measurementInvarianceConfiguralModelFeatures}
-
-```{r}
-summary(configuralInvarianceModel)
-```
-
-##### Model Syntax in Table Form {#measurementInvarianceConfiguralModelTabular}
-
-```{r}
-lavaanify(cfaModel, ngroups = 2)
 ```
 
 #### Fit the Model {#measurementInvarianceConfiguralModelFit}
@@ -2293,40 +2278,11 @@ configuralInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r configuralInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "configuralInvarianceModel"}
-configuralInvarianceModelFullSyntax_fit <- lavaan(
-  cfaModel_configuralInvariance,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-```
-
-#### Model Summary {#measurementInvarianceConfiguralModelSummary}
-
-```{r}
-summary(
-  configuralInvarianceModel_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-```{r}
-summary(
-  configuralInvarianceModelFullSyntax_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
 #### Model Fit {#measurementInvarianceConfiguralModelFitCriteria}
 
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!configural}
+\index{structural equation modeling!measurement invariance!configural}
 
 ```{r}
-fitMeasures(configuralInvarianceModel_fit)
-
 configuralInvarianceModelFitIndices <- fitMeasures(
   configuralInvarianceModel_fit)[c(
     "cfi.robust", "rmsea.robust", "srmr")]
@@ -2363,7 +2319,6 @@ In this case, the equivalence test evaluates the null hypothesis that a model is
 Here, we operationalize a mediocre-fitting model as a model whose RMSEA is .08 or greater.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 So, the equivalence test evaluates whether our invariance model fits significantly better than a mediocre-fitting model.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 Thus, a statistically significant *p*-value indicates that our invariance model fits significantly better than the mediocre-fitting model (i.e., that invariance is established), whereas a non-significant *p*-value indicates that our invariance model does not fit significantly better than the mediocre-fitting model (i.e., that invariance is failed).\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
-```
 
 The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable (i.e., it is not better than the mediocre-fitting model).\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 In other words, configural invariance failed.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
@@ -2389,8 +2344,6 @@ A non-significant *p*-value indicates that the model does not fit signficantly w
 numPermutations <- 100
 ```
 
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`.
-
 ```{r configuralInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","configuralInvarianceModelFit","fitIndices")}
 set.seed(52242)
 configuralInvarianceTest <- permuteMeasEq(
@@ -2413,15 +2366,6 @@ configuralInvarianceTest
 
 The *p*-values are non-significant, indicating that the model does not fit signficantly worse than the best-possible fitting model.\index{structural equation modeling!measurement invariance!configural}
 In other words, configural invariance held.\index{structural equation modeling!measurement invariance!configural}
-
-#### Internal Consistency Reliability {#measurementInvarianceReliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(configuralInvarianceModel_fit)
-AVE(configuralInvarianceModel_fit)
-```
 
 #### Path Diagram {#measurementInvariancePathDiagram}
 
@@ -2451,25 +2395,8 @@ metricInvarianceModel <- measEq.syntax(
   group.equal = "loadings")
 ```
 
-```{r}
-cat(as.character(metricInvarianceModel))
-```
-
 ```{r metricInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "metricInvarianceModelSyntax1"}
 metricInvarianceSyntax <- as.character(metricInvarianceModel)
-```
-
-##### Summary of Model Features {#measurementInvarianceMetricModelFeatures}
-
-```{r}
-summary(metricInvarianceModel)
-```
-
-#### Model Syntax in Table Form {#measurementInvarianceMetricModelTabular}
-
-```{r}
-lavaanify(metricInvarianceModel, ngroups = 2)
-lavaanify(cfaModel_metricInvariance, ngroups = 2)
 ```
 
 #### Fit the Model {#measurementInvarianceMetricModelFit}
@@ -2483,40 +2410,11 @@ metricInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r metricInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "metricInvarianceModel"}
-metricInvarianceModelFullSyntax_fit <- lavaan(
-  cfaModel_metricInvariance,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-```
-
-#### Model Summary {#measurementInvarianceMetricModelOutput}
-
-```{r}
-summary(
-  metricInvarianceModel_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-```{r}
-summary(
-  metricInvarianceModelFullSyntax_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
 #### Model Fit {#measurementInvarianceMetricModelFitCriteria}
 
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!metric}
+\index{structural equation modeling!measurement invariance!metric}
 
 ```{r}
-fitMeasures(metricInvarianceModel_fit)
-
 metricInvarianceModelFitIndices <- fitMeasures(
   metricInvarianceModel_fit)[c(
     "cfi.robust", "rmsea.robust", "srmr")]
@@ -2551,16 +2449,7 @@ The metric invariance model did not fit significantly worse than the configural 
 This provides evidence of measurement invariance of factor loadings across groups.\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}\index{structural equation modeling!measurement invariance!configural}\index{structural equation modeling!factor loading}
 Measurement invariance of factor loadings across groups provides support for examining whether the groups show different associations of the factor with other constructs [@Little2007].\index{structural equation modeling!measurement invariance!metric}\index{structural equation modeling!factor loading}
 
-Below is a Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}
-
-```{r, include = FALSE}
-satorraBentlerScaledChiSquareDifferenceTestStatistic <- function(T0, c0, d0, T1, c1, d1){
-    cd <- (d0 * c0 - d1*c1)/(d0 - d1)
-    TRd <- (T0*c0 - T1*c1)/cd
-    
-    return(TRd)
-}
-```
+The `petersenlab` package [@R-petersenlab] contains a function to perform a Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
 metricInvarianceModel_chisquareDiff <- satorraBentlerScaledChiSquareDifferenceTestStatistic(
@@ -2629,8 +2518,6 @@ equiv_chi(
 
 Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].\index{structural equation modeling!measurement invariance!metric}
 
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`.
-
 ```{r metricInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","metricInvarianceModelFit","configuralInvarianceModelFit","fitIndices")}
 set.seed(52242)
 metricInvarianceTest <- permuteMeasEq(
@@ -2653,15 +2540,6 @@ metricInvarianceTest
 
 The *p*-values are non-significant, indicating that the model does not fit signficantly worse than the configural invariance model.\index{structural equation modeling!measurement invariance!metric}
 In other words, metric invariance held.\index{structural equation modeling!measurement invariance!metric}
-
-#### Internal Consistency Reliability {#measurementInvarianceMetricModelReliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(metricInvarianceModel_fit)
-AVE(metricInvarianceModel_fit)
-```
 
 #### Path Diagram {#measurementInvarianceMetricModelPathDiagram}
 
@@ -2691,26 +2569,13 @@ scalarInvarianceModel <- measEq.syntax(
   group.equal = c("loadings","intercepts"))
 ```
 
-```{r}
-cat(as.character(scalarInvarianceModel))
-```
-
 ```{r scalarInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "scalarInvarianceModelSyntax1"}
 scalarInvarianceSyntax <- as.character(scalarInvarianceModel)
 ```
 
 ##### Summary of Model Features {#measurementInvarianceScalarModelFeatures}
 
-```{r}
-summary(scalarInvarianceModel)
-```
-
 #### Model Syntax in Table Form {#measurementInvarianceScalarModelTabular}
-
-```{r}
-lavaanify(scalarInvarianceModel, ngroups = 2)
-lavaanify(cfaModel_scalarInvariance, ngroups = 2)
-```
 
 #### Fit the Model {#measurementInvarianceScalarModelFit}
 
@@ -2723,36 +2588,9 @@ scalarInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r scalarInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "scalarInvarianceModel"}
-scalarInvarianceModelFullSyntax_fit <- lavaan(
-  cfaModel_scalarInvariance,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-```
-
-#### Model Summary {#measurementInvarianceScalarModelOutput}
-
-```{r}
-summary(
-  scalarInvarianceModel_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-```{r}
-summary(
-  scalarInvarianceModelFullSyntax_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
 #### Model Fit {#measurementInvarianceScalarModelFitCriteria}
 
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!scalar}
+\index{structural equation modeling!measurement invariance!scalar}
 
 ```{r}
 fitMeasures(scalarInvarianceModel_fit)
@@ -2859,10 +2697,6 @@ equiv_chi(
 ##### Permutation Test {#measurementInvarianceScalarModelPermutationTest}
 
 Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].\index{structural equation modeling!measurement invariance!scalar}
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!scalar}
-
-**Warning**: this code takes a while to run based on `r numPermutations` iterations.
-You can reduce the number of iterations to be faster.
 
 ```{r scalarInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","scalarInvarianceModelFit","metricInvarianceModelFit","fitIndices")}
 set.seed(52242)
@@ -2886,15 +2720,6 @@ scalarInvarianceTest
 
 The *p*-values are significant, indicating that the model fit signficantly worse than the metric invariance model.\index{structural equation modeling!measurement invariance!scalar}
 In other words, scalar invariance failed.\index{structural equation modeling!measurement invariance!scalar}
-
-#### Internal Consistency Reliability {#measurementInvarianceScalarModelReliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(scalarInvarianceModel_fit)
-AVE(scalarInvarianceModel_fit)
-```
 
 #### Path Diagram {#measurementInvarianceScalarModelPathDiagram}
 
@@ -2924,18 +2749,8 @@ residualInvarianceModel <- measEq.syntax(
   group.equal = c("loadings","intercepts","residuals"))
 ```
 
-```{r}
-cat(as.character(residualInvarianceModel))
-```
-
 ```{r residualInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "residualInvarianceModelSyntax1"}
 residualInvarianceSyntax <- as.character(residualInvarianceModel)
-```
-
-##### Summary of Model Features {#measurementInvarianceResidualModelFeatures}
-
-```{r}
-summary(residualInvarianceModel)
 ```
 
 #### Model Syntax in Table Form {#measurementInvarianceResidualModelTabular}
@@ -2956,40 +2771,11 @@ residualInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r residualInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "residualInvarianceModel"}
-residualInvarianceModelFullSyntax_fit <- lavaan(
-  cfaModel_residualInvariance,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-```
-
-#### Model Summary {#measurementInvarianceResidualModelOutput}
-
-```{r}
-summary(
-  residualInvarianceModel_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-```{r}
-summary(
-  residualInvarianceModelFullSyntax_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
 #### Model Fit {#measurementInvarianceResidualModelFitCriteria}
 
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!residual}
+\index{structural equation modeling!measurement invariance!residual}
 
 ```{r}
-fitMeasures(residualInvarianceModel_fit)
-
 residualInvarianceModelFitIndices <- fitMeasures(
   residualInvarianceModel_fit)[c(
     "cfi.robust", "rmsea.robust", "srmr")]
@@ -3091,10 +2877,6 @@ equiv_chi(
 ##### Permutation Test {#measurementInvarianceResidualModelPermutationTest}
 
 Permutation procedures for testing measurement invariance are described in [@Jorgensen2018].\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
-You can specify the null model as the baseline model using: `baseline.model = nullModelFit`.
-
-**Warning**: this code takes a while to run based on $`r numPermutations`$ iterations.
-You can reduce the number of iterations to be faster.
 
 ```{r residualInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","residualInvarianceModelFit","scalarInvarianceModelFit","fitIndices")}
 set.seed(52242)
@@ -3117,15 +2899,6 @@ residualInvarianceTest
 ```
 
 The *p*-values are non-significant, indicating that the model did not fit signficantly worse than the scalar invariance model.\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
-
-#### Internal Consistency Reliability {#measurementInvarianceResidualModelReliability}
-
-[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
-
-```{r}
-compRelSEM(residualInvarianceModel_fit)
-AVE(residualInvarianceModel_fit)
-```
 
 #### Path Diagram {#measurementInvarianceResidualModelPathDiagram}
 
@@ -3150,548 +2923,7 @@ When detecting measurement non-invariance in a given parameter (e.g., factor loa
 
 In the example above, we detected measurement non-invariance of intercepts.\index{structural equation modeling!intercept}\index{structural equation modeling!measurement invariance}
 One approach to identify measurement non-invariance is to iteratively add constraints to a model that allows the given parameter (intercepts) to differ across groups.\index{structural equation modeling!intercept}\index{structural equation modeling!measurement invariance}
-So, we will use the metric invariance model as the baseline model (in which item intercepts are allowed to differ across groups), and iteratively add constraints to identify which item(s) show non-invariant intercepts across groups.\index{structural equation modeling!intercept}\index{structural equation modeling!measurement invariance}\index{structural equation modeling!measurement invariance!metric}
-
-##### Variable 1 {#measurementInvarianceAddConstraintsVariable1}
-
-Variable 1 does not have non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV1 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV1_fit <- lavaan(
-  cfaModel_metricInvarianceV1,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV1_fit)
-```
-
-##### Variable 2 {#measurementInvarianceAddConstraintsVariable2}
-
-Variable 2 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV2 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ c(intx1, intx1)*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV2_fit <- lavaan(
-  cfaModel_metricInvarianceV2,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV2_fit)
-```
-
-Variable 2 appears to have larger intercepts in group 2 than in group 1:\index{structural equation modeling!intercept}
-
-```{r}
-summary(metricInvarianceModel_fit)
-```
-
-Thus, in subsequent models, we would allow variable 2 to have different intercepts across groups.\index{structural equation modeling!intercept}
-
-##### Variable 3 {#measurementInvarianceAddConstraintsVariable3}
-
-Variable 3 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV3 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ c(intx1, intx1)*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV3_fit <- lavaan(
-  cfaModel_metricInvarianceV3,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV3_fit)
-```
-
-##### Variable 4 {#measurementInvarianceAddConstraintsVariable4}
-
-Variable 4 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV4 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ c(intx1, intx1)*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV4_fit <- lavaan(
-  cfaModel_metricInvarianceV4,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV4_fit)
-```
-
-##### Variable 5 {#measurementInvarianceAddConstraintsVariable5}
-
-Variable 5 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV5 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ c(intx1, intx1)*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV5_fit <- lavaan(
-  cfaModel_metricInvarianceV5,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV5_fit)
-```
-
-##### Variable 6 {#measurementInvarianceAddConstraintsVariable6}
-
-Variable 6 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV6 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ c(intx1, intx1)*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV6_fit <- lavaan(
-  cfaModel_metricInvarianceV6,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV6_fit)
-```
-
-##### Variable 7 {#measurementInvarianceAddConstraintsVariable7}
-
-Variable 7 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV7 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ c(intx1, intx1)*1
- x8 ~ NA*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV7_fit <- lavaan(
-  cfaModel_metricInvarianceV7,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV7_fit)
-```
-
-##### Variable 8 {#measurementInvarianceAddConstraintsVariable8}
-
-Variable 8 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV8 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ c(intx1, intx1)*1
- x9 ~ NA*1
-'
-
-cfaModel_metricInvarianceV8_fit <- lavaan(
-  cfaModel_metricInvarianceV8,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV8_fit)
-```
-
-##### Variable 9 {#measurementInvarianceAddConstraintsVariable9}
-
-Variable 9 has non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_metricInvarianceV9 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively fix intercepts of manifest variables across groups
- x1 ~ c(intx1, intx1)*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ c(intx1, intx1)*1
-'
-
-cfaModel_metricInvarianceV9_fit <- lavaan(
-  cfaModel_metricInvarianceV9,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV9_fit)
-```
-
-##### Summary {#measurementInvarianceAddConstraintsSummary}
+So, we can use the metric invariance model as the baseline model (in which item intercepts are allowed to differ across groups), and iteratively add constraints to identify which item(s) show non-invariant intercepts across groups.\index{structural equation modeling!intercept}\index{structural equation modeling!measurement invariance}\index{structural equation modeling!measurement invariance!metric}
 
 When iteratively adding constraints, item 1 showed measurement invariance of intercepts, but all other items showed measurement non-invariance of intercepts.\index{structural equation modeling!measurement invariance}\index{structural equation modeling!intercept}
 This could be due to the selection of starting with item 1 as the first constraint.\index{structural equation modeling!measurement invariance}\index{structural equation modeling!intercept}
@@ -3700,550 +2932,7 @@ We could try applying constraints in a different order to see the extent to whic
 #### Iteratively drop constraints to identify measurement non-invariance {#measurementInvarianceDropConstraints}
 
 Another approach to identify measurement non-invariance is to iteratively drop constraints to a model that constrains the given parameter (intercepts) to be the same across groups.\index{structural equation modeling!measurement invariance}\index{structural equation modeling!intercept}
-So, we will use the scalar invariance model as the baseline model (in which item intercepts are constrained to be the same across groups), and we will iteratively drop constraints to identify which the items for which measurement invariance becomes established (relative to the metric invariance model which allows item intercepts to differ across groups), and therefore, identifies which item(s) show non-invariant intercepts across groups.\index{structural equation modeling!measurement invariance}\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!intercept}
-
-##### Variable 1 {#measurementInvarianceDropConstraintsVariable1}
-
-Measurement invariance does not yet become established when freeing intercepts of variable 1 across groups.\index{structural equation modeling!intercept}
-This suggests that, whether or not variable 1 shows non-invariant intercepts, there are other items that show non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV1 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ c(intx2, intx2)*1
- x3 ~ c(intx3, intx3)*1
- x4 ~ c(intx4, intx4)*1
- x5 ~ c(intx5, intx5)*1
- x6 ~ c(intx6, intx6)*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV1_fit <- lavaan(
-  cfaModel_scalarInvarianceV1,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV1_fit)
-```
-
-##### Variable 2 {#measurementInvarianceDropConstraintsVariable2}
-
-Measurement invariance does not yet become established when freeing intercepts of variable 2 across groups.\index{structural equation modeling!intercept}
-This suggests that, whether or not variables 1 and 2 show non-invariant intercepts, there are other items that show non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV2 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ c(intx3, intx3)*1
- x4 ~ c(intx4, intx4)*1
- x5 ~ c(intx5, intx5)*1
- x6 ~ c(intx6, intx6)*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV2_fit <- lavaan(
-  cfaModel_scalarInvarianceV2,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV2_fit)
-```
-
-##### Variable 3 {#measurementInvarianceDropConstraintsVariable3}
-
-Measurement invariance does not yet become established when freeing intercepts of variable 3 across groups.\index{structural equation modeling!intercept}
-This suggests that, whether or not variables 1, 2, and 3 show non-invariant intercepts, there are other items that show non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV3 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ c(intx4, intx4)*1
- x5 ~ c(intx5, intx5)*1
- x6 ~ c(intx6, intx6)*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV3_fit <- lavaan(
-  cfaModel_scalarInvarianceV3,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV3_fit)
-```
-
-##### Variable 4 {#measurementInvarianceDropConstraintsVariable4}
-
-Measurement invariance does not yet become established when freeing intercepts of variable 4 across groups.\index{structural equation modeling!intercept}
-This suggests that, whether or not variables 1, 2, 3, and 4 show non-invariant intercepts, there are other items that show non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV4 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ c(intx5, intx5)*1
- x6 ~ c(intx6, intx6)*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV4_fit <- lavaan(
-  cfaModel_scalarInvarianceV4,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV4_fit)
-```
-
-##### Variable 5 {#measurementInvarianceDropConstraintsVariable5}
-
-Measurement invariance does not yet become established when freeing intercepts of variable 5 across groups.\index{structural equation modeling!intercept}
-This suggests that, whether or not variables 1, 2, 3, 4, and 5 show non-invariant intercepts, there are other items that show non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV5 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ c(intx6, intx6)*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV5_fit <- lavaan(
-  cfaModel_scalarInvarianceV5,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV5_fit)
-```
-
-##### Variable 6 {#measurementInvarianceDropConstraintsVariable6}
-
-Measurement invariance does not yet become established when freeing intercepts of variable 6 across groups.\index{structural equation modeling!intercept}
-This suggests that, whether or not variables 1, 2, 3, 4, 5, and 6 show non-invariant intercepts, there are other items that show non-invariant intercepts.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV6 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ c(intx7, intx7)*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV6_fit <- lavaan(
-  cfaModel_scalarInvarianceV6,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV6_fit)
-```
-
-##### Variable 7 {#measurementInvarianceDropConstraintsVariable7}
-
-Measurement invariance becomes established when freeing intercepts of variable 7 across groups.\index{structural equation modeling!intercept}
-This suggests that item 7 shows non-invariant intercepts across groups, and that measurement invariance holds when constraining items 8 and 9 to be invariant across groups.\index{structural equation modeling!intercept}
-There may also be other items, especially among the preceding items (variables 1–6), that show non-invariant intercepts across groups.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV7 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV7_fit <- lavaan(
-  cfaModel_scalarInvarianceV7,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV7_fit)
-```
-
-##### Variable 8 {#measurementInvarianceDropConstraintsVariable8}
-
-Measurement invariance continues to hold when freeing intercepts of variable 8 across groups.\index{structural equation modeling!intercept}
-This suggests that variable 8 does not show non-invariant intercepts across groups, at least when the other intercepts have been freed.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV8 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ NA*1
- x9 ~ c(intx9, intx9)*1
-'
-
-cfaModel_scalarInvarianceV8_fit <- lavaan(
-  cfaModel_scalarInvarianceV8,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV8_fit)
-```
-
-##### Variable 9 {#measurementInvarianceDropConstraintsVariable9}
-
-Measurement invariance continues to hold when freeing intercepts of variable 9 across groups (even after constraining intercepts of variable 8 across groups).\index{structural equation modeling!intercept}
-This suggests that variable 9 does not show non-invariant intercepts across groups, at least when the other intercepts have been freed.\index{structural equation modeling!intercept}
-
-```{r}
-cfaModel_scalarInvarianceV9 <- '
- #Fix factor loadings to be the same across groups
- visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
- textual =~ c(lambdax4,lambdax4)*x4 + c(lambdax5,lambdax5)*x5 + c(lambdax6,lambdax6)*x6
- speed   =~ c(lambdax7,lambdax7)*x7 + c(lambdax8,lambdax8)*x8 + c(lambdax9,lambdax9)*x9
- 
- #Fix latent means to zero
- visual ~ 0
- textual ~ 0
- speed ~ 0
- 
- #Fix latent variances to one in group 1; free latent variances in group 2
- visual ~~ c(1, NA)*visual
- textual ~~ c(1, NA)*textual
- speed ~~ c(1, NA)*speed
- 
- #Estimate covariances among latent variables
- visual ~~ textual
- visual ~~ speed
- textual ~~ speed
- 
- #Estimate residual variances of manifest variables
- x1 ~~ x1
- x2 ~~ x2
- x3 ~~ x3
- x4 ~~ x4
- x5 ~~ x5
- x6 ~~ x6
- x7 ~~ x7
- x8 ~~ x8
- x9 ~~ x9
- 
- #Iteratively free intercepts across groups
- x1 ~ NA*1
- x2 ~ NA*1
- x3 ~ NA*1
- x4 ~ NA*1
- x5 ~ NA*1
- x6 ~ NA*1
- x7 ~ NA*1
- x8 ~ c(intx8, intx8)*1
- x9 ~ NA*1
-'
-
-cfaModel_scalarInvarianceV9_fit <- lavaan(
-  cfaModel_scalarInvarianceV9,
-  data = HolzingerSwineford1939,
-  group = "school",
-  missing = "ML",
-  estimator = "MLR")
-
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV9_fit)
-```
-
-##### Summary {#measurementInvarianceDropConstraintsSummary}
+So, we can use the scalar invariance model as the baseline model (in which item intercepts are constrained to be the same across groups), and we can iteratively drop constraints to identify which the items for which measurement invariance becomes established (relative to the metric invariance model which allows item intercepts to differ across groups), and therefore, identifies which item(s) show non-invariant intercepts across groups.\index{structural equation modeling!measurement invariance}\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!intercept}
 
 When iteratively dropping constraints, measurement invariance became established when freeing the intercepts for items 1–7 across groups.
 This suggests that items 7, 8, and 9 show measurement invariance of intercepts across groups.\index{structural equation modeling!measurement invariance}\index{structural equation modeling!intercept}
