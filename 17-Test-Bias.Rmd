@@ -775,9 +775,13 @@ library("mirt")
 library("dmacs")
 library("strucchange")
 library("MOTE")
-library("tidyverse")
 library("here")
+library("tidyverse")
 library("tinytex")
+library("knitr")
+library("kableExtra")
+library("rmarkdown")
+library("bookdown")
 ```
 
 ### Prepare Data {#prepareData-bias}
@@ -1393,18 +1397,6 @@ Thus, it can also be beneficial to review and address DIF sequentially by magnit
 
 Tests of DIF were conducted using the `mirt` package [@R-mirt].\index{item response theory!differential item functioning}
 
-### Item Descriptive Statistics {#descriptiveStats-bias}
-
-```{r}
-itemstats(
-  data = cnlsy[,c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7")],
-  group = cnlsy$sex,
-  ts.tables = TRUE)
-```
-
 ### Unconstrained Model {#difUnconstrained}
 
 #### Fit Model {#difUnconstrainedFit}
@@ -1428,7 +1420,6 @@ Items that appear to differ:\index{item response theory!differential item functi
 - item 4 has higher [difficulty/severity](#itemDifficulty) ($b_1$ and $b_2$ parameters) among males than females\index{item response theory!differential item functioning}\index{item response theory!item difficulty}
 
 ```{r}
-summary(unconstrainedModel)
 coef(unconstrainedModel,
      simplify = TRUE,
      IRTpars = TRUE)
@@ -1459,7 +1450,6 @@ constrainedModel <- multipleGroup(
 #### Model Summary {#difConstrainedSummary}
 
 ```{r}
-summary(constrainedModel)
 coef(
   constrainedModel,
   simplify = TRUE,
@@ -1531,7 +1521,7 @@ round(difDropItemsSeverity, 2)
 Items 1, 2, 3, 4, 5, and 6 showed [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}\index{chi-square!difference test}
 The [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty) is depicted in Figure \@ref(fig:difAddDiscriminationSeverity).\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}
 
-```{r difAddDiscriminationSeverity, out.width = "100%", fig.align = "center", fig.cap = "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination and/or Severity."}
+```{r}
 difAddItems <- DIF(
   unconstrainedModel,
   c("a1","d1","d2"),
@@ -1539,8 +1529,14 @@ difAddItems <- DIF(
   simplify = TRUE,
   plotdif = TRUE,
   par.settings = standard.theme("pdf", color = FALSE))
+```
 
-round(difAddItems, 2)
+```{r difAddDiscriminationSeverity, out.width = "100%", fig.align = "center", fig.cap = "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination and/or Severity."}
+round(difAddItems, 2) %>% 
+  kable(.,
+  format = "latex",
+  booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
 ```
 
 #### Items that differ in discrimination {#difAddConstraintsDiscrimination}
