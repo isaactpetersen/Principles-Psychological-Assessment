@@ -627,32 +627,43 @@ cor.table(
   dig = 2)
 ```
 
-```{r, echo = FALSE}
-cor.table(
+```{r, include = FALSE}
+corTable1 <- cor.table(
   HolzingerSwineford1939[,vars],
-  dig = 2) %>% 
-  kable(.,
-  format = "latex",
-  booktabs = TRUE) %>%
-  kable_styling(latex_options = "scale_down")
+  dig = 2)
 
-cor.table(
+corTable2 <- cor.table(
   HolzingerSwineford1939[,vars],
   type = "manuscript",
-  dig = 2) %>% 
+  dig = 2)
+
+corTable3 <- cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscriptBig",
+  dig = 2)
+```
+
+```{r, echo = FALSE}
+corTable1 %>% 
   kable(.,
+  caption = "Correlation matrix with *r*, *n*, and *p*-values.",
   format = "latex",
   booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
 
-cor.table(
-  HolzingerSwineford1939[,vars],
-  type = "manuscriptBig",
-  dig = 2) %>% 
+corTable2 %>% 
   kable(.,
+  caption = "Correlation matrix with asterisks for significant associations.",
   format = "latex",
-  booktabs = TRUE) %>%
+  booktabs = TRUE,
+  escape = FALSE) %>%
   kable_styling(latex_options = "scale_down")
+
+corTable3 %>% 
+  kable(.,
+  caption = "Correlation matrix.",
+  format = "latex",
+  booktabs = TRUE)
 ```
 
 Pairs panel plots were generated using the `psych` package [@R-psych].\index{correlation}
@@ -1112,6 +1123,7 @@ efaOrthogonalLavaan_fitIndices <- fitMeasures(
 ```{r, echo = FALSE}
 efaOrthogonalLavaan_fitIndices %>% 
   kable(.,
+  caption = "Orthogonal EFA fit indices.",
   format = "latex",
   booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
@@ -1133,7 +1145,7 @@ efaObliqueLavaan_fitIndices <- fitMeasures(
     "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
-```{r, echo = FALSE}
+```{r, include = FALSE}
 efaObliqueLavaan_fitIndices %>% 
   kable(.,
   format = "latex",
@@ -1445,9 +1457,9 @@ cfaModelFitModIndices <- modificationindices(
 ```{r, echo = FALSE}
 head(cfaModelFitModIndices) %>% 
   kable(.,
+  caption = "Modification Indices from Confirmatory Factor Analysis Model.",
   format = "latex",
-  booktabs = TRUE) %>%
-  kable_styling(latex_options = "scale_down")
+  booktabs = TRUE)
 ```
 
 #### Factor scores {#factorScores-cfa}
@@ -1795,6 +1807,7 @@ esem_loadings <- parameterEstimates(
 ```{r, echo = FALSE}
 esem_loadings %>% 
   kable(.,
+  caption = "Factor Loadings from Exploratory Factor Analysis for Use in Exploratory Structural Equation Modeling.",
   format = "latex",
   booktabs = TRUE)
 ```

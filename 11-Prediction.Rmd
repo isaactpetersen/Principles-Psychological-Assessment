@@ -214,7 +214,7 @@ $$
 In this case, we know the [marginal probability](#baseRate) ($P(R_i)$), and we can use that to solve for the unknown [conditional probability](#conditionalProbability) that reflects the [false positive rate](#falsePositiveRate) ($P(R | \text{not } C)$), as in Equation \@ref(eq:conditionalProbabilityRevised):\index{Bayesian!Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{false positive!rate}
 
 $$
-\scriptsize
+\tiny
 \begin{aligned}
   P(R_i) &= P(R | C) \cdot P(C_i) + P(R | \text{not } C) \cdot P(\text{not } C_i) && \\
   P(R_i) - [P(R | \text{not } C) \cdot P(\text{not } C_i)] &= P(R | C) \cdot P(C_i) && \text{Move } P(R | \text{not } C) \text{ to the left side} \\
@@ -329,7 +329,7 @@ We can calculate the probability of HIV given a positive test using three terms:
 Using the $P(R|\text{not } C)$ calculated in Equation \@ref(eq:conditionalProbabilityRevised), the [conditional probability](#conditionalProbability) of HIV given a single positive test is in Equation \@ref(eq:bayes4):\index{Bayesian!Bayes' theorem}\index{probability!conditional}
 
 $$
-\small
+\tiny
 \begin{aligned}
   P(C | R) &= \frac{P(R | C) \cdot P(C_i)}{P(R | C) \cdot P(C_i) + P(R | \text{not } C) \cdot [1 - P(C_i)]} \\
   &= \frac{\text{sensitivity of test} \times \text{base rate of HIV}}{\text{sensitivity of test} \times \text{base rate of HIV} + \text{false positive rate of test} \times (1 - \text{base rate of HIV})} \\
@@ -355,7 +355,7 @@ We can calculate the [conditional probability](#conditionalProbability) of HIV g
 The [conditional probability](#conditionalProbability) of HIV given a second positive test is in Equation \@ref(eq:baseRateUpdated4):\index{Bayesian!Bayes' theorem}\index{probability!conditional}
 
 $$
-\scriptsize
+\tiny
 \begin{aligned}
   P(C | R) &= \frac{P(R | C) \cdot P(C_i)}{P(R | C) \cdot P(C_i) + P(R | \text{not } C) \cdot [1 - P(C_i)]} \\
   &= \frac{\text{sensitivity of test} \times \text{updated base rate of HIV}}{\text{sensitivity of test} \times \text{updated base rate of HIV} + \text{false positive rate of test} \times (1 - \text{updated base rate of HIV})} \\
@@ -1118,9 +1118,9 @@ accuracyEstimates  %>%
   t %>%
   round(., 2) %>% 
   kable(.,
+  caption = "Estimates of Prediction Accuracy Across Cutoffs.",
   format = "latex",
-  booktabs = TRUE) %>%
-  kable_styling(latex_options = "scale_down")
+  booktabs = TRUE)
 ```
 
 ### General Prediction Accuracy {#generalPredictionAccuracy}
@@ -2054,10 +2054,11 @@ accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label 
 row.names(accuracyEstimatesAtCutoffTable) <- NULL
 names(accuracyEstimatesAtCutoffTable) <- c("value","index")
 accuracyEstimatesAtCutoffTable <- accuracyEstimatesAtCutoffTable %>% 
-  select(index, value)
+  dplyr::select(index, value)
 
 accuracyEstimatesAtCutoffTable %>%
   kable(.,
+  caption = "Estimates of Prediction Accuracy At a Given Cutoff.",
   format = "latex",
   booktabs = TRUE)
 ```
@@ -3752,7 +3753,11 @@ collinearRegression_model <- lm(
   s100b ~ ndka + gender + age + wfns + collinearPredictor,
   data = mydataSDT)
 
-vif(collinearRegression_model)
+vif(collinearRegression_model) %>%
+  kable(.,
+  caption = "Generalized VIF (GVIF) Estimates.",
+  format = "latex",
+  booktabs = TRUE)
 ```
 
 To address multicollinearity, you can drop a redundant predictor or you can also use [principal component analysis](#pca) or [factor analysis](#factorAnalysis) of the predictors to reduce the predictors down to a smaller number of meaningful predictors.\index{multicollinearity}\index{factor analysis}\index{principal component analysis}

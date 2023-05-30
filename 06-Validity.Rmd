@@ -25,7 +25,6 @@ library("semPlot")
 library("rockchalk")
 library("semTools")
 library("semPlot")
-library("kableExtra")
 library("MASS")
 library("psych")
 library("simstandard")
@@ -665,9 +664,9 @@ MTMM_data <- sim_standardized(
   errors = FALSE)
 ```
 
-A multitrait-multimethod matrix correlation matrix is in Figure \@ref(fig:mtmmCorrelationPDF).\index{multitrait-multimethod matrix}\index{validity!construct}
+A multitrait-multimethod matrix correlation matrix is in Figure \@ref(tab:mtmmCorrelationPDF).\index{multitrait-multimethod matrix}\index{validity!construct}
 
-```{r mtmmCorrelationPDF, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", echo = FALSE}
+```{r mtmmCorrelationPDF, echo = FALSE}
 MTMM_corMatrix <- cor(MTMM_data) %>% 
   specify_decimal(., 2) %>% 
   suppressLeadingZero(.) %>% 
@@ -681,6 +680,7 @@ MTMM_corMatrix[upper.tri(MTMM_corMatrix)] <- ""
 
 kable(
   MTMM_corMatrix,
+  caption = "Multitrait-Multimethod Correlation Matrix.",
   format = "latex",
   booktabs = TRUE
   ) %>%
@@ -779,14 +779,7 @@ model1 <- lm(
 model2 <- lm(
   criterion ~ oldpredictor + predictor,
   data = na.omit(mydataValidity))
-```
 
-```{r, eval = FALSE}
-summary(model1)
-summary(model2)
-```
-
-```{r}
 model1Rsquare <- summary(model1)$r.squared
 model2Rsquare <- summary(model2)$r.squared
 
@@ -1118,74 +1111,6 @@ The attenuation and disattenuation formulas are based on [classical test theory]
 Nevertheless, the attenuation formula can be informative for understanding how imperiled your research is when your measures have low [reliability](#reliability) (i.e., when there is instability in the measure).\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{reliability!problems of low reliability}
 Researchers recommend accounting for measurement [reliability](#reliability), to better estimate the association between constructs, either with the disattenuation formula [@Schmidt1996] or with [structural equation modeling](#sem), as described in the next chapter.\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
 
-### Test with Simulated Data {#measurementErrorEffects-simulatedData}
-
-#### Reliability of Predictor {#measurementErrorEffects-reliabilityPredictor}
-
-```{r}
-cor(
-  x = mydataValidity$predictorWithMeasurementErrorT1,
-  y = mydataValidity$predictorWithMeasurementErrorT2,
-  use = "pairwise.complete.obs")
-```
-
-```{r, include = FALSE}
-reliabilityPredictor_sim <- 
-  cor.test(
-    x = mydataValidity$predictorWithMeasurementErrorT1,
-    y = mydataValidity$predictorWithMeasurementErrorT2)$estimate
-```
-
-#### Reliability of Criterion {#measurementErrorEffects-reliabilityCriterion}
-
-```{r}
-cor(
-  x = mydataValidity$criterionWithMeasurementErrorT1,
-  y = mydataValidity$criterionWithMeasurementErrorT2,
-  use = "pairwise.complete.obs")
-```
-
-```{r, include = FALSE}
-reliabilityCriterion_sim <- 
-  cor.test(
-    x = mydataValidity$criterionWithMeasurementErrorT1,
-    y = mydataValidity$criterionWithMeasurementErrorT2)$estimate
-```
-
-#### True Association {#measurementErrorEffects-trueAssociation}
-
-```{r}
-cor(
-  x = mydataValidity$predictor,
-  y = mydataValidity$criterion,
-  use = "pairwise.complete.obs")
-```
-
-```{r, include = FALSE}
-trueAssociation_sim <- 
-  cor.test(
-    x = mydataValidity$predictor,
-    y = mydataValidity$criterion)$estimate
-```
-
-#### Observed Association (After Adding Measurement Error) {#measurementErrorEffects-observedAssociation}
-
-```{r}
-cor(
-  x = mydataValidity$predictorWithMeasurementErrorT1,
-  y = mydataValidity$criterionWithMeasurementErrorT1,
-  use = "pairwise.complete.obs")
-```
-
-```{r, include = FALSE}
-observedAssociation_sim <- 
-  cor.test(
-    x = mydataValidity$predictorWithMeasurementErrorT1,
-    y = mydataValidity$criterionWithMeasurementErrorT1)$estimate
-```
-
-Using simulated data, when the [reliability](#reliability) of the predictor is `r apa(reliabilityPredictor_sim, 2, leading = FALSE)`, the [reliability](#reliability) of the criterion is `r apa(reliabilityCriterion_sim, 2, leading = FALSE)`, and the true association between the predictor and criterion is $r = `r apa(trueAssociation_sim, 2, leading = FALSE)`$, the observed association is attenuated to $r = `r apa(observedAssociation_sim, 2, leading = FALSE)`$.\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
-
 ### Attenuation of True Correlation Due to Measurement Error {#attenuation}
 
 The attenuation formula is presented in Equation \@ref(eq:attenuationFormula).
@@ -1203,15 +1128,6 @@ $$
 where $x = \text{measure of construct} \ A$; $y = \text{measure of construct} \ B$\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
 
 Below is an example of how to find the observed correlation between the predictor and criterion if the true association between the constructs (i.e., correlation between true scores of constructs) is .70, the [reliability](#reliability) of the predictor is .90, and the [reliability](#reliability) of the criterion is .85:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
-
-```{r}
-trueAssociation <- .7
-reliabilityOfPredictor <- 0.9
-reliabilityOfCriterion <- 0.85
-
-trueAssociation * sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
-```
-
 The `petersenlab` package [@R-petersenlab] contains the `attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
 
 ```{r}
@@ -1245,28 +1161,6 @@ $$
 where $x = \text{measure of construct} \ A$; $y = \text{measure of construct} \ B$\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
 
 Find the true association between the construct assessed by the predictor and the construct assessed by the criterion given an observed association if the [reliability](#reliability) of the predictor is .9, and the [reliability](#reliability) of the criterion is .85:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
-
-```{r}
-reliabilityOfPredictor <- 0.9
-reliabilityOfCriterion <- 0.85
-```
-
-The observed (attenuated) association is as follows:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
-
-```{r}
-observedAssociation <- cor.test(
-  x = mydataValidity$predictor,
-  y = mydataValidity$criterion)$estimate
-
-observedAssociation
-```
-
-The true (disattenuated) association is as follows:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
-
-```{r}
-observedAssociation / sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
-```
-
 The `petersenlab` package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
 
 ```{r}
@@ -1308,6 +1202,7 @@ parameterEstimates(
   observedSEM_fit,
   standardized = TRUE) %>% 
   kable(.,
+  caption = "Parameter Estimates of Observed Association in Structural Equation Model.",
   format = "latex",
   booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
@@ -1357,6 +1252,7 @@ parameterEstimates(
   disattenuationSEM_fit,
   standardized = TRUE) %>% 
   kable(.,
+  caption = "Parameter Estimates of Disattenuated Association in Structural Equation Model.",
   format = "latex",
   booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
