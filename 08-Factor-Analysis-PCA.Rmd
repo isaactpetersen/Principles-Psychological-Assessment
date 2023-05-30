@@ -605,9 +605,11 @@ vars <- c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 
 ## Descriptive Statistics and Correlations {#descriptiveStatsCorrelations-factorAnalysis}
 
-Before conducting a [factor analysis](#factorAnalysis), it is important examine descriptive statistics and correlations among variables.\index{correlation}
+Before conducting a [factor analysis](#factorAnalysis), it is important examine descriptive statistics and correlations among variables.\index{correlation}\index{descriptive statistics}
 
 ### Descriptive Statistics {#descriptives-factorAnalysis}
+
+Descriptive statistics are presented in Table \@ref(tab:descriptiveStats).\index{descriptive statistics}
 
 ```{r, include = FALSE}
 summaryTable <- HolzingerSwineford1939 %>% 
@@ -639,7 +641,7 @@ summaryTableTransposed <- summaryTable[-1] %>%
   round(., digits = 2)
 ```
 
-```{r, echo = FALSE}
+```{r descriptiveStats, echo = FALSE}
 summaryTableTransposed %>% 
   kable(.,
   caption = "Descriptive Statistics.",
@@ -651,7 +653,7 @@ summaryTableTransposed %>%
 
 ### Correlations {#correlations-factorAnalysis}
 
-Here are correlation matrices of various types using the `cor.table()` from the `petersenlab` package [@R-petersenlab]:\index{petersenlab package}\index{correlation}
+Correlation matrices of various types using the `cor.table()` from the `petersenlab` package [@R-petersenlab] are in Tables \@ref(tab:corTable1), \@ref(tab:corTable2), and \@ref(tab:corTable3).\index{petersenlab package}\index{correlation}
 
 ```{r, eval = FALSE}
 cor.table(
@@ -685,7 +687,7 @@ corTable3 <- cor.table(
   dig = 2)
 ```
 
-```{r, echo = FALSE}
+```{r corTable1, echo = FALSE}
 corTable1 %>% 
   kable(.,
   caption = "Correlation matrix with \\textit{r}, \\textit{n}, and \\textit{p}-values.",
@@ -696,7 +698,7 @@ corTable1 %>%
   kable_styling(latex_options = "scale_down")
 ```
 
-```{r, echo = FALSE}
+```{r corTable2, echo = FALSE}
 corTable2 %>% 
   kable(.,
   caption = "Correlation matrix with asterisks for significant associations.",
@@ -707,7 +709,7 @@ corTable2 %>%
   kable_styling(latex_options = "scale_down")
 ```
 
-```{r, echo = FALSE}
+```{r corTable3, echo = FALSE}
 corTable3 %>% 
   kable(.,
   caption = "Correlation matrix.",
@@ -1156,7 +1158,7 @@ summary(
 
 ##### Orthogonal (Varimax) rotation {#fitEstimatesOrthogonal-efa}
 
-\index{factor analysis!exploratory}\index{orthogonal rotation}
+Fit indices are generated using the syntax below and are in Table \@ref(tab:efaOrthogonal_fitIndices).\index{factor analysis!exploratory}\index{orthogonal rotation}
 
 ```{r}
 efaOrthogonalLavaan_fitIndices <- fitMeasures(
@@ -1170,10 +1172,10 @@ efaOrthogonalLavaan_fitIndices <- fitMeasures(
     "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
-```{r, echo = FALSE}
-efaOrthogonalLavaan_fitIndices %>% 
+```{r efaOrthogonal_fitIndices, echo = FALSE}
+round(efaOrthogonalLavaan_fitIndices, 3) %>% 
   kable(.,
-  caption = "Orthogonal EFA fit indices.",
+  caption = "Fit Indices from EFA with Orthogonal Rotation.",
   format = "latex",
   booktabs = TRUE,
   linesep = "") %>%
@@ -1500,13 +1502,15 @@ residuals(cfaModelFit, type = "cor")
 
 #### Modification indices {#modIndices-cfa}
 
+Modification indices are generated using the syntax below and are in Table \@ref(tab:modIndicesCFA).\index{structural equation modeling!modification indices}
+
 ```{r}
 cfaModelFitModIndices <- modificationindices(
   cfaModelFit,
   sort. = TRUE)
 ```
 
-```{r, echo = FALSE}
+```{r modIndicesCFA, echo = FALSE}
 head(cfaModelFitModIndices) %>% 
   kable(.,
   caption = "Modification Indices from Confirmatory Factor Analysis Model.",
@@ -1846,6 +1850,7 @@ semPaths(
 
 To specify an [ESEM](#efa-cfa-esem) model, you use the factor loadings from an [EFA](#efa) model as the starting values in a [structural equation model](#sem).\index{structural equation modeling!exploratory}\index{factor analysis!exploratory}
 In this example, I use the factor loadings from the three-factor [EFA](#efa) model, as specified in Section \@ref(#oblique-efa).\index{structural equation modeling!exploratory}
+The factor loadings are in Table \@ref(tab:esemLoadings).
 
 ```{r}
 esem_loadings <- parameterEstimates(
@@ -1857,7 +1862,7 @@ esem_loadings <- parameterEstimates(
   dplyr::rename(item = rhs, latent = lhs, loading = est)
 ```
 
-```{r, echo = FALSE}
+```{r esemLoadings, echo = FALSE}
 esem_loadings %>% 
   kable(.,
   caption = "Factor Loadings from Exploratory Factor Analysis for Use in Exploratory Structural Equation Modeling.",

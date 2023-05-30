@@ -1105,6 +1105,7 @@ That is, each index of accuracy described in this section provides a single nume
 Aspects of accuracy at a particular cutoff are described in Section \@ref(cutoffAccuracy).\index{cutoff}
 
 The `petersenlab` package [@R-petersenlab] contains the `accuracyOverall()` function that estimates the prediction accuracy across cutoffs.\index{petersenlab package}\index{cutoff}
+Estimates of prediction accuracy across cutoffs are in Table \@ref(tab:accuracyAcrossCutoffs).\index{cutoff}
 
 ```{r}
 accuracyEstimates <- accuracyOverall(
@@ -1113,7 +1114,7 @@ accuracyEstimates <- accuracyOverall(
   dropUndefined = TRUE)
 ```
 
-```{r, echo = FALSE}
+```{r accuracyAcrossCutoffs, echo = FALSE}
 accuracyEstimates  %>%
   t %>%
   round(., 2) %>% 
@@ -1999,6 +2000,7 @@ mydataSDT$disorderFactor <- factor(
 ### Accuracy at a Given Cutoff {#accuracyAtCutoff}
 
 The `petersenlab` package [@R-petersenlab] contains the `accuracyAtCutoff()` function that estimates the prediction accuracy at a given cutoff.\index{petersenlab package}
+Estimates of prediction accuracy at a given cutoff are in Table \@ref(tab:accuracyAtGivenCutoff).\index{cutoff}
 
 ```{r}
 accuracyEstimatesAtCutoff <- accuracyAtCutoff(
@@ -2007,7 +2009,7 @@ accuracyEstimatesAtCutoff <- accuracyAtCutoff(
   cutoff = cutoff)
 ```
 
-```{r, echo = FALSE}
+```{r accuracyAtGivenCutoff, echo = FALSE}
 accuracyEstimatesAtCutoffTable <- accuracyEstimatesAtCutoff %>% 
   t() %>% 
   round(., 2) %>%
@@ -3747,7 +3749,8 @@ As the correlations among the predictors increase, the chance of getting an arbi
 So, it is important to examine a correlation matrix of the predictors before putting them in the same regression model.\index{multicollinearity}\index{multiple regression}
 You can also examine indices such as variance inflation factor (VIF).\index{multicollinearity}\index{multiple regression}
 
-Generalized VIF (GVIF) values are estimated below using the `car` package [@R-car].\index{multicollinearity}
+Generalized VIF (GVIF) values are estimated below using the `car` package [@R-car] and are in Table \@ref(tab:vif).\index{multicollinearity}
+
 
 ```{r}
 set.seed(52242)
@@ -3757,7 +3760,13 @@ rnorm(nrow(mydataSDT), sd = 20)
 collinearRegression_model <- lm(
   s100b ~ ndka + gender + age + wfns + collinearPredictor,
   data = mydataSDT)
+```
 
+```{r, eval = FALSE}
+vif(collinearRegression_model)
+```
+
+```{r vif, echo = FALSE}
 vif(collinearRegression_model) %>%
   kable(.,
   caption = "Generalized VIF (GVIF) Estimates.",
