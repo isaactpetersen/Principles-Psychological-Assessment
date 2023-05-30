@@ -1902,10 +1902,13 @@ The `petersenlab` package [@R-petersenlab] contains the `attenuationCorrelation(
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}
 
 ```{r}
+trueAssociation <- 0.7
+reliabilityOfMeasure <- 0.9
+
 attenuationCorrelation(
-  trueAssociation = 0.7, 
-  reliabilityOfPredictor = 0.9,
-  reliabilityOfCriterion = 0.9)
+  trueAssociation = trueAssociation, 
+  reliabilityOfPredictor = reliabilityOfMeasure,
+  reliabilityOfCriterion = reliabilityOfMeasure)
 ```
 
 ### Disattenuation of Observed Test–Retest Reliability Due to Measurement Error {#measurementErrorEffects-disattenuationTestRetestReliability}
@@ -1925,11 +1928,16 @@ Find the true correlation of the construct across two time points given an obser
 The `petersenlab` package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}\index{petersenlab package}
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}
 
+
 ```{r}
+observedAssociation <- as.numeric(cor.test(
+  x = mydata$time2,
+  y = mydata$time3)$estimate)
+  
 disattenuationCorrelation(
   observedAssociation = observedAssociation, 
-  reliabilityOfPredictor = 0.9,
-  reliabilityOfCriterion = 0.9)
+  reliabilityOfPredictor = reliabilityOfMeasure,
+  reliabilityOfCriterion = reliabilityOfMeasure)
 ```
 
 In the next section, I discuss [method biases](#methodBias), including what they are, why they are important, and how to account for them.\index{method bias}
