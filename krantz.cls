@@ -1093,12 +1093,12 @@
 \SectionTOCWidth2.3em
 \newcommand*\l@section{\@dottedtocline{1}{1.5em}{2.3em}}
 \newcommand*\l@subsection{\@dottedtocline{2}{3.8em}{4.1em}}
-\newcommand*\l@subsubsection{\@dottedtocline{3}{7.0em}{4.1em}}
+\newcommand*\l@subsubsection{\@dottedtocline{3}{7.0em}{5.9em}}
 \newlength\subsection@toc@skip
 \subsection@toc@skip\section@toc@skip
 \advance\subsection@toc@skip\SectionTOCWidth
 \newlength\SubSectionTOCWidth
-\SubSectionTOCWidth3.2em
+\SubSectionTOCWidth4.1em
 \newlength\subsubsection@toc@skip
 \subsubsection@toc@skip\subsection@toc@skip
 \advance\subsubsection@toc@skip\SubSectionTOCWidth
