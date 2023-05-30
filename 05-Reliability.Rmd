@@ -1388,12 +1388,6 @@ latentFactorModel_fit <- cfa(
   missing = "ML",
   estimator = "MLR",
   std.lv = TRUE)
-
-summary(
-  latentFactorModel_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
 ```
 
 ```{r}
@@ -1531,7 +1525,7 @@ ci.reliability(
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
-```{r omegaHierarchical, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
+```{r omegaHierarchical, eval = FALSE}
 set.seed(52242)
 ci.reliability(
   mydata[,c("item1","item2","item3","item4")],
@@ -1558,7 +1552,7 @@ ci.reliability(
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
-```{r omegaCategorical, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
+```{r omegaCategorical, eval = FALSE}
 set.seed(52242)
 ci.reliability(
   mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
@@ -1903,15 +1897,7 @@ $$
 (\#eq:attenuationRetestReliability)
 $$
 
-Find the observed test–retest association if the true test–retest association (i.e., the stability of the construct) is .7 and the reliability of the measure is .9:\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}
-
-```{r}
-trueAssociation <- 0.7
-reliabilityOfMeasure <- 0.9
-
-trueAssociation * reliabilityOfMeasure
-```
-
+Find the observed test–retest association if the true test–retest association (i.e., the stability of the construct) is .7 and the reliability of the measure is .9.\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}
 The `petersenlab` package [@R-petersenlab] contains the `attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}\index{petersenlab package}
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}
 
@@ -1935,18 +1921,7 @@ $$
 (\#eq:disattenuationRetestReliability)
 $$
 
-Find the true correlation of the construct across two time points given an observed correlation if the observed reliability of the measure is .9:\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}
-
-```{r}
-reliabilityOfMeasure <- 0.9
-
-observedAssociation <- as.numeric(cor.test(
-  x = mydata$time2,
-  y = mydata$time3)$estimate)
-
-observedAssociation / reliabilityOfMeasure
-```
-
+Find the true correlation of the construct across two time points given an observed correlation if the observed reliability of the measure is .9.\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}
 The `petersenlab` package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}\index{petersenlab package}
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}
 

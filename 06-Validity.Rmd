@@ -665,15 +665,22 @@ MTMM_data <- sim_standardized(
   errors = FALSE)
 ```
 
-A multitrait-multimethod matrix correlation matrix is below.\index{multitrait-multimethod matrix}\index{validity!construct}
-
-```{r, eval = FALSE}
-round(cor(MTMM_data), 2)
-```
+A multitrait-multimethod matrix correlation matrix is in Figure \@ref(fig:mtmmCorrelationPDF).\index{multitrait-multimethod matrix}\index{validity!construct}
 
 ```{r mtmmCorrelationPDF, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", echo = FALSE}
+MTMM_corMatrix <- cor(MTMM_data) %>% 
+  specify_decimal(., 2) %>% 
+  suppressLeadingZero(.) %>% 
+  matrix(., nrow = ncol(MTMM_data), ncol = ncol(MTMM_data)) %>% 
+  data.frame()
+
+names(MTMM_corMatrix) <- names(MTMM_data)
+row.names(MTMM_corMatrix) <- names(MTMM_data)
+  
+MTMM_corMatrix[upper.tri(MTMM_corMatrix)] <- ""
+
 kable(
-  data.frame(round(cor(MTMM_data), 2)),
+  MTMM_corMatrix,
   format = "latex",
   booktabs = TRUE
   ) %>%
