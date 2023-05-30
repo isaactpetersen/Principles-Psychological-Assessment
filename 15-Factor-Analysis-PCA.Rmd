@@ -627,6 +627,38 @@ kable(psych::describe(HolzingerSwineford1939[,vars]),
       booktabs = TRUE)
 ```
 
+```{r}
+summaryTable <- HolzingerSwineford1939 %>% 
+  select(x1:x9) %>% 
+  summarise(across(
+    everything(),
+    .fns = list(
+      n = ~ length(na.omit(.)),
+      missingness = ~ mean(is.na(.)) * 100,
+      M = ~ mean(., na.rm = TRUE),
+      SD = ~ sd(., na.rm = TRUE),
+      min = ~ min(., na.rm = TRUE),
+      max = ~ max(., na.rm = TRUE),
+      skewness = ~ psych::skew(., na.rm = TRUE),
+      kurtosis = ~ kurtosi(., na.rm = TRUE)),
+    .names = "{.col}.{.fn}")) %>%  
+  pivot_longer(
+    cols = everything(),
+    names_to = c("variable","index"),
+    names_sep = "\\.") %>% 
+  pivot_wider(
+    names_from = index,
+    values_from = value)
+
+summaryTableTransposed <- summaryTable[-1] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  setNames(summaryTable$variable) %>% 
+  round(., digits = 2)
+
+summaryTableTransposed
+```
+
 ### Correlations {#correlations-factorAnalysis}
 
 ```{r}
