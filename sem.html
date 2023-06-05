@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2023-05-31" />
+<meta name="date" content="2023-06-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -4178,9 +4178,31 @@ Figure 7.10: Modified Confirmatory Factor Analysis Model.
 <h4><span class="header-section-number">7.9.10.7</span> Compare model fit<a href="sem.html#nestedModelComparison-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The modified model with the cross loading and the original model are considered “nested” models.
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
-Model fit of nested models can be compared with a chi-square difference test.</p>
+To confirm that the models are nested, I use the <code>net()</code> function from the <code>semTools</code> package <span class="citation">(<a href="#ref-R-semTools" role="doc-biblioref">Jorgensen et al., 2021</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="sem.html#cb341-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cfaModelFit, cfaModel2Fit)</span></code></pre></div>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="sem.html#cb341-1" aria-hidden="true" tabindex="-1"></a><span class="fu">net</span>(cfaModelFit, cfaModel2Fit)</span></code></pre></div>
+</details>
+<pre><code>
+        If cell [R, C] is TRUE, the model in row R is nested within column C.
+
+        If the models also have the same degrees of freedom, they are equivalent.
+
+        NA indicates the model in column C did not converge when fit to the
+        implied means and covariance matrix from the model in row R.
+
+        The hidden diagonal is TRUE because any model is equivalent to itself.
+        The upper triangle is hidden because for models with the same degrees
+        of freedom, cell [C, R] == cell [R, C].  For all models with different
+        degrees of freedom, the upper diagonal is all FALSE because models with
+        fewer degrees of freedom (i.e., more parameters) cannot be nested
+        within models with more degrees of freedom (i.e., fewer parameters).
+        
+                       cfaModel2Fit cfaModelFit
+cfaModel2Fit (df = 23)                         
+cfaModelFit (df = 24)  TRUE                    </code></pre>
+<p>Model fit of nested models can be compared with a chi-square difference test.</p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="sem.html#cb343-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(cfaModelFit, cfaModel2Fit)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4190,24 +4212,24 @@ Model fit of nested models can be compared with a chi-square difference test.</p
 <p>In this case, the model with the cross loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross loading.</p>
 <p>One can also compare nested models using a robust likelihood ratio test:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="sem.html#cb342-1" aria-hidden="true" tabindex="-1"></a>cfaModelFitML <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
-<span id="cb342-2"><a href="sem.html#cb342-2" aria-hidden="true" tabindex="-1"></a>  cfaModel_syntax,</span>
-<span id="cb342-3"><a href="sem.html#cb342-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
-<span id="cb342-4"><a href="sem.html#cb342-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
-<span id="cb342-5"><a href="sem.html#cb342-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;ML&quot;</span>,</span>
-<span id="cb342-6"><a href="sem.html#cb342-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb342-7"><a href="sem.html#cb342-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb342-8"><a href="sem.html#cb342-8" aria-hidden="true" tabindex="-1"></a>cfaModel2FitML <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
-<span id="cb342-9"><a href="sem.html#cb342-9" aria-hidden="true" tabindex="-1"></a>  cfaModel2_syntax,</span>
-<span id="cb342-10"><a href="sem.html#cb342-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
-<span id="cb342-11"><a href="sem.html#cb342-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
-<span id="cb342-12"><a href="sem.html#cb342-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;ML&quot;</span>,</span>
-<span id="cb342-13"><a href="sem.html#cb342-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb342-14"><a href="sem.html#cb342-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb342-15"><a href="sem.html#cb342-15" aria-hidden="true" tabindex="-1"></a><span class="fu">vuongtest</span>(</span>
-<span id="cb342-16"><a href="sem.html#cb342-16" aria-hidden="true" tabindex="-1"></a>  cfaModelFitML,</span>
-<span id="cb342-17"><a href="sem.html#cb342-17" aria-hidden="true" tabindex="-1"></a>  cfaModel2FitML,</span>
-<span id="cb342-18"><a href="sem.html#cb342-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">nested =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="sem.html#cb344-1" aria-hidden="true" tabindex="-1"></a>cfaModelFitML <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb344-2"><a href="sem.html#cb344-2" aria-hidden="true" tabindex="-1"></a>  cfaModel_syntax,</span>
+<span id="cb344-3"><a href="sem.html#cb344-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
+<span id="cb344-4"><a href="sem.html#cb344-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
+<span id="cb344-5"><a href="sem.html#cb344-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;ML&quot;</span>,</span>
+<span id="cb344-6"><a href="sem.html#cb344-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb344-7"><a href="sem.html#cb344-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb344-8"><a href="sem.html#cb344-8" aria-hidden="true" tabindex="-1"></a>cfaModel2FitML <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb344-9"><a href="sem.html#cb344-9" aria-hidden="true" tabindex="-1"></a>  cfaModel2_syntax,</span>
+<span id="cb344-10"><a href="sem.html#cb344-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
+<span id="cb344-11"><a href="sem.html#cb344-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
+<span id="cb344-12"><a href="sem.html#cb344-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;ML&quot;</span>,</span>
+<span id="cb344-13"><a href="sem.html#cb344-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb344-14"><a href="sem.html#cb344-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb344-15"><a href="sem.html#cb344-15" aria-hidden="true" tabindex="-1"></a><span class="fu">vuongtest</span>(</span>
+<span id="cb344-16"><a href="sem.html#cb344-16" aria-hidden="true" tabindex="-1"></a>  cfaModelFitML,</span>
+<span id="cb344-17"><a href="sem.html#cb344-17" aria-hidden="true" tabindex="-1"></a>  cfaModel2FitML,</span>
+<span id="cb344-18"><a href="sem.html#cb344-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">nested =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>
 Model 1 
@@ -4229,26 +4251,26 @@ Robust likelihood ratio test of distinguishable models
     LR = 32.923,   p = 8.11e-08</code></pre>
 <p>For non-nested models, one can compare model fit with AIC, BIC, or the Vuong test.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="sem.html#cb344-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
-<span id="cb344-2"><a href="sem.html#cb344-2" aria-hidden="true" tabindex="-1"></a>  cfaModelFitML,</span>
-<span id="cb344-3"><a href="sem.html#cb344-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
-<span id="cb344-4"><a href="sem.html#cb344-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;aic&quot;</span>,<span class="st">&quot;bic&quot;</span>,<span class="st">&quot;bic2&quot;</span>))</span></code></pre></div>
-</details>
-<pre><code>     aic      bic     bic2 
-7535.490 7646.703 7551.560 </code></pre>
-<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="sem.html#cb346-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
-<span id="cb346-2"><a href="sem.html#cb346-2" aria-hidden="true" tabindex="-1"></a>  cfaModel2FitML,</span>
+<span id="cb346-2"><a href="sem.html#cb346-2" aria-hidden="true" tabindex="-1"></a>  cfaModelFitML,</span>
 <span id="cb346-3"><a href="sem.html#cb346-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
 <span id="cb346-4"><a href="sem.html#cb346-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;aic&quot;</span>,<span class="st">&quot;bic&quot;</span>,<span class="st">&quot;bic2&quot;</span>))</span></code></pre></div>
 </details>
 <pre><code>     aic      bic     bic2 
+7535.490 7646.703 7551.560 </code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="sem.html#cb348-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
+<span id="cb348-2"><a href="sem.html#cb348-2" aria-hidden="true" tabindex="-1"></a>  cfaModel2FitML,</span>
+<span id="cb348-3"><a href="sem.html#cb348-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
+<span id="cb348-4"><a href="sem.html#cb348-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;aic&quot;</span>,<span class="st">&quot;bic&quot;</span>,<span class="st">&quot;bic2&quot;</span>))</span></code></pre></div>
+</details>
+<pre><code>     aic      bic     bic2 
 7504.566 7619.487 7521.172 </code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="sem.html#cb348-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vuongtest</span>(</span>
-<span id="cb348-2"><a href="sem.html#cb348-2" aria-hidden="true" tabindex="-1"></a>  cfaModelFitML,</span>
-<span id="cb348-3"><a href="sem.html#cb348-3" aria-hidden="true" tabindex="-1"></a>  cfaModel2FitML,</span>
-<span id="cb348-4"><a href="sem.html#cb348-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nested =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="sem.html#cb350-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vuongtest</span>(</span>
+<span id="cb350-2"><a href="sem.html#cb350-2" aria-hidden="true" tabindex="-1"></a>  cfaModelFitML,</span>
+<span id="cb350-3"><a href="sem.html#cb350-3" aria-hidden="true" tabindex="-1"></a>  cfaModel2FitML,</span>
+<span id="cb350-4"><a href="sem.html#cb350-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nested =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </details>
 <pre><code>
 Model 1 
@@ -4281,84 +4303,84 @@ The examples were adapted from the <code>lavaan</code> documentation: <a href="h
 <div id="semModelSyntax-sem" class="section level3 hasAnchor" number="7.10.1">
 <h3><span class="header-section-number">7.10.1</span> Specify the model<a href="sem.html#semModelSyntax-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="sem.html#cb350-1" aria-hidden="true" tabindex="-1"></a>semModel_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb350-2"><a href="sem.html#cb350-2" aria-hidden="true" tabindex="-1"></a><span class="st"> #Measurement model factor loadings</span></span>
-<span id="cb350-3"><a href="sem.html#cb350-3" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ x1 + x2 + x3</span></span>
-<span id="cb350-4"><a href="sem.html#cb350-4" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ y1 + y2 + y3 + y4</span></span>
-<span id="cb350-5"><a href="sem.html#cb350-5" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ y5 + y6 + y7 + y8</span></span>
-<span id="cb350-6"><a href="sem.html#cb350-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb350-7"><a href="sem.html#cb350-7" aria-hidden="true" tabindex="-1"></a><span class="st"> #Regression paths</span></span>
-<span id="cb350-8"><a href="sem.html#cb350-8" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ ind60</span></span>
-<span id="cb350-9"><a href="sem.html#cb350-9" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ ind60 + dem60</span></span>
-<span id="cb350-10"><a href="sem.html#cb350-10" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb350-11"><a href="sem.html#cb350-11" aria-hidden="true" tabindex="-1"></a><span class="st"> #Covariances among residual variances (correlated errors)</span></span>
-<span id="cb350-12"><a href="sem.html#cb350-12" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y5</span></span>
-<span id="cb350-13"><a href="sem.html#cb350-13" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y4 + y6</span></span>
-<span id="cb350-14"><a href="sem.html#cb350-14" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y7</span></span>
-<span id="cb350-15"><a href="sem.html#cb350-15" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y8</span></span>
-<span id="cb350-16"><a href="sem.html#cb350-16" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y8</span></span>
-<span id="cb350-17"><a href="sem.html#cb350-17" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
-<span id="cb350-18"><a href="sem.html#cb350-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb350-19"><a href="sem.html#cb350-19" aria-hidden="true" tabindex="-1"></a>semModel_fullSyntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb350-20"><a href="sem.html#cb350-20" aria-hidden="true" tabindex="-1"></a><span class="st"> #Measurement model factor loadings (free the factor loading of the first indicator)</span></span>
-<span id="cb350-21"><a href="sem.html#cb350-21" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ NA*x1 + x2 + x3</span></span>
-<span id="cb350-22"><a href="sem.html#cb350-22" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ NA*y1 + y2 + y3 + y4</span></span>
-<span id="cb350-23"><a href="sem.html#cb350-23" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ NA*y5 + y6 + y7 + y8</span></span>
-<span id="cb350-24"><a href="sem.html#cb350-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb350-25"><a href="sem.html#cb350-25" aria-hidden="true" tabindex="-1"></a><span class="st"> #Regression paths</span></span>
-<span id="cb350-26"><a href="sem.html#cb350-26" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ ind60</span></span>
-<span id="cb350-27"><a href="sem.html#cb350-27" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ ind60 + dem60</span></span>
-<span id="cb350-28"><a href="sem.html#cb350-28" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb350-29"><a href="sem.html#cb350-29" aria-hidden="true" tabindex="-1"></a><span class="st"> #Covariances among residual variances (correlated errors)</span></span>
-<span id="cb350-30"><a href="sem.html#cb350-30" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y5</span></span>
-<span id="cb350-31"><a href="sem.html#cb350-31" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y4 + y6</span></span>
-<span id="cb350-32"><a href="sem.html#cb350-32" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y7</span></span>
-<span id="cb350-33"><a href="sem.html#cb350-33" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y8</span></span>
-<span id="cb350-34"><a href="sem.html#cb350-34" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y8</span></span>
-<span id="cb350-35"><a href="sem.html#cb350-35" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb350-36"><a href="sem.html#cb350-36" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent means to zero</span></span>
-<span id="cb350-37"><a href="sem.html#cb350-37" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~ 0</span></span>
-<span id="cb350-38"><a href="sem.html#cb350-38" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ 0</span></span>
-<span id="cb350-39"><a href="sem.html#cb350-39" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ 0</span></span>
-<span id="cb350-40"><a href="sem.html#cb350-40" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb350-41"><a href="sem.html#cb350-41" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent variances to one</span></span>
-<span id="cb350-42"><a href="sem.html#cb350-42" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~~ 1*ind60</span></span>
-<span id="cb350-43"><a href="sem.html#cb350-43" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~~ 1*dem60</span></span>
-<span id="cb350-44"><a href="sem.html#cb350-44" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~~ 1*dem65</span></span>
-<span id="cb350-45"><a href="sem.html#cb350-45" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb350-46"><a href="sem.html#cb350-46" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)</span></span>
-<span id="cb350-47"><a href="sem.html#cb350-47" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb350-48"><a href="sem.html#cb350-48" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate residual variances of manifest variables</span></span>
-<span id="cb350-49"><a href="sem.html#cb350-49" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~~ x1</span></span>
-<span id="cb350-50"><a href="sem.html#cb350-50" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~~ x2</span></span>
-<span id="cb350-51"><a href="sem.html#cb350-51" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~~ x3</span></span>
-<span id="cb350-52"><a href="sem.html#cb350-52" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y1</span></span>
-<span id="cb350-53"><a href="sem.html#cb350-53" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y2</span></span>
-<span id="cb350-54"><a href="sem.html#cb350-54" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y3</span></span>
-<span id="cb350-55"><a href="sem.html#cb350-55" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y4</span></span>
-<span id="cb350-56"><a href="sem.html#cb350-56" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~~ y5</span></span>
-<span id="cb350-57"><a href="sem.html#cb350-57" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y6</span></span>
-<span id="cb350-58"><a href="sem.html#cb350-58" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~~ y7</span></span>
-<span id="cb350-59"><a href="sem.html#cb350-59" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~~ y8</span></span>
-<span id="cb350-60"><a href="sem.html#cb350-60" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb350-61"><a href="sem.html#cb350-61" aria-hidden="true" tabindex="-1"></a><span class="st"> #Free intercepts of manifest variables</span></span>
-<span id="cb350-62"><a href="sem.html#cb350-62" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~ intx1*1</span></span>
-<span id="cb350-63"><a href="sem.html#cb350-63" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~ intx2*1</span></span>
-<span id="cb350-64"><a href="sem.html#cb350-64" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~ intx3*1</span></span>
-<span id="cb350-65"><a href="sem.html#cb350-65" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~ inty1*1</span></span>
-<span id="cb350-66"><a href="sem.html#cb350-66" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~ inty2*1</span></span>
-<span id="cb350-67"><a href="sem.html#cb350-67" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~ inty3*1</span></span>
-<span id="cb350-68"><a href="sem.html#cb350-68" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~ inty4*1</span></span>
-<span id="cb350-69"><a href="sem.html#cb350-69" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~ inty5*1</span></span>
-<span id="cb350-70"><a href="sem.html#cb350-70" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~ inty6*1</span></span>
-<span id="cb350-71"><a href="sem.html#cb350-71" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~ inty7*1</span></span>
-<span id="cb350-72"><a href="sem.html#cb350-72" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~ inty8*1</span></span>
-<span id="cb350-73"><a href="sem.html#cb350-73" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="sem.html#cb352-1" aria-hidden="true" tabindex="-1"></a>semModel_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb352-2"><a href="sem.html#cb352-2" aria-hidden="true" tabindex="-1"></a><span class="st"> #Measurement model factor loadings</span></span>
+<span id="cb352-3"><a href="sem.html#cb352-3" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ x1 + x2 + x3</span></span>
+<span id="cb352-4"><a href="sem.html#cb352-4" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ y1 + y2 + y3 + y4</span></span>
+<span id="cb352-5"><a href="sem.html#cb352-5" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ y5 + y6 + y7 + y8</span></span>
+<span id="cb352-6"><a href="sem.html#cb352-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb352-7"><a href="sem.html#cb352-7" aria-hidden="true" tabindex="-1"></a><span class="st"> #Regression paths</span></span>
+<span id="cb352-8"><a href="sem.html#cb352-8" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ ind60</span></span>
+<span id="cb352-9"><a href="sem.html#cb352-9" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ ind60 + dem60</span></span>
+<span id="cb352-10"><a href="sem.html#cb352-10" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb352-11"><a href="sem.html#cb352-11" aria-hidden="true" tabindex="-1"></a><span class="st"> #Covariances among residual variances (correlated errors)</span></span>
+<span id="cb352-12"><a href="sem.html#cb352-12" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y5</span></span>
+<span id="cb352-13"><a href="sem.html#cb352-13" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y4 + y6</span></span>
+<span id="cb352-14"><a href="sem.html#cb352-14" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y7</span></span>
+<span id="cb352-15"><a href="sem.html#cb352-15" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y8</span></span>
+<span id="cb352-16"><a href="sem.html#cb352-16" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y8</span></span>
+<span id="cb352-17"><a href="sem.html#cb352-17" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb352-18"><a href="sem.html#cb352-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb352-19"><a href="sem.html#cb352-19" aria-hidden="true" tabindex="-1"></a>semModel_fullSyntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb352-20"><a href="sem.html#cb352-20" aria-hidden="true" tabindex="-1"></a><span class="st"> #Measurement model factor loadings (free the factor loading of the first indicator)</span></span>
+<span id="cb352-21"><a href="sem.html#cb352-21" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ NA*x1 + x2 + x3</span></span>
+<span id="cb352-22"><a href="sem.html#cb352-22" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ NA*y1 + y2 + y3 + y4</span></span>
+<span id="cb352-23"><a href="sem.html#cb352-23" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ NA*y5 + y6 + y7 + y8</span></span>
+<span id="cb352-24"><a href="sem.html#cb352-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb352-25"><a href="sem.html#cb352-25" aria-hidden="true" tabindex="-1"></a><span class="st"> #Regression paths</span></span>
+<span id="cb352-26"><a href="sem.html#cb352-26" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ ind60</span></span>
+<span id="cb352-27"><a href="sem.html#cb352-27" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ ind60 + dem60</span></span>
+<span id="cb352-28"><a href="sem.html#cb352-28" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb352-29"><a href="sem.html#cb352-29" aria-hidden="true" tabindex="-1"></a><span class="st"> #Covariances among residual variances (correlated errors)</span></span>
+<span id="cb352-30"><a href="sem.html#cb352-30" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y5</span></span>
+<span id="cb352-31"><a href="sem.html#cb352-31" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y4 + y6</span></span>
+<span id="cb352-32"><a href="sem.html#cb352-32" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y7</span></span>
+<span id="cb352-33"><a href="sem.html#cb352-33" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y8</span></span>
+<span id="cb352-34"><a href="sem.html#cb352-34" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y8</span></span>
+<span id="cb352-35"><a href="sem.html#cb352-35" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb352-36"><a href="sem.html#cb352-36" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent means to zero</span></span>
+<span id="cb352-37"><a href="sem.html#cb352-37" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~ 0</span></span>
+<span id="cb352-38"><a href="sem.html#cb352-38" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ 0</span></span>
+<span id="cb352-39"><a href="sem.html#cb352-39" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ 0</span></span>
+<span id="cb352-40"><a href="sem.html#cb352-40" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb352-41"><a href="sem.html#cb352-41" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent variances to one</span></span>
+<span id="cb352-42"><a href="sem.html#cb352-42" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~~ 1*ind60</span></span>
+<span id="cb352-43"><a href="sem.html#cb352-43" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~~ 1*dem60</span></span>
+<span id="cb352-44"><a href="sem.html#cb352-44" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~~ 1*dem65</span></span>
+<span id="cb352-45"><a href="sem.html#cb352-45" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb352-46"><a href="sem.html#cb352-46" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)</span></span>
+<span id="cb352-47"><a href="sem.html#cb352-47" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb352-48"><a href="sem.html#cb352-48" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate residual variances of manifest variables</span></span>
+<span id="cb352-49"><a href="sem.html#cb352-49" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~~ x1</span></span>
+<span id="cb352-50"><a href="sem.html#cb352-50" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~~ x2</span></span>
+<span id="cb352-51"><a href="sem.html#cb352-51" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~~ x3</span></span>
+<span id="cb352-52"><a href="sem.html#cb352-52" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y1</span></span>
+<span id="cb352-53"><a href="sem.html#cb352-53" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y2</span></span>
+<span id="cb352-54"><a href="sem.html#cb352-54" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y3</span></span>
+<span id="cb352-55"><a href="sem.html#cb352-55" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y4</span></span>
+<span id="cb352-56"><a href="sem.html#cb352-56" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~~ y5</span></span>
+<span id="cb352-57"><a href="sem.html#cb352-57" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y6</span></span>
+<span id="cb352-58"><a href="sem.html#cb352-58" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~~ y7</span></span>
+<span id="cb352-59"><a href="sem.html#cb352-59" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~~ y8</span></span>
+<span id="cb352-60"><a href="sem.html#cb352-60" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb352-61"><a href="sem.html#cb352-61" aria-hidden="true" tabindex="-1"></a><span class="st"> #Free intercepts of manifest variables</span></span>
+<span id="cb352-62"><a href="sem.html#cb352-62" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~ intx1*1</span></span>
+<span id="cb352-63"><a href="sem.html#cb352-63" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~ intx2*1</span></span>
+<span id="cb352-64"><a href="sem.html#cb352-64" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~ intx3*1</span></span>
+<span id="cb352-65"><a href="sem.html#cb352-65" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~ inty1*1</span></span>
+<span id="cb352-66"><a href="sem.html#cb352-66" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~ inty2*1</span></span>
+<span id="cb352-67"><a href="sem.html#cb352-67" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~ inty3*1</span></span>
+<span id="cb352-68"><a href="sem.html#cb352-68" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~ inty4*1</span></span>
+<span id="cb352-69"><a href="sem.html#cb352-69" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~ inty5*1</span></span>
+<span id="cb352-70"><a href="sem.html#cb352-70" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~ inty6*1</span></span>
+<span id="cb352-71"><a href="sem.html#cb352-71" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~ inty7*1</span></span>
+<span id="cb352-72"><a href="sem.html#cb352-72" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~ inty8*1</span></span>
+<span id="cb352-73"><a href="sem.html#cb352-73" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
 </details>
 <div id="semModelTabular-sem" class="section level4 hasAnchor" number="7.10.1.1">
 <h4><span class="header-section-number">7.10.1.1</span> Model Syntax in Table Form:<a href="sem.html#semModelTabular-sem" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="sem.html#cb351-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavaanify</span>(semModel_syntax)</span></code></pre></div>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="sem.html#cb353-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavaanify</span>(semModel_syntax)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4366,7 +4388,7 @@ The examples were adapted from the <code>lavaan</code> documentation: <a href="h
   </script>
 </div>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="sem.html#cb352-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavaanify</span>(semModel_fullSyntax)</span></code></pre></div>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="sem.html#cb354-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavaanify</span>(semModel_fullSyntax)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4378,18 +4400,18 @@ The examples were adapted from the <code>lavaan</code> documentation: <a href="h
 <div id="semModelFit-sem" class="section level3 hasAnchor" number="7.10.2">
 <h3><span class="header-section-number">7.10.2</span> Fit the model<a href="sem.html#semModelFit-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="sem.html#cb353-1" aria-hidden="true" tabindex="-1"></a>semModelFit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
-<span id="cb353-2"><a href="sem.html#cb353-2" aria-hidden="true" tabindex="-1"></a>  semModel_syntax,</span>
-<span id="cb353-3"><a href="sem.html#cb353-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb353-4"><a href="sem.html#cb353-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
-<span id="cb353-5"><a href="sem.html#cb353-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;MLR&quot;</span>,</span>
-<span id="cb353-6"><a href="sem.html#cb353-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb353-7"><a href="sem.html#cb353-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb353-8"><a href="sem.html#cb353-8" aria-hidden="true" tabindex="-1"></a>semModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb353-9"><a href="sem.html#cb353-9" aria-hidden="true" tabindex="-1"></a>  semModel_fullSyntax,</span>
-<span id="cb353-10"><a href="sem.html#cb353-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb353-11"><a href="sem.html#cb353-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
-<span id="cb353-12"><a href="sem.html#cb353-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;MLR&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="sem.html#cb355-1" aria-hidden="true" tabindex="-1"></a>semModelFit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb355-2"><a href="sem.html#cb355-2" aria-hidden="true" tabindex="-1"></a>  semModel_syntax,</span>
+<span id="cb355-3"><a href="sem.html#cb355-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb355-4"><a href="sem.html#cb355-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
+<span id="cb355-5"><a href="sem.html#cb355-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;MLR&quot;</span>,</span>
+<span id="cb355-6"><a href="sem.html#cb355-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb355-7"><a href="sem.html#cb355-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb355-8"><a href="sem.html#cb355-8" aria-hidden="true" tabindex="-1"></a>semModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb355-9"><a href="sem.html#cb355-9" aria-hidden="true" tabindex="-1"></a>  semModel_fullSyntax,</span>
+<span id="cb355-10"><a href="sem.html#cb355-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb355-11"><a href="sem.html#cb355-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
+<span id="cb355-12"><a href="sem.html#cb355-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;MLR&quot;</span>)</span></code></pre></div>
 </details>
 </div>
 <div id="semModelOutput-sem" class="section level3 hasAnchor" number="7.10.3">
@@ -4407,11 +4429,11 @@ In this case, the <em>p</em>-value of the robust chi-square test in comparison t
 Thus, the model fits significantly better than the worst-possible-fitting model.</p>
 <p>In terms of the model findings, <code>ind60</code> was significantly positively associated with <code>dem60</code>, <code>dem60</code> was significantly positively associated with <code>dem65</code>, and <code>ind60</code> was marginally significantly positively associated with <code>dem65</code>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="sem.html#cb354-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
-<span id="cb354-2"><a href="sem.html#cb354-2" aria-hidden="true" tabindex="-1"></a>  semModelFit,</span>
-<span id="cb354-3"><a href="sem.html#cb354-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb354-4"><a href="sem.html#cb354-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb354-5"><a href="sem.html#cb354-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="sem.html#cb356-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb356-2"><a href="sem.html#cb356-2" aria-hidden="true" tabindex="-1"></a>  semModelFit,</span>
+<span id="cb356-3"><a href="sem.html#cb356-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb356-4"><a href="sem.html#cb356-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb356-5"><a href="sem.html#cb356-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>lavaan 0.6.15 ended normally after 82 iterations
 
@@ -4571,11 +4593,11 @@ R-Square:
     dem60             0.232
     dem65             0.932</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="sem.html#cb356-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
-<span id="cb356-2"><a href="sem.html#cb356-2" aria-hidden="true" tabindex="-1"></a>  semModelFit_full,</span>
-<span id="cb356-3"><a href="sem.html#cb356-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb356-4"><a href="sem.html#cb356-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb356-5"><a href="sem.html#cb356-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="sem.html#cb358-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb358-2"><a href="sem.html#cb358-2" aria-hidden="true" tabindex="-1"></a>  semModelFit_full,</span>
+<span id="cb358-3"><a href="sem.html#cb358-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb358-4"><a href="sem.html#cb358-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb358-5"><a href="sem.html#cb358-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>lavaan 0.6.15 ended normally after 82 iterations
 
@@ -4739,15 +4761,15 @@ R-Square:
 <div id="semModelFitCriteria-sem" class="section level3 hasAnchor" number="7.10.4">
 <h3><span class="header-section-number">7.10.4</span> Estimates of model fit<a href="sem.html#semModelFitCriteria-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="sem.html#cb358-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
-<span id="cb358-2"><a href="sem.html#cb358-2" aria-hidden="true" tabindex="-1"></a>  semModelFit,</span>
-<span id="cb358-3"><a href="sem.html#cb358-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
-<span id="cb358-4"><a href="sem.html#cb358-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
-<span id="cb358-5"><a href="sem.html#cb358-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
-<span id="cb358-6"><a href="sem.html#cb358-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
-<span id="cb358-7"><a href="sem.html#cb358-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;baseline.chisq&quot;</span>,<span class="st">&quot;baseline.df&quot;</span>,<span class="st">&quot;baseline.pvalue&quot;</span>,</span>
-<span id="cb358-8"><a href="sem.html#cb358-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
-<span id="cb358-9"><a href="sem.html#cb358-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb360-1"><a href="sem.html#cb360-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(</span>
+<span id="cb360-2"><a href="sem.html#cb360-2" aria-hidden="true" tabindex="-1"></a>  semModelFit,</span>
+<span id="cb360-3"><a href="sem.html#cb360-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
+<span id="cb360-4"><a href="sem.html#cb360-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;chisq&quot;</span>, <span class="st">&quot;df&quot;</span>, <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb360-5"><a href="sem.html#cb360-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;chisq.scaled&quot;</span>, <span class="st">&quot;df.scaled&quot;</span>, <span class="st">&quot;pvalue.scaled&quot;</span>,</span>
+<span id="cb360-6"><a href="sem.html#cb360-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;chisq.scaling.factor&quot;</span>,</span>
+<span id="cb360-7"><a href="sem.html#cb360-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;baseline.chisq&quot;</span>,<span class="st">&quot;baseline.df&quot;</span>,<span class="st">&quot;baseline.pvalue&quot;</span>,</span>
+<span id="cb360-8"><a href="sem.html#cb360-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;rmsea&quot;</span>, <span class="st">&quot;cfi&quot;</span>, <span class="st">&quot;tli&quot;</span>, <span class="st">&quot;srmr&quot;</span>,</span>
+<span id="cb360-9"><a href="sem.html#cb360-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;rmsea.robust&quot;</span>, <span class="st">&quot;cfi.robust&quot;</span>, <span class="st">&quot;tli.robust&quot;</span>))</span></code></pre></div>
 </details>
 <pre><code>               chisq                   df               pvalue 
               38.748               35.000                0.304 
@@ -4765,7 +4787,7 @@ chisq.scaling.factor       baseline.chisq          baseline.df
 <div id="semModelResiduals-sem" class="section level3 hasAnchor" number="7.10.5">
 <h3><span class="header-section-number">7.10.5</span> Residuals<a href="sem.html#semModelResiduals-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb360-1"><a href="sem.html#cb360-1" aria-hidden="true" tabindex="-1"></a><span class="fu">residuals</span>(semModelFit, <span class="at">type =</span> <span class="st">&quot;cor&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="sem.html#cb362-1" aria-hidden="true" tabindex="-1"></a><span class="fu">residuals</span>(semModelFit, <span class="at">type =</span> <span class="st">&quot;cor&quot;</span>)</span></code></pre></div>
 </details>
 <pre><code>$type
 [1] &quot;cor.bollen&quot;
@@ -4791,7 +4813,7 @@ $mean
 <div id="semModelModIndices-sem" class="section level3 hasAnchor" number="7.10.6">
 <h3><span class="header-section-number">7.10.6</span> Modification indices<a href="sem.html#semModelModIndices-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="sem.html#cb362-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modificationindices</span>(semModelFit, <span class="at">sort. =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="sem.html#cb364-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modificationindices</span>(semModelFit, <span class="at">sort. =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4802,19 +4824,19 @@ $mean
 <div id="semModelFactorScores-sem" class="section level3 hasAnchor" number="7.10.7">
 <h3><span class="header-section-number">7.10.7</span> Factor scores<a href="sem.html#semModelFactorScores-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb363"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb363-1"><a href="sem.html#cb363-1" aria-hidden="true" tabindex="-1"></a>semModelFit_factorScores <span class="ot">&lt;-</span> <span class="fu">lavPredict</span>(semModelFit)</span></code></pre></div>
+<div class="sourceCode" id="cb365"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb365-1"><a href="sem.html#cb365-1" aria-hidden="true" tabindex="-1"></a>semModelFit_factorScores <span class="ot">&lt;-</span> <span class="fu">lavPredict</span>(semModelFit)</span></code></pre></div>
 </details>
 </div>
 <div id="semModelReliability-sem" class="section level3 hasAnchor" number="7.10.8">
 <h3><span class="header-section-number">7.10.8</span> Internal Consistency Reliability<a href="sem.html#semModelReliability-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><a href="reliability.html#internalConsistency-reliability">Internal consistency reliability</a> of items composing the latent factors, as quantified by <a href="reliability.html#coefficientOmega">omega (<span class="math inline">\(\omega\)</span>)</a> and <a href="reliability.html#averageVarianceExtracted">average variance extracted</a> (AVE), was estimated using the <code>semTools</code> package <span class="citation">(<a href="#ref-R-semTools" role="doc-biblioref">Jorgensen et al., 2021</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="sem.html#cb364-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compRelSEM</span>(semModelFit)</span></code></pre></div>
+<div class="sourceCode" id="cb366"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb366-1"><a href="sem.html#cb366-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compRelSEM</span>(semModelFit)</span></code></pre></div>
 </details>
 <pre><code>ind60 dem60 dem65 
 0.938 0.855 0.843 </code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb366"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb366-1"><a href="sem.html#cb366-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AVE</span>(semModelFit)</span></code></pre></div>
+<div class="sourceCode" id="cb368"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb368-1"><a href="sem.html#cb368-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AVE</span>(semModelFit)</span></code></pre></div>
 </details>
 <pre><code>ind60 dem60 dem65 
 0.861 0.605 0.632 </code></pre>
@@ -4823,14 +4845,14 @@ $mean
 <h3><span class="header-section-number">7.10.9</span> Path diagram<a href="sem.html#semModelPathDiagram-sem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Below is a path diagram of the model generated using the <code>semPlot</code> package <span class="citation">(<a href="#ref-R-semPlot" role="doc-biblioref">Epskamp, 2022</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb368"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb368-1"><a href="sem.html#cb368-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
-<span id="cb368-2"><a href="sem.html#cb368-2" aria-hidden="true" tabindex="-1"></a>  semModelFit,</span>
-<span id="cb368-3"><a href="sem.html#cb368-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
-<span id="cb368-4"><a href="sem.html#cb368-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
-<span id="cb368-5"><a href="sem.html#cb368-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.7</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb370"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb370-1"><a href="sem.html#cb370-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb370-2"><a href="sem.html#cb370-2" aria-hidden="true" tabindex="-1"></a>  semModelFit,</span>
+<span id="cb370-3"><a href="sem.html#cb370-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
+<span id="cb370-4"><a href="sem.html#cb370-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb370-5"><a href="sem.html#cb370-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.7</span>)</span></code></pre></div>
 </details>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-227"></span>
-<img src="Book_files/figure-html/unnamed-chunk-227-1.png" alt="Structural Equation Model." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-228"></span>
+<img src="Book_files/figure-html/unnamed-chunk-228-1.png" alt="Structural Equation Model." width="100%" />
 <p class="caption">
 Figure 7.11: Structural Equation Model.
 </p>
@@ -4886,64 +4908,64 @@ These examples were adapted from the <code>simsem</code> documentation:</p>
 <p>The population model was used to generate the simulated data.
 It is important to specify each parameter value in the population model based on theory and/or prior empirical research, especially meta-analysis of the target population (when possible).</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb369"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb369-1"><a href="sem.html#cb369-1" aria-hidden="true" tabindex="-1"></a>populationModel <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb369-2"><a href="sem.html#cb369-2" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify measurement model factor loadings</span></span>
-<span id="cb369-3"><a href="sem.html#cb369-3" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ .7*x1 + .7*x2 + .7*x3</span></span>
-<span id="cb369-4"><a href="sem.html#cb369-4" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ .7*y1 + .7*y2 + .7*y3 + .7*y4</span></span>
-<span id="cb369-5"><a href="sem.html#cb369-5" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ .7*y5 + .7*y6 + .7*y7 + .7*y8</span></span>
-<span id="cb369-6"><a href="sem.html#cb369-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb369-7"><a href="sem.html#cb369-7" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify regression coefficients</span></span>
-<span id="cb369-8"><a href="sem.html#cb369-8" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ .4*ind60</span></span>
-<span id="cb369-9"><a href="sem.html#cb369-9" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ .25*ind60 + .85*dem60</span></span>
-<span id="cb369-10"><a href="sem.html#cb369-10" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb369-11"><a href="sem.html#cb369-11" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent means to zero</span></span>
-<span id="cb369-12"><a href="sem.html#cb369-12" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~ 0</span></span>
-<span id="cb369-13"><a href="sem.html#cb369-13" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ 0</span></span>
-<span id="cb369-14"><a href="sem.html#cb369-14" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ 0</span></span>
-<span id="cb369-15"><a href="sem.html#cb369-15" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb369-16"><a href="sem.html#cb369-16" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent variances to one</span></span>
-<span id="cb369-17"><a href="sem.html#cb369-17" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~~ 1*ind60</span></span>
-<span id="cb369-18"><a href="sem.html#cb369-18" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~~ 1*dem60</span></span>
-<span id="cb369-19"><a href="sem.html#cb369-19" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~~ 1*dem65</span></span>
-<span id="cb369-20"><a href="sem.html#cb369-20" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb369-21"><a href="sem.html#cb369-21" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify covariances among latent variables (not necessary because the latent variables are already linked via regression paths)</span></span>
-<span id="cb369-22"><a href="sem.html#cb369-22" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb369-23"><a href="sem.html#cb369-23" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify residual variances of manifest variables</span></span>
-<span id="cb369-24"><a href="sem.html#cb369-24" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~~ (1-.7^2)*x1</span></span>
-<span id="cb369-25"><a href="sem.html#cb369-25" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~~ (1-.7^2)*x2</span></span>
-<span id="cb369-26"><a href="sem.html#cb369-26" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~~ (1-.7^2)*x3</span></span>
-<span id="cb369-27"><a href="sem.html#cb369-27" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ (1-.7^2)*y1</span></span>
-<span id="cb369-28"><a href="sem.html#cb369-28" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ (1-.7^2)*y2</span></span>
-<span id="cb369-29"><a href="sem.html#cb369-29" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ (1-.7^2)*y3</span></span>
-<span id="cb369-30"><a href="sem.html#cb369-30" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ (1-.7^2)*y4</span></span>
-<span id="cb369-31"><a href="sem.html#cb369-31" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~~ (1-.7^2)*y5</span></span>
-<span id="cb369-32"><a href="sem.html#cb369-32" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ (1-.7^2)*y6</span></span>
-<span id="cb369-33"><a href="sem.html#cb369-33" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~~ (1-.7^2)*y7</span></span>
-<span id="cb369-34"><a href="sem.html#cb369-34" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~~ (1-.7^2)*y8</span></span>
-<span id="cb369-35"><a href="sem.html#cb369-35" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb369-36"><a href="sem.html#cb369-36" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify intercepts of manifest variables</span></span>
-<span id="cb369-37"><a href="sem.html#cb369-37" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~ 0*1</span></span>
-<span id="cb369-38"><a href="sem.html#cb369-38" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~ 0*1</span></span>
-<span id="cb369-39"><a href="sem.html#cb369-39" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~ 0*1</span></span>
-<span id="cb369-40"><a href="sem.html#cb369-40" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~ 0*1</span></span>
-<span id="cb369-41"><a href="sem.html#cb369-41" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~ 0*1</span></span>
-<span id="cb369-42"><a href="sem.html#cb369-42" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~ 0*1</span></span>
-<span id="cb369-43"><a href="sem.html#cb369-43" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~ 0*1</span></span>
-<span id="cb369-44"><a href="sem.html#cb369-44" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~ 0*1</span></span>
-<span id="cb369-45"><a href="sem.html#cb369-45" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~ 0*1</span></span>
-<span id="cb369-46"><a href="sem.html#cb369-46" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~ 0*1</span></span>
-<span id="cb369-47"><a href="sem.html#cb369-47" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~ 0*1</span></span>
-<span id="cb369-48"><a href="sem.html#cb369-48" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb371"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb371-1"><a href="sem.html#cb371-1" aria-hidden="true" tabindex="-1"></a>populationModel <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb371-2"><a href="sem.html#cb371-2" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify measurement model factor loadings</span></span>
+<span id="cb371-3"><a href="sem.html#cb371-3" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ .7*x1 + .7*x2 + .7*x3</span></span>
+<span id="cb371-4"><a href="sem.html#cb371-4" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ .7*y1 + .7*y2 + .7*y3 + .7*y4</span></span>
+<span id="cb371-5"><a href="sem.html#cb371-5" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ .7*y5 + .7*y6 + .7*y7 + .7*y8</span></span>
+<span id="cb371-6"><a href="sem.html#cb371-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb371-7"><a href="sem.html#cb371-7" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify regression coefficients</span></span>
+<span id="cb371-8"><a href="sem.html#cb371-8" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ .4*ind60</span></span>
+<span id="cb371-9"><a href="sem.html#cb371-9" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ .25*ind60 + .85*dem60</span></span>
+<span id="cb371-10"><a href="sem.html#cb371-10" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb371-11"><a href="sem.html#cb371-11" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent means to zero</span></span>
+<span id="cb371-12"><a href="sem.html#cb371-12" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~ 0</span></span>
+<span id="cb371-13"><a href="sem.html#cb371-13" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ 0</span></span>
+<span id="cb371-14"><a href="sem.html#cb371-14" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ 0</span></span>
+<span id="cb371-15"><a href="sem.html#cb371-15" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb371-16"><a href="sem.html#cb371-16" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent variances to one</span></span>
+<span id="cb371-17"><a href="sem.html#cb371-17" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~~ 1*ind60</span></span>
+<span id="cb371-18"><a href="sem.html#cb371-18" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~~ 1*dem60</span></span>
+<span id="cb371-19"><a href="sem.html#cb371-19" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~~ 1*dem65</span></span>
+<span id="cb371-20"><a href="sem.html#cb371-20" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb371-21"><a href="sem.html#cb371-21" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify covariances among latent variables (not necessary because the latent variables are already linked via regression paths)</span></span>
+<span id="cb371-22"><a href="sem.html#cb371-22" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb371-23"><a href="sem.html#cb371-23" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify residual variances of manifest variables</span></span>
+<span id="cb371-24"><a href="sem.html#cb371-24" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~~ (1-.7^2)*x1</span></span>
+<span id="cb371-25"><a href="sem.html#cb371-25" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~~ (1-.7^2)*x2</span></span>
+<span id="cb371-26"><a href="sem.html#cb371-26" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~~ (1-.7^2)*x3</span></span>
+<span id="cb371-27"><a href="sem.html#cb371-27" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ (1-.7^2)*y1</span></span>
+<span id="cb371-28"><a href="sem.html#cb371-28" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ (1-.7^2)*y2</span></span>
+<span id="cb371-29"><a href="sem.html#cb371-29" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ (1-.7^2)*y3</span></span>
+<span id="cb371-30"><a href="sem.html#cb371-30" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ (1-.7^2)*y4</span></span>
+<span id="cb371-31"><a href="sem.html#cb371-31" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~~ (1-.7^2)*y5</span></span>
+<span id="cb371-32"><a href="sem.html#cb371-32" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ (1-.7^2)*y6</span></span>
+<span id="cb371-33"><a href="sem.html#cb371-33" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~~ (1-.7^2)*y7</span></span>
+<span id="cb371-34"><a href="sem.html#cb371-34" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~~ (1-.7^2)*y8</span></span>
+<span id="cb371-35"><a href="sem.html#cb371-35" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb371-36"><a href="sem.html#cb371-36" aria-hidden="true" tabindex="-1"></a><span class="st"> #Specify intercepts of manifest variables</span></span>
+<span id="cb371-37"><a href="sem.html#cb371-37" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~ 0*1</span></span>
+<span id="cb371-38"><a href="sem.html#cb371-38" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~ 0*1</span></span>
+<span id="cb371-39"><a href="sem.html#cb371-39" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~ 0*1</span></span>
+<span id="cb371-40"><a href="sem.html#cb371-40" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~ 0*1</span></span>
+<span id="cb371-41"><a href="sem.html#cb371-41" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~ 0*1</span></span>
+<span id="cb371-42"><a href="sem.html#cb371-42" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~ 0*1</span></span>
+<span id="cb371-43"><a href="sem.html#cb371-43" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~ 0*1</span></span>
+<span id="cb371-44"><a href="sem.html#cb371-44" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~ 0*1</span></span>
+<span id="cb371-45"><a href="sem.html#cb371-45" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~ 0*1</span></span>
+<span id="cb371-46"><a href="sem.html#cb371-46" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~ 0*1</span></span>
+<span id="cb371-47"><a href="sem.html#cb371-47" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~ 0*1</span></span>
+<span id="cb371-48"><a href="sem.html#cb371-48" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
 </details>
 <div id="monteCarloPowerAnalysis-fixedDefaultValues" class="section level4 hasAnchor" number="7.12.1.1">
 <h4><span class="header-section-number">7.12.1.1</span> Show the model’s fixed and default values<a href="sem.html#monteCarloPowerAnalysis-fixedDefaultValues" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb370"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb370-1"><a href="sem.html#cb370-1" aria-hidden="true" tabindex="-1"></a>populationModel_fit <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(populationModel, <span class="at">do.fit =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb372"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb372-1"><a href="sem.html#cb372-1" aria-hidden="true" tabindex="-1"></a>populationModel_fit <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(populationModel, <span class="at">do.fit =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </details>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb371"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb371-1"><a href="sem.html#cb371-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(populationModel_fit,</span>
-<span id="cb371-2"><a href="sem.html#cb371-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb371-3"><a href="sem.html#cb371-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="sem.html#cb373-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(populationModel_fit,</span>
+<span id="cb373-2"><a href="sem.html#cb373-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb373-3"><a href="sem.html#cb373-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>lavaan 0.6.15 did not run (perhaps do.fit = FALSE)?
 ** WARNING ** Estimates below are simply the starting values
@@ -5038,7 +5060,7 @@ R-Square:
 <div id="monteCarloPowerAnalysis-covarianceMatrix" class="section level5 hasAnchor" number="7.12.1.2.1">
 <h5><span class="header-section-number">7.12.1.2.1</span> Model-implied covariance matrix:<a href="sem.html#monteCarloPowerAnalysis-covarianceMatrix" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="sem.html#cb373-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(populationModel_fit)</span></code></pre></div>
+<div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb375-1"><a href="sem.html#cb375-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(populationModel_fit)</span></code></pre></div>
 </details>
 <pre><code>$cov
       x1    x2    x3    y1    y2    y3    y4    y5    y6    y7    y8
@@ -5061,7 +5083,7 @@ x1 x2 x3 y1 y2 y3 y4 y5 y6 y7 y8
 <div id="monteCarloPowerAnalysis-correlationMatrix" class="section level5 hasAnchor" number="7.12.1.2.2">
 <h5><span class="header-section-number">7.12.1.2.2</span> Model-implied correlation matrix<a href="sem.html#monteCarloPowerAnalysis-correlationMatrix" class="anchor-section" aria-label="Anchor link to header"></a></h5>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb375-1"><a href="sem.html#cb375-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov2cor</span>(<span class="fu">fitted</span>(populationModel_fit)<span class="sc">$</span>cov)</span></code></pre></div>
+<div class="sourceCode" id="cb377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb377-1"><a href="sem.html#cb377-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov2cor</span>(<span class="fu">fitted</span>(populationModel_fit)<span class="sc">$</span>cov)</span></code></pre></div>
 </details>
 <pre><code>      x1    x2    x3    y1    y2    y3    y4    y5    y6    y7    y8
 x1 1.000                                                            
@@ -5081,54 +5103,54 @@ y8 0.234 0.234 0.234 0.415 0.415 0.415 0.415 0.665 0.665 0.665 1.000</code></pre
 <div id="monteCarloPowerAnalysis-analysisModel" class="section level3 hasAnchor" number="7.12.2">
 <h3><span class="header-section-number">7.12.2</span> Specify analysis model<a href="sem.html#monteCarloPowerAnalysis-analysisModel" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb377-1"><a href="sem.html#cb377-1" aria-hidden="true" tabindex="-1"></a>analysisModel_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb377-2"><a href="sem.html#cb377-2" aria-hidden="true" tabindex="-1"></a><span class="st"> #Measurement model factor loadings (free the factor loading of the first indicator)</span></span>
-<span id="cb377-3"><a href="sem.html#cb377-3" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ NA*x1 + x2 + x3</span></span>
-<span id="cb377-4"><a href="sem.html#cb377-4" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ NA*y1 + y2 + y3 + y4</span></span>
-<span id="cb377-5"><a href="sem.html#cb377-5" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ NA*y5 + y6 + y7 + y8</span></span>
-<span id="cb377-6"><a href="sem.html#cb377-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb377-7"><a href="sem.html#cb377-7" aria-hidden="true" tabindex="-1"></a><span class="st"> #Regression paths</span></span>
-<span id="cb377-8"><a href="sem.html#cb377-8" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ ind60</span></span>
-<span id="cb377-9"><a href="sem.html#cb377-9" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ ind60 + dem60</span></span>
-<span id="cb377-10"><a href="sem.html#cb377-10" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb377-11"><a href="sem.html#cb377-11" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent means to zero</span></span>
-<span id="cb377-12"><a href="sem.html#cb377-12" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~ 0</span></span>
-<span id="cb377-13"><a href="sem.html#cb377-13" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ 0</span></span>
-<span id="cb377-14"><a href="sem.html#cb377-14" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ 0</span></span>
-<span id="cb377-15"><a href="sem.html#cb377-15" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb377-16"><a href="sem.html#cb377-16" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent variances to one</span></span>
-<span id="cb377-17"><a href="sem.html#cb377-17" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~~ 1*ind60</span></span>
-<span id="cb377-18"><a href="sem.html#cb377-18" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~~ 1*dem60</span></span>
-<span id="cb377-19"><a href="sem.html#cb377-19" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~~ 1*dem65</span></span>
-<span id="cb377-20"><a href="sem.html#cb377-20" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb377-21"><a href="sem.html#cb377-21" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)</span></span>
-<span id="cb377-22"><a href="sem.html#cb377-22" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb377-23"><a href="sem.html#cb377-23" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate residual variances of manifest variables</span></span>
-<span id="cb377-24"><a href="sem.html#cb377-24" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~~ x1</span></span>
-<span id="cb377-25"><a href="sem.html#cb377-25" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~~ x2</span></span>
-<span id="cb377-26"><a href="sem.html#cb377-26" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~~ x3</span></span>
-<span id="cb377-27"><a href="sem.html#cb377-27" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y1</span></span>
-<span id="cb377-28"><a href="sem.html#cb377-28" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y2</span></span>
-<span id="cb377-29"><a href="sem.html#cb377-29" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y3</span></span>
-<span id="cb377-30"><a href="sem.html#cb377-30" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y4</span></span>
-<span id="cb377-31"><a href="sem.html#cb377-31" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~~ y5</span></span>
-<span id="cb377-32"><a href="sem.html#cb377-32" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y6</span></span>
-<span id="cb377-33"><a href="sem.html#cb377-33" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~~ y7</span></span>
-<span id="cb377-34"><a href="sem.html#cb377-34" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~~ y8</span></span>
-<span id="cb377-35"><a href="sem.html#cb377-35" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
-<span id="cb377-36"><a href="sem.html#cb377-36" aria-hidden="true" tabindex="-1"></a><span class="st"> #Free intercepts of manifest variables</span></span>
-<span id="cb377-37"><a href="sem.html#cb377-37" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~ intx1*1</span></span>
-<span id="cb377-38"><a href="sem.html#cb377-38" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~ intx2*1</span></span>
-<span id="cb377-39"><a href="sem.html#cb377-39" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~ intx3*1</span></span>
-<span id="cb377-40"><a href="sem.html#cb377-40" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~ inty1*1</span></span>
-<span id="cb377-41"><a href="sem.html#cb377-41" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~ inty2*1</span></span>
-<span id="cb377-42"><a href="sem.html#cb377-42" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~ inty3*1</span></span>
-<span id="cb377-43"><a href="sem.html#cb377-43" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~ inty4*1</span></span>
-<span id="cb377-44"><a href="sem.html#cb377-44" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~ inty5*1</span></span>
-<span id="cb377-45"><a href="sem.html#cb377-45" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~ inty6*1</span></span>
-<span id="cb377-46"><a href="sem.html#cb377-46" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~ inty7*1</span></span>
-<span id="cb377-47"><a href="sem.html#cb377-47" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~ inty8*1</span></span>
-<span id="cb377-48"><a href="sem.html#cb377-48" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb379"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb379-1"><a href="sem.html#cb379-1" aria-hidden="true" tabindex="-1"></a>analysisModel_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb379-2"><a href="sem.html#cb379-2" aria-hidden="true" tabindex="-1"></a><span class="st"> #Measurement model factor loadings (free the factor loading of the first indicator)</span></span>
+<span id="cb379-3"><a href="sem.html#cb379-3" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 =~ NA*x1 + x2 + x3</span></span>
+<span id="cb379-4"><a href="sem.html#cb379-4" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 =~ NA*y1 + y2 + y3 + y4</span></span>
+<span id="cb379-5"><a href="sem.html#cb379-5" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 =~ NA*y5 + y6 + y7 + y8</span></span>
+<span id="cb379-6"><a href="sem.html#cb379-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb379-7"><a href="sem.html#cb379-7" aria-hidden="true" tabindex="-1"></a><span class="st"> #Regression paths</span></span>
+<span id="cb379-8"><a href="sem.html#cb379-8" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ ind60</span></span>
+<span id="cb379-9"><a href="sem.html#cb379-9" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ ind60 + dem60</span></span>
+<span id="cb379-10"><a href="sem.html#cb379-10" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb379-11"><a href="sem.html#cb379-11" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent means to zero</span></span>
+<span id="cb379-12"><a href="sem.html#cb379-12" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~ 0</span></span>
+<span id="cb379-13"><a href="sem.html#cb379-13" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~ 0</span></span>
+<span id="cb379-14"><a href="sem.html#cb379-14" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~ 0</span></span>
+<span id="cb379-15"><a href="sem.html#cb379-15" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb379-16"><a href="sem.html#cb379-16" aria-hidden="true" tabindex="-1"></a><span class="st"> #Fix latent variances to one</span></span>
+<span id="cb379-17"><a href="sem.html#cb379-17" aria-hidden="true" tabindex="-1"></a><span class="st"> ind60 ~~ 1*ind60</span></span>
+<span id="cb379-18"><a href="sem.html#cb379-18" aria-hidden="true" tabindex="-1"></a><span class="st"> dem60 ~~ 1*dem60</span></span>
+<span id="cb379-19"><a href="sem.html#cb379-19" aria-hidden="true" tabindex="-1"></a><span class="st"> dem65 ~~ 1*dem65</span></span>
+<span id="cb379-20"><a href="sem.html#cb379-20" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb379-21"><a href="sem.html#cb379-21" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)</span></span>
+<span id="cb379-22"><a href="sem.html#cb379-22" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb379-23"><a href="sem.html#cb379-23" aria-hidden="true" tabindex="-1"></a><span class="st"> #Estimate residual variances of manifest variables</span></span>
+<span id="cb379-24"><a href="sem.html#cb379-24" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~~ x1</span></span>
+<span id="cb379-25"><a href="sem.html#cb379-25" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~~ x2</span></span>
+<span id="cb379-26"><a href="sem.html#cb379-26" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~~ x3</span></span>
+<span id="cb379-27"><a href="sem.html#cb379-27" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~~ y1</span></span>
+<span id="cb379-28"><a href="sem.html#cb379-28" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~~ y2</span></span>
+<span id="cb379-29"><a href="sem.html#cb379-29" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~~ y3</span></span>
+<span id="cb379-30"><a href="sem.html#cb379-30" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~~ y4</span></span>
+<span id="cb379-31"><a href="sem.html#cb379-31" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~~ y5</span></span>
+<span id="cb379-32"><a href="sem.html#cb379-32" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~~ y6</span></span>
+<span id="cb379-33"><a href="sem.html#cb379-33" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~~ y7</span></span>
+<span id="cb379-34"><a href="sem.html#cb379-34" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~~ y8</span></span>
+<span id="cb379-35"><a href="sem.html#cb379-35" aria-hidden="true" tabindex="-1"></a><span class="st"> </span></span>
+<span id="cb379-36"><a href="sem.html#cb379-36" aria-hidden="true" tabindex="-1"></a><span class="st"> #Free intercepts of manifest variables</span></span>
+<span id="cb379-37"><a href="sem.html#cb379-37" aria-hidden="true" tabindex="-1"></a><span class="st"> x1 ~ intx1*1</span></span>
+<span id="cb379-38"><a href="sem.html#cb379-38" aria-hidden="true" tabindex="-1"></a><span class="st"> x2 ~ intx2*1</span></span>
+<span id="cb379-39"><a href="sem.html#cb379-39" aria-hidden="true" tabindex="-1"></a><span class="st"> x3 ~ intx3*1</span></span>
+<span id="cb379-40"><a href="sem.html#cb379-40" aria-hidden="true" tabindex="-1"></a><span class="st"> y1 ~ inty1*1</span></span>
+<span id="cb379-41"><a href="sem.html#cb379-41" aria-hidden="true" tabindex="-1"></a><span class="st"> y2 ~ inty2*1</span></span>
+<span id="cb379-42"><a href="sem.html#cb379-42" aria-hidden="true" tabindex="-1"></a><span class="st"> y3 ~ inty3*1</span></span>
+<span id="cb379-43"><a href="sem.html#cb379-43" aria-hidden="true" tabindex="-1"></a><span class="st"> y4 ~ inty4*1</span></span>
+<span id="cb379-44"><a href="sem.html#cb379-44" aria-hidden="true" tabindex="-1"></a><span class="st"> y5 ~ inty5*1</span></span>
+<span id="cb379-45"><a href="sem.html#cb379-45" aria-hidden="true" tabindex="-1"></a><span class="st"> y6 ~ inty6*1</span></span>
+<span id="cb379-46"><a href="sem.html#cb379-46" aria-hidden="true" tabindex="-1"></a><span class="st"> y7 ~ inty7*1</span></span>
+<span id="cb379-47"><a href="sem.html#cb379-47" aria-hidden="true" tabindex="-1"></a><span class="st"> y8 ~ inty8*1</span></span>
+<span id="cb379-48"><a href="sem.html#cb379-48" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
 </details>
 </div>
 <div id="monteCarloPowerAnalysis-dataDistribution" class="section level3 hasAnchor" number="7.12.3">
@@ -5136,19 +5158,19 @@ y8 0.234 0.234 0.234 0.415 0.415 0.415 0.415 0.665 0.665 0.665 1.000</code></pre
 <p>Specifying the expected distributions of the data variables is an optional step, but it can help give you more realistic estimates of your likely power, especially when the data are non-normally distributed.
 First, identify the order in which the indicator variables appear in the model, so you can know the order to specify skewness and kurtosis (which I specify in the next section):</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb378"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb378-1"><a href="sem.html#cb378-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">fitted</span>(populationModel_fit)<span class="sc">$</span>mean)</span></code></pre></div>
+<div class="sourceCode" id="cb380"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb380-1"><a href="sem.html#cb380-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">fitted</span>(populationModel_fit)<span class="sc">$</span>mean)</span></code></pre></div>
 </details>
 <pre><code> [1] &quot;x1&quot; &quot;x2&quot; &quot;x3&quot; &quot;y1&quot; &quot;y2&quot; &quot;y3&quot; &quot;y4&quot; &quot;y5&quot; &quot;y6&quot; &quot;y7&quot; &quot;y8&quot;</code></pre>
 <p>Specify the skewness and kurtosis of the data variables.
 In this example, I set the variables <span class="math inline">\(x1\)</span>–<span class="math inline">\(x3\)</span> (the first three variables) to have skewness of 1.3 and kurtosis of 1.8, and I set the variables <span class="math inline">\(y1\)</span>–<span class="math inline">\(y8\)</span> (the next eight variables) to have a skewness of 2 and a kurtosis of 4.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb380"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb380-1"><a href="sem.html#cb380-1" aria-hidden="true" tabindex="-1"></a>numberOfIndicators <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">fitted</span>(populationModel_fit)<span class="sc">$</span>mean)</span></code></pre></div>
+<div class="sourceCode" id="cb382"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb382-1"><a href="sem.html#cb382-1" aria-hidden="true" tabindex="-1"></a>numberOfIndicators <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">fitted</span>(populationModel_fit)<span class="sc">$</span>mean)</span></code></pre></div>
 </details>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="sem.html#cb381-1" aria-hidden="true" tabindex="-1"></a>indicatorDistributions <span class="ot">&lt;-</span> <span class="fu">bindDist</span>(</span>
-<span id="cb381-2"><a href="sem.html#cb381-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> numberOfIndicators,</span>
-<span id="cb381-3"><a href="sem.html#cb381-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">skewness =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">1.3</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">8</span>)),</span>
-<span id="cb381-4"><a href="sem.html#cb381-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">kurtosis =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">1.8</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">8</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="sem.html#cb383-1" aria-hidden="true" tabindex="-1"></a>indicatorDistributions <span class="ot">&lt;-</span> <span class="fu">bindDist</span>(</span>
+<span id="cb383-2"><a href="sem.html#cb383-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> numberOfIndicators,</span>
+<span id="cb383-3"><a href="sem.html#cb383-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">skewness =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">1.3</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">8</span>)),</span>
+<span id="cb383-4"><a href="sem.html#cb383-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">kurtosis =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">1.8</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">8</span>)))</span></code></pre></div>
 </details>
 </div>
 <div id="monteCarloPowerAnalysis-missingness" class="section level3 hasAnchor" number="7.12.4">
@@ -5164,33 +5186,33 @@ To set missingness to be missing at random (MAR), add a covariate in the missing
 I set the model to use full information maximum likelihood (FIML) estimation to handle missingness.
 If you set <span class="math inline">\(m\)</span> to a value greater than zero, it will use multiple imputation instead of FIML.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb382"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb382-1"><a href="sem.html#cb382-1" aria-hidden="true" tabindex="-1"></a>percentMissingByVariable <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb382-2"><a href="sem.html#cb382-2" aria-hidden="true" tabindex="-1"></a><span class="st">  x1 ~ p(0.10)</span></span>
-<span id="cb382-3"><a href="sem.html#cb382-3" aria-hidden="true" tabindex="-1"></a><span class="st">  x2 ~ p(0.10)</span></span>
-<span id="cb382-4"><a href="sem.html#cb382-4" aria-hidden="true" tabindex="-1"></a><span class="st">  x3 ~ p(0.10)</span></span>
-<span id="cb382-5"><a href="sem.html#cb382-5" aria-hidden="true" tabindex="-1"></a><span class="st">  y1 ~ p(0.15)</span></span>
-<span id="cb382-6"><a href="sem.html#cb382-6" aria-hidden="true" tabindex="-1"></a><span class="st">  y2 ~ p(0.15)</span></span>
-<span id="cb382-7"><a href="sem.html#cb382-7" aria-hidden="true" tabindex="-1"></a><span class="st">  y3 ~ p(0.15)</span></span>
-<span id="cb382-8"><a href="sem.html#cb382-8" aria-hidden="true" tabindex="-1"></a><span class="st">  y4 ~ p(0.15)</span></span>
-<span id="cb382-9"><a href="sem.html#cb382-9" aria-hidden="true" tabindex="-1"></a><span class="st">  y5 ~ p(0.15)</span></span>
-<span id="cb382-10"><a href="sem.html#cb382-10" aria-hidden="true" tabindex="-1"></a><span class="st">  y6 ~ p(0.15)</span></span>
-<span id="cb382-11"><a href="sem.html#cb382-11" aria-hidden="true" tabindex="-1"></a><span class="st">  y7 ~ p(0.15)</span></span>
-<span id="cb382-12"><a href="sem.html#cb382-12" aria-hidden="true" tabindex="-1"></a><span class="st">  y8 ~ p(0.15)</span></span>
-<span id="cb382-13"><a href="sem.html#cb382-13" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb384"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb384-1"><a href="sem.html#cb384-1" aria-hidden="true" tabindex="-1"></a>percentMissingByVariable <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb384-2"><a href="sem.html#cb384-2" aria-hidden="true" tabindex="-1"></a><span class="st">  x1 ~ p(0.10)</span></span>
+<span id="cb384-3"><a href="sem.html#cb384-3" aria-hidden="true" tabindex="-1"></a><span class="st">  x2 ~ p(0.10)</span></span>
+<span id="cb384-4"><a href="sem.html#cb384-4" aria-hidden="true" tabindex="-1"></a><span class="st">  x3 ~ p(0.10)</span></span>
+<span id="cb384-5"><a href="sem.html#cb384-5" aria-hidden="true" tabindex="-1"></a><span class="st">  y1 ~ p(0.15)</span></span>
+<span id="cb384-6"><a href="sem.html#cb384-6" aria-hidden="true" tabindex="-1"></a><span class="st">  y2 ~ p(0.15)</span></span>
+<span id="cb384-7"><a href="sem.html#cb384-7" aria-hidden="true" tabindex="-1"></a><span class="st">  y3 ~ p(0.15)</span></span>
+<span id="cb384-8"><a href="sem.html#cb384-8" aria-hidden="true" tabindex="-1"></a><span class="st">  y4 ~ p(0.15)</span></span>
+<span id="cb384-9"><a href="sem.html#cb384-9" aria-hidden="true" tabindex="-1"></a><span class="st">  y5 ~ p(0.15)</span></span>
+<span id="cb384-10"><a href="sem.html#cb384-10" aria-hidden="true" tabindex="-1"></a><span class="st">  y6 ~ p(0.15)</span></span>
+<span id="cb384-11"><a href="sem.html#cb384-11" aria-hidden="true" tabindex="-1"></a><span class="st">  y7 ~ p(0.15)</span></span>
+<span id="cb384-12"><a href="sem.html#cb384-12" aria-hidden="true" tabindex="-1"></a><span class="st">  y8 ~ p(0.15)</span></span>
+<span id="cb384-13"><a href="sem.html#cb384-13" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span></code></pre></div>
 </details>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="sem.html#cb383-1" aria-hidden="true" tabindex="-1"></a>missingnessModel <span class="ot">&lt;-</span> <span class="fu">miss</span>(</span>
-<span id="cb383-2"><a href="sem.html#cb383-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">logit =</span> percentMissingByVariable,</span>
-<span id="cb383-3"><a href="sem.html#cb383-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="sem.html#cb385-1" aria-hidden="true" tabindex="-1"></a>missingnessModel <span class="ot">&lt;-</span> <span class="fu">miss</span>(</span>
+<span id="cb385-2"><a href="sem.html#cb385-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">logit =</span> percentMissingByVariable,</span>
+<span id="cb385-3"><a href="sem.html#cb385-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="dv">0</span>)</span></code></pre></div>
 </details>
 </div>
 <div id="monteCarloPowerAnalysis-missingDataPlot" class="section level4 hasAnchor" number="7.12.4.2">
 <h4><span class="header-section-number">7.12.4.2</span> Plot of extent of missing data specified<a href="sem.html#monteCarloPowerAnalysis-missingDataPlot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb384"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb384-1"><a href="sem.html#cb384-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLogitMiss</span>(percentMissingByVariable)</span></code></pre></div>
+<div class="sourceCode" id="cb386"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb386-1"><a href="sem.html#cb386-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLogitMiss</span>(percentMissingByVariable)</span></code></pre></div>
 </details>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-232"></span>
-<img src="Book_files/figure-html/unnamed-chunk-232-1.png" alt="Percent Missingness Specified for Each Variable." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-233"></span>
+<img src="Book_files/figure-html/unnamed-chunk-233-1.png" alt="Percent Missingness Specified for Each Variable." width="100%" />
 <p class="caption">
 Figure 7.12: Percent Missingness Specified for Each Variable.
 </p>
@@ -5201,8 +5223,8 @@ Figure 7.12: Percent Missingness Specified for Each Variable.
 <h3><span class="header-section-number">7.12.5</span> Specify sample sizes and repetitions<a href="sem.html#monteCarloPowerAnalysis-sampleSizeReps" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Specify the sample sizes to evaluate in the Monte Carlo simulation and the number of repetitions per sample size.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="sem.html#cb385-1" aria-hidden="true" tabindex="-1"></a>sampleSizes <span class="ot">&lt;-</span> <span class="dv">150</span><span class="sc">:</span><span class="dv">700</span></span>
-<span id="cb385-2"><a href="sem.html#cb385-2" aria-hidden="true" tabindex="-1"></a>repetitionsPerSampleSize <span class="ot">&lt;-</span> <span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb387-1"><a href="sem.html#cb387-1" aria-hidden="true" tabindex="-1"></a>sampleSizes <span class="ot">&lt;-</span> <span class="dv">150</span><span class="sc">:</span><span class="dv">700</span></span>
+<span id="cb387-2"><a href="sem.html#cb387-2" aria-hidden="true" tabindex="-1"></a>repetitionsPerSampleSize <span class="ot">&lt;-</span> <span class="dv">2</span></span></code></pre></div>
 </details>
 </div>
 <div id="monteCarloPowerAnalysis-run" class="section level3 hasAnchor" number="7.12.6">
@@ -5214,31 +5236,31 @@ If you choose to do processing in serial rather than parallel (by setting <code>
 <strong>Warning</strong>: this code takes a while to run based on <span class="math inline">\(551\)</span> different sample sizes <span class="math inline">\((700 - 150 + 1)\)</span> and <span class="math inline">\(2\)</span> repetitions per sample size, for a total of <span class="math inline">\(1102\)</span> iterations <span class="math inline">\(([700 - 150 + 1]\)</span> sample sizes <span class="math inline">\(\times\)</span> <span class="math inline">\(2\)</span> repetitions per sample size <span class="math inline">\(= 1102\)</span> iterations).
 You can reduce the number of sample sizes and/or repetitions per sample size to be faster.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb386"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb386-1"><a href="sem.html#cb386-1" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> simsem<span class="sc">::</span><span class="fu">sim</span>(</span>
-<span id="cb386-2"><a href="sem.html#cb386-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">rep</span>(</span>
-<span id="cb386-3"><a href="sem.html#cb386-3" aria-hidden="true" tabindex="-1"></a>    sampleSizes,</span>
-<span id="cb386-4"><a href="sem.html#cb386-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">each =</span> repetitionsPerSampleSize),</span>
-<span id="cb386-5"><a href="sem.html#cb386-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> analysisModel_syntax,</span>
-<span id="cb386-6"><a href="sem.html#cb386-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">generate =</span> populationModel,</span>
-<span id="cb386-7"><a href="sem.html#cb386-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">miss =</span> missingnessModel,</span>
-<span id="cb386-8"><a href="sem.html#cb386-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">indDist =</span> indicatorDistributions,</span>
-<span id="cb386-9"><a href="sem.html#cb386-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lavaanfun =</span> <span class="st">&quot;lavaan&quot;</span>,</span>
-<span id="cb386-10"><a href="sem.html#cb386-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
-<span id="cb386-11"><a href="sem.html#cb386-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;MLR&quot;</span>,</span>
-<span id="cb386-12"><a href="sem.html#cb386-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb386-13"><a href="sem.html#cb386-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">52242</span>,</span>
-<span id="cb386-14"><a href="sem.html#cb386-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">multicore =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb388"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb388-1"><a href="sem.html#cb388-1" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> simsem<span class="sc">::</span><span class="fu">sim</span>(</span>
+<span id="cb388-2"><a href="sem.html#cb388-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">rep</span>(</span>
+<span id="cb388-3"><a href="sem.html#cb388-3" aria-hidden="true" tabindex="-1"></a>    sampleSizes,</span>
+<span id="cb388-4"><a href="sem.html#cb388-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">each =</span> repetitionsPerSampleSize),</span>
+<span id="cb388-5"><a href="sem.html#cb388-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> analysisModel_syntax,</span>
+<span id="cb388-6"><a href="sem.html#cb388-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">generate =</span> populationModel,</span>
+<span id="cb388-7"><a href="sem.html#cb388-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">miss =</span> missingnessModel,</span>
+<span id="cb388-8"><a href="sem.html#cb388-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">indDist =</span> indicatorDistributions,</span>
+<span id="cb388-9"><a href="sem.html#cb388-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lavaanfun =</span> <span class="st">&quot;lavaan&quot;</span>,</span>
+<span id="cb388-10"><a href="sem.html#cb388-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>,</span>
+<span id="cb388-11"><a href="sem.html#cb388-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="st">&quot;MLR&quot;</span>,</span>
+<span id="cb388-12"><a href="sem.html#cb388-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">std.lv =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb388-13"><a href="sem.html#cb388-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">52242</span>,</span>
+<span id="cb388-14"><a href="sem.html#cb388-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">multicore =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>Progress tracker is not available when &#39;multicore&#39; is TRUE.</code></pre>
 <p>Return the seed to the normal seed behavior so that future calls to <code>set.seed()</code> use the default settings:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb388"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb388-1"><a href="sem.html#cb388-1" aria-hidden="true" tabindex="-1"></a><span class="fu">RNGkind</span>(<span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb390"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb390-1"><a href="sem.html#cb390-1" aria-hidden="true" tabindex="-1"></a><span class="fu">RNGkind</span>(<span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>, <span class="st">&quot;default&quot;</span>)</span></code></pre></div>
 </details>
 </div>
 <div id="monteCarloPowerAnalysis-outputPopulationModel" class="section level3 hasAnchor" number="7.12.7">
 <h3><span class="header-section-number">7.12.7</span> Summary of population model<a href="sem.html#monteCarloPowerAnalysis-outputPopulationModel" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb389"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb389-1"><a href="sem.html#cb389-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaryPopulation</span>(output)</span></code></pre></div>
+<div class="sourceCode" id="cb391"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb391-1"><a href="sem.html#cb391-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaryPopulation</span>(output)</span></code></pre></div>
 </details>
 <pre><code>                 ind60=~x1 ind60=~x2 ind60=~x3 dem60=~y1 dem60=~y2 dem60=~y3
 Population Value 0.7       0.7       0.7       0.7       0.7       0.7      
@@ -5256,7 +5278,7 @@ Population Value 0    0    0    0    0    0    0   </code></pre>
 <div id="monteCarloPowerAnalysis-outputSimulatedData" class="section level3 hasAnchor" number="7.12.8">
 <h3><span class="header-section-number">7.12.8</span> Summary of simulated data<a href="sem.html#monteCarloPowerAnalysis-outputSimulatedData" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb391"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb391-1"><a href="sem.html#cb391-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(output)</span></code></pre></div>
+<div class="sourceCode" id="cb393"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb393-1"><a href="sem.html#cb393-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(output)</span></code></pre></div>
 </details>
 <pre><code>RESULT OBJECT
 Model Type
@@ -5377,7 +5399,7 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <div id="monteCarloPowerAnalysis-parameterSummary" class="section level3 hasAnchor" number="7.12.9">
 <h3><span class="header-section-number">7.12.9</span> Summary of parameters<a href="sem.html#monteCarloPowerAnalysis-parameterSummary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb393"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb393-1"><a href="sem.html#cb393-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaryParam</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">detail =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb395"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb395-1"><a href="sem.html#cb395-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaryParam</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">detail =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -5388,27 +5410,27 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <div id="monteCarloPowerAnalysis-completionTime" class="section level3 hasAnchor" number="7.12.10">
 <h3><span class="header-section-number">7.12.10</span> Time to completion<a href="sem.html#monteCarloPowerAnalysis-completionTime" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb394"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb394-1"><a href="sem.html#cb394-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaryTime</span>(output)</span></code></pre></div>
+<div class="sourceCode" id="cb396"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb396-1"><a href="sem.html#cb396-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summaryTime</span>(output)</span></code></pre></div>
 </details>
 <pre><code>============ Wall Time ============
   1. Error Checking and setting up data-generation and analysis template:        0.000
-  2. Set combinations of n, pmMCAR, and pmMAR:                                   0.002
-  3. Setting up simulation conditions for each replication:                      0.028
-  4. Total time elapsed running all replications:                             4297.188
-  5. Combining outputs from different replications:                              0.120
+  2. Set combinations of n, pmMCAR, and pmMAR:                                   0.001
+  3. Setting up simulation conditions for each replication:                      0.024
+  4. Total time elapsed running all replications:                             3658.898
+  5. Combining outputs from different replications:                              0.095
 
 ============ Average Time in Each Replication ============
-  1. Data Generation:                                  0.105
-  2. Impose Missing Values:                            0.020
+  1. Data Generation:                                  0.092
+  2. Impose Missing Values:                            0.017
   3. User-defined Data-Transformation Function:        0.000
-  4. Main Data Analysis:                               4.443
-  5. Extracting Outputs:                               3.225
+  4. Main Data Analysis:                               3.785
+  5. Extracting Outputs:                               2.741
 
 ============ Summary ============
-  Start Time:                   2023-05-31 12:32:19
-  End Time:                     2023-05-31 13:43:57
-  Wall (Actual) Time:             4297.338
-  System (Processors) Time:       8589.196
+  Start Time:                   2023-06-05 11:54:03
+  End Time:                     2023-06-05 12:55:02
+  Wall (Actual) Time:             3659.018
+  System (Processors) Time:       7311.615
   Units:                        seconds</code></pre>
 </div>
 <div id="monteCarloPowerAnalysis-fitIndicesCutoffs" class="section level3 hasAnchor" number="7.12.11">
@@ -5417,10 +5439,10 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <h4><span class="header-section-number">7.12.11.1</span> Plot of cutoffs of fit indices<a href="sem.html#monteCarloPowerAnalysis-fitIndicesCutoffsPlot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>At <span class="math inline">\(\alpha = .05\)</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb396"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb396-1"><a href="sem.html#cb396-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCutoff</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb398"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb398-1"><a href="sem.html#cb398-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCutoff</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>)</span></code></pre></div>
 </details>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-238"></span>
-<img src="Book_files/figure-html/unnamed-chunk-238-1.png" alt="Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-239"></span>
+<img src="Book_files/figure-html/unnamed-chunk-239-1.png" alt="Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis." width="100%" />
 <p class="caption">
 Figure 7.13: Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis.
 </p>
@@ -5430,7 +5452,7 @@ Figure 7.13: Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis.
 <h4><span class="header-section-number">7.12.11.2</span> Cutoffs of fit indices at particular sample size<a href="sem.html#monteCarloPowerAnalysis-fitIndicesCutoffsSampleSize" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>At <span class="math inline">\(N = 200\)</span>, <span class="math inline">\(\alpha = .05\)</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb397"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb397-1"><a href="sem.html#cb397-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getCutoff</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">nVal =</span> <span class="dv">200</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb399-1"><a href="sem.html#cb399-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getCutoff</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">nVal =</span> <span class="dv">200</span>)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -5445,24 +5467,24 @@ Figure 7.13: Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis.
 <h4><span class="header-section-number">7.12.12.1</span> Plot of power to detect various parameters as a function of sample size<a href="sem.html#monteCarloPowerAnalysis-powerPlot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>At <span class="math inline">\(\alpha = .05\)</span>; dashed horizontal line represents power (<span class="math inline">\(1 - \beta\)</span>) of .8</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb398"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb398-1"><a href="sem.html#cb398-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb398-2"><a href="sem.html#cb398-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb398-3"><a href="sem.html#cb398-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPower</span>(</span>
-<span id="cb398-4"><a href="sem.html#cb398-4" aria-hidden="true" tabindex="-1"></a>  output,</span>
-<span id="cb398-5"><a href="sem.html#cb398-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">powerParam =</span> <span class="st">&quot;dem65~dem60&quot;</span>,</span>
-<span id="cb398-6"><a href="sem.html#cb398-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
-<span id="cb398-7"><a href="sem.html#cb398-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb398-8"><a href="sem.html#cb398-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb398-9"><a href="sem.html#cb398-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb398-10"><a href="sem.html#cb398-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPower</span>(</span>
-<span id="cb398-11"><a href="sem.html#cb398-11" aria-hidden="true" tabindex="-1"></a>  output,</span>
-<span id="cb398-12"><a href="sem.html#cb398-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">powerParam =</span> <span class="st">&quot;dem65~ind60&quot;</span>,</span>
-<span id="cb398-13"><a href="sem.html#cb398-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
-<span id="cb398-14"><a href="sem.html#cb398-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb398-15"><a href="sem.html#cb398-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb400"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb400-1"><a href="sem.html#cb400-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb400-2"><a href="sem.html#cb400-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb400-3"><a href="sem.html#cb400-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPower</span>(</span>
+<span id="cb400-4"><a href="sem.html#cb400-4" aria-hidden="true" tabindex="-1"></a>  output,</span>
+<span id="cb400-5"><a href="sem.html#cb400-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">powerParam =</span> <span class="st">&quot;dem65~dem60&quot;</span>,</span>
+<span id="cb400-6"><a href="sem.html#cb400-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
+<span id="cb400-7"><a href="sem.html#cb400-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb400-8"><a href="sem.html#cb400-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb400-9"><a href="sem.html#cb400-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb400-10"><a href="sem.html#cb400-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPower</span>(</span>
+<span id="cb400-11"><a href="sem.html#cb400-11" aria-hidden="true" tabindex="-1"></a>  output,</span>
+<span id="cb400-12"><a href="sem.html#cb400-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">powerParam =</span> <span class="st">&quot;dem65~ind60&quot;</span>,</span>
+<span id="cb400-13"><a href="sem.html#cb400-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
+<span id="cb400-14"><a href="sem.html#cb400-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb400-15"><a href="sem.html#cb400-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-240"></span>
-<img src="Book_files/figure-html/unnamed-chunk-240-1.png" alt="Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis." width="100%" />
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-241"></span>
+<img src="Book_files/figure-html/unnamed-chunk-241-1.png" alt="Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis." width="100%" />
 <p class="caption">
 Figure 7.14: Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis.
 </p>
@@ -5472,8 +5494,8 @@ Figure 7.14: Plot of Power to Detect Various Parameters as a Function of Sample 
 <h4><span class="header-section-number">7.12.12.2</span> Sample size needed to detect a given parameter<a href="sem.html#monteCarloPowerAnalysis-sampleSizeNeeded" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>At power (<span class="math inline">\(1 - \beta\)</span>) = .80, <span class="math inline">\(\alpha = .05\)</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb399-1"><a href="sem.html#cb399-1" aria-hidden="true" tabindex="-1"></a>powerEstimates <span class="ot">&lt;-</span> <span class="fu">getPower</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
-<span id="cb399-2"><a href="sem.html#cb399-2" aria-hidden="true" tabindex="-1"></a><span class="fu">findPower</span>(powerEstimates, <span class="at">iv =</span> <span class="st">&quot;N&quot;</span>, <span class="at">power =</span> .<span class="dv">80</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb401"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb401-1"><a href="sem.html#cb401-1" aria-hidden="true" tabindex="-1"></a>powerEstimates <span class="ot">&lt;-</span> <span class="fu">getPower</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
+<span id="cb401-2"><a href="sem.html#cb401-2" aria-hidden="true" tabindex="-1"></a><span class="fu">findPower</span>(powerEstimates, <span class="at">iv =</span> <span class="st">&quot;N&quot;</span>, <span class="at">power =</span> .<span class="dv">80</span>)</span></code></pre></div>
 </details>
 <pre><code>  ind60=~x1   ind60=~x2   ind60=~x3   dem60=~y1   dem60=~y2   dem60=~y3 
         Inf         Inf         Inf         Inf         Inf         Inf 
@@ -5492,7 +5514,7 @@ dem65~ind60 dem65~dem60      x1~~x1      x2~~x2      x3~~x3      y1~~y1
 <h4><span class="header-section-number">7.12.12.3</span> Power to detect each parameter at a given sample size<a href="sem.html#monteCarloPowerAnalysis-powerSampleSize" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>At <span class="math inline">\(N = 200\)</span>, <span class="math inline">\(\alpha = .05\)</span></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb401"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb401-1"><a href="sem.html#cb401-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getPower</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">nVal =</span> <span class="dv">200</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb403"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb403-1"><a href="sem.html#cb403-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getPower</span>(output, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">nVal =</span> <span class="dv">200</span>)</span></code></pre></div>
 </details>
 <pre><code>     iv.N ind60=~x1 ind60=~x2 ind60=~x3 dem60=~y1 dem60=~y2 dem60=~y3 dem60=~y4
 [1,]  200         1         1         1         1         1         1         1
