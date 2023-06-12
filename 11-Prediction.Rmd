@@ -1001,7 +1001,8 @@ mydataSDT <- mydataSDT %>%
 
 mydataSDT$predictedProbability <- 
   (mydataSDT$s100b - min(mydataSDT$s100b, na.rm = TRUE)) / 
-  (max(mydataSDT$s100b, na.rm = TRUE) - min(mydataSDT$s100b, na.rm = TRUE))
+  (max(mydataSDT$s100b, na.rm = TRUE) - 
+     min(mydataSDT$s100b, na.rm = TRUE))
 mydataSDT$continuousOutcome <- mydataSDT$testScore + 
   rnorm(nrow(mydataSDT), mean = 0.20, sd = 0.20)
 mydataSDT$disorder <- NA
@@ -1030,7 +1031,11 @@ The examples depict ROC curves that demonstrate that the measure is moderately a
 ### Empirical ROC Curve {#empiricalROC}
 
 ```{r}
-rocCurve <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE)
+rocCurve <- roc(
+  data = mydataSDT,
+  response = disorder,
+  predictor = testScore,
+  smooth = FALSE)
 ```
 
 ```{r, fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Empirical Receiver Operating Characteristic Curve. AUC = Area under the receiver operating characteristic curve."}
@@ -1053,7 +1058,11 @@ abline(coef = c(0,1))
 ### Smooth ROC Curve {#smoothROC}
 
 ```{r}
-rocCurveSmooth <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = TRUE)
+rocCurveSmooth <- roc(
+  data = mydataSDT,
+  response = disorder,
+  predictor = testScore,
+  smooth = TRUE)
 ```
 
 ```{r, fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Smooth Receiver Operating Characteristic Curve. AUC = Area under the receiver operating characteristic curve."}
@@ -2101,7 +2110,9 @@ prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor))
 #### Proportions with margins added {#confusionMatrix-numberMarginsProportionsMargins}
 
 ```{r}
-addmargins(prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)))
+addmargins(prop.table(table(
+  mydataSDT$diagnosisFactor,
+  mydataSDT$disorderFactor)))
 ```
 
 ### True Positives (TP) {#truePositive}
@@ -3111,7 +3122,9 @@ $$
 $$
 
 ```{r}
-posttestProbability <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, SP = NULL, likelihoodRatio = NULL){
+posttestProbability <- function(
+    TP, TN, FP, FN, pretestProb = NULL, SN = NULL, SP = NULL,
+    likelihoodRatio = NULL){
   if(!is.null(pretestProb) & !is.null(SN) & !is.null(SP)){
     pretestProbability <- pretestProb
     pretestOdds <- pretestProbability / (1 - pretestProbability)
@@ -3380,12 +3393,14 @@ miscalibration <- function(predicted, actual, cutoff, bins = 10){
       calibrationTable$inRange == TRUE))]
     calibrationAtNearestCutoff <- calibrationTable[which(
       calibrationTable$bin == nearestCutoff),]
-    calibrationAtNearestCutoff <- as.data.frame(calibrationTable[max(which(
+    calibrationAtNearestCutoff <- as.data.frame(
+      calibrationTable[max(which(
       calibrationTable$inRange == TRUE)),])
     
     meanPredicted <- calibrationAtNearestCutoff[, "meanPredicted"]
     meanObserved <- calibrationAtNearestCutoff[, "meanObserved"]
-    differenceBetweenPredictedAndObserved <- meanPredicted - meanObserved
+    differenceBetweenPredictedAndObserved <- meanPredicted - 
+      meanObserved
   } else{
     differenceBetweenPredictedAndObserved <- NA
   }
