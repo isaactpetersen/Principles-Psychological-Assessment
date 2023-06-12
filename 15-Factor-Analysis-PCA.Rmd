@@ -607,9 +607,11 @@ vars <- c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 
 ## Descriptive Statistics and Correlations {#descriptiveStatsCorrelations-factorAnalysis}
 
-Before conducting a [factor analysis](#factorAnalysis), it is important examine descriptive statistics and correlations among variables.\index{correlation}
+Before conducting a [factor analysis](#factorAnalysis), it is important examine descriptive statistics and correlations among variables.\index{correlation}\index{descriptive statistics}
 
 ### Descriptive Statistics {#descriptiveStats-factorAnalysis}
+
+Descriptive statistics are presented in Table \@ref(tab:descriptiveStats).\index{descriptive statistics}
 
 ```{r, eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
 paged_table(psych::describe(HolzingerSwineford1939[,vars]))
@@ -627,6 +629,38 @@ kable(psych::describe(HolzingerSwineford1939[,vars]),
       booktabs = TRUE)
 ```
 
+```{r descriptiveStats}
+summaryTable <- HolzingerSwineford1939 %>% 
+  dplyr::select(all_of(vars)) %>% 
+  summarise(across(
+    everything(),
+    .fns = list(
+      n = ~ length(na.omit(.)),
+      missingness = ~ mean(is.na(.)) * 100,
+      M = ~ mean(., na.rm = TRUE),
+      SD = ~ sd(., na.rm = TRUE),
+      min = ~ min(., na.rm = TRUE),
+      max = ~ max(., na.rm = TRUE),
+      skewness = ~ psych::skew(., na.rm = TRUE),
+      kurtosis = ~ kurtosi(., na.rm = TRUE)),
+    .names = "{.col}.{.fn}")) %>%  
+  pivot_longer(
+    cols = everything(),
+    names_to = c("variable","index"),
+    names_sep = "\\.") %>% 
+  pivot_wider(
+    names_from = index,
+    values_from = value)
+
+summaryTableTransposed <- summaryTable[-1] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  setNames(summaryTable$variable) %>% 
+  round(., digits = 2)
+
+summaryTableTransposed
+```
+
 ### Correlations {#correlations-factorAnalysis}
 
 ```{r}
@@ -635,18 +669,22 @@ cor(
   use = "pairwise.complete.obs")
 ```
 
-Here are correlation matrices of various types using the `cor.table()` from the `petersenlab` package [@R-petersenlab]:\index{petersenlab package}\index{correlation}
+Correlation matrices of various types using the `cor.table()` from the `petersenlab` package [@R-petersenlab] are in Tables \@ref(tab:corTable1), \@ref(tab:corTable2), and \@ref(tab:corTable3).\index{petersenlab package}\index{correlation}
 
-```{r}
+```{r corTable1}
 cor.table(
   HolzingerSwineford1939[,vars],
   dig = 2)
+```
 
+```{r corTable2}
 cor.table(
   HolzingerSwineford1939[,vars],
   type = "manuscript",
   dig = 2)
+```
 
+```{r corTable3}
 cor.table(
   HolzingerSwineford1939[,vars],
   type = "manuscriptBig",
@@ -1535,9 +1573,9 @@ summary(
 
 ##### Orthogonal (Varimax) rotation {#fitEstimatesOrthogonal-efa}
 
-\index{factor analysis!exploratory}\index{orthogonal rotation}
+Fit indices are generated using the syntax below.\index{factor analysis!exploratory}\index{orthogonal rotation}
 
-```{r}
+```{r efaOrthogonal_fitIndices}
 fitMeasures(
   efaOrthogonalLavaan_fit,
   fit.measures = c(
@@ -1976,7 +2014,9 @@ residuals(cfaModelFit, type = "cor")
 
 #### Modification indices {#modIndices-cfa}
 
-```{r}
+Modification indices are generated using the syntax below.\index{structural equation modeling!modification indices}
+
+```{r modIndicesCFA}
 modificationindices(cfaModelFit, sort. = TRUE)
 ```
 
@@ -3150,8 +3190,9 @@ lapply(equivalentDAGs(
 
 To specify an [ESEM](#efa-cfa-esem) model, you use the factor loadings from an [EFA](#efa) model as the starting values in a [structural equation model](#sem).\index{structural equation modeling!exploratory}\index{factor analysis!exploratory}
 In this example, I use the factor loadings from the three-factor [EFA](#efa) model, as specified in Section \@ref(obliqueLavaan-efa).\index{structural equation modeling!exploratory}
+The factor loadings are in Table \@ref(tab:esemLoadings).
 
-```{r}
+```{r esemLoadings}
 esem_loadings <- parameterEstimates(
   efa3factorObliqueLavaan_fit,
   standardized = TRUE
