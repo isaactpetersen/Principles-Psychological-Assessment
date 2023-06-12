@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2023-06-11" />
+<meta name="date" content="2023-06-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -2196,7 +2196,7 @@ Such <a href="reliability.html#measurementError">measurement error</a> includes:
 </ul>
 <p>In G-theory, all sources of <a href="reliability.html#measurementError">measurement error</a> (facets) are considered simultaneously—something CTT cannot achieve <span class="citation">(<a href="#ref-Shavelson1989" role="doc-biblioref">Shavelson et al., 1989</a>)</span>.
 This occurs through specifying many different variance facets in the estimation of the true score, rather than just one source of error variance as in CTT.
-This specification allows us to take into consideration variance due to occasion effects, item effects, and occasion <span class="math inline">\(\times\)</span> item effects (i.e., main effects of the facets in addition to their interaction).</p>
+This specification allows us to take into consideration variance due to occasion effects, item effects, and occasion <span class="math inline">\(\times\)</span> item effects (i.e., main effects of the facets in addition to their interaction), as in Table <a href="gTheory.html#tab:gTheoryTable">6.1</a>.</p>
 <table>
 <caption>
 <span id="tab:gTheoryTable">Table 6.1: </span>Percent of Variance from Different Sources in Generalizability Theory Model With Three Facets: Person, Item, and Occasion (and Their Interactions).
@@ -2542,11 +2542,7 @@ The examples are adapted from <span class="citation">Huebner &amp; Lucht (<a hre
 </div>
 <div id="universeScore-example" class="section level3 hasAnchor" number="6.2.3">
 <h3><span class="header-section-number">6.2.3</span> Universe score for each person<a href="gTheory.html#universeScore-example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="gTheory.html#cb238-1" aria-hidden="true" tabindex="-1"></a>pio_cross_dat <span class="sc">%&gt;%</span></span>
-<span id="cb238-2"><a href="gTheory.html#cb238-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Person) <span class="sc">%&gt;%</span></span>
-<span id="cb238-3"><a href="gTheory.html#cb238-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">universeScore =</span> <span class="fu">mean</span>(Score, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span></code></pre></div>
-</details>
+<p>Universe scores for each person are generated using the following syntax and are presented in Table <a href="#tab:universeScores"><strong>??</strong></a>.</p>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Person"],"name":[1],"type":["fct"],"align":["left"]},{"label":["universeScore"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"7.000000"},{"1":"2","2":"5.500000"},{"1":"3","2":"5.500000"},{"1":"4","2":"6.142857"},{"1":"5","2":"8.250000"},{"1":"6","2":"3.250000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -2563,8 +2559,8 @@ Thus, when designing future studies, it would be important to assess and evaluat
 <h4><span class="header-section-number">6.2.4.1</span> ANOVA framework<a href="gTheory.html#gTheoryANOVA" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="gTheory.html#cb239-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(Score <span class="sc">~</span> Person<span class="sc">*</span>Item<span class="sc">*</span>Occasion,</span>
-<span id="cb239-2"><a href="gTheory.html#cb239-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> pio_cross_dat))</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="gTheory.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(Score <span class="sc">~</span> Person<span class="sc">*</span>Item<span class="sc">*</span>Occasion,</span>
+<span id="cb238-2"><a href="gTheory.html#cb238-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> pio_cross_dat))</span></code></pre></div>
 </details>
 <pre><code>                     Df Sum Sq Mean Sq
 Person                5 112.95   22.59
@@ -2580,9 +2576,9 @@ Person:Item:Occasion 14  12.08    0.86
 <h4><span class="header-section-number">6.2.4.2</span> Mixed model framework<a href="gTheory.html#gTheoryMixedModel" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>The mixed model framework for estimating generalizability is described by <span class="citation">Jiang (<a href="#ref-Jiang2018a" role="doc-biblioref">2018</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="gTheory.html#cb241-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lmer</span>(Score <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> </span>
-<span id="cb241-2"><a href="gTheory.html#cb241-2" aria-hidden="true" tabindex="-1"></a>               (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item),</span>
-<span id="cb241-3"><a href="gTheory.html#cb241-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> pio_cross_dat))</span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="gTheory.html#cb240-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lmer</span>(Score <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> </span>
+<span id="cb240-2"><a href="gTheory.html#cb240-2" aria-hidden="true" tabindex="-1"></a>               (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item),</span>
+<span id="cb240-3"><a href="gTheory.html#cb240-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> pio_cross_dat))</span></code></pre></div>
 </details>
 <pre><code>Linear mixed model fit by REML [&#39;lmerMod&#39;]
 Formula: Score ~ 1 + (1 | Person) + (1 | Item) + (1 | Occasion) + (1 |  
@@ -2611,11 +2607,11 @@ Fixed effects:
             Estimate Std. Error t value
 (Intercept)    5.957      1.234   4.827</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="gTheory.html#cb243-1" aria-hidden="true" tabindex="-1"></a>PxIxO <span class="ot">&lt;-</span> <span class="fu">gstudy</span>(<span class="at">data =</span> pio_cross_dat,</span>
-<span id="cb243-2"><a href="gTheory.html#cb243-2" aria-hidden="true" tabindex="-1"></a>                Score <span class="sc">~</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> </span>
-<span id="cb243-3"><a href="gTheory.html#cb243-3" aria-hidden="true" tabindex="-1"></a>                  (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item))</span>
-<span id="cb243-4"><a href="gTheory.html#cb243-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb243-5"><a href="gTheory.html#cb243-5" aria-hidden="true" tabindex="-1"></a>PxIxO</span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="gTheory.html#cb242-1" aria-hidden="true" tabindex="-1"></a>PxIxO <span class="ot">&lt;-</span> <span class="fu">gstudy</span>(<span class="at">data =</span> pio_cross_dat,</span>
+<span id="cb242-2"><a href="gTheory.html#cb242-2" aria-hidden="true" tabindex="-1"></a>                Score <span class="sc">~</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> </span>
+<span id="cb242-3"><a href="gTheory.html#cb242-3" aria-hidden="true" tabindex="-1"></a>                  (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item))</span>
+<span id="cb242-4"><a href="gTheory.html#cb242-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb242-5"><a href="gTheory.html#cb242-5" aria-hidden="true" tabindex="-1"></a>PxIxO</span></code></pre></div>
 </details>
 <pre><code>$components
            source         var percent n
@@ -2635,10 +2631,10 @@ attr(,&quot;class&quot;)
 <h3><span class="header-section-number">6.2.5</span> Decision (<span class="math inline">\(D\)</span>) Study<a href="gTheory.html#dStudy-example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The decision (<span class="math inline">\(D\)</span>) study and generalizability (<span class="math inline">\(G\)</span>) study, from which the generalizability and dependendability coefficients can be estimated, were analyzed using the gtheory package <span class="citation">(<a href="#ref-R-gtheory" role="doc-biblioref">Moore, 2016</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="gTheory.html#cb245-1" aria-hidden="true" tabindex="-1"></a>decisionStudy <span class="ot">&lt;-</span> <span class="fu">dstudy</span>(PxIxO,</span>
-<span id="cb245-2"><a href="gTheory.html#cb245-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colname.objects =</span> <span class="st">&quot;Person&quot;</span>,</span>
-<span id="cb245-3"><a href="gTheory.html#cb245-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> pio_cross_dat,</span>
-<span id="cb245-4"><a href="gTheory.html#cb245-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colname.scores =</span> <span class="st">&quot;Score&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="gTheory.html#cb244-1" aria-hidden="true" tabindex="-1"></a>decisionStudy <span class="ot">&lt;-</span> <span class="fu">dstudy</span>(PxIxO,</span>
+<span id="cb244-2"><a href="gTheory.html#cb244-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colname.objects =</span> <span class="st">&quot;Person&quot;</span>,</span>
+<span id="cb244-3"><a href="gTheory.html#cb244-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> pio_cross_dat,</span>
+<span id="cb244-4"><a href="gTheory.html#cb244-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colname.scores =</span> <span class="st">&quot;Score&quot;</span>)</span></code></pre></div>
 </details>
 </div>
 <div id="generalizabilityCoefficient" class="section level3 hasAnchor" number="6.2.6">
@@ -2648,7 +2644,7 @@ It divides the estimated person variance component (the universe score variance)
 In other words, variance in a <a href="reliability.html#reliability">reliable</a> measure should mostly be due to person variance rather than variance as a function of items, occasion, raters, methods, or other factors.
 The generalizability coefficient uses relative error variance, so it is relevant when decisions are made based on relative (<a href="scoresScales.html#norm">norm-referenced</a>) scores (e.g., <a href="scoresScales.html#percentileRanks">percentiles</a>).</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="gTheory.html#cb246-1" aria-hidden="true" tabindex="-1"></a>decisionStudy<span class="sc">$</span>generalizability</span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="gTheory.html#cb245-1" aria-hidden="true" tabindex="-1"></a>decisionStudy<span class="sc">$</span>generalizability</span></code></pre></div>
 </details>
 <pre><code>[1] 0.8731069</code></pre>
 </div>
@@ -2657,7 +2653,7 @@ The generalizability coefficient uses relative error variance, so it is relevant
 <p>The dependability coefficient is analogous to the <a href="reliability.html#reliability">reliability</a> coefficient in CTT.
 It uses absolute error variance, so it is relevant when decisions are made based on absolute (e.g., <a href="scoresScales.html#rawScores">raw</a>) scores.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="gTheory.html#cb248-1" aria-hidden="true" tabindex="-1"></a>decisionStudy<span class="sc">$</span>dependability</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="gTheory.html#cb247-1" aria-hidden="true" tabindex="-1"></a>decisionStudy<span class="sc">$</span>dependability</span></code></pre></div>
 </details>
 <pre><code>[1] 0.6374135</code></pre>
 </div>
