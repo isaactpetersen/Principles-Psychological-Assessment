@@ -72,17 +72,21 @@ A measure can be no more valid than it is reliable.
 
 # Chapter 6: Generalizability Theory
 
-G-theory provides an important reminder that reliability is not one thing.
-You cannot just say that a test "is reliable"; it is important to specify the facets across which the reliability and validity of a measure has been established (e.g., times, raters, items, groups, instruments).
-Generalizability theory can be a useful way of estimating multiple aspects of reliability and validity of measures in the same model.
+Generalizability theory is an alternative measurement theory to classical test theory that does not treat all measurement differences across time, rater, or situation as "error" but rather as a phenomenon of interest.
+G-theory examines the extent to which scores are consistent across a specific set of conditions.
+G-theory can be a useful way of estimating multiple aspects of reliability and validity of measures in the same model, which classical test theory cannot achieve.
+In G-theory, the true score is conceived of as a person's *universe score*—the mean of all observations for a person over all conditions in the universe—this allows us to estimate and recognize the magnitude of multiple influences on test performance (e.g., times, raters, items, groups, instruments).
+
+The G-Theory equivalent of the classical test theory reliability coefficient of a measure is the generalizability coefficient or dependability coefficient.
+The generalizability and dependability coefficients evaluate the extent to which variance is due to person variance rather than variance as a function of items, occasion, raters, methods, or other factors.
 
 # Chapter 7: Factor Analysis and Principal Component Analysis
 
-PCA is not factor analysis.
+Principal component analysis (PCA) is not factor analysis.
 PCA is a technique for data reduction, whereas factor analysis uses latent variables and can be used to identify the structure of measures/constructs or for data reduction.
 Many people use PCA when they should use factor analysis instead, such as when they are assessing latent constructs.
 Nevertheless, factor analysis has weaknesses including indeterminacy—i.e., a given data matrix can produce many different factor models, and you cannot determine which one is correct based on the data matrix alone.
-There are many decisions to make in factor analysis.
+There are many decisions to make in factor analysis, including, (1) what variables to include in the model and how to scale them, (2) the method of factor extraction, (3) the kind of factor analysis: exploratory (EFA) or confirmatory (CFA), (4) how many factors to retain, (5) if EFA, whether and how to rotate factors, and (6) model selection and interpretation.
 These decisions can have important impacts on the resulting solution.
 Thus, it can be helpful for theory and interpretability to help guide decision making when conducting factor analysis.
 
@@ -91,10 +95,26 @@ Thus, it can be helpful for theory and interpretability to help guide decision m
 Structural equation modeling (SEM) is an advanced modeling approach that allows estimating latent variables as the common variance from multiple measures.
 SEM holds promise to account for measurement error and method biases, which allows one to get more accurate estimates of constructs, people's standing on constructs (i.e., individual differences), and associations between constructs.
 
+Path analysis is similar to multiple regression but also allows inclusion of multiple *dependent* variables in the same model.
+SEM is path analysis but with latent variables.
+A SEM model consists of a measurement model and a structural model.
+The measurement model is a confirmatory factor analysis (CFA) model that identifies how many latent factors are estimated, and which items load onto which latent factor.
+The structural component of a SEM model includes the regression paths that specify the hypothesized causal relations among the latent variables.
+SEM is CFA, but it adds regression paths that specify hypothesized causal relations between the latent variables, which is called the structural component of the model.
+
 # Chapter 9: Item Response Theory
 
 Item response theory is a measurement theory and advanced modeling approach that allows estimating latent variables as the common variance from multiple items, and how the items relate to the construct (latent variable).
 IRT holds promise to enable the development of briefer assessments, including short forms and adaptive assessments, that have strong reliability and validity.
+In IRT, a person's construct score is estimated based on their item responses.
+The construct is estimated as a latent factor that represents the common variance among all items as in structural equation modeling or confirmatory factor analysis (CFA).
+IRT is similar to an ordinal or categorical approach to CFA.
+IRT models can estimate up to four parameters, including difficulty (severity), discrimination, guessing, and inattention/careless errors.
+
+IRT conceptualizes reliability in a different way than classical test theory does.
+In classical test theory, the same standard error of measurement applies to all construct levels.
+However, IRT estimates how much measurement precision (information) or imprecision (standard error of measurement) each item, and the test as a whole, have at different construct levels.
+Thus, IRT conceptualizes reliability in such a way that precision/reliability can *differ* at different construct levels, unlike in classical test theory.
 
 # Chapter 10: Prediction
 
@@ -195,19 +215,18 @@ In addition, they can be very time consuming, and they provide very little infor
 
 # Chapter 20: Psychophysiological and Ambulatory Assessment
 
-The National Institute of Mental Health (NIMH) provided the Research Domain Criteria (RDoC) as an alternative structure of psychopathology.
-Compared to the DSM, RDoC is dimensional and it works from the ground up, starting with brain–behavior relations, and linking those to clinical symptoms.
-RDoC spans multiple domains—such as positive and negative valience systems—and units of analysis, including genes, molecules, cells, circuits, physiology, behaviors, self-reports, and paradigms.
+The National Institute of Mental Health (NIMH) provided the Research Domain Criteria (RDoC).
+RDoC is dimensional and it works from the ground up, starting with brain–behavior relations, and linking those to clinical symptoms.
+RDoC spans multiple domains—including positive and negative valience systems—and units of analysis, including genes, molecules, cells, circuits, physiology, behaviors, self-reports, and paradigms.
 
 Psychophysiological measures include electroencephalography (EEG), event-related potential (ERP), (functional) magnetic resonance imaging (f)MRI, computerized axial tomography (CAT), magnetoencephalography (MEG), functional near infrared spectroscopy (fNIRS), electrocardiography (ECG or EKG), electromyography (EMG), electrooculography (EOG), eyetracking, and actigraphy.
 Psychophysiological measures are not invulnerable to basic measurement issues, including reliability and validity.
 Another important consideration of psychophysiological measures is how to handle the rich data without increasing the likelihood of Type I errors.
 
-Another class of measurement includes ambulatory assessment.
 Ambulatory assessment is designed to acquire minimally disruptive measures of a person engaging in normal activities in their natural environment.
 Ambulatory assessment allows rich measurement including, for example, audio, pictures, video, geolocation (global positioning system [GPS]), and physical activity (accelerometer).
-Ambulatory biosensors are assessment tools that measure physiological or motor activity, such as those that monitor cardiovascular activity (e.g., heart rate and blood pressure), physical activity (e.g., actigraph and pedometer), cortisol levels, EEG, respiration, muscle tension, blood glucose, skin conductance, and other processes.
-Virtual reality is an emerging approach that allows structured assessment in simulated but life-like situations.
+Ambulatory biosensors are assessment tools that measure physiological or motor activity—e.g., cardiovascular activity (e.g., heart rate and blood pressure), physical activity (e.g., actigraph and pedometer), cortisol levels, respiration, muscle tension, blood glucose, skin conductance.
+Virtual reality is an emerging approach.
 
 # Chapter 21: Computers and Adaptive Testing
 
