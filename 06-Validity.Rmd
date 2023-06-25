@@ -749,9 +749,9 @@ MTMM.fit <- cfa(
   missing = "ml")
 ```
 
-A path diagram of the model is depicted in Figure \@ref(fig:mtmmCFAFigure) using the `semPlot` package [@R-semPlot].\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
+A path diagram of the model can be generated using the `semPlot` package [@R-semPlot].\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
 
-```{r mtmmCFAFigure, out.width = "100%", fig.align = "center", fig.height = 8, fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
+```{r, eval = FALSE}
 semPaths(
   MTMM.fit,
   what = "std",
@@ -787,15 +787,12 @@ model2Rsquare <- summary(model2)$r.squared
 model1RsquareAdj <- summary(model1)$adj.r.squared
 model2RsquareAdj <- summary(model2)$adj.r.squared
 
-deltaRsquare <- getDeltaRsquare(model2)[["predictor"]]
-deltaRsquareAdj <- model2RsquareAdj - model1RsquareAdj
+deltaRsquare <- model2Rsquare - model1Rsquare
 
-deltaRsquareAdj
+deltaRsquare
 anova(model1, model2)
-getDeltaRsquare(model2)
 ```
 
-$\Delta R^2$ was calculated using the `rockchalk` package [@R-rockchalk].\index{validity!incremental}\index{prediction}
 The predictor shows significant incremental validity above the old predictor in predicting the criterion.\index{validity!incremental}\index{prediction}
 `Model 1` explains $`r round(model1Rsquare * 100, 2)`$% of the variance $(R^2 = `r round(model1Rsquare, 2)`)$, and `Model 2` explains $`r round(model2Rsquare * 100, 2)`$% of the variance $(R^2 = `r round(model2Rsquare, 2)`)$.\index{validity!incremental}\index{prediction}
 Thus, the predictor explains only $`r round(deltaRsquare * 100, 2)`$% additional variance in the criterion above the variance explained by the old predictor $(\Delta R^2)$.\index{validity!incremental}\index{prediction}

@@ -1115,7 +1115,7 @@ CR = `r qnorm(.975)` \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 (\#eq:coefficientOfRepeatability)
 $$
 
-```{r}
+```{r, include = FALSE}
 coefficientOfRepeatability <- function(measure1, measure2){
   value <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
   
@@ -1123,13 +1123,8 @@ coefficientOfRepeatability <- function(measure1, measure2){
 }
 ```
 
-```{r}
-coefficientOfRepeatability(
-  measure1 = mydata$time1,
-  measure2 = mydata$time2)
-```
-
 The `petersenlab` package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot) in Figure \@ref(fig:repeatability).\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{petersenlab package}
+The coefficient of repeatability is labeled `cr` in the output.
 
 ```{r repeatability, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
 repeatability(
@@ -1154,24 +1149,6 @@ Another line reflects the bias estimate (i.e., mean difference from the measure 
 The bias plus or minus the coefficient of repeatability is the upper or lower limit of agreement (LOA), respectively, as in Equations \@ref(eq:lowerLimitOfAgreement) and \@ref(eq:upperLimitOfAgreement).\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}\index{reliability!test–retest!limits of agreement}
 The top dashed line reflects the upper LOA.\index{reliability!test–retest}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!limits of agreement}
 The bottom dashed line reflects the lower LOA.\index{reliability!test–retest}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!limits of agreement}
-The Bland-Altman plot was created using the `blandr` package [@R-blandr].\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}\index{reliability!test–retest!limits of agreement}
-
-```{r}
-BAstats <- blandr.statistics(
-  method1 = mydata$time1,
-  method2 = mydata$time2)
-BAplotlimits <- blandr.plot.limits(BAstats)
-```
-
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Bland-Altman Plot."}
-blandr.plot.rplot(
-  BAstats,
-  plot.limits = BAplotlimits,
-  annotate = TRUE,
-  method1name = "T1",
-  method2name = "T2",
-  ciDisplay = FALSE)
-```
 
 ##### Bias {#blandAltmanBias}
 
@@ -1232,12 +1209,6 @@ upperLOAvalue <- upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
 
 The limits of agreement indicate that 95% of scores at time 2 are expected to fall within $[`r apa(lowerLOAvalue, 2)`, `r apa(upperLOAvalue, 2)`]$ of scores at time 1.
-
-##### Regression Slope {#repeatabilitySlope}
-
-```{r}
-BAstats$regression.fixed.slope
-```
 
 ### Inter-Rater Reliability {#interrater-reliability}
 
@@ -1356,8 +1327,6 @@ meanInterItemCorrelations
 Here is the mean inter-item correlation across all items:\index{reliability!internal consistency!average inter–item correlation}
 
 ```{r}
-mean(meanInterItemCorrelations)
-
 psych::alpha(
   mydata[,c("item1","item2","item3","item4")])$total$average_r
 ```
@@ -1374,8 +1343,6 @@ medianInterItemCorrelations
 Here is the median inter-item correlation across all items:\index{reliability!internal consistency!average inter–item correlation}
 
 ```{r}
-median(interItemCorrelations[lower.tri(interItemCorrelations)])
-
 psych::alpha(mydata[,c(
   "item1","item2","item3","item4")])$total$median_r
 ```
@@ -1496,13 +1463,6 @@ psych::alpha(mydata[,c(
   "item1","item2","item3","item4")])$total$raw_alpha
 ```
 
-Below is an estimate of standardized alpha (if the items are standardized before computing the scale score).
-
-```{r}
-psych::alpha(mydata[,c(
-  "item1","item2","item3","item4")])$total$std.alpha
-```
-
 However, because of the many weaknesses of Cronbach's alpha [@Cortina1993; @Dunn2014; @Flora2020; @Green2015; @Hayes2020; @Kelley2016; @McNeish2018; @Peters2014a; @Raykov2001; @Revelle2019; @Sijtsma2008; but see @Raykov2019], current recommendations are to use coefficient omega ($\omega$) instead, as described next.\index{reliability!internal consistency}\index{reliability!internal consistency!Cronbach's alpha}\index{reliability!internal consistency!omega}
 
 #### Coefficient Omega ($\omega$) {#coefficientOmega}
@@ -1515,30 +1475,13 @@ Specifically, it is recommended to use omega total ($\omega_t$) for continuous i
 Omega total ($\omega_t$) (or simply omega) is the proportion of the total variance that is accounted for by the common factor [@Flora2020].\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 Omega total, like Cronbach's alpha, assumes that the items are unidimensional.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{unidimensional}
 Omega total ($\omega_t$) was calculated using the `MBESS` package [@R-MBESS].\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-This code quickly calculates a point estimate for omega total:\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
+This code calculates a point estimate for omega total:\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
 ```{r}
 ci.reliability(
   mydata[,c("item1","item2","item3","item4")],
   type = "omega",
   interval.type = "none")$est
-```
-
-If you want to calculate a confidence interval for omega, you will need to specify an `interval.type` and specify how many bootstrap replications.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-
-```{r omegaIterations, cache = TRUE, cache.comments = FALSE}
-bootstrapReplications <- 1000
-```
-
-The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-
-```{r omegaTotal, cache = TRUE, cache.extra = list(getRversion(), packageVersion("MBESS"), mydata), cache.comments = FALSE, dependson = "omegaIterations"}
-set.seed(52242)
-ci.reliability(
-  mydata[,c("item1","item2","item3","item4")],
-  type = "omega",
-  interval.type = "bca",
-  B = bootstrapReplications)
 ```
 
 ##### Omega Hierarchical ($\omega_h$)
@@ -1555,17 +1498,6 @@ ci.reliability(
   mydata[,c("item1","item2","item3","item4")],
   type = "hierarchical",
   interval.type = "none")$est
-```
-
-The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-
-```{r omegaHierarchical, eval = FALSE}
-set.seed(52242)
-ci.reliability(
-  mydata[,c("item1","item2","item3","item4")],
-  type = "hierarchical",
-  interval.type = "bca",
-  B = bootstrapReplications)
 ```
 
 ##### Omega Categorical ($\omega_C$)
@@ -1585,20 +1517,6 @@ ci.reliability(
     "rater3categorical")],
   type = "categorical",
   interval.type = "none")$est
-```
-
-The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
-
-```{r omegaCategorical, eval = FALSE}
-set.seed(52242)
-ci.reliability(
-  mydata[,c(
-    "rater1categorical",
-    "rater2categorical",
-    "rater3categorical")],
-  type = "categorical",
-  interval.type = "bca",
-  B = bootstrapReplications)
 ```
 
 ### Comparison {#comparison-reliability}

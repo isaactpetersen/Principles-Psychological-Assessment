@@ -605,7 +605,7 @@ vars <- c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
 
 ## Descriptive Statistics and Correlations {#descriptiveStatsCorrelations-factorAnalysis}
 
-Before conducting a [factor analysis](#factorAnalysis), it is important examine descriptive statistics and correlations among variables.\index{correlation}\index{descriptive statistics}
+Before conducting a [factor analysis](#factorAnalysis), it is important to examine descriptive statistics and correlations among variables.\index{correlation}\index{descriptive statistics}
 
 ### Descriptive Statistics {#descriptives-factorAnalysis}
 
@@ -769,16 +769,6 @@ fa.parallel(
   fa = "fa")
 ```
 
-A scree plot from EFA is in Figure \@ref(fig:screePlotEFA).\index{scree plot}\index{factor analysis!exploratory}
-
-```{r screePlotEFA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Exploratory Factor Analysis."}
-plot(
-  nScree(x = cor(
-    HolzingerSwineford1939[,vars],
-    use = "pairwise.complete.obs"),
-    model = "factors"))
-```
-
 ##### Very Simple Structure (VSS) Plot {#vssPlot}
 
 The very simple structure (VSS) is another criterion that can be used to determine the optimal number of factors or components to retain.\index{very simple structure plot}
@@ -797,15 +787,6 @@ A VSS plot is in Figure \@ref(fig:vssOrthogonal).\index{very simple structure pl
 
 ```{r vssOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
 vss(
-  HolzingerSwineford1939[,vars],
-  rotate = "varimax",
-  fm = "ml")
-```
-
-Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOrthogonal).\index{very simple structure plot}\index{orthogonal rotation}
-
-```{r vssComplexOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Orthogonal Rotation in Exploratory Factor Analysis."}
-nfactors(
   HolzingerSwineford1939[,vars],
   rotate = "varimax",
   fm = "ml")
@@ -834,7 +815,21 @@ efaOrthogonalLavaan_fit <- efa(
 
 The `efa()` wrapper can also fit individual EFA models (with `output = "lavaan"`):\index{factor analysis!exploratory}\index{orthogonal rotation}
 
-```{r}
+```{r, eval = FALSE}
+efaFactor3OrthogonalLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 3,
+  rotation = "varimax",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = list(orthogonal = TRUE),
+  output = "lavaan"
+)
+```
+
+```{r, include = FALSE}
 efaFactor1OrthogonalLavaan_fit <- efa(
   data = HolzingerSwineford1939,
   ov.names = vars,
@@ -1012,7 +1007,21 @@ efaObliqueLavaan_fit <- efa(
 
 The `efa()` wrapper can also fit individual EFA models (with `output = "lavaan"`):\index{factor analysis!exploratory}\index{oblique rotation}
 
-```{r}
+```{r, eval = FALSE}
+efaFactor3ObliqueLavaan_fit <- efa(
+  data = HolzingerSwineford1939,
+  ov.names = vars,
+  nfactors = 3,
+  rotation = "geomin",
+  missing = "ML",
+  estimator = "MLR",
+  meanstructure = TRUE,
+  rotation.args = mplusRotationArgs,
+  output = "lavaan"
+)
+```
+
+```{r, include = FALSE}
 efaFactor1ObliqueLavaan_fit <- efa(
   data = HolzingerSwineford1939,
   ov.names = vars,
@@ -1116,49 +1125,16 @@ efaFactor9ObliqueLavaan_fit <- sem(
 
 #### Factor Loadings {#factorLoadings-efa}
 
-##### Orthogonal (Varimax) rotation {#orthogonalFactorLoadings-efa}
-
-The factor loadings and summaries of the model results are below:\index{factor analysis!exploratory}\index{orthogonal rotation}
+The factor loadings and summaries of the orthogonal models are below:\index{factor analysis!exploratory}\index{orthogonal rotation}
 
 ```{r}
 summary(
   efaOrthogonalLavaan_fit)
 ```
 
-The model results for the three-factor model are below:\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r}
-summary(
-  efaFactor3OrthogonalLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
-##### Oblique (Oblimin) rotation {#obliqueFactorLoadings-efa}
-
-The factor loadings and summaries of the model results can be generated with the following syntax:\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r, eval = FALSE}
-summary(
-  efaObliqueLavaan_fit)
-```
-
-The model results for a given model can be generated using the following syntax:\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r, eval = FALSE}
-summary(
-  efaFactor3ObliqueLavaan_fit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
-```
-
 #### Estimates of Model Fit {#fitEstimates-efa}
 
-##### Orthogonal (Varimax) rotation {#fitEstimatesOrthogonal-efa}
-
-Fit indices are generated using the syntax below and are in Table \@ref(tab:efaOrthogonalFitIndices).\index{factor analysis!exploratory}\index{orthogonal rotation}
+Fit indices for the orthogonal models are extracted using the syntax below and are in Table \@ref(tab:efaOrthogonalFitIndices).\index{factor analysis!exploratory}\index{orthogonal rotation}
 
 ```{r}
 efaOrthogonalLavaan_fitIndices <- fitMeasures(
@@ -1182,58 +1158,19 @@ round(efaOrthogonalLavaan_fitIndices, 3) %>%
   kable_styling(latex_options = "scale_down")
 ```
 
-##### Oblique (Oblimin) rotation {#fitEstimatesOblique-efa}
-
-\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r, eval = FALSE}
-efaObliqueLavaan_fitIndices <- fitMeasures(
-  efaObliqueLavaan_fit,
-  fit.measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
-    "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
-```
-
-```{r, eval = FALSE, include = FALSE}
-efaObliqueLavaan_fitIndices %>% 
-  kable(.,
-  format = "latex",
-  booktabs = TRUE,
-  linesep = "") %>%
-  kable_styling(latex_options = "scale_down")
-```
-
 #### Factor Scores {#factorScores-efa}
 
-##### Orthogonal (Varimax) rotation {#factorScoresOrthogonal-efa}
-
-\index{factor analysis!exploratory}\index{orthogonal rotation}
+Factor scores are extracted using the following syntax:\index{factor analysis!exploratory}\index{orthogonal rotation}
 
 ```{r}
 fa3Orthogonal_lavaan <- lavPredict(efaFactor3OrthogonalLavaan_fit)
 ```
 
-##### Oblique (Oblimin) rotation {#factorScoresOblique-efa}
-
-\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r}
-fa3Oblique_lavaan <- lavPredict(efaFactor3ObliqueLavaan_fit)
-```
-
 #### Plots {#factorScoresPlots-efa}
 
-Biplots were generated using the `psych` package [@R-psych].\index{correlation}
 Pairs panel plots were generated using the `psych` package [@R-psych].\index{correlation}
-Correlation plots were generated using the `corrplot` package [@R-corrplot].\index{correlation}
 
-##### Orthogonal (Varimax) rotation {#factorScoresPlotsOrthogonal-efa}
-
-A scree plot based on factor loadings from `lavaan` is in Figure \@ref(fig:screePlotLavaanOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}
+A scree plot based on factor loadings from the orthogonal model is in Figure \@ref(fig:screePlotLavaanOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}
 When the factors are uncorrelated (orthogonal rotation), the eigenvalue for a factor is calculated as the sum of squared factor loadings across all items, as described in Section \@ref(pca).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}\index{eigenvalue}
 
 ```{r screePlotLavaanOrthogonal, out.width = "100%", fig.align = "center", echo = FALSE, fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis"}
@@ -1399,48 +1336,10 @@ plot(
   type = "b")
 ```
 
-A factor plot is in Figure \@ref(fig:factorPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}
-
-```{r factorPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
-factor.plot(fa3Orthogonal_lavaan, cut = 0.5)
-```
-
 A pairs panel plot is in Figure \@ref(fig:pairsPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
 
 ```{r pairsPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
 pairs.panels(fa3Orthogonal_lavaan)
-```
-
-A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
-
-```{r correlationPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
-corrplot(cor(
-  fa3Orthogonal_lavaan,
-  use = "pairwise.complete.obs"),
-  col = c("gray","black"))
-```
-
-##### Oblique (Oblimin) rotation {#factorScoresPlotsOblique-efa}
-
-A factor plot is in Figure \@ref(fig:factorPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}
-
-```{r factorPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Oblique Rotation in Exploratory Factor Analysis."}
-factor.plot(fa3Oblique_lavaan, cut = 0.5)
-```
-
-A pairs panel plot is in Figure \@ref(fig:pairsPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
-
-```{r pairsPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Oblique Rotation in Exploratory Factor Analysis."}
-pairs.panels(fa3Oblique_lavaan)
-```
-
-A correlation plot is in Figure \@ref(fig:correlationPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
-
-```{r correlationPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."}
-corrplot(cor(
-  fa3Oblique_lavaan,
-  use = "pairwise.complete.obs"),
-  col = c("gray","black"))
 ```
 
 ### Confirmatory Factor Analysis (CFA) {#cfaExamples}
@@ -1475,9 +1374,7 @@ cfaModelFit <- cfa(
 ```{r}
 summary(
   cfaModelFit,
-  fit.measures = TRUE,
-  standardized = TRUE,
-  rsquare = TRUE)
+  standardized = TRUE)
 ```
 
 #### Estimates of model fit {#fitCriteria-cfa}
@@ -1502,15 +1399,20 @@ residuals(cfaModelFit, type = "cor")
 
 #### Modification indices {#modIndices-cfa}
 
-Modification indices are generated using the syntax below and are in Table \@ref(tab:modIndicesCFA).\index{structural equation modeling!modification indices}
+Modification indices are described in Section \@ref(cfaModelModIndices-sem).
+Modification indices are extracted using the syntax below and are in Table \@ref(tab:modIndicesCFA).\index{structural equation modeling!modification indices}
 
 ```{r}
-cfaModelFitModIndices <- modificationindices(
+modificationindices(
   cfaModelFit,
   sort. = TRUE)
 ```
 
 ```{r modIndicesCFA, echo = FALSE}
+cfaModelFitModIndices <- modificationindices(
+  cfaModelFit,
+  sort. = TRUE)
+
 head(cfaModelFitModIndices) %>% 
   kable(.,
   caption = "Modification Indices from Confirmatory Factor Analysis Model.",
@@ -1557,7 +1459,7 @@ AVE(cfaModelFit)
 
 #### Path diagram {#pathDiagram-cfa}
 
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagram).\index{factor analysis!confirmatory}
+A path diagram of the model is in Figure \@ref(fig:cfaPathDiagram).\index{factor analysis!confirmatory}
 
 ```{r cfaPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model Diagram."}
 semPaths(
@@ -1766,7 +1668,7 @@ cfaModelBifactorFit <- cfa(
 
 ##### Path diagram {#bifactorModelPathDiagram}
 
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:bifactorModelPathDiagram).\index{factor analysis!bifactor}
+A path diagram of the model is in Figure \@ref(fig:bifactorModelPathDiagram).\index{factor analysis!bifactor}
 
 ```{r bifactorModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Bifactor Model."}
 semPaths(
@@ -1827,19 +1729,6 @@ cfaModelMTMMFit <- cfa(
   std.lv = TRUE,
   missing = "ML",
   estimator = "MLR")
-```
-
-##### Path diagram {#mtmmCFApathDiagram}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:mtmmCFApathDiagram).\index{multitrait-multimethod matrix}\index{factor analysis!confirmatory}
-
-```{r mtmmCFApathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
-semPaths(
-  cfaModelMTMMFit,
-  what = "std",
-  layout = "tree3",
-  bifactor = c("Verbal","Spatial","Quant","g"),
-  edge.label.cex = 1.3)
 ```
 
 ### Exploratory Structural Equation Model (ESEM) {#esemModel}
@@ -1906,18 +1795,6 @@ A nested model comparison indicates that the [ESEM](#efa-cfa-esem) model fits si
 anova(cfaModelFit, esemModelFit)
 ```
 
-##### Path diagram {#esemModelPathDiagram}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram).\index{structural equation modeling!exploratory}
-
-```{r esemModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With All Cross Loadings."}
-semPaths(
-  esemModelFit,
-  what = "std",
-  layout = "tree3",
-  edge.label.cex = 1.3)
-```
-
 #### Example 2 {#esemModelExample2}
 
 ##### Specify the model {#esemModelSyntax2}
@@ -1948,18 +1825,6 @@ esem_fit <- sem(
   rotation = "geomin",
   missing = "ML",
   estimator = "MLR")
-```
-
-##### Path diagram {#esemModelPathDiagram2}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram2).\index{structural equation modeling!exploratory}
-
-```{r esemModelPathDiagram2, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With Exploratory Factors, Confirmatory Factors, and Regression Paths."}
-semPaths(
-  esem_fit,
-  what = "std",
-  layout = "tree3",
-  edge.label.cex = 1.3)
 ```
 
 ## Principal Component Analysis {#pcaAnalysis}
@@ -2004,10 +1869,6 @@ plot(nScree(
 
 #### Very Simple Structure (VSS) Plot {#pcaAnalysisVSSplot}
 
-Very simple structure (VSS) plots were generated using the `psych` package [@R-psych].\index{very simple structure plot}
-
-##### Orthogonal (Varimax) rotation {#pcaAnalysisVSSplotOrthogonal}
-
 In the example with orthogonal rotation below, the VSS criterion is highest with 3 or 4 components.\index{very simple structure plot}\index{orthogonal rotation}\index{principal component analysis}
 
 A VSS plot of PCA with orthogonal rotation is in Figure \@ref(fig:vssOrthogonalPCA).\index{very simple structure plot}\index{orthogonal rotation}\index{principal component analysis}
@@ -2016,32 +1877,6 @@ A VSS plot of PCA with orthogonal rotation is in Figure \@ref(fig:vssOrthogonalP
 vss(
   HolzingerSwineford1939[,vars],
   rotate = "varimax",
-  fm = "pc")
-```
-
-##### Oblique (Oblimin) rotation {#pcaAnalysisVSSplotOblique}
-
-In the example with orthogonal rotation below, the VSS criterion is highest with 2 components.\index{very simple structure plot}\index{oblique rotation}\index{principal component analysis}
-
-A VSS plot of PCA with oblique rotation is in Figure \@ref(fig:vssObliquePCA).\index{very simple structure plot}\index{oblique rotation}\index{principal component analysis}
-
-```{r vssObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(
-  HolzingerSwineford1939[,vars],
-  rotate = "oblimin",
-  fm = "pc")
-```
-
-##### No rotation {#pcaAnalysisVSSplotNoRotation}
-
-In the example with no rotation below, the VSS criterion is highest with 3 or 4 components.\index{very simple structure plot}\index{principal component analysis}
-
-A VSS plot of PCA with no rotation is in Figure \@ref(fig:vssUnrotatedPCA).\index{very simple structure plot}\index{principal component analysis}
-
-```{r vssUnrotatedPCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot in Principal Component Analysis."}
-vss(
-  HolzingerSwineford1939[,vars],
-  rotate = "none",
   fm = "pc")
 ```
 
@@ -2100,58 +1935,20 @@ pca9factorOrthogonal <- principal(
 
 #### Oblique (Oblimin) rotation {#pcaAnalysisFitOblique}
 
-```{r}
-pca1factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 1,
-  rotate = "oblimin")
+An oblique (oblimin) rotation can be obtained by specifying `rotate = "oblimin"`.
 
-pca2factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 2,
-  rotate = "oblimin")
-
+```{r, eval = FALSE}
 pca3factorOblique <- principal(
   HolzingerSwineford1939[,vars],
   nfactors = 3,
-  rotate = "oblimin")
-
-pca4factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 4,
-  rotate = "oblimin")
-
-pca5factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 5,
-  rotate = "oblimin")
-
-pca6factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 6,
-  rotate = "oblimin")
-
-pca7factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 7,
-  rotate = "oblimin")
-
-pca8factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 8,
-  rotate = "oblimin")
-
-pca9factorOblique <- principal(
-  HolzingerSwineford1939[,vars],
-  nfactors = 9,
   rotate = "oblimin")
 ```
 
 ### Component Loadings {#pcaLoadings}
 
-#### Orthogonal (Varimax) rotation {#pcaAnalysisLoadingsOrthogonal}
+The component loadings can be extracted using the following syntax:
 
-```{r}
+```{r, eval = FALSE}
 pca1factorOrthogonal
 pca2factorOrthogonal
 pca3factorOrthogonal
@@ -2163,81 +1960,31 @@ pca8factorOrthogonal
 pca9factorOrthogonal
 ```
 
-#### Oblique (Oblimin) rotation {#pcaAnalysisLoadingsOblique}
+The component loadings for the three-component orthogonal model are below:
 
 ```{r, eval = FALSE}
-pca1factorOblique
-pca2factorOblique
-pca3factorOblique
-pca4factorOblique
-pca5factorOblique
-pca6factorOblique
-pca7factorOblique
-pca8factorOblique
-pca9factorOblique
+pca3factorOrthogonal
 ```
 
 ### Component Scores {#pcaAnalysisComponentScores}
-
-#### Orthogonal (Varimax) rotation {#pcaAnalysisComponentScoresOrthogonal}
 
 ```{r}
 pca3Orthogonal <- pca3factorOrthogonal$scores
 ```
 
-#### Oblique (Oblimin) rotation {#pcaAnalysisComponentScoresOblique}
-
-```{r}
-pca3Oblique <- pca3factorOblique$scores
-```
-
 ### Plots {#pcaAnalysisPlots}
 
-Biplots were generated using the `psych` package [@R-psych].\index{principal component analysis}\index{correlation}
-Pairs panel plots were generated using the `psych` package [@R-psych].\index{principal component analysis}\index{correlation}
-Correlation plots were generated using the `corrplot` package [@R-corrplot].\index{principal component analysis}\index{correlation}
-
-#### Biplot {#pcaBiplot}
-
-A biplot is in Figure \@ref(fig:pcaBiplot).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
+A biplot of the two-component orthogonal model is in Figure \@ref(fig:pcaBiplot).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
 
 ```{r pcaBiplot, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Principal Component Analysis."}
 biplot(pca2factorOrthogonal)
 abline(h = 0, v = 0, lty = 2)
 ```
 
-#### Orthogonal (Varimax) rotation {#pcaAnalysisPlotsOrthogonal}
-
-A pairs panel plot is in Figure \@ref(fig:pairsPlotOrthogonalPCA).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
+A pairs panel plot of the three-component orthogonal model is in Figure \@ref(fig:pairsPlotOrthogonalPCA).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
 
 ```{r pairsPlotOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Orthogonal Rotation in Principal Component Analysis."}
 pairs.panels(pca3Orthogonal)
-```
-
-A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonalPCA).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
-
-```{r correlationPlotOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Orthogonal Rotation in Principal Component Analysis."}
-corrplot(cor(
-  pca3Orthogonal,
-  use = "pairwise.complete.obs"),
-  col = c("gray","black"))
-```
-
-#### Oblique (Oblimin) rotation {#pcaAnalysisPlotsOblique}
-
-A pairs panel plot is in Figure \@ref(fig:pairsPlotObliquePCA).\index{principal component analysis}\index{correlation}\index{oblique rotation}
-
-```{r pairsPlotObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Oblique Rotation in Principal Component Analysis."}
-pairs.panels(pca3Oblique)
-```
-
-A correlation plot is in Figure \@ref(fig:correlationPlotObliquePCA).\index{principal component analysis}\index{correlation}\index{oblique rotation}
-
-```{r correlationPlotObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Oblique Rotation in Principal Component Analysis."}
-corrplot(cor(
-  pca3Oblique,
-  use = "pairwise.complete.obs"),
-  col = c("gray","black"))
 ```
 
 ## Conclusion {#conclusion-factorAnalysis}

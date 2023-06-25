@@ -1474,14 +1474,16 @@ The constrained model fits significantly worse than the unconstrained model, whi
 
 ### Identify DIF by iteratively removing constraints from fully constrained model {#difRemoveConstraints}
 
+One way to identify DIF is it interatively remove constraints from a model in which all parameters are constrained to be the same across groups.index{item response theory!differential item functioning}
+Removing constraints allows individual items to have different item parameters across groups, to identify which items yield a significant improvement in model fit when allowing their [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty) to differ across groups.\index{item response theory!differential item functioning}
 Items 1, 3, 4, 5, 6, and 7 showed [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}\index{chi-square!difference test}
 
 #### Items that differ in discrimination and/or severity {#difRemoveConstraintsDiscrimationSeverity}
 
 \index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}
 
-```{r}
-difDropItems <- DIF(
+```{r, eval = FALSE}
+DIF(
   constrainedModel,
   c("a1","d1","d2"),
   scheme = "drop",
@@ -1489,6 +1491,12 @@ difDropItems <- DIF(
 ```
 
 ```{r, echo = FALSE}
+difDropItems <- DIF(
+  constrainedModel,
+  c("a1","d1","d2"),
+  scheme = "drop",
+  simplify = TRUE)
+
 difDropItems %>% 
   kable(.,
   caption = "Differential Item Functioning in Terms of Discrimination And/Or Severity.",
@@ -1502,8 +1510,8 @@ difDropItems %>%
 
 Items 1, 3, 4, and 5 showed [DIF](#dif) in [discrimination](#itemDiscrimination), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{chi-square!difference test}
 
-```{r}
-difDropItemsDiscrimination <- DIF(
+```{r, eval = FALSE}
+DIF(
   constrainedModel,
   c("a1"),
   scheme = "drop",
@@ -1511,6 +1519,12 @@ difDropItemsDiscrimination <- DIF(
 ```
 
 ```{r, echo = FALSE}
+difDropItemsDiscrimination <- DIF(
+  constrainedModel,
+  c("a1"),
+  scheme = "drop",
+  simplify = TRUE)
+
 difDropItemsDiscrimination %>% 
   kable(.,
   caption = "Differential Item Functioning in Terms of Discrimination.",
@@ -1524,8 +1538,8 @@ difDropItemsDiscrimination %>%
 
 Items 1, 3, 4, 5, and 7 showed [DIF](#dif) in [difficulty/severity](#itemDifficulty), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item difficulty}\index{chi-square!difference test}
 
-```{r}
-difDropItemsSeverity <- DIF(
+```{r, eval = FALSE}
+DIF(
   constrainedModel,
   c("d1","d2"),
   scheme = "drop",
@@ -1533,6 +1547,12 @@ difDropItemsSeverity <- DIF(
 ```
 
 ```{r, echo = FALSE}
+difDropItemsSeverity <- DIF(
+  constrainedModel,
+  c("d1","d2"),
+  scheme = "drop",
+  simplify = TRUE)
+
 difDropItemsSeverity %>% 
   kable(.,
   caption = "Differential Item Functioning in Terms of Severity.",
@@ -1546,77 +1566,18 @@ difDropItemsSeverity %>%
 
 #### Items that differ in discrimination and/or severity {#difAddConstraintsDiscriminationSeverity}
 
+Another way to identify DIF is it interatively add constraints to a model in which all parameters are allowed to differ across groups.index{item response theory!differential item functioning}
+Adding constraints forces individual items to have the same item parameters across groups, to identify which items yield a significant worsening in model fit when constraining their [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty) to be the same across groups.\index{item response theory!differential item functioning}
 Items 1, 2, 3, 4, 5, and 6 showed [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}\index{chi-square!difference test}
 The [DIF](#dif) in [discrimination](#itemDiscrimination) and/or [severity](#itemDifficulty) is depicted in Figure \@ref(fig:difAddDiscriminationSeverity).\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}
 
-```{r difAddDiscriminationSeverity, out.width = "100%", fig.align = "center", fig.cap = "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination and/or Severity."}
+```{r, eval = FALSE}
 difAddItems <- DIF(
   unconstrainedModel,
   c("a1","d1","d2"),
   scheme = "add",
   simplify = TRUE,
-  plotdif = TRUE,
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r, echo = FALSE}
-difAddItems %>% 
-  kable(.,
-  caption = "Differential Item Functioning in Terms of Discrimination And/Or Severity.",
-  format = "latex",
-  booktabs = TRUE,
-  linesep = "") %>%
-  kable_styling(latex_options = "scale_down")
-```
-
-#### Items that differ in discrimination {#difAddConstraintsDiscrimination}
-
-Items 6 and 7 showed [DIF](#dif) in [discrimination](#itemDiscrimination), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{chi-square!difference test}
-The [DIF](#dif) in [discrimination](#itemDiscrimination) is depicted in Figure \@ref(fig:difAddDiscrimination).\index{item response theory!differential item functioning}\index{item response theory!item discrimination}
-
-```{r difAddDiscrimination, out.width = "100%", fig.align = "center", fig.cap = "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination."}
-difAddItemsDiscrimination <- DIF(
-  unconstrainedModel,
-  c("a1"),
-  scheme = "add",
-  simplify = TRUE,
-  plotdif = TRUE,
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r, echo = FALSE}
-difAddItemsDiscrimination %>% 
-  kable(.,
-  caption = "Differential Item Functioning in Terms of Discrimination.",
-  format = "latex",
-  booktabs = TRUE,
-  linesep = "") %>%
-  kable_styling(latex_options = "scale_down")
-```
-
-#### Items that differ in severity {#difAddConstraintsSeverity}
-
-Items 1, 2, 3, 4, 5, and 6 showed [DIF](#dif) in [difficulty/severity](#itemDifficulty), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item difficulty}\index{chi-square!difference test}
-The [DIF](#dif) in [difficulty/severity](#itemDifficulty) is depicted in Figure \@ref(fig:difAddSeverity)\index{item response theory!differential item functioning}\index{item response theory!item difficulty}
-
-```{r difAddSeverity, out.width = "100%", fig.align = "center", fig.cap = "Item Probability Functions for Examining Differential Item Functioning in Terms of Severity."}
-difAddItemsSeverity <- DIF(
-  unconstrainedModel,
-  c("d1","d2"),
-  scheme = "add",
-  simplify = TRUE,
-  plotdif = TRUE,
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r, echo = FALSE}
-difAddItemsSeverity %>% 
-  kable(.,
-  caption = "Differential Item Functioning in Terms of Severity.",
-  format = "latex",
-  booktabs = TRUE,
-  linesep = "") %>%
-  kable_styling(latex_options = "scale_down")
+  plotdif = TRUE)
 ```
 
 ### Compute effect size of DIF {#difEffectSize}
@@ -1629,13 +1590,17 @@ Some researchers recommend using a simulation-based procedure to examine the imp
 [Differential test functioning](#dif) is depicted in Figure \@ref(fig:dtf).\index{item response theory!differential item functioning}\index{effect size}
 Estimates of [differential test functioning](#dif) are in Table \@ref(tab:testLevelDIF).\index{item response theory!differential item functioning}
 
-```{r}
-testLevelDIF <- empirical_ES(
+```{r, eval = FALSE}
+empirical_ES(
   unconstrainedModel,
   DIF = FALSE)
 ```
 
 ```{r testLevelDIF, echo = FALSE}
+testLevelDIF <- empirical_ES(
+  unconstrainedModel,
+  DIF = FALSE)
+
 testLevelDIF %>% 
   kable(.,
   caption = "Test-Level Differential Item Functioning.",
@@ -1648,7 +1613,14 @@ In general, the measure showed greater [difficulty](#itemDifficulty) for females
 That is, at a given construct level, males were more likely than females to endorse the items.\index{item response theory!differential item functioning}\index{effect size}\index{item response theory!item difficulty}
 Otherwise said, it takes a higher construct level for females to obtain the same score on the measure as males.\index{item response theory!differential item functioning}\index{effect size}\index{item response theory!item difficulty}
 
-```{r dtf, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Differential Test Functioning by Sex."}
+```{r, eval = FALSE}
+empirical_ES(
+  unconstrainedModel,
+  DIF = FALSE,
+  plot = TRUE)
+```
+
+```{r dtf, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Differential Test Functioning by Sex.", echo = FALSE}
 empirical_ES(
   unconstrainedModel,
   DIF = FALSE,
@@ -1658,14 +1630,19 @@ empirical_ES(
 
 #### Item-level DIF {#difItemLevel}
 
-```{r}
-itemLevelDIF <- empirical_ES(
+```{r, eval = FALSE}
+empirical_ES(
   unconstrainedModel,
   DIF = TRUE) %>% 
   round(., 2)
 ```
 
 ```{r itemLevelDIF, echo = FALSE}
+itemLevelDIF <- empirical_ES(
+  unconstrainedModel,
+  DIF = TRUE) %>% 
+  round(., 2)
+
 itemLevelDIF %>% 
   kable(.,
   caption = "Item-Level Differential Item Functioning.",
@@ -1682,7 +1659,14 @@ The measure-level differences in functioning appear to be largely driven by grea
 That is, at a given construct level, males were more likely than females to endorse items 4 and 5, in particular.\index{item response theory!differential item functioning}\index{effect size}\index{item response theory!item difficulty}
 Otherwise said, it takes a higher construct level for females than males to endorse items 4 and 5.\index{item response theory!differential item functioning}\index{effect size}\index{item response theory!item difficulty}
 
-```{r dif, out.width = "100%", fig.align = "center", fig.cap = "Differential Item Functioning by Sex."}
+```{r, eval = FALSE}
+empirical_ES(
+  unconstrainedModel,
+  DIF = TRUE,
+  plot = TRUE)
+```
+
+```{r dif, out.width = "100%", fig.align = "center", fig.cap = "Differential Item Functioning by Sex.", echo = FALSE}
 empirical_ES(
   unconstrainedModel,
   DIF = TRUE,
@@ -1692,33 +1676,16 @@ empirical_ES(
 
 ### Item plots {#difItemPlots}
 
-Plots of item response category characteristic curves by sex are in Figures \@ref(fig:ircSex1)–\@ref(fig:ircSex7).\index{item response theory!differential item functioning}\index{item response theory!item response category characteristic curve}
+Item response category characteristic curves by sex for Item 4 are in Figure \@ref(fig:ircSex4).\index{item response theory!differential item functioning}\index{item response theory!item response category characteristic curve}
 
-```{r ircSex1, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 1."}
+```{r, eval = FALSE}
 itemplot(
   unconstrainedModel,
-  "bpi_antisocialT1_1",
-  type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  "bpi_antisocialT1_4",
+  type = "trace")
 ```
 
-```{r ircSex2, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 2."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_2",
-  type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r ircSex3, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 3."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_3",
-  type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r ircSex4, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 4."}
+```{r ircSex4, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 4.", echo = FALSE}
 itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
@@ -1726,75 +1693,18 @@ itemplot(
   par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r ircSex5, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 5."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_5",
-  type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r ircSex6, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 6."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_6",
-  type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r ircSex7, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves by Sex: Item 7."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_7",
-  type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-Plots of item [information](#irtReliability) functions by sex are in Figures \@ref(fig:itemInfo1)–\@ref(fig:itemInfo7).\index{item response theory!differential item functioning}\index{item response theory!item information curve}
+Plots of item [information](#irtReliability) functions by sex for Item 6 are in Figure \@ref(fig:itemInfo6).\index{item response theory!differential item functioning}\index{item response theory!item information curve}
 Items 1, 5, and 6 showed greater [information](#irtReliability) for females than for males.\index{item response theory!differential item functioning}\index{item response theory!item information curve}
 Items 2, 4, and 7 showed greater [information](#irtReliability) for females than for males.\index{item response theory!differential item functioning}\index{item response theory!item information curve}
 
-```{r itemInfo1, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 1."}
+```{r, eval = FALSE}
 itemplot(
   unconstrainedModel,
-  "bpi_antisocialT1_1",
-  type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  "bpi_antisocialT1_6",
+  type = "info")
 ```
 
-```{r itemInfo2, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 2."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_2",
-  type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemInfo3, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 3."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_3",
-  type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemInfo4, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 4."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_4",
-  type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemInfo5, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 5."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_5",
-  type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemInfo6, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 6."}
+```{r itemInfo6, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 6.", echo = FALSE}
 itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
@@ -1802,41 +1712,16 @@ itemplot(
   par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r itemInfo7, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves by Sex: Item 7."}
+Plots of expected item scores by sex for Items 4 and 6 are in Figures \@ref(fig:itemScore4) and \@ref(fig:itemScore6), respectively.\index{item response theory!differential item functioning}
+
+```{r, eval = FALSE}
 itemplot(
   unconstrainedModel,
-  "bpi_antisocialT1_7",
-  type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  "bpi_antisocialT1_4",
+  type = "score")
 ```
 
-Plots of expected item scores by sex are are in Figures \@ref(fig:itemScore1)–\@ref(fig:itemScore7).\index{item response theory!differential item functioning}
-
-```{r itemScore1, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 1."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_1",
-  type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemScore2, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 2."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_2",
-  type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemScore3, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 3."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_3",
-  type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemScore4, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 4."}
+```{r itemScore4, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 4.", echo = FALSE}
 itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
@@ -1844,26 +1729,17 @@ itemplot(
   par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r itemScore5, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 5."}
-itemplot(
-  unconstrainedModel,
-  "bpi_antisocialT1_5",
-  type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r itemScore6, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 6."}
+```{r, eval = FALSE}
 itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
-  type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  type = "score")
 ```
 
-```{r itemScore7, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 7."}
+```{r itemScore6, out.width = "100%", fig.align = "center", fig.cap = "Expected Item Score by Sex: Item 6.", echo = FALSE}
 itemplot(
   unconstrainedModel,
-  "bpi_antisocialT1_7",
+  "bpi_antisocialT1_6",
   type = "score",
   par.settings = standard.theme("pdf", color = FALSE))
 ```
@@ -2226,7 +2102,7 @@ In other words, configural invariance held.\index{structural equation modeling!m
 
 #### Path Diagram {#measurementInvariancePathDiagram}
 
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is below.
+A path diagram of the model is in Figure \@ref(fig:measurementInvariancePathDiagram).
 
 ```{r measurementInvariancePathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Configural Invariance Model in Confirmatory Factor Analysis."}
 semPaths(
@@ -2309,13 +2185,14 @@ Measurement invariance of factor loadings across groups provides support for exa
 The `petersenlab` package [@R-petersenlab] contains a function to perform a Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
-metricInvarianceModel_chisquareDiff <- satorraBentlerScaledChiSquareDifferenceTestStatistic(
-  T0 = metricInvarianceModel_chisquare,
-  c0 = metricInvarianceModel_chisquareScaling,
-  d0 = metricInvarianceModel_df,
-  T1 = configuralInvarianceModel_chisquare,
-  c1 = configuralInvarianceModel_chisquareScaling,
-  d1 = configuralInvarianceModel_df)
+metricInvarianceModel_chisquareDiff <-
+  satorraBentlerScaledChiSquareDifferenceTestStatistic(
+    T0 = metricInvarianceModel_chisquare,
+    c0 = metricInvarianceModel_chisquareScaling,
+    d0 = metricInvarianceModel_df,
+    T1 = configuralInvarianceModel_chisquare,
+    c1 = configuralInvarianceModel_chisquareScaling,
+    d1 = configuralInvarianceModel_df)
 
 metricInvarianceModel_chisquareDiff
 ```
@@ -2323,7 +2200,9 @@ metricInvarianceModel_chisquareDiff
 ##### Compare Other Fit Criteria {#measurementInvarianceMetricModelCompareFitCriteria}
 
 ```{r}
-round(metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices, digits = 3)
+round(
+  metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices,
+  digits = 3)
 ```
 
 ##### Score-Based Test {#measurementInvarianceMetricModelScoreBasedTest}
@@ -2396,19 +2275,6 @@ metricInvarianceTest
 
 The *p*-values are non-significant, indicating that the model does not fit signficantly worse than the configural invariance model.\index{structural equation modeling!measurement invariance!metric}
 In other words, metric invariance held.\index{structural equation modeling!measurement invariance!metric}
-
-#### Path Diagram {#measurementInvarianceMetricModelPathDiagram}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is below.
-
-```{r measurementInvarianceMetricModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Metric Invariance Model in Confirmatory Factor Analysis."}
-semPaths(
-  metricInvarianceModel_fit,
-  what = "est",
-  layout = "tree2",
-  ask = FALSE,
-  edge.label.cex = 1.2)
-```
 
 ### Scalar ("Strong Factorial") Invariance Model {#measurementInvarianceScalarModel}
 
@@ -2574,19 +2440,6 @@ scalarInvarianceTest
 The *p*-values are significant, indicating that the model fit signficantly worse than the metric invariance model.\index{structural equation modeling!measurement invariance!scalar}
 In other words, scalar invariance failed.\index{structural equation modeling!measurement invariance!scalar}
 
-#### Path Diagram {#measurementInvarianceScalarModelPathDiagram}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is below.
-
-```{r measurementInvarianceScalarModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Scalar Invariance Model in Confirmatory Factor Analysis."}
-semPaths(
-  scalarInvarianceModel_fit,
-  what = "est",
-  layout = "tree2",
-  ask = FALSE,
-  edge.label.cex = 1.2)
-```
-
 ### Residual ("Strict Factorial") Invariance Model {#measurementInvarianceResidualModel}
 
 Specify invariance of factor loadings, intercepts, and residuals across groups.\index{structural equation modeling!measurement invariance!residual}\index{structural equation modeling!factor loading}\index{structural equation modeling!intercept}\index{structural equation modeling!residual}
@@ -2745,18 +2598,6 @@ residualInvarianceTest
 
 The *p*-values are non-significant, indicating that the model did not fit signficantly worse than the scalar invariance model.\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
 
-#### Path Diagram {#measurementInvarianceResidualModelPathDiagram}
-
-A path diagram of the model generated using the `semPlot` package [@R-semPlot] is below.
-
-```{r measurementInvarianceResidualModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Residual Invariance Model in Confirmatory Factor Analysis."}
-semPaths(
-  residualInvarianceModel_fit,
-  what = "est",
-  layout = "tree2",
-  ask = FALSE,
-  edge.label.cex = 1.2)
-```
 
 ### Addressing Measurement Non-Invariance {#addressingMeasurementNonInvariance}
 

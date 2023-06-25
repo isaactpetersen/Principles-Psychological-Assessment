@@ -1232,10 +1232,11 @@ ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(
   scale_color_grey() +
   scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
-  theme_bw()
+  theme_bw() +
+  theme(legend.key.size = unit(0.15, "in"))
 ```
 
-```{r goodMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual Representation of a Good Measure Based on the Test Information Curve."}
+```{r goodMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-clinical Range) Based on the Test Information Curve."}
 ggplot(goodMeasureInfo, aes(theta, information)) +
   geom_line(linewidth = 1.5) +
   scale_color_grey() +
@@ -1383,7 +1384,13 @@ plot(raschModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:onePLtifSEM).\index{item response theory!information}\index{item response theory!standard error of measurement}\index{reliability!standard error of measurement}\index{item response theory!test information curve}
 
-```{r onePLtifSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Rasch Item Response Theory Model."}
+```{r, eval = FALSE}
+plot(
+  raschModel,
+  type = "infoSE")
+```
+
+```{r onePLtifSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Rasch Item Response Theory Model.", echo = FALSE}
 plot(
   raschModel,
   type = "infoSE",
@@ -1394,9 +1401,16 @@ plot(
 
 ##### Item Characteristic Curves {#irt-onePLicc}
 
-Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:onePLicc) and \@ref(fig:onePLiccFacet).\index{item response theory!item characteristic curve}
+Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figure \@ref(fig:onePLicc).\index{item response theory!item characteristic curve}
 
-```{r onePLicc, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Rasch Item Response Theory Model."}
+```{r, eval = FALSE}
+plot(
+  raschModel,
+  type = "itemscore",
+  facet_items = FALSE)
+```
+
+```{r onePLicc, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Rasch Item Response Theory Model.", echo = FALSE}
 plot(
   raschModel,
   type = "itemscore",
@@ -1404,24 +1418,23 @@ plot(
   par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r onePLiccFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Rasch Item Response Theory Model."}
-plot(raschModel, type = "itemscore", facet_items = TRUE)
-```
-
 ##### Item Information Curves {#irt-onePLiif}
 
-Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:onePLiif) and \@ref(fig:onePLiifFacet).\index{item response theory!information}\index{item response theory!item information curve}
+Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figure \@ref(fig:onePLiif).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r onePLiif, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Rasch Item Response Theory Model."}
+```{r, eval = FALSE}
+plot(
+  raschModel,
+  type = "infotrace",
+  facet_items = FALSE)
+```
+
+```{r onePLiif, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Rasch Item Response Theory Model.", echo = FALSE}
 plot(
   raschModel,
   type = "infotrace",
   facet_items = FALSE,
   par.settings = standard.theme("pdf", color = FALSE))
-```
-
-```{r onePLiifFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Rasch Item Response Theory Model."}
-plot(raschModel, type = "infotrace", facet_items = TRUE)
 ```
 
 ### CFA {#irt-onePLcfa}
@@ -1723,7 +1736,13 @@ plot(gradedResponseModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelTIFsem).\index{item response theory!information}\index{reliability}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 
-```{r gradedResponseModelTIFsem, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Graded Response Model."}
+```{r, eval = FALSE}
+plot(
+  gradedResponseModel,
+  type = "infoSE")
+```
+
+```{r gradedResponseModelTIFsem, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Graded Response Model.", echo = FALSE}
 plot(
   gradedResponseModel,
   type = "infoSE",
@@ -1734,9 +1753,16 @@ plot(
 
 ##### Item Characteristic Curves {#irt-gradedResponseModelICC}
 
-Item characteristic curve ([ICC](#icc)) plots of the expected score on the item as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:gradedResponseModelICC) and \@ref(fig:gradedResponseModelICCfacet).\index{item response theory!item characteristic curve}
+Item characteristic curve ([ICC](#icc)) plots of the expected score on the item as a function of a person's level on the latent construct (theta; $\theta$) are in Figure \@ref(fig:gradedResponseModelICC).\index{item response theory!item characteristic curve}
 
-```{r gradedResponseModelICC, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Graded Response Model."}
+```{r, eval = FALSE}
+plot(
+  gradedResponseModel,
+  type = "itemscore",
+  facet_items = FALSE)
+```
+
+```{r gradedResponseModelICC, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Graded Response Model.", echo = FALSE}
 plot(
   gradedResponseModel,
   type = "itemscore",
@@ -1744,15 +1770,18 @@ plot(
   par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r gradedResponseModelICCfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Graded Response Model."}
-plot(gradedResponseModel, type = "itemscore", facet_items = TRUE)
-```
-
 ##### Item Information Curves {#irt-gradedResponseModelIIF}
 
-Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:gradedResponseModelIIF) and \@ref(fig:gradedResponseModelIIFfacet).\index{item response theory!information}\index{item response theory!item information curve}
+Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figure \@ref(fig:gradedResponseModelIIF).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r gradedResponseModelIIF, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Graded Response Model."}
+```{r, eval = FALSE}
+plot(
+  gradedResponseModel,
+  type = "infotrace",
+  facet_items = FALSE)
+```
+
+```{r gradedResponseModelIIF, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Graded Response Model.", echo = FALSE}
 plot(
   gradedResponseModel,
   type = "infotrace",
@@ -1760,15 +1789,17 @@ plot(
   par.settings = standard.theme("pdf", color = FALSE))
 ```
 
-```{r gradedResponseModelIIFfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Graded Response Model."}
-plot(gradedResponseModel, type = "infotrace", facet_items = TRUE)
-```
-
 ##### Item Response Category Characteristic Curves {#irt-gradedResponseModelIRCCC}
 
 A plot of the probability of item threshold endorsement as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelIRCCC).\index{item response theory!item response category characteristic curve}
 
-```{r gradedResponseModelIRCCC, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves From Graded Response Model."}
+```{r, eval = FALSE}
+plot(
+  gradedResponseModel,
+  type = "trace")
+```
+
+```{r gradedResponseModelIRCCC, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves From Graded Response Model.", echo = FALSE}
 plot(
   gradedResponseModel,
   type = "trace",
