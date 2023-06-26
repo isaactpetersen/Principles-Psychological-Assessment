@@ -443,7 +443,7 @@ fitMeasures(reflectiveModelFit, "df")
 
 Here is a model diagram:
 
-```{r reflectiveModelFigure, out.width = "100%", fig.align = "center", fig.cap = "Depiction of a Reflective Model."}
+```{r reflectiveModelFigure, out.width = "100%", fig.align = "center", fig.cap = "Example of a Reflective Model."}
 semPaths(
   reflectiveModelFit,
   what = "Std.all",
@@ -489,7 +489,7 @@ formativeModelFit
 
 Here is a model diagram:
 
-```{r formativeModelUnderidentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Depiction of an Under-Identified Formative Model."}
+```{r formativeModelUnderidentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Example of an Under-Identified Formative Model."}
 semPaths(
   formativeModelFit,
   what = "Std.all",
@@ -505,7 +505,7 @@ Therefore, to estimate a formative model with 4 indicators, we must add assumpti
 Options for identifying a [formative construct](#formativeConstruct) are described by @Treiblmaier2011.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 See below for an example formative model that is identified because of additional assumptions.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 
-```{r formativeModelIdentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Depiction of an Identified Formative Model."}
+```{r formativeModelIdentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Example of an Identified Formative Model."}
 formativeModel2_syntax <- '
  #Formative model factor loadings
  formative <~ 1*v1 + v2 + v3 + v4
@@ -619,12 +619,69 @@ If the two variables are connected by only indirect pathways, it may be helpful 
 cor(mydataSEM, use = "pairwise.complete.obs")
 ```
 
-Here are correlation matrices of various types using the `cor.table()` function from the `petersenlab` package [@R-petersenlab]:\index{petersenlab package}
+Correlation matrices of various types using the `cor.table()` function from the `petersenlab` package [@R-petersenlab] are in Tables \@ref(tab:corTable1), \@ref(tab:corTable2), and \@ref(tab:corTable3).\index{petersenlab package}\index{correlation}
 
-```{r}
-cor.table(mydataSEM, dig = 2)
-cor.table(mydataSEM, type = "manuscript", dig = 2)
-cor.table(mydataSEM, type = "manuscriptBig", dig = 2)
+```{r, eval = FALSE}
+cor.table(
+  HolzingerSwineford1939[,vars],
+  dig = 2)
+
+cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscript",
+  dig = 2)
+
+cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscriptBig",
+  dig = 2)
+```
+
+```{r, include = FALSE}
+corTable1 <- cor.table(
+  HolzingerSwineford1939[,vars],
+  dig = 2)
+
+corTable2 <- cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscript",
+  dig = 2)
+
+corTable3 <- cor.table(
+  HolzingerSwineford1939[,vars],
+  type = "manuscriptBig",
+  dig = 2)
+```
+
+```{r corTable1, echo = FALSE}
+corTable1 %>% 
+  kable(.,
+  caption = "Correlation Matrix with *r*, *n*, and *p*-values.",
+  format = "latex",
+  booktabs = TRUE,
+  linesep = c("", "", "\\addlinespace"),
+  escape = FALSE) %>%
+  kable_styling(latex_options = "scale_down")
+```
+
+```{r corTable2, echo = FALSE}
+corTable2 %>% 
+  kable(.,
+  caption = "Correlation Matrix with Asterisks for Significant Associations.",
+  format = "latex",
+  booktabs = TRUE,
+  linesep = "",
+  escape = FALSE) %>%
+  kable_styling(latex_options = "scale_down")
+```
+
+```{r corTable3, echo = FALSE}
+corTable3 %>% 
+  kable(.,
+  caption = "Correlation Matrix.",
+  format = "latex",
+  booktabs = TRUE,
+  linesep = "")
 ```
 
 ## Measurement Model {#measurementModelExample-sem}
@@ -1358,7 +1415,7 @@ AVE(semModelFit)
 
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Structural Equation Model."}
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Example Structural Equation Model."}
 semPaths(
   semModelFit,
   what = "Std.all",
