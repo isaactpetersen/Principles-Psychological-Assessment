@@ -1061,6 +1061,8 @@ abline(coef = c(0,1))
 
 ### Smooth ROC Curve {#smoothROC}
 
+The syntax used to generate a smooth ROC plot is below, and the plot is in Figure \@ref(fig:smoothROC).\index{receiver operating characteristic curve}
+
 ```{r}
 rocCurveSmooth <- roc(
   data = mydataSDT,
@@ -1069,7 +1071,7 @@ rocCurveSmooth <- roc(
   smooth = TRUE)
 ```
 
-```{r, fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Smooth Receiver Operating Characteristic Curve. AUC = Area under the receiver operating characteristic curve."}
+```{r, eval = FALSE}
 plot(rocCurveSmooth, legacy.axes = TRUE, print.auc = TRUE)
 ```
 
@@ -1082,11 +1084,14 @@ youdenJ <- coords(
   rocCurve,
   x = "best",
   best.method = "youden")
+
+youdenJ
+```
+
+```{r, include = FALSE}
 youdenJthreshold <- youdenJ$threshold
 youdenJspecificity <- youdenJ$specificity
 youdenJsensitivity <- youdenJ$sensitivity
-
-youdenJ
 ```
 
 For this test, the Youden's J Statistic is at a threshold of $`r youdenJthreshold`$, where sensitivity is $`r youdenJsensitivity`$ and specificity is $`r youdenJspecificity`$.
@@ -1100,11 +1105,14 @@ closestTopLeft <- coords(
   rocCurve,
   x = "best",
   best.method = "closest.topleft")
+
+closestTopLeft
+```
+
+```{r, include = FALSE}
 closestTopLeftthreshold <- closestTopLeft$threshold
 closestTopLeftspecificity <- closestTopLeft$specificity
 closestTopLeftsensitivity <- closestTopLeft$sensitivity
-
-closestTopLeft
 ```
 
 For this test, the combination of [sensitivity](#sensitivity) and [specificity](#specificity) is closest to the top left of the [ROC plot](#roc) at a threshold of $`r closestTopLeftthreshold`$, where [sensitivity](#sensitivity) is $`r closestTopLeftsensitivity`$ and [specificity](#specificity) is $`r closestTopLeftspecificity`$.
@@ -1237,7 +1245,7 @@ $$
 (\#eq:rootMeanSquaredError)
 $$
 
-```{r}
+```{r, include = FALSE}
 rootMeanSquaredError = function(predicted, actual){
   value <- sqrt(mean((predicted - actual)^2, na.rm = TRUE))
   return(value)
@@ -1572,7 +1580,6 @@ cpa(
 
 When the coefficient of predictive ability is applied to an ordinal or continuous outcome, it is linearly related to Spearman's rho ($\rho$) rank correlation [@Gneiting2020].\index{Spearman's rho rank correlation}
 Larger values reflect greater accuracy.\index{Spearman's rho rank correlation}
-Spearman's rho was estimated in the `rms` package [@R-rms].\index{Spearman's rho rank correlation}
 
 ```{r}
 cor(
@@ -1580,10 +1587,6 @@ cor(
   y = mydataSDT$continuousOutcome,
   use = "pairwise.complete.obs",
   method = "spearman")
-
-orm(
-  continuousOutcome ~ testScore,
-  data = mydataSDT)$stats["rho"]
 ```
 
 #### Somers' $D_{xy}$ Rank Correlation {#somersD}
@@ -1596,13 +1599,6 @@ Somers' $D_{xy}$ was estimated in the `rms` package [@R-rms].\index{Somers' $D_{
 lrm(
   continuousOutcome ~ testScore,
   data = mydataSDT)$stats["Dxy"]
-
-rms::validate(lrm(
-  continuousOutcome ~ testScore,
-  data = mydataSDT,
-  x = TRUE,
-  y = TRUE),
-  group = mydataSDT$continuousOutcome)["Dxy","index.corrected"]
 ```
 
 #### Kendall's Tau-a ($\tau_A$) Rank Correlation {#kendallTau}
@@ -1612,12 +1608,6 @@ Larger values reflect greater accuracy.\index{Kendall's $\tau_A$ rank correlatio
 Kendall's tau-a was estimated in the `rms` package [@R-rms].\index{Kendall's $\tau_A$ rank correlation}
 
 ```{r}
-cor(
-  x = mydataSDT$testScore,
-  y = mydataSDT$continuousOutcome,
-  use = "pairwise.complete.obs",
-  method = "kendall")
-
 lrm(continuousOutcome ~ testScore,
     data = mydataSDT)$stats["Tau-a"]
 ```
@@ -1764,9 +1754,7 @@ A statistically significant $\chi^2$ (*p* < .05) indicates a significant degree 
 The Hosler-Lemeshow GOF test was calculated using the `ResourceSelection` package [@R-ResourceSelection].\index{Hosler-Lemeshow test}
 The table of predicted versus observed frequencies was generated using the `PredictABEL` package [@R-PredictABEL].\index{Hosler-Lemeshow test}
 
-For the number of bins ($g$) specified below, the predictions show statistically significant miscalibration.\index{Hosler-Lemeshow test}
-
-$g = 10$
+For the number of bins ($g=10$) specified below, the predictions show statistically significant miscalibration.\index{Hosler-Lemeshow test}
 
 ```{r}
 gValue <- 10
@@ -2379,7 +2367,7 @@ $$
 (\#eq:sensitivity)
 $$
 
-```{r}
+```{r, include = FALSE}
 sensitivity <- function(TP, TN, FP, FN){
   value <- TP/(TP + FN)
   
@@ -2479,7 +2467,7 @@ $$
 (\#eq:specificity)
 $$
 
-```{r}
+```{r, include = FALSE}
 specificity <- function(TP, TN, FP, FN){
   value <- TN/(TN + FP)
   
@@ -3097,7 +3085,7 @@ posttestProbability <- function(
 }
 ```
 
-```{r, include}
+```{r, include = FALSE}
 posttestProbabilityValue <- posttestProbability(
   TP = TPvalue,
   TN = TNvalue,
@@ -3301,65 +3289,6 @@ It is called "calibration-in-the-small" (as opposed to calibration-in-the-large,
 Values closer to zero reflect greater accuracy.\index{calibration}
 Values above zero indicate that the predicted values are, on average, greater than the observed values.\index{calibration}
 Values below zero indicate that the observed values are, on average, greater than the predicted values.\index{calibration}
-
-```{r, fig.show = "hide"}
-miscalibration <- function(predicted, actual, cutoff, bins = 10){
-  data <- data.frame(na.omit(cbind(predicted, actual)))
-  
-  calibrationTable <- mutate(
-    data,
-    bin = cut_number(
-      predicted,
-      n = 10)) %>%
-    group_by(bin) %>%
-    summarise(
-      n = length(predicted),
-      meanPredicted = mean(predicted, na.rm = TRUE),
-      meanObserved = mean(actual, na.rm = TRUE),
-      .groups = "drop")
-  
-  calibrationTable$cutoffMin <- as.numeric(str_replace_all(str_split(
-    calibrationTable$bin,
-    pattern = ",",
-    simplify = TRUE)[,1],
-    "[^[:alnum:]\\-\\.]", ""))
-  calibrationTable$cutoffMax <- as.numeric(str_replace_all(str_split(
-    calibrationTable$bin,
-    pattern = ",",
-    simplify = TRUE)[,2],
-    "[^[:alnum:]\\-\\.]", ""))
-
-  calibrationTable$inRange <- with(
-    calibrationTable,
-    cutoff >= cutoffMin & cutoff <= cutoffMax)
-  
-  if(length(which(calibrationTable$inRange == TRUE)) > 0){
-    nearestCutoff <- calibrationTable$bin[min(which(
-      calibrationTable$inRange == TRUE))]
-    calibrationAtNearestCutoff <- calibrationTable[which(
-      calibrationTable$bin == nearestCutoff),]
-    calibrationAtNearestCutoff <- as.data.frame(
-      calibrationTable[max(which(
-      calibrationTable$inRange == TRUE)),])
-    
-    meanPredicted <- calibrationAtNearestCutoff[, "meanPredicted"]
-    meanObserved <- calibrationAtNearestCutoff[, "meanObserved"]
-    differenceBetweenPredictedAndObserved <- meanPredicted - 
-      meanObserved
-  } else{
-    differenceBetweenPredictedAndObserved <- NA
-  }
-  
-  return(differenceBetweenPredictedAndObserved)
-}
-```
-
-```{r, fig.show = "hide"}
-miscalibration(
-  predicted = mydataSDT$predictedProbability,
-  actual = mydataSDT$disorder,
-  cutoff = cutoff)
-```
 
 ## Optimal Cutoff Specification {#optimalCutoff}
 
