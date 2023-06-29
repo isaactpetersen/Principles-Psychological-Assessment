@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2023-06-28" />
+<meta name="date" content="2023-06-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -2639,12 +2639,13 @@ And we would expect a useful measure to show consistency, stability, precision, 
 <span id="cb35-7"><a href="reliability.html#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;psychmeta&quot;</span>)</span>
 <span id="cb35-8"><a href="reliability.html#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;irrCAC&quot;</span>)</span>
 <span id="cb35-9"><a href="reliability.html#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;gtheory&quot;</span>)</span>
-<span id="cb35-10"><a href="reliability.html#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MOTE&quot;</span>)</span>
-<span id="cb35-11"><a href="reliability.html#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb35-12"><a href="reliability.html#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span>
-<span id="cb35-13"><a href="reliability.html#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;knitr&quot;</span>)</span>
-<span id="cb35-14"><a href="reliability.html#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rmarkdown&quot;</span>)</span>
-<span id="cb35-15"><a href="reliability.html#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;bookdown&quot;</span>)</span></code></pre></div>
+<span id="cb35-10"><a href="reliability.html#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;performance&quot;</span>)</span>
+<span id="cb35-11"><a href="reliability.html#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MOTE&quot;</span>)</span>
+<span id="cb35-12"><a href="reliability.html#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb35-13"><a href="reliability.html#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span>
+<span id="cb35-14"><a href="reliability.html#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;knitr&quot;</span>)</span>
+<span id="cb35-15"><a href="reliability.html#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rmarkdown&quot;</span>)</span>
+<span id="cb35-16"><a href="reliability.html#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;bookdown&quot;</span>)</span></code></pre></div>
 </details>
 </div>
 <div id="prepareData-reliability" class="section level3 hasAnchor" number="4.5.2">
@@ -3807,13 +3808,23 @@ Thus, the Spearman-Brown prediction formula accounts for the shorter test in pre
 \end{aligned}
 \tag{4.18}
 \]</span></p>
-<p>Another challenge to split-half reliability is that the reliability differs depending on which items go into which half.
-Modern computational software allows for estimating the mean reliability estimate of all possible split-halves <span class="citation">(<a href="#ref-Revelle2019" role="doc-biblioref">Revelle &amp; Condon, 2019</a>)</span>, while correcting for test length, as seen below.
+<p>Another challenge to split-half reliability is that the reliability differs depending on which items go into which half.</p>
+<p>One option is to calculate the split-half reliability of odd and even trials, while correcting for test length, as is performed with the <code>item_split_half()</code> function of the <code>performance</code> package <span class="citation">(<a href="#ref-R-performance" role="doc-biblioref"><strong>R-performance?</strong></a>)</span>:</p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="reliability.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">item_split_half</span>(mydata[,<span class="fu">c</span>(</span>
+<span id="cb99-2"><a href="reliability.html#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])</span></code></pre></div>
+</details>
+<pre><code>$splithalf
+[1] 0.8734005
+
+$spearmanbrown
+[1] 0.9324226</code></pre>
+<p>Modern computational software allows for estimating the mean reliability estimate of all possible split-halves <span class="citation">(<a href="#ref-Revelle2019" role="doc-biblioref">Revelle &amp; Condon, 2019</a>)</span>, while correcting for test length, as seen below.
 Split-half reliability was estimated using the <code>psych</code> package <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="reliability.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">splitHalf</span>(mydata[,<span class="fu">c</span>(</span>
-<span id="cb99-2"><a href="reliability.html#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
-<span id="cb99-3"><a href="reliability.html#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">brute =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="reliability.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">splitHalf</span>(mydata[,<span class="fu">c</span>(</span>
+<span id="cb101-2"><a href="reliability.html#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
+<span id="cb101-3"><a href="reliability.html#cb101-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">brute =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>Split half reliabilities  
 Call: splitHalf(r = mydata[, c(&quot;item1&quot;, &quot;item2&quot;, &quot;item3&quot;, &quot;item4&quot;)], 
@@ -3853,20 +3864,20 @@ If you use it with multidimensional scales, you know the extent to which items c
 However, Cronbach’s alpha does not assess the dimensionality of the scale or any type of <a href="validity.html#constructValidity">construct validity</a>—it can only tell us how strongly the items hang together.</p>
 <p>Cronbach’s alpha (<span class="math inline">\(\alpha\)</span>) was estimated using the <code>psych</code> package <span class="citation">(<a href="#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="reliability.html#cb101-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(</span>
-<span id="cb101-2"><a href="reliability.html#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])<span class="sc">$</span>total<span class="sc">$</span>raw_alpha</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="reliability.html#cb103-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(</span>
+<span id="cb103-2"><a href="reliability.html#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])<span class="sc">$</span>total<span class="sc">$</span>raw_alpha</span></code></pre></div>
 </details>
 <pre><code>[1] 0.8923861</code></pre>
 <p>Below is an estimate of standardized alpha (if the items are standardized before computing the scale score).</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="reliability.html#cb103-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(</span>
-<span id="cb103-2"><a href="reliability.html#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])<span class="sc">$</span>total<span class="sc">$</span>std.alpha</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="reliability.html#cb105-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(</span>
+<span id="cb105-2"><a href="reliability.html#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])<span class="sc">$</span>total<span class="sc">$</span>std.alpha</span></code></pre></div>
 </details>
 <pre><code>[1] 0.9212844</code></pre>
 <p>Below are item statistics:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="reliability.html#cb105-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(</span>
-<span id="cb105-2"><a href="reliability.html#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="reliability.html#cb107-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">alpha</span>(mydata[,<span class="fu">c</span>(</span>
+<span id="cb107-2"><a href="reliability.html#cb107-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)])</span></code></pre></div>
 </details>
 <pre><code>
 Reliability analysis   
@@ -3906,15 +3917,15 @@ Omega total, like Cronbach’s alpha, assumes that the items are unidimensional.
 Omega total (<span class="math inline">\(\omega_t\)</span>) was calculated using the <code>MBESS</code> package <span class="citation">(<a href="#ref-R-MBESS" role="doc-biblioref">Kelley, 2020</a>)</span>.
 This code quickly calculates a point estimate for omega total:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="reliability.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
-<span id="cb107-2"><a href="reliability.html#cb107-2" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
-<span id="cb107-3"><a href="reliability.html#cb107-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;omega&quot;</span>,</span>
-<span id="cb107-4"><a href="reliability.html#cb107-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;none&quot;</span>)<span class="sc">$</span>est</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="reliability.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb109-2"><a href="reliability.html#cb109-2" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
+<span id="cb109-3"><a href="reliability.html#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;omega&quot;</span>,</span>
+<span id="cb109-4"><a href="reliability.html#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;none&quot;</span>)<span class="sc">$</span>est</span></code></pre></div>
 </details>
 <pre><code>[1] 0.8760799</code></pre>
 <p>If you want to calculate a confidence interval for omega, you will need to specify an <code>interval.type</code> and specify how many bootstrap replications.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="reliability.html#cb109-1" aria-hidden="true" tabindex="-1"></a>bootstrapReplications <span class="ot">&lt;-</span> <span class="dv">1000</span></span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="reliability.html#cb111-1" aria-hidden="true" tabindex="-1"></a>bootstrapReplications <span class="ot">&lt;-</span> <span class="dv">1000</span></span></code></pre></div>
 </details>
 <p>The following code calculates a confidence interval from a bias-corrected bootstrap.
 For reproducibility, I set the seed below.
@@ -3924,12 +3935,12 @@ There is nothing special about this particular seed.
 You can reduce the number of replications to be faster.
 However, the number of bootstrap replications must be larger than the number of rows in the data.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="reliability.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb110-2"><a href="reliability.html#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
-<span id="cb110-3"><a href="reliability.html#cb110-3" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
-<span id="cb110-4"><a href="reliability.html#cb110-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;omega&quot;</span>,</span>
-<span id="cb110-5"><a href="reliability.html#cb110-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;bca&quot;</span>,</span>
-<span id="cb110-6"><a href="reliability.html#cb110-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> bootstrapReplications)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="reliability.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb112-2"><a href="reliability.html#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb112-3"><a href="reliability.html#cb112-3" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
+<span id="cb112-4"><a href="reliability.html#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;omega&quot;</span>,</span>
+<span id="cb112-5"><a href="reliability.html#cb112-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;bca&quot;</span>,</span>
+<span id="cb112-6"><a href="reliability.html#cb112-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> bootstrapReplications)</span></code></pre></div>
 </details>
 <pre><code>$est
 [1] 0.8760799
@@ -3960,10 +3971,10 @@ Use omega hierarchical for estimating internal consistency of continuous items t
 If the multidimensional items follow a higher-order structure, use omega higher-order [<span class="math inline">\(\omega_{ho}\)</span>; <span class="citation">Flora (<a href="#ref-Flora2020" role="doc-biblioref">2020</a>)</span>].</p>
 <p>Omega hierarchical was calculated using the <code>MBESS</code> package <span class="citation">(<a href="#ref-R-MBESS" role="doc-biblioref">Kelley, 2020</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="reliability.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
-<span id="cb112-2"><a href="reliability.html#cb112-2" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
-<span id="cb112-3"><a href="reliability.html#cb112-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;hierarchical&quot;</span>,</span>
-<span id="cb112-4"><a href="reliability.html#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;none&quot;</span>)<span class="sc">$</span>est</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="reliability.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb114-2"><a href="reliability.html#cb114-2" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
+<span id="cb114-3"><a href="reliability.html#cb114-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;hierarchical&quot;</span>,</span>
+<span id="cb114-4"><a href="reliability.html#cb114-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;none&quot;</span>)<span class="sc">$</span>est</span></code></pre></div>
 </details>
 <pre><code>[1] 0.8453203</code></pre>
 <p>The following code calculates a confidence interval from a bias-corrected bootstrap.
@@ -3974,12 +3985,12 @@ There is nothing special about this particular seed.
 You can reduce the number of replications to be faster.
 However, the number of bootstrap replications must be larger than the number of rows in the data.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="reliability.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb114-2"><a href="reliability.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
-<span id="cb114-3"><a href="reliability.html#cb114-3" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
-<span id="cb114-4"><a href="reliability.html#cb114-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;hierarchical&quot;</span>,</span>
-<span id="cb114-5"><a href="reliability.html#cb114-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;bca&quot;</span>,</span>
-<span id="cb114-6"><a href="reliability.html#cb114-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> bootstrapReplications)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="reliability.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb116-2"><a href="reliability.html#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb116-3"><a href="reliability.html#cb116-3" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
+<span id="cb116-4"><a href="reliability.html#cb116-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;hierarchical&quot;</span>,</span>
+<span id="cb116-5"><a href="reliability.html#cb116-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;bca&quot;</span>,</span>
+<span id="cb116-6"><a href="reliability.html#cb116-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> bootstrapReplications)</span></code></pre></div>
 </details>
 <pre><code>$est
 [1] 0.8453203
@@ -4010,10 +4021,10 @@ If the categorical items are multidimensional items and they follow a bifactor s
 If the categorical items are multidimensional and they follow a higher-order structure, use omega higher-order categorical [<span class="math inline">\(\omega_{ho\text{-cat}}\)</span>; <span class="citation">Flora (<a href="#ref-Flora2020" role="doc-biblioref">2020</a>)</span>].</p>
 <p>Omega categorical was calculated using the <code>MBESS</code> package <span class="citation">(<a href="#ref-R-MBESS" role="doc-biblioref">Kelley, 2020</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="reliability.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
-<span id="cb116-2"><a href="reliability.html#cb116-2" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;rater1categorical&quot;</span>,<span class="st">&quot;rater2categorical&quot;</span>,<span class="st">&quot;rater3categorical&quot;</span>)],</span>
-<span id="cb116-3"><a href="reliability.html#cb116-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;categorical&quot;</span>,</span>
-<span id="cb116-4"><a href="reliability.html#cb116-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;none&quot;</span>)<span class="sc">$</span>est</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="reliability.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb118-2"><a href="reliability.html#cb118-2" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;rater1categorical&quot;</span>,<span class="st">&quot;rater2categorical&quot;</span>,<span class="st">&quot;rater3categorical&quot;</span>)],</span>
+<span id="cb118-3"><a href="reliability.html#cb118-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;categorical&quot;</span>,</span>
+<span id="cb118-4"><a href="reliability.html#cb118-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;none&quot;</span>)<span class="sc">$</span>est</span></code></pre></div>
 </details>
 <pre><code>          [,1]      [,2]      [,3]
 [1,] 1.0073439 0.9852044 0.9903989
@@ -4028,12 +4039,12 @@ There is nothing special about this particular seed.
 You can reduce the number of replications to be faster.
 However, the number of bootstrap replications must be larger than the number of rows in the data.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="reliability.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb119-2"><a href="reliability.html#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
-<span id="cb119-3"><a href="reliability.html#cb119-3" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;rater1categorical&quot;</span>,<span class="st">&quot;rater2categorical&quot;</span>,<span class="st">&quot;rater3categorical&quot;</span>)],</span>
-<span id="cb119-4"><a href="reliability.html#cb119-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;categorical&quot;</span>,</span>
-<span id="cb119-5"><a href="reliability.html#cb119-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;bca&quot;</span>,</span>
-<span id="cb119-6"><a href="reliability.html#cb119-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> bootstrapReplications)</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="reliability.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb121-2"><a href="reliability.html#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb121-3"><a href="reliability.html#cb121-3" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;rater1categorical&quot;</span>,<span class="st">&quot;rater2categorical&quot;</span>,<span class="st">&quot;rater3categorical&quot;</span>)],</span>
+<span id="cb121-4"><a href="reliability.html#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;categorical&quot;</span>,</span>
+<span id="cb121-5"><a href="reliability.html#cb121-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval.type =</span> <span class="st">&quot;bca&quot;</span>,</span>
+<span id="cb121-6"><a href="reliability.html#cb121-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> bootstrapReplications)</span></code></pre></div>
 </details>
 </div>
 </div>
@@ -4063,28 +4074,28 @@ As we noted in Equation \@ref(eq:reliabilityRatio), reliability is the ratio of 
 <p>We first specify the variables used to generate the correlation matrix, and the reliability, standard deviation, and weight of each variable.
 We specify items 2 and 3 to have twice the weight as item 1 in the composite, and item 4 to have 1.5 times the weight as item 1 in the composite.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="reliability.html#cb120-1" aria-hidden="true" tabindex="-1"></a>rxx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.70</span>, <span class="fl">0.75</span>, <span class="fl">0.80</span>, <span class="fl">0.85</span>) <span class="co">#reliability coefficients</span></span>
-<span id="cb120-2"><a href="reliability.html#cb120-2" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fu">cor</span>(mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
-<span id="cb120-3"><a href="reliability.html#cb120-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>)</span>
-<span id="cb120-4"><a href="reliability.html#cb120-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">apply</span>(</span>
-<span id="cb120-5"><a href="reliability.html#cb120-5" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
-<span id="cb120-6"><a href="reliability.html#cb120-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>,</span>
-<span id="cb120-7"><a href="reliability.html#cb120-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="co">#standard deviations</span></span>
-<span id="cb120-8"><a href="reliability.html#cb120-8" aria-hidden="true" tabindex="-1"></a>weights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">1.5</span>) <span class="co">#weights of each variable in the linear combination</span></span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="reliability.html#cb122-1" aria-hidden="true" tabindex="-1"></a>rxx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.70</span>, <span class="fl">0.75</span>, <span class="fl">0.80</span>, <span class="fl">0.85</span>) <span class="co">#reliability coefficients</span></span>
+<span id="cb122-2"><a href="reliability.html#cb122-2" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fu">cor</span>(mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
+<span id="cb122-3"><a href="reliability.html#cb122-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>)</span>
+<span id="cb122-4"><a href="reliability.html#cb122-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">apply</span>(</span>
+<span id="cb122-5"><a href="reliability.html#cb122-5" aria-hidden="true" tabindex="-1"></a>  mydata[,<span class="fu">c</span>(<span class="st">&quot;item1&quot;</span>,<span class="st">&quot;item2&quot;</span>,<span class="st">&quot;item3&quot;</span>,<span class="st">&quot;item4&quot;</span>)],</span>
+<span id="cb122-6"><a href="reliability.html#cb122-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>,</span>
+<span id="cb122-7"><a href="reliability.html#cb122-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="co">#standard deviations</span></span>
+<span id="cb122-8"><a href="reliability.html#cb122-8" aria-hidden="true" tabindex="-1"></a>weights <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">1.5</span>) <span class="co">#weights of each variable in the linear combination</span></span></code></pre></div>
 </details>
 <p>Here is the reliability of an unweighted composite:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="reliability.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">composite_rel_matrix</span>(<span class="at">rel_vec =</span> rxx,</span>
-<span id="cb121-2"><a href="reliability.html#cb121-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r_mat =</span> rho,</span>
-<span id="cb121-3"><a href="reliability.html#cb121-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sd_vec =</span> sigma)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="reliability.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">composite_rel_matrix</span>(<span class="at">rel_vec =</span> rxx,</span>
+<span id="cb123-2"><a href="reliability.html#cb123-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r_mat =</span> rho,</span>
+<span id="cb123-3"><a href="reliability.html#cb123-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sd_vec =</span> sigma)</span></code></pre></div>
 </details>
 <pre><code>[1] 0.9337237</code></pre>
 <p>Here is the reliability of a weighted composite:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="reliability.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">composite_rel_matrix</span>(<span class="at">rel_vec =</span> rxx,</span>
-<span id="cb123-2"><a href="reliability.html#cb123-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r_mat =</span> rho,</span>
-<span id="cb123-3"><a href="reliability.html#cb123-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sd_vec =</span> sigma,</span>
-<span id="cb123-4"><a href="reliability.html#cb123-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">wt_vec =</span> weights)</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="reliability.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">composite_rel_matrix</span>(<span class="at">rel_vec =</span> rxx,</span>
+<span id="cb125-2"><a href="reliability.html#cb125-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r_mat =</span> rho,</span>
+<span id="cb125-3"><a href="reliability.html#cb125-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sd_vec =</span> sigma,</span>
+<span id="cb125-4"><a href="reliability.html#cb125-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">wt_vec =</span> weights)</span></code></pre></div>
 </details>
 <pre><code>[1] 0.931709</code></pre>
 </div>
@@ -4102,22 +4113,22 @@ r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\
 \]</span></p>
 <p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2023</a>)</span> contains the <code>reliabilityOfDifferenceScore()</code> function to calculate the reliability of a difference score:</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb125-1"><a href="reliability.html#cb125-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfDifferenceScore <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, reliabilityX, reliabilityY){</span>
-<span id="cb125-2"><a href="reliability.html#cb125-2" aria-hidden="true" tabindex="-1"></a>  rxy <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)<span class="sc">$</span>estimate)</span>
-<span id="cb125-3"><a href="reliability.html#cb125-3" aria-hidden="true" tabindex="-1"></a>  sigmaX <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb125-4"><a href="reliability.html#cb125-4" aria-hidden="true" tabindex="-1"></a>  sigmaY <span class="ot">&lt;-</span> <span class="fu">sd</span>(y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb125-5"><a href="reliability.html#cb125-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb125-6"><a href="reliability.html#cb125-6" aria-hidden="true" tabindex="-1"></a>  reliability <span class="ot">&lt;-</span> (sigmaX<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> reliabilityX <span class="sc">+</span> sigmaY<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> reliabilityY <span class="sc">-</span> (<span class="dv">2</span> <span class="sc">*</span> rxy <span class="sc">*</span> sigmaX <span class="sc">*</span> sigmaY)) <span class="sc">/</span> (sigmaX<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigmaY<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> (<span class="dv">2</span> <span class="sc">*</span> rxy <span class="sc">*</span> sigmaX <span class="sc">*</span> sigmaY))</span>
-<span id="cb125-7"><a href="reliability.html#cb125-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb125-8"><a href="reliability.html#cb125-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(reliability)</span>
-<span id="cb125-9"><a href="reliability.html#cb125-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb127-1"><a href="reliability.html#cb127-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfDifferenceScore <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, reliabilityX, reliabilityY){</span>
+<span id="cb127-2"><a href="reliability.html#cb127-2" aria-hidden="true" tabindex="-1"></a>  rxy <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)<span class="sc">$</span>estimate)</span>
+<span id="cb127-3"><a href="reliability.html#cb127-3" aria-hidden="true" tabindex="-1"></a>  sigmaX <span class="ot">&lt;-</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb127-4"><a href="reliability.html#cb127-4" aria-hidden="true" tabindex="-1"></a>  sigmaY <span class="ot">&lt;-</span> <span class="fu">sd</span>(y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb127-5"><a href="reliability.html#cb127-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb127-6"><a href="reliability.html#cb127-6" aria-hidden="true" tabindex="-1"></a>  reliability <span class="ot">&lt;-</span> (sigmaX<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> reliabilityX <span class="sc">+</span> sigmaY<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> reliabilityY <span class="sc">-</span> (<span class="dv">2</span> <span class="sc">*</span> rxy <span class="sc">*</span> sigmaX <span class="sc">*</span> sigmaY)) <span class="sc">/</span> (sigmaX<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> sigmaY<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> (<span class="dv">2</span> <span class="sc">*</span> rxy <span class="sc">*</span> sigmaX <span class="sc">*</span> sigmaY))</span>
+<span id="cb127-7"><a href="reliability.html#cb127-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb127-8"><a href="reliability.html#cb127-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(reliability)</span>
+<span id="cb127-9"><a href="reliability.html#cb127-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="reliability.html#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reliabilityOfDifferenceScore</span>(</span>
-<span id="cb126-2"><a href="reliability.html#cb126-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>item1,</span>
-<span id="cb126-3"><a href="reliability.html#cb126-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>item2,</span>
-<span id="cb126-4"><a href="reliability.html#cb126-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityX =</span> .<span class="dv">95</span>,</span>
-<span id="cb126-5"><a href="reliability.html#cb126-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityY =</span> .<span class="dv">95</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="reliability.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reliabilityOfDifferenceScore</span>(</span>
+<span id="cb128-2"><a href="reliability.html#cb128-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>item1,</span>
+<span id="cb128-3"><a href="reliability.html#cb128-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>item2,</span>
+<span id="cb128-4"><a href="reliability.html#cb128-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityX =</span> .<span class="dv">95</span>,</span>
+<span id="cb128-5"><a href="reliability.html#cb128-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityY =</span> .<span class="dv">95</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 0.2552898</code></pre>
 <p>For instance, in this case, the reliability of the difference score is .26 even though the reliability of both indices is .95.</p>
@@ -4171,26 +4182,26 @@ It is also below:</p>
 <p>where <span class="math inline">\(\sigma_x = \text{standard deviation of scores on measure } x\)</span> and <span class="math inline">\(r_{xx} = \text{reliability of measure } x\)</span></p>
 <p>The reliability of the measure was estimated here based on the test–retest reliability of the measure at T1 with the measure at T2.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="reliability.html#cb128-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(</span>
-<span id="cb128-2"><a href="reliability.html#cb128-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor.test</span>(</span>
-<span id="cb128-3"><a href="reliability.html#cb128-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb128-4"><a href="reliability.html#cb128-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>estimate)</span>
-<span id="cb128-5"><a href="reliability.html#cb128-5" aria-hidden="true" tabindex="-1"></a>sem <span class="ot">&lt;-</span> <span class="fu">sd</span>(mydata<span class="sc">$</span>time1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityOfMeasure)</span>
-<span id="cb128-6"><a href="reliability.html#cb128-6" aria-hidden="true" tabindex="-1"></a>sem</span></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="reliability.html#cb130-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(</span>
+<span id="cb130-2"><a href="reliability.html#cb130-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor.test</span>(</span>
+<span id="cb130-3"><a href="reliability.html#cb130-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb130-4"><a href="reliability.html#cb130-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>estimate)</span>
+<span id="cb130-5"><a href="reliability.html#cb130-5" aria-hidden="true" tabindex="-1"></a>sem <span class="ot">&lt;-</span> <span class="fu">sd</span>(mydata<span class="sc">$</span>time1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityOfMeasure)</span>
+<span id="cb130-6"><a href="reliability.html#cb130-6" aria-hidden="true" tabindex="-1"></a>sem</span></code></pre></div>
 </details>
 <pre><code>[1] 2.720493</code></pre>
 <p>We can use the standard error of measurement to estimate the confidence interval around a person’s score.
 A confidence interval indicates a range within which, with some degree of confidence (e.g., 95%), the person’s true score is expected to be.
 For a 95% confidence interval, the true score is expected to fall within <span class="math inline">\(\pm 1.959964 \ \text{SEMs}\)</span> of the observed score 95% of the time.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="reliability.html#cb130-1" aria-hidden="true" tabindex="-1"></a>lower95CI <span class="ot">&lt;-</span> <span class="fu">mean</span>(mydata<span class="sc">$</span>time1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>)<span class="sc">*</span>sem</span>
-<span id="cb130-2"><a href="reliability.html#cb130-2" aria-hidden="true" tabindex="-1"></a>upper95CI <span class="ot">&lt;-</span> <span class="fu">mean</span>(mydata<span class="sc">$</span>time1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>)<span class="sc">*</span>sem</span>
-<span id="cb130-3"><a href="reliability.html#cb130-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb130-4"><a href="reliability.html#cb130-4" aria-hidden="true" tabindex="-1"></a>lower95CI</span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="reliability.html#cb132-1" aria-hidden="true" tabindex="-1"></a>lower95CI <span class="ot">&lt;-</span> <span class="fu">mean</span>(mydata<span class="sc">$</span>time1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>)<span class="sc">*</span>sem</span>
+<span id="cb132-2"><a href="reliability.html#cb132-2" aria-hidden="true" tabindex="-1"></a>upper95CI <span class="ot">&lt;-</span> <span class="fu">mean</span>(mydata<span class="sc">$</span>time1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>)<span class="sc">*</span>sem</span>
+<span id="cb132-3"><a href="reliability.html#cb132-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-4"><a href="reliability.html#cb132-4" aria-hidden="true" tabindex="-1"></a>lower95CI</span></code></pre></div>
 </details>
 <pre><code>[1] 45.60439</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="reliability.html#cb132-1" aria-hidden="true" tabindex="-1"></a>upper95CI</span></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="reliability.html#cb134-1" aria-hidden="true" tabindex="-1"></a>upper95CI</span></code></pre></div>
 </details>
 <pre><code>[1] 56.26852</code></pre>
 <p>The 95% CI is <span class="math inline">\([45.6, 56.27]\)</span>.</p>
@@ -4209,35 +4220,35 @@ For reproducibility, I set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb134-1"><a href="reliability.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
-<span id="cb134-2"><a href="reliability.html#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb134-3"><a href="reliability.html#cb134-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb134-4"><a href="reliability.html#cb134-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb134-5"><a href="reliability.html#cb134-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
-<span id="cb134-6"><a href="reliability.html#cb134-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> sampleSize,</span>
-<span id="cb134-7"><a href="reliability.html#cb134-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="dv">0</span>,</span>
-<span id="cb134-8"><a href="reliability.html#cb134-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb134-9"><a href="reliability.html#cb134-9" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
-<span id="cb134-10"><a href="reliability.html#cb134-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> sampleSize,</span>
-<span id="cb134-11"><a href="reliability.html#cb134-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="dv">0</span>,</span>
-<span id="cb134-12"><a href="reliability.html#cb134-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb134-13"><a href="reliability.html#cb134-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb134-14"><a href="reliability.html#cb134-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
-<span id="cb134-15"><a href="reliability.html#cb134-15" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb134-16"><a href="reliability.html#cb134-16" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb134-17"><a href="reliability.html#cb134-17" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb134-18"><a href="reliability.html#cb134-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb134-19"><a href="reliability.html#cb134-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
-<span id="cb134-20"><a href="reliability.html#cb134-20" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb134-21"><a href="reliability.html#cb134-21" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
-<span id="cb134-22"><a href="reliability.html#cb134-22" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
-<span id="cb134-23"><a href="reliability.html#cb134-23" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
-<span id="cb134-24"><a href="reliability.html#cb134-24" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb136-1"><a href="reliability.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
+<span id="cb136-2"><a href="reliability.html#cb136-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb136-3"><a href="reliability.html#cb136-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-4"><a href="reliability.html#cb136-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb136-5"><a href="reliability.html#cb136-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb136-6"><a href="reliability.html#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> sampleSize,</span>
+<span id="cb136-7"><a href="reliability.html#cb136-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb136-8"><a href="reliability.html#cb136-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb136-9"><a href="reliability.html#cb136-9" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb136-10"><a href="reliability.html#cb136-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> sampleSize,</span>
+<span id="cb136-11"><a href="reliability.html#cb136-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb136-12"><a href="reliability.html#cb136-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb136-13"><a href="reliability.html#cb136-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-14"><a href="reliability.html#cb136-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
+<span id="cb136-15"><a href="reliability.html#cb136-15" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb136-16"><a href="reliability.html#cb136-16" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb136-17"><a href="reliability.html#cb136-17" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb136-18"><a href="reliability.html#cb136-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-19"><a href="reliability.html#cb136-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
+<span id="cb136-20"><a href="reliability.html#cb136-20" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb136-21"><a href="reliability.html#cb136-21" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
+<span id="cb136-22"><a href="reliability.html#cb136-22" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
+<span id="cb136-23"><a href="reliability.html#cb136-23" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
+<span id="cb136-24"><a href="reliability.html#cb136-24" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span></code></pre></div>
 </details>
 <div id="noError-stability" class="section level4 hasAnchor" number="4.9.1.1">
 <h4><span class="header-section-number">4.9.1.1</span> Coefficient of stability<a href="reliability.html#noError-stability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="reliability.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="reliability.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -4254,19 +4265,19 @@ sample estimates:
 <div id="noError-repeatability" class="section level4 hasAnchor" number="4.9.1.2">
 <h4><span class="header-section-number">4.9.1.2</span> Coefficient of repeatability<a href="reliability.html#noError-repeatability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="reliability.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
-<span id="cb137-2"><a href="reliability.html#cb137-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
-<span id="cb137-3"><a href="reliability.html#cb137-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb137-4"><a href="reliability.html#cb137-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="reliability.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
+<span id="cb139-2"><a href="reliability.html#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
+<span id="cb139-3"><a href="reliability.html#cb139-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb139-4"><a href="reliability.html#cb139-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 6.588758</code></pre>
 </div>
 <div id="noError-bias" class="section level4 hasAnchor" number="4.9.1.3">
 <h4><span class="header-section-number">4.9.1.3</span> Bias<a href="reliability.html#noError-bias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="reliability.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
-<span id="cb139-2"><a href="reliability.html#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb139-3"><a href="reliability.html#cb139-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="reliability.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
+<span id="cb141-2"><a href="reliability.html#cb141-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb141-3"><a href="reliability.html#cb141-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
 </details>
 <pre><code>[1] 0.335823</code></pre>
 </div>
@@ -4279,37 +4290,37 @@ Specifically, I added error that is randomly distributed around a mean of 0 and 
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb141-1"><a href="reliability.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
-<span id="cb141-2"><a href="reliability.html#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb141-3"><a href="reliability.html#cb141-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb141-4"><a href="reliability.html#cb141-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb141-5"><a href="reliability.html#cb141-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb141-6"><a href="reliability.html#cb141-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb141-7"><a href="reliability.html#cb141-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb141-8"><a href="reliability.html#cb141-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
-<span id="cb141-9"><a href="reliability.html#cb141-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb141-10"><a href="reliability.html#cb141-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb141-11"><a href="reliability.html#cb141-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb141-12"><a href="reliability.html#cb141-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb141-13"><a href="reliability.html#cb141-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
-<span id="cb141-14"><a href="reliability.html#cb141-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb141-15"><a href="reliability.html#cb141-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
-<span id="cb141-16"><a href="reliability.html#cb141-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
-<span id="cb141-17"><a href="reliability.html#cb141-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
-<span id="cb141-18"><a href="reliability.html#cb141-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
-<span id="cb141-19"><a href="reliability.html#cb141-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb141-20"><a href="reliability.html#cb141-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
-<span id="cb141-21"><a href="reliability.html#cb141-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
-<span id="cb141-22"><a href="reliability.html#cb141-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mydata)){</span>
-<span id="cb141-23"><a href="reliability.html#cb141-23" aria-hidden="true" tabindex="-1"></a>  mydata[i, <span class="fu">c</span>(<span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="ot">&lt;-</span> mydata[i, <span class="fu">c</span>(</span>
-<span id="cb141-24"><a href="reliability.html#cb141-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="sc">+</span> </span>
-<span id="cb141-25"><a href="reliability.html#cb141-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span>
-<span id="cb141-26"><a href="reliability.html#cb141-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb143-1"><a href="reliability.html#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
+<span id="cb143-2"><a href="reliability.html#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb143-3"><a href="reliability.html#cb143-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-4"><a href="reliability.html#cb143-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb143-5"><a href="reliability.html#cb143-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb143-6"><a href="reliability.html#cb143-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb143-7"><a href="reliability.html#cb143-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-8"><a href="reliability.html#cb143-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
+<span id="cb143-9"><a href="reliability.html#cb143-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb143-10"><a href="reliability.html#cb143-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb143-11"><a href="reliability.html#cb143-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb143-12"><a href="reliability.html#cb143-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-13"><a href="reliability.html#cb143-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
+<span id="cb143-14"><a href="reliability.html#cb143-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb143-15"><a href="reliability.html#cb143-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
+<span id="cb143-16"><a href="reliability.html#cb143-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
+<span id="cb143-17"><a href="reliability.html#cb143-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
+<span id="cb143-18"><a href="reliability.html#cb143-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
+<span id="cb143-19"><a href="reliability.html#cb143-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-20"><a href="reliability.html#cb143-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
+<span id="cb143-21"><a href="reliability.html#cb143-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb143-22"><a href="reliability.html#cb143-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mydata)){</span>
+<span id="cb143-23"><a href="reliability.html#cb143-23" aria-hidden="true" tabindex="-1"></a>  mydata[i, <span class="fu">c</span>(<span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="ot">&lt;-</span> mydata[i, <span class="fu">c</span>(</span>
+<span id="cb143-24"><a href="reliability.html#cb143-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="sc">+</span> </span>
+<span id="cb143-25"><a href="reliability.html#cb143-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span>
+<span id="cb143-26"><a href="reliability.html#cb143-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <div id="withinPersonRandomError-stability" class="section level4 hasAnchor" number="4.9.2.1">
 <h4><span class="header-section-number">4.9.2.1</span> Coefficient of stability<a href="reliability.html#withinPersonRandomError-stability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="reliability.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="reliability.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -4326,20 +4337,20 @@ sample estimates:
 <div id="withinPersonRandomError-repeatability" class="section level4 hasAnchor" number="4.9.2.2">
 <h4><span class="header-section-number">4.9.2.2</span> Coefficient of repeatability<a href="reliability.html#withinPersonRandomError-repeatability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="reliability.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
-<span id="cb144-2"><a href="reliability.html#cb144-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
-<span id="cb144-3"><a href="reliability.html#cb144-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb144-4"><a href="reliability.html#cb144-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
-<span id="cb144-5"><a href="reliability.html#cb144-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="reliability.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
+<span id="cb146-2"><a href="reliability.html#cb146-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
+<span id="cb146-3"><a href="reliability.html#cb146-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb146-4"><a href="reliability.html#cb146-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
+<span id="cb146-5"><a href="reliability.html#cb146-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 10.03618</code></pre>
 </div>
 <div id="withinPersonRandomError-bias" class="section level4 hasAnchor" number="4.9.2.3">
 <h4><span class="header-section-number">4.9.2.3</span> Bias<a href="reliability.html#withinPersonRandomError-bias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="reliability.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
-<span id="cb146-2"><a href="reliability.html#cb146-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb146-3"><a href="reliability.html#cb146-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="reliability.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
+<span id="cb148-2"><a href="reliability.html#cb148-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb148-3"><a href="reliability.html#cb148-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
 </details>
 <pre><code>[1] 0.5901701</code></pre>
 </div>
@@ -4360,37 +4371,37 @@ Specifically, to all participants, I added error that is consistent across time 
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb148-1"><a href="reliability.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
-<span id="cb148-2"><a href="reliability.html#cb148-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb148-3"><a href="reliability.html#cb148-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb148-4"><a href="reliability.html#cb148-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb148-5"><a href="reliability.html#cb148-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb148-6"><a href="reliability.html#cb148-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb148-7"><a href="reliability.html#cb148-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb148-8"><a href="reliability.html#cb148-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
-<span id="cb148-9"><a href="reliability.html#cb148-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb148-10"><a href="reliability.html#cb148-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb148-11"><a href="reliability.html#cb148-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb148-12"><a href="reliability.html#cb148-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb148-13"><a href="reliability.html#cb148-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
-<span id="cb148-14"><a href="reliability.html#cb148-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb148-15"><a href="reliability.html#cb148-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
-<span id="cb148-16"><a href="reliability.html#cb148-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
-<span id="cb148-17"><a href="reliability.html#cb148-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
-<span id="cb148-18"><a href="reliability.html#cb148-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
-<span id="cb148-19"><a href="reliability.html#cb148-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb148-20"><a href="reliability.html#cb148-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
-<span id="cb148-21"><a href="reliability.html#cb148-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
-<span id="cb148-22"><a href="reliability.html#cb148-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mydata)){</span>
-<span id="cb148-23"><a href="reliability.html#cb148-23" aria-hidden="true" tabindex="-1"></a>  mydata[i, <span class="fu">c</span>(<span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="ot">&lt;-</span> mydata[i, <span class="fu">c</span>(</span>
-<span id="cb148-24"><a href="reliability.html#cb148-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="sc">+</span> </span>
-<span id="cb148-25"><a href="reliability.html#cb148-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span>
-<span id="cb148-26"><a href="reliability.html#cb148-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb150-1"><a href="reliability.html#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
+<span id="cb150-2"><a href="reliability.html#cb150-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb150-3"><a href="reliability.html#cb150-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-4"><a href="reliability.html#cb150-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb150-5"><a href="reliability.html#cb150-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb150-6"><a href="reliability.html#cb150-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb150-7"><a href="reliability.html#cb150-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-8"><a href="reliability.html#cb150-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
+<span id="cb150-9"><a href="reliability.html#cb150-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb150-10"><a href="reliability.html#cb150-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb150-11"><a href="reliability.html#cb150-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb150-12"><a href="reliability.html#cb150-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-13"><a href="reliability.html#cb150-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
+<span id="cb150-14"><a href="reliability.html#cb150-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb150-15"><a href="reliability.html#cb150-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
+<span id="cb150-16"><a href="reliability.html#cb150-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
+<span id="cb150-17"><a href="reliability.html#cb150-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
+<span id="cb150-18"><a href="reliability.html#cb150-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
+<span id="cb150-19"><a href="reliability.html#cb150-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-20"><a href="reliability.html#cb150-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
+<span id="cb150-21"><a href="reliability.html#cb150-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb150-22"><a href="reliability.html#cb150-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(mydata)){</span>
+<span id="cb150-23"><a href="reliability.html#cb150-23" aria-hidden="true" tabindex="-1"></a>  mydata[i, <span class="fu">c</span>(<span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="ot">&lt;-</span> mydata[i, <span class="fu">c</span>(</span>
+<span id="cb150-24"><a href="reliability.html#cb150-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;time1&quot;</span>,<span class="st">&quot;time2&quot;</span>,<span class="st">&quot;time3&quot;</span>)] <span class="sc">+</span> </span>
+<span id="cb150-25"><a href="reliability.html#cb150-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span>
+<span id="cb150-26"><a href="reliability.html#cb150-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </details>
 <div id="withinPersonSystematicError-stability" class="section level4 hasAnchor" number="4.9.3.1">
 <h4><span class="header-section-number">4.9.3.1</span> Coefficient of stability<a href="reliability.html#withinPersonSystematicError-stability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="reliability.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="reliability.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -4407,20 +4418,20 @@ sample estimates:
 <div id="withinPersonSystematicError-repeatability" class="section level4 hasAnchor" number="4.9.3.2">
 <h4><span class="header-section-number">4.9.3.2</span> Coefficient of repeatability<a href="reliability.html#withinPersonSystematicError-repeatability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="reliability.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
-<span id="cb151-2"><a href="reliability.html#cb151-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
-<span id="cb151-3"><a href="reliability.html#cb151-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb151-4"><a href="reliability.html#cb151-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
-<span id="cb151-5"><a href="reliability.html#cb151-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="reliability.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
+<span id="cb153-2"><a href="reliability.html#cb153-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
+<span id="cb153-3"><a href="reliability.html#cb153-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb153-4"><a href="reliability.html#cb153-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
+<span id="cb153-5"><a href="reliability.html#cb153-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 6.588758</code></pre>
 </div>
 <div id="withinPersonSystematicError-bias" class="section level4 hasAnchor" number="4.9.3.3">
 <h4><span class="header-section-number">4.9.3.3</span> Bias<a href="reliability.html#withinPersonSystematicError-bias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="reliability.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
-<span id="cb153-2"><a href="reliability.html#cb153-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb153-3"><a href="reliability.html#cb153-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="reliability.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
+<span id="cb155-2"><a href="reliability.html#cb155-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb155-3"><a href="reliability.html#cb155-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
 </details>
 <pre><code>[1] 0.335823</code></pre>
 </div>
@@ -4442,34 +4453,34 @@ Specifically, I added error that is randomly distributed around a mean of 0 and 
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb155-1"><a href="reliability.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
-<span id="cb155-2"><a href="reliability.html#cb155-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb155-3"><a href="reliability.html#cb155-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb155-4"><a href="reliability.html#cb155-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb155-5"><a href="reliability.html#cb155-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb155-6"><a href="reliability.html#cb155-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb155-7"><a href="reliability.html#cb155-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb155-8"><a href="reliability.html#cb155-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
-<span id="cb155-9"><a href="reliability.html#cb155-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb155-10"><a href="reliability.html#cb155-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb155-11"><a href="reliability.html#cb155-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb155-12"><a href="reliability.html#cb155-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb155-13"><a href="reliability.html#cb155-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
-<span id="cb155-14"><a href="reliability.html#cb155-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb155-15"><a href="reliability.html#cb155-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
-<span id="cb155-16"><a href="reliability.html#cb155-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
-<span id="cb155-17"><a href="reliability.html#cb155-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
-<span id="cb155-18"><a href="reliability.html#cb155-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
-<span id="cb155-19"><a href="reliability.html#cb155-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb155-20"><a href="reliability.html#cb155-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
-<span id="cb155-21"><a href="reliability.html#cb155-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
-<span id="cb155-22"><a href="reliability.html#cb155-22" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time2 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time2 <span class="sc">+</span> </span>
-<span id="cb155-23"><a href="reliability.html#cb155-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb157-1"><a href="reliability.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
+<span id="cb157-2"><a href="reliability.html#cb157-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb157-3"><a href="reliability.html#cb157-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-4"><a href="reliability.html#cb157-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb157-5"><a href="reliability.html#cb157-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb157-6"><a href="reliability.html#cb157-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb157-7"><a href="reliability.html#cb157-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-8"><a href="reliability.html#cb157-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
+<span id="cb157-9"><a href="reliability.html#cb157-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb157-10"><a href="reliability.html#cb157-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb157-11"><a href="reliability.html#cb157-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb157-12"><a href="reliability.html#cb157-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-13"><a href="reliability.html#cb157-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
+<span id="cb157-14"><a href="reliability.html#cb157-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb157-15"><a href="reliability.html#cb157-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
+<span id="cb157-16"><a href="reliability.html#cb157-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
+<span id="cb157-17"><a href="reliability.html#cb157-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
+<span id="cb157-18"><a href="reliability.html#cb157-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
+<span id="cb157-19"><a href="reliability.html#cb157-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-20"><a href="reliability.html#cb157-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
+<span id="cb157-21"><a href="reliability.html#cb157-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb157-22"><a href="reliability.html#cb157-22" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time2 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time2 <span class="sc">+</span> </span>
+<span id="cb157-23"><a href="reliability.html#cb157-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">3</span>)</span></code></pre></div>
 </details>
 <div id="betweenPersonRandomError-stability" class="section level4 hasAnchor" number="4.9.4.1">
 <h4><span class="header-section-number">4.9.4.1</span> Coefficient of stability<a href="reliability.html#betweenPersonRandomError-stability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="reliability.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="reliability.html#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -4486,20 +4497,20 @@ sample estimates:
 <div id="betweenPersonRandomError-repeatability" class="section level4 hasAnchor" number="4.9.4.2">
 <h4><span class="header-section-number">4.9.4.2</span> Coefficient of repeatability<a href="reliability.html#betweenPersonRandomError-repeatability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="reliability.html#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
-<span id="cb158-2"><a href="reliability.html#cb158-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
-<span id="cb158-3"><a href="reliability.html#cb158-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb158-4"><a href="reliability.html#cb158-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
-<span id="cb158-5"><a href="reliability.html#cb158-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="reliability.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
+<span id="cb160-2"><a href="reliability.html#cb160-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
+<span id="cb160-3"><a href="reliability.html#cb160-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb160-4"><a href="reliability.html#cb160-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
+<span id="cb160-5"><a href="reliability.html#cb160-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 9.288859</code></pre>
 </div>
 <div id="betweenPersonRandomError-bias" class="section level4 hasAnchor" number="4.9.4.3">
 <h4><span class="header-section-number">4.9.4.3</span> Bias<a href="reliability.html#betweenPersonRandomError-bias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="reliability.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
-<span id="cb160-2"><a href="reliability.html#cb160-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb160-3"><a href="reliability.html#cb160-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="reliability.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
+<span id="cb162-2"><a href="reliability.html#cb162-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb162-3"><a href="reliability.html#cb162-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
 </details>
 <pre><code>[1] -0.4554251</code></pre>
 </div>
@@ -4521,34 +4532,34 @@ Specifically, I added constant variance of 10 to all participants’ scores at T
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb162-1"><a href="reliability.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
-<span id="cb162-2"><a href="reliability.html#cb162-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb162-3"><a href="reliability.html#cb162-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb162-4"><a href="reliability.html#cb162-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb162-5"><a href="reliability.html#cb162-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb162-6"><a href="reliability.html#cb162-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb162-7"><a href="reliability.html#cb162-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb162-8"><a href="reliability.html#cb162-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
-<span id="cb162-9"><a href="reliability.html#cb162-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb162-10"><a href="reliability.html#cb162-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb162-11"><a href="reliability.html#cb162-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb162-12"><a href="reliability.html#cb162-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb162-13"><a href="reliability.html#cb162-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
-<span id="cb162-14"><a href="reliability.html#cb162-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb162-15"><a href="reliability.html#cb162-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
-<span id="cb162-16"><a href="reliability.html#cb162-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
-<span id="cb162-17"><a href="reliability.html#cb162-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
-<span id="cb162-18"><a href="reliability.html#cb162-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
-<span id="cb162-19"><a href="reliability.html#cb162-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb162-20"><a href="reliability.html#cb162-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
-<span id="cb162-21"><a href="reliability.html#cb162-21" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time2 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time2 <span class="sc">+</span> <span class="dv">10</span></span></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb164-1"><a href="reliability.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
+<span id="cb164-2"><a href="reliability.html#cb164-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb164-3"><a href="reliability.html#cb164-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-4"><a href="reliability.html#cb164-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb164-5"><a href="reliability.html#cb164-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb164-6"><a href="reliability.html#cb164-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb164-7"><a href="reliability.html#cb164-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-8"><a href="reliability.html#cb164-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
+<span id="cb164-9"><a href="reliability.html#cb164-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb164-10"><a href="reliability.html#cb164-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb164-11"><a href="reliability.html#cb164-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb164-12"><a href="reliability.html#cb164-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-13"><a href="reliability.html#cb164-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
+<span id="cb164-14"><a href="reliability.html#cb164-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb164-15"><a href="reliability.html#cb164-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
+<span id="cb164-16"><a href="reliability.html#cb164-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
+<span id="cb164-17"><a href="reliability.html#cb164-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
+<span id="cb164-18"><a href="reliability.html#cb164-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
+<span id="cb164-19"><a href="reliability.html#cb164-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-20"><a href="reliability.html#cb164-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
+<span id="cb164-21"><a href="reliability.html#cb164-21" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time2 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time2 <span class="sc">+</span> <span class="dv">10</span></span></code></pre></div>
 </details>
 <div id="betweenPersonSystematicError-stability" class="section level4 hasAnchor" number="4.9.5.1">
 <h4><span class="header-section-number">4.9.5.1</span> Coefficient of stability<a href="reliability.html#betweenPersonSystematicError-stability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="reliability.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
-<span id="cb163-2"><a href="reliability.html#cb163-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb163-3"><a href="reliability.html#cb163-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="reliability.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb165-2"><a href="reliability.html#cb165-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb165-3"><a href="reliability.html#cb165-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -4565,20 +4576,20 @@ sample estimates:
 <div id="betweenPersonSystematicError-repeatability" class="section level4 hasAnchor" number="4.9.5.2">
 <h4><span class="header-section-number">4.9.5.2</span> Coefficient of repeatability<a href="reliability.html#betweenPersonSystematicError-repeatability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="reliability.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
-<span id="cb165-2"><a href="reliability.html#cb165-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
-<span id="cb165-3"><a href="reliability.html#cb165-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb165-4"><a href="reliability.html#cb165-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
-<span id="cb165-5"><a href="reliability.html#cb165-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="reliability.html#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
+<span id="cb167-2"><a href="reliability.html#cb167-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
+<span id="cb167-3"><a href="reliability.html#cb167-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb167-4"><a href="reliability.html#cb167-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences,</span>
+<span id="cb167-5"><a href="reliability.html#cb167-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 6.588758</code></pre>
 </div>
 <div id="betweenPersonSystematicError-bias" class="section level4 hasAnchor" number="4.9.5.3">
 <h4><span class="header-section-number">4.9.5.3</span> Bias<a href="reliability.html#betweenPersonSystematicError-bias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="reliability.html#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
-<span id="cb167-2"><a href="reliability.html#cb167-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb167-3"><a href="reliability.html#cb167-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="reliability.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
+<span id="cb169-2"><a href="reliability.html#cb169-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb169-3"><a href="reliability.html#cb169-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
 </details>
 <pre><code>[1] -9.664177</code></pre>
 </div>
@@ -4600,35 +4611,35 @@ Specifically I added 10 to all participants’ scores at all time points.</p>
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb169-1"><a href="reliability.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
-<span id="cb169-2"><a href="reliability.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb169-3"><a href="reliability.html#cb169-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-4"><a href="reliability.html#cb169-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb169-5"><a href="reliability.html#cb169-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb169-6"><a href="reliability.html#cb169-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb169-7"><a href="reliability.html#cb169-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-8"><a href="reliability.html#cb169-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
-<span id="cb169-9"><a href="reliability.html#cb169-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb169-10"><a href="reliability.html#cb169-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb169-11"><a href="reliability.html#cb169-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb169-12"><a href="reliability.html#cb169-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-13"><a href="reliability.html#cb169-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
-<span id="cb169-14"><a href="reliability.html#cb169-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb169-15"><a href="reliability.html#cb169-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
-<span id="cb169-16"><a href="reliability.html#cb169-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
-<span id="cb169-17"><a href="reliability.html#cb169-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
-<span id="cb169-18"><a href="reliability.html#cb169-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
-<span id="cb169-19"><a href="reliability.html#cb169-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-20"><a href="reliability.html#cb169-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
-<span id="cb169-21"><a href="reliability.html#cb169-21" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time1 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time1 <span class="sc">+</span> <span class="dv">10</span></span>
-<span id="cb169-22"><a href="reliability.html#cb169-22" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time2 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time2 <span class="sc">+</span> <span class="dv">10</span></span>
-<span id="cb169-23"><a href="reliability.html#cb169-23" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time3 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time3 <span class="sc">+</span> <span class="dv">10</span></span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb171-1"><a href="reliability.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate Data</span></span>
+<span id="cb171-2"><a href="reliability.html#cb171-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb171-3"><a href="reliability.html#cb171-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-4"><a href="reliability.html#cb171-4" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb171-5"><a href="reliability.html#cb171-5" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb171-6"><a href="reliability.html#cb171-6" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb171-7"><a href="reliability.html#cb171-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-8"><a href="reliability.html#cb171-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Missing Data</span></span>
+<span id="cb171-9"><a href="reliability.html#cb171-9" aria-hidden="true" tabindex="-1"></a>time1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb171-10"><a href="reliability.html#cb171-10" aria-hidden="true" tabindex="-1"></a>time2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb171-11"><a href="reliability.html#cb171-11" aria-hidden="true" tabindex="-1"></a>time3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb171-12"><a href="reliability.html#cb171-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-13"><a href="reliability.html#cb171-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data into data frame</span></span>
+<span id="cb171-14"><a href="reliability.html#cb171-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb171-15"><a href="reliability.html#cb171-15" aria-hidden="true" tabindex="-1"></a>  rater1continuous, rater2continuous, rater3continuous,</span>
+<span id="cb171-16"><a href="reliability.html#cb171-16" aria-hidden="true" tabindex="-1"></a>  rater1categorical, rater2categorical, rater3categorical,</span>
+<span id="cb171-17"><a href="reliability.html#cb171-17" aria-hidden="true" tabindex="-1"></a>  time1, time2, time3,</span>
+<span id="cb171-18"><a href="reliability.html#cb171-18" aria-hidden="true" tabindex="-1"></a>  item1, item2, item3, item4)</span>
+<span id="cb171-19"><a href="reliability.html#cb171-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-20"><a href="reliability.html#cb171-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add error</span></span>
+<span id="cb171-21"><a href="reliability.html#cb171-21" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time1 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time1 <span class="sc">+</span> <span class="dv">10</span></span>
+<span id="cb171-22"><a href="reliability.html#cb171-22" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time2 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time2 <span class="sc">+</span> <span class="dv">10</span></span>
+<span id="cb171-23"><a href="reliability.html#cb171-23" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>time3 <span class="ot">&lt;-</span> mydata<span class="sc">$</span>time3 <span class="sc">+</span> <span class="dv">10</span></span></code></pre></div>
 </details>
 <div id="constantVariance-stability" class="section level4 hasAnchor" number="4.9.6.1">
 <h4><span class="header-section-number">4.9.6.1</span> Coefficient of stability<a href="reliability.html#constantVariance-stability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="reliability.html#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb170-2"><a href="reliability.html#cb170-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="reliability.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb172-2"><a href="reliability.html#cb172-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -4645,19 +4656,19 @@ sample estimates:
 <div id="constantVariance-repeatability" class="section level4 hasAnchor" number="4.9.6.2">
 <h4><span class="header-section-number">4.9.6.2</span> Coefficient of repeatability<a href="reliability.html#constantVariance-repeatability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="reliability.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
-<span id="cb172-2"><a href="reliability.html#cb172-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
-<span id="cb172-3"><a href="reliability.html#cb172-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb172-4"><a href="reliability.html#cb172-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="reliability.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>(</span>
+<span id="cb174-2"><a href="reliability.html#cb174-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">blandr.statistics</span>(</span>
+<span id="cb174-3"><a href="reliability.html#cb174-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb174-4"><a href="reliability.html#cb174-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>differences, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 6.588758</code></pre>
 </div>
 <div id="constantVariance-bias" class="section level4 hasAnchor" number="4.9.6.3">
 <h4><span class="header-section-number">4.9.6.3</span> Bias<a href="reliability.html#constantVariance-bias" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="reliability.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
-<span id="cb174-2"><a href="reliability.html#cb174-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
-<span id="cb174-3"><a href="reliability.html#cb174-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="reliability.html#cb176-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blandr.statistics</span>(</span>
+<span id="cb176-2"><a href="reliability.html#cb176-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method1 =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb176-3"><a href="reliability.html#cb176-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method2 =</span> mydata<span class="sc">$</span>time2)<span class="sc">$</span>bias</span></code></pre></div>
 </details>
 <pre><code>[1] 0.335823</code></pre>
 </div>
@@ -4706,19 +4717,19 @@ The greater the <a href="reliability.html#randomError">random measurement error<
 \]</span></p>
 <p>Find the observed test–retest association if the true test–retest association (i.e., the stability of the construct) is .7 and the reliability of the measure is .9:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="reliability.html#cb176-1" aria-hidden="true" tabindex="-1"></a>trueAssociation <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb176-2"><a href="reliability.html#cb176-2" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
-<span id="cb176-3"><a href="reliability.html#cb176-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb176-4"><a href="reliability.html#cb176-4" aria-hidden="true" tabindex="-1"></a>trueAssociation <span class="sc">*</span> reliabilityOfMeasure</span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="reliability.html#cb178-1" aria-hidden="true" tabindex="-1"></a>trueAssociation <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb178-2"><a href="reliability.html#cb178-2" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb178-3"><a href="reliability.html#cb178-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb178-4"><a href="reliability.html#cb178-4" aria-hidden="true" tabindex="-1"></a>trueAssociation <span class="sc">*</span> reliabilityOfMeasure</span></code></pre></div>
 </details>
 <pre><code>[1] 0.63</code></pre>
 <p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2023</a>)</span> contains the <code>attenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion.
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="reliability.html#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attenuationCorrelation</span>(</span>
-<span id="cb178-2"><a href="reliability.html#cb178-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">trueAssociation =</span> <span class="fl">0.7</span>, </span>
-<span id="cb178-3"><a href="reliability.html#cb178-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
-<span id="cb178-4"><a href="reliability.html#cb178-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="reliability.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attenuationCorrelation</span>(</span>
+<span id="cb180-2"><a href="reliability.html#cb180-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">trueAssociation =</span> <span class="fl">0.7</span>, </span>
+<span id="cb180-3"><a href="reliability.html#cb180-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
+<span id="cb180-4"><a href="reliability.html#cb180-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 0.63</code></pre>
 </div>
@@ -4735,22 +4746,22 @@ When dealing with test–retest reliability, the predictor and criterion are the
 \]</span></p>
 <p>Find the true correlation of the construct across two time points given an observed correlation if the observed reliability of the measure is .9:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="reliability.html#cb180-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
-<span id="cb180-2"><a href="reliability.html#cb180-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb180-3"><a href="reliability.html#cb180-3" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(</span>
-<span id="cb180-4"><a href="reliability.html#cb180-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time2,</span>
-<span id="cb180-5"><a href="reliability.html#cb180-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time3)<span class="sc">$</span>estimate)</span>
-<span id="cb180-6"><a href="reliability.html#cb180-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb180-7"><a href="reliability.html#cb180-7" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="sc">/</span> reliabilityOfMeasure</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="reliability.html#cb182-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfMeasure <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb182-2"><a href="reliability.html#cb182-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-3"><a href="reliability.html#cb182-3" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(</span>
+<span id="cb182-4"><a href="reliability.html#cb182-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time2,</span>
+<span id="cb182-5"><a href="reliability.html#cb182-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time3)<span class="sc">$</span>estimate)</span>
+<span id="cb182-6"><a href="reliability.html#cb182-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-7"><a href="reliability.html#cb182-7" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="sc">/</span> reliabilityOfMeasure</span></code></pre></div>
 </details>
 <pre><code>[1] 0.8974584</code></pre>
 <p>The <code>petersenlab</code> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2023</a>)</span> contains the <code>disattenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion.
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="reliability.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">disattenuationCorrelation</span>(</span>
-<span id="cb182-2"><a href="reliability.html#cb182-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">observedAssociation =</span> observedAssociation, </span>
-<span id="cb182-3"><a href="reliability.html#cb182-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
-<span id="cb182-4"><a href="reliability.html#cb182-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="reliability.html#cb184-1" aria-hidden="true" tabindex="-1"></a><span class="fu">disattenuationCorrelation</span>(</span>
+<span id="cb184-2"><a href="reliability.html#cb184-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">observedAssociation =</span> observedAssociation, </span>
+<span id="cb184-3"><a href="reliability.html#cb184-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
+<span id="cb184-4"><a href="reliability.html#cb184-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 0.8974584</code></pre>
 <p>In the next section, I discuss <a href="reliability.html#methodBias">method biases</a>, including what they are, why they are important, and how to account for them.</p>
