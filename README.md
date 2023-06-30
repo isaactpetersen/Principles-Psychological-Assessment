@@ -34,7 +34,7 @@ The BibTeX citation for the book is:
 
 ## How to Download The `petersenlab` `R` Package Used in the Book
 
-You can install the `petersenlab` package in `R` using the following code:
+You can install the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package in `R` using the following code:
 
 ```r
 install.packages("remotes")
