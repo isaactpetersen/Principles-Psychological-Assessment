@@ -5,9 +5,9 @@ This is a repository for the Textbook: "*Principles of Psychological Assessment:
 
 The book is located here: **https://isaactpetersen.github.io/Principles-Psychological-Assessment**
 
-# Citation
+## Citation
 
-## APA-style
+### APA-style
 
 The APA-style citation for the book is:
 
@@ -15,7 +15,7 @@ Petersen, I. T. (2023). *Principles of psychological assessment: With applied ex
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6466589.svg)](https://doi.org/10.5281/zenodo.6466589)
 
-## BibTeX
+### BibTeX
 
 The BibTeX citation for the book is:
 
@@ -32,7 +32,16 @@ The BibTeX citation for the book is:
 }
 ```
 
-# License
+## How to Download The `petersenlab` R Package Used in the Book
+
+You can install the `petersenlab` package [@R-petersenlab] in R using the following code:
+
+```r
+install.packages("remotes")
+remotes::install_github("DevPsyLab/petersenlab")
+```
+
+## License
 
 [![CC BY 4.0][cc-by-shield]][cc-by]
 
