@@ -1,6 +1,8 @@
 
 # Chapter Abstracts
 
+Book ISBN #: 9781032411347
+
 # Chapter 1 Abstract "Introduction":
 
 This book is about the principles of psychological assessment to help researchers and clinicians better develop, evaluate, administer, score, integrate, and interpret psychological assessments.
