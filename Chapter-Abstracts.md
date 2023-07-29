@@ -334,6 +334,23 @@ Inclusion refers to providing a community where all members are and feel respect
 There are various multicultural frameworks for assessment.
 Guidelines for assessment of diverse populations are discussed.
 Recommendations include developing and using appropriate and valid measures for the target population(s), ensuring fair group comparisons, seeking training and consultation, developing awareness of cultural differences, showing cultural humility, avoiding assuming or stereotyping, ensuring adequate representationof under-represented minorities, considering pathoplasticity of constructs, formulating a culturally informed case conceptualization, using appropriate normative data, contextualizing group-related differences, and using inclusive language.
+
+# Book Synopsis
+
+Assessment is the gathering of information to improve decision making.
+Many assessment approaches can be used to assess people's thoughts, emotions, and behaviors, including self-report questionnaires, questionnaires reported by others, interviews, observations, biopsychological assessments, performance-based assessments, archival approaches, and combinations of these.
+However, the field has paid insufficient attention to measurement.
+There has been a proliferation of pseudoscience in assessment, including harmful and inaccurate assessments.
+It is crucial to use assessments that are supported by science—with strong psychometric properties, including reliability and validity, and to develop better assessments.
+
+This book discusses the principles of psychological assessment to help researchers and clinicians better develop, evaluate, administer, score, integrate, and interpret psychological assessments.
+This book discusses psychometrics (reliability and validity), the assessment of various psychological domains (behavior, personality, intellectual functioning), various measurement methods (e.g., questionnaires, observations, interviews, biopsychological assessments, performance-based assessments), and emerging analytical frameworks to evaluate and improve assessment, including generalizability theory, structural equation modeling, item response theory, and signal detection theory.
+The book also discuss considerations of ethics, test bias, and cultural and individual diversity.
+
+This book provides analysis scripts in the free software, `R`, to help readers apply the principles to research and practice.
+Many `R` functions in this book are freely available from the `petersenlab` package.
+The dissemination of these principles and tools will promote the development of more efficient and accurate assessment strategies that will lead to important scientific advancements and improved intervention.
+
 # Keywords
 
 psychological assessment; measurement; reliability; validity; psychometrics; structural equation modeling; item response theory; factor analysis; generalizability theory; test bias
