@@ -334,3 +334,6 @@ Inclusion refers to providing a community where all members are and feel respect
 There are various multicultural frameworks for assessment.
 Guidelines for assessment of diverse populations are discussed.
 Recommendations include developing and using appropriate and valid measures for the target population(s), ensuring fair group comparisons, seeking training and consultation, developing awareness of cultural differences, showing cultural humility, avoiding assuming or stereotyping, ensuring adequate representationof under-represented minorities, considering pathoplasticity of constructs, formulating a culturally informed case conceptualization, using appropriate normative data, contextualizing group-related differences, and using inclusive language.
+# Keywords
+
+psychological assessment; measurement; reliability; validity; psychometrics; structural equation modeling; item response theory; factor analysis; generalizability theory; test bias
