@@ -1,6 +1,11 @@
 
 # Chapter Abstracts
 
+## Book Information
+
+Book Title: Principles of Psychological Assessment: With Applied Examples in R\
+Author Name: Isaac T. Petersen\
+ORCID: 0000-0003-3072-6673\
 Book ISBN #: 9781032411347
 
 # Chapter 1 Abstract "Introduction":
