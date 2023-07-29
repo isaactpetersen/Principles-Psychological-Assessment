@@ -344,11 +344,13 @@ There has been a proliferation of pseudoscience in assessment, including harmful
 It is crucial to use assessments that are supported by science—with strong psychometric properties, including reliability and validity, and to develop better assessments.
 
 This book discusses the principles of psychological assessment to help researchers and clinicians better develop, evaluate, administer, score, integrate, and interpret psychological assessments.
-This book discusses psychometrics (reliability and validity), the assessment of various psychological domains (behavior, personality, intellectual functioning), various measurement methods (e.g., questionnaires, observations, interviews, biopsychological assessments, performance-based assessments), and emerging analytical frameworks to evaluate and improve assessment, including generalizability theory, structural equation modeling, item response theory, and signal detection theory.
-The book also discuss considerations of ethics, test bias, and cultural and individual diversity.
+It is intended for use by graduate students, faculty, researchers, and practicing psychologists.
+The book discusses psychometrics (reliability and validity), the assessment of various psychological domains (behavior, personality, intellectual functioning), various measurement methods (e.g., questionnaires, observations, interviews, biopsychological assessments, performance-based assessments), and emerging analytical frameworks to evaluate and improve assessment, including generalizability theory, structural equation modeling, item response theory, and signal detection theory.
+The book also discusses considerations of ethics, test bias, and cultural and individual diversity.
 
-This book provides analysis scripts in the free software, `R`, to help readers apply the principles to research and practice.
-Many `R` functions in this book are freely available from the `petersenlab` package.
+The book provides analysis examples using the free software, `R`, to help readers apply the principles to research and practice.
+The text, analysis code/syntax, `R` output, figures, and interpretation are all integrated to help guide readers.
+The book uses the freely available `petersenlab` package for `R`, which includes many functions relevant for assessment.
 The dissemination of these principles and tools will promote the development of more efficient and accurate assessment strategies that will lead to important scientific advancements and improved intervention.
 
 # Keywords
@@ -357,6 +359,16 @@ psychological assessment; measurement; reliability; validity; psychometrics; str
 
 # Author Bio
 
+Dr. Isaac T. Petersen is an Assistant Professor at the University of Iowa.
+He completed his Bachelor of Arts in Psychology and French at the University of Texas, his Ph.D. in Psychology at Indiana University, and his clinical psychology internship from the University of Pittsburgh Medical Center Western Psychiatric Hospital.
+
 Dr. Petersen is a licensed clinical psychologist with expertise in developmental psychopathology.
-He studies how externalizing behavior problems develop.
-His work considers multiple levels of analysis simultaneously, in interaction, and over lengthy spans of development in ways that identify developmental change while accounting for changes in behavioral manifestation.
+His clinical expertise is in training parents how to deal with difficult children.
+He is interested in how children develop individual differences in adjustment, including behavior problems as well as competencies, so that more effective intervention and prevention approaches can be developed and implemented.
+He is particularly interested in the development of externalizing behavior problems (e.g., ADHD, conduct problems, and aggression) and underlying self-regulation difficulties.
+Dr. Petersen's primary interests include how children develop self-regulation as a function of bio-psycho-social processes including brain functioning, genetics, parenting, temperament, language, and sleep, and how self-regulation influences adjustment.
+A special emphasis of his work examines neural processes underlying the development of self-regulation and externalizing problems, using electroencephalography (EEG) and event-related potentials (ERPs).
+He uses longitudinal designs, advanced quantitative methods, and multiple levels of analysis, including bio-psycho-social processes, to elucidate mechanisms in the development of externalizing problems.
+His work considers multiple levels of analysis simultaneously, in interaction, and over lengthy spans of development in ways that identify people's change in behavior problems over time while accounting for the changing manifestation of behavior problems across development (heterotypic continuity).
+
+In his free time, he enjoys playing basketball, fishing, grilling, and spending time with friends and family.
