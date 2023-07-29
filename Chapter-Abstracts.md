@@ -354,3 +354,9 @@ The dissemination of these principles and tools will promote the development of 
 # Keywords
 
 psychological assessment; measurement; reliability; validity; psychometrics; structural equation modeling; item response theory; factor analysis; generalizability theory; test bias
+
+# Author Bio
+
+Dr. Petersen is a licensed clinical psychologist with expertise in developmental psychopathology.
+He studies how externalizing behavior problems develop.
+His work considers multiple levels of analysis simultaneously, in interaction, and over lengthy spans of development in ways that identify developmental change while accounting for changes in behavioral manifestation.
