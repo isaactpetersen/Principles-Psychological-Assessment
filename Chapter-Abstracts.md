@@ -12,7 +12,7 @@ Book ISBN #: 9781032411347
 
 This book is about the principles of psychological assessment to help researchers and clinicians better develop, evaluate, administer, score, integrate, and interpret psychological assessments.
 The assessments one uses should be supported by science.
-I provide analysis scripts in the free software, `R`.
+The book provides analysis scripts in the free software, `R`.
 Many `R` functions in this book are available from the `petersenlab` package.
 
 Assessment is the gathering of information to improve decision making.
