@@ -1,7 +1,7 @@
 
 # Chapter Abstracts
 
-# Chapter 1: Introduction
+# Chapter 1 Abstract "Introduction":
 
 This book is about the principles of psychological assessment to help researchers and clinicians better develop, evaluate, administer, score, integrate, and interpret psychological assessments.
 The assessments one uses should be supported by science.
@@ -18,7 +18,7 @@ Much of the current discussion in psychology surrounding the replication crisis 
 However, the field has paid insufficient attention to how lousy/noisy measures might contribute to the replication crisis.
 It is crucial to use assessments with strong psychometric properties, including reliability and validity, and to develop better assessments.
 
-# Chapter 2: Scores and Scales
+# Chapter 2 Abstract "Scores and Scales":
 
 It is important to consider the types of data your data are. 
 There are four general data types: nominal, ordinal, interval, and ratio.
@@ -32,7 +32,7 @@ Many analyses approaches assume data that are interval or ratio.
 It is also important to consider whether the data were transformed because score transformations are not neutral—they can impact the results.
 Norm-referenced scores, such as percentile ranks, standardized scores, *T* scores, *z* scores, scaled scores, standard scores, scaled scores, and stanine scores are scores that are referenced to some norm or standard of comparison.
 
-# Chapter 3: Constructs
+# Chapter 3 Abstract "Constructs":
 
 It is important to think about the nature of a construct before deciding how to estimate it.
 For a formative construct, the indicators influence the construct, and a linear composite such as a weighted mean or sum score is justifiable.
@@ -44,7 +44,7 @@ For effect indicators of a unidimensional construct, equally reliable measures a
 For effect indicators, high correlations are desirable.
 For causal indicators, too high of a correlation between indicators is likely to introduce the problem of multicollinearity, so lower correlations are optimal.
 
-# Chapter 4: Reliability
+# Chapter 4 Abstract "Reliability":
 
 Reliability is how much repeatability, consistency, and precision a measure's scores have.
 There are multiple aspects of reliability, and the extent to which a given aspect of reliability is important depends on the construct of interest.
@@ -56,12 +56,12 @@ Reliability is not a characteristic that resides in a test.
 The reliability of a measure's scores reflects an interaction of the properties of the test with the population for whom it is designed and the sample, situation, and context in which it is administered.
 Thus, it is important to adequately describe the aspects of reliability that have been considered and the population, sample, and context in which the measure is assessed.
 
-# Chapter 5: Validity
+# Chapter 5 Abstract "Validity":
 
 Validity is how much accuracy, utility, and meaningfulness the interpretation of a measure's scores have for a particular purpose.
 There are multiple aspects of validity.
 Validity is not a characteristic that resides in a test.
-The validity of a measure's scores reflect an interaction of the properties of the test with the population for whom it is designed and the sample and context in which it is administered.
+The validity of a measure's scores reflects an interaction of the properties of the test with the population for whom it is designed and the sample and context in which it is administered.
 Thus, when reporting validity in papers, it is important to adequately describe the aspects of validity that have been considered and the population, sample, and context in which the measure is assessed.
 
 There are many types of measurement validity, but the central psychometric aspect of measurement validity is construct validity.
@@ -70,7 +70,7 @@ Construct validity includes the nomological network of the construct and subsume
 
 A measure can be no more valid than it is reliable.
 
-# Chapter 6: Generalizability Theory
+# Chapter 6 Abstract "Generalizability Theory":
 
 Generalizability theory is an alternative measurement theory to classical test theory that does not treat all measurement differences across time, rater, or situation as "error" but rather as a phenomenon of interest.
 G-theory examines the extent to which scores are consistent across a specific set of conditions.
@@ -80,7 +80,7 @@ In G-theory, the true score is conceived of as a person's universe score—the m
 The G-Theory equivalent of the classical test theory reliability coefficient of a measure is the generalizability coefficient or dependability coefficient.
 The generalizability and dependability coefficients evaluate the extent to which variance is due to person variance rather than variance as a function of items, occasion, raters, methods, or other factors.
 
-# Chapter 7: Factor Analysis and Principal Component Analysis
+# Chapter 7 Abstract "Factor Analysis and Principal Component Analysis":
 
 Principal component analysis (PCA) is not factor analysis.
 PCA is a technique for data reduction, whereas factor analysis uses latent variables and can be used to identify the structure of measures/constructs or for data reduction.
@@ -90,7 +90,7 @@ There are many decisions to make in factor analysis, including, (1) what variabl
 These decisions can have important impacts on the resulting solution.
 Thus, it can be helpful for theory and interpretability to help guide decision making when conducting factor analysis.
 
-# Chapter 8: Structural Equation Modeling
+# Chapter 8 Abstract "Structural Equation Modeling":
 
 Structural equation modeling (SEM) is an advanced modeling approach that allows estimating latent variables as the common variance from multiple measures.
 SEM holds promise to account for measurement error and method biases, which allows one to get more accurate estimates of constructs, people's standing on constructs (i.e., individual differences), and associations between constructs.
@@ -102,7 +102,7 @@ The measurement model is a confirmatory factor analysis (CFA) model that identif
 The structural component of a SEM model includes the regression paths that specify the hypothesized causal relations among the latent variables.
 SEM is CFA, but it adds regression paths that specify hypothesized causal relations between the latent variables, which is called the structural component of the model.
 
-# Chapter 9: Item Response Theory
+# Chapter 9 Abstract "Item Response Theory":
 
 Item response theory is a measurement theory and advanced modeling approach that allows estimating latent variables as the common variance from multiple items, and how the items relate to the construct (latent variable).
 IRT holds promise to enable the development of briefer assessments, including short forms and adaptive assessments, that have strong reliability and validity.
@@ -116,13 +116,13 @@ In classical test theory, the same standard error of measurement applies to all 
 However, IRT estimates how much measurement precision (information) or imprecision (standard error of measurement) each item, and the test as a whole, have at different construct levels.
 Thus, IRT conceptualizes reliability in such a way that precision/reliability can differ at different construct levels, unlike in classical test theory.
 
-# Chapter 10: Prediction
+# Chapter 10 Abstract "Prediction":
 
 Human behavior is challenging to predict.
 People commonly make cognitive pseudo-prediction errors, such as the confusion of inverse probabilities.
 People also tend to ignore base rates when making predictions.
 When the base rate of a behavior is very low or very high, you can be highly accurate in predicting the behavior by predicting from the base rate.
-Thus, you cannot judge how accurate your prediction is until you know how you accurate your predictions would be by random chance.
+Thus, you cannot judge how accurate your prediction is until you know how accurate your predictions would be by random chance.
 Moreover, maximizing percent accuracy may not be the ultimate goal because different errors have different costs.
 Though there are many types of accuracy, there are two broad types: discrimination and calibration—and they are orthogonal.
 Discrimination accuracy is frequently evaluated with the area under the receiver operating characteristic curve, or with sensitivity and specificity, standardized regression coefficients.
@@ -131,7 +131,7 @@ Sensitivity and specificity depend on the cutoff.
 Therefore, the optimal cutoff depends on the purposes of the assessment and how much one weights the various costs of the different types of errors: false negatives and false positives.
 It is important to evaluate both discrimination and calibration when evaluating prediction accuracy.
 
-# Chapter 11: Clinical Judgment versus Algorithmic Prediction
+# Chapter 11 Abstract "Clinical Judgment versus Algorithmic Prediction":
 
 Using the clinical judgment method of prediction, all gathered information is collected and formulated into a diagnosis or prediction in the clinician's mind.
 The clinician selects, measures, and combines risk factors and produces risk estimate solely according to clinical experience and judgment.
@@ -148,7 +148,7 @@ In general, it is better to develop and use structured, actuarial approaches tha
 Actuarial approaches to prediction tend to be as accurate or more accurate than clinical judgment.
 Nevertheless, clinical judgment tends to be much more widely used than actuarial approaches, which is a major ethical problem.
 
-# Chapter 12: General Issues in Clinical Assessment
+# Chapter 12 Abstract "General Issues in Clinical Assessment":
 
 Many of the origins of assessment came from attempts to address wartime needs.
 Since the 1980s, there has been a general decline in the frequency with which clinical assessment (and psychotherapy) are conducted by clinical psychologists, due to managed care and cost containment.
@@ -164,7 +164,7 @@ Therefore, signs can be perceived by a clinician.
 By contrast, symptoms are unobservable manifestations of a disorder that can only be perceived by the client.
 A syndrome is a collection of signs and symptoms that co-occur and may reflect a particular disorder.
 
-# Chapter 13: Evidence-Based Assessment
+# Chapter 13 Abstract "Evidence-Based Assessment":
 
 Evidence-based assessment involves using assessment devices that are clinically relevant, culturally sensitive, and scientifically sound.
 Standards are available for excellent tests.
@@ -180,7 +180,7 @@ When publishing papers, it is important to report effect sizes, and not just sta
 It is also important to report aspects of reliability and validity, both in current sample and from prior studies.
 Describe the current sample and assessment methods in adequate detail.
 
-# Chapter 14: Ethical Issues in Assessment
+# Chapter 14 Abstract "Ethical Issues in Assessment":
 
 According to the Belmont Report, professional ethics includes respect for persons, beneficence, and justice.
 It is also important to follow the APA Ethics Code and AERA guidelines.
@@ -191,11 +191,11 @@ Honor the agreement implied by the explanation provided in the informed consent.
 Consider the potential social consequences of testing.
 High stakes decisions probably should not be made on the basis of the results of a single test.
 If you are unsure how to handle an ethical dilemma, CONSULT, CONSULT, CONSULT!
-When writing assessment reports, Recognize factors, such as language, culture, and the situation, that could have impacted the results, and note them in the report.
+When writing assessment reports, recognize factors, such as language, culture, and the situation, that could have impacted the results, and note them in the report.
 
-# Chapter 15: Intellectual Assessment
+# Chapter 15 Abstract "Intellectual Assessment":
 
-Intelligence has been defined in many ways, and intelligence assessment has a long history
+Intelligence has been defined in many ways, and intelligence assessment has a long history.
 The assessment of intelligence is considered one of the key successes in psychology.
 The most prominent contemporary theory of intelligence is the Cattell-Horn-Carroll (CHC) model, which is a three-stratum hierarchical model that includes narrow abilities (stratum 1), broad abilities (stratum 2), and general abilities (stratum 3).
 However, there are alternative conceptualizations of intelligence.
@@ -206,7 +206,7 @@ Assessments of intelligence have utility for various purposes, including predict
 However, there are many things that intelligence does not predict well, such as how successfully one will perform in their job, the quality of their interpersonal relationships, or their happiness.
 Moreover, there are potential weaknesses of intelligence tests, including content validity because they do not assess creativity or emotional aspects of intelligence such as empathy.
 
-# Chapter 16: Test Bias
+# Chapter 16 Abstract "Test Bias":
 
 Bias is a systematic error.
 Test bias refers to a systematic error (in measurement, prediction, etc.) as a function of group membership.
@@ -218,10 +218,10 @@ However, even if a test does not show bias does not mean that the test is fair.
 Fairness is not a scientific question but rather a moral, societal, and ethical question; there are many different ways of operationalizing fairness.
 Fairness is a complex question, so do the best you can and try to minimize negative impact.
 
-# Chapter 17: The Interview and the DSM
+# Chapter 17 Abstract "The Interview and the DSM":
 
 Interviews can be administered (a) in a free-flowing way as unstructured interviews, (b) in a way that asks questions in a pre-defined way with a pre-defined order and pre-defined scoring criteria as structured interviews, or (c) as semi-structured interviews that blend structured interviews with freedom to ask follow-up questions.
-In general, reliability and validity improves as the degree of structure for an interview increases.
+In general, reliability and validity improve as the degree of structure for an interview increases.
 
 The Diagnostic and Statistical Manual of Mental Disorders (DSM) and the International Classification of Diseases (ICD) provide the list of mental disorders and the diagnostic criteria for mental health treatment providers.
 The DSM and ICD have potential strengths, including (ideally) facilitating communication, guiding treatment selection, providing justification for payment for services, providing a normalizing and empowering effect for some clients, and promoting research in psychopathology.
@@ -229,7 +229,7 @@ However, there are key concerns of the DSM and ICD, including concerns with stig
 There are alternatives to the DSM and ICD for conceptualizing psychopathology.
 Alternative structures of psychopathology include hierarchical structures such as the *p*-factor and the hierarchical taxonomy of psychopathology (HiTOP).
 
-# Chapter 18: Objective Personality Testing
+# Chapter 18 Abstract "Objective Personality Testing":
 
 In an objective personality test, a stimulus is presented to a respondent, who makes a closed-ended response, such as True/False or Likert ratings.
 An example of an objective personality test is the Minnesota Multiphasic Personality Inventory (MMPI).
@@ -241,7 +241,7 @@ Guidelines for measurement development are provided.
 Nevertheless, relying on self-report and self-assessment is prone to key weaknesses including response bias, ambiguity of items, lack of insight, and satisficing.
 There are ways to improve self-assessment, but it can also be helpful to supplement self-assessments with informants' ratings and with observational assessments.
 
-# Chapter 19: Projective Personality Testing
+# Chapter 19 Abstract "Projective Personality Testing":
 
 Projective measures are measures in which an ambiguous stimulus is presented to the respondent, who is asked to make an open-ended response.
 Projective measures were developed based on psychodynamic theory and the projective hypothesis that whatever a person does when exposed to an ambiguous stimulus will reveal important aspects of the person's personality.
@@ -250,11 +250,11 @@ Projective measures aim to bypass defense mechanisms so that they assess charact
 Examples of projective measures include the Rorschach Inkblot Test, the Thematic Apperception Test (TAT), Draw-A-Person Test, and drawing a family (Kinetic Family Drawing).
 However, there are many problems with projective measures: most projective techniques do not have standardized stimuli and testing instructions, systematic algorithms for scoring responses to stimuli, or well-calibrated norms for comparing responses with those of other people.
 Their scientific status is not strong in terms of utility of norms, reliability, influence of measurement error, or validity.
-In addition, they can be very time consuming, and they provide very little information.
+In addition, they can be very time-consuming, and they provide very little information.
 
-# Chapter 20: Psychophysiological and Ambulatory Assessment
+# Chapter 20 Abstract "Psychophysiological and Ambulatory Assessment":
 
-The National Institute of Mental Health (NIMH) provide the Research Domain Criteria (RDoC).
+The National Institute of Mental Health (NIMH) provides the Research Domain Criteria (RDoC).
 RDoC is dimensional and it works from the ground up, starting with brain–behavior relations, and linking those to clinical symptoms.
 RDoC spans multiple domains—including positive and negative valience systems—and units of analysis, including genes, molecules, cells, circuits, physiology, behaviors, self-reports, and paradigms.
 
@@ -267,10 +267,10 @@ Ambulatory assessment allows rich measurement including, for example, audio, pic
 Ambulatory biosensors are assessment tools that measure physiological or motor activity—e.g., cardiovascular activity (e.g., heart rate and blood pressure), physical activity (e.g., actigraph and pedometer), cortisol levels, respiration, muscle tension, blood glucose, skin conductance.
 Virtual reality is an emerging approach.
 
-# Chapter 21: Computers and Adaptive Testing
+# Chapter 21 Abstract "Computers and Adaptive Testing":
 
 Computer-administered and online assessments have the potential to be both desirable and dangerous.
-They have key advantages; at the same times, they have both validity and ethical challenges.
+They have key advantages; at the same time, they have challenges regarding validity and ethics.
 Best practices for computer-administered and online assessments are provided.
 Adaptive testing involves having the respondent complete only those items that are needed to answer an assessment question, which can save immense time without sacrificing validity (if done well).
 There are many approaches to adaptive testing, including manual administration—such as skip rules, basal and ceiling criteria, and the countdown approach—and computerized adaptive testing (CAT) using item response theory (IRT).
@@ -281,7 +281,7 @@ CAT typically results in the greatest item savings—around 50% item savings or 
 Well-designed CATs show equivalent reliability and validity to their full-scale counterparts.
 By contrast, many short forms are not as accurate as their full-scale counterparts.
 
-# Chapter 22: Behavioral Assessment
+# Chapter 22 Abstract "Behavioral Assessment":
 
 Examples of behavioral assessment include naturalistic behavioral observation, analogue (structured) observation, self-monitoring/diary, behavior ratings (e.g., informant report), and self-report.
 A gold standard for naturalistic observations is to observe people in their natural context across more than one day, time, situation, and context with more than one rater to get a more robust sampling of the person's behavior.
@@ -289,12 +289,12 @@ Compared to naturalistic observation, analogue assessments tend to show greater 
 
 Behavioral observations are costly due to people and time.
 The cost limits the amount of observation time that is possible, which raises questions about how typical and representative the participant's behavior was during the observation period relative to their everyday life.
-The limited amount of observation time raises questions about reliability and external validity, that is the generalizability of the person's behavior in the situation to their typical functioning.
+The limited amount of observation time raises questions about reliability and external validity, that is, the generalizability of the person's behavior in the situation to their typical functioning.
 
 A useful approach to identify the function of a given behavior is to identify patterns of sequences according to the antecedent-behavior-consequence (A-B-C) model as part of a functional behavior analysis.
-Another useful approach is self-monitoring, which provides a lot of information at low cost and is therefor a component of most empirically supported treatments.
+Another useful approach is self-monitoring, which provides a lot of information at low cost and is therefore a component of most empirically supported treatments.
 
-# Chapter 23: Repeated Assessments Across Time
+# Chapter 23 Abstract "Repeated Assessments Across Time":
 
 Repeated measurement is a design feature that can provide stronger tests of causality compared to concurrent associations.
 By repeatedly assessing multiple constructs, one can examine lagged associations that control for prior levels of the outcome and that simultaneously test each direction of effect.
@@ -305,7 +305,7 @@ Instead of using traditional difference scores to represent change, consider oth
 
 There are a variety of types of research designs based on combinations of age, period, and cohort: cross-sectional, cross-sectional sequences, time-lag, longitudinal, and longitudinal sequences, such as time-sequential, cross-sequential, and cohort-sequential designs.
 
-# Chapter 24: Assessment of Cognition
+# Chapter 24 Abstract "Assessment of Cognition":
 
 Multiple aspects of cognition can be assessed, including cognitive products, processes, and structures or organization.
 The general approaches to assessing cognition include endorsement methods and production methods.
@@ -315,7 +315,7 @@ Despite the advantages of not relying on participants' recall of their thoughts,
 One challenge related to the use of performance-based assessment of cognition is that many such tasks involve difference scores, which tend to be lower in reliability than each of the indices that compose it.
 Another challenge with performance-based assessments of cognition is known as the reliability paradox that despite some robust cognitive tasks showing well-established experimental effects, many of these tasks do not produce reliable individual differences due to low between-subject variability.
 
-# Chapter 25: Cultural and Individual Diversity
+# Chapter 25 Abstract "Cultural and Individual Diversity":
 
 Diverse samples provide stronger tests of theories and better generalizability of findings (external validity).
 The field needs measures that are reliable and valid for all people who are assessed with them.
@@ -324,6 +324,6 @@ Diversity refers to all aspects of differences between people.
 Equity refers to fair and just practices and policies that ensure everyone can thrive.
 Inclusion refers to providing a community where all members are and feel respected, have a sense of belonging, and are able to participate and achieve their potential.
 
-There are various multicultural frameworks to assessment.
+There are various multicultural frameworks for assessment.
 Guidelines for assessment of diverse populations are discussed.
 Recommendations include developing and using appropriate and valid measures for the target population(s), ensuring fair group comparisons, seeking training and consultation, developing awareness of cultural differences, showing cultural humility, avoiding assuming or stereotyping, ensuring adequate representationof under-represented minorities, considering pathoplasticity of constructs, formulating a culturally informed case conceptualization, using appropriate normative data, contextualizing group-related differences, and using inclusive language.
