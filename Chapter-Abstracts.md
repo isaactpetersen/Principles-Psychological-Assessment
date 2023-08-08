@@ -338,9 +338,9 @@ Recommendations include developing and using appropriate and valid measures for 
 # Book Synopsis
 
 Assessment is the gathering of information to improve decision making.
-Many assessment approaches can be used to assess people's thoughts, emotions, and behaviors, including self-report questionnaires, questionnaires reported by others, interviews, observations, biopsychological assessments, performance-based assessments, archival approaches, and combinations of these.
+There are many approaches to psychological assessment that can be used to assess people's thoughts, emotions, and behaviors, including self-report questionnaires, questionnaires reported by others, interviews, observations, biopsychological assessments, performance-based assessments, archival approaches, and combinations of these.
 However, the field has paid insufficient attention to measurement.
-There has been a proliferation of pseudoscience in assessment, including harmful and inaccurate assessments.
+There has been a proliferation of pseudoscience in assessment, including inaccurate assessments that can potentially cause harm.
 It is crucial to use assessments that are supported by science—with strong psychometric properties, including reliability and validity, and to develop better assessments.
 
 This book discusses the principles of psychological assessment to help researchers and clinicians better develop, evaluate, administer, score, integrate, and interpret psychological assessments.
@@ -360,7 +360,7 @@ psychological assessment; measurement; reliability; validity; psychometrics; str
 # Author Bio
 
 Dr. Isaac T. Petersen is an Assistant Professor at the University of Iowa.
-He completed his Bachelor of Arts in Psychology and French at the University of Texas, his Ph.D. in Psychology at Indiana University, and his clinical psychology internship from the University of Pittsburgh Medical Center Western Psychiatric Hospital.
+He completed his Bachelor of Arts in Psychology and French at the University of Texas, his Ph.D. in Psychology at Indiana University, and his clinical psychology internship from Western Psychiatric Hospital at the University of Pittsburgh Medical Center.
 
 Dr. Petersen is a licensed clinical psychologist with expertise in developmental psychopathology.
 His clinical expertise is in training parents how to deal with difficult children.
