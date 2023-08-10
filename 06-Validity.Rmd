@@ -1326,16 +1326,16 @@ observedBeta <- observedSEM_parameters[
 A path diagram of the observed association is depicted in Figure \@ref(fig:observedSEM).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
 
 ```{r observedSEM, out.width = "100%", fig.align = "center", fig.cap = "Observed Association, as Depicted in a Structural Equation Model."}
-semPaths(observedSEM_fit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 2)
+semPaths(
+  observedSEM_fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 2)
 ```
 
 Now consider when we account for the degree of [unreliability](#measurementError) of each measure.\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
 We can account for the [(un)reliability](#reliability) of each measure by specifying the residual errors.\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
-As described in Section \@ref(exampleFactorModelsFromCorrelationMatrices) of the chapter on [factor analysis](#factor-analysis-PCA), residual errors for each indicator are equal to $1 - R^2$.\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
-Thus, we can account for the [(un)reliability](#reliability) of each measure by specifying the residual errors as $1 - \text{reliability}^2$, as below:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+We can account for the [(un)reliability](#reliability) of each measure by specifying the residual errors as $1 - \text{reliability}$, as below:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
 
 ```{r}
 # Syntax that specifies the reliability programmatically
@@ -1350,8 +1350,8 @@ disattenuationSEM_syntax <-
     criterionLatent ~ predictorLatent
     
     # Specify residual errors (measurement error)
-    predictorObservedSEM ~~ (1 - ', reliabilityOfPredictor, '^2)*predictorObservedSEM
-    criterionObservedSEM ~~ (1 - ', reliabilityOfCriterion, '^2)*criterionObservedSEM
+    predictorObservedSEM ~~ (1 - ', reliabilityOfPredictor, ')*predictorObservedSEM
+    criterionObservedSEM ~~ (1 - ', reliabilityOfCriterion, ')*criterionObservedSEM
     ',
     sep = "")
 
@@ -1365,8 +1365,8 @@ disattenuationTraditionalSEM_syntax <- '
   criterionLatent ~ predictorLatent
   
   # Specify residual errors (measurement error)
-  predictorObservedSEM ~~ (1 - .9^2)*predictorObservedSEM # where .9 is the reliability of the predictor
-  criterionObservedSEM ~~ (1 - .85^2)*criterionObservedSEM # where .85 is the reliability of the criterion
+  predictorObservedSEM ~~ (1 - .9)*predictorObservedSEM # where .9 is the reliability of the predictor
+  criterionObservedSEM ~~ (1 - .85)*criterionObservedSEM # where .85 is the reliability of the criterion
 '
 
 disattenuationSEM_fit <- sem(
