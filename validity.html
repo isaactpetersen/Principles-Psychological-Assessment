@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 5 Validity | Principles of Psychological Assessment: With Applied Examples in R</title>
   <meta name="description" content="This is a textbook on Principles of Psychological Assessment. The goal of this book is to provide computational examples to apply principles of psychological assessment into practice." />
-  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 5 Validity | Principles of Psychological Assessment: With Applied Examples in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2023-08-09" />
+<meta name="date" content="2023-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -3729,16 +3729,55 @@ For instance, consider the following observed association:</p>
 <span id="cb230-13"><a href="validity.html#cb230-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb230-14"><a href="validity.html#cb230-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
 <span id="cb230-15"><a href="validity.html#cb230-15" aria-hidden="true" tabindex="-1"></a>  observedSEM_fit,</span>
-<span id="cb230-16"><a href="validity.html#cb230-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb230-17"><a href="validity.html#cb230-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb230-16"><a href="validity.html#cb230-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
-<pre><code>Error in data.frame(lhs = NAMES, op = rep(&quot;r2&quot;, nel), rhs = NAMES, block = block, : row names contain missing values</code></pre>
+<pre><code>lavaan 0.6.16 ended normally after 9 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                         5
+
+                                                  Used       Total
+  Number of observations                           998        1000
+  Number of missing patterns                         3            
+
+Model Test User Model:
+                                                      
+  Test statistic                                 0.000
+  Degrees of freedom                                 0
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Observed
+  Observed information based on                Hessian
+
+Regressions:
+                         Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  criterionObservedSEM ~                                                      
+    prdctrObsrvSEM          0.633    0.027   23.366    0.000    0.633    0.611
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .crtrnObsrvdSEM   -0.012    0.027   -0.459    0.646   -0.012   -0.012
+    prdctrObsrvSEM    0.012    0.032    0.373    0.709    0.012    0.012
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    prdctrObsrvSEM    0.971    0.044   21.932    0.000    0.971    1.000
+   .crtrnObsrvdSEM    0.654    0.030   21.518    0.000    0.654    0.627</code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="validity.html#cb232-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavInspect</span>(observedSEM_fit, <span class="st">&quot;rsquare&quot;</span>)</span></code></pre></div>
+</details>
+<pre><code>criterionObservedSEM 
+               0.373 </code></pre>
 <p>A path diagram of the observed association is depicted in Figure <a href="validity.html#fig:observedSEM">5.21</a>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="validity.html#cb232-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(observedSEM_fit,</span>
-<span id="cb232-2"><a href="validity.html#cb232-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
-<span id="cb232-3"><a href="validity.html#cb232-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
-<span id="cb232-4"><a href="validity.html#cb232-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="validity.html#cb234-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb234-2"><a href="validity.html#cb234-2" aria-hidden="true" tabindex="-1"></a>  observedSEM_fit,</span>
+<span id="cb234-3"><a href="validity.html#cb234-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
+<span id="cb234-4"><a href="validity.html#cb234-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb234-5"><a href="validity.html#cb234-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:observedSEM"></span>
 <img src="Book_files/figure-html/observedSEM-1.png" alt="Observed Association, as Depicted in a Structural Equation Model." width="100%" />
@@ -3748,51 +3787,50 @@ Figure 5.21: Observed Association, as Depicted in a Structural Equation Model.
 </div>
 <p>Now consider when we account for the degree of <a href="reliability.html#measurementError">unreliability</a> of each measure.
 We can account for the <a href="reliability.html#reliability">(un)reliability</a> of each measure by specifying the residual errors.
-As described in Section <a href="factor-analysis-PCA.html#exampleFactorModelsFromCorrelationMatrices">14.1.1</a> of the chapter on <a href="factor-analysis-PCA.html#factor-analysis-PCA">factor analysis</a>, residual errors for each indicator are equal to <span class="math inline">\(1 - R^2\)</span>.
-Thus, we can account for the <a href="reliability.html#reliability">(un)reliability</a> of each measure by specifying the residual errors as <span class="math inline">\(1 - \text{reliability}^2\)</span>, as below:</p>
+We can account for the <a href="reliability.html#reliability">(un)reliability</a> of each measure by specifying the residual errors as <span class="math inline">\(1 - \text{reliability}\)</span>, as below:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="validity.html#cb233-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Syntax that specifies the reliability programmatically</span></span>
-<span id="cb233-2"><a href="validity.html#cb233-2" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_syntax <span class="ot">&lt;-</span> </span>
-<span id="cb233-3"><a href="validity.html#cb233-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb233-4"><a href="validity.html#cb233-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;</span></span>
-<span id="cb233-5"><a href="validity.html#cb233-5" aria-hidden="true" tabindex="-1"></a><span class="st">    # Factor loadings</span></span>
-<span id="cb233-6"><a href="validity.html#cb233-6" aria-hidden="true" tabindex="-1"></a><span class="st">    predictorLatent =~ 1*predictorObservedSEM</span></span>
-<span id="cb233-7"><a href="validity.html#cb233-7" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionLatent =~ 1*criterionObservedSEM</span></span>
-<span id="cb233-8"><a href="validity.html#cb233-8" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
-<span id="cb233-9"><a href="validity.html#cb233-9" aria-hidden="true" tabindex="-1"></a><span class="st">    # Factor correlation</span></span>
-<span id="cb233-10"><a href="validity.html#cb233-10" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionLatent ~ predictorLatent</span></span>
-<span id="cb233-11"><a href="validity.html#cb233-11" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
-<span id="cb233-12"><a href="validity.html#cb233-12" aria-hidden="true" tabindex="-1"></a><span class="st">    # Specify residual errors (measurement error)</span></span>
-<span id="cb233-13"><a href="validity.html#cb233-13" aria-hidden="true" tabindex="-1"></a><span class="st">    predictorObservedSEM ~~ (1 - &#39;</span>, reliabilityOfPredictor, <span class="st">&#39;^2)*predictorObservedSEM</span></span>
-<span id="cb233-14"><a href="validity.html#cb233-14" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionObservedSEM ~~ (1 - &#39;</span>, reliabilityOfCriterion, <span class="st">&#39;^2)*criterionObservedSEM</span></span>
-<span id="cb233-15"><a href="validity.html#cb233-15" aria-hidden="true" tabindex="-1"></a><span class="st">    &#39;</span>,</span>
-<span id="cb233-16"><a href="validity.html#cb233-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb233-17"><a href="validity.html#cb233-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb233-18"><a href="validity.html#cb233-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Syntax that substitutes in the reliability values</span></span>
-<span id="cb233-19"><a href="validity.html#cb233-19" aria-hidden="true" tabindex="-1"></a>disattenuationTraditionalSEM_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb233-20"><a href="validity.html#cb233-20" aria-hidden="true" tabindex="-1"></a><span class="st">  # Factor loadings</span></span>
-<span id="cb233-21"><a href="validity.html#cb233-21" aria-hidden="true" tabindex="-1"></a><span class="st">  predictorLatent =~ 1*predictorObservedSEM</span></span>
-<span id="cb233-22"><a href="validity.html#cb233-22" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionLatent =~ 1*criterionObservedSEM</span></span>
-<span id="cb233-23"><a href="validity.html#cb233-23" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb233-24"><a href="validity.html#cb233-24" aria-hidden="true" tabindex="-1"></a><span class="st">  # Factor correlation</span></span>
-<span id="cb233-25"><a href="validity.html#cb233-25" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionLatent ~ predictorLatent</span></span>
-<span id="cb233-26"><a href="validity.html#cb233-26" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb233-27"><a href="validity.html#cb233-27" aria-hidden="true" tabindex="-1"></a><span class="st">  # Specify residual errors (measurement error)</span></span>
-<span id="cb233-28"><a href="validity.html#cb233-28" aria-hidden="true" tabindex="-1"></a><span class="st">  predictorObservedSEM ~~ (1 - .9^2)*predictorObservedSEM # where .9 is the reliability of the predictor</span></span>
-<span id="cb233-29"><a href="validity.html#cb233-29" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ (1 - .85^2)*criterionObservedSEM # where .85 is the reliability of the criterion</span></span>
-<span id="cb233-30"><a href="validity.html#cb233-30" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
-<span id="cb233-31"><a href="validity.html#cb233-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb233-32"><a href="validity.html#cb233-32" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
-<span id="cb233-33"><a href="validity.html#cb233-33" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_syntax,</span>
-<span id="cb233-34"><a href="validity.html#cb233-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
-<span id="cb233-35"><a href="validity.html#cb233-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
-<span id="cb233-36"><a href="validity.html#cb233-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb233-37"><a href="validity.html#cb233-37" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
-<span id="cb233-38"><a href="validity.html#cb233-38" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
-<span id="cb233-39"><a href="validity.html#cb233-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb233-40"><a href="validity.html#cb233-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="validity.html#cb235-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Syntax that specifies the reliability programmatically</span></span>
+<span id="cb235-2"><a href="validity.html#cb235-2" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_syntax <span class="ot">&lt;-</span> </span>
+<span id="cb235-3"><a href="validity.html#cb235-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb235-4"><a href="validity.html#cb235-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;</span></span>
+<span id="cb235-5"><a href="validity.html#cb235-5" aria-hidden="true" tabindex="-1"></a><span class="st">    # Factor loadings</span></span>
+<span id="cb235-6"><a href="validity.html#cb235-6" aria-hidden="true" tabindex="-1"></a><span class="st">    predictorLatent =~ 1*predictorObservedSEM</span></span>
+<span id="cb235-7"><a href="validity.html#cb235-7" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionLatent =~ 1*criterionObservedSEM</span></span>
+<span id="cb235-8"><a href="validity.html#cb235-8" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb235-9"><a href="validity.html#cb235-9" aria-hidden="true" tabindex="-1"></a><span class="st">    # Factor correlation</span></span>
+<span id="cb235-10"><a href="validity.html#cb235-10" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionLatent ~ predictorLatent</span></span>
+<span id="cb235-11"><a href="validity.html#cb235-11" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb235-12"><a href="validity.html#cb235-12" aria-hidden="true" tabindex="-1"></a><span class="st">    # Specify residual errors (measurement error)</span></span>
+<span id="cb235-13"><a href="validity.html#cb235-13" aria-hidden="true" tabindex="-1"></a><span class="st">    predictorObservedSEM ~~ (1 - &#39;</span>, reliabilityOfPredictor, <span class="st">&#39;)*predictorObservedSEM</span></span>
+<span id="cb235-14"><a href="validity.html#cb235-14" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionObservedSEM ~~ (1 - &#39;</span>, reliabilityOfCriterion, <span class="st">&#39;)*criterionObservedSEM</span></span>
+<span id="cb235-15"><a href="validity.html#cb235-15" aria-hidden="true" tabindex="-1"></a><span class="st">    &#39;</span>,</span>
+<span id="cb235-16"><a href="validity.html#cb235-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb235-17"><a href="validity.html#cb235-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb235-18"><a href="validity.html#cb235-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Syntax that substitutes in the reliability values</span></span>
+<span id="cb235-19"><a href="validity.html#cb235-19" aria-hidden="true" tabindex="-1"></a>disattenuationTraditionalSEM_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb235-20"><a href="validity.html#cb235-20" aria-hidden="true" tabindex="-1"></a><span class="st">  # Factor loadings</span></span>
+<span id="cb235-21"><a href="validity.html#cb235-21" aria-hidden="true" tabindex="-1"></a><span class="st">  predictorLatent =~ 1*predictorObservedSEM</span></span>
+<span id="cb235-22"><a href="validity.html#cb235-22" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionLatent =~ 1*criterionObservedSEM</span></span>
+<span id="cb235-23"><a href="validity.html#cb235-23" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb235-24"><a href="validity.html#cb235-24" aria-hidden="true" tabindex="-1"></a><span class="st">  # Factor correlation</span></span>
+<span id="cb235-25"><a href="validity.html#cb235-25" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionLatent ~ predictorLatent</span></span>
+<span id="cb235-26"><a href="validity.html#cb235-26" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb235-27"><a href="validity.html#cb235-27" aria-hidden="true" tabindex="-1"></a><span class="st">  # Specify residual errors (measurement error)</span></span>
+<span id="cb235-28"><a href="validity.html#cb235-28" aria-hidden="true" tabindex="-1"></a><span class="st">  predictorObservedSEM ~~ (1 - .9)*predictorObservedSEM # where .9 is the reliability of the predictor</span></span>
+<span id="cb235-29"><a href="validity.html#cb235-29" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ (1 - .85)*criterionObservedSEM # where .85 is the reliability of the criterion</span></span>
+<span id="cb235-30"><a href="validity.html#cb235-30" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb235-31"><a href="validity.html#cb235-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb235-32"><a href="validity.html#cb235-32" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb235-33"><a href="validity.html#cb235-33" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_syntax,</span>
+<span id="cb235-34"><a href="validity.html#cb235-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
+<span id="cb235-35"><a href="validity.html#cb235-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
+<span id="cb235-36"><a href="validity.html#cb235-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb235-37"><a href="validity.html#cb235-37" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb235-38"><a href="validity.html#cb235-38" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
+<span id="cb235-39"><a href="validity.html#cb235-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb235-40"><a href="validity.html#cb235-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
-<pre><code>lavaan 0.6.16 ended normally after 14 iterations
+<pre><code>lavaan 0.6.16 ended normally after 15 iterations
 
   Estimator                                         ML
   Optimization method                           NLMINB
@@ -3816,14 +3854,14 @@ Parameter Estimates:
 Latent Variables:
                      Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
   predictorLatent =~                                                      
-    prdctrObsrvSEM      1.000                               0.884    0.897
+    prdctrObsrvSEM      1.000                               0.933    0.947
   criterionLatent =~                                                      
-    crtrnObsrvdSEM      1.000                               0.876    0.857
+    crtrnObsrvdSEM      1.000                               0.946    0.925
 
 Regressions:
                     Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
   criterionLatent ~                                                      
-    predictorLatnt     0.787    0.035   22.537    0.000    0.795    0.795
+    predictorLatnt     0.706    0.030   23.152    0.000    0.697    0.697
 
 Intercepts:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
@@ -3834,23 +3872,23 @@ Intercepts:
 
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .prdctrObsrvSEM    0.190                               0.190    0.196
-   .crtrnObsrvdSEM    0.278                               0.278    0.266
-    predictorLatnt    0.781    0.044   17.642    0.000    1.000    1.000
-   .criterionLatnt    0.282    0.032    8.915    0.000    0.368    0.368
+   .prdctrObsrvSEM    0.100                               0.100    0.103
+   .crtrnObsrvdSEM    0.150                               0.150    0.144
+    predictorLatnt    0.871    0.044   19.674    0.000    1.000    1.000
+   .criterionLatnt    0.460    0.031   14.960    0.000    0.514    0.514
 
 R-Square:
                    Estimate
-    prdctrObsrvSEM    0.804
-    crtrnObsrvdSEM    0.734
-    criterionLatnt    0.632</code></pre>
+    prdctrObsrvSEM    0.897
+    crtrnObsrvdSEM    0.856
+    criterionLatnt    0.486</code></pre>
 <p>A path diagram of the true association is depicted in Figure <a href="validity.html#fig:disattenuationSEM">5.22</a>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="validity.html#cb235-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
-<span id="cb235-2"><a href="validity.html#cb235-2" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
-<span id="cb235-3"><a href="validity.html#cb235-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
-<span id="cb235-4"><a href="validity.html#cb235-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
-<span id="cb235-5"><a href="validity.html#cb235-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="validity.html#cb237-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb237-2"><a href="validity.html#cb237-2" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
+<span id="cb237-3"><a href="validity.html#cb237-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
+<span id="cb237-4"><a href="validity.html#cb237-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb237-5"><a href="validity.html#cb237-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:disattenuationSEM"></span>
 <img src="Book_files/figure-html/disattenuationSEM-1.png" alt="Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model." width="100%" />
@@ -3858,7 +3896,7 @@ R-Square:
 Figure 5.22: Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model.
 </p>
 </div>
-<p>The observed association (<span class="math inline">\(\beta = 0.61\)</span>) becomes <span class="math inline">\(\beta = 0.79\)</span> when it is disattenuated for <a href="reliability.html#measurementError">measurement error</a>.</p>
+<p>The observed association (<span class="math inline">\(\beta = 0.61\)</span>) becomes <span class="math inline">\(\beta = 0.70\)</span> when it is disattenuated for <a href="reliability.html#measurementError">measurement error</a>.</p>
 </div>
 </div>
 <div id="gTheoryValidity" class="section level2 hasAnchor" number="5.7">
