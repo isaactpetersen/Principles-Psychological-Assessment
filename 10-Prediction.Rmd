@@ -2088,7 +2088,6 @@ With a plot of the predictions on the x-axis, and the outcomes on the y-axis (i.
 The intercept is also called "calibration-in-the-large", whereas "calibration-in-the-small" refers to the extent to which the predicted values match the observed values at a specific predicted value (e.g., when the weather forecaster says that there is a 10% chance of rain, does it actually rain 10% of the time?).\index{calibration!plot}\index{calibration!in the small}\index{calibration!in the large}
 For predictions to be well [calibrated](#calibration), the intercept should be close to zero and the slope should be close to one.\index{calibration!plot}
 If the slope is close to one but the intercept is not close to zero (or the intercept is close to zero but the slope is not close to one), the predictions would not be considered well [calibrated](#calibration).\index{calibration!plot}
-Likewise, if the intercept is close to zero but the slope is not close to zero, the predictions would not be well [calibrated](#calibration).\index{calibration!plot}
 The 95% confidence interval of the observed value, across all values of the predicted values, should include the diagonal reference line whose intercept is zero and whose slope is one.\index{calibration!plot}
 
 For instance, based on the intercept and slope of the [calibration plot](#calibrationPlot) in Figure \@ref(fig:calibrationContinuousOutcome), the predictions are not well calibrated, despite having a slope near one, because the 95% confidence interval of the intercept does not include zero.\index{calibration!plot}
@@ -2283,7 +2282,7 @@ addmargins(prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)
 
 True positives (TPs) are instances in which a positive classification (e.g., a disorder present) is correct—that is, the test says that a classification is present, and the classification is present.\index{true positive}
 True positives are also called valid positives (VPs) or hits.\index{true positive}
-Higher values reflect greater accuracy.\index{true positive}
+Higher values (relative to the same sample size) reflect greater accuracy.\index{true positive}
 The formula for true positives is in Equation \@ref(eq:truePositive):\index{true positive}
 
 $$
@@ -2304,7 +2303,7 @@ TPvalue
 
 True negatives (TNs) are instances in which a negative classification (e.g., absence of a disorder) is correct—that is, the test says that a classification is not present, and the classification is not present.\index{true negative}
 True negatives are also called valid negatives (VNs) or correct rejections.\index{true negative}
-Higher values reflect greater accuracy.\index{true negative}
+Higher values (relative to the same sample size) reflect greater accuracy.\index{true negative}
 The formula for true negatives is in Equation \@ref(eq:trueNegative):\index{true negative}
 
 $$
@@ -2325,7 +2324,7 @@ TNvalue
 
 False positives (FPs) are instances in which a positive classification (e.g., a disorder present) is incorrect—that is, the test says that a classification is present, and the classification is not present.\index{false positive}
 False positives are also called false alarms (FAs).\index{false positive}
-Lower values reflect greater accuracy.\index{false positive}
+Lower values (relative to the same sample size) reflect greater accuracy.\index{false positive}
 The formula for false positives is in Equation \@ref(eq:falsePositive):\index{false positive}
 
 $$
@@ -2346,7 +2345,7 @@ FPvalue
 
 False negatives (FNs) are instances in which a negative classification (e.g., absence of a disorder) is incorrect—that is, the test says that a classification is not present, and the classification is present.\index{false negative}
 False negatives are also called misses.\index{false negative}
-Lower values reflect greater accuracy.\index{false negative}
+Lower values (relative to the same sample size) reflect greater accuracy.\index{false negative}
 The formula for false negatives is in Equation \@ref(eq:falseNegative):\index{false negative}
 
 $$
@@ -2882,7 +2881,7 @@ falseNegativeRate(TP = TPvalue, FN = FNvalue)
 The false positive rate (FPR) is also called the false alarm rate (FAR) or fall-out.\index{false positive!rate}\index{fall-out!zzzzz@\igobble|seealso{false positive rate}}
 The false positive rate is the [conditional probability](#conditionalProbability) of a positive test given that the person does not have the condition: $P(R|\text{not } C)$.\index{false positive!rate}\index{probability!conditional}
 Lower values reflect greater accuracy.\index{false positive!rate}
-The formula for calculating false positive rate is in Equation \@ref(eq:falsePositiveRate):\index{false positive!rate}
+The formula for calculating false positive rate is in Equation \@ref(eq:falsePositiveRate).\index{false positive!rate}
 
 $$
 \begin{aligned}
@@ -2972,7 +2971,7 @@ positivePredictiveValue(
 positivePredictivevalueValue <- positivePredictiveValue(TP = TPvalue, FP = FPvalue)
 ```
 
-Below I compute PPV and NPV at every possible [base rate](#baseRate) given the [sensitivity](#sensitivity) and [specificity](#specificity) at the current cutoff.\index{positive predictive value}\index{negative predictive value}\index{sensitivity}\index{specificity}\index{cutoff}
+Below I compute PPV and [NPV](#npv) at every possible [base rate](#baseRate) given the [sensitivity](#sensitivity) and [specificity](#specificity) at the current cutoff.\index{positive predictive value}\index{negative predictive value}\index{sensitivity}\index{specificity}\index{cutoff}
 
 ```{r, class.source = "fold-hide"}
 negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
@@ -3503,7 +3502,7 @@ $$
 (\#eq:posttestOdds)
 $$
 
-For calculating the posttest odds of a [true positive](#truePositive) compared to a [false positive](#falsePositive), we use the [positive likelihood ratio](#positiveLikelihoodRatio) below.\index{odds!posttest}\index{positive likelihood ratio}\index{true positive}\index{false positive}
+For calculating the posttest odds of a [true positive](#truePositive) compared to a [false positive](#falsePositive), we use the [positive likelihood ratio](#positiveLikelihoodRatio), described later.\index{odds!posttest}\index{positive likelihood ratio}\index{true positive}\index{false positive}
 We would use the [negative likelihood ratio](#negativeLikelihoodRatio) if we wanted to calculate the posttest odds of a [false negative](#falseNegative) compared to a [true negative](#trueNegative).\index{odds!posttest}\index{positive likelihood ratio}\index{false negative}\index{true negative}
 
 ```{r, class.source = "fold-hide"}
@@ -3956,6 +3955,7 @@ There are two ways to improve diagnostic performance [@Swets2000].\index{cutoff!
 One way is to increase the diagnostic accuracy of the assessment.\index{cutoff!optimal}\index{discrimination}
 The second way is to increase the utility of the diagnostic decisions that are made, based on where we set the cutoff.\index{cutoff!optimal}
 The optimal cutoff depends on the differential costs of [false positives](#falsePositive) versus [false negatives](#falseNegative), as applied in [decision theory](#decisionTheory).\index{cutoff!optimal}\index{decision theory}\index{false positive}\index{false negative}\index{prediction!prediction error!costs of}
+When differential costs of [false positives](#falsePositive) versus [false negatives](#falseNegative) cannot be specified, an alternative approach to specifying the optimal cutoff is to use [information theory](#informationTheory).\index{cutoff!optimal}\index{information!theory}
 
 ### Decision Theory {#decisionTheory}
 
@@ -5017,9 +5017,9 @@ $$
 $$
 
 Then, what are the regression coefficients?\index{multicollinearity}\index{multiple regression}
-We do not know, and we could come up with arbitrary estimates with enormous standard error around each estimate.\index{multicollinearity}\index{multiple regression}
+We do not know, and we could come up with arbitrary estimates with an enormous standard error around each estimate.\index{multicollinearity}\index{multiple regression}
 Any predictors that have a correlation above ~ $r = .30$ with each other could have an impact on the confidence interval of the regression coefficient.\index{multicollinearity}\index{multiple regression}
-As the correlations among the predictors increase, the chance of getting an arbitrary answer increases.\index{multicollinearity}\index{multiple regression}
+As the correlations among the predictors increase, the chance of getting an arbitrary answer increases, sometimes called "bouncing betas."\index{multicollinearity}\index{multiple regression}
 So, it is important to examine a correlation matrix of the predictors before putting them in the same regression model.\index{multicollinearity}\index{multiple regression}
 You can also examine indices such as variance inflation factor (VIF).\index{multicollinearity}\index{multiple regression}
 
@@ -5071,17 +5071,17 @@ The "wisdom of the crowd" is often more accurate than individuals' predictions, 
 - A goal of prediction is to capture as much signal as possible and as little noise (error) as possible [@Silver2012].\index{prediction!improving accuracy of}
 Parsimony (i.e., not having too many predictors) can help reduce the amount of error variance captured by the prediction model.\index{prediction!improving accuracy of}\index{parsimony}
 However, to accurately model complex systems like human behavior, the brain, etc., complex models may be necessary.\index{prediction!improving accuracy of}
-However, strong theory of the causal processes and dynamics may be necessary to develop accurate complex models.\index{prediction!improving accuracy of}
+Nevertheless, strong theory of the causal processes and dynamics may be necessary to develop accurate complex models.\index{prediction!improving accuracy of}
 - Although incorporating theory can be helpful, provide more weight to empiricism than to theory, until our theories and measures are stronger.\index{prediction!improving accuracy of}\index{theory}\index{empiricism}
 Ideally, we would use theory to design a model that mirrors the causal system, with accurate measures of each process in the system, so we could make accurate predictions.\index{prediction!improving accuracy of}\index{theory}
 However, as described in Section \@ref(theoryEmpiricism), our psychological theories of the causal processes that influence outcomes are not yet very strong.\index{prediction!improving accuracy of}\index{theory}
-Until we have stronger theories that specify the causal process for a given outcome, and until we have accurate measures of those causal processes, actuarial approaches are likely to be most accurate, as discussed in Chapter \@ref(actuarial).\index{prediction!improving accuracy of}\index{theory}\index{empiricism}\index{actuarial}
+Until we have stronger theories that specify the causal process for a given outcome, and until we have accurate measures of those causal processes, [actuarial](#actuarialPrediction) approaches are likely to be most accurate, as discussed in Chapter \@ref(actuarial).\index{prediction!improving accuracy of}\index{theory}\index{empiricism}\index{actuarial}
 At the same time, keep in mind that measures in psychology, and their resulting data, are often noisy.\index{prediction!improving accuracy of}
 As a result, theoretically (conceptually) informed empirical approaches may lead to more accuracy than empiricism alone.\index{prediction!improving accuracy of}\index{theory}\index{empiricism}
 - Use an empirically validated and cross-validated [statistical algorithm](#actuarial) to combine information from the predictors in a formalized way.
 Give each predictor appropriate weight in the statistical algorithm, according to its strength of association with the outcome.\index{prediction!improving accuracy of}\index{theory}\index{empiricism}\index{actuarial}\index{validity!criterion}
 Use measures with strong [reliability](#reliability) and [validity](#validity) for assessing these processes to be used in the algorithm.\index{prediction!improving accuracy of}\index{reliability}\index{validity}
-Cross-validation will help reduce the likelihood that your model is fitting to noise and will maximize the likelihood that the model predicts accurately when applied to new data (i.e., the model's predictions accurately generalize).\index{prediction!improving accuracy of}\index{cross validation}
+Cross-validation will help reduce the likelihood that your model is fitting to noise and will maximize the likelihood that the model predicts accurately when applied to new data (i.e., the model's predictions accurately generalize), as described in Section \@ref(modelAccuracy-actuarial).\index{prediction!improving accuracy of}\index{cross validation}
 - When presenting your predictions, acknowledge what you do not know.\index{prediction!improving accuracy of}\index{uncertainty}
 - Express your predictions in terms of probabilistic estimates and present the uncertainty in your predictions with confidence intervals [even though bolder, more extreme predictions tend to receive stronger television ratings; @Silver2012].\index{prediction!improving accuracy of}\index{uncertainty}\index{confidence interval}
 - Qualify your predictions by identifying and noting counter-examples that would not be well fit by your prediction model, such as extreme cases, edge cases, and "broken leg" [@Meehl1957] cases.\index{prediction!improving accuracy of}\index{broken leg}
@@ -5100,7 +5100,7 @@ When the [base rate](#baseRate) of a behavior is very low or very high, you can 
 Thus, you cannot judge how accurate your prediction is until you know how you accurate your predictions would be by [random chance](#accuracyByChance).\index{percent accuracy!by chance}
 Moreover, maximizing [percent accuracy](#percentAccuracy) may not be the ultimate goal because [different errors have different costs](#differentErrorsDifferentCosts).\index{percent accuracy}\index{prediction!prediction error!costs of}
 Though there are many types of accuracy, there are two broad types: [discrimination](#discrimination) and [calibration](#calibration)—and they are orthogonal.\index{discrimination}\index{calibration}
-[Discrimination](#discrimination) accuracy is frequently evaluated with the [area under the receiver operating characteristic curve](#auc), or with [sensitivity](#sensitivity) and [specificity](#specificity), [standardized regression coefficients](#standardizedRegressionCoefficient).\index{discrimination}\index{receiver operating characteristic curve!area under the curve}\index{sensitivity}\index{specificity}\index{standardized regression coefficient}
+[Discrimination](#discrimination) accuracy is frequently evaluated with the [area under the receiver operating characteristic curve](#auc), or with [sensitivity](#sensitivity) and [specificity](#specificity), or [standardized regression coefficients](#standardizedRegressionCoefficient).\index{discrimination}\index{receiver operating characteristic curve!area under the curve}\index{sensitivity}\index{specificity}\index{standardized regression coefficient}
 [Calibration](#calibration) accuracy is frequently evaluated graphically and with various indices.\index{calibration}
 [Sensitivity](#sensitivity) and [specificity](#specificity) [depend on the cutoff](#accuracyCutoff).\index{sensitivity}\index{specificity}\index{cutoff}
 Therefore, the [optimal cutoff](#optimalCutoff) depends on the purposes of the assessment and how much one weights the various costs of the different types of errors: [false negatives](#falseNegative) and [false positives](#falsePositive).\index{cutoff!optimal}\index{prediction!prediction error!costs of}\index{false negative}\index{false positive}
