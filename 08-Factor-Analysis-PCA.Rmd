@@ -47,6 +47,8 @@ where:
 - `Item Intercept` represents the constant term that accounts for the expected value of the indicator when the latent factor(s) are zero
 - `Error Term` is the residual, indicating the extent of variance in the indicator that is not explained by the latent factor(s)
 
+When the latent factors are uncorrelated, the (standardized) error term for an indicator is calculated as 1 minus the sum of squared standardized factor loadings for a given item (including cross loadings).\index{factor analysis}\index{structural equation modeling!residual}\index{structural equation modeling!factor loading}\index{cross loading}
+
 Another class of [factor analysis](#factorAnalysis) models are [higher-order](#higherOrderModel) (or hierarchical) factor models and [bifactor models](#bifactorModel).\index{factor analysis}\index{factor analysis!higher-order}\index{factor analysis!bifactor}
 Guidelines in using [higher-order factor](#higherOrderModel) and [bifactor](#bifactorModel) models are discussed by @Markon2019.\index{factor analysis}\index{factor analysis!higher-order}\index{factor analysis!bifactor}
 
@@ -76,7 +78,7 @@ knitr::include_graphics("./Images/correlationMatrix1.png")
 In a single-factor model fit to these data, the factor loadings are .77 and the residual error terms are .40, as depicted in Figure \@ref(fig:factorAnalysis1).\index{factor analysis}
 The amount of common variance ($R^2$) that is accounted for by an indicator is estimated as the square of the standardized loading: $.60 = .77 \times .77$.\index{factor analysis}\index{structural equation modeling!factor loading}
 The amount of error for an indicator is estimated as: $\text{error} = 1 - \text{common variance}$, so in this case, the amount of error is: $.40 = 1 - .60$.\index{factor analysis}\index{structural equation modeling!residual}
-The proportion of the total variance in indicators that is accounted for by the latent factor is the sum of the square of the standardized loading divided by the number of indicators.\index{factor analysis}
+The proportion of the total variance in indicators that is accounted for by the latent factor is the sum of the square of the standardized loadings divided by the number of indicators.\index{factor analysis}
 That is, to calculate the proportion of the total variance in the variables that is accounted for by the latent factor, you would square the loadings, sum them up, and divide by the number of variables: $\frac{.77^2 + .77^2 + .77^2 + .77^2 + .77^2 + .77^2}{6} = \frac{.60 + .60 + .60 + .60 + .60 + .60}{6} = .60$.\index{factor analysis}
 Thus, the latent factor accounts for 60% of the variance in the indicators.\index{factor analysis}
 In this model, the latent factor explains the covariance among the variables.\index{factor analysis}
@@ -263,7 +265,7 @@ After the model is fit, you can look at the results and discard the components w
 Judgments about which factors to retain are based on empirical criteria in conjunction with theory to select a parsimonious number of components that account for the majority of variance.\index{factor analysis!decisions}\index{principal component analysis}
 
 The eigenvalue reflects the amount of variance explained by the component (eigenvector).\index{factor analysis!decisions}\index{principal component analysis}\index{eigenvalue}
-When using a varimax (orthogonal) rotation, an eigenvalue for a component is calculated as the sum of squared component loadings on that component.\index{factor analysis!decisions}\index{principal component analysis}\index{orthogonal rotation}\index{eigenvalue}
+When using a varimax (orthogonal) rotation, an eigenvalue for a component is calculated as the sum of squared standardized component loadings on that component.\index{factor analysis!decisions}\index{principal component analysis}\index{orthogonal rotation}\index{eigenvalue}
 When using oblique rotation, however, the items explain more variance than is attributable to their factor loadings because the factors are correlated.\index{factor analysis!decisions}\index{principal component analysis}\index{oblique rotation}
 
 PCA pulls the first principal component out (i.e., the eigenvector that explains the most variance) and makes a new data matrix: i.e., new correlation matrix.\index{factor analysis!decisions}\index{principal component analysis}\index{eigenvector}
@@ -381,7 +383,7 @@ There is not necessarily a "correct" criterion to use in determining how many fa
 
 A scree plot from a [factor analysis](#factorAnalysis) or [PCA](#pca) provides lots of information.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{scree plot}
 A scree plot has the factor number on the x-axis and the eigenvalue on the y-axis.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{scree plot}\index{eigenvalue}
-The eigenvalue is the variance accounted for by a factor; when using a varimax (orthogonal) rotation, an eigenvalue (or factor variance) is calculated as the sum of squared factor (or component) loadings on that factor.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{scree plot}\index{eigenvalue}
+The eigenvalue is the variance accounted for by a factor; when using a varimax (orthogonal) rotation, an eigenvalue (or factor variance) is calculated as the sum of squared standardized factor (or component) loadings on that factor.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{scree plot}\index{eigenvalue}
 An example of a scree plot is in Figure \@ref(fig:screePlot).\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{scree plot}
 
 ```{r screePlot, out.width = "100%", fig.align = "center", fig.cap = "Example of a Scree Plot.", echo = FALSE}
@@ -1195,7 +1197,7 @@ fa3Orthogonal_lavaan <- lavPredict(efaFactor3OrthogonalLavaan_fit)
 Pairs panel plots were generated using the `psych` package [@R-psych].\index{correlation}
 
 A scree plot based on factor loadings from the orthogonal model is in Figure \@ref(fig:screePlotLavaanOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}
-When the factors are uncorrelated (orthogonal rotation), the eigenvalue for a factor is calculated as the sum of squared factor loadings across all items, as described in Section \@ref(pca).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}\index{eigenvalue}
+When the factors are uncorrelated (orthogonal rotation), the eigenvalue for a factor is calculated as the sum of squared standardized factor loadings across all items, as described in Section \@ref(pca).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}\index{eigenvalue}
 
 ```{r screePlotLavaanOrthogonal, out.width = "100%", fig.align = "center", echo = FALSE, fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis"}
 param1Factor <- parameterEstimates(
