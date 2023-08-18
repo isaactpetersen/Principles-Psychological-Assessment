@@ -320,7 +320,7 @@ Cognitive assessments include self-report, think-aloud approaches, random though
 Cognitive modeling attempts to decompose behavioral performance into different indices that reflect different sub-processes.
 Despite the advantages of not relying on participants' recall of their thoughts, there are challenges to using cognitive science approaches to assess cognition.
 One challenge related to the use of performance-based assessment of cognition is that many such tasks involve difference scores, which tend to be lower in reliability than each of the indices that compose it.
-Another challenge with performance-based assessments of cognition is known as the reliability paradox that despite some robust cognitive tasks showing well-established experimental effects, many of these tasks do not produce reliable individual differences due to low between-subject variability.
+Another challenge with performance-based assessments of cognition is known as the reliability paradox that despite some robust cognitive tasks showing well-established experimental effects, many of these tasks do not produce reliable individual differences due to low between-subject variability and the use of difference scores.
 
 # Chapter 24 Abstract "Cultural and Individual Diversity":
 
