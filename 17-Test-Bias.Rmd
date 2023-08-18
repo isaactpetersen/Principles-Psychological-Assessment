@@ -2405,17 +2405,6 @@ Here, we operationalize a mediocre-fitting model as a model whose RMSEA is .08 o
 So, the equivalence test evaluates whether our invariance model fits significantly better than a mediocre-fitting model.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 Thus, a statistically significant *p*-value indicates that our invariance model fits significantly better than the mediocre-fitting model (i.e., that invariance is established), whereas a non-significant *p*-value indicates that our invariance model does not fit significantly better than the mediocre-fitting model (i.e., that invariance is failed).\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
-equiv_chi <- function(alpha = .05, chi, df, m, N_sample, popRMSEA = .08){
-  Fml <- chi/(N_sample - m)
-  popep <- (df * popRMSEA^2)/m
-  popdelt <- (N_sample - m) * popep
-  pval <- pchisq(chi, df, ncp = popdelt, lower.tail = TRUE)
-  res <- data.frame(chi, Fml, popep, popdelt, pval)
-  res
-}
-```
-
 The chi-square equivalence test is non-significant, suggesting that the model fit of the configural invariance model is not acceptable (i.e., it is not better than the mediocre-fitting model).\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 In other words, configural invariance failed.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 
@@ -2607,16 +2596,8 @@ The metric invariance model did not fit significantly worse than the configural 
 This provides evidence of measurement invariance of factor loadings across groups.\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}\index{structural equation modeling!measurement invariance!configural}\index{structural equation modeling!factor loading}
 Measurement invariance of factor loadings across groups provides support for examining whether the groups show different associations of the factor with other constructs [@Little2007].\index{structural equation modeling!measurement invariance!metric}\index{structural equation modeling!factor loading}
 
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
 Below is a Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}
-
-```{r, class.source = "fold-hide"}
-satorraBentlerScaledChiSquareDifferenceTestStatistic <- function(T0, c0, d0, T1, c1, d1){
-    cd <- (d0 * c0 - d1*c1)/(d0 - d1)
-    TRd <- (T0*c0 - T1*c1)/cd
-    
-    return(TRd)
-}
-```
 
 ```{r}
 metricInvarianceModel_chisquareDiff <- 
@@ -2854,6 +2835,8 @@ The scalar invariance model fit significantly worse than the configural invarian
 This provides evidence of measurement non-invariance of indicator intercepts across groups.\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!measurement invariance!metric}\index{structural equation modeling!intercept}
 Measurement non-invariance of indicator intercepts poses challenges to being able to meaningfully compare levels on the latent factor across groups [@Little2007].\index{structural equation modeling!intercept}
 
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
+
 ```{r}
 scalarInvarianceModel_chisquareDiff <- 
   satorraBentlerScaledChiSquareDifferenceTestStatistic(
@@ -2861,6 +2844,7 @@ scalarInvarianceModel_chisquareDiff <-
     c0 = scalarInvarianceModel_chisquareScaling,
     d0 = scalarInvarianceModel_df,
     T1 = metricInvarianceModel_chisquare,
+    c1 = metricInvarianceModel_chisquareScaling,
     d1 = metricInvarianceModel_df)
 
 scalarInvarianceModel_chisquareDiff
@@ -3089,6 +3073,8 @@ anova(scalarInvarianceModel_fit, residualInvarianceModel_fit)
 ```
 
 In this instance, you do not need to examine whether residual invariance held because the preceding level of measurement invariance (scalar invariance) did not hold.\index{structural equation modeling!measurement invariance!residual}\index{structural equation modeling!measurement invariance!scalar}
+
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
 
 ```{r}
 residualInvarianceModel_chisquareDiff <- 
