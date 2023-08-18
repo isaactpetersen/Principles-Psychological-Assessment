@@ -298,7 +298,7 @@ Behavioral observations are costly due to people and time.
 The cost limits the amount of observation time that is possible, which raises questions about how typical and representative the participant's behavior was during the observation period relative to their everyday life.
 The limited amount of observation time raises questions about reliability and external validity, that is, the generalizability of the person's behavior in the situation to their typical functioning.
 
-A useful approach to identify the function of a given behavior is to identify patterns of sequences according to the antecedent-behavior-consequence (A-B-C) model as part of a functional behavior analysis.
+A useful approach to identify the function of a given behavior is to identify patterns of sequences according to the antecedent-behavior-consequence (A-B-C) model as part of a functional behavior assessment.
 Another useful approach is self-monitoring, which provides a lot of information at low cost and is therefore a component of most empirically supported treatments.
 
 # Chapter 22 Abstract "Repeated Assessments Across Time":
