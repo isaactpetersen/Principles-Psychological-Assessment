@@ -549,7 +549,7 @@ formativeModel3_syntax <- '
   
   formative =~ NA*v1 + l11*v1+ l21*v2 + 1*v3 + l41*v4
   
-  formative ~~ vformative*formative
+  formative ~~ varformative*formative
   
   # Specification of the associations between the observed variables v1 - v4
   # and their excrescent variables in terms of composite loadings.
@@ -558,9 +558,9 @@ formativeModel3_syntax <- '
   nu12 =~ 0*v1 + 1*v2 + l33*v3 + l43*v4
   nu13 =~ 0*v1 + 0*v2 + l34*v3 + 1*v4
   
-  nu11 ~~ vnu11*nu11
-  nu12 ~~ vnu12*nu12
-  nu13 ~~ vnu13*nu13
+  nu11 ~~ varnu11*nu11
+  nu12 ~~ varnu12*nu12
+  nu13 ~~ varnu13*nu13
   
   # Specification of the covariances among the latent variables
   formative ~~ reflective
@@ -602,16 +602,16 @@ formativeModel3_syntax <- '
       l34*l41 + l11*l34*l42 + l21*l34*l43 - l11*l22*l34*l43)
   
   # Calculate the variances
-  vv1 := l11^2*vformative + vnu11
-  vv2 := l21^2*vformative + l22^2*vnu11 + vnu12
-  vv3 := vformative + l32^2*vnu11 + l33^2 * vnu12 + l34^2*vnu13
-  vv4 := l41^2*vformative + l42^2*vnu11 + l43^2*vnu12 + vnu13
+  varv1 := l11^2*varformative + varnu11
+  varv2 := l21^2*varformative + l22^2*varnu11 + varnu12
+  varv3 := varformative + l32^2*varnu11 + l33^2 * varnu12 + l34^2*varnu13
+  varv4 := l41^2*varformative + l42^2*varnu11 + l43^2*varnu12 + varnu13
   
   # Calculate the standardized weights to form the formative latent variable
-  w1std := w1*(vv1/vformative)^(1/2)
-  w2std := w2*(vv2/vformative)^(1/2)
-  w3std := w3*(vv3/vformative)^(1/2)
-  w4std := w4*(vv4/vformative)^(1/2)
+  w1std := w1*(varv1/varformative)^(1/2)
+  w2std := w2*(varv2/varformative)^(1/2)
+  w3std := w3*(varv3/varformative)^(1/2)
+  w4std := w4*(varv4/varformative)^(1/2)
 '
 
 formativeModel3Fit <- sem(
