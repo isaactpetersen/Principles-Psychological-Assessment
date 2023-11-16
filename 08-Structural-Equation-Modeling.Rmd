@@ -537,7 +537,7 @@ Thus, [formative constructs](#formativeConstruct) are challenging to use in a SE
 To estimate a [formative construct](#formativeConstruct) in a SEM framework, the [formative construct](#formativeConstruct) must be used in the context of a model that allows some constraints.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 However, emerging techniques such as confirmatory composite analysis allow estimation of [formative](#formativeConstruct) latent factors [@Schuberth2023; @Yu2023].\index{construct!formative}\index{confirmatory composite analysis}
 
-Below is an example using confirmatory composite analysis (adapted from: https://confirmatorycompositeanalysis.com/tutorials-lavaan; archived at: https://perma.cc/7LSU-PTZR):
+Below is an example of confirmatory composite analysis using the Henseler-Ogasawara specification (adapted from: https://confirmatorycompositeanalysis.com/tutorials-lavaan; archived at: https://perma.cc/7LSU-PTZR) [@Schuberth2023]:
 
 ```{r}
 formativeModel3_syntax <- '
@@ -558,12 +558,15 @@ formativeModel3_syntax <- '
   nu12 =~ 0*v1 + 1*v2 + l33*v3 + l43*v4
   nu13 =~ 0*v1 + 0*v2 + l34*v3 + 1*v4
   
+  # Label the variances of the excrescent variables
+  
   nu11 ~~ varnu11*nu11
   nu12 ~~ varnu12*nu12
   nu13 ~~ varnu13*nu13
   
-  # Specification of the covariances among the latent variables
-  formative ~~ reflective
+  # Specify the effect of formative on reflective
+  
+  reflective ~ formative
   
   # The H-O specification assumes that the excrescent variables are uncorrelated.
   # Therefore, the covariance between the excrescent variables is fixed to 0:
@@ -604,7 +607,7 @@ formativeModel3_syntax <- '
   # Calculate the variances
   varv1 := l11^2*varformative + varnu11
   varv2 := l21^2*varformative + l22^2*varnu11 + varnu12
-  varv3 := varformative + l32^2*varnu11 + l33^2 * varnu12 + l34^2*varnu13
+  varv3 := varformative + l32^2*varnu11 + l33^2*varnu12 + l34^2*varnu13
   varv4 := l41^2*varformative + l42^2*varnu11 + l43^2*varnu12 + varnu13
   
   # Calculate the standardized weights to form the formative latent variable
@@ -627,6 +630,79 @@ fitMeasures(formativeModel3Fit, "df")
 
 semPaths(
   formativeModel3Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+Below is an example of confirmatory composite analysis using the refined Henseler-Ogasawara specification [@Yu2023]:
+
+```{r, include = FAlSE}
+# The model below is not (yet) correctly specified
+
+formativeModel4_syntax <- '
+  # Specification of the reflective latent factor
+  
+  reflective =~ y1 + y2 + y3 + y4
+  
+  # Specification of the associations between the observed variables v1 - v4
+  # and the emergent variable "formative" in terms of composite loadings.
+  
+  formative =~ NA*v1 + l11*v1 + l21*v2 + 1*v3 + l41*v4
+  
+  formative ~~ varformative*formative
+  
+  # Specification of the associations between the observed variables v1 - v4
+  # and their excrescent variables in terms of composite loadings.
+  
+  nu1 =~ l12*v1 + 1*v2
+  nu2 =~ l23*v2 + 1*v3
+  nu3 =~ l34*v3 + 1*v4
+  
+  # Label the variances of the excrescent variables
+  
+  nu1 ~~ varnu1*nu1
+  nu2 ~~ varnu2*nu2
+  nu3 ~~ varnu3*nu3
+  
+  # Specify the effect of formative on reflective
+  reflective ~ formative
+  
+  # Constrain the covariances between excrescent variables and
+  # other variables in the structural model to zero. Moreover,
+  # label the covariances among excrescent variables.
+  
+  nu1 ~~ 0*formative + 0*reflective + cov12*nu2 + cov13*nu3
+  nu2 ~~ 0*formative + 0*reflective + cov23*nu3
+  nu3 ~~ 0*formative + 0*reflective
+  
+  # Fix the variances of the disturbance terms to zero.
+  
+  v1 ~~ 0*v1
+  v2 ~~ 0*v2
+  v3 ~~ 0*v3
+  v4 ~~ 0*v4
+  
+  # Calculate the weights to form the formative latent variable
+  
+  # Calculate the variances
+  
+  # Calculate the standardized weights to form the formative latent variable
+'
+
+formativeModel4Fit <- sem(
+  formativeModel4_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+formativeModel4Parameters <- parameterEstimates(formativeModel4Fit)
+formativeModel4Parameters
+
+fitMeasures(formativeModel4Fit, "df")
+
+semPaths(
+  formativeModel4Fit,
   what = "Std.all",
   layout = "tree2",
   edge.label.cex = 0.8)
