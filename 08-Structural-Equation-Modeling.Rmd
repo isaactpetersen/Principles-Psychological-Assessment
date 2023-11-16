@@ -637,9 +637,7 @@ semPaths(
 
 Below is an example of confirmatory composite analysis using the refined Henseler-Ogasawara specification [@Yu2023]:
 
-```{r, include = FALSE, eval = FALSE}
-# The model below is not (yet) correctly specified
-
+```{r}
 formativeModel4_syntax <- '
   # Specification of the reflective latent factor
   
@@ -655,7 +653,7 @@ formativeModel4_syntax <- '
   # Specification of the associations between the observed variables v1 - v4
   # and their excrescent variables in terms of composite loadings.
   
-  nu1 =~ 1*v2 + l12*v1
+  nu1 =~ 1*v2 + l12*v1 
   nu2 =~ 1*v3 + l23*v2
   nu3 =~ 1*v4 + l34*v3
   
@@ -684,10 +682,22 @@ formativeModel4_syntax <- '
   v4 ~~ 0*v4
   
   # Calculate the weights to form the formative latent variable
+  w1 := ((1)*((1)*((1)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
+  w2 := -((l12)*((1)*((1)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
+  w3 := ((l12)*((l23)*((1)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
+  w4 := -((l12)*((l23)*((l34)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
   
   # Calculate the variances
+  varv1 := ((l11) * (varformative)) * (l11) + ((l11) * (varnu1)) * (l11)
+  varv2 := ((l21) * (varformative)) * (l21) + ((1) * (varnu1) + (l23) * (cov12)) * (1) + ((1) * (cov12) + (l23) * (varnu2)) * (l23)
+  varv3 := ((1) * (varformative)) * (1) + ((1) * (varnu2) + (l34) * (cov23)) * (1) + ((1) * (cov23) + (l34) * (varnu3)) * (l34)
+  varv4 := ((l41) * (varformative)) * (l41) + ((1) * (varnu3)) * (1)
   
   # Calculate the standardized weights to form the formative latent variable
+  # wstdv1:=((w1) * (sqrt(varv1))) * (1/sqrt(varformative))
+  # wstdv2:=((w2) * (sqrt(varv2))) * (1/sqrt(varformative))
+  # wstdv3:=((w3) * (sqrt(varv3))) * (1/sqrt(varformative))
+  # wstdv4:=((w4) * (sqrt(varv4))) * (1/sqrt(varformative))
 '
 
 formativeModel4Fit <- sem(
