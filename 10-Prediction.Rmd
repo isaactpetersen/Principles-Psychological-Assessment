@@ -3689,29 +3689,40 @@ The probability of having the condition if the person has a positive test on Tes
 ### Probability Nomogram {#nomogram}
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `nomogrammer()` function that creates a probability nomogram plot, adapted from\index{petersenlab package}\index{probability!nomogram} https://github.com/achekroud/nomogrammer.
-In Figure \@ref(fig:nomogramPlot), the probability nomogram is generated using the [base rate](#pretestProbability) of the condition and the [sensitivity](#sensitivity) and [specificity](#specificity) of the test at a given cutoff.\index{petersenlab package}\index{probability!nomogram}\index{base rate}\index{sensitivity}\index{specificity}\index{cutoff}
+In Figure \@ref(fig:nomogramPlot), the probability nomogram is generated using the number of [true positives](#truePositive), [true negatives](#trueNegative), [false positives](#falsePositive), and [false negatives](#falseNegative) at a given cutoff.\index{petersenlab package}\index{probability!nomogram}\index{true positive}\index{true negative}\index{false positive}\index{false negative}\index{cutoff}
 
 ```{r nomogramPlot, fig.align = "center", fig.cap = "Probability Nomogram."}
 nomogrammer(
-  Prevalence = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
-  Sens = sensitivity(TP = TPvalue, FN = FNvalue),
-  Spec = specificity(TN = TNvalue, FP = FPvalue)
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue
 )
 ```
 
 The blue line indicates the [posterior probability](#posttestProbability) of the condition given a positive test.\index{petersenlab package}\index{probability!nomogram}\index{probability!posttest}
 The pink line indicates the [posterior probability](#posttestProbability) of the condition given a negative test.\index{petersenlab package}\index{probability!nomogram}\index{probability!posttest}
+One can also generate the probability nomogram from the [base rate](#pretestProbability) and the [sensitivity](#sensitivity) and [specificity](#specificity) of the test at a given cutoff:\index{petersenlab package}\index{probability!nomogram}\index{base rate}\index{sensitivity}\index{specificity}\index{cutoff}
+
+```{r, eval = FALSE}
+nomogrammer(
+  pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
+  SN = sensitivity(TP = TPvalue, FN = FNvalue),
+  SP = specificity(TN = TNvalue, FP = FPvalue)
+)
+```
+
 One can also generate the probability nomogram from the [base rate](#pretestProbability), [positive likelihood ratio](#positiveLikelihoodRatio), and [negative likelihood ratio](#negativeLikelihoodRatio) at a given cutoff:\index{petersenlab package}\index{probability!nomogram}\index{positive likelihood ratio}\index{negative likelihood ratio}\index{cutoff}
 
 ```{r, eval = FALSE}
 nomogrammer(
-  Prevalence = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
-  Plr = positiveLikelihoodRatio(
+  pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
+  PLR = positiveLikelihoodRatio(
     TP = TPvalue,
     TN = TNvalue,
     FP = FPvalue,
     FN = FNvalue),
-  Nlr = negativeLikelihoodRatio(
+  NLR = negativeLikelihoodRatio(
     TP = TPvalue,
     TN = TNvalue,
     FP = FPvalue,
