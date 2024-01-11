@@ -144,7 +144,7 @@ Using the clinical judgment method of prediction, all gathered information is co
 The clinician selects, measures, and combines risk factors and produces risk estimate solely according to clinical experience and judgment.
 In the actuarial or statistical method of prediction (i.e., statistical prediction rules), information is gathered and combined systematically in an evidence-based statistical prediction formula, and established cutoffs are used.
 
-Clinicians tend to over-estimate exceptions to the established rules (base rate neglect).
+Clinicians tend to overestimate exceptions to the established rules (base rate neglect).
 A clinician's decision is likely to be influenced by past experiences.
 Clinicians give weight to less relevant information, and often give too much weight to singular variables.
 Clinicians are susceptible to representative schema biases.
