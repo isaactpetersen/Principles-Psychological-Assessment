@@ -1153,15 +1153,25 @@ accuracyEstimates <- accuracyOverall(
   dropUndefined = TRUE)
 ```
 
+```{r, include = FALSE}
+numColumns <- ncol(accuracyEstimates)
+
+digits <- rep(2, length.out = numColumns)
+for (j in seq_len(numColumns)) {
+  if (is.numeric(accuracyEstimates[, j])) accuracyEstimates[, j] <- sprintf(sprintf('$%%.%sf$', digits[j]), accuracyEstimates[, j])
+}
+```
+
 ```{r accuracyAcrossCutoffs, echo = FALSE}
 accuracyEstimates  %>%
   t %>%
-  round(., 2) %>% 
   kable(.,
   caption = "Estimates of Prediction Accuracy Across Cutoffs.",
   format = "latex",
   booktabs = TRUE,
-  linesep = "")
+  linesep = "",
+  align = c("l","r"),
+  escape = FALSE)
 ```
 
 ### General Prediction Accuracy {#generalPredictionAccuracy}
@@ -1985,8 +1995,14 @@ accuracyEstimatesAtCutoff <- accuracyAtCutoff(
 ```{r accuracyAtGivenCutoff, echo = FALSE}
 accuracyEstimatesAtCutoffTable <- accuracyEstimatesAtCutoff %>% 
   t() %>% 
-  round(., 2) %>%
   data.frame
+
+numColumns <- ncol(accuracyEstimatesAtCutoffTable)
+
+digits <- rep(2, length.out = numColumns)
+for (j in seq_len(numColumns)) {
+  if (is.numeric(accuracyEstimatesAtCutoffTable[, j])) accuracyEstimatesAtCutoffTable[, j] <- sprintf(sprintf('$%%.%sf$', digits[j]), accuracyEstimatesAtCutoffTable[, j])
+}
 
 accuracyEstimatesAtCutoffTable$label <- row.names(accuracyEstimatesAtCutoffTable)
 accuracyEstimatesAtCutoffTable$label[which(accuracyEstimatesAtCutoffTable$label == "TP")] <- "True Positives"
@@ -2038,7 +2054,9 @@ accuracyEstimatesAtCutoffTable %>%
   col.names = c("Index","Value"),
   format = "latex",
   booktabs = TRUE,
-  linesep = "")
+  linesep = "",
+  align = c("l","r"),
+  escape = FALSE)
 ```
 
 ### Confusion Matrix {#confusionMatrix}

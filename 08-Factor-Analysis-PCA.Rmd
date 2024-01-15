@@ -665,6 +665,13 @@ summaryTableTransposed <- summaryTable[-1] %>%
   as.data.frame() %>% 
   setNames(summaryTable$variable) %>% 
   round(., digits = 2)
+
+numColumns <- ncol(summaryTableTransposed)
+
+digits <- rep(2, length.out = numColumns)
+for (j in seq_len(numColumns)) {
+  if (is.numeric(summaryTableTransposed[, j])) summaryTableTransposed[, j] = sprintf(sprintf('$%%.%sf$', digits[j]), summaryTableTransposed[, j])
+}
 ```
 
 ```{r descriptiveStats, echo = FALSE}
@@ -711,6 +718,17 @@ corTable3 <- cor.table(
   HolzingerSwineford1939[,vars],
   type = "manuscriptBig",
   dig = 2)
+
+numColumns <- ncol(corTable1)
+
+for (j in seq_len(numColumns)) {
+  corTable1[, j] <- paste("$", corTable1[, j], "$", sep = "")
+  corTable2[, j] <- paste("$", corTable2[, j], "$", sep = "")
+  corTable3[, j] <- paste("$", corTable3[, j], "$", sep = "")
+}
+
+corTable2[corTable2 == "$$"] <- ""
+corTable3[corTable3 == "$$"] <- ""
 ```
 
 ```{r corTable1, echo = FALSE}
@@ -741,7 +759,9 @@ corTable3 %>%
   caption = "Correlation Matrix.",
   format = "latex",
   booktabs = TRUE,
-  linesep = "")
+  linesep = "",
+  align = c("r","r","r","r","r","r","r","r","r","r"),
+  escape = "FALSE")
 ```
 
 Pairs panel plots were generated using the `psych` package [@R-psych].\index{correlation}
@@ -1747,6 +1767,15 @@ esem_loadings <- parameterEstimates(
   dplyr::rename(item = rhs, latent = lhs, loading = est)
 ```
 
+```{r, include = FALSE}
+numColumns <- ncol(esem_loadings)
+
+digits <- rep(3, length.out = numColumns)
+for (j in seq_len(numColumns)) {
+  if (is.numeric(esem_loadings[, j])) esem_loadings[, j] = sprintf(sprintf('$%%.%sf$', digits[j]), esem_loadings[, j])
+}
+```
+
 ```{r esemLoadings, echo = FALSE}
 esem_loadings %>% 
   kable(
@@ -1755,7 +1784,9 @@ esem_loadings %>%
     caption = "Factor Loadings from Exploratory Factor Analysis for Use in Exploratory Structural Equation Modeling.",
     format = "latex",
     booktabs = TRUE,
-    linesep = c("", "", "", "", "", "", "", "", "\\addlinespace"))
+    linesep = c("", "", "", "", "", "", "", "", "\\addlinespace"),
+    align = c("l","l","r"),
+    escape = FALSE)
 ```
 
 In [ESEM](#efa-cfa-esem), you specify one anchor item for each latent factor.\index{structural equation modeling!exploratory}
