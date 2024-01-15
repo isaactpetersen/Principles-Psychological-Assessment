@@ -745,6 +745,7 @@ for (j in seq_len(numColumns)) {
   corTable3[, j] <- paste("$", corTable3[, j], "$", sep = "")
 }
 
+corTable1[corTable1 == "$NA$"] <- "NA"
 corTable2[corTable2 == "$$"] <- ""
 corTable3[corTable3 == "$$"] <- ""
 ```
@@ -1786,16 +1787,18 @@ esem_loadings <- parameterEstimates(
 ```
 
 ```{r, include = FALSE}
-numColumns <- ncol(esem_loadings)
+esem_loadingsTable <- esem_loadings
+
+numColumns <- ncol(esem_loadingsTable)
 
 digits <- rep(3, length.out = numColumns)
 for (j in seq_len(numColumns)) {
-  if (is.numeric(esem_loadings[, j])) esem_loadings[, j] = sprintf(sprintf('$%%.%sf$', digits[j]), esem_loadings[, j])
+  if (is.numeric(esem_loadingsTable[, j])) esem_loadingsTable[, j] = sprintf(sprintf('$%%.%sf$', digits[j]), esem_loadingsTable[, j])
 }
 ```
 
 ```{r esemLoadings, echo = FALSE}
-esem_loadings %>% 
+esem_loadingsTable %>% 
   kable(
     .,
     col.names = c("Item", "Latent", "Loading"),
