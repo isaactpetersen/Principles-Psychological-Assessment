@@ -680,7 +680,9 @@ summaryTableTransposed %>%
   caption = "Descriptive Statistics.",
   format = "latex",
   booktabs = TRUE,
-  linesep = "") %>%
+  linesep = "",
+  align = c("r","r","r","r","r","r","r","r","r","r"),
+  escape = FALSE) %>%
   kable_styling(latex_options = "scale_down")
 ```
 
@@ -722,6 +724,22 @@ corTable3 <- cor.table(
 numColumns <- ncol(corTable1)
 
 for (j in seq_len(numColumns)) {
+  # Vectorized replacement for dagger
+  corTable1[, j] <- gsub("†", "^{†}", corTable1[, j])
+  corTable2[, j] <- gsub("†", "^{†}", corTable2[, j])
+  
+  # Vectorized replacement for three asterisks
+  corTable1[, j] <- gsub("\\*\\*\\*", "^{\\***}", corTable1[, j])
+  corTable2[, j] <- gsub("\\*\\*\\*", "^{\\***}", corTable2[, j])
+  
+  # Vectorized replacement for two asterisks
+  corTable1[, j] <- gsub("\\*\\*(\\b|$)", "^{\\**}", corTable1[, j], perl = TRUE)
+  corTable2[, j] <- gsub("\\*\\*(\\b|$)", "^{\\**}", corTable2[, j], perl = TRUE)
+  
+  # Vectorized replacement for one asterisk
+  corTable1[, j] <- gsub("\\*(\\b|$)", "^{\\*}", corTable1[, j], perl = TRUE)
+  corTable2[, j] <- gsub("\\*(\\b|$)", "^{\\*}", corTable2[, j], perl = TRUE)
+  
   corTable1[, j] <- paste("$", corTable1[, j], "$", sep = "")
   corTable2[, j] <- paste("$", corTable2[, j], "$", sep = "")
   corTable3[, j] <- paste("$", corTable3[, j], "$", sep = "")
