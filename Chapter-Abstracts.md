@@ -15,7 +15,7 @@ The assessments one uses should be supported by science.
 The book provides analysis scripts in the free software, `R`.
 Many `R` functions in this book are available from the `petersenlab` package.
 
-Assessment is the gathering of information to improve decision making.
+Assessment is the gathering of information to improve decision-making.
 Many assessment approaches can be used to assess people's thoughts, emotions, and behaviors, including self-report questionnaires, questionnaires reported by others, interviews, observations, biopsychological assessments, performance-based assessments, archival approaches, and combinations of these.
 However, there has been a proliferation of pseudoscience in assessment, including harmful and inaccurate assessments, an ethical problem.
 It is important to understand the characteristics of science that distinguish it from pseudoscience.
@@ -95,7 +95,7 @@ Many people use PCA when they should use factor analysis instead, such as when t
 Nevertheless, factor analysis has weaknesses including indeterminacy—i.e., a given data matrix can produce many different factor models, and you cannot determine which one is correct based on the data matrix alone.
 There are many decisions to make in factor analysis, including, (1) what variables to include in the model and how to scale them, (2) the method of factor extraction, (3) the kind of factor analysis: exploratory (EFA) or confirmatory (CFA), (4) how many factors to retain, (5) if EFA, whether and how to rotate factors, and (6) model selection and interpretation.
 These decisions can have important impacts on the resulting solution.
-Thus, it can be helpful for theory and interpretability to help guide decision making when conducting factor analysis.
+Thus, it can be helpful for theory and interpretability to help guide decision-making when conducting factor analysis.
 
 # Chapter 7 Abstract "Structural Equation Modeling":
 
@@ -337,7 +337,7 @@ Recommendations include developing and using appropriate and valid measures for 
 
 # Book Synopsis
 
-Assessment is the gathering of information to improve decision making.
+Assessment is the gathering of information to improve decision-making.
 There are many approaches to psychological assessment that can be used to assess people's thoughts, emotions, and behaviors, including self-report questionnaires, questionnaires reported by others, interviews, observations, biopsychological assessments, performance-based assessments, archival approaches, and combinations of these.
 However, the field has paid insufficient attention to measurement.
 There has been a proliferation of pseudoscience in assessment, including inaccurate assessments that can potentially cause harm.
