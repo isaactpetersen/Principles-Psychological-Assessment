@@ -1324,7 +1324,7 @@ ggplot(goodMeasureInfo, aes(theta, information)) +
   theme_bw()
 ```
 
-## Assumptions of IRT {#assumptions-irt}
+### Assumptions of IRT {#assumptions-irt}
 
 IRT has several assumptions:\index{item response theory!assumptions}
 
@@ -1447,6 +1447,14 @@ raschModel <- mirt(
 ```{r}
 summary(raschModel)
 coef(raschModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Factor Scores {#irt-onePLfactorScores}
+
+One can obtain factor scores (i.e., theta; and their associated standard errors) for each participant using the `fscores()` function.
+
+```{r}
+raschModel_factorScores <- fscores(raschModel, full.scores.SE = TRUE)
 ```
 
 ### Plots {#irt-onePLplots}
@@ -1574,6 +1582,8 @@ modificationindices(onePLModel_cfa_fit, sort. = TRUE)
 
 compRelSEM(onePLModel_cfa_fit)
 AVE(onePLModel_cfa_fit)
+
+onePLModel_cfa_factorScores <- lavPredict(onePLModel_cfa_fit)
 ```
 
 A path diagram of the one-parameter item factor analysis is in Figure \@ref(fig:onePLifa).\index{item response theory!one-parameter model}
@@ -1590,7 +1600,6 @@ semPaths(
 
 A Rasch model can also be fit in a mixed model framework.\index{mixed model}\index{item response theory!one-parameter model}
 The Rasch model below was fit using the `lme4` package [@R-lme4].\index{mixed model}\index{item response theory!one-parameter model}
-
 
 First, we convert the data from wide form to long form for the mixed model:
 
@@ -1621,6 +1630,22 @@ raschModel_mixed_probit <- glmer(
 summary(raschModel_mixed_probit)
 ```
 
+One can extract item difficulty and people's factor scores (i.e., theta), as adapted from James Uanhoro (https://www.jamesuanhoro.com/post/2018/01/02/using-glmer-to-perform-rasch-analysis/; archived at: https://perma.cc/84WP-TQBG):
+
+```{r}
+# Item difficulty
+item.diff <- -1 * coef(summary(raschModel_mixed_logit))[, 1] # Regression coefficients * -1
+item.diff[1] <- -1 * sum(item.diff[2:5]) # Difficulty of the first item is the sum of all others
+item.diff <- data.frame(
+  item = paste("Item", 1:5, sep = "."),
+  item.diff = as.numeric(item.diff))
+
+head(item.diff)
+
+# Factor Scores (Theta)
+raschModel_mixed_logit_theta <- ranef(raschModel_mixed_logit)$ID[, 1]
+```
+
 ## Two-Parameter Logistic Model {#irt-twoPL}
 
 A two-parameter logistic (2PL) IRT model is a model fit to dichotomous data, which estimates a different [difficulty](#itemDifficulty) ($b$) and [discrimination](#itemDiscrimination) ($a$) parameter for each item.\index{item response theory!two-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}
@@ -1641,6 +1666,12 @@ twoPLModel <- mirt(
 ```{r}
 summary(twoPLModel)
 coef(twoPLModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Factor Scores {#irt-twoPLfactorScores}
+
+```{r}
+twoPLModel_factorScores <- fscores(twoPLModel, full.scores.SE = TRUE)
 ```
 
 ### Plots {#irt-twoPLplots}
@@ -1823,6 +1854,12 @@ summary(twoPL2FactorModel)
 coef(twoPL2FactorModel, simplify = TRUE)
 ```
 
+### Factor Scores {#irt-twoPLmultidimensionalFactorScores}
+
+```{r}
+twoPL2FactorModel_factorScores <- fscores(twoPL2FactorModel, full.scores.SE = TRUE)
+```
+
 ### Compare model fit {#irt-twoPLmultidimensionalCompare}
 
 The modified model with two factors and the original one-factor model are considered "nested" models.\index{nested model}\index{item response theory!multidimensional model}
@@ -1968,6 +2005,12 @@ summary(threePLModel)
 coef(threePLModel, simplify = TRUE, IRTpars = TRUE)
 ```
 
+### Factor Scores {#irt-threePLfactorScores}
+
+```{r}
+threePLModel_factorScores <- fscores(threePLModel, full.scores.SE = TRUE)
+```
+
 ### Plots {#irt-threePLplots}
 
 #### Test Curves {#irt-threePLtestCurves}
@@ -2067,6 +2110,12 @@ fourPLModel <- mirt(
 ```{r}
 summary(fourPLModel)
 coef(fourPLModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Factor Scores {#irt-fourPLfactorScores}
+
+```{r}
+fourPLModel_factorScores <- fscores(fourPLModel, full.scores.SE = TRUE)
 ```
 
 ### Plots {#irt-fourPLplots}
@@ -2171,6 +2220,12 @@ gradedResponseModel <- mirt(
 ```{r}
 summary(gradedResponseModel)
 coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)
+```
+
+### Factor Scores {#irt-gradedResponseModelFactorScores}
+
+```{r}
+gradedResponseModel_factorScores <- fscores(gradedResponseModel, full.scores.SE = TRUE)
 ```
 
 ### Plots {#irt-gradedResponseModelPlots}
