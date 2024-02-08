@@ -1333,7 +1333,7 @@ IRT has several assumptions:\index{item response theory!assumptions}
 - item invariance\index{item response theory!assumptions}
 - local independence\index{item response theory!assumptions}
 
-### Monotonicity {#monotonicity-irt}
+#### Monotonicity {#monotonicity-irt}
 
 The monotonicity assumption holds that a person's probability of endorsing a higher level on the item increases as a person's level on the latent construct increases.\index{item response theory!assumptions}
 For instance, for each item assessing externalizing problems, as a child increases in their level of externalizing problems, they are expected to be rated with a higher level on that item.\index{item response theory!assumptions}
@@ -1341,21 +1341,21 @@ Monotonicity can be evaluated in multiple ways.\index{item response theory!assum
 For instance, monotonicity can be evaluated using visual inspection of empirical [item characteristic curves](#icc).\index{item response theory!assumptions}\index{item response theory!item characteristic curve}
 Another way to evaluate monotonicity is with Mokken scale analysis, such as using the `mokken` package in `R`.\index{item response theory!assumptions}
 
-### Unidimensionality {#unidimensionality-irt}
+#### Unidimensionality {#unidimensionality-irt}
 
 The unidimensionality assumption holds that the items have one predominant dimension, which reflects the underlying (latent) construct.\index{item response theory!assumptions}\index{unidimensional}
 The dimensionality of a set of items can be evaluated using [factor analysis](#factorAnalysis).\index{item response theory!assumptions}\index{factor analysis}
 Although items that are intended to assess a given latent latent construct are expected to be unidimensional, models have been developed that allow multiple latent dimensions, as shown in Section \@ref(irt-twoPLmultidimensional).\index{item response theory!assumptions}\index{multidimensional}\index{unidimensional}
 These [multidimensional IRT models](#irt-twoPLmultidimensional) allow borrowing information from a given latent factor in the estimation of other latent factor(s) to account for the covariation.\index{item response theory!assumptions}\index{multidimensional}
 
-### Item Invariance {#itemInvariance-irt}
+#### Item Invariance {#itemInvariance-irt}
 
 The item invariance assumption holds that the items function similarly (i.e., have the same parameters) for all people and subgroups in the population.\index{item response theory!assumptions}
 The extent to which items may violate the item invariance assumption can be evaluated empirically using tests of [differential item functioning](#dif) (DIF).\index{item response theory!assumptions}\index{item response theory!differential item functioning}
 Tests of [measurement invariance](#measurementInvariance) are the equivalent of tests of [differential item functioning](#dif) for [factor analysis](#factorAnalysis)/[structural equation models](#sem).\index{item response theory!assumptions}\index{item response theory!differential item functioning}\index{structural equation modeling!measurement invariance}\index{factor analysis}\index{structural equation modeling}
 Test of [differential item functioning](#dif) and [measurement invariance](#measurementInvariance) are described in the chapter on [test bias](#bias).\index{item response theory!assumptions}\index{item response theory!differential item functioning}\index{structural equation modeling!measurement invariance}
 
-### Local Independence {#localIndependence-irt}
+#### Local Independence {#localIndependence-irt}
 
 The local independence assumptions holds that the items are uncorrelated when controlling for the latent dimension.\index{item response theory!assumptions}
 That is, IRT models assume that the items' errors (residuals) are uncorrelated with each other.\index{item response theory!assumptions}
@@ -1630,16 +1630,15 @@ One can extract item difficulty and people's factor scores (i.e., theta), as ada
 
 ```{r}
 # Item difficulty
-item.diff <- -1 * coef(summary(raschModel_mixed_logit))[, 1] # Regression coefficients * -1
-item.diff[1] <- -1 * sum(item.diff[2:5]) # Difficulty of the first item is the sum of all others
+item.diff <- -1 * coef(summary(raschModel_mixed_logit))[,"Estimate"] # Regression coefficients * -1
 item.diff <- data.frame(
   item = paste("Item", 1:5, sep = "."),
   item.diff = as.numeric(item.diff))
 
-head(item.diff)
+item.diff
 
 # Factor Scores (Theta)
-raschModel_mixed_logit_theta <- ranef(raschModel_mixed_logit)$ID[, 1]
+raschModel_mixed_logit_theta <- ranef(raschModel_mixed_logit)$ID[,"(Intercept)"]
 ```
 
 ## Two-Parameter Logistic Model {#irt-twoPL}
