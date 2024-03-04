@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 5 Validity | Principles of Psychological Assessment: With Applied Examples in R</title>
   <meta name="description" content="This is a textbook on Principles of Psychological Assessment. The goal of this book is to provide computational examples to apply principles of psychological assessment into practice." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 5 Validity | Principles of Psychological Assessment: With Applied Examples in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2024-02-24" />
+<meta name="date" content="2024-03-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -70,7 +70,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -2176,7 +2177,7 @@ div.csl-indent {
 </blockquote>
 <div id="overview-validity" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Overview of Validity<a href="validity.html#overview-validity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>According to the <em>Standards for Educational and Psychological Testing</em> <span class="citation">(<a href="#ref-AERA2014" role="doc-biblioref">American Educational Research Association et al., 2014, p. 11</a>)</span>, measurement validity is “the degree to which evidence and theory support the interpretations of test scores for proposed uses of tests.”
+<p>According to the <em>Standards for Educational and Psychological Testing</em> <span class="citation">(<a href="#ref-AERA2014">American Educational Research Association et al., 2014, p. 11</a>)</span>, measurement validity is “the degree to which evidence and theory support the interpretations of test scores for proposed uses of tests.”
 We summarized <a href="reliability.html#reliability">reliability</a> with three words: repeatability, consistency, and precision.
 A summary of validity in three words is accuracy, utility, and meaningfulness.
 Validity is tied to the <em>interpretation</em> of a measure’s scores for the <em>proposed uses</em>, not (just) to the measure itself.
@@ -2190,24 +2191,24 @@ Thus, as <em>the Standards</em> indicate, it is incorrect to use the unqualified
 <div id="loadLibraries-validity" class="section level3 hasAnchor" number="5.2.1">
 <h3><span class="header-section-number">5.2.1</span> Load Libraries<a href="validity.html#loadLibraries-validity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="validity.html#cb186-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;petersenlab&quot;</span>) <span class="co">#to install: install.packages(&quot;remotes&quot;); remotes::install_github(&quot;DevPsyLab/petersenlab&quot;)</span></span>
-<span id="cb186-2"><a href="validity.html#cb186-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;lavaan&quot;</span>)</span>
-<span id="cb186-3"><a href="validity.html#cb186-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semPlot&quot;</span>)</span>
-<span id="cb186-4"><a href="validity.html#cb186-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rockchalk&quot;</span>)</span>
-<span id="cb186-5"><a href="validity.html#cb186-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semTools&quot;</span>)</span>
-<span id="cb186-6"><a href="validity.html#cb186-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semPlot&quot;</span>)</span>
-<span id="cb186-7"><a href="validity.html#cb186-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;kableExtra&quot;</span>)</span>
-<span id="cb186-8"><a href="validity.html#cb186-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MASS&quot;</span>)</span>
-<span id="cb186-9"><a href="validity.html#cb186-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;psych&quot;</span>)</span>
-<span id="cb186-10"><a href="validity.html#cb186-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;simstandard&quot;</span>)</span>
-<span id="cb186-11"><a href="validity.html#cb186-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MOTE&quot;</span>)</span>
-<span id="cb186-12"><a href="validity.html#cb186-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb186-13"><a href="validity.html#cb186-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span>
-<span id="cb186-14"><a href="validity.html#cb186-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;knitr&quot;</span>)</span>
-<span id="cb186-15"><a href="validity.html#cb186-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rmarkdown&quot;</span>)</span>
-<span id="cb186-16"><a href="validity.html#cb186-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;bookdown&quot;</span>)</span>
-<span id="cb186-17"><a href="validity.html#cb186-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
-<span id="cb186-18"><a href="validity.html#cb186-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;DT&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="validity.html#cb186-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;petersenlab&quot;</span>) <span class="co">#to install: install.packages(&quot;remotes&quot;); remotes::install_github(&quot;DevPsyLab/petersenlab&quot;)</span></span>
+<span id="cb186-2"><a href="validity.html#cb186-2" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;lavaan&quot;</span>)</span>
+<span id="cb186-3"><a href="validity.html#cb186-3" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semPlot&quot;</span>)</span>
+<span id="cb186-4"><a href="validity.html#cb186-4" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rockchalk&quot;</span>)</span>
+<span id="cb186-5"><a href="validity.html#cb186-5" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semTools&quot;</span>)</span>
+<span id="cb186-6"><a href="validity.html#cb186-6" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;semPlot&quot;</span>)</span>
+<span id="cb186-7"><a href="validity.html#cb186-7" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;kableExtra&quot;</span>)</span>
+<span id="cb186-8"><a href="validity.html#cb186-8" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MASS&quot;</span>)</span>
+<span id="cb186-9"><a href="validity.html#cb186-9" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;psych&quot;</span>)</span>
+<span id="cb186-10"><a href="validity.html#cb186-10" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;simstandard&quot;</span>)</span>
+<span id="cb186-11"><a href="validity.html#cb186-11" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MOTE&quot;</span>)</span>
+<span id="cb186-12"><a href="validity.html#cb186-12" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
+<span id="cb186-13"><a href="validity.html#cb186-13" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tinytex&quot;</span>)</span>
+<span id="cb186-14"><a href="validity.html#cb186-14" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;knitr&quot;</span>)</span>
+<span id="cb186-15"><a href="validity.html#cb186-15" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rmarkdown&quot;</span>)</span>
+<span id="cb186-16"><a href="validity.html#cb186-16" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;bookdown&quot;</span>)</span>
+<span id="cb186-17"><a href="validity.html#cb186-17" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;here&quot;</span>)</span>
+<span id="cb186-18"><a href="validity.html#cb186-18" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;DT&quot;</span>)</span></code></pre></div>
 </details>
 </div>
 <div id="prepareData-validity" class="section level3 hasAnchor" number="5.2.2">
@@ -2218,108 +2219,108 @@ Thus, as <em>the Standards</em> indicate, it is incorrect to use the unqualified
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="validity.html#cb187-1" aria-hidden="true" tabindex="-1"></a>sampleSize <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb187-2"><a href="validity.html#cb187-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-3"><a href="validity.html#cb187-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb187-4"><a href="validity.html#cb187-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-5"><a href="validity.html#cb187-5" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>)</span>
-<span id="cb187-6"><a href="validity.html#cb187-6" aria-hidden="true" tabindex="-1"></a>standardDeviations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>)</span>
-<span id="cb187-7"><a href="validity.html#cb187-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-8"><a href="validity.html#cb187-8" aria-hidden="true" tabindex="-1"></a>correlationMatrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(.<span class="dv">7</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb187-9"><a href="validity.html#cb187-9" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb187-10"><a href="validity.html#cb187-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(correlationMatrix) <span class="ot">&lt;-</span> </span>
-<span id="cb187-11"><a href="validity.html#cb187-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;predictor&quot;</span>,<span class="st">&quot;criterion&quot;</span>)</span>
-<span id="cb187-12"><a href="validity.html#cb187-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-13"><a href="validity.html#cb187-13" aria-hidden="true" tabindex="-1"></a>covarianceMatrix <span class="ot">&lt;-</span> psych<span class="sc">::</span><span class="fu">cor2cov</span>(</span>
-<span id="cb187-14"><a href="validity.html#cb187-14" aria-hidden="true" tabindex="-1"></a>  correlationMatrix,</span>
-<span id="cb187-15"><a href="validity.html#cb187-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma =</span> standardDeviations)</span>
-<span id="cb187-16"><a href="validity.html#cb187-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-17"><a href="validity.html#cb187-17" aria-hidden="true" tabindex="-1"></a>mydataValidity <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(</span>
-<span id="cb187-18"><a href="validity.html#cb187-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> sampleSize,</span>
-<span id="cb187-19"><a href="validity.html#cb187-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> means,</span>
-<span id="cb187-20"><a href="validity.html#cb187-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sigma =</span> covarianceMatrix,</span>
-<span id="cb187-21"><a href="validity.html#cb187-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb187-22"><a href="validity.html#cb187-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-23"><a href="validity.html#cb187-23" aria-hidden="true" tabindex="-1"></a>errorToAddToPredictor <span class="ot">&lt;-</span> <span class="fl">3.20</span></span>
-<span id="cb187-24"><a href="validity.html#cb187-24" aria-hidden="true" tabindex="-1"></a>errorToAddToCriterion <span class="ot">&lt;-</span> <span class="fl">6.15</span></span>
-<span id="cb187-25"><a href="validity.html#cb187-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-26"><a href="validity.html#cb187-26" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1 <span class="ot">&lt;-</span> </span>
-<span id="cb187-27"><a href="validity.html#cb187-27" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
-<span id="cb187-28"><a href="validity.html#cb187-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
-<span id="cb187-29"><a href="validity.html#cb187-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-30"><a href="validity.html#cb187-30" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2 <span class="ot">&lt;-</span> </span>
-<span id="cb187-31"><a href="validity.html#cb187-31" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
-<span id="cb187-32"><a href="validity.html#cb187-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
-<span id="cb187-33"><a href="validity.html#cb187-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-34"><a href="validity.html#cb187-34" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1 <span class="ot">&lt;-</span> </span>
-<span id="cb187-35"><a href="validity.html#cb187-35" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
-<span id="cb187-36"><a href="validity.html#cb187-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
-<span id="cb187-37"><a href="validity.html#cb187-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-38"><a href="validity.html#cb187-38" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2 <span class="ot">&lt;-</span> </span>
-<span id="cb187-39"><a href="validity.html#cb187-39" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
-<span id="cb187-40"><a href="validity.html#cb187-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
-<span id="cb187-41"><a href="validity.html#cb187-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-42"><a href="validity.html#cb187-42" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
-<span id="cb187-43"><a href="validity.html#cb187-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">7.5</span>)</span>
-<span id="cb187-44"><a href="validity.html#cb187-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-45"><a href="validity.html#cb187-45" aria-hidden="true" tabindex="-1"></a>latentCorrelation <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
-<span id="cb187-46"><a href="validity.html#cb187-46" aria-hidden="true" tabindex="-1"></a>reliabilityPredictor <span class="ot">&lt;-</span> .<span class="dv">9</span></span>
-<span id="cb187-47"><a href="validity.html#cb187-47" aria-hidden="true" tabindex="-1"></a>reliabilityCriterion <span class="ot">&lt;-</span> .<span class="dv">85</span></span>
-<span id="cb187-48"><a href="validity.html#cb187-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-49"><a href="validity.html#cb187-49" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(sampleSize, <span class="dv">0</span> , <span class="dv">1</span>)</span>
-<span id="cb187-50"><a href="validity.html#cb187-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-51"><a href="validity.html#cb187-51" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="ot">&lt;-</span> latentCorrelation <span class="sc">*</span> </span>
-<span id="cb187-52"><a href="validity.html#cb187-52" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
-<span id="cb187-53"><a href="validity.html#cb187-53" aria-hidden="true" tabindex="-1"></a>    sampleSize,</span>
-<span id="cb187-54"><a href="validity.html#cb187-54" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>,</span>
-<span id="cb187-55"><a href="validity.html#cb187-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> latentCorrelation <span class="sc">^</span> <span class="dv">2</span>))</span>
-<span id="cb187-56"><a href="validity.html#cb187-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-57"><a href="validity.html#cb187-57" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM <span class="ot">&lt;-</span> reliabilityPredictor <span class="sc">*</span> </span>
-<span id="cb187-58"><a href="validity.html#cb187-58" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
-<span id="cb187-59"><a href="validity.html#cb187-59" aria-hidden="true" tabindex="-1"></a>    sampleSize,</span>
-<span id="cb187-60"><a href="validity.html#cb187-60" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>,</span>
-<span id="cb187-61"><a href="validity.html#cb187-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityPredictor <span class="sc">^</span> <span class="dv">2</span>))</span>
-<span id="cb187-62"><a href="validity.html#cb187-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb187-63"><a href="validity.html#cb187-63" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM <span class="ot">&lt;-</span> reliabilityCriterion <span class="sc">*</span> </span>
-<span id="cb187-64"><a href="validity.html#cb187-64" aria-hidden="true" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
-<span id="cb187-65"><a href="validity.html#cb187-65" aria-hidden="true" tabindex="-1"></a>    sampleSize,</span>
-<span id="cb187-66"><a href="validity.html#cb187-66" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>,</span>
-<span id="cb187-67"><a href="validity.html#cb187-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityCriterion <span class="sc">^</span> <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="validity.html#cb187-1" tabindex="-1"></a>sampleSize <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb187-2"><a href="validity.html#cb187-2" tabindex="-1"></a></span>
+<span id="cb187-3"><a href="validity.html#cb187-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
+<span id="cb187-4"><a href="validity.html#cb187-4" tabindex="-1"></a></span>
+<span id="cb187-5"><a href="validity.html#cb187-5" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>)</span>
+<span id="cb187-6"><a href="validity.html#cb187-6" tabindex="-1"></a>standardDeviations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>)</span>
+<span id="cb187-7"><a href="validity.html#cb187-7" tabindex="-1"></a></span>
+<span id="cb187-8"><a href="validity.html#cb187-8" tabindex="-1"></a>correlationMatrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(.<span class="dv">7</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb187-9"><a href="validity.html#cb187-9" tabindex="-1"></a><span class="fu">diag</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb187-10"><a href="validity.html#cb187-10" tabindex="-1"></a><span class="fu">rownames</span>(correlationMatrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(correlationMatrix) <span class="ot">&lt;-</span> </span>
+<span id="cb187-11"><a href="validity.html#cb187-11" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;predictor&quot;</span>,<span class="st">&quot;criterion&quot;</span>)</span>
+<span id="cb187-12"><a href="validity.html#cb187-12" tabindex="-1"></a></span>
+<span id="cb187-13"><a href="validity.html#cb187-13" tabindex="-1"></a>covarianceMatrix <span class="ot">&lt;-</span> psych<span class="sc">::</span><span class="fu">cor2cov</span>(</span>
+<span id="cb187-14"><a href="validity.html#cb187-14" tabindex="-1"></a>  correlationMatrix,</span>
+<span id="cb187-15"><a href="validity.html#cb187-15" tabindex="-1"></a>  <span class="at">sigma =</span> standardDeviations)</span>
+<span id="cb187-16"><a href="validity.html#cb187-16" tabindex="-1"></a></span>
+<span id="cb187-17"><a href="validity.html#cb187-17" tabindex="-1"></a>mydataValidity <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(</span>
+<span id="cb187-18"><a href="validity.html#cb187-18" tabindex="-1"></a>  <span class="at">n =</span> sampleSize,</span>
+<span id="cb187-19"><a href="validity.html#cb187-19" tabindex="-1"></a>  <span class="at">mu =</span> means,</span>
+<span id="cb187-20"><a href="validity.html#cb187-20" tabindex="-1"></a>  <span class="at">Sigma =</span> covarianceMatrix,</span>
+<span id="cb187-21"><a href="validity.html#cb187-21" tabindex="-1"></a>  <span class="at">empirical =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb187-22"><a href="validity.html#cb187-22" tabindex="-1"></a></span>
+<span id="cb187-23"><a href="validity.html#cb187-23" tabindex="-1"></a>errorToAddToPredictor <span class="ot">&lt;-</span> <span class="fl">3.20</span></span>
+<span id="cb187-24"><a href="validity.html#cb187-24" tabindex="-1"></a>errorToAddToCriterion <span class="ot">&lt;-</span> <span class="fl">6.15</span></span>
+<span id="cb187-25"><a href="validity.html#cb187-25" tabindex="-1"></a></span>
+<span id="cb187-26"><a href="validity.html#cb187-26" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1 <span class="ot">&lt;-</span> </span>
+<span id="cb187-27"><a href="validity.html#cb187-27" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
+<span id="cb187-28"><a href="validity.html#cb187-28" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
+<span id="cb187-29"><a href="validity.html#cb187-29" tabindex="-1"></a></span>
+<span id="cb187-30"><a href="validity.html#cb187-30" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2 <span class="ot">&lt;-</span> </span>
+<span id="cb187-31"><a href="validity.html#cb187-31" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictor <span class="sc">+</span> </span>
+<span id="cb187-32"><a href="validity.html#cb187-32" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToPredictor)</span>
+<span id="cb187-33"><a href="validity.html#cb187-33" tabindex="-1"></a></span>
+<span id="cb187-34"><a href="validity.html#cb187-34" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1 <span class="ot">&lt;-</span> </span>
+<span id="cb187-35"><a href="validity.html#cb187-35" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
+<span id="cb187-36"><a href="validity.html#cb187-36" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
+<span id="cb187-37"><a href="validity.html#cb187-37" tabindex="-1"></a></span>
+<span id="cb187-38"><a href="validity.html#cb187-38" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2 <span class="ot">&lt;-</span> </span>
+<span id="cb187-39"><a href="validity.html#cb187-39" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
+<span id="cb187-40"><a href="validity.html#cb187-40" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> errorToAddToCriterion)</span>
+<span id="cb187-41"><a href="validity.html#cb187-41" tabindex="-1"></a></span>
+<span id="cb187-42"><a href="validity.html#cb187-42" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor <span class="ot">&lt;-</span> mydataValidity<span class="sc">$</span>criterion <span class="sc">+</span> </span>
+<span id="cb187-43"><a href="validity.html#cb187-43" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">7.5</span>)</span>
+<span id="cb187-44"><a href="validity.html#cb187-44" tabindex="-1"></a></span>
+<span id="cb187-45"><a href="validity.html#cb187-45" tabindex="-1"></a>latentCorrelation <span class="ot">&lt;-</span> .<span class="dv">8</span></span>
+<span id="cb187-46"><a href="validity.html#cb187-46" tabindex="-1"></a>reliabilityPredictor <span class="ot">&lt;-</span> .<span class="dv">9</span></span>
+<span id="cb187-47"><a href="validity.html#cb187-47" tabindex="-1"></a>reliabilityCriterion <span class="ot">&lt;-</span> .<span class="dv">85</span></span>
+<span id="cb187-48"><a href="validity.html#cb187-48" tabindex="-1"></a></span>
+<span id="cb187-49"><a href="validity.html#cb187-49" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(sampleSize, <span class="dv">0</span> , <span class="dv">1</span>)</span>
+<span id="cb187-50"><a href="validity.html#cb187-50" tabindex="-1"></a></span>
+<span id="cb187-51"><a href="validity.html#cb187-51" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="ot">&lt;-</span> latentCorrelation <span class="sc">*</span> </span>
+<span id="cb187-52"><a href="validity.html#cb187-52" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb187-53"><a href="validity.html#cb187-53" tabindex="-1"></a>    sampleSize,</span>
+<span id="cb187-54"><a href="validity.html#cb187-54" tabindex="-1"></a>    <span class="dv">0</span>,</span>
+<span id="cb187-55"><a href="validity.html#cb187-55" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> latentCorrelation <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb187-56"><a href="validity.html#cb187-56" tabindex="-1"></a></span>
+<span id="cb187-57"><a href="validity.html#cb187-57" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM <span class="ot">&lt;-</span> reliabilityPredictor <span class="sc">*</span> </span>
+<span id="cb187-58"><a href="validity.html#cb187-58" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>predictorLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb187-59"><a href="validity.html#cb187-59" tabindex="-1"></a>    sampleSize,</span>
+<span id="cb187-60"><a href="validity.html#cb187-60" tabindex="-1"></a>    <span class="dv">0</span>,</span>
+<span id="cb187-61"><a href="validity.html#cb187-61" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityPredictor <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb187-62"><a href="validity.html#cb187-62" tabindex="-1"></a></span>
+<span id="cb187-63"><a href="validity.html#cb187-63" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM <span class="ot">&lt;-</span> reliabilityCriterion <span class="sc">*</span> </span>
+<span id="cb187-64"><a href="validity.html#cb187-64" tabindex="-1"></a>  mydataValidity<span class="sc">$</span>criterionLatentSEM <span class="sc">+</span> <span class="fu">rnorm</span>(</span>
+<span id="cb187-65"><a href="validity.html#cb187-65" tabindex="-1"></a>    sampleSize,</span>
+<span id="cb187-66"><a href="validity.html#cb187-66" tabindex="-1"></a>    <span class="dv">0</span>,</span>
+<span id="cb187-67"><a href="validity.html#cb187-67" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> reliabilityCriterion <span class="sc">^</span> <span class="dv">2</span>))</span></code></pre></div>
 </details>
 </div>
 <div id="addMissingData-validity" class="section level4 hasAnchor" number="5.2.2.2">
 <h4><span class="header-section-number">5.2.2.2</span> Add Missing Data<a href="validity.html#addMissingData-validity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="validity.html#cb188-1" aria-hidden="true" tabindex="-1"></a>missingValuesPredictor <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
-<span id="cb188-2"><a href="validity.html#cb188-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span>sampleSize,</span>
-<span id="cb188-3"><a href="validity.html#cb188-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">50</span>,</span>
-<span id="cb188-4"><a href="validity.html#cb188-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb188-5"><a href="validity.html#cb188-5" aria-hidden="true" tabindex="-1"></a>missingValuesCriterion <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
-<span id="cb188-6"><a href="validity.html#cb188-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span>sampleSize,</span>
-<span id="cb188-7"><a href="validity.html#cb188-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">50</span>,</span>
-<span id="cb188-8"><a href="validity.html#cb188-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb188-9"><a href="validity.html#cb188-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-10"><a href="validity.html#cb188-10" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictor[</span>
-<span id="cb188-11"><a href="validity.html#cb188-11" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-12"><a href="validity.html#cb188-12" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1[</span>
-<span id="cb188-13"><a href="validity.html#cb188-13" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-14"><a href="validity.html#cb188-14" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2[</span>
-<span id="cb188-15"><a href="validity.html#cb188-15" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-16"><a href="validity.html#cb188-16" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM[</span>
-<span id="cb188-17"><a href="validity.html#cb188-17" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-18"><a href="validity.html#cb188-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-19"><a href="validity.html#cb188-19" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterion[</span>
-<span id="cb188-20"><a href="validity.html#cb188-20" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-21"><a href="validity.html#cb188-21" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1[</span>
-<span id="cb188-22"><a href="validity.html#cb188-22" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-23"><a href="validity.html#cb188-23" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2[</span>
-<span id="cb188-24"><a href="validity.html#cb188-24" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-25"><a href="validity.html#cb188-25" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM[</span>
-<span id="cb188-26"><a href="validity.html#cb188-26" aria-hidden="true" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb188-27"><a href="validity.html#cb188-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb188-28"><a href="validity.html#cb188-28" aria-hidden="true" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor[</span>
-<span id="cb188-29"><a href="validity.html#cb188-29" aria-hidden="true" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="validity.html#cb188-1" tabindex="-1"></a>missingValuesPredictor <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb188-2"><a href="validity.html#cb188-2" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span>sampleSize,</span>
+<span id="cb188-3"><a href="validity.html#cb188-3" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">50</span>,</span>
+<span id="cb188-4"><a href="validity.html#cb188-4" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb188-5"><a href="validity.html#cb188-5" tabindex="-1"></a>missingValuesCriterion <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb188-6"><a href="validity.html#cb188-6" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span>sampleSize,</span>
+<span id="cb188-7"><a href="validity.html#cb188-7" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">50</span>,</span>
+<span id="cb188-8"><a href="validity.html#cb188-8" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb188-9"><a href="validity.html#cb188-9" tabindex="-1"></a></span>
+<span id="cb188-10"><a href="validity.html#cb188-10" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictor[</span>
+<span id="cb188-11"><a href="validity.html#cb188-11" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-12"><a href="validity.html#cb188-12" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1[</span>
+<span id="cb188-13"><a href="validity.html#cb188-13" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-14"><a href="validity.html#cb188-14" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2[</span>
+<span id="cb188-15"><a href="validity.html#cb188-15" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-16"><a href="validity.html#cb188-16" tabindex="-1"></a>mydataValidity<span class="sc">$</span>predictorObservedSEM[</span>
+<span id="cb188-17"><a href="validity.html#cb188-17" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-18"><a href="validity.html#cb188-18" tabindex="-1"></a></span>
+<span id="cb188-19"><a href="validity.html#cb188-19" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterion[</span>
+<span id="cb188-20"><a href="validity.html#cb188-20" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-21"><a href="validity.html#cb188-21" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1[</span>
+<span id="cb188-22"><a href="validity.html#cb188-22" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-23"><a href="validity.html#cb188-23" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2[</span>
+<span id="cb188-24"><a href="validity.html#cb188-24" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-25"><a href="validity.html#cb188-25" tabindex="-1"></a>mydataValidity<span class="sc">$</span>criterionObservedSEM[</span>
+<span id="cb188-26"><a href="validity.html#cb188-26" tabindex="-1"></a>  missingValuesCriterion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb188-27"><a href="validity.html#cb188-27" tabindex="-1"></a></span>
+<span id="cb188-28"><a href="validity.html#cb188-28" tabindex="-1"></a>mydataValidity<span class="sc">$</span>oldpredictor[</span>
+<span id="cb188-29"><a href="validity.html#cb188-29" tabindex="-1"></a>  missingValuesPredictor] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
 </details>
 </div>
 </div>
@@ -2397,7 +2398,7 @@ Fourth, a face valid measure may be too simple because anybody can understand th
 Faking of responses may be more of a concern in situations when there is an incentive for the respondent to achieve a particular outcome (e.g., be deemed competent to stand trial, be judged competent to obtain a job or custody of child, be judged to have a disorder to receive accommodations or disability benefits).</p>
 <p>It is disputed whether having face validity is good or bad.
 Whether face validity is important to a given measure depends on the construct that is intended to be assessed, the context in which the assessment will occur, who will be paying for and/or administering the assessment, whether the respondents have incentives to achieve particular scores, and the goals of the assessment (i.e., how the assessment will be used).
-There is also controversy about whether face validity is a true form of validity; many researchers have argued that it is not a true psychometric form of validity, because the <em>appearance</em> of validity is not validity <span class="citation">(<a href="#ref-Royal2016" role="doc-biblioref">Royal, 2016</a>)</span>.</p>
+There is also controversy about whether face validity is a true form of validity; many researchers have argued that it is not a true psychometric form of validity, because the <em>appearance</em> of validity is not validity <span class="citation">(<a href="#ref-Royal2016">Royal, 2016</a>)</span>.</p>
 </div>
 <div id="contentValidity" class="section level4 hasAnchor" number="5.3.1.2">
 <h4><span class="header-section-number">5.3.1.2</span> Content Validity<a href="validity.html#contentValidity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -2436,7 +2437,7 @@ This is quantified by the correlation between a measure’s scores and some (hop
 For instance, a criterion could be a diagnosis, a child’s achievement in school, an employee’s performance in a job, etc.</p>
 <p>Below, we provide an example of criterion-related validity by examining the <a href="reliability.html#correlationConsiderations">Pearson correlation</a> between a predictor and a criterion.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="validity.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor, <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="validity.html#cb189-1" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor, <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -2537,13 +2538,13 @@ An association may reflect a static or unmodifiable predictor that is not practi
 </div>
 <div id="causalSystem" class="section level6 hasAnchor" number="5.3.1.3.3.2">
 <h6><span class="header-section-number">5.3.1.3.3.2</span> Understanding the Causal System<a href="validity.html#causalSystem" class="anchor-section" aria-label="Anchor link to header"></a></h6>
-<p>As <span class="citation">Silver (<a href="#ref-Silver2012" role="doc-biblioref">2012</a>)</span> notes, “The numbers have no way of speaking for themselves.
+<p>As <span class="citation">Silver (<a href="#ref-Silver2012">2012</a>)</span> notes, “The numbers have no way of speaking for themselves.
 We speak for them.
 We imbue them with meaning.” (p. 9).
 If we <em>understand</em> the variables in the system and how they influence each other, we can predict things more accurately than predicting for the sake of predicting.
 For instance, <a href="https://www.npr.org/sections/money/2023/07/11/1186458991/should-we-invest-more-in-weather-forecasting-it-may-save-your-life">we have made great strides in the last decades when it comes to more accurate weather forecasts</a> (archived at <a href="https://perma.cc/PF8P-BT3D" class="uri">https://perma.cc/PF8P-BT3D</a>), including extreme weather events like hurricanes.
-These great strides have more to do with a better causal understanding of the weather system and the ability to conduct simulations of the atmosphere than merely because of big data <span class="citation">(<a href="#ref-Silver2012" role="doc-biblioref">Silver, 2012</a>)</span>.
-By contrast, other events are still incredibly difficult to predict, including earthquakes, in large part because we do not have a strong understanding of the system (and because we do not have ways of precisely measuring those causes because they occur at a depth below which we are realistically able to drill) <span class="citation">(<a href="#ref-Silver2012" role="doc-biblioref">Silver, 2012</a>)</span>.</p>
+These great strides have more to do with a better causal understanding of the weather system and the ability to conduct simulations of the atmosphere than merely because of big data <span class="citation">(<a href="#ref-Silver2012">Silver, 2012</a>)</span>.
+By contrast, other events are still incredibly difficult to predict, including earthquakes, in large part because we do not have a strong understanding of the system (and because we do not have ways of precisely measuring those causes because they occur at a depth below which we are realistically able to drill) <span class="citation">(<a href="#ref-Silver2012">Silver, 2012</a>)</span>.</p>
 </div>
 <div id="overfitting" class="section level6 hasAnchor" number="5.3.1.3.3.3">
 <h6><span class="header-section-number">5.3.1.3.3.3</span> Model Over-Fitting<a href="validity.html#overfitting" class="anchor-section" aria-label="Anchor link to header"></a></h6>
@@ -2578,7 +2579,7 @@ Indeed, I have misgivings calling them theories because they do not meet the tra
 A scientific theory is an explanation of the natural world that is testable and falsifiable, and that has withstood rigorous scientific testing and scrutiny.
 In psychology, our “theories” are more like conceptual frameworks.
 And these conceptual frameworks are often vague, do not make specific predictions of effects <em>and</em> noneffects, and do not hold up consistently when rigorously tested.
-As described by <span class="citation">Meehl (<a href="#ref-Meehl1978" role="doc-biblioref">1978</a>)</span>:</p>
+As described by <span class="citation">Meehl (<a href="#ref-Meehl1978">1978</a>)</span>:</p>
 <blockquote>
 <p>I consider it unnecessary to persuade you that most so-called “theories” in the soft areas of psychology (clinical, counseling, social, personality, community, and school psychology) are scientifically unimpressive and technologically worthless … Perhaps the easiest way to convince yourself is by scanning the literature of soft psychology over the last 30 years and noticing what happens to theories.
 Most of them suffer the fate that General MacArthur ascribed to old generals—They never die, they just slowly fade away.
@@ -2592,7 +2593,7 @@ Other perspectives, such as quantum mechanics and chaos theory, would say that, 
 But assume, for a moment, that LaPlace’s demon is true.
 The challenge in psychology is that we have a relatively poor understanding of the initial conditions of the universe.
 Thus, our predictions would necessarily be probabilistic, similar to weather forecasts.
-Despite having a strong understanding of how weather systems behave, we have imperfect understanding of the initial conditions (e.g., the position and movement of all molecules) <span class="citation">(<a href="#ref-Silver2012" role="doc-biblioref">Silver, 2012</a>)</span>.</p>
+Despite having a strong understanding of how weather systems behave, we have imperfect understanding of the initial conditions (e.g., the position and movement of all molecules) <span class="citation">(<a href="#ref-Silver2012">Silver, 2012</a>)</span>.</p>
 </div>
 <div id="psychoanalysisVsEmpiricism" class="section level6 hasAnchor" number="5.3.1.3.3.6">
 <h6><span class="header-section-number">5.3.1.3.3.6</span> Psychoanalysis Versus Empiricism<a href="validity.html#psychoanalysisVsEmpiricism" class="anchor-section" aria-label="Anchor link to header"></a></h6>
@@ -2621,9 +2622,9 @@ Figure 5.7: Conceptual Depiction of Psychoanalysis.
 <p>Circles represent unobserved, latent entities.
 For instance a psychoanalyst may make a conceptual claim that one observed variable influences another observed variable through a complex chain of intervening processes that are unobservable.</p>
 <p>There is a classic and hilarious <a href="https://osf.io/gc79d">Monty Python video</a> (see below) that is an absurd example akin to radical operationalism taken to the extreme.</p>
-<div class="figure">
-<video src="Images/montyPythonPenguinResearch.mp4" style="width:100.0%" controls=""><a href="Images/montyPythonPenguinResearch.mp4"></a></video>
-<p class="caption">Monty Python video on penguin research</p>
+<div class="float">
+<video src="Images/montyPythonPenguinResearch.mp4" style="width:100.0%" controls=""><a href="Images/montyPythonPenguinResearch.mp4">Monty Python video on penguin research</a></video>
+<div class="figcaption">Monty Python video on penguin research</div>
 </div>
 <p>In the video, the researchers make lots of measurements and predictions.
 The researchers identify interspecies differences in intelligence where humans show better performance on the English-based intelligence test (who got an IQ score of 100) than the penguins, who got an IQ score of 2.
@@ -2641,7 +2642,7 @@ Theory and empiricism can—and should—inform each other.</p>
 </div>
 <div id="constructValidity" class="section level4 hasAnchor" number="5.3.1.4">
 <h4><span class="header-section-number">5.3.1.4</span> Construct Validity<a href="validity.html#constructValidity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p><em>Construct validity</em> is the extent to which a measure accurately assesses a target construct <span class="citation">(<a href="#ref-Cronbach1955" role="doc-biblioref">Cronbach &amp; Meehl, 1955</a>)</span>.
+<p><em>Construct validity</em> is the extent to which a measure accurately assesses a target construct <span class="citation">(<a href="#ref-Cronbach1955">Cronbach &amp; Meehl, 1955</a>)</span>.
 Construct validity is not quantified by a single index but rather consists of a “web of evidence” (the totality of evidence), which reflect the sum of inferences from multiple aspects of validity.
 That is, construct validity is the extent to which a measure assesses a target construct.
 Construct validity deals with the association between a measure and an unobservable criterion, i.e., a latent construct.
@@ -2675,14 +2676,14 @@ People started finding a correlation of a measure with other measures, asserting
 But a theoretically expected association is not enough!
 For example, consider a measure of how quickly someone can count backward by seven.
 Performance is impaired in those with schizophrenia, anxiety (due to greater distractibility), and depression (due to concentration difficulties and cognitive slowing).
-Therefore, it is a low-quality claim that counting backward is part of the phenomenology of these disorders because it lacks differential deficit or <a href="validity.html#discriminantValidity">discriminant validity</a> <span class="citation">(<a href="#ref-Campbell1959" role="doc-biblioref">D. T. Campbell &amp; Fiske, 1959</a>)</span>.
+Therefore, it is a low-quality claim that counting backward is part of the phenomenology of these disorders because it lacks differential deficit or <a href="validity.html#discriminantValidity">discriminant validity</a> <span class="citation">(<a href="#ref-Campbell1959">D. T. Campbell &amp; Fiske, 1959</a>)</span>.
 This is related to the “glop problem,” which asserts that every bad thing is associated with every other bad thing—there is high comorbidity.
 Therefore, researchers needed some way to distinguish method variance from construct variance.
 This led to the development of the multitrait-multimethod matrix.</p>
 </div>
 <div id="MTMM" class="section level5 hasAnchor" number="5.3.1.4.2">
 <h5><span class="header-section-number">5.3.1.4.2</span> Multitrait-Multimethod Matrix (MTMM)<a href="validity.html#MTMM" class="anchor-section" aria-label="Anchor link to header"></a></h5>
-<p>The <em>multitrait-multimethod matrix</em> (MTMM), as proposed by Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959" role="doc-biblioref">1959</a>)</span>, is a concrete way to evaluate the validity of a measure.
+<p>The <em>multitrait-multimethod matrix</em> (MTMM), as proposed by Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959">1959</a>)</span>, is a concrete way to evaluate the validity of a measure.
 The MTMM allows you to split the variance of measures’ scores into variance that is due to the method (i.e., <a href="reliability.html#methodBias">method variance or method bias</a>) and variance that is due to the construct (trait) of interest (i.e., construct variance).
 To create an MTMM, you need at least two methods and at least two constructs.
 For example, an MTMM could include self-report and observation of depression and introversion.
@@ -2695,7 +2696,7 @@ The <a href="reliability.html#reliability">reliability</a> coefficients should b
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:campbellFiske"></span>
 <img src="Images/campbellFiske.png" alt="Multitrait-Multimethod Matrix. (Figure reprinted from Campbell and Fiske (1959), Table 1, p. 82. Campbell, D. T., &amp; Fiske, D. W. (1959). Convergent and discriminant validation by the multitrait-multimethod matrix. Psychological Bulletin, 56, 81-105. https://doi.org/10.1037/h0046016)" width="100%" />
 <p class="caption">
-Figure 5.9: Multitrait-Multimethod Matrix. (Figure reprinted from Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959" role="doc-biblioref">1959</a>)</span>, Table 1, p. 82. Campbell, D. T., &amp; Fiske, D. W. (1959). Convergent and discriminant validation by the multitrait-multimethod matrix. <em>Psychological Bulletin</em>, <em>56</em>, 81-105. <a href="https://doi.org/10.1037/h0046016">https://doi.org/10.1037/h0046016</a>)
+Figure 5.9: Multitrait-Multimethod Matrix. (Figure reprinted from Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959">1959</a>)</span>, Table 1, p. 82. Campbell, D. T., &amp; Fiske, D. W. (1959). Convergent and discriminant validation by the multitrait-multimethod matrix. <em>Psychological Bulletin</em>, <em>56</em>, 81-105. <a href="https://doi.org/10.1037/h0046016">https://doi.org/10.1037/h0046016</a>)
 </p>
 </div>
 <p>A multitrait-multimethod matrix can be organized by method and then by construct or vice versa.
@@ -2726,7 +2727,7 @@ For strong convergent validity, we would expect the values in the validity diago
 Discriminant validity is the extent to which a measure is <em>not</em> associated (or less strongly associated) with measures of different constructs that are not theoretically expected to be related (compared to associations with measures of the same construct).
 In an MTMM, discriminant validity determines the extent to which a measure does not correlate with measures that share a method but assess different constructs.
 For strong discriminant validity, we would expect the discriminant correlations (heterotrait monomethod) to be low.</p>
-<p>According to Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959" role="doc-biblioref">1959</a>)</span>, discriminant validity of measures can be established when three criteria are met:</p>
+<p>According to Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959">1959</a>)</span>, discriminant validity of measures can be established when three criteria are met:</p>
 <ol style="list-style-type: decimal">
 <li>The convergent (monotrait-heteromethod) correlations are stronger than heterotrait-heteromethod correlations.
 This provides the weakest evidence for discriminant validity.
@@ -2738,37 +2739,37 @@ This provides stronger evidence of discriminant validity.</li>
 That is, the pattern of inter-trait associations is the same in all triangles.
 For example, if extraversion and anxiety are moderately correlated with each other but uncorrelated with achievement, we would expect this pattern of interrelations between constructs would hold, regardless of which method was used to assess the construct.</li>
 </ol>
-<p>You can estimate a measure’s degree of discriminant validity based on the <em>heterotrait-monotrait ratio</em> [HTMT; <span class="citation">Henseler et al. (<a href="#ref-Henseler2015" role="doc-biblioref">2015</a>)</span>; <span class="citation">Roemer et al. (<a href="#ref-Roemer2021" role="doc-biblioref">2021</a>)</span>].
+<p>You can estimate a measure’s degree of discriminant validity based on the <em>heterotrait-monotrait ratio</em> [HTMT; <span class="citation">Henseler et al. (<a href="#ref-Henseler2015">2015</a>)</span>; <span class="citation">Roemer et al. (<a href="#ref-Roemer2021">2021</a>)</span>].
 HTMT is the average of the heterotrait-heteromethod correlations (i.e., the correlations of measures from different measurement methods that assess different constructs), relative to the average of the monotrait-heteromethod correlations (i.e., the correlations of measures from different measurement methods that assess the same construct).
-As described <a href="https://www.henseler.com/htmt.html">here (https://www.henseler.com/htmt.html)</a> (archived at <a href="https://perma.cc/A9DU-WZWQ" class="uri">https://perma.cc/A9DU-WZWQ</a>) based on evidence from <span class="citation">Voorhees et al. (<a href="#ref-Voorhees2016" role="doc-biblioref">2016</a>)</span>,</p>
+As described <a href="https://www.henseler.com/htmt.html">here (https://www.henseler.com/htmt.html)</a> (archived at <a href="https://perma.cc/A9DU-WZWQ" class="uri">https://perma.cc/A9DU-WZWQ</a>) based on evidence from <span class="citation">Voorhees et al. (<a href="#ref-Voorhees2016">2016</a>)</span>,</p>
 <blockquote>
 <p>If the HTMT is clearly smaller than one, discriminant validity can be regarded as established.
 In many practical situations, a threshold of 0.85 reliably distinguishes between those pairs of latent variables that are discriminant valid and those that are not.</p>
 </blockquote>
-<p>The authors updated the HTMT to use the geometric mean of the correlations rather than the arithmetic mean of the correlations to relax the assumption of <a href="reliability.html#cttTauEquivalent">tau-equivalence</a> <span class="citation">(<a href="#ref-Roemer2021" role="doc-biblioref">Roemer et al., 2021</a>)</span>.
+<p>The authors updated the HTMT to use the geometric mean of the correlations rather than the arithmetic mean of the correlations to relax the assumption of <a href="reliability.html#cttTauEquivalent">tau-equivalence</a> <span class="citation">(<a href="#ref-Roemer2021">Roemer et al., 2021</a>)</span>.
 They called the updated index HTMT2.
-HTMT2 was calculated below using the <code>semTools</code> package <span class="citation">(<a href="#ref-R-semTools" role="doc-biblioref">Jorgensen et al., 2021</a>)</span>.
+HTMT2 was calculated below using the <code>semTools</code> package <span class="citation">(<a href="#ref-R-semTools">Jorgensen et al., 2021</a>)</span>.
 In this case, the HTMT values are less than .85, providing evidence of discriminant validity.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="validity.html#cb191-1" aria-hidden="true" tabindex="-1"></a>modelCFA <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb191-2"><a href="validity.html#cb191-2" aria-hidden="true" tabindex="-1"></a><span class="st">  visual  =~ x1 + x2 + x3</span></span>
-<span id="cb191-3"><a href="validity.html#cb191-3" aria-hidden="true" tabindex="-1"></a><span class="st">  textual =~ x4 + x5 + x6</span></span>
-<span id="cb191-4"><a href="validity.html#cb191-4" aria-hidden="true" tabindex="-1"></a><span class="st">  speed   =~ x7 + x8 + x9</span></span>
-<span id="cb191-5"><a href="validity.html#cb191-5" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
-<span id="cb191-6"><a href="validity.html#cb191-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb191-7"><a href="validity.html#cb191-7" aria-hidden="true" tabindex="-1"></a><span class="fu">htmt</span>(</span>
-<span id="cb191-8"><a href="validity.html#cb191-8" aria-hidden="true" tabindex="-1"></a>  modelCFA,</span>
-<span id="cb191-9"><a href="validity.html#cb191-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
-<span id="cb191-10"><a href="validity.html#cb191-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="validity.html#cb191-1" tabindex="-1"></a>modelCFA <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb191-2"><a href="validity.html#cb191-2" tabindex="-1"></a><span class="st">  visual  =~ x1 + x2 + x3</span></span>
+<span id="cb191-3"><a href="validity.html#cb191-3" tabindex="-1"></a><span class="st">  textual =~ x4 + x5 + x6</span></span>
+<span id="cb191-4"><a href="validity.html#cb191-4" tabindex="-1"></a><span class="st">  speed   =~ x7 + x8 + x9</span></span>
+<span id="cb191-5"><a href="validity.html#cb191-5" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb191-6"><a href="validity.html#cb191-6" tabindex="-1"></a></span>
+<span id="cb191-7"><a href="validity.html#cb191-7" tabindex="-1"></a><span class="fu">htmt</span>(</span>
+<span id="cb191-8"><a href="validity.html#cb191-8" tabindex="-1"></a>  modelCFA,</span>
+<span id="cb191-9"><a href="validity.html#cb191-9" tabindex="-1"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
+<span id="cb191-10"><a href="validity.html#cb191-10" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span></code></pre></div>
 </details>
 <pre><code>        visual textul speed
 visual   1.000             
 textual  0.384  1.000      
 speed    0.387  0.280 1.000</code></pre>
-<p>Other indexes of discriminant validity include the <span class="math inline">\(\text{CI}_\text{CFA}\text{(sys)}\)</span> <span class="citation">(<a href="#ref-Ronkko2020" role="doc-biblioref">Rönkkö &amp; Cho, 2020</a>)</span>, <span class="math inline">\(\chi^2\text{(sys)}\)</span> <span class="citation">(<a href="#ref-Ronkko2020" role="doc-biblioref">Rönkkö &amp; Cho, 2020</a>)</span>, and the Fornell-Larcker Ratio [FLR; <span class="citation">Fornell &amp; Larcker (<a href="#ref-Fornell1981" role="doc-biblioref">1981</a>)</span>].
+<p>Other indexes of discriminant validity include the <span class="math inline">\(\text{CI}_\text{CFA}\text{(sys)}\)</span> <span class="citation">(<a href="#ref-Ronkko2020">Rönkkö &amp; Cho, 2020</a>)</span>, <span class="math inline">\(\chi^2\text{(sys)}\)</span> <span class="citation">(<a href="#ref-Ronkko2020">Rönkkö &amp; Cho, 2020</a>)</span>, and the Fornell-Larcker Ratio [FLR; <span class="citation">Fornell &amp; Larcker (<a href="#ref-Fornell1981">1981</a>)</span>].
 The FLR is based on the idea that a construct should be more strongly associated with its indicators than with other constructs, and is computed as the ratio of (a) the highest squared inter-correlation the construct has with other constructs to (b) the <a href="reliability.html#averageVarianceExtracted">average variance extracted</a> [AVE] by the construct.
-A criterion of FLR &lt; 1 evaluates whether the <a href="reliability.html#averageVarianceExtracted">AVE</a> of a factor is greater than the highest squared inter-correlation between the factor and other factors in the model <span class="citation">(<a href="#ref-Fornell1981" role="doc-biblioref">Fornell &amp; Larcker, 1981</a>)</span>.
-Another index estimates the degree of correspondence of convergent and discriminant validity correlations with a priori hypotheses as an index of construct validity <span class="citation">(<a href="#ref-Furr2019" role="doc-biblioref">Furr &amp; Heuckeroth, 2019</a>)</span>.</p>
+A criterion of FLR &lt; 1 evaluates whether the <a href="reliability.html#averageVarianceExtracted">AVE</a> of a factor is greater than the highest squared inter-correlation between the factor and other factors in the model <span class="citation">(<a href="#ref-Fornell1981">Fornell &amp; Larcker, 1981</a>)</span>.
+Another index estimates the degree of correspondence of convergent and discriminant validity correlations with a priori hypotheses as an index of construct validity <span class="citation">(<a href="#ref-Furr2019">Furr &amp; Heuckeroth, 2019</a>)</span>.</p>
 <p>Using an MTMM, a researcher can learn a lot about the quality of a measure and build a nomological network.
 For instance, we can estimate the extent of method variance, or variance that is attributable to the measurement method rather than the construct of interest.
 Method variance is estimated by the difference between monomethod versus heteromethod blocks.</p>
@@ -2776,8 +2777,8 @@ Method variance is estimated by the difference between monomethod versus heterom
 This would be a poor MTMM for two reasons: (1) there are trivial differences in the methods, which would lead to obvious convergence, and (2) the differences between the constructs are not important—they are obviously discriminant.
 Using such an MTMM would find strong convergent associations because the methods are maximally similar and weak discriminant associations because the constructs are maximally different.
 It would be better to use maximally different measurement methods (e.g., self-report and performance-based measures) and to use constructs that are important to distinguish (e.g., depression and anxiey).</p>
-<p>The paper by Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959" role="doc-biblioref">1959</a>)</span> that introduced the MTMM is one of the most widely cited papers in psychology of all time.
-<em>Psychological Bulletin</em> published a more recent paper by Fiske and Campbell <span class="citation">(<a href="#ref-Fiske1992" role="doc-biblioref">1992</a>)</span>, entitled “Citations Do Not Solve Problems.”
+<p>The paper by Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959">1959</a>)</span> that introduced the MTMM is one of the most widely cited papers in psychology of all time.
+<em>Psychological Bulletin</em> published a more recent paper by Fiske and Campbell <span class="citation">(<a href="#ref-Fiske1992">1992</a>)</span>, entitled “Citations Do Not Solve Problems.”
 They noted how their original paper was the most widely cited paper in the history of <em>Psychological Bulletin</em>, but they argued that nothing came of their paper.
 The MTMM matrices published today show little-to-no improvement compared to the ones they published in 1959.
 In part, this may be because we need better measures (i.e., a higher ratio of construct to method variance).</p>
@@ -2785,41 +2786,41 @@ In part, this may be because we need better measures (i.e., a higher ratio of co
 <div id="mtmmCorrelationMatrix" class="section level6 hasAnchor" number="5.3.1.4.2.3">
 <h6><span class="header-section-number">5.3.1.4.2.3</span> Multitrait-Multimethod Correlation Matrix<a href="validity.html#mtmmCorrelationMatrix" class="anchor-section" aria-label="Anchor link to header"></a></h6>
 <p>This example is courtesy of W. Joel Schneider.
-First, we simulate data for an MTMM model using a fixed model with population parameters using the <code>simstandard</code> package <span class="citation">(<a href="#ref-R-simstandard" role="doc-biblioref">Schneider, 2021</a>)</span>:</p>
+First, we simulate data for an MTMM model using a fixed model with population parameters using the <code>simstandard</code> package <span class="citation">(<a href="#ref-R-simstandard">Schneider, 2021</a>)</span>:</p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb193-1"><a href="validity.html#cb193-1" aria-hidden="true" tabindex="-1"></a>model_fixed <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb193-2"><a href="validity.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="st"> Verbal =~ .5*VO1 + .6*VO2 + .7*VO3 +</span></span>
-<span id="cb193-3"><a href="validity.html#cb193-3" aria-hidden="true" tabindex="-1"></a><span class="st">           .7*VW1 + .6*VW2 + .5*VW3 + </span></span>
-<span id="cb193-4"><a href="validity.html#cb193-4" aria-hidden="true" tabindex="-1"></a><span class="st">           .6*VM1 + .7*VM2 + .5*VM3 </span></span>
-<span id="cb193-5"><a href="validity.html#cb193-5" aria-hidden="true" tabindex="-1"></a><span class="st"> Spatial =~ .7*SO1 + .7*SO2 + .6*SO3 + </span></span>
-<span id="cb193-6"><a href="validity.html#cb193-6" aria-hidden="true" tabindex="-1"></a><span class="st">            .6*SW1 + .7*SW2 + .5*SW3 + </span></span>
-<span id="cb193-7"><a href="validity.html#cb193-7" aria-hidden="true" tabindex="-1"></a><span class="st">            .7*SM1 + .5*SM2 + .7*SM3 </span></span>
-<span id="cb193-8"><a href="validity.html#cb193-8" aria-hidden="true" tabindex="-1"></a><span class="st"> Quant =~ .5*QO1 + .7*QO2 + .5*QO3 + </span></span>
-<span id="cb193-9"><a href="validity.html#cb193-9" aria-hidden="true" tabindex="-1"></a><span class="st">          .5*QW1 + .6*QW2 + .7*QW3 + </span></span>
-<span id="cb193-10"><a href="validity.html#cb193-10" aria-hidden="true" tabindex="-1"></a><span class="st">          .5*QM1 + .6*QM2 + .7*QM3 </span></span>
-<span id="cb193-11"><a href="validity.html#cb193-11" aria-hidden="true" tabindex="-1"></a><span class="st"> Oral =~ .4*VO1 + .5*VO2 + .3*VO3 + </span></span>
-<span id="cb193-12"><a href="validity.html#cb193-12" aria-hidden="true" tabindex="-1"></a><span class="st">         .3*SO1 + .3*SO2 + .5*SO3 + </span></span>
-<span id="cb193-13"><a href="validity.html#cb193-13" aria-hidden="true" tabindex="-1"></a><span class="st">         .6*QO1 + .3*QO2 + .4*QO3</span></span>
-<span id="cb193-14"><a href="validity.html#cb193-14" aria-hidden="true" tabindex="-1"></a><span class="st"> Written =~ .6*VW1 + .4*VW2 + .3*VW3 + </span></span>
-<span id="cb193-15"><a href="validity.html#cb193-15" aria-hidden="true" tabindex="-1"></a><span class="st">            .6*SW1 + .5*SW2 + .5*SW3 + </span></span>
-<span id="cb193-16"><a href="validity.html#cb193-16" aria-hidden="true" tabindex="-1"></a><span class="st">            .4*QW1 + .4*QW2 + .5*QW3</span></span>
-<span id="cb193-17"><a href="validity.html#cb193-17" aria-hidden="true" tabindex="-1"></a><span class="st"> Manipulative =~ .5*VM1 + .5*VM2 + .3*VM3 + </span></span>
-<span id="cb193-18"><a href="validity.html#cb193-18" aria-hidden="true" tabindex="-1"></a><span class="st">                 .5*SM1 + .5*SM2 + .6*SM3 + </span></span>
-<span id="cb193-19"><a href="validity.html#cb193-19" aria-hidden="true" tabindex="-1"></a><span class="st">                 .4*QM1 + .3*QM2 + .3*QM3</span></span>
-<span id="cb193-20"><a href="validity.html#cb193-20" aria-hidden="true" tabindex="-1"></a><span class="st"> Verbal ~~ .7*Spatial + .6*Quant</span></span>
-<span id="cb193-21"><a href="validity.html#cb193-21" aria-hidden="true" tabindex="-1"></a><span class="st"> Spatial ~~ .5*Quant</span></span>
-<span id="cb193-22"><a href="validity.html#cb193-22" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
-<span id="cb193-23"><a href="validity.html#cb193-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb193-24"><a href="validity.html#cb193-24" aria-hidden="true" tabindex="-1"></a>MTMM_data <span class="ot">&lt;-</span> <span class="fu">sim_standardized</span>(</span>
-<span id="cb193-25"><a href="validity.html#cb193-25" aria-hidden="true" tabindex="-1"></a>  model_fixed,</span>
-<span id="cb193-26"><a href="validity.html#cb193-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">10000</span>,</span>
-<span id="cb193-27"><a href="validity.html#cb193-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">observed =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb193-28"><a href="validity.html#cb193-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">latent =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb193-29"><a href="validity.html#cb193-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">errors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb193-1"><a href="validity.html#cb193-1" tabindex="-1"></a>model_fixed <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb193-2"><a href="validity.html#cb193-2" tabindex="-1"></a><span class="st"> Verbal =~ .5*VO1 + .6*VO2 + .7*VO3 +</span></span>
+<span id="cb193-3"><a href="validity.html#cb193-3" tabindex="-1"></a><span class="st">           .7*VW1 + .6*VW2 + .5*VW3 + </span></span>
+<span id="cb193-4"><a href="validity.html#cb193-4" tabindex="-1"></a><span class="st">           .6*VM1 + .7*VM2 + .5*VM3 </span></span>
+<span id="cb193-5"><a href="validity.html#cb193-5" tabindex="-1"></a><span class="st"> Spatial =~ .7*SO1 + .7*SO2 + .6*SO3 + </span></span>
+<span id="cb193-6"><a href="validity.html#cb193-6" tabindex="-1"></a><span class="st">            .6*SW1 + .7*SW2 + .5*SW3 + </span></span>
+<span id="cb193-7"><a href="validity.html#cb193-7" tabindex="-1"></a><span class="st">            .7*SM1 + .5*SM2 + .7*SM3 </span></span>
+<span id="cb193-8"><a href="validity.html#cb193-8" tabindex="-1"></a><span class="st"> Quant =~ .5*QO1 + .7*QO2 + .5*QO3 + </span></span>
+<span id="cb193-9"><a href="validity.html#cb193-9" tabindex="-1"></a><span class="st">          .5*QW1 + .6*QW2 + .7*QW3 + </span></span>
+<span id="cb193-10"><a href="validity.html#cb193-10" tabindex="-1"></a><span class="st">          .5*QM1 + .6*QM2 + .7*QM3 </span></span>
+<span id="cb193-11"><a href="validity.html#cb193-11" tabindex="-1"></a><span class="st"> Oral =~ .4*VO1 + .5*VO2 + .3*VO3 + </span></span>
+<span id="cb193-12"><a href="validity.html#cb193-12" tabindex="-1"></a><span class="st">         .3*SO1 + .3*SO2 + .5*SO3 + </span></span>
+<span id="cb193-13"><a href="validity.html#cb193-13" tabindex="-1"></a><span class="st">         .6*QO1 + .3*QO2 + .4*QO3</span></span>
+<span id="cb193-14"><a href="validity.html#cb193-14" tabindex="-1"></a><span class="st"> Written =~ .6*VW1 + .4*VW2 + .3*VW3 + </span></span>
+<span id="cb193-15"><a href="validity.html#cb193-15" tabindex="-1"></a><span class="st">            .6*SW1 + .5*SW2 + .5*SW3 + </span></span>
+<span id="cb193-16"><a href="validity.html#cb193-16" tabindex="-1"></a><span class="st">            .4*QW1 + .4*QW2 + .5*QW3</span></span>
+<span id="cb193-17"><a href="validity.html#cb193-17" tabindex="-1"></a><span class="st"> Manipulative =~ .5*VM1 + .5*VM2 + .3*VM3 + </span></span>
+<span id="cb193-18"><a href="validity.html#cb193-18" tabindex="-1"></a><span class="st">                 .5*SM1 + .5*SM2 + .6*SM3 + </span></span>
+<span id="cb193-19"><a href="validity.html#cb193-19" tabindex="-1"></a><span class="st">                 .4*QM1 + .3*QM2 + .3*QM3</span></span>
+<span id="cb193-20"><a href="validity.html#cb193-20" tabindex="-1"></a><span class="st"> Verbal ~~ .7*Spatial + .6*Quant</span></span>
+<span id="cb193-21"><a href="validity.html#cb193-21" tabindex="-1"></a><span class="st"> Spatial ~~ .5*Quant</span></span>
+<span id="cb193-22"><a href="validity.html#cb193-22" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb193-23"><a href="validity.html#cb193-23" tabindex="-1"></a></span>
+<span id="cb193-24"><a href="validity.html#cb193-24" tabindex="-1"></a>MTMM_data <span class="ot">&lt;-</span> <span class="fu">sim_standardized</span>(</span>
+<span id="cb193-25"><a href="validity.html#cb193-25" tabindex="-1"></a>  model_fixed,</span>
+<span id="cb193-26"><a href="validity.html#cb193-26" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb193-27"><a href="validity.html#cb193-27" tabindex="-1"></a>  <span class="at">observed =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb193-28"><a href="validity.html#cb193-28" tabindex="-1"></a>  <span class="at">latent =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb193-29"><a href="validity.html#cb193-29" tabindex="-1"></a>  <span class="at">errors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </details>
 <p>A multitrait-multimethod matrix correlation matrix is below.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="validity.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(MTMM_data), <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="validity.html#cb194-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(MTMM_data), <span class="dv">2</span>)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -2829,7 +2830,7 @@ First, we simulate data for an MTMM model using a fixed model with population pa
 </div>
 <div id="constructValidity-beyondCampbellFiske" class="section level6 hasAnchor" number="5.3.1.4.2.4">
 <h6><span class="header-section-number">5.3.1.4.2.4</span> Construct Validity Beyond Campbell and Fiske<a href="validity.html#constructValidity-beyondCampbellFiske" class="anchor-section" aria-label="Anchor link to header"></a></h6>
-<p>There are a number of other approaches that can be helpful for establishing construct validity in ways that go beyond the approaches proposed by Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959" role="doc-biblioref">1959</a>)</span>.
+<p>There are a number of other approaches that can be helpful for establishing construct validity in ways that go beyond the approaches proposed by Campbell and Fiske <span class="citation">(<a href="#ref-Campbell1959">1959</a>)</span>.
 One way is known as triangulation.
 Triangulation is conceptually depicted in Figure <a href="validity.html#fig:triangulation">5.12</a>.
 Triangulation involves testing a hypothesis with multiple measures and/or methods to see if the findings are consistent—that is, whether the findings triangulate.</p>
@@ -2852,47 +2853,47 @@ For an example of an MTMM in <a href="factor-analysis-PCA.html#cfa">confirmatory
 Figure 5.13: Multitrait-Multimethod Model in Confirmatory Factor Analysis With Three Constructs (Internalizing, Externalizing, and Thought-Disordered Problems) and Three Methods (Mother-, Father-, and Teacher-report).
 </p>
 </div>
-<p>The confirmatory factor analysis (CFA) model was fit in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan" role="doc-biblioref">Rosseel et al., 2022</a>)</span>.</p>
+<p>The confirmatory factor analysis (CFA) model was fit in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan">Rosseel et al., 2022</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="validity.html#cb195-1" aria-hidden="true" tabindex="-1"></a>modelMTMM <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb195-2"><a href="validity.html#cb195-2" aria-hidden="true" tabindex="-1"></a><span class="st"> g =~ Verbal + Spatial + Quant</span></span>
-<span id="cb195-3"><a href="validity.html#cb195-3" aria-hidden="true" tabindex="-1"></a><span class="st"> Verbal =~ </span></span>
-<span id="cb195-4"><a href="validity.html#cb195-4" aria-hidden="true" tabindex="-1"></a><span class="st">   VO1 + VO2 + VO3 + </span></span>
-<span id="cb195-5"><a href="validity.html#cb195-5" aria-hidden="true" tabindex="-1"></a><span class="st">   VW1 + VW2 + VW3 + </span></span>
-<span id="cb195-6"><a href="validity.html#cb195-6" aria-hidden="true" tabindex="-1"></a><span class="st">   VM1 + VM2 + VM3</span></span>
-<span id="cb195-7"><a href="validity.html#cb195-7" aria-hidden="true" tabindex="-1"></a><span class="st"> Spatial =~ </span></span>
-<span id="cb195-8"><a href="validity.html#cb195-8" aria-hidden="true" tabindex="-1"></a><span class="st">   SO1 + SO2 + SO3 + </span></span>
-<span id="cb195-9"><a href="validity.html#cb195-9" aria-hidden="true" tabindex="-1"></a><span class="st">   SW1 + SW2 + SW3 + </span></span>
-<span id="cb195-10"><a href="validity.html#cb195-10" aria-hidden="true" tabindex="-1"></a><span class="st">   SM1 + SM2 + SM3</span></span>
-<span id="cb195-11"><a href="validity.html#cb195-11" aria-hidden="true" tabindex="-1"></a><span class="st"> Quant =~ </span></span>
-<span id="cb195-12"><a href="validity.html#cb195-12" aria-hidden="true" tabindex="-1"></a><span class="st">   QO1 + QO2 + QO3 + </span></span>
-<span id="cb195-13"><a href="validity.html#cb195-13" aria-hidden="true" tabindex="-1"></a><span class="st">   QW1 + QW2 + QW3 + </span></span>
-<span id="cb195-14"><a href="validity.html#cb195-14" aria-hidden="true" tabindex="-1"></a><span class="st">   QM1 + QM2 + QM3</span></span>
-<span id="cb195-15"><a href="validity.html#cb195-15" aria-hidden="true" tabindex="-1"></a><span class="st"> Oral =~ </span></span>
-<span id="cb195-16"><a href="validity.html#cb195-16" aria-hidden="true" tabindex="-1"></a><span class="st">   VO1 + VO2 + VO3 + </span></span>
-<span id="cb195-17"><a href="validity.html#cb195-17" aria-hidden="true" tabindex="-1"></a><span class="st">   SO1 + SO2 + SO3 + </span></span>
-<span id="cb195-18"><a href="validity.html#cb195-18" aria-hidden="true" tabindex="-1"></a><span class="st">   QO1 + QO2 + QO3</span></span>
-<span id="cb195-19"><a href="validity.html#cb195-19" aria-hidden="true" tabindex="-1"></a><span class="st"> Written =~ </span></span>
-<span id="cb195-20"><a href="validity.html#cb195-20" aria-hidden="true" tabindex="-1"></a><span class="st">   VW1 + VW2 + VW3 + </span></span>
-<span id="cb195-21"><a href="validity.html#cb195-21" aria-hidden="true" tabindex="-1"></a><span class="st">   SW1 + SW2 + SW3 + </span></span>
-<span id="cb195-22"><a href="validity.html#cb195-22" aria-hidden="true" tabindex="-1"></a><span class="st">   QW1 + QW2 + QW3</span></span>
-<span id="cb195-23"><a href="validity.html#cb195-23" aria-hidden="true" tabindex="-1"></a><span class="st"> Manipulative =~ </span></span>
-<span id="cb195-24"><a href="validity.html#cb195-24" aria-hidden="true" tabindex="-1"></a><span class="st">   VM1 + VM2 + VM3 + </span></span>
-<span id="cb195-25"><a href="validity.html#cb195-25" aria-hidden="true" tabindex="-1"></a><span class="st">   SM1 + SM2 + SM3 + </span></span>
-<span id="cb195-26"><a href="validity.html#cb195-26" aria-hidden="true" tabindex="-1"></a><span class="st">   QM1 + QM2 + QM3</span></span>
-<span id="cb195-27"><a href="validity.html#cb195-27" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
-<span id="cb195-28"><a href="validity.html#cb195-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb195-29"><a href="validity.html#cb195-29" aria-hidden="true" tabindex="-1"></a>MTMM.fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
-<span id="cb195-30"><a href="validity.html#cb195-30" aria-hidden="true" tabindex="-1"></a>  modelMTMM,</span>
-<span id="cb195-31"><a href="validity.html#cb195-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> MTMM_data,</span>
-<span id="cb195-32"><a href="validity.html#cb195-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">orthogonal =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb195-33"><a href="validity.html#cb195-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span>
-<span id="cb195-34"><a href="validity.html#cb195-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb195-35"><a href="validity.html#cb195-35" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
-<span id="cb195-36"><a href="validity.html#cb195-36" aria-hidden="true" tabindex="-1"></a>  MTMM.fit,</span>
-<span id="cb195-37"><a href="validity.html#cb195-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb195-38"><a href="validity.html#cb195-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb195-39"><a href="validity.html#cb195-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="validity.html#cb195-1" tabindex="-1"></a>modelMTMM <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb195-2"><a href="validity.html#cb195-2" tabindex="-1"></a><span class="st"> g =~ Verbal + Spatial + Quant</span></span>
+<span id="cb195-3"><a href="validity.html#cb195-3" tabindex="-1"></a><span class="st"> Verbal =~ </span></span>
+<span id="cb195-4"><a href="validity.html#cb195-4" tabindex="-1"></a><span class="st">   VO1 + VO2 + VO3 + </span></span>
+<span id="cb195-5"><a href="validity.html#cb195-5" tabindex="-1"></a><span class="st">   VW1 + VW2 + VW3 + </span></span>
+<span id="cb195-6"><a href="validity.html#cb195-6" tabindex="-1"></a><span class="st">   VM1 + VM2 + VM3</span></span>
+<span id="cb195-7"><a href="validity.html#cb195-7" tabindex="-1"></a><span class="st"> Spatial =~ </span></span>
+<span id="cb195-8"><a href="validity.html#cb195-8" tabindex="-1"></a><span class="st">   SO1 + SO2 + SO3 + </span></span>
+<span id="cb195-9"><a href="validity.html#cb195-9" tabindex="-1"></a><span class="st">   SW1 + SW2 + SW3 + </span></span>
+<span id="cb195-10"><a href="validity.html#cb195-10" tabindex="-1"></a><span class="st">   SM1 + SM2 + SM3</span></span>
+<span id="cb195-11"><a href="validity.html#cb195-11" tabindex="-1"></a><span class="st"> Quant =~ </span></span>
+<span id="cb195-12"><a href="validity.html#cb195-12" tabindex="-1"></a><span class="st">   QO1 + QO2 + QO3 + </span></span>
+<span id="cb195-13"><a href="validity.html#cb195-13" tabindex="-1"></a><span class="st">   QW1 + QW2 + QW3 + </span></span>
+<span id="cb195-14"><a href="validity.html#cb195-14" tabindex="-1"></a><span class="st">   QM1 + QM2 + QM3</span></span>
+<span id="cb195-15"><a href="validity.html#cb195-15" tabindex="-1"></a><span class="st"> Oral =~ </span></span>
+<span id="cb195-16"><a href="validity.html#cb195-16" tabindex="-1"></a><span class="st">   VO1 + VO2 + VO3 + </span></span>
+<span id="cb195-17"><a href="validity.html#cb195-17" tabindex="-1"></a><span class="st">   SO1 + SO2 + SO3 + </span></span>
+<span id="cb195-18"><a href="validity.html#cb195-18" tabindex="-1"></a><span class="st">   QO1 + QO2 + QO3</span></span>
+<span id="cb195-19"><a href="validity.html#cb195-19" tabindex="-1"></a><span class="st"> Written =~ </span></span>
+<span id="cb195-20"><a href="validity.html#cb195-20" tabindex="-1"></a><span class="st">   VW1 + VW2 + VW3 + </span></span>
+<span id="cb195-21"><a href="validity.html#cb195-21" tabindex="-1"></a><span class="st">   SW1 + SW2 + SW3 + </span></span>
+<span id="cb195-22"><a href="validity.html#cb195-22" tabindex="-1"></a><span class="st">   QW1 + QW2 + QW3</span></span>
+<span id="cb195-23"><a href="validity.html#cb195-23" tabindex="-1"></a><span class="st"> Manipulative =~ </span></span>
+<span id="cb195-24"><a href="validity.html#cb195-24" tabindex="-1"></a><span class="st">   VM1 + VM2 + VM3 + </span></span>
+<span id="cb195-25"><a href="validity.html#cb195-25" tabindex="-1"></a><span class="st">   SM1 + SM2 + SM3 + </span></span>
+<span id="cb195-26"><a href="validity.html#cb195-26" tabindex="-1"></a><span class="st">   QM1 + QM2 + QM3</span></span>
+<span id="cb195-27"><a href="validity.html#cb195-27" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb195-28"><a href="validity.html#cb195-28" tabindex="-1"></a></span>
+<span id="cb195-29"><a href="validity.html#cb195-29" tabindex="-1"></a>MTMM.fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb195-30"><a href="validity.html#cb195-30" tabindex="-1"></a>  modelMTMM,</span>
+<span id="cb195-31"><a href="validity.html#cb195-31" tabindex="-1"></a>  <span class="at">data =</span> MTMM_data,</span>
+<span id="cb195-32"><a href="validity.html#cb195-32" tabindex="-1"></a>  <span class="at">orthogonal =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb195-33"><a href="validity.html#cb195-33" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ml&quot;</span>)</span>
+<span id="cb195-34"><a href="validity.html#cb195-34" tabindex="-1"></a></span>
+<span id="cb195-35"><a href="validity.html#cb195-35" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb195-36"><a href="validity.html#cb195-36" tabindex="-1"></a>  MTMM.fit,</span>
+<span id="cb195-37"><a href="validity.html#cb195-37" tabindex="-1"></a>  <span class="at">fit.measures =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb195-38"><a href="validity.html#cb195-38" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb195-39"><a href="validity.html#cb195-39" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>lavaan 0.6.17 ended normally after 72 iterations
 
@@ -3134,13 +3135,13 @@ R-Square:
     Verbal            0.845
     Spatial           0.588
     Quant             0.424</code></pre>
-<p>A path diagram of the model is depicted in Figure <a href="validity.html#fig:mtmmCFAFigure">5.14</a> using the <code>semPlot</code> package <span class="citation">(<a href="#ref-R-semPlot" role="doc-biblioref">Epskamp, 2022</a>)</span>.</p>
+<p>A path diagram of the model is depicted in Figure <a href="validity.html#fig:mtmmCFAFigure">5.14</a> using the <code>semPlot</code> package <span class="citation">(<a href="#ref-R-semPlot">Epskamp, 2022</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="validity.html#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
-<span id="cb197-2"><a href="validity.html#cb197-2" aria-hidden="true" tabindex="-1"></a>  MTMM.fit,</span>
-<span id="cb197-3"><a href="validity.html#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;std&quot;</span>,</span>
-<span id="cb197-4"><a href="validity.html#cb197-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree3&quot;</span>,</span>
-<span id="cb197-5"><a href="validity.html#cb197-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">bifactor =</span> <span class="fu">c</span>(<span class="st">&quot;Verbal&quot;</span>,<span class="st">&quot;Spatial&quot;</span>,<span class="st">&quot;Quant&quot;</span>,<span class="st">&quot;g&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="validity.html#cb197-1" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb197-2"><a href="validity.html#cb197-2" tabindex="-1"></a>  MTMM.fit,</span>
+<span id="cb197-3"><a href="validity.html#cb197-3" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;std&quot;</span>,</span>
+<span id="cb197-4"><a href="validity.html#cb197-4" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree3&quot;</span>,</span>
+<span id="cb197-5"><a href="validity.html#cb197-5" tabindex="-1"></a>  <span class="at">bifactor =</span> <span class="fu">c</span>(<span class="st">&quot;Verbal&quot;</span>,<span class="st">&quot;Spatial&quot;</span>,<span class="st">&quot;Quant&quot;</span>,<span class="st">&quot;g&quot;</span>))</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:mtmmCFAFigure"></span>
 <img src="Book_files/figure-html/mtmmCFAFigure-1.png" alt="Multitrait-Multimethod Model in Confirmatory Factor Analysis." width="100%" />
@@ -3154,7 +3155,7 @@ Figure 5.14: Multitrait-Multimethod Model in Confirmatory Factor Analysis.
 <div id="incrementalValidity" class="section level4 hasAnchor" number="5.3.1.5">
 <h4><span class="header-section-number">5.3.1.5</span> Incremental Validity<a href="validity.html#incrementalValidity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Accuracy is not enough for a measure to be useful.
-Proposed by <span class="citation">Sechrest (<a href="#ref-Sechrest1963" role="doc-biblioref">1963</a>)</span>, measures should also be judged by the extent to which they provide an increment in predictive efficiency over the information otherwise easily and cheaply available.
+Proposed by <span class="citation">Sechrest (<a href="#ref-Sechrest1963">1963</a>)</span>, measures should also be judged by the extent to which they provide an increment in predictive efficiency over the information otherwise easily and cheaply available.
 <em>Incremental validity</em> deals with the incremental value or utility over a measure beyond other sources of information.
 It must be demonstrated that the addition of a measure will produce better predictions than are made on the basis of information ordinarily available.
 It is not enough to show that the measure is better than chance, and the measure should not just be capitalizing on shared method variance with the criterion or on increased <a href="reliability.html#reliability">reliability</a> of the measure.
@@ -3164,15 +3165,15 @@ Incremental validity is a specific kind of <a href="validity.html#criterionValid
 The incremental validity of a measure can be evaluated by examining whether the measure explains significant unique variance in the criterion when accounting for other information, such as easily accessible information, traditionally available measures, or the current gold-standard measure.
 The extent of incremental validity of a measure can be quantified with the change in the coefficient of determination (<span class="math inline">\(\Delta R^2\)</span>) that compares (a) the model that includes the old predictor(s) to (b) the model that includes old predictors and the new predictor (measure).</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="validity.html#cb198-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb198-2"><a href="validity.html#cb198-2" aria-hidden="true" tabindex="-1"></a>  criterion <span class="sc">~</span> oldpredictor,</span>
-<span id="cb198-3"><a href="validity.html#cb198-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
-<span id="cb198-4"><a href="validity.html#cb198-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb198-5"><a href="validity.html#cb198-5" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb198-6"><a href="validity.html#cb198-6" aria-hidden="true" tabindex="-1"></a>  criterion <span class="sc">~</span> oldpredictor <span class="sc">+</span> predictor,</span>
-<span id="cb198-7"><a href="validity.html#cb198-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
-<span id="cb198-8"><a href="validity.html#cb198-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb198-9"><a href="validity.html#cb198-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="validity.html#cb198-1" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb198-2"><a href="validity.html#cb198-2" tabindex="-1"></a>  criterion <span class="sc">~</span> oldpredictor,</span>
+<span id="cb198-3"><a href="validity.html#cb198-3" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
+<span id="cb198-4"><a href="validity.html#cb198-4" tabindex="-1"></a></span>
+<span id="cb198-5"><a href="validity.html#cb198-5" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb198-6"><a href="validity.html#cb198-6" tabindex="-1"></a>  criterion <span class="sc">~</span> oldpredictor <span class="sc">+</span> predictor,</span>
+<span id="cb198-7"><a href="validity.html#cb198-7" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">na.omit</span>(mydataValidity))</span>
+<span id="cb198-8"><a href="validity.html#cb198-8" tabindex="-1"></a></span>
+<span id="cb198-9"><a href="validity.html#cb198-9" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code></pre></div>
 </details>
 <pre><code>
 Call:
@@ -3193,7 +3194,7 @@ Residual standard error: 7.015 on 900 degrees of freedom
 Multiple R-squared:  0.7831,    Adjusted R-squared:  0.7829 
 F-statistic:  3250 on 1 and 900 DF,  p-value: &lt; 2.2e-16</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="validity.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="validity.html#cb200-1" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code></pre></div>
 </details>
 <pre><code>
 Call:
@@ -3215,13 +3216,13 @@ Residual standard error: 6.405 on 899 degrees of freedom
 Multiple R-squared:  0.8194,    Adjusted R-squared:  0.819 
 F-statistic:  2040 on 2 and 899 DF,  p-value: &lt; 2.2e-16</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="validity.html#cb202-1" aria-hidden="true" tabindex="-1"></a>model1Rsquare <span class="ot">&lt;-</span> <span class="fu">summary</span>(model1)<span class="sc">$</span>r.squared</span>
-<span id="cb202-2"><a href="validity.html#cb202-2" aria-hidden="true" tabindex="-1"></a>model2Rsquare <span class="ot">&lt;-</span> <span class="fu">summary</span>(model2)<span class="sc">$</span>r.squared</span>
-<span id="cb202-3"><a href="validity.html#cb202-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb202-4"><a href="validity.html#cb202-4" aria-hidden="true" tabindex="-1"></a>model1RsquareAdj <span class="ot">&lt;-</span> <span class="fu">summary</span>(model1)<span class="sc">$</span>adj.r.squared</span>
-<span id="cb202-5"><a href="validity.html#cb202-5" aria-hidden="true" tabindex="-1"></a>model2RsquareAdj <span class="ot">&lt;-</span> <span class="fu">summary</span>(model2)<span class="sc">$</span>adj.r.squared</span>
-<span id="cb202-6"><a href="validity.html#cb202-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb202-7"><a href="validity.html#cb202-7" aria-hidden="true" tabindex="-1"></a>deltaRsquare <span class="ot">&lt;-</span> <span class="fu">getDeltaRsquare</span>(model2)[[<span class="st">&quot;predictor&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="validity.html#cb202-1" tabindex="-1"></a>model1Rsquare <span class="ot">&lt;-</span> <span class="fu">summary</span>(model1)<span class="sc">$</span>r.squared</span>
+<span id="cb202-2"><a href="validity.html#cb202-2" tabindex="-1"></a>model2Rsquare <span class="ot">&lt;-</span> <span class="fu">summary</span>(model2)<span class="sc">$</span>r.squared</span>
+<span id="cb202-3"><a href="validity.html#cb202-3" tabindex="-1"></a></span>
+<span id="cb202-4"><a href="validity.html#cb202-4" tabindex="-1"></a>model1RsquareAdj <span class="ot">&lt;-</span> <span class="fu">summary</span>(model1)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb202-5"><a href="validity.html#cb202-5" tabindex="-1"></a>model2RsquareAdj <span class="ot">&lt;-</span> <span class="fu">summary</span>(model2)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb202-6"><a href="validity.html#cb202-6" tabindex="-1"></a></span>
+<span id="cb202-7"><a href="validity.html#cb202-7" tabindex="-1"></a>deltaRsquare <span class="ot">&lt;-</span> <span class="fu">getDeltaRsquare</span>(model2)[[<span class="st">&quot;predictor&quot;</span>]]</span></code></pre></div>
 </details>
 <pre><code>The deltaR-square values: the change in the R-square
       observed when a single term is removed.
@@ -3230,13 +3231,13 @@ Same as the square of the &#39;semi-partial correlation coefficient&#39;
 oldpredictor   0.31824800
 predictor      0.03627593</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="validity.html#cb204-1" aria-hidden="true" tabindex="-1"></a>deltaRsquareAdj <span class="ot">&lt;-</span> model2RsquareAdj <span class="sc">-</span> model1RsquareAdj</span>
-<span id="cb204-2"><a href="validity.html#cb204-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb204-3"><a href="validity.html#cb204-3" aria-hidden="true" tabindex="-1"></a>deltaRsquareAdj</span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="validity.html#cb204-1" tabindex="-1"></a>deltaRsquareAdj <span class="ot">&lt;-</span> model2RsquareAdj <span class="sc">-</span> model1RsquareAdj</span>
+<span id="cb204-2"><a href="validity.html#cb204-2" tabindex="-1"></a></span>
+<span id="cb204-3"><a href="validity.html#cb204-3" tabindex="-1"></a>deltaRsquareAdj</span></code></pre></div>
 </details>
 <pre><code>[1] 0.03611514</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="validity.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model1, model2)</span></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="validity.html#cb206-1" tabindex="-1"></a><span class="fu">anova</span>(model1, model2)</span></code></pre></div>
 </details>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3244,7 +3245,7 @@ predictor      0.03627593</code></pre>
   </script>
 </div>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="validity.html#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getDeltaRsquare</span>(model2)</span></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="validity.html#cb207-1" tabindex="-1"></a><span class="fu">getDeltaRsquare</span>(model2)</span></code></pre></div>
 </details>
 <pre><code>The deltaR-square values: the change in the R-square
       observed when a single term is removed.
@@ -3252,7 +3253,7 @@ Same as the square of the &#39;semi-partial correlation coefficient&#39;
              deltaRsquare
 oldpredictor   0.31824800
 predictor      0.03627593</code></pre>
-<p><span class="math inline">\(\Delta R^2\)</span> was calculated using the <code>rockchalk</code> package <span class="citation">(<a href="#ref-R-rockchalk" role="doc-biblioref">P. E. Johnson, 2022</a>)</span>.
+<p><span class="math inline">\(\Delta R^2\)</span> was calculated using the <code>rockchalk</code> package <span class="citation">(<a href="#ref-R-rockchalk">P. E. Johnson, 2022</a>)</span>.
 The predictor shows significant incremental validity above the old predictor in predicting the criterion.
 <code>Model 1</code> explains <span class="math inline">\(78.31\)</span>% of the variance <span class="math inline">\((R^2 = 0.78)\)</span>, and <code>Model 2</code> explains <span class="math inline">\(81.94\)</span>% of the variance <span class="math inline">\((R^2 = 0.82)\)</span>.
 Thus, the predictor explains only <span class="math inline">\(3.63\)</span>% additional variance in the criterion above the variance explained by the old predictor <span class="math inline">\((\Delta R^2)\)</span>.
@@ -3260,7 +3261,7 @@ Based on adjusted <span class="math inline">\(R^2\)</span> (<span class="math in
 </div>
 <div id="treatmentUtility" class="section level4 hasAnchor" number="5.3.1.6">
 <h4><span class="header-section-number">5.3.1.6</span> Treatment Utility of Assessment<a href="validity.html#treatmentUtility" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p><span class="citation">S. C. Hayes et al. (<a href="#ref-Hayes1987" role="doc-biblioref">1987</a>)</span> argued that it is not enough for measures to be <a href="reliability.html#reliability">reliable</a> and valid.
+<p><span class="citation">S. C. Hayes et al. (<a href="#ref-Hayes1987">1987</a>)</span> argued that it is not enough for measures to be <a href="reliability.html#reliability">reliable</a> and valid.
 The authors raised another important consideration for the validity of a measure: its treatment utility or usefulness.
 They asked the question: What goal do assessments accomplish in clinical psychology?
 In clinical psychology, the goal of assessment is to lead to better treatment outcomes.
@@ -3268,7 +3269,7 @@ Therefore, the <em>treatment utility</em> of a measure is the extent to which a 
 That is, if a clinician has the information/results from having administered this measure, do the clients have better outcomes?
 The treatment utility of assessment is a specific kind of <a href="validity.html#criterionValidity">criterion-related validity</a>, with the idea that “all criteria are not created equal.”
 And the criterion that is most important to optimize, from this perspective, when developing and selecting measures is a client’s treatment outcomes.</p>
-<p><span class="citation">S. C. Hayes et al. (<a href="#ref-Hayes1987" role="doc-biblioref">1987</a>)</span> described different approaches to evaluating the extent to which a measure shows treatment utility.
+<p><span class="citation">S. C. Hayes et al. (<a href="#ref-Hayes1987">1987</a>)</span> described different approaches to evaluating the extent to which a measure shows treatment utility.
 These are a priori group comparison approaches that examine whether a specific difference in the assessment approach relates to treatment outcome.
 They distinguished between (a) manipulated assessment and (b) manipulated use.
 Manipulated assessment and manipulated use are depicted in Figure <a href="validity.html#fig:treatmentUtility">5.15</a>.</p>
@@ -3291,7 +3292,7 @@ For example, one group gets a treatment matched to assessment outcomes, and the 
 So, in one group, the assessment information is used to match the treatment to the client based on their assessment results, whereas the other group receives a standard treatment regardless of their assessment results.
 An advantage of this design is that you can be certain that the treatment decisions are explicitly informed by the assessment results because the researcher ensures this, whereas the decision of how the assessment information is used is up to the clinician in manipulated assessment.</p>
 <p>Relatively few measures show evidence of treatment utility of assessment.
-A review on the treatment utility of assessment is provided by <span class="citation">Nelson-Gray (<a href="#ref-NelsonGray2003" role="doc-biblioref">2003</a>)</span>.</p>
+A review on the treatment utility of assessment is provided by <span class="citation">Nelson-Gray (<a href="#ref-NelsonGray2003">2003</a>)</span>.</p>
 </div>
 <div id="discriminativeValidity" class="section level4 hasAnchor" number="5.3.1.7">
 <h4><span class="header-section-number">5.3.1.7</span> Discriminative Validity<a href="validity.html#discriminativeValidity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -3329,7 +3330,7 @@ Figure 5.16: Invalidation of a Measure Due to Society’s Response to the Use of
 </p>
 </div>
 <p>A prediction that becomes less accurate as a result of people’s response to a prediction is a self-canceling prediction.
-The most effective prediction about a flu outbreak might be one that leads people to safer behavior; therefore lowering flu rates, which does not correspond to the initial prediction <span class="citation">(<a href="#ref-Silver2012" role="doc-biblioref">Silver, 2012</a>)</span>.
+The most effective prediction about a flu outbreak might be one that leads people to safer behavior; therefore lowering flu rates, which does not correspond to the initial prediction <span class="citation">(<a href="#ref-Silver2012">Silver, 2012</a>)</span>.
 Society’s response to a measure can invalidate the measure.
 For example, consider that an organization rates cities based on quality-of-life measures.
 If quality-of-life indices include the percent of solved cases by the city’s police (i.e., the clearance rate), cities may try to improve their ratings of “quality-of-life” by increasing their clearance rate either by increasing the number of cases they mark as solved (such as by marking cases falsely as resolved) or by decreasing the number of cases (such as by investigating fewer cases).
@@ -3360,7 +3361,7 @@ It is a type of <a href="validity.html#constructValidity">construct validity</a>
 <div id="processFocusedValidity" class="section level4 hasAnchor" number="5.3.1.13">
 <h4><span class="header-section-number">5.3.1.13</span> Process-Focused Validity<a href="validity.html#processFocusedValidity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Process-focused validity attempts to get closer to the underlying mechanisms.
-<em>Process-focused validity</em> examines the degree to which respondents engage in a predictable set of psychological processes (which are specified a priori) when completing the measure <span class="citation">(<a href="#ref-Bornstein2011" role="doc-biblioref">Bornstein, 2011</a>; <a href="#ref-Furr2017" role="doc-biblioref">Furr, 2017</a>)</span>.
+<em>Process-focused validity</em> examines the degree to which respondents engage in a predictable set of psychological processes (which are specified a priori) when completing the measure <span class="citation">(<a href="#ref-Bornstein2011">Bornstein, 2011</a>; <a href="#ref-Furr2017">Furr, 2017</a>)</span>.
 These psychological processes include effects of the instrument (e.g., observer versus third-party report versus projective test) as well as effects of the context (e.g., assessment setting, assessment instructions, affect state of the participant, etc.).
 To determine whether a test is valid in the process-focused technique, one experimentally manipulates variables that moderate the test score–criterion association—to better understand the underlying processes.
 The ideal outcome is a measure that both (1) has an adequate outcome (correlations where expected) as well as (2) adequate process validity—the psychological processes that one engages in are well hypothesized.</p>
@@ -3380,7 +3381,7 @@ It is a form of <a href="validity.html#constructValidity">construct validity</a>
 </div>
 <div id="culturalValidity" class="section level4 hasAnchor" number="5.3.1.16">
 <h4><span class="header-section-number">5.3.1.16</span> Cultural Validity<a href="validity.html#culturalValidity" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>Cultural validity refers to “the effectiveness of a measure or the accuracy of a clinical diagnosis to address the existence and importance of essential cultural factors” <span class="citation">(<a href="#ref-Leong2016" role="doc-biblioref">Leong &amp; Kalibatseva, 2016, p. 58</a>)</span>.
+<p>Cultural validity refers to “the effectiveness of a measure or the accuracy of a clinical diagnosis to address the existence and importance of essential cultural factors” <span class="citation">(<a href="#ref-Leong2016">Leong &amp; Kalibatseva, 2016, p. 58</a>)</span>.
 Essential cultural factors may include values, beliefs, experiences, communication patterns, and approaches to knowledge (epistemologies).</p>
 </div>
 </div>
@@ -3398,7 +3399,7 @@ This encompasses multiple features including</p>
 <li>no plausible alternative explanations—such as third variables that could influence both variables and explain their covariation</li>
 </ul>
 <p>There are number of potential threats to internal validity, which are important to consider when designing studies and interpreting findings.
-Examples of potential threats to internal validity include history, maturation, testing, instrumentation, regression, selection, experimental mortality, and an interaction of threats <span class="citation">(<a href="#ref-Slack2001" role="doc-biblioref">Slack &amp; Draugalis, 2001</a>)</span>.</p>
+Examples of potential threats to internal validity include history, maturation, testing, instrumentation, regression, selection, experimental mortality, and an interaction of threats <span class="citation">(<a href="#ref-Slack2001">Slack &amp; Draugalis, 2001</a>)</span>.</p>
 <p>Research designs differ in the extent to which they show internal validity versus <a href="validity.html#externalValidity">external validity</a>.
 An experiment is a research design in which one or more variables (independent variables) are manipulated to observe how the manipulation influences the dependent variable.
 In an experiment, the researcher has greater control over the variables and attempts to hold everything else constant (e.g., by standardization and random assignment).
@@ -3412,9 +3413,9 @@ Thus, experiments tend to have higher internal validity than correlational desig
 <p><em>External validity</em> is the extent to which the findings can be generalized to the broader population and the real world.
 External validity is crucial to consider for studies that intend to make inferences to people outside of those who were assessed.
 For instance, <a href="scoresScales.html#norm">norm-referenced</a> assessments attempt to identify the distribution of scores for a given population from a sample within that population.
-The validity of the <a href="scoresScales.html#norm">norms</a> of a <a href="scoresScales.html#norm">norm-referenced</a> assessment are important to consider <span class="citation">(<a href="#ref-Achenbach2001c" role="doc-biblioref">Achenbach, 2001</a>)</span>.
+The validity of the <a href="scoresScales.html#norm">norms</a> of a <a href="scoresScales.html#norm">norm-referenced</a> assessment are important to consider <span class="citation">(<a href="#ref-Achenbach2001c">Achenbach, 2001</a>)</span>.
 The validity of norms and external validity, more broadly, can depend highly on how representative the sample is of the target population and how appropriate this population is to a given participant.
-Some measures are known to have poor norms, including the Exner Comprehensive System <span class="citation">(<a href="#ref-Exner1974" role="doc-biblioref">Exner, 1974</a>; <a href="#ref-Exner2005" role="doc-biblioref">Exner &amp; Erdberg, 2005</a>)</span> for administering and scoring the <a href="projective.html#rorschach">Rorschach Inkblot Test</a>, which has been known to over-pathologize <span class="citation">(<a href="#ref-Wood2001a" role="doc-biblioref">Wood, Teresa, et al., 2001</a>; <a href="#ref-Wood2001b" role="doc-biblioref">Wood, Nezworski, et al., 2001</a>)</span>.
+Some measures are known to have poor norms, including the Exner Comprehensive System <span class="citation">(<a href="#ref-Exner1974">Exner, 1974</a>; <a href="#ref-Exner2005">Exner &amp; Erdberg, 2005</a>)</span> for administering and scoring the <a href="projective.html#rorschach">Rorschach Inkblot Test</a>, which has been known to over-pathologize <span class="citation">(<a href="#ref-Wood2001a">Wood, Teresa, et al., 2001</a>; <a href="#ref-Wood2001b">Wood, Nezworski, et al., 2001</a>)</span>.
 The <a href="projective.html#rorschach">Rorschach</a> is discussed in greater detail in Chapter <a href="projective.html#projective">19</a>.</p>
 <div id="internalExternalValidityTradeoffs" class="section level5 hasAnchor" number="5.3.2.2.1">
 <h5><span class="header-section-number">5.3.2.2.1</span> Tradeoffs of Internal Validity and External Validity<a href="validity.html#internalExternalValidityTradeoffs" class="anchor-section" aria-label="Anchor link to header"></a></h5>
@@ -3533,7 +3534,7 @@ To the extent that one of the measures is <a href="reliability.html#reliability"
 Figure 5.20: The Criterion-Related Validity of a Measure, i.e., Its Association With Another Measure, as Depicted in a Path Diagram.
 </p>
 </div>
-<p>As described above, (<a href="reliability.html#randomError">random</a>) <a href="reliability.html#measurementError">measurement error</a> weakens (or attenuates) the association between variables <span class="citation">(<a href="#ref-Goodwin2006" role="doc-biblioref">Goodwin &amp; Leech, 2006</a>; <a href="#ref-Schmidt1996" role="doc-biblioref">Schmidt &amp; Hunter, 1996</a>)</span>.
+<p>As described above, (<a href="reliability.html#randomError">random</a>) <a href="reliability.html#measurementError">measurement error</a> weakens (or attenuates) the association between variables <span class="citation">(<a href="#ref-Goodwin2006">Goodwin &amp; Leech, 2006</a>; <a href="#ref-Schmidt1996">Schmidt &amp; Hunter, 1996</a>)</span>.
 The greater the <a href="reliability.html#randomError">random measurement error</a>, the weaker the association.
 Thus, the correlation between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> depends on both the true correlation of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> (<span class="math inline">\(r_{x_{t}y_{t}}\)</span>) and the <a href="reliability.html#reliability">reliabilities</a> of <span class="math inline">\(x\)</span> (<span class="math inline">\(r_{xx}\)</span>) and <span class="math inline">\(y\)</span> (<span class="math inline">\(r_{yy}\)</span>).
 So, <a href="reliability.html#measurementError">measurement error</a> in <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> can reduce the observed correlation below the true correlation.
@@ -3548,7 +3549,7 @@ This is known as the <em>attenuation formula</em> (Equation <a href="validity.ht
 \]</span></p>
 <p>The lower the <a href="reliability.html#reliability">reliability</a>, the greater the attenuation of the validity coefficient relative to the true association between the constructs.</p>
 <p>All of these <span class="math inline">\(r\)</span> values (excluding the true correlation) are just estimates unless the sample size is infinite, so the observed association is an imperfect estimate.
-Hence, we need a correction for this attenuation <span class="citation">(<a href="#ref-Schmidt1996" role="doc-biblioref">Schmidt &amp; Hunter, 1996</a>)</span>.
+Hence, we need a correction for this attenuation <span class="citation">(<a href="#ref-Schmidt1996">Schmidt &amp; Hunter, 1996</a>)</span>.
 This correction for the attenuation of an association due to <a href="reliability.html#measurementError">measurement error</a> (unreliability) is known as the disattenuation of a correlation, i.e., correction for the attenuation of an association due to <a href="reliability.html#measurementError">measurement error</a> to get a more accurate estimate of the true association between constructs.
 Rearranging the terms from the attenuation formula, the formula for disattenuation of a correlation (i.e., the <em>disattenuation formula</em>) is in Equation <a href="validity.html#eq:disattenuationFormula">(5.3)</a>:</p>
 <p><span class="math display" id="eq:disattenuationFormula">\[
@@ -3561,15 +3562,15 @@ Rearranging the terms from the attenuation formula, the formula for disattenuati
 <p>All of this is implied in the path diagram (see Figure <a href="validity.html#fig:validity">5.20</a>).
 The attenuation and disattenuation formulas are based on <a href="reliability.html#ctt">classical test theory</a>, and therefore assume that all <a href="reliability.html#measurementError">measurement error</a> is random, that errors are uncorrelated, etc.
 Nevertheless, the attenuation formula can be informative for understanding how imperiled your research is when your measures have low <a href="reliability.html#reliability">reliability</a> (i.e., when there is instability in the measure).
-Researchers recommend accounting for measurement <a href="reliability.html#reliability">reliability</a>, to better estimate the association between constructs, either with the disattenuation formula <span class="citation">(<a href="#ref-Schmidt1996" role="doc-biblioref">Schmidt &amp; Hunter, 1996</a>)</span> or with <a href="sem.html#sem">structural equation modeling</a>, as described in the next chapter.</p>
+Researchers recommend accounting for measurement <a href="reliability.html#reliability">reliability</a>, to better estimate the association between constructs, either with the disattenuation formula <span class="citation">(<a href="#ref-Schmidt1996">Schmidt &amp; Hunter, 1996</a>)</span> or with <a href="sem.html#sem">structural equation modeling</a>, as described in the next chapter.</p>
 <div id="measurementErrorEffects-simulatedData" class="section level3 hasAnchor" number="5.6.1">
 <h3><span class="header-section-number">5.6.1</span> Test with Simulated Data<a href="validity.html#measurementErrorEffects-simulatedData" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="measurementErrorEffects-reliabilityPredictor" class="section level4 hasAnchor" number="5.6.1.1">
 <h4><span class="header-section-number">5.6.1.1</span> Reliability of Predictor<a href="validity.html#measurementErrorEffects-reliabilityPredictor" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="validity.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
-<span id="cb209-2"><a href="validity.html#cb209-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
-<span id="cb209-3"><a href="validity.html#cb209-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2)</span></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="validity.html#cb209-1" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb209-2"><a href="validity.html#cb209-2" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
+<span id="cb209-3"><a href="validity.html#cb209-3" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -3586,9 +3587,9 @@ sample estimates:
 <div id="measurementErrorEffects-reliabilityCriterion" class="section level4 hasAnchor" number="5.6.1.2">
 <h4><span class="header-section-number">5.6.1.2</span> Reliability of Criterion<a href="validity.html#measurementErrorEffects-reliabilityCriterion" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="validity.html#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
-<span id="cb211-2"><a href="validity.html#cb211-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1,</span>
-<span id="cb211-3"><a href="validity.html#cb211-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2)</span></code></pre></div>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="validity.html#cb211-1" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb211-2"><a href="validity.html#cb211-2" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1,</span>
+<span id="cb211-3"><a href="validity.html#cb211-3" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT2)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -3605,9 +3606,9 @@ sample estimates:
 <div id="measurementErrorEffects-trueAssociation" class="section level4 hasAnchor" number="5.6.1.3">
 <h4><span class="header-section-number">5.6.1.3</span> True Association<a href="validity.html#measurementErrorEffects-trueAssociation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="validity.html#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
-<span id="cb213-2"><a href="validity.html#cb213-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
-<span id="cb213-3"><a href="validity.html#cb213-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="validity.html#cb213-1" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb213-2"><a href="validity.html#cb213-2" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
+<span id="cb213-3"><a href="validity.html#cb213-3" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -3624,9 +3625,9 @@ sample estimates:
 <div id="measurementErrorEffects-observedAssociation" class="section level4 hasAnchor" number="5.6.1.4">
 <h4><span class="header-section-number">5.6.1.4</span> Observed Association (After Adding Measurement Error)<a href="validity.html#measurementErrorEffects-observedAssociation" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="validity.html#cb215-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
-<span id="cb215-2"><a href="validity.html#cb215-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
-<span id="cb215-3"><a href="validity.html#cb215-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1)</span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="validity.html#cb215-1" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb215-2"><a href="validity.html#cb215-2" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorWithMeasurementErrorT1,</span>
+<span id="cb215-3"><a href="validity.html#cb215-3" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionWithMeasurementErrorT1)</span></code></pre></div>
 </details>
 <pre><code>
     Pearson&#39;s product-moment correlation
@@ -3657,19 +3658,19 @@ We extend it to a specific example in Equation <a href="validity.html#eq:attenua
 <p>where <span class="math inline">\(x = \text{measure of construct} \ A\)</span>; <span class="math inline">\(y = \text{measure of construct} \ B\)</span>.</p>
 <p>Below is an example of how to find the observed correlation between the predictor and criterion if the true association between the constructs (i.e., correlation between true scores of constructs) is .70, the <a href="reliability.html#reliability">reliability</a> of the predictor is .90, and the <a href="reliability.html#reliability">reliability</a> of the criterion is .85:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="validity.html#cb217-1" aria-hidden="true" tabindex="-1"></a>trueAssociation <span class="ot">&lt;-</span> .<span class="dv">7</span></span>
-<span id="cb217-2"><a href="validity.html#cb217-2" aria-hidden="true" tabindex="-1"></a>reliabilityOfPredictor <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
-<span id="cb217-3"><a href="validity.html#cb217-3" aria-hidden="true" tabindex="-1"></a>reliabilityOfCriterion <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
-<span id="cb217-4"><a href="validity.html#cb217-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb217-5"><a href="validity.html#cb217-5" aria-hidden="true" tabindex="-1"></a>trueAssociation <span class="sc">*</span> <span class="fu">sqrt</span>(reliabilityOfPredictor <span class="sc">*</span> reliabilityOfCriterion)</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="validity.html#cb217-1" tabindex="-1"></a>trueAssociation <span class="ot">&lt;-</span> .<span class="dv">7</span></span>
+<span id="cb217-2"><a href="validity.html#cb217-2" tabindex="-1"></a>reliabilityOfPredictor <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb217-3"><a href="validity.html#cb217-3" tabindex="-1"></a>reliabilityOfCriterion <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
+<span id="cb217-4"><a href="validity.html#cb217-4" tabindex="-1"></a></span>
+<span id="cb217-5"><a href="validity.html#cb217-5" tabindex="-1"></a>trueAssociation <span class="sc">*</span> <span class="fu">sqrt</span>(reliabilityOfPredictor <span class="sc">*</span> reliabilityOfCriterion)</span></code></pre></div>
 </details>
 <pre><code>[1] 0.6122499</code></pre>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2024b</a>)</span> contains the <code>attenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation">(<a href="#ref-R-petersenlab">Petersen, 2024b</a>)</span> contains the <code>attenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="validity.html#cb219-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attenuationCorrelation</span>(</span>
-<span id="cb219-2"><a href="validity.html#cb219-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">trueAssociation =</span> <span class="fl">0.7</span>, </span>
-<span id="cb219-3"><a href="validity.html#cb219-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
-<span id="cb219-4"><a href="validity.html#cb219-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.85</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="validity.html#cb219-1" tabindex="-1"></a><span class="fu">attenuationCorrelation</span>(</span>
+<span id="cb219-2"><a href="validity.html#cb219-2" tabindex="-1"></a>  <span class="at">trueAssociation =</span> <span class="fl">0.7</span>, </span>
+<span id="cb219-3"><a href="validity.html#cb219-3" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
+<span id="cb219-4"><a href="validity.html#cb219-4" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.85</span>)</span></code></pre></div>
 </details>
 <pre><code>[1] 0.6122499</code></pre>
 <p>The observed association (<span class="math inline">\(r = .61\)</span>) is attenuated relative to the true association (<span class="math inline">\(r = .70\)</span>).</p>
@@ -3689,61 +3690,61 @@ We extend it to a specific example in Equation <a href="validity.html#eq:disatte
 <p>where <span class="math inline">\(x = \text{measure of construct} \ A\)</span>; <span class="math inline">\(y = \text{measure of construct} \ B\)</span></p>
 <p>Find the true association between the construct assessed by the predictor and the construct assessed by the criterion given an observed association if the <a href="reliability.html#reliability">reliability</a> of the predictor is .9, and the <a href="reliability.html#reliability">reliability</a> of the criterion is .85:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="validity.html#cb221-1" aria-hidden="true" tabindex="-1"></a>reliabilityOfPredictor <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
-<span id="cb221-2"><a href="validity.html#cb221-2" aria-hidden="true" tabindex="-1"></a>reliabilityOfCriterion <span class="ot">&lt;-</span> <span class="fl">0.85</span></span></code></pre></div>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="validity.html#cb221-1" tabindex="-1"></a>reliabilityOfPredictor <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb221-2"><a href="validity.html#cb221-2" tabindex="-1"></a>reliabilityOfCriterion <span class="ot">&lt;-</span> <span class="fl">0.85</span></span></code></pre></div>
 </details>
 <p>The observed (attenuated) association is as follows:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="validity.html#cb222-1" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(</span>
-<span id="cb222-2"><a href="validity.html#cb222-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
-<span id="cb222-3"><a href="validity.html#cb222-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)<span class="sc">$</span>estimate</span>
-<span id="cb222-4"><a href="validity.html#cb222-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb222-5"><a href="validity.html#cb222-5" aria-hidden="true" tabindex="-1"></a>observedAssociation</span></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="validity.html#cb222-1" tabindex="-1"></a>observedAssociation <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(</span>
+<span id="cb222-2"><a href="validity.html#cb222-2" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
+<span id="cb222-3"><a href="validity.html#cb222-3" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)<span class="sc">$</span>estimate</span>
+<span id="cb222-4"><a href="validity.html#cb222-4" tabindex="-1"></a></span>
+<span id="cb222-5"><a href="validity.html#cb222-5" tabindex="-1"></a>observedAssociation</span></code></pre></div>
 </details>
 <pre><code>      cor 
 0.7079278 </code></pre>
 <p>The true (disattenuated) association is as follows:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="validity.html#cb224-1" aria-hidden="true" tabindex="-1"></a>observedAssociation <span class="sc">/</span> <span class="fu">sqrt</span>(reliabilityOfPredictor <span class="sc">*</span> reliabilityOfCriterion)</span></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="validity.html#cb224-1" tabindex="-1"></a>observedAssociation <span class="sc">/</span> <span class="fu">sqrt</span>(reliabilityOfPredictor <span class="sc">*</span> reliabilityOfCriterion)</span></code></pre></div>
 </details>
 <pre><code>      cor 
 0.8093908 </code></pre>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation">(<a href="#ref-R-petersenlab" role="doc-biblioref">Petersen, 2024b</a>)</span> contains the <code>disattenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation">(<a href="#ref-R-petersenlab">Petersen, 2024b</a>)</span> contains the <code>disattenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="validity.html#cb226-1" aria-hidden="true" tabindex="-1"></a><span class="fu">disattenuationCorrelation</span>(</span>
-<span id="cb226-2"><a href="validity.html#cb226-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">observedAssociation =</span> observedAssociation, </span>
-<span id="cb226-3"><a href="validity.html#cb226-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
-<span id="cb226-4"><a href="validity.html#cb226-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.85</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="validity.html#cb226-1" tabindex="-1"></a><span class="fu">disattenuationCorrelation</span>(</span>
+<span id="cb226-2"><a href="validity.html#cb226-2" tabindex="-1"></a>  <span class="at">observedAssociation =</span> observedAssociation, </span>
+<span id="cb226-3"><a href="validity.html#cb226-3" tabindex="-1"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
+<span id="cb226-4"><a href="validity.html#cb226-4" tabindex="-1"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.85</span>)</span></code></pre></div>
 </details>
 <pre><code>      cor 
 0.8093908 </code></pre>
 <p>The disattenuation of an observed correlation due to <a href="reliability.html#measurementError">measurement error</a> can be demonstrated using <a href="sem.html#sem">structural equation modeling</a>.
 For instance, consider the following observed association:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="validity.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
-<span id="cb228-2"><a href="validity.html#cb228-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorObservedSEM,</span>
-<span id="cb228-3"><a href="validity.html#cb228-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionObservedSEM)<span class="sc">$</span>estimate</span></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="validity.html#cb228-1" tabindex="-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb228-2"><a href="validity.html#cb228-2" tabindex="-1"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictorObservedSEM,</span>
+<span id="cb228-3"><a href="validity.html#cb228-3" tabindex="-1"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterionObservedSEM)<span class="sc">$</span>estimate</span></code></pre></div>
 </details>
 <pre><code>      cor 
 0.6118049 </code></pre>
-<p>The observed association can be estimated in <a href="sem.html#sem">structural equation modeling</a> in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan" role="doc-biblioref">Rosseel et al., 2022</a>)</span> using the following syntax:</p>
+<p>The observed association can be estimated in <a href="sem.html#sem">structural equation modeling</a> in the <code>lavaan</code> package <span class="citation">(<a href="#ref-R-lavaan">Rosseel et al., 2022</a>)</span> using the following syntax:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="validity.html#cb230-1" aria-hidden="true" tabindex="-1"></a>observedSEM_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb230-2"><a href="validity.html#cb230-2" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionObservedSEM ~ predictorObservedSEM</span></span>
-<span id="cb230-3"><a href="validity.html#cb230-3" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb230-4"><a href="validity.html#cb230-4" aria-hidden="true" tabindex="-1"></a><span class="st">  # Specify residual errors (measurement error)</span></span>
-<span id="cb230-5"><a href="validity.html#cb230-5" aria-hidden="true" tabindex="-1"></a><span class="st">  predictorObservedSEM ~~ predictorObservedSEM</span></span>
-<span id="cb230-6"><a href="validity.html#cb230-6" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ criterionObservedSEM</span></span>
-<span id="cb230-7"><a href="validity.html#cb230-7" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
-<span id="cb230-8"><a href="validity.html#cb230-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-9"><a href="validity.html#cb230-9" aria-hidden="true" tabindex="-1"></a>observedSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
-<span id="cb230-10"><a href="validity.html#cb230-10" aria-hidden="true" tabindex="-1"></a>  observedSEM_syntax,</span>
-<span id="cb230-11"><a href="validity.html#cb230-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
-<span id="cb230-12"><a href="validity.html#cb230-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
-<span id="cb230-13"><a href="validity.html#cb230-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-14"><a href="validity.html#cb230-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
-<span id="cb230-15"><a href="validity.html#cb230-15" aria-hidden="true" tabindex="-1"></a>  observedSEM_fit,</span>
-<span id="cb230-16"><a href="validity.html#cb230-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="validity.html#cb230-1" tabindex="-1"></a>observedSEM_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb230-2"><a href="validity.html#cb230-2" tabindex="-1"></a><span class="st">  criterionObservedSEM ~ predictorObservedSEM</span></span>
+<span id="cb230-3"><a href="validity.html#cb230-3" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb230-4"><a href="validity.html#cb230-4" tabindex="-1"></a><span class="st">  # Specify residual errors (measurement error)</span></span>
+<span id="cb230-5"><a href="validity.html#cb230-5" tabindex="-1"></a><span class="st">  predictorObservedSEM ~~ predictorObservedSEM</span></span>
+<span id="cb230-6"><a href="validity.html#cb230-6" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ criterionObservedSEM</span></span>
+<span id="cb230-7"><a href="validity.html#cb230-7" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb230-8"><a href="validity.html#cb230-8" tabindex="-1"></a></span>
+<span id="cb230-9"><a href="validity.html#cb230-9" tabindex="-1"></a>observedSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb230-10"><a href="validity.html#cb230-10" tabindex="-1"></a>  observedSEM_syntax,</span>
+<span id="cb230-11"><a href="validity.html#cb230-11" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
+<span id="cb230-12"><a href="validity.html#cb230-12" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
+<span id="cb230-13"><a href="validity.html#cb230-13" tabindex="-1"></a></span>
+<span id="cb230-14"><a href="validity.html#cb230-14" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb230-15"><a href="validity.html#cb230-15" tabindex="-1"></a>  observedSEM_fit,</span>
+<span id="cb230-16"><a href="validity.html#cb230-16" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>lavaan 0.6.17 ended normally after 9 iterations
 
@@ -3781,17 +3782,17 @@ Variances:
     prdctrObsrvSEM    0.971    0.044   21.932    0.000    0.971    1.000
    .crtrnObsrvdSEM    0.654    0.030   21.518    0.000    0.654    0.627</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="validity.html#cb232-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavInspect</span>(observedSEM_fit, <span class="st">&quot;rsquare&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="validity.html#cb232-1" tabindex="-1"></a><span class="fu">lavInspect</span>(observedSEM_fit, <span class="st">&quot;rsquare&quot;</span>)</span></code></pre></div>
 </details>
 <pre><code>criterionObservedSEM 
                0.373 </code></pre>
 <p>A path diagram of the observed association is depicted in Figure <a href="validity.html#fig:observedSEM">5.21</a>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="validity.html#cb234-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
-<span id="cb234-2"><a href="validity.html#cb234-2" aria-hidden="true" tabindex="-1"></a>  observedSEM_fit,</span>
-<span id="cb234-3"><a href="validity.html#cb234-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
-<span id="cb234-4"><a href="validity.html#cb234-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
-<span id="cb234-5"><a href="validity.html#cb234-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="validity.html#cb234-1" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb234-2"><a href="validity.html#cb234-2" tabindex="-1"></a>  observedSEM_fit,</span>
+<span id="cb234-3"><a href="validity.html#cb234-3" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
+<span id="cb234-4"><a href="validity.html#cb234-4" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb234-5"><a href="validity.html#cb234-5" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:observedSEM"></span>
 <img src="Book_files/figure-html/observedSEM-1.png" alt="Observed Association, as Depicted in a Structural Equation Model." width="100%" />
@@ -3802,46 +3803,46 @@ Figure 5.21: Observed Association, as Depicted in a Structural Equation Model.
 <p>Now consider when we account for the degree of <a href="reliability.html#measurementError">unreliability</a> of each measure.
 We can account for the <a href="reliability.html#reliability">(un)reliability</a> of each measure by specifying the residual errors as <span class="math inline">\(1 - \text{reliability}\)</span>, as below:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="validity.html#cb235-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Syntax that specifies the reliability programmatically</span></span>
-<span id="cb235-2"><a href="validity.html#cb235-2" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_syntax <span class="ot">&lt;-</span> </span>
-<span id="cb235-3"><a href="validity.html#cb235-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
-<span id="cb235-4"><a href="validity.html#cb235-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;</span></span>
-<span id="cb235-5"><a href="validity.html#cb235-5" aria-hidden="true" tabindex="-1"></a><span class="st">    # Factor loadings</span></span>
-<span id="cb235-6"><a href="validity.html#cb235-6" aria-hidden="true" tabindex="-1"></a><span class="st">    predictorLatent =~ 1*predictorObservedSEM</span></span>
-<span id="cb235-7"><a href="validity.html#cb235-7" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionLatent =~ 1*criterionObservedSEM</span></span>
-<span id="cb235-8"><a href="validity.html#cb235-8" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
-<span id="cb235-9"><a href="validity.html#cb235-9" aria-hidden="true" tabindex="-1"></a><span class="st">    # Factor correlation</span></span>
-<span id="cb235-10"><a href="validity.html#cb235-10" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionLatent ~ predictorLatent</span></span>
-<span id="cb235-11"><a href="validity.html#cb235-11" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
-<span id="cb235-12"><a href="validity.html#cb235-12" aria-hidden="true" tabindex="-1"></a><span class="st">    # Specify residual errors (measurement error)</span></span>
-<span id="cb235-13"><a href="validity.html#cb235-13" aria-hidden="true" tabindex="-1"></a><span class="st">    predictorObservedSEM ~~ (1 - &#39;</span>, reliabilityOfPredictor, <span class="st">&#39;)*predictorObservedSEM</span></span>
-<span id="cb235-14"><a href="validity.html#cb235-14" aria-hidden="true" tabindex="-1"></a><span class="st">    criterionObservedSEM ~~ (1 - &#39;</span>, reliabilityOfCriterion, <span class="st">&#39;)*criterionObservedSEM</span></span>
-<span id="cb235-15"><a href="validity.html#cb235-15" aria-hidden="true" tabindex="-1"></a><span class="st">    &#39;</span>,</span>
-<span id="cb235-16"><a href="validity.html#cb235-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb235-17"><a href="validity.html#cb235-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb235-18"><a href="validity.html#cb235-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Syntax that substitutes in the reliability values</span></span>
-<span id="cb235-19"><a href="validity.html#cb235-19" aria-hidden="true" tabindex="-1"></a>disattenuationTraditionalSEM_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
-<span id="cb235-20"><a href="validity.html#cb235-20" aria-hidden="true" tabindex="-1"></a><span class="st">  # Factor loadings</span></span>
-<span id="cb235-21"><a href="validity.html#cb235-21" aria-hidden="true" tabindex="-1"></a><span class="st">  predictorLatent =~ 1*predictorObservedSEM</span></span>
-<span id="cb235-22"><a href="validity.html#cb235-22" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionLatent =~ 1*criterionObservedSEM</span></span>
-<span id="cb235-23"><a href="validity.html#cb235-23" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb235-24"><a href="validity.html#cb235-24" aria-hidden="true" tabindex="-1"></a><span class="st">  # Factor correlation</span></span>
-<span id="cb235-25"><a href="validity.html#cb235-25" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionLatent ~ predictorLatent</span></span>
-<span id="cb235-26"><a href="validity.html#cb235-26" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb235-27"><a href="validity.html#cb235-27" aria-hidden="true" tabindex="-1"></a><span class="st">  # Specify residual errors (measurement error)</span></span>
-<span id="cb235-28"><a href="validity.html#cb235-28" aria-hidden="true" tabindex="-1"></a><span class="st">  predictorObservedSEM ~~ (1 - .9)*predictorObservedSEM # where .9 is the reliability of the predictor</span></span>
-<span id="cb235-29"><a href="validity.html#cb235-29" aria-hidden="true" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ (1 - .85)*criterionObservedSEM # where .85 is the reliability of the criterion</span></span>
-<span id="cb235-30"><a href="validity.html#cb235-30" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;</span></span>
-<span id="cb235-31"><a href="validity.html#cb235-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb235-32"><a href="validity.html#cb235-32" aria-hidden="true" tabindex="-1"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
-<span id="cb235-33"><a href="validity.html#cb235-33" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_syntax,</span>
-<span id="cb235-34"><a href="validity.html#cb235-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
-<span id="cb235-35"><a href="validity.html#cb235-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
-<span id="cb235-36"><a href="validity.html#cb235-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb235-37"><a href="validity.html#cb235-37" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(</span>
-<span id="cb235-38"><a href="validity.html#cb235-38" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
-<span id="cb235-39"><a href="validity.html#cb235-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb235-40"><a href="validity.html#cb235-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="validity.html#cb235-1" tabindex="-1"></a><span class="co"># Syntax that specifies the reliability programmatically</span></span>
+<span id="cb235-2"><a href="validity.html#cb235-2" tabindex="-1"></a>disattenuationSEM_syntax <span class="ot">&lt;-</span> </span>
+<span id="cb235-3"><a href="validity.html#cb235-3" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb235-4"><a href="validity.html#cb235-4" tabindex="-1"></a>    <span class="st">&#39;</span></span>
+<span id="cb235-5"><a href="validity.html#cb235-5" tabindex="-1"></a><span class="st">    # Factor loadings</span></span>
+<span id="cb235-6"><a href="validity.html#cb235-6" tabindex="-1"></a><span class="st">    predictorLatent =~ 1*predictorObservedSEM</span></span>
+<span id="cb235-7"><a href="validity.html#cb235-7" tabindex="-1"></a><span class="st">    criterionLatent =~ 1*criterionObservedSEM</span></span>
+<span id="cb235-8"><a href="validity.html#cb235-8" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb235-9"><a href="validity.html#cb235-9" tabindex="-1"></a><span class="st">    # Factor correlation</span></span>
+<span id="cb235-10"><a href="validity.html#cb235-10" tabindex="-1"></a><span class="st">    criterionLatent ~ predictorLatent</span></span>
+<span id="cb235-11"><a href="validity.html#cb235-11" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb235-12"><a href="validity.html#cb235-12" tabindex="-1"></a><span class="st">    # Specify residual errors (measurement error)</span></span>
+<span id="cb235-13"><a href="validity.html#cb235-13" tabindex="-1"></a><span class="st">    predictorObservedSEM ~~ (1 - &#39;</span>, reliabilityOfPredictor, <span class="st">&#39;)*predictorObservedSEM</span></span>
+<span id="cb235-14"><a href="validity.html#cb235-14" tabindex="-1"></a><span class="st">    criterionObservedSEM ~~ (1 - &#39;</span>, reliabilityOfCriterion, <span class="st">&#39;)*criterionObservedSEM</span></span>
+<span id="cb235-15"><a href="validity.html#cb235-15" tabindex="-1"></a><span class="st">    &#39;</span>,</span>
+<span id="cb235-16"><a href="validity.html#cb235-16" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb235-17"><a href="validity.html#cb235-17" tabindex="-1"></a></span>
+<span id="cb235-18"><a href="validity.html#cb235-18" tabindex="-1"></a><span class="co"># Syntax that substitutes in the reliability values</span></span>
+<span id="cb235-19"><a href="validity.html#cb235-19" tabindex="-1"></a>disattenuationTraditionalSEM_syntax <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
+<span id="cb235-20"><a href="validity.html#cb235-20" tabindex="-1"></a><span class="st">  # Factor loadings</span></span>
+<span id="cb235-21"><a href="validity.html#cb235-21" tabindex="-1"></a><span class="st">  predictorLatent =~ 1*predictorObservedSEM</span></span>
+<span id="cb235-22"><a href="validity.html#cb235-22" tabindex="-1"></a><span class="st">  criterionLatent =~ 1*criterionObservedSEM</span></span>
+<span id="cb235-23"><a href="validity.html#cb235-23" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb235-24"><a href="validity.html#cb235-24" tabindex="-1"></a><span class="st">  # Factor correlation</span></span>
+<span id="cb235-25"><a href="validity.html#cb235-25" tabindex="-1"></a><span class="st">  criterionLatent ~ predictorLatent</span></span>
+<span id="cb235-26"><a href="validity.html#cb235-26" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb235-27"><a href="validity.html#cb235-27" tabindex="-1"></a><span class="st">  # Specify residual errors (measurement error)</span></span>
+<span id="cb235-28"><a href="validity.html#cb235-28" tabindex="-1"></a><span class="st">  predictorObservedSEM ~~ (1 - .9)*predictorObservedSEM # where .9 is the reliability of the predictor</span></span>
+<span id="cb235-29"><a href="validity.html#cb235-29" tabindex="-1"></a><span class="st">  criterionObservedSEM ~~ (1 - .85)*criterionObservedSEM # where .85 is the reliability of the criterion</span></span>
+<span id="cb235-30"><a href="validity.html#cb235-30" tabindex="-1"></a><span class="st">&#39;</span></span>
+<span id="cb235-31"><a href="validity.html#cb235-31" tabindex="-1"></a></span>
+<span id="cb235-32"><a href="validity.html#cb235-32" tabindex="-1"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb235-33"><a href="validity.html#cb235-33" tabindex="-1"></a>  disattenuationSEM_syntax,</span>
+<span id="cb235-34"><a href="validity.html#cb235-34" tabindex="-1"></a>  <span class="at">data =</span> mydataValidity,</span>
+<span id="cb235-35"><a href="validity.html#cb235-35" tabindex="-1"></a>  <span class="at">missing =</span> <span class="st">&quot;ML&quot;</span>)</span>
+<span id="cb235-36"><a href="validity.html#cb235-36" tabindex="-1"></a></span>
+<span id="cb235-37"><a href="validity.html#cb235-37" tabindex="-1"></a><span class="fu">summary</span>(</span>
+<span id="cb235-38"><a href="validity.html#cb235-38" tabindex="-1"></a>  disattenuationSEM_fit,</span>
+<span id="cb235-39"><a href="validity.html#cb235-39" tabindex="-1"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb235-40"><a href="validity.html#cb235-40" tabindex="-1"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <pre><code>lavaan 0.6.17 ended normally after 15 iterations
 
@@ -3895,11 +3896,11 @@ R-Square:
     criterionLatnt    0.486</code></pre>
 <p>A path diagram of the true association is depicted in Figures <a href="validity.html#fig:disattenuationSEM">5.22</a> and <a href="validity.html#fig:semDisattenuation">5.23</a>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="validity.html#cb237-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
-<span id="cb237-2"><a href="validity.html#cb237-2" aria-hidden="true" tabindex="-1"></a>  disattenuationSEM_fit,</span>
-<span id="cb237-3"><a href="validity.html#cb237-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
-<span id="cb237-4"><a href="validity.html#cb237-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
-<span id="cb237-5"><a href="validity.html#cb237-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="validity.html#cb237-1" tabindex="-1"></a><span class="fu">semPaths</span>(</span>
+<span id="cb237-2"><a href="validity.html#cb237-2" tabindex="-1"></a>  disattenuationSEM_fit,</span>
+<span id="cb237-3"><a href="validity.html#cb237-3" tabindex="-1"></a>  <span class="at">what =</span> <span class="st">&quot;Std.all&quot;</span>,</span>
+<span id="cb237-4"><a href="validity.html#cb237-4" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">&quot;tree2&quot;</span>,</span>
+<span id="cb237-5"><a href="validity.html#cb237-5" tabindex="-1"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:disattenuationSEM"></span>
 <img src="Book_files/figure-html/disattenuationSEM-1.png" alt="Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model." width="100%" />
@@ -3960,7 +3961,7 @@ Thus, when reporting validity in papers, it is important to adequately describe 
 </div>
 <div id="readings-validity" class="section level2 hasAnchor" number="5.10">
 <h2><span class="header-section-number">5.10</span> Suggested Readings<a href="validity.html#readings-validity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><span class="citation">Cronbach &amp; Meehl (<a href="#ref-Cronbach1955" role="doc-biblioref">1955</a>)</span>; <span class="citation">L. A. Clark &amp; Watson (<a href="#ref-Clark2019" role="doc-biblioref">2019</a>)</span></p>
+<p><span class="citation">Cronbach &amp; Meehl (<a href="#ref-Cronbach1955">1955</a>)</span>; <span class="citation">L. A. Clark &amp; Watson (<a href="#ref-Clark2019">2019</a>)</span></p>
 </div>
 <div id="exercises-validity" class="section level2 hasAnchor" number="5.11">
 <h2><span class="header-section-number">5.11</span> Exercises<a href="validity.html#exercises-validity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -4027,7 +4028,7 @@ Thus, the HTMT provides evidence that the measures of verbal and spatial constru
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-Achenbach2001c" class="csl-entry">
 Achenbach, T. M. (2001). What are norms and why do we need valid ones? <em>Clinical Psychology: Science and Practice</em>, <em>8</em>(4), 446–450. <a href="https://doi.org/10.1093/clipsy.8.4.446">https://doi.org/10.1093/clipsy.8.4.446</a>
 </div>
