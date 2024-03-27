@@ -548,6 +548,8 @@ library("lavaan")
 library("semTools")
 library("psychmeta")
 library("irrCAC")
+library("irrICC")
+library("irrNA")
 library("gtheory")
 library("performance")
 library("MOTE")
@@ -646,6 +648,7 @@ item4[c(10)] <- NA
 
 ```{r}
 mydata <- data.frame(
+  subid = 1:sampleSize,
   rater1continuous, rater2continuous, rater3continuous,
   rater1categorical, rater2categorical, rater3categorical,
   time1, time2, time3,
@@ -1273,7 +1276,7 @@ By contrast, Cohen's kappa ($\kappa$) is recommended for categorical variables, 
 
 Use intraclass correlation (ICC) for estimating inter-rater reliability of continuous data.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 ICC ranges from 0–1, with higher scores indicating greater agreement.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
-ICC was estimated using the `psych` package [@R-psych].\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
+Below, ICC was estimated using the `psych` package [@R-psych].\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 
 ```{r}
 ICC(mydata[,c(
@@ -1281,11 +1284,36 @@ ICC(mydata[,c(
   missing = FALSE)
 ```
 
+Below, ICC was estimated using the `irrNA` package:
+
+```{r}
+iccNA(mydata[,c(
+  "rater1continuous","rater2continuous","rater3continuous")])
+```
+
+Below, ICC was estimated using the `irrICC` package:
+
+```{r}
+icc1a.fn(mydata[,c("subid",
+  "rater1continuous","rater2continuous","rater3continuous")])
+icc1b.fn(mydata[,c("subid",
+  "rater1continuous","rater2continuous","rater3continuous")])
+icc2.inter.fn(mydata[,c("subid",
+  "rater1continuous","rater2continuous","rater3continuous")])
+icc2.nointer.fn(mydata[,c("subid",
+  "rater1continuous","rater2continuous","rater3continuous")])
+icc3.inter.fn(mydata[,c("subid",
+  "rater1continuous","rater2continuous","rater3continuous")])
+icc3.nointer.fn(mydata[,c("subid",
+  "rater1continuous","rater2continuous","rater3continuous")])
+```
+
 There are various kinds of ICC coefficients.\index{reliability!intra-rater}\index{reliability!inter-rater!intraclass correlation}
-To read more about the various types of ICC coefficients, type the following command:\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
+To read more about the various types of ICC coefficients, type the following commands:\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 
 ```{r, eval = FALSE}
 ?ICC
+?iccNA
 ```
 
 #### Categorical Data {#interraterReliability-catergorical}
