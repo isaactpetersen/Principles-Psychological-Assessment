@@ -180,6 +180,20 @@ In this model, the latent factor accounts for 30% of the variance in the indicat
 knitr::include_graphics("./Images/FactorAnalysis-07.png")
 ```
 
+Alternatively, there could be a single factor that influences measures 1, 2, 3, 4, 5, and 6 with a [method bias](#methodBias) factor (e.g., a particular measurement method, item stem, reverse-worded item, or another [method bias](#methodBias)) that influences measures 4, 5, and 6, as depicted in Figure \@ref(fig:factorAnalysis10).\index{factor analysis}\index{method bias}
+In this model, measures 4, 5, and 6 have cross-loadings—that is, they load onto more than one latent factor.\index{factor analysis}\index{cross-loading}
+This model has the exact same fit as the previous models.\index{factor analysis}
+The amount of common variance ($R^2$) that is accounted for by an indicator is estimated as the sum of the squared standardized loadings: $.60 = .77 \times .77 = (.39 \times .39) + (.67 \times .67)$.\index{factor analysis}\index{structural equation modeling!factor loading}
+The amount of error for an indicator is estimated as: $\text{error} = 1 - \text{common variance}$, so in this case, the amount of error is: $.40 = 1 - .60$.\index{factor analysis}\index{structural equation modeling!residual}
+Using path tracing rules, the correlation of measures within a factor in this model is calculated as: $.60 = (.77 \times .77) = (.39 \times .39) + (.67 \times .67)$.\index{factor analysis}\index{path analysis!path tracing rules}
+The correlation of measures across factors in this model is calculated as: $.30 = .77 \times .39$.\index{factor analysis}\index{path analysis!path tracing rules}
+In this model, the first latent factor accounts for 37% of the variance in the indicators: $\frac{.77^2 + .77^2 + .77^2 + .39^2 + .39^2 + .39^2}{6} = \frac{.59 + .59 + .59 + .15 + .15 + .15}{6} = .30$.\index{factor analysis}
+The second latent factor accounts for 45% of the variance in its indicators: $\frac{.67^2 + .67^2 + .67^2}{3} = \frac{.45 + .45 + .45}{3} = .45$.\index{factor analysis}
+
+```{r factorAnalysis10, out.width = "100%", fig.align = "center", fig.cap = "Example Confirmatory Factor Analysis Model: Two-Factor Model With Cross-Loadings.", echo = FALSE}
+knitr::include_graphics("./Images/FactorAnalysis-10.png")
+```
+
 ### Indeterminacy {#indeterminacy}
 
 There could be many more models that have the same fit to the data.\index{factor analysis!indeterminacy}
@@ -755,6 +769,7 @@ corTable3 %>%
   caption = "Correlation Matrix.",
   booktabs = TRUE,
   linesep = "")
+```
 
 Pairs panel plots were generated using the `psych` package [@R-psych].\index{correlation}
 Correlation plots were generated using the `corrplot` package [@R-corrplot].\index{correlation}
@@ -2535,6 +2550,19 @@ cfaModel4D <- '
  V5 ~~ fixcor*V6
  V4 ~~ fixcor*V6
 '
+
+cfaModel4E <- '
+ #Factor loadings
+ f1 =~ V1 + V2 + V3 + V4 + V5 + V6
+ f2 =~ b*V4 + b*V5 + b*V6
+ 
+ #Covariances between latent factors
+ f1 ~~ 0*f2
+ 
+ #Constrain factor variances to one
+ f1 ~~ 1*f1
+ f2 ~~ 1*f2
+'
 ```
 
 ###### Model syntax in table form: {#classExamplesModel4tabular-cfa}
@@ -2544,6 +2572,7 @@ lavaanify(cfaModel4A)
 lavaanify(cfaModel4B)
 lavaanify(cfaModel4C)
 lavaanify(cfaModel4D)
+lavaanify(cfaModel4E)
 ```
 
 ###### Fit the model {#classExamplesModel4fit-cfa}
@@ -2576,6 +2605,13 @@ cfaModel4DFit <- cfa(
   sample.nobs = sampleSize,
   estimator = "ML",
   std.lv = TRUE)
+
+cfaModel4EFit <- cfa(
+  cfaModel4E,
+  sample.cov = covarianceMatrixModel4,
+  sample.nobs = sampleSize,
+  estimator = "ML",
+  std.lv = TRUE)
 ```
 
 ###### Display summary output {#classExamplesModel4output-cfa}
@@ -2601,6 +2637,12 @@ summary(
 
 summary(
   cfaModel4DFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+
+summary(
+  cfaModel4EFit,
   fit.measures = TRUE,
   standardized = TRUE,
   rsquare = TRUE)
@@ -2632,6 +2674,12 @@ fitMeasures(
   fit.measures = c(
     "chisq", "df", "pvalue",
     "rmsea", "cfi", "tli", "srmr"))
+
+fitMeasures(
+  cfaModel4EFit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
 ```
 
 ###### Residuals {#classExamplesModel4residuals-cfa}
@@ -2641,6 +2689,7 @@ residuals(cfaModel4AFit, type = "cor")
 residuals(cfaModel4BFit, type = "cor")
 residuals(cfaModel4CFit, type = "cor")
 residuals(cfaModel4DFit, type = "cor")
+residuals(cfaModel4EFit, type = "cor")
 ```
 
 ###### Modification indices {#classExamplesModel4modIndices-cfa}
@@ -2650,6 +2699,7 @@ modificationindices(cfaModel4AFit, sort. = TRUE)
 modificationindices(cfaModel4BFit, sort. = TRUE)
 modificationindices(cfaModel4CFit, sort. = TRUE)
 modificationindices(cfaModel4DFit, sort. = TRUE)
+modificationindices(cfaModel4EFit, sort. = TRUE)
 ```
 
 ###### Internal Consistency Reliability {#classExamplesModel4reliability-cfa}
@@ -2662,16 +2712,18 @@ compRelSEM(cfaModel4BFit)
 compRelSEM(cfaModel4CFit)
 compRelSEM(cfaModel4CFit, higher = "A1")
 compRelSEM(cfaModel4DFit)
+compRelSEM(cfaModel4EFit)
 
 AVE(cfaModel4AFit)
 AVE(cfaModel4BFit)
 AVE(cfaModel4CFit)
 AVE(cfaModel4DFit)
+AVE(cfaModel4EFit)
 ```
 
 ###### Path diagram {#classExamplesModel4pathDiagram-cfa}
 
-Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaModel4AFit), \@ref(fig:cfaModel4BFit), \@ref(fig:cfaModel4CFit), and \@ref(fig:cfaModel4DFit).\index{factor analysis!confirmatory}
+Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaModel4AFit), \@ref(fig:cfaModel4BFit), \@ref(fig:cfaModel4CFit), \@ref(fig:cfaModel4DFit), and \@ref(fig:cfaModel4EFit).\index{factor analysis!confirmatory}
 
 ```{r cfaModel4AFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4a Diagram."}
 semPaths(
@@ -2700,6 +2752,14 @@ semPaths(
 ```{r cfaModel4DFit, fig.height = 6, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4d Diagram."}
 semPaths(
   cfaModel4DFit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.3)
+```
+
+```{r cfaModel4EFit, fig.height = 6, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4e Diagram."}
+semPaths(
+  cfaModel4EFit,
   what = "std",
   layout = "tree2",
   edge.label.cex = 1.3)
