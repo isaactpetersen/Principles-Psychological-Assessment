@@ -5,6 +5,8 @@ This is a repository for the Textbook: "*Principles of Psychological Assessment:
 
 The book is located here: **https://isaactpetersen.github.io/Principles-Psychological-Assessment**
 
+A print version is available for purchase: https://www.amazon.com/Principles-Psychological-Assessment-Statistics-Behavioral/dp/1032413069
+
 ## Citation
 
 ### APA-style
@@ -31,6 +33,12 @@ The BibTeX citation for the book is:
   url = {https://isaactpetersen.github.io/Principles-Psychological-Assessment}
 }
 ```
+
+### Print Version
+
+The APA-style citation for the print version of the book is:
+
+Petersen, I. T. (2024). *Principles of psychological assessment: With applied examples in R*. Chapman and Hall/CRC. https://www.routledge.com/Principles-of-Psychological-Assessment-With-Applied-Examples-in-R/Petersen/p/book/9781032413068; https://doi.org/10.1201/9781003357421
 
 ## How to Download The `petersenlab` `R` Package Used in the Book
 
