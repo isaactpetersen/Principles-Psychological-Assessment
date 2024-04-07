@@ -3,7 +3,9 @@
 
 This is a repository for the Textbook: "*Principles of Psychological Assessment: With Applied Examples in R*".
 
-The book is located here: **INSERT URL**
+The book is located here: **https://www.routledge.com/Principles-of-Psychological-Assessment-With-Applied-Examples-in-R/Petersen/p/book/9781032413068**
+
+It is available for purchase on Amazon: https://www.amazon.com/Principles-Psychological-Assessment-Statistics-Behavioral/dp/1032413069
 
 ## Citation
 
@@ -11,7 +13,7 @@ The book is located here: **INSERT URL**
 
 The APA-style citation for the book is:
 
-Petersen, I. T. ([insert YEAR]). *Principles of psychological assessment: With applied examples in R*. CRC Press. [insert URL]. [insert DOI]
+Petersen, I. T. (2024). *Principles of psychological assessment: With applied examples in R*. Chapman and Hall/CRC. https://www.routledge.com/Principles-of-Psychological-Assessment-With-Applied-Examples-in-R/Petersen/p/book/9781032413068; https://doi.org/10.1201/9781003357421
 
 ### BibTeX
 
@@ -21,11 +23,11 @@ The BibTeX citation for the book is:
 @book{petersenPrinciplesPsychologicalAssessment,
   title = {Principles of psychological assessment: With applied examples in {R}},
   author = {Petersen, Isaac T.},
-  year = {INSERT},
-  publisher = {{CRC Press}},
-  doi = {INSERT},
+  year = {2024},
+  publisher = {{Chapman and Hall/CRC}},
+  doi = {10.1201/9781003357421},
   isbn = {9781032411347},
-  url = {INSERT}
+  url = {https://www.routledge.com/Principles-of-Psychological-Assessment-With-Applied-Examples-in-R/Petersen/p/book/9781032413068}
 }
 ```
 
