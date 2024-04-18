@@ -23,7 +23,7 @@
 <meta name="author" content="Isaac T. Petersen" />
 
 
-<meta name="date" content="2024-04-16" />
+<meta name="date" content="2024-04-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1125,9 +1125,10 @@ div.csl-indent {
 <li class="chapter" data-level="10.6.2" data-path="actuarial.html"><a href="actuarial.html#regressionMultiplePredictors"><i class="fa fa-check"></i><b>10.6.2</b> Regression with Multiple Predictors</a></li>
 <li class="chapter" data-level="10.6.3" data-path="actuarial.html"><a href="actuarial.html#lasso"><i class="fa fa-check"></i><b>10.6.3</b> Least Absolute Shrinkage and Selection Option (LASSO)</a></li>
 <li class="chapter" data-level="10.6.4" data-path="actuarial.html"><a href="actuarial.html#ridgeRegression"><i class="fa fa-check"></i><b>10.6.4</b> Ridge Regression</a></li>
-<li class="chapter" data-level="10.6.5" data-path="actuarial.html"><a href="actuarial.html#randomForest"><i class="fa fa-check"></i><b>10.6.5</b> Random Forest Machine Learning</a></li>
-<li class="chapter" data-level="10.6.6" data-path="actuarial.html"><a href="actuarial.html#kfoldCV"><i class="fa fa-check"></i><b>10.6.6</b> <em>k</em>-Fold Cross-Validation</a></li>
-<li class="chapter" data-level="10.6.7" data-path="actuarial.html"><a href="actuarial.html#looCV"><i class="fa fa-check"></i><b>10.6.7</b> Leave-One-Out (LOO) Cross-Validation</a></li>
+<li class="chapter" data-level="10.6.5" data-path="actuarial.html"><a href="actuarial.html#elasticNet"><i class="fa fa-check"></i><b>10.6.5</b> Elastic Net</a></li>
+<li class="chapter" data-level="10.6.6" data-path="actuarial.html"><a href="actuarial.html#randomForest"><i class="fa fa-check"></i><b>10.6.6</b> Random Forest Machine Learning</a></li>
+<li class="chapter" data-level="10.6.7" data-path="actuarial.html"><a href="actuarial.html#kfoldCV"><i class="fa fa-check"></i><b>10.6.7</b> <em>k</em>-Fold Cross-Validation</a></li>
+<li class="chapter" data-level="10.6.8" data-path="actuarial.html"><a href="actuarial.html#looCV"><i class="fa fa-check"></i><b>10.6.8</b> Leave-One-Out (LOO) Cross-Validation</a></li>
 </ul></li>
 <li class="chapter" data-level="10.7" data-path="actuarial.html"><a href="actuarial.html#actuarialExamples"><i class="fa fa-check"></i><b>10.7</b> Examples of Using Actuarial Methods</a></li>
 <li class="chapter" data-level="10.8" data-path="actuarial.html"><a href="actuarial.html#whyHumanJudgmentIsMoreWidelyUsed"><i class="fa fa-check"></i><b>10.8</b> Why Clinical Judgment is More Widely Used Than Statistical Formulas</a></li>
@@ -2461,6 +2462,7 @@ There is nothing special about this particular seed.</p>
 </div>
 <div id="fittingModels-actuarial" class="section level2 hasAnchor" number="10.6">
 <h2><span class="header-section-number">10.6</span> Fitting the Statistical Models<a href="actuarial.html#fittingModels-actuarial" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You can find an array of statistical models for classification and prediction available in the <code>caret</code> package <span class="citation">(<a href="#ref-R-caret">Kuhn, 2022</a>)</span> at the following link: <a href="https://topepo.github.io/caret/available-models.html" class="uri">https://topepo.github.io/caret/available-models.html</a> (archived at <a href="https://perma.cc/E45U-YE6S" class="uri">https://perma.cc/E45U-YE6S</a>)</p>
 <div id="regressionOnePredictor" class="section level3 hasAnchor" number="10.6.1">
 <h3><span class="header-section-number">10.6.1</span> Regression with One Predictor<a href="actuarial.html#regressionOnePredictor" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Dichotomous Outcome:</p>
@@ -2881,17 +2883,53 @@ Resampling results across tuning parameters:
 RMSE was used to select the optimal model using the smallest value.
 The final value used for the model was lambda = 1e-04.</code></pre>
 </div>
-<div id="randomForest" class="section level3 hasAnchor" number="10.6.5">
-<h3><span class="header-section-number">10.6.5</span> Random Forest Machine Learning<a href="actuarial.html#randomForest" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="elasticNet" class="section level3 hasAnchor" number="10.6.5">
+<h3><span class="header-section-number">10.6.5</span> Elastic Net<a href="actuarial.html#elasticNet" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The elastic net models were fit in the <code>caret</code> package <span class="citation">(<a href="#ref-R-caret">Kuhn, 2022</a>)</span>.</p>
+<p>Continuous Outcome:</p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1021"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1021-1"><a href="actuarial.html#cb1021-1" tabindex="-1"></a>elasticnetModelContinuous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1021-2"><a href="actuarial.html#cb1021-2" tabindex="-1"></a>  s100b <span class="sc">~</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1021-3"><a href="actuarial.html#cb1021-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1021-4"><a href="actuarial.html#cb1021-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;enet&quot;</span>)</span>
+<span id="cb1021-5"><a href="actuarial.html#cb1021-5" tabindex="-1"></a></span>
+<span id="cb1021-6"><a href="actuarial.html#cb1021-6" tabindex="-1"></a><span class="fu">print</span>(elasticnetModelContinuous)</span></code></pre></div>
+</details>
+<pre><code>Elasticnet 
+
+113 samples
+  4 predictor
+
+No pre-processing
+Resampling: Bootstrapped (25 reps) 
+Summary of sample sizes: 113, 113, 113, 113, 113, 113, ... 
+Resampling results across tuning parameters:
+
+  lambda  fraction  RMSE       Rsquared   MAE      
+  0e+00   0.050     0.2731440  0.2621499  0.1863863
+  0e+00   0.525     0.2336049  0.3631764  0.1389417
+  0e+00   1.000     0.2385990  0.3368319  0.1364719
+  1e-04   0.050     0.2731444  0.2621501  0.1863868
+  1e-04   0.525     0.2336066  0.3631744  0.1389431
+  1e-04   1.000     0.2386016  0.3368277  0.1364723
+  1e-01   0.050     0.2734316  0.2622984  0.1867288
+  1e-01   0.525     0.2348413  0.3605836  0.1397894
+  1e-01   1.000     0.2412255  0.3321961  0.1369182
+
+RMSE was used to select the optimal model using the smallest value.
+The final values used for the model were fraction = 0.525 and lambda = 0.</code></pre>
+</div>
+<div id="randomForest" class="section level3 hasAnchor" number="10.6.6">
+<h3><span class="header-section-number">10.6.6</span> Random Forest Machine Learning<a href="actuarial.html#randomForest" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The random forest models were fit in the <code>caret</code> package <span class="citation">(<a href="#ref-R-caret">Kuhn, 2022</a>)</span>.</p>
 <p>Dichotomous Outcome:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1021"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1021-1"><a href="actuarial.html#cb1021-1" tabindex="-1"></a>rfModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb1021-2"><a href="actuarial.html#cb1021-2" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
-<span id="cb1021-3"><a href="actuarial.html#cb1021-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
-<span id="cb1021-4"><a href="actuarial.html#cb1021-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;rf&quot;</span>)</span>
-<span id="cb1021-5"><a href="actuarial.html#cb1021-5" tabindex="-1"></a></span>
-<span id="cb1021-6"><a href="actuarial.html#cb1021-6" tabindex="-1"></a><span class="fu">print</span>(rfModelDichotomous)</span></code></pre></div>
+<div class="sourceCode" id="cb1023"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1023-1"><a href="actuarial.html#cb1023-1" tabindex="-1"></a>rfModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1023-2"><a href="actuarial.html#cb1023-2" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1023-3"><a href="actuarial.html#cb1023-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1023-4"><a href="actuarial.html#cb1023-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;rf&quot;</span>)</span>
+<span id="cb1023-5"><a href="actuarial.html#cb1023-5" tabindex="-1"></a></span>
+<span id="cb1023-6"><a href="actuarial.html#cb1023-6" tabindex="-1"></a><span class="fu">print</span>(rfModelDichotomous)</span></code></pre></div>
 </details>
 <pre><code>Random Forest 
 
@@ -2905,20 +2943,20 @@ Summary of sample sizes: 113, 113, 113, 113, 113, 113, ...
 Resampling results across tuning parameters:
 
   mtry  Accuracy   Kappa    
-  2     0.7349233  0.4037114
-  5     0.7230596  0.3936861
-  8     0.7185507  0.3876438
+  2     0.7369067  0.3953884
+  5     0.7347013  0.4032376
+  8     0.7284303  0.3899586
 
 Accuracy was used to select the optimal model using the largest value.
 The final value used for the model was mtry = 2.</code></pre>
 <p>Ordinal Outcome:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1023"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1023-1"><a href="actuarial.html#cb1023-1" tabindex="-1"></a>rfModelOrdinal <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb1023-2"><a href="actuarial.html#cb1023-2" tabindex="-1"></a>  ordinalFactor <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
-<span id="cb1023-3"><a href="actuarial.html#cb1023-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
-<span id="cb1023-4"><a href="actuarial.html#cb1023-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;ordinalRF&quot;</span>)</span>
-<span id="cb1023-5"><a href="actuarial.html#cb1023-5" tabindex="-1"></a></span>
-<span id="cb1023-6"><a href="actuarial.html#cb1023-6" tabindex="-1"></a><span class="fu">print</span>(rfModelOrdinal)</span></code></pre></div>
+<div class="sourceCode" id="cb1025"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1025-1"><a href="actuarial.html#cb1025-1" tabindex="-1"></a>rfModelOrdinal <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1025-2"><a href="actuarial.html#cb1025-2" tabindex="-1"></a>  ordinalFactor <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1025-3"><a href="actuarial.html#cb1025-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1025-4"><a href="actuarial.html#cb1025-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;ordinalRF&quot;</span>)</span>
+<span id="cb1025-5"><a href="actuarial.html#cb1025-5" tabindex="-1"></a></span>
+<span id="cb1025-6"><a href="actuarial.html#cb1025-6" tabindex="-1"></a><span class="fu">print</span>(rfModelOrdinal)</span></code></pre></div>
 </details>
 <pre><code>Random Forest 
 
@@ -2932,45 +2970,45 @@ Summary of sample sizes: 113, 113, 113, 113, 113, 113, ...
 Resampling results across tuning parameters:
 
   nsets  ntreeperdiv  ntreefinal  Accuracy   Kappa       
-   50     50          200         0.3057617  -0.015770805
-   50     50          400         0.3015026  -0.017156003
-   50     50          600         0.3055496  -0.014086678
-   50    100          200         0.3015249  -0.020816194
-   50    100          400         0.2963003  -0.029159715
-   50    100          600         0.2958437  -0.024921868
-   50    150          200         0.3069229  -0.011408076
-   50    150          400         0.2995678  -0.023461748
-   50    150          600         0.2940863  -0.028409606
-  100     50          200         0.2955238  -0.027662105
-  100     50          400         0.3015875  -0.019402180
-  100     50          600         0.2965227  -0.027634874
-  100    100          200         0.3067089  -0.011187846
-  100    100          400         0.2995108  -0.022786956
-  100    100          600         0.3061425  -0.012816753
-  100    150          200         0.2968141  -0.025065815
-  100    150          400         0.3000907  -0.020507364
-  100    150          600         0.3098957  -0.008999884
-  150     50          200         0.2992429  -0.026099534
-  150     50          400         0.2950022  -0.028733118
-  150     50          600         0.3050260  -0.015037998
-  150    100          200         0.3089756  -0.010320453
-  150    100          400         0.3020859  -0.017879407
-  150    100          600         0.2978000  -0.024113511
-  150    150          200         0.3015334  -0.022444615
-  150    150          400         0.2993464  -0.020963896
-  150    150          600         0.3029796  -0.014054003
+   50     50          200         0.3211389  -0.005466516
+   50     50          400         0.3022129  -0.031700266
+   50     50          600         0.3053906  -0.026771454
+   50    100          200         0.3079423  -0.024898546
+   50    100          400         0.3067742  -0.025865855
+   50    100          600         0.3104021  -0.020939333
+   50    150          200         0.3086011  -0.025645459
+   50    150          400         0.3040616  -0.029628515
+   50    150          600         0.3020118  -0.033196001
+  100     50          200         0.3290558   0.003086972
+  100     50          400         0.3042518  -0.027140626
+  100     50          600         0.3138210  -0.014979737
+  100    100          200         0.3070572  -0.029330252
+  100    100          400         0.3142540  -0.017303057
+  100    100          600         0.3048068  -0.034920067
+  100    150          200         0.3163612  -0.013654494
+  100    150          400         0.3058112  -0.031364175
+  100    150          600         0.3091778  -0.025260742
+  150     50          200         0.3080989  -0.023783202
+  150     50          400         0.3097436  -0.022047402
+  150     50          600         0.3088715  -0.027163376
+  150    100          200         0.3076460  -0.027799395
+  150    100          400         0.3090770  -0.023510219
+  150    100          600         0.3130607  -0.018028479
+  150    150          200         0.3058690  -0.028026053
+  150    150          400         0.2998348  -0.039127889
+  150    150          600         0.3062674  -0.031066605
 
 Accuracy was used to select the optimal model using the largest value.
-The final values used for the model were nsets = 100, ntreeperdiv = 150
- and ntreefinal = 600.</code></pre>
+The final values used for the model were nsets = 100, ntreeperdiv = 50
+ and ntreefinal = 200.</code></pre>
 <p>Continuous Outcome:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1025"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1025-1"><a href="actuarial.html#cb1025-1" tabindex="-1"></a>rfModelContinuous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb1025-2"><a href="actuarial.html#cb1025-2" tabindex="-1"></a>  s100b <span class="sc">~</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
-<span id="cb1025-3"><a href="actuarial.html#cb1025-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
-<span id="cb1025-4"><a href="actuarial.html#cb1025-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;rf&quot;</span>)</span>
-<span id="cb1025-5"><a href="actuarial.html#cb1025-5" tabindex="-1"></a></span>
-<span id="cb1025-6"><a href="actuarial.html#cb1025-6" tabindex="-1"></a><span class="fu">print</span>(rfModelContinuous)</span></code></pre></div>
+<div class="sourceCode" id="cb1027"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1027-1"><a href="actuarial.html#cb1027-1" tabindex="-1"></a>rfModelContinuous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1027-2"><a href="actuarial.html#cb1027-2" tabindex="-1"></a>  s100b <span class="sc">~</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1027-3"><a href="actuarial.html#cb1027-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1027-4"><a href="actuarial.html#cb1027-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;rf&quot;</span>)</span>
+<span id="cb1027-5"><a href="actuarial.html#cb1027-5" tabindex="-1"></a></span>
+<span id="cb1027-6"><a href="actuarial.html#cb1027-6" tabindex="-1"></a><span class="fu">print</span>(rfModelContinuous)</span></code></pre></div>
 </details>
 <pre><code>Random Forest 
 
@@ -2983,32 +3021,32 @@ Summary of sample sizes: 113, 113, 113, 113, 113, 113, ...
 Resampling results across tuning parameters:
 
   mtry  RMSE       Rsquared   MAE      
-  2     0.2337980  0.3300834  0.1324867
-  4     0.2347716  0.3220767  0.1338039
-  7     0.2367637  0.3166710  0.1381707
+  2     0.2217943  0.3596668  0.1278765
+  4     0.2219191  0.3547089  0.1278610
+  7     0.2222394  0.3476888  0.1318543
 
 RMSE was used to select the optimal model using the smallest value.
 The final value used for the model was mtry = 2.</code></pre>
 </div>
-<div id="kfoldCV" class="section level3 hasAnchor" number="10.6.6">
-<h3><span class="header-section-number">10.6.6</span> <em>k</em>-Fold Cross-Validation<a href="actuarial.html#kfoldCV" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="kfoldCV" class="section level3 hasAnchor" number="10.6.7">
+<h3><span class="header-section-number">10.6.7</span> <em>k</em>-Fold Cross-Validation<a href="actuarial.html#kfoldCV" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The <em>k</em>-fold cross-validation models were fit in the <code>caret</code> package <span class="citation">(<a href="#ref-R-caret">Kuhn, 2022</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1027"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1027-1"><a href="actuarial.html#cb1027-1" tabindex="-1"></a>kFolds <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb1027-2"><a href="actuarial.html#cb1027-2" tabindex="-1"></a></span>
-<span id="cb1027-3"><a href="actuarial.html#cb1027-3" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
-<span id="cb1027-4"><a href="actuarial.html#cb1027-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;cv&quot;</span>,</span>
-<span id="cb1027-5"><a href="actuarial.html#cb1027-5" tabindex="-1"></a>  <span class="at">number =</span> kFolds)</span></code></pre></div>
+<div class="sourceCode" id="cb1029"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1029-1"><a href="actuarial.html#cb1029-1" tabindex="-1"></a>kFolds <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1029-2"><a href="actuarial.html#cb1029-2" tabindex="-1"></a></span>
+<span id="cb1029-3"><a href="actuarial.html#cb1029-3" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb1029-4"><a href="actuarial.html#cb1029-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;cv&quot;</span>,</span>
+<span id="cb1029-5"><a href="actuarial.html#cb1029-5" tabindex="-1"></a>  <span class="at">number =</span> kFolds)</span></code></pre></div>
 </details>
 <p>Dichotomous Outcome:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1028"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1028-1"><a href="actuarial.html#cb1028-1" tabindex="-1"></a>cvModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb1028-2"><a href="actuarial.html#cb1028-2" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
-<span id="cb1028-3"><a href="actuarial.html#cb1028-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
-<span id="cb1028-4"><a href="actuarial.html#cb1028-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;glm&quot;</span>,</span>
-<span id="cb1028-5"><a href="actuarial.html#cb1028-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
-<span id="cb1028-6"><a href="actuarial.html#cb1028-6" tabindex="-1"></a></span>
-<span id="cb1028-7"><a href="actuarial.html#cb1028-7" tabindex="-1"></a><span class="fu">print</span>(cvModelDichotomous)</span></code></pre></div>
+<div class="sourceCode" id="cb1030"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1030-1"><a href="actuarial.html#cb1030-1" tabindex="-1"></a>cvModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1030-2"><a href="actuarial.html#cb1030-2" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1030-3"><a href="actuarial.html#cb1030-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1030-4"><a href="actuarial.html#cb1030-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;glm&quot;</span>,</span>
+<span id="cb1030-5"><a href="actuarial.html#cb1030-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
+<span id="cb1030-6"><a href="actuarial.html#cb1030-6" tabindex="-1"></a></span>
+<span id="cb1030-7"><a href="actuarial.html#cb1030-7" tabindex="-1"></a><span class="fu">print</span>(cvModelDichotomous)</span></code></pre></div>
 </details>
 <pre><code>Generalized Linear Model 
 
@@ -3018,20 +3056,20 @@ The final value used for the model was mtry = 2.</code></pre>
 
 No pre-processing
 Resampling: Cross-Validated (10 fold) 
-Summary of sample sizes: 102, 101, 102, 102, 102, 101, ... 
+Summary of sample sizes: 102, 102, 102, 102, 102, 102, ... 
 Resampling results:
 
   Accuracy   Kappa    
-  0.7590909  0.4476044</code></pre>
+  0.7780303  0.5046079</code></pre>
 <p>Continuous Outcome:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1030"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1030-1"><a href="actuarial.html#cb1030-1" tabindex="-1"></a>cvModelContinuous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb1030-2"><a href="actuarial.html#cb1030-2" tabindex="-1"></a>  s100b <span class="sc">~</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
-<span id="cb1030-3"><a href="actuarial.html#cb1030-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
-<span id="cb1030-4"><a href="actuarial.html#cb1030-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
-<span id="cb1030-5"><a href="actuarial.html#cb1030-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
-<span id="cb1030-6"><a href="actuarial.html#cb1030-6" tabindex="-1"></a></span>
-<span id="cb1030-7"><a href="actuarial.html#cb1030-7" tabindex="-1"></a><span class="fu">print</span>(cvModelContinuous)</span></code></pre></div>
+<div class="sourceCode" id="cb1032"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1032-1"><a href="actuarial.html#cb1032-1" tabindex="-1"></a>cvModelContinuous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1032-2"><a href="actuarial.html#cb1032-2" tabindex="-1"></a>  s100b <span class="sc">~</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1032-3"><a href="actuarial.html#cb1032-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1032-4"><a href="actuarial.html#cb1032-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
+<span id="cb1032-5"><a href="actuarial.html#cb1032-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
+<span id="cb1032-6"><a href="actuarial.html#cb1032-6" tabindex="-1"></a></span>
+<span id="cb1032-7"><a href="actuarial.html#cb1032-7" tabindex="-1"></a><span class="fu">print</span>(cvModelContinuous)</span></code></pre></div>
 </details>
 <pre><code>Linear Regression 
 
@@ -3040,30 +3078,30 @@ Resampling results:
 
 No pre-processing
 Resampling: Cross-Validated (10 fold) 
-Summary of sample sizes: 101, 102, 102, 102, 101, 101, ... 
+Summary of sample sizes: 102, 103, 101, 102, 101, 102, ... 
 Resampling results:
 
-  RMSE       Rsquared   MAE     
-  0.1985933  0.4319806  0.129278
+  RMSE       Rsquared   MAE      
+  0.2074522  0.3819308  0.1293988
 
 Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
-<div id="looCV" class="section level3 hasAnchor" number="10.6.7">
-<h3><span class="header-section-number">10.6.7</span> Leave-One-Out (LOO) Cross-Validation<a href="actuarial.html#looCV" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="looCV" class="section level3 hasAnchor" number="10.6.8">
+<h3><span class="header-section-number">10.6.8</span> Leave-One-Out (LOO) Cross-Validation<a href="actuarial.html#looCV" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The leave-one-out (LOO) cross-validation models were fit in the <code>caret</code> package <span class="citation">(<a href="#ref-R-caret">Kuhn, 2022</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1032"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1032-1"><a href="actuarial.html#cb1032-1" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
-<span id="cb1032-2"><a href="actuarial.html#cb1032-2" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;LOOCV&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1034"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1034-1"><a href="actuarial.html#cb1034-1" tabindex="-1"></a>train.control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb1034-2"><a href="actuarial.html#cb1034-2" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;LOOCV&quot;</span>)</span></code></pre></div>
 </details>
 <p>Dichotomous Outcome:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1033"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1033-1"><a href="actuarial.html#cb1033-1" tabindex="-1"></a>loocvModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb1033-2"><a href="actuarial.html#cb1033-2" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
-<span id="cb1033-3"><a href="actuarial.html#cb1033-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
-<span id="cb1033-4"><a href="actuarial.html#cb1033-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;glm&quot;</span>,</span>
-<span id="cb1033-5"><a href="actuarial.html#cb1033-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
-<span id="cb1033-6"><a href="actuarial.html#cb1033-6" tabindex="-1"></a></span>
-<span id="cb1033-7"><a href="actuarial.html#cb1033-7" tabindex="-1"></a><span class="fu">print</span>(loocvModelDichotomous)</span></code></pre></div>
+<div class="sourceCode" id="cb1035"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1035-1"><a href="actuarial.html#cb1035-1" tabindex="-1"></a>loocvModelDichotomous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1035-2"><a href="actuarial.html#cb1035-2" tabindex="-1"></a>  outcome <span class="sc">~</span> s100b <span class="sc">+</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1035-3"><a href="actuarial.html#cb1035-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1035-4"><a href="actuarial.html#cb1035-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;glm&quot;</span>,</span>
+<span id="cb1035-5"><a href="actuarial.html#cb1035-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
+<span id="cb1035-6"><a href="actuarial.html#cb1035-6" tabindex="-1"></a></span>
+<span id="cb1035-7"><a href="actuarial.html#cb1035-7" tabindex="-1"></a><span class="fu">print</span>(loocvModelDichotomous)</span></code></pre></div>
 </details>
 <pre><code>Generalized Linear Model 
 
@@ -3080,13 +3118,13 @@ Resampling results:
   0.7699115  0.4747944</code></pre>
 <p>Continuous Outcome:</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb1035"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1035-1"><a href="actuarial.html#cb1035-1" tabindex="-1"></a>loocvModelContinuous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb1035-2"><a href="actuarial.html#cb1035-2" tabindex="-1"></a>  s100b <span class="sc">~</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
-<span id="cb1035-3"><a href="actuarial.html#cb1035-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
-<span id="cb1035-4"><a href="actuarial.html#cb1035-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
-<span id="cb1035-5"><a href="actuarial.html#cb1035-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
-<span id="cb1035-6"><a href="actuarial.html#cb1035-6" tabindex="-1"></a></span>
-<span id="cb1035-7"><a href="actuarial.html#cb1035-7" tabindex="-1"></a><span class="fu">print</span>(loocvModelContinuous)</span></code></pre></div>
+<div class="sourceCode" id="cb1037"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1037-1"><a href="actuarial.html#cb1037-1" tabindex="-1"></a>loocvModelContinuous <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb1037-2"><a href="actuarial.html#cb1037-2" tabindex="-1"></a>  s100b <span class="sc">~</span> ndka <span class="sc">+</span> gender <span class="sc">+</span> age <span class="sc">+</span> wfns,</span>
+<span id="cb1037-3"><a href="actuarial.html#cb1037-3" tabindex="-1"></a>  <span class="at">data =</span> mydataActuarial,</span>
+<span id="cb1037-4"><a href="actuarial.html#cb1037-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
+<span id="cb1037-5"><a href="actuarial.html#cb1037-5" tabindex="-1"></a>  <span class="at">trControl =</span> train.control)</span>
+<span id="cb1037-6"><a href="actuarial.html#cb1037-6" tabindex="-1"></a></span>
+<span id="cb1037-7"><a href="actuarial.html#cb1037-7" tabindex="-1"></a><span class="fu">print</span>(loocvModelContinuous)</span></code></pre></div>
 </details>
 <pre><code>Linear Regression 
 
