@@ -22,32 +22,3 @@ library("tinytex")
 library("knitr")
 library("rmarkdown")
 ```
-
-### Load Data {#loadData-factorAnalysis}
-
-### Prepare Data {#prepareData-factorAnalysis}
-
-#### Add Missing Data {#addMissingData-factorAnalysis}
-
-Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
-For reproducibility, I set the seed below.
-Using the same seed will yield the same answer every time.
-There is nothing special about this particular seed.
-
-`HolzingerSwineford1939` is a data set from the `lavaan` package [@R-lavaan] that contains mental ability test scores (`x1`–`x9`) for seventh- and eighth-grade children.
-
-```{r}
-set.seed(52242)
-
-varNames <- names(HolzingerSwineford1939)
-dimensionsDf <- dim(HolzingerSwineford1939)
-unlistedDf <- unlist(HolzingerSwineford1939)
-unlistedDf[sample(
-  1:length(unlistedDf),
-  size = .15 * length(unlistedDf))] <- NA
-HolzingerSwineford1939 <- as.data.frame(matrix(
-  unlistedDf,
-  ncol = dimensionsDf[2]))
-names(HolzingerSwineford1939) <- varNames
-vars <- c("x1","x2","x3","x4","x5","x6","x7","x8","x9")
-```
