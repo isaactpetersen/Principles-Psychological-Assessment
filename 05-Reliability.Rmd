@@ -603,6 +603,39 @@ rater3categorical[
          size = 10,
          replace = FALSE)] <- 1
 
+rater1ordinal <- sample(
+  c(0,1,2),
+  size = sampleSize,
+  replace = TRUE)
+rater2ordinal <- rater1ordinal
+rater3ordinal <- rater1ordinal
+
+rater2ordinal[
+  sample(1:length(rater1ordinal),
+         size = 10,
+         replace = FALSE)] <- 0
+rater2ordinal[
+  sample(1:length(rater1ordinal),
+         size = 10,
+         replace = FALSE)] <- 1
+rater2ordinal[
+  sample(1:length(rater1ordinal),
+         size = 10,
+         replace = FALSE)] <- 2
+
+rater3ordinal[
+  sample(1:length(rater1ordinal),
+         size = 10,
+         replace = FALSE)] <- 0
+rater3ordinal[
+  sample(1:length(rater1ordinal),
+         size = 10,
+         replace = FALSE)] <- 1
+rater3ordinal[
+  sample(1:length(rater1ordinal),
+         size = 10,
+         replace = FALSE)] <- 2
+
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
@@ -636,6 +669,10 @@ rater1categorical[c(5,10)] <- NA
 rater2categorical[c(10,15)] <- NA
 rater3categorical[c(10)] <- NA
 
+rater1ordinal[c(5,10)] <- NA
+rater2ordinal[c(10,15)] <- NA
+rater3ordinal[c(10)] <- NA
+
 time1[c(5,10)] <- NA
 time2[c(10,15)] <- NA
 time3[c(10)] <- NA
@@ -653,6 +690,7 @@ mydata <- data.frame(
   subid = 1:sampleSize,
   rater1continuous, rater2continuous, rater3continuous,
   rater1categorical, rater2categorical, rater3categorical,
+  rater1ordinal, rater2ordinal, rater3ordinal,
   time1, time2, time3,
   item1, item2, item3, item4)
 
@@ -1272,12 +1310,13 @@ BAstats
 Inter-rater reliability is the consistency of scores across raters.\index{reliability!inter-rater}\index{inter-rater reliability!zzzzz@\igobble|seealso{reliability}}
 For instance, two different raters may make a diagnostic decision for the same client, two different people may provide observational ratings of the same participant, or two different researchers may process psychophysiological data (e.g., electroencephalography, electrocardiography) from the same person.\index{reliability!inter-rater}
 Consistency of scores can also be assessed within the same rater, which is known as *intra*-rater reliability and is described in Section \@ref(intrarater-reliability).\index{reliability!intra-rater}
-For assessing inter-rater reliability, intraclass correlation (ICC) is recommended for continuous data, such as ratings of a participant's mood.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
-By contrast, Cohen's kappa ($\kappa$) is recommended for categorical variables, such as making a diagnostic decision whether to give someone a diagnosis of depression or not.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}
+For assessing inter-rater reliability, intraclass correlation (ICC) is recommended for continuous (interval/ratio) data, such as ratings of a participant's mood.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}\index{data!interval}\index{data!ratio}
+By contrast, Cohen's kappa ($\kappa$) or Fleiss' kappa is recommended for categorical variables, such as making a diagnostic decision whether to give someone a diagnosis of depression or not.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{data!nominal}
+Cohen's weighted kappa ($\kappa$) or Kendall's coefficient of concordance (Kendall's W) is recommended for ordinal variables.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{data!ordinal}\index{reliability!inter-rater!weighted kappa}\index{reliability!inter-rater!Kendall's W}
 
 #### Continuous Data {#interraterReliability-continuous}
 
-Use intraclass correlation (ICC) for estimating inter-rater reliability of continuous data.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
+Use intraclass correlation (ICC) for estimating inter-rater reliability of continuous (interval/ratio) data.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}\index{data!interval}\index{data!ratio}
 ICC ranges from 0–1, with higher scores indicating greater agreement.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 Below, ICC was estimated using the `psych` package [@R-psych].\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 
@@ -1312,7 +1351,8 @@ icc3.nointer.fn(dropRowsWithAllNA(mydata[,c("subid",
 ```
 
 There are various kinds of ICC coefficients.\index{reliability!intra-rater}\index{reliability!inter-rater!intraclass correlation}
-To read more about the various types of ICC coefficients, type the following commands:\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
+To read more about the various types of ICC coefficients, see @Shrout1979 and @McGraw1996.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
+You can also type the following commands to learn more:\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 
 ```{r, eval = FALSE}
 ?ICC
@@ -1321,8 +1361,13 @@ To read more about the various types of ICC coefficients, type the following com
 
 #### Categorical Data {#interraterReliability-categorical}
 
-For estimating the inter-rater reliability of categorical data, use Cohen's kappa [@Bakeman2020], Fleiss's kappa, the S index [@Falotico2010], or Gwet's AC1 statistic [@Gwet2008; @Gwet2021a; @Gwet2021b].\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{reliability!inter-rater!S index}\index{reliability!inter-rater!AC1 statistic}
-Cohen's kappa was estimated using the `psych` package [@R-psych].
+For estimating the inter-rater reliability of categorical data, use Cohen's kappa [@Bakeman2020], Fleiss's kappa, the S index [@Falotico2010], or Gwet's AC1 statistic [@Gwet2008; @Gwet2021a; @Gwet2021b].\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{reliability!inter-rater!S index}\index{reliability!inter-rater!AC1 statistic}\index{data!nominal}
+Cohen's kappa accounts for chance agreement.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{data!nominal}
+For instance, if two coders were each to flip a coin 100 times and were to on agree on 50 of the flips (i.e., 50% agreement), that would not be particularly impressive.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{data!nominal}
+However, Cohen's kappa only allows two raters.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{data!nominal}
+For more than two raters, Fleiss's kappa, the S index, or Gwet's AC1 statistic is recommended.\index{reliability!inter-rater}\index{reliability!inter-rater!S index}\index{reliability!inter-rater!AC1 statistic}\index{data!nominal}
+
+Cohen's kappa (and weighted kappa) were estimated using the `psych` package [@R-psych].
 Fleiss's kappa and Gwet's AC1 statistic were estimated using the `irrCAC` package.
 These estimates of inter-rater reliability range from −1 to +1, with −1 indicating perfect disagreement, 0 indicating chance agreement, and 1 indicating perfect agreement.
 Larger, more positive scores indicate greater agreement.
@@ -1334,6 +1379,26 @@ fleiss.kappa.raw(na.omit(mydata[,c(
   "rater1categorical","rater2categorical","rater3categorical")]))
 gwet.ac1.raw(na.omit(mydata[,c(
   "rater1categorical","rater2categorical","rater3categorical")]))
+```
+
+#### Ordinal Data {#interraterReliability-ordinal}
+
+For estimating the inter-rater reliability of ordinal data, use Cohen's weighted kappa [@Cohen1968] or Kendall's W.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{reliability!inter-rater!weighted kappa}\index{reliability!inter-rater!Kendall's W}\index{data!ordinal}
+Weighted kappa does not treat all errors as equal; when dealing with ordinal data, weighted kappa weights errors according to the distance of the error.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{reliability!inter-rater!weighted kappa}\index{data!ordinal}
+For instance, if Coder 1 rated as person as 0 (no diagnosis) and Coder 2 rated a person as 2 (diagnosis), this would be a larger difference than if Coder 1 rated a person as 1 (subthreshold) and Coder 2 rated a person as 2 (diagnosis).\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{reliability!inter-rater!weighted kappa}\index{data!ordinal}
+However, Cohen's weighted kappa only allows two raters.\index{reliability!inter-rater}\index{reliability!inter-rater!kappa}\index{reliability!inter-rater!weighted kappa}\index{data!ordinal}
+For more than two raters, Kendall's W is recommended.\index{reliability!inter-rater}\index{reliability!inter-rater!weighted kappa}\index{reliability!inter-rater!Kendall's W}\index{data!ordinal}
+
+Cohen's kappa and weighted kappa were estimated using the `psych` package [@R-psych].
+Kendall's W was estimated using the `irrNA` package.
+The values range from −1 to +1, with −1 indicating perfect disagreement, 0 indicating chance agreement, and 1 indicating perfect agreement.
+Larger, more positive scores indicate greater agreement.
+
+```{r}
+cohen.kappa(mydata[,c(
+  "rater1ordinal","rater2ordinal","rater3ordinal")])
+kendallNA(mydata[,c(
+  "rater1ordinal","rater2ordinal","rater3ordinal")])
 ```
 
 ### Intra-Rater Reliability {#intrarater-reliability}
