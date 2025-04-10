@@ -1875,7 +1875,8 @@ I set 15% of values to be missing for variables $y1$–$y8$.\index{power analysi
 I assumed the missingness mechanism to be MCAR.\index{power analysis}\index{structural equation modeling!power analysis}
 To set missingness to be missing at random (MAR), add a covariate in the missingness formula [see @Beaujean2014].\index{power analysis}\index{structural equation modeling!power analysis}
 I set the model to use full information maximum likelihood (FIML) estimation to handle missingness.\index{power analysis}\index{structural equation modeling!power analysis}
-If you set $m$ to a value greater than zero, it will use multiple imputation instead of FIML.\index{power analysis}\index{structural equation modeling!power analysis}
+If you set $m$ to a value greater than zero, it will allow use of multiple imputation instead of FIML.\index{power analysis}\index{structural equation modeling!power analysis}
+Statistical power with multiple imputation tends to be lower than with FIML unless the number of imputations is large [@Graham2007].\index{power analysis}\index{structural equation modeling!power analysis}
 
 ```{r powerAnalysisMissingness, cache = TRUE, cache.comments = FALSE}
 percentMissingByVariable <- '
@@ -2593,15 +2594,6 @@ powerStress1_ex <- power1_ex[,"dem65~ind60"]
 powerHarshParenting1_ex <- power1_ex[,"dem65~dem60"]
 ```
 
-```{r numImputationsExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
-numImputations_ex <- 5
-```
-
-```{r multipleImputationExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
-# Multiple Imputation
-missingnessModelMI_ex <- miss(logit = percentMissingByVariable_ex, m = numImputations_ex)
-```
-
 ```{r, include = FALSE}
 # Normally Distributed Data
 names(fitted(populationModelFit_ex)$mean)
@@ -2613,9 +2605,9 @@ indicatorDistributionsNormal <- bindDist(p = numberOfIndicators_ex,
                                          kurtosis = rep(0, 11))
 ```
 
-```{r powerAnalysisSampleSizeExercise2, include = FALSE, cache = TRUE, cache.comments = FALSE}
-sampleSizes2_ex <- 150
-repetitionsPerSampleSize2_ex <- 50
+```{r powerAnalysisSampleSizeExercise3, include = FALSE, cache = TRUE, cache.comments = FALSE}
+sampleSizes3_ex <- 150
+repetitionsPerSampleSize3_ex <- 50
 ```
 
 ```{r, include = FALSE}
@@ -2623,59 +2615,8 @@ detach("package:semTools", unload = TRUE)
 library("semTools")
 ```
 
-```{r powerAnalysisMIExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "multipleImputationExercise", "normallyDistrubutedDataExercise")}
-output2_ex <- simsem::sim(n = rep(sampleSizes2_ex, each = repetitionsPerSampleSize2_ex),
-                          model = analysisModelSyntax_ex,
-                          generate = populationModel_ex,
-                          miss = missingnessModelMI_ex,
-                          indDist = indicatorDistributionsNormal,
-                          lavaanfun = "lavaan",
-                          missing = "ML",
-                          estimator = "MLR",
-                          std.lv = TRUE,
-                          seed = 52242,
-                          multicore = TRUE)
-```
-
-```{r, include = FALSE}
-RNGkind("default", "default", "default")
-
-summaryPopulation(output2_ex)
-summary(output2_ex)
-summaryParam(output2_ex, alpha = .05, detail = TRUE)
-summaryTime(output2_ex)
-```
-
-```{r, include = FALSE}
-#plotCutoff(output2_ex, alpha = .05)
-```
-
-```{r, include = FALSE}
-getCutoff(output2_ex, alpha = .05, nVal = 150)
-```
-
-```{r, include = FALSE}
-#plotPower(output2_ex,
-#          powerParam = c("dem65~dem60", "dem65~ind60"),
-#          alpha = .05)
-#abline(h = 0.8, lwd = 2, lty = 2)
-```
-
-```{r, include = FALSE}
-#powerEstimates2_ex <- getPower(output2_ex, alpha = .05)
-#findPower(powerEstimates2_ex, iv = "N", power = .80)
-```
-
-```{r, include = FALSE}
-getPower(output2_ex, alpha = 0.05, nVal = 150)
-
-power2_ex <- getPower(output2_ex, alpha = 0.05, nVal = 150)
-powerStress2_ex <- power2_ex["dem65~ind60"]
-powerHarshParenting2_ex <- power2_ex["dem65~dem60"]
-```
-
 ```{r powerAnalysisNormallyDistributedExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "normallyDistrubutedDataExercise")}
-output3_ex <- simsem::sim(n = rep(sampleSizes2_ex, each = repetitionsPerSampleSize2_ex),
+output3_ex <- simsem::sim(n = rep(sampleSizes3_ex, each = repetitionsPerSampleSize3_ex),
                model = analysisModelSyntax_ex,
                generate = populationModel_ex,
                miss = missingnessModelFIML_ex,
@@ -2812,9 +2753,6 @@ You plan to assess stress with three methods (self-report, friend report, cortis
     d. Re-run the power analysis with normally distributed values (skewness $= 0$, kurtosis $= 0$), using 50 repetitions with a sample size of 150.
     Did power to detect the hypothesized effects increase or decrease?
     What does this indicate?
-    e. Re-run the power analysis using multiple imputation instead of FIML (and normally distributed values); use 50 repetitions with a sample size of 150 and use five imputations.
-    Did power to detect the hypothesized effects increase or decrease?
-    What does this indicate?
 
 ### Answers
 
@@ -2865,7 +2803,3 @@ Because your study was under-powered to detect the effect of stress ($\text{powe
 	You would have a power of $`r apa(powerStress3_ex, decimals = 2, leading = FALSE)`$ to detect the effect of stress on children's antisocial behavior.
 	You would have a power of $`r apa(powerHarshParenting3_ex, decimals = 2, leading = FALSE)`$ to detect the effect of harsh parenting on children's antisocial behavior.
 	This indicates that statistical power tends to be lower when data are non-normally distributed (compared to when data are normally distributed).
-    e. Power to detect the hypothesized effects decreased when using multiple imputation compared to FIML.
-	You would have a power of $`r apa(powerStress2_ex, decimals = 2, leading = FALSE)`$ to detect the effect of stress on children's antisocial behavior.
-	You would have a power of $`r apa(powerHarshParenting2_ex, decimals = 2, leading = FALSE)`$ to detect the effect of harsh parenting on children's antisocial behavior.
-	This is consistent with prior findings that statistical power with multiple imputation is lower than with FIML unless the number of imputations is large [@Graham2007].
