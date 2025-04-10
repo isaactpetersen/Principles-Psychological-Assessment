@@ -5568,7 +5568,8 @@ I set 15% of values to be missing for variables <span class="math inline">\(y1\)
 I assumed the missingness mechanism to be MCAR.
 To set missingness to be missing at random (MAR), add a covariate in the missingness formula <span class="citation">(see <a href="#ref-Beaujean2014">Beaujean, 2014</a>)</span>.
 I set the model to use full information maximum likelihood (FIML) estimation to handle missingness.
-If you set <span class="math inline">\(m\)</span> to a value greater than zero, it will use multiple imputation instead of FIML.</p>
+If you set <span class="math inline">\(m\)</span> to a value greater than zero, it will allow use of multiple imputation instead of FIML.
+Statistical power with multiple imputation tends to be lower than with FIML unless the number of imputations is large <span class="citation">(<a href="#ref-Graham2007">J. Graham et al., 2007</a>)</span>.</p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb406"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb406-1"><a href="sem.html#cb406-1" tabindex="-1"></a>percentMissingByVariable <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
 <span id="cb406-2"><a href="sem.html#cb406-2" tabindex="-1"></a><span class="st">  x1 ~ p(0.10)</span></span>
@@ -5797,24 +5798,24 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb418-1"><a href="sem.html#cb418-1" tabindex="-1"></a><span class="fu">summaryTime</span>(output)</span></code></pre></div>
 </details>
 <pre><code>============ Wall Time ============
-  1. Error Checking and setting up data-generation and analysis template:        0.001
+  1. Error Checking and setting up data-generation and analysis template:        0.000
   2. Set combinations of n, pmMCAR, and pmMAR:                                   0.001
-  3. Setting up simulation conditions for each replication:                      0.019
-  4. Total time elapsed running all replications:                             1280.934
-  5. Combining outputs from different replications:                              0.075
+  3. Setting up simulation conditions for each replication:                      0.018
+  4. Total time elapsed running all replications:                             1284.228
+  5. Combining outputs from different replications:                              0.077
 
 ============ Average Time in Each Replication ============
-  1. Data Generation:                                  0.079
-  2. Impose Missing Values:                            0.014
+  1. Data Generation:                                  0.082
+  2. Impose Missing Values:                            0.015
   3. User-defined Data-Transformation Function:        0.000
-  4. Main Data Analysis:                               2.756
-  5. Extracting Outputs:                               1.786
+  4. Main Data Analysis:                               2.805
+  5. Extracting Outputs:                               1.750
 
 ============ Summary ============
-  Start Time:                   2025-04-10 04:40:36
-  End Time:                     2025-04-10 05:01:57
-  Wall (Actual) Time:             1281.030
-  System (Processors) Time:       5108.695
+  Start Time:                   2025-04-10 10:48:53
+  End Time:                     2025-04-10 11:10:18
+  Wall (Actual) Time:             1284.324
+  System (Processors) Time:       5125.335
   Units:                        seconds</code></pre>
 </div>
 <div id="monteCarloPowerAnalysis-fitIndicesCutoffs" class="section level3 hasAnchor" number="7.14.11">
@@ -6026,9 +6027,6 @@ How would you interpret each of these findings?</li>
 <li>Re-run the power analysis with normally distributed values (skewness <span class="math inline">\(= 0\)</span>, kurtosis <span class="math inline">\(= 0\)</span>), using 50 repetitions with a sample size of 150.
 Did power to detect the hypothesized effects increase or decrease?
 What does this indicate?</li>
-<li>Re-run the power analysis using multiple imputation instead of FIML (and normally distributed values); use 50 repetitions with a sample size of 150 and use five imputations.
-Did power to detect the hypothesized effects increase or decrease?
-What does this indicate?</li>
 </ol></li>
 </ol>
 </div>
@@ -6086,10 +6084,6 @@ Because your study was under-powered to detect the effect of stress (<span class
 You would have a power of <span class="math inline">\(.40\)</span> to detect the effect of stress on children’s antisocial behavior.
 You would have a power of <span class="math inline">\(1.00\)</span> to detect the effect of harsh parenting on children’s antisocial behavior.
 This indicates that statistical power tends to be lower when data are non-normally distributed (compared to when data are normally distributed).</li>
-<li>Power to detect the hypothesized effects decreased when using multiple imputation compared to FIML.
-You would have a power of <span class="math inline">\(.40\)</span> to detect the effect of stress on children’s antisocial behavior.
-You would have a power of <span class="math inline">\(1.00\)</span> to detect the effect of harsh parenting on children’s antisocial behavior.
-This is consistent with prior findings that statistical power with multiple imputation is lower than with FIML unless the number of imputations is large <span class="citation">(<a href="#ref-Graham2007">J. Graham et al., 2007</a>)</span>.</li>
 </ol></li>
 </ol>
 
