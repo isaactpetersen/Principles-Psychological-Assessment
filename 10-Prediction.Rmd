@@ -1031,6 +1031,7 @@ library("msir")
 library("car")
 library("viridis")
 library("ggrepel")
+library("caret")
 library("MOTE")
 library("tidyverse")
 library("here")
@@ -1630,10 +1631,16 @@ rSquaredValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
 
 The predictor (`testScore`) explains $`r apa(rSquaredValue * 100, 2)`$% of the variance $(R^2 = `r apa(rSquaredValue, 4, leading = FALSE)`)$ in the outcome (`disorder` status).
 
+An issue with $R^2$ is that it can be artificially inflated by adding more predictors to the model, even if those predictors do not improve the model fit.\index{coefficient of determination}\index{overfitting}
+$R^2$ never decreases when adding predictors to a model, even if the predictors do not provide any predictive power.\index{coefficient of determination}
+Thus, to account for the number of predictors in the model, we can use [adjusted $R^2$](#adjustedRsquared).\index{coefficient of determination}
+
 ###### Adjusted $R^2$ ($R^2_{adj}$) {#adjustedRsquared}
 
 Adjusted $R^2$ is similar to the [coefficient of determination](#coefficientOfDetermination), but it accounts for the number of predictors included in the regression model to penalize [overfitting](#overfitting).\index{adjusted $R^2$}\index{multiple regression}\index{over-fitting}
+Specifically, adjusted $R^2$ penalizes the number of predictors in the model.\index{adjusted $R^2$}
 Adjusted $R^2$ reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions over and above what would be expected to be accounted for by chance, given the number of predictors in the model.\index{adjusted $R^2$}
+Thus, adjusted $R^2$ will increase only if the new predictor improves the model (i.e., explains additional variance in the outcome variable) more than would be expected by chance.\index{adjusted $R^2$}
 Larger values indicate greater accuracy.\index{adjusted $R^2$}
 The formula for adjusted $R^2$ is in Equation \@ref(eq:adjustedRSquared):\index{adjusted $R^2$}
 
@@ -1658,9 +1665,17 @@ Adjusted $R^2$ is described further in Section \@ref(pseudoPrediction).
 
 ###### Predictive $R^2$ {#predictiveRsquared}
 
-Predictive $R^2$ is described here:\index{predictive $R^2$} https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/ (archived at https://perma.cc/BK8J-HFUK).
+Predictive $R^2$ is described here:\index{predictive $R^2$} https://tomhopper.me/2014/05/16/can-we-do-better-than-r-squared/ (archived at https://perma.cc/BK8J-HFUK) and https://mfatihtuzen.netlify.app/posts/2025-04-30_rsquared/ (archived at https://perma.cc/EPP8-VG23).
 Predictive $R^2$ penalizes [overfitting](#overfitting), unlike traditional $R^2$.\index{predictive $R^2$}\index{coefficient of determination}\index{over-fitting}
 Larger values indicate greater accuracy.\index{predictive $R^2$}
+The formula for predictive $R^2$ is in Equation \@ref(eq:predictiveRSquared):\index{predictive $R^2$}
+
+\begin{equation}
+R^2_{pred} = 1 - \frac{\text{PRESS}}{\text{SS}_\text{total}}
+(\#eq:predictiveRSquared)
+\end{equation}
+
+where PRESS is the predictive residual sum of squares, and $\text{SS}_\text{total}$ is the total sum of squares.\index{predictive $R^2$}
 
 ```{r, class.source = "fold-hide"}
 #predictive residual sum of squares (PRESS)
@@ -1696,6 +1711,31 @@ predictiveRSquared(mydataSDT$testScore, mydataSDT$disorder)
 
 ```{r, include = FALSE}
 predictiveRSquaredValue <- predictiveRSquared(mydataSDT$testScore, mydataSDT$disorder)
+```
+
+It is preferable to examine predictive $R^2$ using new data that the model was not trained on—i.e., cross-validation, either in an independent sample (i.e., external cross-validation) or in a hold-out sample (i.e., internal cross-validation on test data).\index{predictive $R^2$}\index{cross-validation}
+
+For example, here is an example of estimating predictive $R^2$ 10-fold cross-validation using the `caret` package [@R-caret].\index{predictive $R^2$}\index{cross-validation}
+
+```{r}
+set.seed(52242)
+
+# Set up 10-fold cross-validation
+train_control <- caret::trainControl(
+  method = "cv",
+  number = 10)
+
+# Fit the model with cross-validation
+model_cv <- caret::train(
+  testScore ~ disorder,
+  data = mydataSDT,
+  method = "lm",
+  na.action = na.exclude,
+  trControl = train_control,
+  metric = "Rsquared")
+
+# View R-squared across the folds
+model_cv$results$Rsquared
 ```
 
 ### Discrimination {#discrimination}
