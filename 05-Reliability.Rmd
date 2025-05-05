@@ -547,6 +547,7 @@ library("MBESS")
 library("lavaan")
 library("semTools")
 library("psychmeta")
+library("irr")
 library("irrCAC")
 library("irrICC")
 library("irrNA")
@@ -1097,14 +1098,24 @@ ICC ranges from 0–1, with higher scores indicating greater agreement.\index{re
 ICC was estimated using the `psych` package [@R-psych].\index{reliability!test–retest}\index{reliability!test–retest!coefficient of agreement}
 
 ```{r}
-ICC(mydata[,c("time1","time2")], missing = FALSE)
+psych::ICC(mydata[,c("time1","time2")], missing = FALSE)
 ```
 
 There are various kinds of ICC coefficients.
 To read more about the various types of ICC coefficients, type the following command:
 
 ```{r, eval = FALSE}
-?ICC
+?psych::ICC
+```
+
+Below, absolute agreement of test–retest reliability was estimated using the `irr` package:
+
+```{r}
+irr::icc(
+  mydata[,c("time1","time2")],
+  model = "twoway",
+  type = "agreement",
+  unit = "single")
 ```
 
 #### Coefficient of Repeatability {#repeatability}
