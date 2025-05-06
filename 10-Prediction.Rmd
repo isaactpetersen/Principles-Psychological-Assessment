@@ -1713,7 +1713,7 @@ predictiveRSquaredValue <- predictiveRSquared(mydataSDT$testScore, mydataSDT$dis
 
 It is preferable to examine predictive $R^2$ using new data that the model was not trained on—i.e., cross-validation, either in an independent sample (i.e., external cross-validation) or in a hold-out sample (i.e., internal cross-validation on test data).\index{predictive $R^2$}\index{cross-validation}
 
-For example, here is an example of estimating predictive $R^2$ 10-fold cross-validation using the `caret` package [@R-caret].\index{predictive $R^2$}\index{cross-validation}
+For example, here is an example of estimating predictive $R^2$ with 10-fold cross-validation using the `caret` package [@R-caret].\index{predictive $R^2$}\index{cross-validation}
 
 ```{r}
 set.seed(52242)
@@ -1734,6 +1734,33 @@ model_cv <- caret::train(
 
 # View R-squared across the folds
 model_cv$results$Rsquared
+```
+
+Here is an example of estimating predictive $R^2$ with a training and testing data set using the `caret` package [@R-caret].\index{predictive $R^2$}\index{cross-validation}
+
+```{r}
+set.seed(52242)
+
+inTrain <- caret::createDataPartition(
+  y = as.factor(mydataSDT$disorder),
+  p = .75, # the proportion of data for the training data set
+  list = FALSE
+)
+
+training <- mydataSDT[ inTrain,]
+testing  <- mydataSDT[-inTrain,]
+
+training_model <- lm(
+  testScore ~ disorder,
+  data = training)
+
+testing_predictions <- predict(
+  training_model,
+  newdata = testing)
+
+accuracyOverall(
+  predicted = testing_predictions,
+  actual = testing$disorder)
 ```
 
 ### Discrimination {#discrimination}
