@@ -1606,6 +1606,20 @@ rootMeanSquaredLogErrorValue <- rootMeanSquaredLogError(mydataSDT$testScore, myd
 The coefficient of determination ($R^2$) is a general index of accuracy that combines both [discrimination](#discrimination) and [calibration](#calibration).\index{coefficient of determination}\index{discrimination}\index{calibration}
 It reflects the proportion of variance in the outcome (dependent) variable that is explained by the model predictions: $R^2 = \frac{\text{variance explained in }Y}{\text{total variance in }Y}$.\index{coefficient of determination}
 Larger values indicate greater accuracy.\index{coefficient of determination}
+The formula for the coefficient of determination is in Equation \@ref(eq:rSquared):\index{coefficient of determination}
+
+$$
+\begin{aligned}
+  R^2 &= 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2} \\
+      &= 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}} \\
+      &= 1 - \frac{\text{sum of squared residuals}}{\text{total sum of squares}} \\
+      &= \frac{\text{variance explained in }y}{\text{total variance in }y}
+\end{aligned}
+(\#eq:rSquared)
+$$
+
+where $y$ is the outcome variable, $y_i$ is the observed value of the outcome variable for the $i$th observation, $\hat{y}_i$ is the model predicted value for the $i$th observation, and $\bar{y}$ is the mean of the observed values of the outcome variable.\index{coefficient of determination}
+The total sum of squares is an index of the total variation in the outcome variable.\index{coefficient of determination}
 
 $R^2$ is commonly estimated in multiple regression, in which multiple predictors are allowed to predict one outcome.\index{coefficient of determination}\index{multiple regression}
 Multiple regression can be conceptualized with overlapping circles in what is called a [Ballantine graph](https://www.andrewheiss.com/blog/2021/08/21/r2-euler) (archived at https://perma.cc/C7CU-KFVG).\index{multiple regression}
@@ -1628,6 +1642,9 @@ rSquaredValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
 ```
 
 The predictor (`testScore`) explains $`r apa(rSquaredValue * 100, 2)`$% of the variance $(R^2 = `r apa(rSquaredValue, 4, leading = FALSE)`)$ in the outcome (`disorder` status).
+
+The coefficient of determination typically ranges from 0 to 1, but it can be negative.\index{coefficient of determination}
+A negative coefficient of determination indicates that the predicted values are less accurate than using the mean of the actual values as the predicted values (i.e., predicting the mean of the observed values for every case).\index{coefficient of determination}
 
 An issue with $R^2$ is that it can be artificially inflated by adding more predictors to the model, even if those predictors do not improve the model fit.\index{coefficient of determination}\index{overfitting}
 $R^2$ never decreases when adding predictors to a model, even if the predictors do not provide any predictive power.\index{coefficient of determination}
