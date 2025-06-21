@@ -880,11 +880,13 @@ fa.parallel(
 A scree plot from EFA is in Figure \@ref(fig:screePlotEFA).\index{scree plot}\index{factor analysis!exploratory}
 
 ```{r screePlotEFA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Exploratory Factor Analysis."}
-plot(
-  nScree(x = cor(
+screeDataEFA <- nScree(
+  x = cor(
     HolzingerSwineford1939[,vars],
     use = "pairwise.complete.obs"),
-    model = "factors"))
+  model = "factors")
+
+plotnScree(screeDataEFA)
 ```
 
 ##### Very Simple Structure (VSS) Plot {#vssPlot}
@@ -3664,11 +3666,13 @@ fa.parallel(
 A scree plot is in Figure \@ref(fig:screePlotPCA).\index{scree plot}\index{principal component analysis}
 
 ```{r screePlotPCA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Principal Component Analysis."}
-plot(nScree(
+screeDataPCA <- nScree(
   x = cor(
     HolzingerSwineford1939[,vars],
     use = "pairwise.complete.obs"),
-  model = "components"))
+  model = "components")
+
+plotnScree(screeDataPCA)
 ```
 
 #### Very Simple Structure (VSS) Plot {#pcaAnalysisVSSplot}
@@ -3950,8 +3954,22 @@ corrplot(cor(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT
 
 ### Scree Plot
 fa.parallel(x = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], fm = "ml", fa = "fa")
-plot(nScree(x = cor(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], use = "pairwise.complete.obs"), model = "factors"))
-plot(nScree(x = na.omit(as.data.frame(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")])), model = "factors"))
+
+#screeDataEFA_ex1 <- nScree(
+#  x = cor(
+#    cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
+#    use = "pairwise.complete.obs"),
+#  model = "factors")
+#
+#plotnScree(screeDataEFA_ex1)
+#
+#screeDataEFA_ex2 <- nScree(
+#  x = cor(
+#    na.omit(as.data.frame(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")])),
+#    use = "pairwise.complete.obs"),
+#  model = "factors")
+#
+#plotnScree(screeDataEFA_ex2)
 
 ### Very Simple Structure (VSS) Plot
 
@@ -4047,9 +4065,22 @@ lapply(equivalentDAGs(dagModel, n = 9), plot)
 ### Scree Plot
 
 fa.parallel(x = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], fm = "ml", fa = "pc")
-plot(nScree(x = cor(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], use = "pairwise.complete.obs"), model = "components"))
 
-plot(nScree(x = na.omit(as.data.frame(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")])), model = "components"))
+#screeDataPCA_ex1 <- nScree(
+#  x = cor(
+#    cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
+#    use = "pairwise.complete.obs"),
+#  model = "components")
+#
+#plotnScree(screeDataPCA_ex1)
+#
+#screeDataPCA_ex2 <- nScree(
+#  x = cor(
+#    na.omit(as.data.frame(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")])),
+#    use = "pairwise.complete.obs"),
+#  model = "components")
+#
+#plotnScree(screeDataPCA_ex2)
 
 ### Very Simple Structure (VSS) Plot
 
