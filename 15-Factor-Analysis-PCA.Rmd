@@ -664,6 +664,7 @@ library("semPlot")
 library("lavaan")
 library("semTools")
 library("dagitty")
+library("BifactorIndicesCalculator") #to install: install.packages("remotes"); remotes::install_github("ddueber/BifactorIndicesCalculator")
 library("kableExtra")
 library("MOTE")
 library("tidyverse")
@@ -2987,6 +2988,8 @@ lavaanify(cfaModelBifactor_fullSyntax)
 
 ##### Fit the model {#bifactorModelFit}
 
+We simulated the data for the bifactor model in Section \@ref(mtmmCorrelationMatrix).
+
 ```{r}
 cfaModelBifactorFit <- cfa(
   cfaModelBifactor_syntax,
@@ -3052,6 +3055,14 @@ modificationindices(cfaModelBifactorFit, sort. = TRUE)
 ```{r}
 compRelSEM(cfaModelBifactorFit)
 AVE(cfaModelBifactorFit)
+```
+
+##### Bifactor Indices {#bifactorModelIndices}
+
+```{r}
+BifactorIndicesCalculator::bifactorIndices(
+  cfaModelBifactorFit
+)
 ```
 
 ##### Path diagram {#bifactorModelPathDiagram}
@@ -3326,6 +3337,14 @@ compRelSEM(cfaModelMTMMFit)
 compRelSEM(cfaModelMTMMFit, higher = "g")
 
 AVE(cfaModelMTMMFit)
+```
+
+##### Bifactor Indices {#mtmmCFAModelIndices}
+
+```{r}
+BifactorIndicesCalculator::bifactorIndices(
+  cfaModelMTMMFit
+)
 ```
 
 ##### Path diagram {#mtmmCFApathDiagram}

@@ -1381,10 +1381,21 @@ library("tinytex")
 ### Load Data {#loadData-irt}
 
 `LSAT7` is a data set from the `mirt` package [@R-mirt] that contains five items from the Law School Admissions Test.
+`SAT12` is a data set from the `mirt` package [@R-mirt] that contains 32 items for a grade 12 science assessment test (SAT) measuring topics of chemistry, biology, and physics.
 
 ```{r}
 mydataIRT <- expand.table(LSAT7)
+data(SAT12)
 ```
+
+### Prepare Data {#prepareData-irt}
+
+```{r}
+mydataSAT <- mirt::key2binary(
+  SAT12,
+  key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+```
+
 
 ### Descriptive Statistics {#descriptiveStats-IRT}
 
@@ -1557,7 +1568,7 @@ Item.5 | threshold5*t1
 onePLModel_cfa_fit = sem(
   model = onePLModel_cfa,
   data = mydataIRT,
-  ordered = c("Item.1", "Item.2", "Item.3", "Item.4","Item.5"),
+  ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
   mimic = "Mplus",
   estimator = "WLSMV",
   std.lv = TRUE,
@@ -2370,6 +2381,235 @@ ggplot(
   ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
   theme_bw() +
   theme(axis.title.y = element_text(size = 10))
+```
+
+## Bifactor Model {#irt-bifactor}
+
+Bifactor models were fit using the `mirt` package [@R-mirt].\index{item response theory!bifactor model}\index{factor analysis!bifactor}
+
+### Fit Model {#irt-bifactorFit}
+
+```{r, results = "hide"}
+specific <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
+             S2 = 1,3,6,8,16,29,32
+             S3 = 2,4,5,12,14,19,20,23,25,26,28,30"
+
+bifactorModel <- bfactor(
+  data = mydataSAT,
+  model = specific,
+  SE = TRUE)
+```
+
+### Model Summary {#irt-bifactorOutput}
+
+```{r}
+summary(bifactorModel)
+coef(bifactorModel, simplify = TRUE)
+```
+
+### Bifactor Indices {#irt-bifactorIndices}
+
+```{r}
+BifactorIndicesCalculator::bifactorIndices(
+  bifactorModel
+)
+```
+
+### Factor Scores {#irt-bifactorFactorScores}
+
+One can obtain factor scores (i.e., theta; and their associated standard errors) for each participant using the `fscores()` function.
+
+```{r}
+bifactorModel_factorScores <- fscores(
+  bifactorModel,
+  full.scores.SE = TRUE,
+  QMC = TRUE)
+```
+
+### Plots {#irt-bifactorPlots}
+
+#### Test Curves {#irt-bifactorTestCurves}
+
+The test curves suggest that the measure is most [reliable](#reliability) (i.e., provides the most [information](#irtReliability) has the smallest [standard error of measurement](#irtReliability)) at lower levels of the construct.\index{item response theory!information}\index{item response theory!standard error of measurement}\index{reliability!standard error of measurement}
+
+##### Test Characteristic Curve {#irt-bifactorTCC}
+
+A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorTCC).\index{item response theory!item characteristic curve}
+
+```{r bifactorTCC, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "score")
+```
+
+##### Test Information Curve {#irt-bifactorTIF}
+
+A plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorTIF).\index{item response theory!information}\index{item response theory!test information curve}
+
+```{r bifactorTIF, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "info")
+```
+
+##### Test Reliability {#irt-bifactorReliability}
+
+The estimate of marginal [reliability](#irtReliability) is below:\index{reliability}
+
+```{r, eval = FALSE}
+marginal_rxx(bifactorModel)
+```
+
+A plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorReliability).\index{reliability}
+
+```{r bifactorReliability, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "rxx")
+```
+
+##### Test Standard Error of Measurement {#irt-bifactorSEM}
+
+A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorSEM).\index{reliability!standard error of measurement}
+
+```{r bifactorSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "SE")
+```
+
+##### Test Information Curve and Test Standard Error of Measurement {#irt-bifactorTIFsem}
+
+A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorTIFsem).\index{item response theory!information}\index{item response theory!standard error of measurement}\index{reliability!standard error of measurement}\index{item response theory!test information curve}
+
+```{r bifactorTIFsem, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "infoSE")
+```
+
+#### Item Curves {#irt-bifactorItemCurves}
+
+##### Item Characteristic Curves {#irt-bifactorICC}
+
+Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:bifactorICC) and \@ref(fig:bifactorICCfacet).\index{item response theory!item characteristic curve}
+
+```{r bifactorICC, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "itemscore", facet_items = FALSE)
+```
+
+```{r bifactorICCfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "itemscore", facet_items = TRUE)
+```
+
+##### Item Information Curves {#irt-bifactorIIF}
+
+Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:bifactorIIF) and \@ref(fig:onePLiifFacet).\index{item response theory!information}\index{item response theory!item information curve}
+
+```{r bifactorIIF, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "infotrace", facet_items = FALSE)
+```
+
+```{r bifactorIIFfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Bifactor Item Response Theory Model.", eval = FALSE}
+plot(bifactorModel, type = "infotrace", facet_items = TRUE)
+```
+
+### CFA {#irt-bifactorCFA}
+
+A bifactor model can also be fit in a [CFA](#cfa) framework, sometimes called item factor analysis.\index{factor analysis!confirmatory}\index{item response theory!bifactor model}\index{factor analysis!bifactor}
+The item factor analysis models were fit in the `lavaan` package [@R-lavaan].\index{factor analysis!confirmatory}\index{item response theory!bifactor model}\index{factor analysis!bifactor}
+
+```{r}
+bifactorModel_cfa <- '
+# Factor Loadings (i.e., discrimination parameters)
+G =~ Item.1 + Item.2 + Item.3 + Item.4 + Item.5 + Item.6 + Item.7 + Item.8 + Item.9 + 
+     Item.10 + Item.11 + Item.12 + Item.13 + Item.14 + Item.15 + Item.16 + Item.17 + Item.18 + Item.19 +
+     Item.20 + Item.21 + Item.22 + Item.23 + Item.24 + Item.25 + Item.26 + Item.27 + Item.28 + Item.29 +
+     Item.30 + Item.31 + Item.32
+  
+S1 =~ Item.7 + Item.9 + Item.10 + Item.11 + Item.13 + Item.15 + Item.17 + 
+      Item.18 + Item.21 + Item.22 + Item.24 + Item.27 + Item.31
+  
+S2 =~ Item.1 + Item.3 + Item.6 + Item.8 + Item.16 + Item.29 + Item.32
+  
+S3 =~ Item.2 + Item.4 + Item.5 + Item.12 + Item.14 + Item.19 + Item.20 + 
+      Item.23 + Item.25 + Item.26 + Item.28 + Item.30
+
+# Item Thresholds (i.e., difficulty parameters)
+Item.1 | t1
+Item.2 | t1
+Item.3 | t1
+Item.4 | t1
+Item.5 | t1
+Item.6 | t1
+Item.7 | t1
+Item.8 | t1
+Item.9 | t1
+Item.10 | t1
+Item.11 | t1
+Item.12 | t1
+Item.13 | t1
+Item.14 | t1
+Item.15 | t1
+Item.16 | t1
+Item.17 | t1
+Item.18 | t1
+Item.19 | t1
+Item.20 | t1
+Item.21 | t1
+Item.22 | t1
+Item.23 | t1
+Item.24 | t1
+Item.25 | t1
+Item.26 | t1
+Item.27 | t1
+Item.28 | t1
+Item.29 | t1
+Item.30 | t1
+Item.31 | t1
+Item.31 | t1
+'
+
+bifactorModel_cfa_fit = sem(
+  model = bifactorModel_cfa,
+  data = mydataSAT,
+  ordered = c(
+    "Item.1","Item.2","Item.3","Item.4","Item.5","Item.6","Item.7","Item.8","Item.9",
+    "Item.10","Item.11","Item.12","Item.13","Item.14","Item.15","Item.16","Item.17","Item.18","Item.19",
+    "Item.20","Item.21","Item.22","Item.23","Item.24","Item.25","Item.26","Item.27","Item.28","Item.29",
+    "Item.30","Item.31","Item.32"),
+  mimic = "Mplus",
+  estimator = "WLSMV",
+  orthogonal = TRUE,
+  std.lv = TRUE,
+  parameterization = "theta")
+
+summary(
+  bifactorModel_cfa_fit,
+  fit.measures = TRUE,
+  rsquare = TRUE,
+  standardized = TRUE)
+
+fitMeasures(
+  bifactorModel_cfa_fit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
+
+residuals(bifactorModel_cfa_fit, type = "cor")
+
+modificationindices(bifactorModel_cfa_fit, sort. = TRUE)
+
+compRelSEM(bifactorModel_cfa_fit)
+AVE(bifactorModel_cfa_fit)
+
+BifactorIndicesCalculator::bifactorIndices(
+  bifactorModel_cfa_fit
+)
+
+bifactorModel_cfa_factorScores <- lavPredict(bifactorModel_cfa_fit)
+```
+
+A path diagram of the bifactor item factor analysis is in Figure \@ref(fig:bifactorIFA).\index{factor analysis!confirmatory}\index{item response theory!bifactor model}\index{factor analysis!bifactor}
+
+```{r bifactorIFA, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of One-Parameter Logistic Model."}
+semPaths(
+  bifactorModel_cfa_fit,
+  what = "std",
+  layout = "tree3",
+  bifactor = c("g"),
+  edge.label.cex = 1.5)
 ```
 
 ## Conclusion {#conclusion-irt}
