@@ -58,7 +58,15 @@ jobs:
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd", output_format = c("all"))'
         
-      - uses: actions/upload-artifact@v4 # update
+      - name: List files in workspace
+        if: always()
+        run: |
+          ls -lh
+          find . -type f
+      
+      - name: Archive production artifacts
+        if: always() # ensures it runs even if previous steps fail
+        uses: actions/upload-artifact@v4 # update
         with:
           name: _book
           path: _book/
