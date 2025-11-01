@@ -524,9 +524,11 @@ knitr::include_graphics("./Images/factorSolutionUnrotated.png")
 
 As a result, to improve the interpretability of the [factor analysis](#factorAnalysis), we can do what is called rotation.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}
 Rotation leverages the idea that there are infinite solutions to the factor analysis model that fit equally well.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}
-*Rotation* involves changing the orientation of the factors by changing the axes so that variables end up with very high (close to one or negative one) or very low (close to zero) loadings, so that it is clear which factors include which variables.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}
+*Rotation* involves changing the orientation of the factors by changing the axes so that variables end up with very high (close to one or negative one) or very low (close to zero) loadings, so that it is clear which factors include which variables (and which factors each variable most strongly loads onto).\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}
 That is, rotation rescales the factors and tries to identify the ideal solution (factor) for each variable.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}
-It searches for simple structure and keeps searching until it finds a minimum.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}\index{simple structure}
+Rotation occurs by changing the variables' loadings while keeping the structure of correlations among the variables intact [@Field2012].
+Moreover, rotation does not change the variance explained by factors.
+Rotation searches for simple structure and keeps searching until it finds a minimum (i.e., the closest as possible to simple structure).\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}\index{simple structure}
 After rotation, if the rotation was successful for imposing simple structure, each factor will have loadings close to one (or negative one) for some variables and close to zero for other variables.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}\index{simple structure}
 The goal of factor rotation is to achieve simple structure, to help make it easier to interpret the meaning of the factors.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}\index{rotation}\index{simple structure}
 
@@ -896,9 +898,9 @@ corMatrix_HolzingerSwineford1939 <- cor(
 det(corMatrix_HolzingerSwineford1939)
 ```
 
-### Bartlett's Test {#bartlettTest}
+### Bartlett's Test of Sphericity {#bartlettTest}
 
-Bartlett's test evaluates whether the correlations between the variables are significantly different from zero.
+Bartlett's test of sphericity evaluates whether the correlations between the variables are significantly different from zero.
 A significant Bartlett's test indicates that the correlations between the variables significantly differ from zero and that factor analysis may be able to be used.
 
 ```{r}
@@ -1778,6 +1780,7 @@ Fit indices are generated using the syntax below.\index{factor analysis!explorat
 
 ```{r}
 residuals(efa3factorOrthogonal)
+hist(residuals(efa3factorOrthogonal))
 
 factor.residuals(
   corMatrix_HolzingerSwineford1939,
@@ -1797,7 +1800,8 @@ fitMeasures(
     "rmsea", "cfi", "tli", "srmr",
     "rmsea.robust", "cfi.robust", "tli.robust"))
 
-residuals(efaOrthogonalLavaan_fit$nf3)
+residuals(efaOrthogonalLavaan_fit$nf3, type = "cor")
+hist(residuals(efaOrthogonalLavaan_fit$nf3, type = "cor")$cov)
 
 residuals(efa3factorOrthogonalLavaan_fit, type = "cor")
 ```
@@ -1810,6 +1814,7 @@ residuals(efa3factorOrthogonalLavaan_fit, type = "cor")
 
 ```{r}
 residuals(efa3factorOblique)
+hist(residuals(efa3factorOblique))
 
 factor.residuals(
   corMatrix_HolzingerSwineford1939,
@@ -1829,7 +1834,8 @@ fitMeasures(
     "rmsea", "cfi", "tli", "srmr",
     "rmsea.robust", "cfi.robust", "tli.robust"))
 
-residuals(efaObliqueLavaan_fit$nf3)
+residuals(efaObliqueLavaan_fit$nf3, type = "cor")
+hist(residuals(efaObliqueLavaan_fit$nf3, type = "cor")$cov)
 
 residuals(efa3factorObliqueLavaan_fit, type = "cor")
 ```
