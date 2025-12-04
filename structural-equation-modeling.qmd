@@ -1,0 +1,2816 @@
+# Structural Equation Modeling {#sem}
+
+> "All models are wrong, but some are useful."
+>
+> --- George Box [-@Box1979, p. 202]
+
+## Overview of SEM {#overview-sem}
+
+Structural equation modeling is an advanced modeling approach that allows estimating latent variables to account for [measurement error](#measurementError) and to get purer estimates of constructs.\index{structural equation modeling}\index{measurement error}\index{latent variable}
+
+## Getting Started {#gettingStarted-sem}
+
+### Load Libraries {#loadLibraries-sem}
+
+```{r}
+library("petersenlab") #to install: install.packages("remotes"); remotes::install_github("DevPsyLab/petersenlab")
+library("lavaan")
+library("semTools")
+library("semPlot")
+library("simsem")
+library("snow")
+library("mice")
+library("quantreg")
+library("nonnest2")
+library("MOTE")
+library("tidyverse")
+library("here")
+library("tinytex")
+```
+
+### Prepare Data {#prepareData-sem}
+
+#### Simulate Data {#simulateData-sem}
+
+For reproducibility, I set the seed below.\index{simulate data}
+Using the same seed will yield the same answer every time.
+There is nothing special about this particular seed.
+
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] includes a [`complement()` function](https://stats.stackexchange.com/a/313138/20338) (archived at https://perma.cc/S26F-QSW3) that simulates data with a specified correlation in relation to an existing variable.\index{petersenlab package}
+`PoliticalDemocracy` refers to the Industrialization and Political Democracy data set from the `lavaan` package [@R-lavaan], and it contains measures of political democracy and industrialization in developing countries.
+
+```{r}
+sampleSize <- 300
+
+set.seed(52242)
+
+v1 <- complement(PoliticalDemocracy$y1, .4)
+v2 <- complement(PoliticalDemocracy$y1, .4)
+v3 <- complement(PoliticalDemocracy$y1, .4)
+v4 <- complement(PoliticalDemocracy$y1, .4)
+
+PoliticalDemocracy$v1 <- v1
+PoliticalDemocracy$v2 <- v2
+PoliticalDemocracy$v3 <- v3
+PoliticalDemocracy$v4 <- v4
+
+measure1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
+measure2 <- measure1 + rnorm(n = sampleSize, mean = 0, sd = 15)
+measure3 <- measure1 + measure2 + rnorm(n = sampleSize, mean = 0, sd = 15)
+```
+
+#### Add Missing Data {#addMissingData-sem}
+
+Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
+
+```{r}
+measure1[c(5,10)] <- NA
+measure2[c(10,15)] <- NA
+measure3[c(10)] <- NA
+PoliticalDemocracy <- 
+  as.data.frame(lapply(
+    PoliticalDemocracy,
+    function(cc) cc[ sample(
+      c(TRUE, NA),
+      prob = c(0.9, 0.1),
+      size = length(cc),
+      replace = TRUE)]))
+```
+
+#### Combine Data into Dataframe {#combineData-sem}
+
+```{r}
+mydataSEM <- data.frame(measure1, measure2, measure3)
+```
+
+## Types of Models {#modelTypes-sem}
+
+Structural equation modeling (SEM) involves the use of models.\index{structural equation modeling}
+A model is a simplification of reality.\index{structural equation modeling}
+
+### Path Analysis Model {#pathAnalysis-sem}
+
+To understand structural equation modeling (SEM), it is helpful to first understand *path analysis*.\index{path analysis}
+Path analysis is similar to multiple regression.\index{path analysis}\index{multiple regression}
+Path analysis allows examining the association between multiple predictor variables (or independent variables) in relation to an outcome variable (or dependent variable).\index{path analysis}
+Unlike multiple regression, however, path analysis also allows inclusion of multiple *dependent* variables in the same model.\index{path analysis}\index{multiple regression}
+Unlike SEM, path analysis uses only manifest (observed) variables, not latent variables (described next).\index{path analysis}\index{structural equation modeling}\index{latent variable}
+SEM is path analysis, but with latent (unobserved) variables.\index{structural equation modeling}\index{latent variable}
+That is, a SEM model is a model that includes latent variables in addition to observed variables, where one attempts to model (i.e., explain) the *structure* of associations between variance using a series of equations (hence structural equation modeling).\index{structural equation modeling}\index{latent variable}
+
+### Components of a Structural Equation Model {#semModelComponents}
+
+#### Measurement Model {#measurementModel-sem}
+
+The measurement model is a crucial sub-component of any SEM model.\index{structural equation modeling!measurement model}
+A SEM model consists of two components: a measurement model and a structural model.\index{structural equation modeling!measurement model}
+The *measurement model* is a [confirmatory factor analysis](#cfa-sem) (CFA) model that identifies how many latent factors are estimated, and which items load onto which latent factor.\index{structural equation modeling!measurement model}\index{factor analysis!confirmatory}\index{latent variable}
+The measurement model can also specify correlated residuals.\index{structural equation modeling!residual!correlated}\index{structural equation modeling!measurement model}
+Basically, the measurement model specifies your best understanding of the structure of the latent construct(s) given how they were assessed.\index{structural equation modeling!measurement model}\index{construct}\index{latent variable}
+Before fitting the structural component of a SEM, it is important to have a well-fitting measurement model for each construct in the model.\index{structural equation modeling!measurement model}\index{construct}
+In Section \@ref(measurementModel-sem), I present an example of a measurement model.\index{structural equation modeling!measurement model}
+
+#### Structural Model {#structuralModel-sem}
+
+The *structural component* of a SEM model includes the regression paths that specify the hypothesized causal relations among the latent variables.\index{structural equation modeling!structural model}\index{latent variable}
+The disturbance (error term) for endogenous latent factors (i.e., latent factors that are predicted by other predictors) in the structural model is called zeta ($\zeta$).\index{structural equation modeling!residual!disturbance}\index{structural equation modeling!structural model}
+
+### Confirmatory Factor Analysis Model {#cfa-sem}
+
+[Confirmatory factor analysis](#cfa) (CFA) is a subset of SEM.
+CFA includes the [measurement model](#measurementModel-sem) but not the [structural component](#structuralModel-sem) of the model.\index{factor analysis!confirmatory}\index{structural equation modeling!measurement model}\index{structural equation modeling!structural model}
+In Section \@ref(cfaExample-sem), I present an example of a [CFA](#cfa) model.\index{factor analysis!confirmatory}
+I discuss [CFA](#cfa) models in greater depth in Chapter \@ref(factor-analysis-PCA).\index{factor analysis!confirmatory}
+
+### Structural Equation Model {#semModel}
+
+SEM is [CFA](#cfa), but it adds regression paths that specify hypothesized causal relations between the latent variables, which is called the [structural component](#structuralModel-sem) of the model.\index{structural equation modeling}\index{structural equation modeling!structural model}\index{factor analysis!confirmatory}\index{latent variable}
+The [structural model](#structuralModel-sem) includes the hypothesized causal relations between latent variables.\index{structural equation modeling!structural model}\index{latent variable}
+A SEM model includes both the [measurement model](#measurementModel-sem) and the [structural model](#structuralModel-sem) [see Figure \@ref(fig:measurementModelStructuralModel), @Civelek2018].\index{structural equation modeling}\index{structural equation modeling!measurement model}\index{structural equation modeling!structural model}
+SEM fits a model to observed data, or the variance-covariance matrix, and evaluates the degree of model misfit.\index{structural equation modeling}
+That is, fit indices evaluate how likely it is that a given model gave rise to the observed data.\index{structural equation modeling!fit index}
+In Section \@ref(semModelExample-sem), I present an example of a SEM model.\index{structural equation modeling}
+
+(ref:measurementModelStructuralModelCaption) Demarcation Between Measurement Model and Structural Model. Disturbance term is zeta. (Figure adapted from @Civelek2018, Figure 1, p. 7. Civelek, M. E. (2018). *Essentials of structural equation modeling*. Zea E-Books. [https://doi.org/10.13014/K2SJ1HR5](https://doi.org/10.13014/K2SJ1HR5))
+
+```{r measurementModelStructuralModel, out.width = "100%", fig.align = "center", fig.cap = "(ref:measurementModelStructuralModelCaption)", fig.scap = "Demarcation Between Measurement Model and Structural Model.", echo = FALSE}
+knitr::include_graphics("./images/measurementModelStructuralModel.png")
+```
+
+SEM is flexible in allowing you to specify [measurement error](#measurementError) and correlated errors.\index{structural equation modeling}\index{measurement error}\index{structural equation modeling!residual!correlated}
+Thus, you do not need the same assumptions as in [classical test theory](#ctt), which assumes that [errors](#measurementError) are [random](#randomError) and uncorrelated.\index{classical test theory}\index{measurement error}\index{measurement error!random error}
+But the flexibility of SEM also poses challenges because you must explicitly decide what to include—and not include—in your model.\index{structural equation modeling}
+This flexibility can be both a blessing and a curse.\index{structural equation modeling}
+If the model fit is unacceptable, you can try fitting a different model to see which fits better.\index{structural equation modeling}\index{structural equation modeling!fit index}
+Nevertheless, it is important to use theory as a guide when specifying and comparing competing models, and not just rely solely on model fit comparison.\index{structural equation modeling}\index{structural equation modeling!fit index}\index{theory}\index{empiricism}
+For example, the model you fit should depend on how you conceptualize each construct: as [reflective](#reflectiveConstruct) or [formative](#formativeConstruct).\index{construct!reflective}\index{construct!formative}
+
+## Estimating Latent Factors {#formativeReflective-sem}
+
+### Model Identification {#modelIdentification-sem}
+
+#### Types of Model Identification {#modelIdentificationTypes-sem}
+
+There are important practical issues to consider with both [reflective](#reflectiveConstruct) and [formative](#formativeConstruct) models.\index{construct!reflective}\index{construct!formative}
+An important practical issue is model identification—adding enough constraints so that there is only one, best answer.\index{structural equation modeling!model identification}
+The model is identified when each of the estimated parameters has a unique solution.\index{structural equation modeling!model identification}
+For ensuring the model is identifiable, see the criteria for identification of the measurement and structural model [here](https://davidakenny.net/cm/identify_formal.htm) (archived at https://perma.cc/5C9E-LBWM).\index{factor analysis}\index{factor analysis!identifiability}
+
+Degrees of freedom in a SEM model is the number of known values minus the number of estimated parameters.\index{structural equation modeling!degrees of freedom}
+The number of known values in a SEM model is the number of variances and covariances in the variance-covariance matrix of the manifest (observed) variables in addition to the number of means (i.e., the number of manifest variables), which can be calculated as: $\frac{m(m + 1)}{2} + m$, where $m = \text{the number of manifest variables}$.\index{structural equation modeling!degrees of freedom}
+You can never estimate more parameters than the number of known values.\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+A model with zero degrees of freedom is considered "saturated"—it will have perfect fit because the model estimates as many parameters as there are known values.\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+All things equal (i.e., in terms of model fit with the same number of manifest variables), a model with more degrees of freedom is preferred for its parsimony, because fewer parameters are estimated.\index{structural equation modeling!degrees of freedom}\index{parsimony}
+
+Based on the number of known values compared to the number of estimated parameters, a model can be considered either just identified, under-identified, or over-identified.\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+A *just identified model* is a model in which the number of known values is equal to the number of parameters to be estimated (degrees of freedom = 0).\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+An *under-identified model* is a model in which the number of known values is less than the number of parameters to be estimated (degrees of freedom < 0).\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+An *over-identified model* is a model in which the number of known values is greater than the number of parameters to be estimated (degrees of freedom > 0).\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+
+As an example, there are 14 known values for a model with 4 manifest variables ($\frac{4(4 + 1)}{2} + 4 = 14$): 4 variances, 6 covariances, and 4 means.\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+
+Here is the variance-covariance matrix:
+
+```{r}
+vcovMatrix4measures <- cov(
+  PoliticalDemocracy[,c("y1","y2","y3","y4")],
+  use = "pairwise.complete.obs")
+
+vcovMatrix4measures[upper.tri(vcovMatrix4measures)] <- NA
+
+vcovMatrix4measures
+```
+
+Here are the variances:
+
+```{r}
+variances4measures <- diag(vcovMatrix4measures)
+
+variances4measures
+```
+
+Here are the covariances:
+
+```{r}
+covariances4measures <- vcovMatrix4measures[lower.tri(vcovMatrix4measures)]
+
+covariances4measures
+```
+
+Here are the means:
+
+```{r}
+means4Measures <- apply(
+  PoliticalDemocracy[,c("y1","y2","y3","y4")],
+  2, mean, na.rm = TRUE)
+
+means4Measures
+```
+
+#### Approaches to Model Identification {#modelIdentificationApproaches-sem}
+
+The three most widely used approaches to identifying latent factors are:\index{structural equation modeling!model identification}\index{latent variable}
+
+1. [Marker variable](#markerVariable-sem)\index{structural equation modeling!model identification}
+1. [Effects coding](#effectsCoding-sem)\index{structural equation modeling!model identification}
+1. [Standardized latent factor](#standardizedLatent-sem)\index{structural equation modeling!model identification}
+
+##### Marker Variable Method {#markerVariable-sem}
+
+In the marker variable method, one of the indicators (i.e., manifest variables) is set to have a loading of 1.\index{structural equation modeling!model identification}
+Here are examples of using the marker variable method for identification of a latent variable:\index{structural equation modeling!model identification}
+
+```{r}
+markerVariable_syntax <- '
+ #Factor loadings
+ latentFactor =~ y1 + y2 + y3 + y4
+'
+
+markerVariable_fullSyntax <- '
+ #Factor loadings
+ latentFactor =~ 1*y1 + y2 + y3 + y4
+ 
+ #Latent variance
+ latentFactor ~~ latentFactor
+ 
+ #Estimate residual variances of manifest variables
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ 
+ #Estimate intercepts of manifest variables
+ y1 ~ 1
+ y2 ~ 1
+ y3 ~ 1
+ y4 ~ 1
+'
+
+markerVariableModelFit <- sem(
+  markerVariable_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+markerVariableModelFit_full <- lavaan(
+  markerVariable_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+```{r markerVariable, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Marker Variable Approach."}
+semPaths(
+  markerVariableModelFit,
+  what = "est",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+##### Effects Coding Method {#effectsCoding-sem}
+
+In the effects coding method, the average of the factor loadings is set to be 1.\index{structural equation modeling!model identification}
+The effects coding method is useful if you are interested in the means or variances of the latent factor, because the metric of the latent factor is on the metric of the indicators.\index{structural equation modeling!model identification}
+Here are examples of using the effects coding method for identification of a latent variable:\index{structural equation modeling!model identification}
+
+```{r}
+effectsCoding_abbreviatedSyntax <- '
+ #Factor loadings
+ latentFactor =~ y1 + y2 + y3 + y4
+'
+
+effectsCoding_syntax <- '
+ #Factor loadings
+ latentFactor =~ NA*y1 + label1*y1 + label2*y2 + label3*y3 + label4*y4
+ 
+ #Constrain factor loadings
+ label1 == 4 - label2 - label3 - label4 # 4 = number of indicators
+'
+
+effectsCoding_fullSyntax <- '
+ #Factor loadings
+ latentFactor =~ label1*y1 + label2*y2 + label3*y3 + label4*y4
+ 
+ #Constrain factor loadings
+ label1 == 4 - label2 - label3 - label4 # 4 = number of indicators
+ 
+ #Latent variance
+ latentFactor ~~ latentFactor
+ 
+ #Estimate residual variances of manifest variables
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ 
+ #Estimate intercepts of manifest variables
+ y1 ~ 1
+ y2 ~ 1
+ y3 ~ 1
+ y4 ~ 1
+'
+
+effectsCodingModelFit_abbreviated <- sem(
+  effectsCoding_abbreviatedSyntax,
+  data = PoliticalDemocracy,
+  effect.coding = "loadings",
+  missing = "ML",
+  estimator = "MLR")
+
+effectsCodingModelFit <- sem(
+  effectsCoding_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+effectsCodingModelFit_full <- lavaan(
+  effectsCoding_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+```{r effectsCoding, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Effects Coding Approach."}
+semPaths(
+  effectsCodingModelFit,
+  what = "est",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+##### Standardized Latent Factor Method {#standardizedLatent-sem}
+
+In the standardized latent factor method, the latent factor is set to have a mean of 0 and a standard deviation of 1.\index{structural equation modeling!model identification}
+The standardized latent factor method is a useful approach if you are not interested in the means or variances of the latent factors and want to freely estimate the factor loadings.\index{structural equation modeling!model identification}
+Here are examples of using the standardized latent factor method for identification of a latent variable:\index{structural equation modeling!model identification}
+
+```{r}
+standardizedLatent_abbreviatedsyntax <- '
+ #Factor loadings
+ latentFactor =~ y1 + y2 + y3 + y4
+'
+
+standardizedLatent_syntax <- '
+ #Factor loadings
+ latentFactor =~ NA*y1 + y2 + y3 + y4
+ 
+ #Latent mean
+ latentFactor ~ 0
+ 
+ #Latent variance
+ latentFactor ~~ 1*latentFactor
+'
+
+standardizedLatent_fullSyntax <- '
+ #Factor loadings
+ latentFactor =~ NA*y1 + y2 + y3 + y4
+ 
+ #Latent mean
+ latentFactor ~ 0
+ 
+ #Latent variance
+ latentFactor ~~ 1*latentFactor
+ 
+ #Estimate residual variances of manifest variables
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ 
+ #Estimate intercepts of manifest variables
+ y1 ~ 1
+ y2 ~ 1
+ y3 ~ 1
+ y4 ~ 1
+'
+
+standardizedLatentFit_abbreviated <- sem(
+  standardizedLatent_abbreviatedsyntax,
+  data = PoliticalDemocracy,
+  std.lv = TRUE,
+  missing = "ML",
+  estimator = "MLR")
+
+standardizedLatentFit <- sem(
+  standardizedLatent_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+standardizedLatentFit_full <- lavaan(
+  standardizedLatent_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+```{r standaredizedLatent, out.width = "100%", fig.align = "center", fig.cap = "Identifying a Latent Variable Using the Standardized Latent Factor Approach."}
+semPaths(
+  standardizedLatentFit,
+  what = "est",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+### Types of Latent Factors {#latentFactorTypes-sem}
+
+#### Reflective Latent Factors {#reflectiveFactors-sem}
+
+For a [reflective model](#reflectiveConstruct) with 4 indicators, we would need to estimate 12 parameters: a factor loading, error term, and intercept for each of the 4 indicators.\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+Here are the parameters estimated:
+
+```{r}
+reflectiveModel_syntax <- '
+ #Reflective model factor loadings
+ reflective =~ y1 + y2 + y3 + y4
+'
+
+reflectiveModelFit <- sem(
+  reflectiveModel_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
+
+reflectiveModelParameters <- parameterEstimates(
+  reflectiveModelFit)[!is.na(parameterEstimates(reflectiveModelFit)$z),]
+
+row.names(reflectiveModelParameters) <- NULL
+
+reflectiveModelParameters
+```
+
+Here are the degrees of freedom:\index{structural equation modeling!degrees of freedom}
+
+```{r}
+fitMeasures(reflectiveModelFit, "df")
+```
+
+Here is a model diagram:
+
+```{r reflectiveModelFigure, out.width = "100%", fig.align = "center", fig.cap = "Example of a Reflective Model."}
+semPaths(
+  reflectiveModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+Thus, for a [reflective model](#reflectiveConstruct), we only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious.\index{construct!reflective}\index{structural equation modeling!degrees of freedom}
+With 4 indicators, the number of known values (14) is greater than the number of parameters (12).\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+We have 2 degrees of freedom ($14 - 12 = 2$).\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+Because the degrees of freedom is greater than 0, it is easy to identify the model—the model is over-identified.\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+A [reflective model](#reflectiveConstruct) with 3 indicators would have 9 known values ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+
+#### Formative Latent Factors {#formativeFactors-sem}
+
+However, for a [formative model](#formativeConstruct), we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+Here are the parameters estimated:
+
+```{r, error = TRUE}
+formativeModel_syntax <- '
+ #Formative model factor loadings
+ formative <~ v1 + v2 + v3 + v4
+ 
+ formative ~~ formative
+'
+
+formativeModelFit <- sem(
+  formativeModel_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR",
+  optim.gradient = "numerical")
+
+formativeModelParameters <- parameterEstimates(formativeModelFit)
+
+formativeModelParameters
+```
+
+Here are the degrees of freedom:\index{structural equation modeling!degrees of freedom}
+
+```{r}
+PT <- lavaanify(
+  formativeModel_syntax,
+  fixed.x = TRUE, # sem() sets fixed.x = TRUE by default
+  meanstructure = TRUE # estimator = "MLR" and missing = "ML" both set meanstructure = TRUE
+  )
+
+lav_partable_df(PT)
+
+formativeModelFit
+```
+
+Here is a model diagram:
+
+```{r formativeModelUnderidentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Example of an Under-Identified Formative Model."}
+semPaths(
+  formativeModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+For a [formative model](#formativeConstruct) with 4 measures, the number of known values (14) is less than the number of parameters (19).\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+The number of degrees of freedom is negative ($14 - 19 = -5$), thus the model is not able to be identified—the model is under-identified.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+
+Thus, for a [formative model](#formativeConstruct), we need more parameters than we have data—the model is under-identified.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+Therefore, to estimate a formative model with 4 indicators, we must add assumptions and other variables that are consequences of the [formative construct](#formativeConstruct).\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+Options for identifying a [formative construct](#formativeConstruct) are described by @Treiblmaier2011.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+See below for an example formative model that is identified because of additional assumptions.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+
+```{r formativeModelIdentifiedFigure, out.width = "100%", fig.align = "center", fig.cap = "Example of an Identified Formative Model."}
+formativeModel2_syntax <- '
+ #Formative model factor loadings
+ formative <~ 1*v1 + v2 + v3 + v4
+ reflective =~ y1 + y2 + y3 + y4
+ 
+ formative ~~ 1*formative
+ reflective ~ formative
+'
+
+formativeModel2Fit <- sem(
+  formativeModel2_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR",
+  optim.gradient = "numerical")
+
+formativeModel2Parameters <- parameterEstimates(formativeModel2Fit)
+formativeModel2Parameters
+
+fitMeasures(formativeModel2Fit, "df")
+
+semPaths(
+  formativeModel2Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+Thus, [formative constructs](#formativeConstruct) are challenging to use in a SEM framework.\index{construct!formative}\index{structural equation modeling!model identification}
+To estimate a [formative construct](#formativeConstruct) in a SEM framework, the [formative construct](#formativeConstruct) must be used in the context of a model that allows some constraints.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+A [formative](#formativeConstruct) latent factor includes a disturbance term, and is thus not entirely determined by the causal indicators [@Bollen2011].\index{construct!formative}
+A composite (such as in [principal component analysis](#pca)), by contrast, has no disturbance term and is therefore completely determined by the composite indicators [@Bollen2011].\index{construct!formative}
+Emerging techniques such as confirmatory composite analysis allow estimation of [formative](#formativeConstruct) composites [@Schuberth2023; @Yu2023].\index{construct!formative}\index{confirmatory composite analysis}
+
+Below is an example of confirmatory composite analysis using the Henseler-Ogasawara specification (adapted from: https://confirmatorycompositeanalysis.com/tutorials-lavaan; archived at: https://perma.cc/7LSU-PTZR) [@Schuberth2023]:
+
+```{r}
+formativeModel3_syntax <- '
+  # Specification of the reflective latent factor
+
+  reflective =~ y1 + y2 + y3 + y4
+  
+  # Specification of the associations between the observed variables v1 - v4
+  # and the emergent variable "formative" in terms of composite loadings.
+  
+  formative =~ NA*v1 + l11*v1+ l21*v2 + 1*v3 + l41*v4
+  
+  # Label the variance of the formative composite
+
+  formative ~~ varformative*formative
+  
+  # Specification of the associations between the observed variables v1 - v4
+  # and their excrescent variables in terms of composite loadings.
+  
+  nu11 =~ 1*v1 + l22*v2 + l32*v3 + l42*v4
+  nu12 =~ 0*v1 + 1*v2 + l33*v3 + l43*v4
+  nu13 =~ 0*v1 + 0*v2 + l34*v3 + 1*v4
+  
+  # Label the variances of the excrescent variables
+  
+  nu11 ~~ varnu11*nu11
+  nu12 ~~ varnu12*nu12
+  nu13 ~~ varnu13*nu13
+  
+  # Specify the effect of formative on reflective
+  
+  reflective ~ formative
+  
+  # The H-O specification assumes that the excrescent variables are uncorrelated.
+  # Therefore, the covariance between the excrescent variables is fixed to 0:
+  
+  nu11 ~~ 0*nu12 + 0*nu13
+  nu12 ~~ 0*nu13
+  
+  # Moreover, the H-O specification assumes that the excrescent variables are uncorrelated
+  # with the emergent and latent variables. Therefore, the covariances between
+  # the emergent and the excrescent varibales are fixed to 0:
+  
+  formative ~~ 0*nu11 + 0*nu12 + 0*nu13
+  
+  reflective =~ 0*nu11 + 0*nu12 + 0*nu13
+  
+  # In lavaan, the =~ command is originally used to specify a common factor model,
+  # which assumes that each observed variable is affected by a random measurement error.
+  # It is assumed that the observed variables forming composites are free from
+  # random measurement error. Therefore, the variances of the random measurement errors
+  # originally attached to the observed variables by the common factor model are fixed to 0:
+  
+  v1 ~~ 0*v1
+  v2 ~~ 0*v2
+  v3 ~~ 0*v3
+  v4 ~~ 0*v4
+  
+  # Calculate the unstandardized weights to form the formative latent variable
+
+  w1 := (-l32 + l22*l33 + l34*l42 - l22*l34*l43)/(1 -
+      l11*l32 - l21*l33 + l11*l22*l33 - l34*l41 + l11*l34*l42 + 
+     l21* l34* l43 - l11* l22* l34* l43)
+  w2 := (-l33 + l34*l43)/(1 - l11*l32 - l21*l33 + 
+      l11*l22*l33 - l34*l41 + l11*l34*l42 + l21*l34*l43 - l11*l22*l34*l43)
+  w3 := 1/(1 - l11*l32 - l21*l33 + l11*l22*l33 -
+      l34*l41 + l11*l34*l42 + l21*l34*l43 - l11*l22*l34*l43)
+  w4 := -l34/(1 - l11*l32 - l21*l33 + l11*l22*l33 -
+      l34*l41 + l11*l34*l42 + l21*l34*l43 - l11*l22*l34*l43)
+  
+  # Calculate the variances
+
+  varv1 := l11^2*varformative + varnu11
+  varv2 := l21^2*varformative + l22^2*varnu11 + varnu12
+  varv3 := varformative + l32^2*varnu11 + l33^2*varnu12 + l34^2*varnu13
+  varv4 := l41^2*varformative + l42^2*varnu11 + l43^2*varnu12 + varnu13
+  
+  # Calculate the standardized weights to form the formative latent variable
+
+  w1std := w1*(varv1/varformative)^(1/2)
+  w2std := w2*(varv2/varformative)^(1/2)
+  w3std := w3*(varv3/varformative)^(1/2)
+  w4std := w4*(varv4/varformative)^(1/2)
+'
+
+formativeModel3Fit <- sem(
+  formativeModel3_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+formativeModel3Parameters <- parameterEstimates(formativeModel3Fit)
+formativeModel3Parameters
+
+fitMeasures(formativeModel3Fit, "df")
+
+semPaths(
+  formativeModel3Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+Below is an example of confirmatory composite analysis using the refined Henseler-Ogasawara specification [@Yu2023]:
+
+```{r}
+formativeModel4_syntax <- '
+  # Specification of the reflective latent factor
+  
+  reflective =~ y1 + y2 + y3 + y4
+  
+  # Specification of the associations between the observed variables v1 - v4
+  # and the emergent variable "formative" in terms of composite loadings.
+  
+  formative =~ NA*v1 + l11*v1 + l21*v2 + 1*v3 + l41*v4
+  
+  # Label the variance of the formative composite
+  
+  formative ~~ varformative*formative
+  
+  # Specification of the associations between the observed variables v1 - v4
+  # and their excrescent variables in terms of composite loadings.
+  
+  nu1 =~ 1*v2 + l12*v1 
+  nu2 =~ 1*v3 + l23*v2
+  nu3 =~ 1*v4 + l34*v3
+  
+  # Label the variances of the excrescent variables
+  
+  nu1 ~~ varnu1*nu1
+  nu2 ~~ varnu2*nu2
+  nu3 ~~ varnu3*nu3
+  
+  # Specify the effect of formative on reflective
+  
+  reflective ~ formative
+  
+  # Constrain the covariances between excrescent variables and
+  # other variables in the structural model to zero. Moreover,
+  # label the covariances among excrescent variables.
+  
+  nu1 ~~ 0*formative + 0*reflective + cov12*nu2 + cov13*nu3
+  nu2 ~~ 0*formative + 0*reflective + cov23*nu3
+  nu3 ~~ 0*formative + 0*reflective
+  
+  # Fix the variances of the disturbance terms to zero.
+  
+  v1 ~~ 0*v1
+  v2 ~~ 0*v2
+  v3 ~~ 0*v3
+  v4 ~~ 0*v4
+  
+  # Calculate the unstandardized weights to form the formative latent variable
+
+  w1 := ((1)*((1)*((1)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
+  w2 := -((l12)*((1)*((1)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
+  w3 := ((l12)*((l23)*((1)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
+  w4 := -((l12)*((l23)*((l34)))) / ((l11)*((1)*((1)*((1)))) + -(l21)*((l12)*((1)*((1)))) + (1)*((l12)*((l23)*((1)))) + -(l41)*((l12)*((l23)*((l34)))))
+  
+  # Calculate the variances
+
+  varv1 := ((l11) * (varformative)) * (l11) + ((l12) * (varnu1)) * (l12)
+  varv2 := ((l21) * (varformative)) * (l21) + ((1) * (varnu1) + (l23) * (cov12)) * (1) + ((1) * (cov12) + (l23) * (varnu2)) * (l23)
+  varv3 := ((1) * (varformative)) * (1) + ((1) * (varnu2) + (l34) * (cov23)) * (1) + ((1) * (cov23) + (l34) * (varnu3)) * (l34)
+  varv4 := ((l41) * (varformative)) * (l41) + ((1) * (varnu3)) * (1)
+  
+  # Calculate the standardized weights to form the formative latent variable
+  
+  wstdv1 := ((w1) * (sqrt(varv1))) * (1/sqrt(varformative))
+  wstdv2 := ((w2) * (sqrt(varv2))) * (1/sqrt(varformative))
+  wstdv3 := ((w3) * (sqrt(varv3))) * (1/sqrt(varformative))
+  wstdv4 := ((w4) * (sqrt(varv4))) * (1/sqrt(varformative))
+'
+
+formativeModel4Fit <- sem(
+  formativeModel4_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+
+formativeModel4Parameters <- parameterEstimates(formativeModel4Fit)
+formativeModel4Parameters
+
+fitMeasures(formativeModel4Fit, "df")
+
+semPaths(
+  formativeModel4Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+You can generate the weights for the indicators (to be used in the model syntax) for the refined Henseler-Ogasawara specification using the following code:
+
+```{r, eval = FALSE}
+library("calculus")
+
+# First, construct the loading matrix
+loadingMatrix <- matrix(c('l11','l21',1,'l41','l12',1,0,0,0,'l23',1,0,0,0,'l34',1),4,4)
+
+# Check the structure
+loadingMatrix
+
+# Invert matrix, the first row contains the (unstandardized) weights
+# these can be copy and pasted to the lavaan model to specify the weights as new parameters
+mxinv(loadingMatrix)
+```
+
+Florian Schubert provides an `R` function to create the full `lavaan` syntax for confirmatory composite analysis at the following link: https://github.com/FloSchuberth/HOspecification
+
+## Additional Types of SEM {#additionalSEMmodels}
+
+Up to this point, we have discussed SEM with dimensional constructs.\index{dimensional}
+It also worth knowing about additional types of SEM models, including latent class models and mixture models, that handle categorical constructs.\index{categorical}\index{latent class model}\index{mixture model}
+However, most disorders are more accurately conceptualized as dimensional than as categorical [@Markon2011], so just because you can estimate categorical latent factors does not necessarily mean that one should.\index{dimensional}\index{categorical}\index{latent class model}\index{mixture model}
+
+### Latent Class Models {#latentClassModels}
+
+In *latent class models*, the construct is not dimensional, but rather categorical.\index{categorical}\index{latent class model}\index{dimensional}
+The categorical constructs are latent classifications and are called latent classes.\index{categorical}\index{latent class model}
+For instance, the construct could be a diagnosis that influences scores on the measures.\index{categorical}\index{latent class model}\index{diagnosis}
+Latent class models examine qualitative differences in kind, rather than quantitative differences in degree.\index{categorical}\index{latent class model}\index{diagnosis}
+
+### Mixture Models {#MixtureModels}
+
+*Mixture models* allow for a combination of latent categorical constructs (classes) and latent dimensional constructs.\index{dimensional}\index{categorical}\index{mixture model}
+That is, it allows for both qualitative and quantitative differences.\index{dimensional}\index{categorical}\index{mixture model}
+However, this additional model complexity also necessitates a larger sample size for estimation.\index{mixture model}
+SEM generally requires a 3-digit sample size ($N = 100+$), whereas mixture models typically require a 4- or 5-digit sample size ($N = 1,000+$).\index{mixture model}
+
+### Exploratory Structural Equation Models {#esemModels}
+
+We describe exploratory structural equation models in Section \@ref(efa-cfa-esem).\index{structural equation modeling!exploratory}
+
+## Causal Diagrams: Directed Acyclic Graphs {#dag}
+
+A key tool when designing a structural equation model is a conceptual depiction of the hypothesized causal processes.\index{structural equation modeling!causal diagram}
+A causal diagram depicts the hypothesized causal processes that link two or more variables.\index{structural equation modeling!causal diagram}
+A common form of causal diagrams is the directed acyclic graph (DAG).\index{structural equation modeling!causal diagram}
+DAGs provide a helpful tool to communicate about causal questions and help identify how to avoid bias (i.e., over-estimation) in associations between variables due to confounding (i.e., common causes) [@Digitale2022].\index{structural equation modeling!causal diagram}
+Free tools to create DAGs include the `R` package `dagitty` [@Textor2017] and the associated browser-based extension, DAGitty\index{structural equation modeling!causal diagram}: https://dagitty.net (archived at https://perma.cc/U9BY-VZE2).
+Path analytic diagrams (i.e., causal diagrams with boxes, circles, and lines) are described in Section \@ref(cttOverview) of Chapter \@ref(reliability).
+@KarchInPress provides a tool to create `lavaan` `R` syntax from a path analytic diagram: https://lavaangui.org.
+
+## Model Fit Indices {#modelFitIndices-sem}
+
+Various model fit indices can be used for evaluating how well a model fits the data and for comparing the fit of two competing models.\index{structural equation modeling!fit index}
+Fit indices known as absolute fit indices compare whether the model fits better than the best-possible fitting model (i.e., a saturated model).\index{structural equation modeling!fit index}
+Examples of absolute fit indices include the chi-square test, root mean square error of approximation (RMSEA), and the standardized root mean square residual (SRMR).\index{structural equation modeling!fit index}
+
+The chi-square test evaluates whether the model has a significant degree of misfit relative to the best-possible fitting model (a saturated model that fits as many parameters as possible; i.e., as many parameters as there are degrees of freedom); the null hypothesis of a chi-square test is that there is no difference between the predicted data (i.e., the data that would be observed if the model were true) and the observed data.\index{structural equation modeling!fit index}
+Thus, a non-significant chi-square test indicates good model fit.\index{structural equation modeling!fit index}
+However, because the null hypothesis of the chi-square test is that the model-implied covariance matrix is exactly equal to the observed covariance matrix (i.e., a model of perfect fit), this may be an unrealistic comparison.\index{structural equation modeling!fit index}
+Models are simplifications of reality, and our models are virtually never expected to be a perfect description of reality.\index{structural equation modeling!fit index}
+Thus, we would say a model is "useful" and partially validated if "it helps us to understand the relation between variables and does a 'reasonable' job of matching the data...A perfect fit may be an inappropriate standard, and a high chi-square estimate may indicate what we already know—that the hypothesized model holds approximately, not perfectly." [@Bollen1989, p. 268].\index{structural equation modeling!fit index}
+The power of the chi-square test depends on sample size, and a large sample will likely detect small differences as significantly worse than the best-possible fitting model [@Bollen1989].\index{structural equation modeling!fit index}
+
+RMSEA is an index of absolute fit.\index{structural equation modeling!fit index}
+Lower values indicate better fit.\index{structural equation modeling!fit index}
+
+SRMR is an index of absolute fit with no penalty for model complexity.\index{structural equation modeling!fit index}
+Lower values indicate better fit.\index{structural equation modeling!fit index}
+
+There are also various fit indices known as incremental, comparative, or relative fit indices that compare whether the model fits better than the worst-possible fitting model (i.e., a "baseline" or "null" model).\index{structural equation modeling!fit index}
+Incremental fit indices include a chi-square difference test, the comparative fit index (CFI), and the Tucker-Lewis index (TLI).\index{structural equation modeling!fit index}
+Unlike the chi-square test comparing the model to the best-possible fitting model, a significant chi-square test of the relative fit index indicates better fit—i.e., that the model fits better than the worst-possible fitting model.\index{structural equation modeling!fit index}
+
+CFI is another relative fit index that compares the model to the worst-possible fitting model.\index{structural equation modeling!fit index}
+Higher values indicate better fit.\index{structural equation modeling!fit index}
+
+TLI is another relative fit index.\index{structural equation modeling!fit index}
+Higher values indicate better fit.\index{structural equation modeling!fit index}
+
+Parsimony fit include fit indices that use information criteria fit indices, including the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC).\index{structural equation modeling!fit index}\index{parsimony}
+BIC penalizes model complexity more so than AIC.\index{structural equation modeling!fit index}
+Lower AIC and BIC values indicate better fit.\index{structural equation modeling!fit index}
+
+Chi-square difference tests and CFI can be used to compare two nested models.\index{structural equation modeling!fit index}
+AIC and BIC can be used to compare two non-nested models.\index{structural equation modeling!fit index}
+
+Criteria for acceptable fit and good fit of SEM models are in Table \@ref(tab:semFitIndices).\index{structural equation modeling!fit index}
+In addition, dynamic fit indexes have been proposed based on simulation to identify fit index cutoffs that are tailored to the characteristics of the specific model and data [@McNeish2023; @McNeish2026]; dyanmic fit indexes are available via the [`dynamic` package](https://github.com/melissagwolf/dynamic) in `R` or with a [webapp](https://dynamicfit.app).\index{structural equation modeling!fit index}
+
+Table: (\#tab:semFitIndices) Criteria for Acceptable and Good Fit of Structural Equation Models Based on Fit Indices.
+
+| SEM Fit Index | Acceptable Fit | Good Fit   |
+|---------------|----------------|------------|
+| RMSEA         | $\leq$ .08     | $\leq$ .05 |
+| CFI           | $\geq$ .90     | $\geq$ .95 |
+| TLI           | $\geq$ .90     | $\geq$ .95 |
+| SRMR          | $\leq$ .10     | $\leq$ .08 |
+
+However, good model fit does not necessarily indicate a true model.\index{structural equation modeling!fit index}
+
+In addition to global fit indices, it can also be helpful to examine evidence of local fit [@Kline2023; @McNeish2026], such as the residual covariance matrix.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+The residual covariance matrix represents the difference between the observed covariance matrix and the model-implied covariance matrix (the observed covariance matrix minus the model-implied covariance matrix).\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+These difference values are called *covariance residuals*.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+Standardizing the covariance matrix by converting each to a correlation matrix can be helpful for interpreting the magnitude of any local misfit.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+This is known as a residual correlation matrix, which is composed of *correlation residuals*.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+Correlation residuals greater than |.10| are possible evidence for poor local fit [@Kline2023].\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+If a correlation residual is positive, it suggests that the model underpredicts the observed association between the two variables (i.e., the observed covariance is greater than the model-implied covariance).\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+If a correlation residual is negative, it suggests that the model overpredicts their observed association between the two variables (i.e., the observed covariance is smaller than the model-implied covariance).\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+If the two variables are connected by only indirect pathways, it may be helpful to respecify the model with direct pathways between the two variables, such as a direct effect (i.e., regression path) or a covariance path.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+For guidance on evaluating local fit, see @Kline2024.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
+
+## Correlation Matrix {#correlationMatrix-sem}
+
+```{r}
+cor(mydataSEM, use = "pairwise.complete.obs")
+```
+
+Correlation matrices of various types using the `cor.table()` function from the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] are in Tables \@ref(tab:corTable1b), \@ref(tab:corTable2b), and \@ref(tab:corTable3b).\index{petersenlab package}\index{correlation}
+
+```{r, eval = FALSE}
+cor.table(mydataSEM, dig = 2)
+cor.table(mydataSEM, type = "manuscript", dig = 2)
+cor.table(mydataSEM, type = "manuscriptBig", dig = 2)
+```
+
+```{r, include = FALSE}
+corTable1b <- cor.table(
+  mydataSEM,
+  dig = 2)
+
+corTable2b <- cor.table(
+  mydataSEM,
+  type = "manuscript",
+  dig = 2)
+
+corTable3b <- cor.table(
+  mydataSEM,
+  type = "manuscriptBig",
+  dig = 2)
+```
+
+```{r corTable1b, echo = FALSE}
+corTable1b %>% 
+  kable(.,
+  caption = "Correlation Matrix with *r*, *n*, and *p*-values.",
+  booktabs = TRUE,
+  linesep = c("", "", "\\addlinespace"),
+  escape = FALSE)
+```
+
+```{r corTable2b, echo = FALSE}
+corTable2b %>% 
+  kable(.,
+  caption = "Correlation Matrix with Asterisks for Significant Associations.",
+  booktabs = TRUE,
+  linesep = "",
+  escape = FALSE)
+```
+
+```{r corTable3b, echo = FALSE}
+corTable3b %>% 
+  kable(.,
+  caption = "Correlation Matrix.",
+  booktabs = TRUE,
+  linesep = "")
+```
+
+## Measurement Model (of a Given Construct)  {#measurementModelExample-sem}
+
+Even though [CFA models](#cfa) are [measurement models](#measurementModel-sem), I provide separate examples of a [measurement model](#measurementModel-sem) and [CFA models](#cfa) in my examples because [CFA](#cfa) is often used to test competing factor structures.\index{structural equation modeling!measurement model}\index{factor analysis!confirmatory}
+For instance, you could use [CFA](#cfa) to test whether the variance in several measures' scores is best explained with one factor or two factors.\index{factor analysis!confirmatory}
+In the [measurement model](#measurementModel-sem) below, I present a simple one-factor model with three measures.\index{structural equation modeling!measurement model}
+The [measurement model](#measurementModel-sem) is what we settle on as the estimation of each construct before we add the [structural component](#structuralModel-sem) to estimate the relations among latent variables.\index{structural equation modeling!measurement model}\index{structural equation modeling!structural model}
+Basically, we add the [structural component](#structuralModel-sem) onto the [measurement model](#measurementModel-sem).\index{structural equation modeling!measurement model}\index{structural equation modeling!structural model}
+In Section \@ref(cfaExample-sem), I present a [CFA model](#cfa) with multiple latent factors.\index{factor analysis!confirmatory}
+
+The measurement models were fit in the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement model}
+
+### Specify the Model {#measurementModelSyntax-sem}
+
+```{r}
+measurementModel_syntax <- '
+ #Factor loadings
+ latentFactor =~ measure1 + measure2 + measure3
+'
+
+measurementModel_fullSyntax <- '
+ #Factor loadings (free the factor loading of the first indicator)
+ latentFactor =~ NA*measure1 + measure2 + measure3
+ 
+ #Fix latent mean to zero
+ latentFactor ~ 0
+ 
+ #Fix latent variance to one
+ latentFactor ~~ 1*latentFactor
+
+ #Estimate covariances among latent variables (not applicable because there is only one latent variable)
+ 
+ #Estimate residual variances of manifest variables
+ measure1 ~~ measure1
+ measure2 ~~ measure2
+ measure3 ~~ measure3
+ 
+ #Free intercepts of manifest variables
+ measure1 ~ int1*1
+ measure2 ~ int2*1
+ measure3 ~ int3*1
+'
+```
+
+#### Summary of Model Features {#measurementModelSummary-sem}
+
+```{r}
+summary(measurementModel_syntax)
+summary(measurementModel_fullSyntax)
+```
+
+#### Model Syntax in Table Form: {#measurementModelTabular-sem}
+
+```{r}
+lavaanify(measurementModel_syntax)
+lavaanify(measurementModel_fullSyntax)
+```
+
+### Fit the Model {#measurementModelFit-sem}
+
+```{r}
+measurementModelFit <- cfa(
+  measurementModel_syntax,
+  data = mydataSEM,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
+
+measurementModelFit_full <- lavaan(
+  measurementModel_fullSyntax,
+  data = mydataSEM,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+### Display Summary Output {#measurementModelOutput-sem}
+
+```{r, include = FALSE}
+measurementModelParameters <- parameterEstimates(
+  measurementModelFit,
+  standardized = TRUE)
+
+measurementModelParameters_beta1 <- measurementModelParameters[
+  which(
+    measurementModelParameters$lhs == "latentFactor" & 
+      measurementModelParameters$rhs == "measure1"),
+  "std.all"]
+
+measurementModelParameters_beta2 <- measurementModelParameters[
+  which(
+    measurementModelParameters$lhs == "latentFactor" & 
+      measurementModelParameters$rhs == "measure2"),
+  "std.all"]
+
+measurementModelParameters_beta3 <- measurementModelParameters[
+  which(
+    measurementModelParameters$lhs == "latentFactor" & 
+      measurementModelParameters$rhs == "measure3"),
+  "std.all"]
+```
+
+This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of known values, thus leaving 0 degrees of freedom.\index{structural equation modeling!measurement model}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
+In the model, all three indicators load strongly on the latent factor (measure 1: $\beta = `r apa(measurementModelParameters_beta1, 2)`$; measure 2: $\beta = `r apa(measurementModelParameters_beta2, 2)`$; measure 3: $\beta = `r apa(measurementModelParameters_beta3, 2)`$).\index{structural equation modeling!factor loading}
+Thus, the loadings of this measurement model would be consistent with a [reflective latent construct](#reflectiveConstruct).\index{structural equation modeling!measurement model}\index{structural equation modeling!factor loading}\index{construct!reflective}
+In terms of interpretation, all three indicators loaded positively on the latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.\index{structural equation modeling!measurement model}\index{structural equation modeling!factor loading}
+However, one of the estimated observed variances is negative, so the model is not able to be estimated accurately.
+Thus, we would need to make additional adjustments in order to estimate the model.
+
+```{r}
+summary(
+  measurementModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+
+summary(
+  measurementModelFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+### Estimates of Model Fit {#measurementModelFitCriteria-sem}
+
+You can extract specific fit indices using the following syntax:\index{structural equation modeling!fit index}
+
+```{r}
+fitMeasures(
+  measurementModelFit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+Because the model is just-identified, many fit statistics are not able to be estimated.\index{structural equation modeling!model identification}
+
+### Residuals {#measurementModelResiduals-sem}
+
+```{r}
+residuals(measurementModelFit, type = "cor")
+```
+
+### Modification Indices {#measurementModelModIndices-sem}
+
+```{r}
+modificationindices(measurementModelFit, sort. = TRUE)
+```
+
+### Factor Scores {#measurementModelFactorScores-sem}
+
+```{r}
+measurementModelFit_factorScores <- lavPredict(measurementModelFit)
+```
+
+### Internal Consistency Reliability {#measurementModelReliability-sem}
+
+[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
+
+```{r}
+compRelSEM(measurementModelFit)
+AVE(measurementModelFit)
+```
+
+### Path Diagram {#measurementModelPathDiagram-sem}
+
+A path diagram of the model is in Figure \@ref(fig:semPathDiagram).
+
+```{r semPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Measurement Model."}
+semPaths(
+  measurementModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 2)
+```
+
+## Confirmatory Factor Analysis (CFA) {#cfaExample-sem}
+
+The [confirmatory factor analysis](#cfa) (CFA) models were fit in the `lavaan` package [@R-lavaan].\index{factor analysis!confirmatory}
+The examples were adapted from the `lavaan` documentation: https://lavaan.ugent.be/tutorial/cfa.html (archived at https://perma.cc/GKY3-9YE4).
+
+In this [CFA model](#cfa), we estimate three latent factors with three indicators loading on each latent factor.\index{factor analysis!confirmatory}
+
+### Specify the Model {#cfaModelSyntax-sem}
+
+```{r}
+cfaModel_syntax <- '
+ #Factor loadings
+ visual  =~ x1 + x2 + x3
+ textual =~ x4 + x5 + x6
+ speed   =~ x7 + x8 + x9
+'
+
+cfaModel_fullSyntax <- '
+ #Factor loadings (free the factor loading of the first indicator)
+ visual  =~ NA*x1 + x2 + x3
+ textual =~ NA*x4 + x5 + x6
+ speed   =~ NA*x7 + x8 + x9
+ 
+ #Fix latent means to zero
+ visual ~ 0
+ textual ~ 0
+ speed ~ 0
+ 
+ #Fix latent variances to one
+ visual ~~ 1*visual
+ textual ~~ 1*textual
+ speed ~~ 1*speed
+ 
+ #Estimate covariances among latent variables
+ visual ~~ textual
+ visual ~~ speed
+ textual ~~ speed
+ 
+ #Estimate residual variances of manifest variables
+ x1 ~~ x1
+ x2 ~~ x2
+ x3 ~~ x3
+ x4 ~~ x4
+ x5 ~~ x5
+ x6 ~~ x6
+ x7 ~~ x7
+ x8 ~~ x8
+ x9 ~~ x9
+ 
+ #Free intercepts of manifest variables
+ x1 ~ int1*1
+ x2 ~ int2*1
+ x3 ~ int3*1
+ x4 ~ int4*1
+ x5 ~ int5*1
+ x6 ~ int6*1
+ x7 ~ int7*1
+ x8 ~ int8*1
+ x9 ~ int9*1
+'
+```
+
+#### Model Syntax in Table Form: {#cfaModelTabular-sem}
+
+```{r}
+lavaanify(cfaModel_syntax)
+lavaanify(cfaModel_fullSyntax)
+```
+
+### Fit the Model {#cfaModelFit-sem}
+
+```{r}
+cfaModelFit <- cfa(
+  cfaModel_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
+
+cfaModelFit_full <- lavaan(
+  cfaModel_fullSyntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+### Display Summary Output {#cfaModelOutput-sem}
+
+In this model, all nine indicators load strongly on their respective latent factor.\index{structural equation modeling!factor loading}
+Thus, this measurement model would be defensible.\index{structural equation modeling!measurement model}
+In terms of interpretation, all indicators load positively on their respective latent factor, so higher levels of the latent factor are indicated by higher levels on the indicators.\index{structural equation modeling!factor loading}
+
+```{r}
+summary(
+  cfaModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+
+summary(
+  cfaModelFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+### Estimates of Model Fit {#cfaModelFitCriteria-sem}
+
+According to model fit estimates, the model fit is good according to SRMR and acceptable according to CFI, but the model fit is weaker according to RMSEA and TLI.\index{structural equation modeling!fit index}
+Thus, we may want to consider adjustments to improve the model fit.\index{structural equation modeling!fit index}
+In general, we want to make decisions regarding what parameters to estimate based on theory in conjunction with empiricism.\index{structural equation modeling!fit index}\index{theory}\index{empiricism}
+
+```{r}
+fitMeasures(
+  cfaModelFit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+### Residuals {#cfaModelResiduals-sem}
+
+```{r}
+residuals(cfaModelFit, type = "cor")
+```
+
+### Modification Indices {#cfaModelModIndices-sem}
+
+Modification indices indicate potential additional parameters that could be estimated and that would improve model fit.\index{structural equation modeling!fit index}\index{structural equation modeling!modification indices}
+For instance, the modification indices in Table \@ref(tab:modIndicesCFAModel) (generated from the syntax below) indicate a few additional factor loadings (i.e., cross-loadings) or correlated residuals that could substantially improve model fit.\index{structural equation modeling!residual!correlated}\index{cross-loading}\index{structural equation modeling!fit index}\index{structural equation modeling!modification indices}
+However, it is generally not recommended to blindly estimate additional parameters solely based on modification indices.\index{structural equation modeling!modification indices}
+Rather, it is generally advised to consider modification indices in light of theory.\index{structural equation modeling!modification indices}\index{theory}
+
+```{r modIndicesCFAModel}
+modificationindices(cfaModelFit, sort. = TRUE)
+```
+
+### Factor Scores {#cfaModelFactorScores-sem}
+
+```{r}
+cfaModelFit_factorScores <- lavPredict(cfaModelFit)
+```
+
+### Internal Consistency Reliability {#cfaModelReliability-sem}
+
+[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
+
+```{r}
+compRelSEM(cfaModelFit)
+AVE(cfaModelFit)
+```
+
+### Path Diagram {#cfaModelPathDiagram-sem}
+
+Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model."}
+semPaths(
+  cfaModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+### Modify Model Based on Modification Indices {#cfaModelModification-sem}
+
+In the model below, I modified the model based on estimating an additional factor loading (assuming the additional factor loading is theoretically supported).\index{structural equation modeling!modification indices}
+This could be supported, for instance, if a given test involves considerable skills in both the visual domain and in speed of processing.
+When the same indicator loads simultaneously on two factors, this is called a *cross-loading*.\index{cross-loading}
+Cross-loadings can complicate the interpretation of latent factors, as discussed in Section \@ref(factorRotation) of the chapter on [factor analysis](#factor-analysis-PCA).\index{cross-loading}
+
+#### Specify the Model {#cfaModelModifiedSyntax-sem}
+
+```{r}
+cfaModel2_syntax <- '
+ #Factor loadings
+ textual =~ x4 + x5 + x6
+ visual  =~ x1 + x2 + x3 + x9
+ speed   =~ x7 + x8 + x9
+'
+
+cfaModel2_fullSyntax <- '
+ #Factor loadings (free the factor loading of the first indicator)
+ textual =~ NA*x4 + x5 + x6
+ visual  =~ NA*x1 + x2 + x3 + x9
+ speed   =~ NA*x7 + x8 + x9
+ 
+ #Fix latent means to zero
+ visual ~ 0
+ textual ~ 0
+ speed ~ 0
+ 
+ #Fix latent variances to one
+ visual ~~ 1*visual
+ textual ~~ 1*textual
+ speed ~~ 1*speed
+ 
+ #Estimate covariances among latent variables
+ visual ~~ textual
+ visual ~~ speed
+ textual ~~ speed
+ 
+ #Estimate residual variances of manifest variables
+ x1 ~~ x1
+ x2 ~~ x2
+ x3 ~~ x3
+ x4 ~~ x4
+ x5 ~~ x5
+ x6 ~~ x6
+ x7 ~~ x7
+ x8 ~~ x8
+ x9 ~~ x9
+ 
+ #Free intercepts of manifest variables
+ x1 ~ int1*1
+ x2 ~ int2*1
+ x3 ~ int3*1
+ x4 ~ int4*1
+ x5 ~ int5*1
+ x6 ~ int6*1
+ x7 ~ int7*1
+ x8 ~ int8*1
+ x9 ~ int9*1
+'
+```
+
+#### Fit the Model {#cfaModelModifiedFit-sem}
+
+```{r}
+cfaModel2Fit <- cfa(
+  cfaModel2_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
+
+cfaModel2Fit_full <- lavaan(
+  cfaModel2_fullSyntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+#### Display Summary Output {#cfaModelModifiedOutput-sem}
+
+```{r}
+summary(
+  cfaModel2Fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+
+summary(
+  cfaModel2Fit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+#### Estimates of Model Fit {#cfaModelModifiedFitCriteria-sem}
+
+After fitting the additional factor loading, the model fits well according to RMSEA, CFI, and SRMR, and the model fit is acceptable according to TLI.\index{structural equation modeling!fit index}
+Thus, this model could be defensible.
+
+```{r}
+fitMeasures(
+  cfaModel2Fit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+#### Residuals {#cfaModelModifiedResiduals-sem}
+
+```{r}
+residuals(cfaModel2Fit, type = "cor")
+```
+
+#### Path Diagram {#cfaModelModifiedPathDiagram-sem}
+
+Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Modified Confirmatory Factor Analysis Model."}
+semPaths(
+  cfaModel2Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.8)
+```
+
+#### Compare Model Fit {#nestedModelComparison-sem}
+
+The modified model with the cross-loading and the original model are considered "nested" models.\index{nested model}\index{cross-loading}
+The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.\index{nested model}
+To confirm that the models are nested, I use the `net()` function from the `semTools` package [@R-semTools].
+
+```{r}
+net(cfaModelFit, cfaModel2Fit)
+```
+
+Model fit of nested models can be compared with a chi-square difference test.\index{chi-square!difference test}\index{structural equation modeling!model comparison}\index{nested model}
+
+```{r}
+anova(cfaModelFit, cfaModel2Fit)
+```
+
+In this case, the model with the cross-loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross-loading.\index{cross-loading}\index{structural equation modeling!model comparison}\index{nested model}
+
+One can also compare nested models using a robust likelihood ratio test:\index{structural equation modeling!model comparison}\index{nested model}
+
+```{r}
+cfaModelFitML <- cfa(
+  cfaModel_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "ML",
+  std.lv = TRUE)
+
+cfaModel2FitML <- cfa(
+  cfaModel2_syntax,
+  data = HolzingerSwineford1939,
+  missing = "ML",
+  estimator = "ML",
+  std.lv = TRUE)
+
+vuongtest(
+  cfaModelFitML,
+  cfaModel2FitML,
+  nested = TRUE)
+```
+
+For non-nested models, one can compare model fit with AIC, BIC, or the Vuong test.\index{structural equation modeling!model comparison}
+
+```{r}
+fitMeasures(
+  cfaModelFitML,
+  fit.measures = c(
+    "aic","bic","bic2"))
+
+fitMeasures(
+  cfaModel2FitML,
+  fit.measures = c(
+    "aic","bic","bic2"))
+
+vuongtest(
+  cfaModelFitML,
+  cfaModel2FitML,
+  nested = FALSE)
+```
+
+## Structural Equation Model (SEM) {#semModelExample-sem}
+
+The structural equation models were fit in the `lavaan` package [@R-lavaan].
+The examples were adapted from the `lavaan` documentation: https://lavaan.ugent.be/tutorial/sem.html (archived at https://perma.cc/8NG9-7JAG).
+
+In this model, we fit a [measurement model](#measurementModel-sem) with three latent factors in addition to a [structural model](#structuralModel-sem) with regressions estimated among the latent factors.\index{structural equation modeling!measurement model}\index{structural equation modeling!structural model}
+
+### Specify the Model {#semModelSyntax-sem}
+
+```{r}
+semModel_syntax <- '
+ #Measurement model factor loadings
+ ind60 =~ x1 + x2 + x3
+ dem60 =~ y1 + y2 + y3 + y4
+ dem65 =~ y5 + y6 + y7 + y8
+
+ #Regression paths
+ dem60 ~ ind60
+ dem65 ~ ind60 + dem60
+ 
+ #Covariances among residual variances (correlated errors)
+ y1 ~~ y5
+ y2 ~~ y4 + y6
+ y3 ~~ y7
+ y4 ~~ y8
+ y6 ~~ y8
+'
+
+semModel_fullSyntax <- '
+ #Measurement model factor loadings (free the factor loading of the first indicator)
+ ind60 =~ NA*x1 + x2 + x3
+ dem60 =~ NA*y1 + y2 + y3 + y4
+ dem65 =~ NA*y5 + y6 + y7 + y8
+
+ #Regression paths
+ dem60 ~ ind60
+ dem65 ~ ind60 + dem60
+ 
+ #Covariances among residual variances (correlated errors)
+ y1 ~~ y5
+ y2 ~~ y4 + y6
+ y3 ~~ y7
+ y4 ~~ y8
+ y6 ~~ y8
+ 
+ #Fix latent means to zero
+ ind60 ~ 0
+ dem60 ~ 0
+ dem65 ~ 0
+ 
+ #Fix latent variances to one
+ ind60 ~~ 1*ind60
+ dem60 ~~ 1*dem60
+ dem65 ~~ 1*dem65
+ 
+ #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)
+ 
+ #Estimate residual variances of manifest variables
+ x1 ~~ x1
+ x2 ~~ x2
+ x3 ~~ x3
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ y5 ~~ y5
+ y6 ~~ y6
+ y7 ~~ y7
+ y8 ~~ y8
+ 
+ #Free intercepts of manifest variables
+ x1 ~ intx1*1
+ x2 ~ intx2*1
+ x3 ~ intx3*1
+ y1 ~ inty1*1
+ y2 ~ inty2*1
+ y3 ~ inty3*1
+ y4 ~ inty4*1
+ y5 ~ inty5*1
+ y6 ~ inty6*1
+ y7 ~ inty7*1
+ y8 ~ inty8*1
+'
+```
+
+#### Model Syntax in Table Form: {#semModelTabular-sem}
+
+```{r}
+lavaanify(semModel_syntax)
+lavaanify(semModel_fullSyntax)
+```
+
+### Fit the Model {#semModelFit-sem}
+
+```{r}
+semModelFit <- sem(
+  semModel_syntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE)
+
+semModelFit_full <- lavaan(
+  semModel_fullSyntax,
+  data = PoliticalDemocracy,
+  missing = "ML",
+  estimator = "MLR")
+```
+
+### Display Summary Output {#semModelOutput-sem}
+
+#### Interpreting `lavaan` Output
+
+```{r, include = FALSE}
+library("MOTE")
+
+chiSquareTestP <- fitMeasures(semModelFit,
+                              fit.measures = "pvalue.scaled")
+chiSquareTestBaselineP <- fitMeasures(semModelFit,
+                                      fit.measures = "baseline.pvalue")
+```
+
+Output from a SEM model includes information such as regression coefficients, intercepts, variances, and model fit indices.\index{structural equation modeling!fit index}
+As noted above, there are two chi-square tests.\index{structural equation modeling!fit index}
+In `lavaan` syntax, one is labeled "Model Test User Model" and the other is labeled "Model Test Baseline Model."\index{structural equation modeling!fit index}
+The chi-square test labeled "Model Test User Model" refers to the chi-square test of whether the model fits worse than the best-possible fitting model (the saturated model).\index{structural equation modeling!fit index}
+In this case, the *p*-value of the robust chi-square test is $`r apa(chiSquareTestP, decimals = 2)`$.\index{structural equation modeling!fit index}
+Thus, the model does not show significant misfit—i.e., the model does not fit significantly worse than the best-possible fitting model.\index{structural equation modeling!fit index}
+The chi-square test labeled "Model Test Baseline Model" refers to the chi-square test of whether the model fits better than the worst-possible fitting model (the null model).\index{structural equation modeling!fit index}
+In this case, the *p*-value of the robust chi-square test in comparison to the worse-possible fitting model is < .05.\index{structural equation modeling!fit index}
+Thus, the model fits significantly better than the worst-possible-fitting model.\index{structural equation modeling!fit index}
+
+In terms of the model findings, `ind60` was significantly positively associated with `dem60`, `dem60` was significantly positively associated with `dem65`, and `ind60` was marginally significantly positively associated with `dem65`.
+
+```{r}
+summary(
+  semModelFit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+
+summary(
+  semModelFit_full,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+### Estimates of Model Fit {#semModelFitCriteria-sem}
+
+```{r}
+fitMeasures(
+  semModelFit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq.scaling.factor",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr",
+    "rmsea.robust", "cfi.robust", "tli.robust"))
+```
+
+### Residuals {#semModelResiduals-sem}
+
+```{r}
+residuals(semModelFit, type = "cor")
+```
+
+### Modification Indices {#semModelModIndices-sem}
+
+Modification indices are generated using the syntax below and are in Table \@ref(tab:modIndicesSEMModel).\index{structural equation modeling!modification indices}
+
+```{r modIndicesSEMModel}
+modificationindices(semModelFit, sort. = TRUE)
+```
+
+### Factor Scores {#semModelFactorScores-sem}
+
+```{r}
+semModelFit_factorScores <- lavPredict(semModelFit)
+```
+
+### Internal Consistency Reliability {#semModelReliability-sem}
+
+[Internal consistency reliability](#internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#coefficientOmega) and [average variance extracted](#averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
+
+```{r}
+compRelSEM(semModelFit)
+AVE(semModelFit)
+```
+
+### Path Diagram {#semModelPathDiagram-sem}
+
+Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
+
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Example Structural Equation Model."}
+semPaths(
+  semModelFit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.7)
+```
+
+## Benefits of SEM {#benefits-sem}
+
+There are many benefits of fitting a model in SEM (or in other latent variable approaches).\index{structural equation modeling}\index{latent variable}
+First, unlike [classical test theory](#ctt), SEM can allow correlated errors.
+With SEM, you do not need to make as restrictive assumptions as in [classical test theory](#ctt).\index{classical test theory}\index{structural equation modeling}\index{structural equation modeling!residual!correlated}
+Second, unlike multiple regression, SEM can handle multiple dependent variables simultaneously.\index{structural equation modeling}\index{multiple regression}
+Third, SEM uses all available information (data) using a technique called full information maximum likelihood (FIML), even if participants have missing scores on some variables.\index{structural equation modeling}\index{missing data}
+By contrast, multiple regression and many other statistical analyses use listwise deletion, in which they discard participants if they have a missing score on any of the model variables.\index{multiple regression}\index{missing data}
+Fourth, whereas multiple regression assumes nonnormally distributed residuals, SEM can handle nonnormally distributed residuals via robust standard errors (i.e., MLR estimator) and robust fit indices.\index{structural equation modeling}\index{nonnormality}
+Fifth, SEM can estimate mediation in a single model.\index{structural equation modeling}
+
+Sixth, as described in the next section (\@ref(semMethodBias)), SEM can be used to account for different forms of [measurement error](#measurementError) (e.g., [method bias](#methodBias)).\index{structural equation modeling}\index{measurement error}\index{method bias}
+Accounting for [measurement error](#measurementError) allows [disattenuating](#disattenuation) associations with other constructs.\index{structural equation modeling}\index{measurement error}\index{method bias}\index{association!disattenuation of}
+I provide an example showing that SEM disattenuates associations for [measurement error](#measurementError) in Section \@ref(disattenuation).\index{structural equation modeling}\index{measurement error}\index{method bias}\index{association!disattenuation of}\index{measurement error!disattenuation of association}
+All of these benefits allow SEM to generate purer estimation of constructs, more accurate estimates of people's levels on constructs, and more accurate estimates of associations between constructs.\index{structural equation modeling}\index{measurement error}
+Our theories deal with constructs (latent variables), not with fallible measurements of constructs (manifest variables).\index{structural equation modeling}\index{measurement error}
+Thus, SEM allows for models that are better aligned with theory than other statistical approaches that do not account for [measurement error](#measurementError).\index{structural equation modeling}\index{measurement error}
+
+### Accounting for Method Bias {#semMethodBias}
+
+SEM/[CFA](#cfa) can be used to account for [method biases](#methodBias) and other forms of [measurement error](#measurementError).\index{structural equation modeling}\index{measurement error}\index{method bias}
+You can use indicators that reflect different [method biases](#methodBias), so that the [method biases](#methodBias) are discarded as unique [errors](#measurementError), and are not combined in the "common variance" of the latent construct.\index{structural equation modeling}\index{measurement error}\index{method bias}
+SEM/[CFA](#cfa) can be used to fit a [multitrait-multimethod matrix](#MTMM) to account for method variance.\index{structural equation modeling}\index{measurement error}\index{method variance}\index{multitrait-multimethod matrix}
+I provide an example of fitting a [multitrait-multimethod matrix](#MTMM) in [CFA](#cfa) in Sections \@ref(mtmmCFA-validity) and \@ref(mtmmCFA).\index{factor analysis!confirmatory}\index{multitrait-multimethod matrix}
+But estimation of a [multitrait-multimethod matrix](#MTMM) in [CFA](#cfa) can be challenging without making additional constraints/assumptions.\index{factor analysis!confirmatory}\index{multitrait-multimethod matrix}
+
+A more practical utility of SEM is that it allows one to obtain "purer" estimates of latent constructs (and people's standing on them) by discarding [measurement error](#measurementError), and you do not have to assume all [errors](#measurementError) are uncorrelated!\index{structural equation modeling}\index{measurement error}
+
+## Guidelines for Reporting Reliability and Validity in SEM {#semReliabilityValidityReporting}
+
+Guidelines for reporting [reliability](#reliability) and [validity](#validity) in structural equation modeling are provided by @Cheung2024.\index{structural equation modeling}\index{reliability}\index{validity}
+
+## Power Analysis Using Monte Carlo Simulation {#monteCarloPowerAnalysis}
+
+Power analysis for latent variable modeling approaches like SEM is more complicated than it is for other statistical analyses, such as correlation, multiple regression, *t* tests, analysis of variance, etc.\index{power analysis}\index{structural equation modeling!power analysis}
+Statistical power for these more straightforward analytical approaches can be estimated in G*Power [@Faul2009]:\index{power analysis} https://www.psychologie.hhu.de/arbeitsgruppen/allgemeine-psychologie-und-arbeitspsychologie/gpower.html (archived at https://perma.cc/F3RW-AXMQ)
+
+I provide an example of how to conduct power analysis of an SEM model to determine the sample size needed to detect a hypothesized effect of a given effect size.\index{power analysis}\index{structural equation modeling!power analysis}
+To perform the power analysis, I use Monte Carlo simulation [@Hancock2013; @Muthen2002].\index{power analysis}\index{structural equation modeling!power analysis}
+It is named after the Casino de Monte-Carlo in Monaco because Monte Carlo simulations involve random samples (random chance), as might be found in casino gambling.\index{power analysis}\index{structural equation modeling!power analysis}
+Monte Carlo simulations can be used to determine the sample size needed to detect a target parameter of a given effect size, using the following four steps [@Wang2021]:\index{power analysis}\index{structural equation modeling!power analysis}
+
+1. Specify the sample size, a hypothesized true population SEM model, and all of its parameter values (e.g., factor loadings, intercepts, residuals, means, variances, covariances, regression paths, sample size);\index{power analysis}\index{structural equation modeling!power analysis}
+1. Generate a large number (e.g., 1,000) of random samples based on the hypothesized model and population values specified;\index{power analysis}\index{structural equation modeling!power analysis}
+1. Fit a SEM model to each of the generated samples, and for each one, record whether the target parameter is significantly different from zero;\index{power analysis}\index{structural equation modeling!power analysis}
+1. Calculate power as the proportion of simulated samples that produce a statistically significant estimate of the target parameter.\index{power analysis}\index{structural equation modeling!power analysis}
+
+These four steps can be repeated with different sample sizes to identify the sample size that is needed to have a particular level of power (e.g., .80).\index{power analysis}\index{structural equation modeling!power analysis}
+
+Power analysis of structural equation models using Monte Carlo simulation was estimated using the `simsem` package [@R-simsem].\index{power analysis}\index{structural equation modeling!power analysis}
+These examples were adapted from the `simsem` documentation:\index{power analysis}\index{structural equation modeling!power analysis}
+
+https://github.com/simsem/simsem/wiki/Vignette (archived at https://perma.cc/BQF7-PQNK)
+
+https://github.com/simsem/simsem/wiki/Example-18:-Simulation-with-Varying-Sample-Size (archived at https://perma.cc/8YCN-HENK)
+
+https://github.com/simsem/simsem/wiki/Example-19:-Simulation-with-Varying-Sample-Size-and-Percent-Missing (archived at https://perma.cc/ZWL4-FHJ3)
+
+https://github.com/simsem/simsem/blob/master/SupportingDocs/Examples/Version05/ex18/ex18.R (archived at https://perma.cc/5W93-BLFD)
+
+https://github.com/simsem/simsem/blob/master/SupportingDocs/Examples/Version05/ex19/ex19.R (archived at https://perma.cc/7DJY-QYSW)
+
+### Specify Population Model {#monteCarloPowerAnalysis-populationModel}
+
+The population model was used to generate the simulated data.\index{power analysis}\index{structural equation modeling!power analysis}
+It is important to specify each parameter value in the population model based on theory and/or prior empirical research, especially meta-analysis of the target population (when possible).\index{power analysis}\index{structural equation modeling!power analysis}\index{theory}\index{empiricism}
+
+```{r powerAnalysisPopulationModel, cache = TRUE}
+populationModel <- '
+ #Specify measurement model factor loadings
+ ind60 =~ .7*x1 + .7*x2 + .7*x3
+ dem60 =~ .7*y1 + .7*y2 + .7*y3 + .7*y4
+ dem65 =~ .7*y5 + .7*y6 + .7*y7 + .7*y8
+
+ #Specify regression coefficients
+ dem60 ~ .4*ind60
+ dem65 ~ .25*ind60 + .85*dem60
+ 
+ #Fix latent means to zero
+ ind60 ~ 0
+ dem60 ~ 0
+ dem65 ~ 0
+ 
+ #Fix latent variances to one
+ ind60 ~~ 1*ind60
+ dem60 ~~ 1*dem60
+ dem65 ~~ 1*dem65
+ 
+ #Specify covariances among latent variables (not necessary because the latent variables are already linked via regression paths)
+ 
+ #Specify residual variances of manifest variables
+ x1 ~~ (1-.7^2)*x1
+ x2 ~~ (1-.7^2)*x2
+ x3 ~~ (1-.7^2)*x3
+ y1 ~~ (1-.7^2)*y1
+ y2 ~~ (1-.7^2)*y2
+ y3 ~~ (1-.7^2)*y3
+ y4 ~~ (1-.7^2)*y4
+ y5 ~~ (1-.7^2)*y5
+ y6 ~~ (1-.7^2)*y6
+ y7 ~~ (1-.7^2)*y7
+ y8 ~~ (1-.7^2)*y8
+ 
+ #Specify intercepts of manifest variables
+ x1 ~ 0*1
+ x2 ~ 0*1
+ x3 ~ 0*1
+ y1 ~ 0*1
+ y2 ~ 0*1
+ y3 ~ 0*1
+ y4 ~ 0*1
+ y5 ~ 0*1
+ y6 ~ 0*1
+ y7 ~ 0*1
+ y8 ~ 0*1
+'
+```
+
+#### Show the Model's Fixed and Default Values {#monteCarloPowerAnalysis-fixedDefaultValues}
+
+```{r powerAnalysisPopulationModelFit, cache = TRUE, cache.comments = FALSE}
+populationModel_fit <- lavaan(populationModel, do.fit = FALSE)
+```
+
+```{r}
+summary(populationModel_fit,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
+#### Model-Implied Covariance and Correlation Matrix {#monteCarloPowerAnalysis-covarianceCorrelationMatrix}
+
+##### Model-implied covariance matrix: {#monteCarloPowerAnalysis-covarianceMatrix}
+
+```{r}
+fitted(populationModel_fit)
+```
+
+##### Model-implied correlation matrix {#monteCarloPowerAnalysis-correlationMatrix}
+
+```{r}
+cov2cor(fitted(populationModel_fit)$cov)
+```
+
+### Specify Analysis Model {#monteCarloPowerAnalysis-analysisModel}
+
+```{r powerAnalysisAnalysisModel, cache = TRUE}
+analysisModel_syntax <- '
+ #Measurement model factor loadings (free the factor loading of the first indicator)
+ ind60 =~ NA*x1 + x2 + x3
+ dem60 =~ NA*y1 + y2 + y3 + y4
+ dem65 =~ NA*y5 + y6 + y7 + y8
+
+ #Regression paths
+ dem60 ~ ind60
+ dem65 ~ ind60 + dem60
+ 
+ #Fix latent means to zero
+ ind60 ~ 0
+ dem60 ~ 0
+ dem65 ~ 0
+ 
+ #Fix latent variances to one
+ ind60 ~~ 1*ind60
+ dem60 ~~ 1*dem60
+ dem65 ~~ 1*dem65
+ 
+ #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)
+ 
+ #Estimate residual variances of manifest variables
+ x1 ~~ x1
+ x2 ~~ x2
+ x3 ~~ x3
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ y5 ~~ y5
+ y6 ~~ y6
+ y7 ~~ y7
+ y8 ~~ y8
+ 
+ #Free intercepts of manifest variables
+ x1 ~ intx1*1
+ x2 ~ intx2*1
+ x3 ~ intx3*1
+ y1 ~ inty1*1
+ y2 ~ inty2*1
+ y3 ~ inty3*1
+ y4 ~ inty4*1
+ y5 ~ inty5*1
+ y6 ~ inty6*1
+ y7 ~ inty7*1
+ y8 ~ inty8*1
+'
+```
+
+### Specify Distribution of Data {#monteCarloPowerAnalysis-dataDistribution}
+
+Specifying the expected distributions of the data variables is an optional step, but it can help give you more realistic estimates of your likely power, especially when the data are non-normally distributed.\index{power analysis}\index{structural equation modeling!power analysis}
+First, identify the order in which the indicator variables appear in the model, so you can know the order to specify skewness and kurtosis (which I specify in the next section):\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r}
+names(fitted(populationModel_fit)$mean)
+```
+
+Specify the skewness and kurtosis of the data variables.\index{power analysis}\index{structural equation modeling!power analysis}
+In this example, I set the variables $x1$–$x3$ (the first three variables) to have skewness of 1.3 and kurtosis of 1.8, and I set the variables $y1$–$y8$ (the next eight variables) to have a skewness of 2 and a kurtosis of 4.\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r powerAnalysisNumberIndicators, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisPopulationModel", "powerAnalysisPopulationModelFit")}
+numberOfIndicators <- length(fitted(populationModel_fit)$mean)
+```
+
+```{r powerAnalysisIndicatorDistributions, cache = TRUE, cache.comments = FALSE, cache.extra=list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), dependson = "powerAnalysisNumberIndicators"}
+indicatorDistributions <- bindDist(
+  p = numberOfIndicators,
+  skewness = c(rep(1.3, 3), rep(2, 8)),
+  kurtosis = c(rep(1.8, 3), rep(4, 8)))
+```
+
+### Specify Extent and Type of Missing Data {#monteCarloPowerAnalysis-missingness}
+
+#### Specify Missingness {#monteCarloPowerAnalysis-missingData}
+
+Specifying the extent and pattern of missingness is an optional step, but it can help give you more realistic estimates of your likely power, especially when there is extensive missing data and/or the data are not missing completely at random (MCAR).\index{power analysis}\index{structural equation modeling!power analysis}
+For an example of specifying the extent and pattern of missingness in the context of a Monte Carlo power analysis, see @Beaujean2014.\index{power analysis}\index{structural equation modeling!power analysis}
+In this example, I set 10% of values to be missing for variables $x1$, $x2$, and $x3$.\index{power analysis}\index{structural equation modeling!power analysis}
+I set 15% of values to be missing for variables $y1$–$y8$.\index{power analysis}\index{structural equation modeling!power analysis}
+I assumed the missingness mechanism to be MCAR.\index{power analysis}\index{structural equation modeling!power analysis}
+To set missingness to be missing at random (MAR), add a covariate in the missingness formula [see @Beaujean2014].\index{power analysis}\index{structural equation modeling!power analysis}
+I set the model to use full information maximum likelihood (FIML) estimation to handle missingness.\index{power analysis}\index{structural equation modeling!power analysis}
+If you set $m$ to a value greater than zero, it will allow use of multiple imputation instead of FIML.\index{power analysis}\index{structural equation modeling!power analysis}
+Statistical power with multiple imputation tends to be lower than with FIML unless the number of imputations is large [@Graham2007].\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r powerAnalysisMissingness, cache = TRUE, cache.comments = FALSE}
+percentMissingByVariable <- '
+  x1 ~ p(0.10)
+  x2 ~ p(0.10)
+  x3 ~ p(0.10)
+  y1 ~ p(0.15)
+  y2 ~ p(0.15)
+  y3 ~ p(0.15)
+  y4 ~ p(0.15)
+  y5 ~ p(0.15)
+  y6 ~ p(0.15)
+  y7 ~ p(0.15)
+  y8 ~ p(0.15)
+'
+```
+
+```{r powerAnalysisMissingnessModel, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = "powerAnalysisMissingness"}
+missingnessModel <- miss(
+  logit = percentMissingByVariable,
+  m = 0)
+```
+
+#### Plot of Extent of Missing Data Specified {#monteCarloPowerAnalysis-missingDataPlot}
+
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Percent Missingness Specified for Each Variable."}
+plotLogitMiss(percentMissingByVariable)
+```
+
+### Specify Sample Sizes and Repetitions {#monteCarloPowerAnalysis-sampleSizeReps}
+
+Specify the sample sizes to evaluate in the Monte Carlo simulation and the number of repetitions per sample size.\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r powerAnalysisSampleSizes, cache = TRUE, cache.comments = FALSE}
+sampleSizes <- 150:700
+repetitionsPerSampleSize <- 2
+```
+
+### Monte Carlo Simulation to Generate Data from the Population Parameter Values {#monteCarloPowerAnalysis-run}
+
+Conduct Monte Carlo simulation with $`r repetitionsPerSampleSize`$ repetitions per sample size $(N\text{s} = `r min(sampleSizes)`–`r max(sampleSizes)`)$.
+The `multicore` backend was used for parallel processing.\index{power analysis}\index{structural equation modeling!power analysis}
+Parallel processing distributes a larger computation task across multiple computing processes or cores, and runs them simultaneously (in parallel) to speed up execution time (if multiple processes or cores are available).\index{power analysis}\index{structural equation modeling!power analysis}
+If you choose to do processing in serial rather than parallel (by setting `multicore = FALSE`), you will need to run a special `set.seed()` command, prior to running the `sim()` command, to get reproducible results with those obtained from parallel processing: `set.seed(seedNumber, "L'Ecuyer-CMRG")`, where `seedNumber` is the value used for the seed.\index{power analysis}\index{structural equation modeling!power analysis}
+**Warning**: this code takes a while to run based on $`r length(sampleSizes)`$ different sample sizes $(`r max(sampleSizes)` - `r min(sampleSizes)` + 1)$ and $`r repetitionsPerSampleSize`$ repetitions per sample size, for a total of $`r length(sampleSizes) * repetitionsPerSampleSize`$ iterations $([`r max(sampleSizes)` - `r min(sampleSizes)` + 1]$ sample sizes $\times$ $`r repetitionsPerSampleSize`$ repetitions per sample size $= `r length(sampleSizes) * repetitionsPerSampleSize`$ iterations).\index{power analysis}\index{structural equation modeling!power analysis}
+You can reduce the number of sample sizes and/or repetitions per sample size to be faster.\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r powerAnalysis, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizes", "powerAnalysisPopulationModel", "powerAnalysisAnalysisModel", "powerAnalysisMissingnessModel", "powerAnalysisIndicatorDistributions")}
+output <- simsem::sim(
+  n = rep(
+    sampleSizes,
+    each = repetitionsPerSampleSize),
+  model = analysisModel_syntax,
+  generate = populationModel,
+  miss = missingnessModel,
+  indDist = indicatorDistributions,
+  lavaanfun = "lavaan",
+  missing = "ML",
+  estimator = "MLR",
+  std.lv = TRUE,
+  seed = 52242,
+  multicore = TRUE)
+```
+
+Return the seed to the normal seed behavior so that future calls to `set.seed()` use the default settings:
+
+```{r}
+RNGkind("default", "default", "default")
+```
+
+### Summary of Population Model {#monteCarloPowerAnalysis-outputPopulationModel}
+
+```{r}
+summaryPopulation(output)
+```
+
+### Summary of Simulated Data {#monteCarloPowerAnalysis-outputSimulatedData}
+
+```{r}
+summary(output)
+```
+
+### Summary of Parameters {#monteCarloPowerAnalysis-parameterSummary}
+
+```{r}
+summaryParam(output, alpha = .05, detail = TRUE)
+```
+
+### Time to Completion {#monteCarloPowerAnalysis-completionTime}
+
+```{r}
+summaryTime(output)
+```
+
+### Cutoffs of Fit Indices {#monteCarloPowerAnalysis-fitIndicesCutoffs}
+
+#### Plot of Cutoffs of Fit Indices {#monteCarloPowerAnalysis-fitIndicesCutoffsPlot}
+
+At $\alpha = .05$
+
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis."}
+plotCutoff(output, alpha = .05)
+```
+
+#### Cutoffs of Fit Indices at Particular Sample Size {#monteCarloPowerAnalysis-fitIndicesCutoffsSampleSize}
+
+At $N = 200$, $\alpha = .05$
+
+```{r}
+getCutoff(output, alpha = .05, nVal = 200)
+```
+
+### Statistical Power {#monteCarloPowerAnalysis-power}
+
+#### Plot of Power to Detect Various Parameters as a Function of Sample Size {#monteCarloPowerAnalysis-powerPlot}
+
+At $\alpha = .05$; dashed horizontal line represents power ($1 - \beta$) of .8\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r, out.width = "100%", fig.align = "center", fig.cap = "Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis."}
+par(mfrow = c(1,2))
+
+plotPower(
+  output,
+  powerParam = "dem65~dem60",
+  alpha = .05)
+
+abline(h = 0.8, lwd = 2, lty = 2)
+
+plotPower(
+  output,
+  powerParam = "dem65~ind60",
+  alpha = .05)
+
+abline(h = 0.8, lwd = 2, lty = 2)
+```
+
+#### Sample Size Needed to Detect a Given Parameter {#monteCarloPowerAnalysis-sampleSizeNeeded}
+
+At power ($1 - \beta$) = .80, $\alpha = .05$\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r}
+powerEstimates <- getPower(output, alpha = .05)
+findPower(powerEstimates, iv = "N", power = .80)
+```
+
+#### Power to Detect Each Parameter at a Given Sample Size {#monteCarloPowerAnalysis-powerSampleSize}
+
+At $N = 200$, $\alpha = .05$\index{power analysis}\index{structural equation modeling!power analysis}
+
+```{r}
+getPower(output, alpha = .05, nVal = 200)
+```
+
+## Generalizability Theory {#generalizability-SEM}
+
+There are also SEM approaches for performing [generalizability theory](#gTheory) analyses.\index{generalizability theory}\index{structural equation modeling}
+The reader is referred to examples by @Vispoel2018, @Vispoel2019, @Vispoel2022, and @Vispoel2023.\index{generalizability theory}\index{structural equation modeling}
+
+## Conclusion {#conclusion-sem}
+
+Structural equation modeling (SEM) is an advanced modeling approach that allows estimating latent variables as the common variance from multiple measures.\index{structural equation modeling}\index{latent variable}\index{aggregation}
+SEM holds promise to account for [measurement error](#measurementError) and [method biases](#methodBias), which allows one to get more accurate estimates of constructs, people's standing on constructs (i.e., individual differences), and associations between constructs.\index{structural equation modeling}\index{measurement error}\index{method bias}
+
+## Suggested Readings {#readings-sem}
+
+@MacCallum2000
+
+## Exercises {#semExercises}
+
+```{r, include = FALSE}
+library("MOTE")
+```
+
+```{r, include = FALSE}
+# Load Data ---------------------------------------------------------------
+
+cnlsy <- read_csv(here("data", "cnlsy.csv"))
+```
+
+```{r, include = FALSE}
+# Measurement Model
+
+## Specify the model
+measurementModelT1 <- '
+ #Factor loadings
+ antisocialT1 =~ bpi_antisocialT1_1 + bpi_antisocialT1_2 + bpi_antisocialT1_3 + bpi_antisocialT1_4 + bpi_antisocialT1_5 + bpi_antisocialT1_6 + bpi_antisocialT1_7
+'
+```
+
+```{r, include = FALSE}
+measurementModelT2 <- '
+ #Factor loadings
+ antisocialT2 =~ bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + bpi_antisocialT2_4 + bpi_antisocialT2_5 + bpi_antisocialT2_6 + bpi_antisocialT2_7
+'
+```
+
+```{r, include = FALSE}
+### Summary of Model Features
+summary(measurementModelT1)
+
+### Model Syntax in Table Form:
+lavaanify(measurementModelT1)
+```
+
+```{r, include = FALSE}
+## Fit the model
+measurementModel1Fit <- cfa(measurementModelT1,
+                            data = cnlsy,
+                            missing = "ML",
+                            estimator = "MLR")
+
+measurementModel2Fit <- cfa(measurementModelT2,
+                            data = cnlsy,
+                            missing = "ML",
+                            estimator = "MLR")
+```
+
+```{r, include = FALSE}
+## Display summary output
+summary(measurementModel1Fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(measurementModel2Fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
+```{r, include = FALSE}
+fitMeasures(measurementModel1Fit,
+            fit.measures = c("chisq", "df", "pvalue",
+                             "chisq.scaled", "df.scaled", "pvalue.scaled",
+                             "chisq.scaling.factor",
+                             "rmsea", "cfi", "tli", "srmr",
+                             "rmsea.robust", "cfi.robust", "tli.robust"))
+
+measurementModel1ChiSquare <- fitMeasures(measurementModel1Fit, fit.measures = c("chisq.scaled"))
+measurementModel1DF <- fitMeasures(measurementModel1Fit, fit.measures = c("df.scaled"))
+
+measurementModel1RMSEA <- fitMeasures(measurementModel1Fit, fit.measures = c("rmsea"))
+measurementModel1CFI <- fitMeasures(measurementModel1Fit, fit.measures = c("cfi"))
+measurementModel1SRMR <- fitMeasures(measurementModel1Fit, fit.measures = c("srmr"))
+```
+
+```{r, include = FALSE}
+## Modification indices
+modificationindices(measurementModel1Fit, sort. = TRUE)
+modificationindices(measurementModel2Fit, sort. = TRUE)
+```
+
+```{r, include = FALSE}
+## Reliability
+compRelSEM(measurementModel1Fit)
+AVE(measurementModel1Fit)
+```
+
+```{r, include = FALSE}
+## Path Diagram
+semPaths(measurementModel1Fit,
+         what = "Std.all",
+         layout = "tree2")
+```
+
+```{r, include = FALSE}
+# Correlated Errors -------------------------------------------------------
+
+## Specify the model
+measurementModelCorrelatedErrorsT1 <- '
+ #Factor loadings
+ antisocialT1 =~ bpi_antisocialT1_1 + bpi_antisocialT1_2 + bpi_antisocialT1_3 + 
+  bpi_antisocialT1_4 + bpi_antisocialT1_5 + bpi_antisocialT1_6 + 
+  bpi_antisocialT1_7
+ 
+ #Correlated errors
+ bpi_antisocialT1_5 ~~ bpi_antisocialT1_6
+'
+```
+
+```{r, include = FALSE}
+measurementModelCorrelatedErrorsT2 <- '
+ #Factor loadings
+ antisocialT2 =~ bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + 
+  bpi_antisocialT2_4 + bpi_antisocialT2_5 + bpi_antisocialT2_6 + 
+  bpi_antisocialT2_7
+
+ #Correlated errors
+ bpi_antisocialT2_5 ~~ bpi_antisocialT2_6
+'
+```
+
+```{r, include = FALSE}
+### Summary of Model Features
+summary(measurementModelCorrelatedErrorsT1)
+
+### Model Syntax in Table Form:
+lavaanify(measurementModelCorrelatedErrorsT1)
+```
+
+```{r, include = FALSE}
+## Fit the model
+measurementModelCorrelatedErrors1Fit <- cfa(measurementModelCorrelatedErrorsT1,
+                            data = cnlsy,
+                            missing = "ML",
+                            estimator = "MLR")
+
+measurementModelCorrelatedErrors2Fit <- cfa(measurementModelCorrelatedErrorsT2,
+                            data = cnlsy,
+                            missing = "ML",
+                            estimator = "MLR")
+```
+
+```{r, include = FALSE}
+## Display summary output
+summary(measurementModelCorrelatedErrors1Fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+
+summary(measurementModelCorrelatedErrors2Fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
+```{r, include = FALSE}
+## Factor loadings
+measurementModelCorrelatedErrors1FitFactorLoadingStd <- standardizedSolution(measurementModelCorrelatedErrors1Fit)
+measurementModelCorrelatedErrors1FitFactorLoadingStdItem2 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" & measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs == "bpi_antisocialT1_2")]
+measurementModelCorrelatedErrors1FitFactorLoadingStdItem7 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" & measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs == "bpi_antisocialT1_7")]
+```
+
+```{r, include = FALSE}
+## Modification indices
+modificationindices(measurementModelCorrelatedErrors1Fit, sort. = TRUE)
+modificationindices(measurementModelCorrelatedErrors2Fit, sort. = TRUE)
+```
+
+```{r, include = FALSE}
+## Factor scores
+measurementModelCorrelatedErrors1Fit_factorScores <- lavPredict(measurementModelCorrelatedErrors1Fit)
+
+## Reliability
+measurementModelCorrelatedErrors1Omega <- compRelSEM(measurementModelCorrelatedErrors1Fit)
+```
+
+```{r, include = FALSE}
+## Path Diagram
+semPaths(measurementModelCorrelatedErrors1Fit,
+         what = "Std.all",
+         layout = "tree2",
+         edge.label.cex = 1.1)
+```
+
+```{r, include = FALSE}
+fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("chisq", "df", "pvalue",
+                                                   "chisq.scaled", "df.scaled", "pvalue.scaled",
+                                                   "chisq.scaling.factor",
+                                                   "rmsea", "cfi", "tli", "srmr",
+                                                   "rmsea.robust", "cfi.robust", "tli.robust"))
+
+measurementModelCorrelatedErrors1ChiSquare <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("chisq.scaled"))
+measurementModelCorrelatedErrors1DF <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("df.scaled"))
+
+measurementModelCorrelatedErrors1RMSEA <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("rmsea"))
+measurementModelCorrelatedErrors1CFI <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("cfi"))
+measurementModelCorrelatedErrors1SRMR <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("srmr"))
+```
+
+```{r, include = FALSE}
+measurementModelComparison <- anova(measurementModel1Fit, measurementModelCorrelatedErrors1Fit)
+
+measurementModelChiSquareDiff <- measurementModelComparison$"Chisq diff"[2]
+measurementModelDFDiff <- measurementModelComparison$"Df diff"[2]
+```
+
+```{r, include = FALSE}
+# SEM ---------------------------------------------------------------------
+
+## Specify the model
+semModel_ex <- '
+ #Factor loadings
+ antisocialT1 =~ bpi_antisocialT1_1 + bpi_antisocialT1_2 + bpi_antisocialT1_3 + bpi_antisocialT1_4 + bpi_antisocialT1_5 + bpi_antisocialT1_6 + bpi_antisocialT1_7
+ antisocialT2 =~ bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + bpi_antisocialT2_4 + bpi_antisocialT2_5 + bpi_antisocialT2_6 + bpi_antisocialT2_7
+
+ #Correlated errors
+ bpi_antisocialT1_5 ~~ bpi_antisocialT1_6
+ bpi_antisocialT2_5 ~~ bpi_antisocialT2_6
+'
+```
+
+```{r, include = FALSE}
+### Summary of Model Features
+summary(semModel_ex)
+
+### Model Syntax in Table Form:
+lavaanify(semModel_ex)
+```
+
+```{r, include = FALSE}
+## Fit the model
+semModelFit_ex <- cfa(semModel_ex,
+                   data = cnlsy,
+                   missing = "ML",
+                   estimator = "MLR",
+                   std.lv = TRUE)
+```
+
+```{r, include = FALSE}
+## Display summary output
+summary(semModelFit_ex,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
+```{r, include = FALSE}
+semModelFactorLoadingStd_ex <- standardizedSolution(semModelFit_ex)
+
+correlationLatentFactor <- semModelFactorLoadingStd_ex$est.std[which(semModelFactorLoadingStd_ex$lhs == "antisocialT1" & semModelFactorLoadingStd_ex$rhs == "antisocialT2")]
+```
+
+```{r, include = FALSE}
+## Modification indices
+modificationindices(semModelFit_ex, sort. = TRUE)
+
+## Factor scores
+semModelFit_ex_factorScores <- lavPredict(semModelFit_ex)
+
+## Reliability
+compRelSEM(semModelFit_ex)
+AVE(semModelFit_ex)
+```
+
+```{r, include = FALSE}
+## Path Diagram
+semPaths(semModelFit_ex,
+         what = "Std.all",
+         layout = "tree2",
+         edge.label.cex = 0.6)
+```
+
+```{r, include = FALSE}
+correlationSumScores <- cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_antisocialT2Sum)$estimate
+```
+
+```{r, include = FALSE}
+semModel2 <- '
+ #Factor loadings
+ antisocialT1 =~ bpi_antisocialT1_1 + bpi_antisocialT1_2 + bpi_antisocialT1_3 + bpi_antisocialT1_4 + bpi_antisocialT1_5 + bpi_antisocialT1_6 + bpi_antisocialT1_7
+ antisocialT2 =~ bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + bpi_antisocialT2_4 + bpi_antisocialT2_5 + bpi_antisocialT2_6 + bpi_antisocialT2_7
+
+ #Correlated errors
+ bpi_antisocialT1_5 ~~ bpi_antisocialT1_6
+ bpi_antisocialT2_5 ~~ bpi_antisocialT2_6
+ 
+ #Regression path
+ antisocialT2 ~ antisocialT1 + bpi_anxiousDepressedSum
+'
+```
+
+```{r, include = FALSE}
+## Fit the model
+semModel2Fit <- cfa(semModel2,
+                   data = cnlsy,
+                   missing = "ML",
+                   estimator = "MLR",
+                   std.lv = TRUE,
+                   fixed.x = FALSE)
+```
+
+```{r, include = FALSE}
+## Display summary output
+summary(semModel2Fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
+```{r, include = FALSE}
+semModel2Unstd <- parameterEstimates(semModel2Fit, standardized = FALSE)
+semModel2Std <- parameterEstimates(semModel2Fit, standardized = TRUE)
+
+semModel2UnstdB <- semModel2Unstd$est[which(semModel2Unstd$lhs == "antisocialT2" & semModel2Unstd$rhs == "bpi_anxiousDepressedSum")]
+semModel2UnstdSE <- semModel2Unstd$se[which(semModel2Unstd$lhs == "antisocialT2" & semModel2Unstd$rhs == "bpi_anxiousDepressedSum")]
+semModel2StdBeta <- semModel2Std$std.all[which(semModel2Std$lhs == "antisocialT2" & semModel2Std$rhs == "bpi_anxiousDepressedSum")]
+```
+
+```{r populationModelExercise, include = FALSE, cache = TRUE}
+# Power Analysis ----------------------------------------------------------
+
+# Specify population model
+
+populationModel_ex <- '
+ #Specify measurement model factor loadings (free the factor loading of the first indicator)
+ ind60 =~ .75*x1 + .75*x2 + .75*x3
+ dem60 =~ .75*y1 + .75*y2 + .75*y3 + .75*y4
+ dem65 =~ .75*y5 + .75*y6 + .75*y7 + .75*y8
+
+ #Specify regression coefficients
+ dem60 ~ .4*ind60
+ dem65 ~ .2*ind60 + .45*dem60
+ 
+ #Fix latent means to zero
+ ind60 ~ 0
+ dem60 ~ 0
+ dem65 ~ 0
+ 
+ #Fix latent variances to one
+ ind60 ~~ 1*ind60
+ dem60 ~~ 1*dem60
+ dem65 ~~ 1*dem65
+ 
+ #Specify covariances among latent variables (not necessary because the latent variables are already linked via regression paths)
+ 
+ #Specify residual variances of manifest variables
+ x1 ~~ (1-.75^2)*x1
+ x2 ~~ (1-.75^2)*x2
+ x3 ~~ (1-.75^2)*x3
+ y1 ~~ (1-.75^2)*y1
+ y2 ~~ (1-.75^2)*y2
+ y3 ~~ (1-.75^2)*y3
+ y4 ~~ (1-.75^2)*y4
+ y5 ~~ (1-.75^2)*y5
+ y6 ~~ (1-.75^2)*y6
+ y7 ~~ (1-.75^2)*y7
+ y8 ~~ (1-.75^2)*y8
+ 
+ #Specify intercepts of manifest variables
+ x1 ~ 0*1
+ x2 ~ 0*1
+ x3 ~ 0*1
+ y1 ~ 0*1
+ y2 ~ 0*1
+ y3 ~ 0*1
+ y4 ~ 0*1
+ y5 ~ 0*1
+ y6 ~ 0*1
+ y7 ~ 0*1
+ y8 ~ 0*1
+'
+```
+
+```{r populationModelFitExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
+populationModelFit_ex <- lavaan(populationModel_ex, do.fit = FALSE)
+```
+
+```{r analysisModelExercise, include = FALSE, cache = TRUE}
+# Specify analysis model
+
+analysisModelSyntax_ex <- '
+ #Measurement model factor loadings (free the factor loading of the first indicator)
+ ind60 =~ NA*x1 + x2 + x3
+ dem60 =~ NA*y1 + y2 + y3 + y4
+ dem65 =~ NA*y5 + y6 + y7 + y8
+
+ #Regression paths
+ dem60 ~ ind60
+ dem65 ~ ind60 + dem60
+ 
+ #Fix latent means to zero
+ ind60 ~ 0
+ dem60 ~ 0
+ dem65 ~ 0
+ 
+ #Fix latent variances to one
+ ind60 ~~ 1*ind60
+ dem60 ~~ 1*dem60
+ dem65 ~~ 1*dem65
+ 
+ #Estimate covariances among latent variables (not necessary because the latent variables are already linked via regression paths)
+ 
+ #Estimate residual variances of manifest variables
+ x1 ~~ x1
+ x2 ~~ x2
+ x3 ~~ x3
+ y1 ~~ y1
+ y2 ~~ y2
+ y3 ~~ y3
+ y4 ~~ y4
+ y5 ~~ y5
+ y6 ~~ y6
+ y7 ~~ y7
+ y8 ~~ y8
+ 
+ #Free intercepts of manifest variables
+ x1 ~ intx1*1
+ x2 ~ intx2*1
+ x3 ~ intx3*1
+ y1 ~ inty1*1
+ y2 ~ inty2*1
+ y3 ~ inty3*1
+ y4 ~ inty4*1
+ y5 ~ inty5*1
+ y6 ~ inty6*1
+ y7 ~ inty7*1
+ y8 ~ inty8*1
+'
+```
+
+```{r, include = FALSE}
+summary(populationModelFit_ex,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
+```{r, include = FALSE}
+fitted(populationModelFit_ex)
+cov2cor(fitted(populationModelFit_ex)$cov)
+```
+
+```{r, include = FALSE}
+#Non-normally distributed data
+names(fitted(populationModelFit_ex)$mean)
+```
+
+```{r powerAnalysisNumberIndicatorsExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("populationModel_exExercise", "populationModel_exFitExercise")}
+numberOfIndicators_ex <- length(fitted(populationModelFit_ex)$mean)
+```
+
+```{r dataDistributionExercise, include = FALSE, cache = TRUE, cache.comments = FALSE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), dependson = "powerAnalysisNumberIndicatorsExercise"}
+indicatorDistributions_ex <- bindDist(p = numberOfIndicators_ex,
+                                      skewness = rep(2.5, 11),
+                                      kurtosis = rep(5, 11))
+```
+
+```{r specifyMissingnessExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
+# Specify missingness
+percentMissingByVariable_ex <- '
+  x1 ~ p(0.10)
+  x2 ~ p(0.10)
+  x3 ~ p(0.10)
+  y1 ~ p(0.10)
+  y2 ~ p(0.10)
+  y3 ~ p(0.10)
+  y4 ~ p(0.10)
+  y5 ~ p(0.10)
+  y6 ~ p(0.10)
+  y7 ~ p(0.10)
+  y8 ~ p(0.10)
+'
+```
+
+```{r, include = FALSE}
+plotLogitMiss(percentMissingByVariable_ex)
+```
+
+```{r missingnessModelExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = "specifyMissingnessExercise"}
+missingnessModelFIML_ex <- miss(logit = percentMissingByVariable_ex, m = 0)
+```
+
+```{r powerAnalysisSampleSizeExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
+sampleSizes_ex <- 100:700
+repetitionsPerSampleSize_ex <- 1
+```
+
+```{r, include = FALSE}
+detach("package:semTools", unload = TRUE)
+library("semTools")
+```
+
+```{r powerAnalysisExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "dataDistributionExercise")}
+output_ex <- simsem::sim(n = rep(sampleSizes_ex, each = repetitionsPerSampleSize_ex),
+                         model = analysisModelSyntax_ex,
+                         generate = populationModel_ex,
+                         miss = missingnessModelFIML_ex,
+                         indDist = indicatorDistributions_ex,
+                         lavaanfun = "lavaan",
+                         missing = "ML",
+                         estimator = "MLR",
+                         std.lv = TRUE,
+                         seed = 52242,
+                         multicore = TRUE)
+```
+
+```{r, include = FALSE}
+RNGkind("default", "default", "default")
+
+summaryPopulation(output_ex)
+summary(output_ex)
+summaryParam(output_ex, alpha = .05, detail = TRUE)
+summaryTime(output_ex)
+```
+
+```{r, include = FALSE}
+plotCutoff(output_ex, alpha = .05)
+```
+
+```{r, include = FALSE}
+getCutoff(output_ex, alpha = .05, nVal = 150)
+```
+
+```{r, include = FALSE}
+plotPower(output_ex,
+          powerParam = c("dem65~dem60", "dem65~ind60"),
+          alpha = .05)
+abline(h = 0.8, lwd = 2, lty = 2)
+```
+
+```{r, include = FALSE}
+powerEstimates1_ex <- getPower(output_ex, alpha = .05)
+findPower(powerEstimates1_ex, iv = "N", power = .80)
+
+sampleSizeNeeded1_ex <- findPower(powerEstimates1_ex, iv = "N", power = .80)
+sampleSizeNeededStress1_ex <- sampleSizeNeeded1_ex[["dem65~ind60"]]
+sampleSizeNeededHarshParenting1_ex <- sampleSizeNeeded1_ex[["dem65~dem60"]]
+```
+
+```{r, include = FALSE}
+getPower(output_ex, alpha = 0.05, nVal = 150)
+
+power1_ex <- getPower(output_ex, alpha = 0.05, nVal = 150)
+powerStress1_ex <- power1_ex[,"dem65~ind60"]
+powerHarshParenting1_ex <- power1_ex[,"dem65~dem60"]
+```
+
+```{r, include = FALSE}
+# Normally Distributed Data
+names(fitted(populationModelFit_ex)$mean)
+```
+
+```{r normallyDistrubutedDataExercise, include = FALSE, cache = TRUE, cache.comments = FALSE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), dependson = "powerAnalysisNumberIndicatorsExercise"}
+indicatorDistributionsNormal <- bindDist(p = numberOfIndicators_ex,
+                                         skewness = rep(0, 11),
+                                         kurtosis = rep(0, 11))
+```
+
+```{r powerAnalysisSampleSizeExercise3, include = FALSE, cache = TRUE, cache.comments = FALSE}
+sampleSizes3_ex <- 150
+repetitionsPerSampleSize3_ex <- 50
+```
+
+```{r, include = FALSE}
+detach("package:semTools", unload = TRUE)
+library("semTools")
+```
+
+```{r powerAnalysisNormallyDistributedExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "normallyDistrubutedDataExercise")}
+output3_ex <- simsem::sim(n = rep(sampleSizes3_ex, each = repetitionsPerSampleSize3_ex),
+               model = analysisModelSyntax_ex,
+               generate = populationModel_ex,
+               miss = missingnessModelFIML_ex,
+               indDist = indicatorDistributionsNormal,
+               lavaanfun = "lavaan",
+               missing = "ML",
+               estimator = "MLR",
+               std.lv = TRUE,
+               seed = 52242,
+               multicore = TRUE)
+```
+
+```{r, include = FALSE}
+RNGkind("default", "default", "default")
+
+summaryPopulation(output3_ex)
+summary(output3_ex)
+summaryParam(output3_ex, alpha = .05, detail = TRUE)
+summaryTime(output3_ex)
+```
+
+```{r, include = FALSE}
+#plotCutoff(output3_ex, alpha = .05)
+```
+
+```{r, include = FALSE}
+getCutoff(output3_ex, alpha = .05, nVal = 150)
+```
+
+```{r, include = FALSE}
+#plotPower(output3_ex,
+#          powerParam = c("dem65~dem60", "dem65~ind60"),
+#          alpha = .05)
+#abline(h = 0.8, lwd = 2, lty = 2)
+```
+
+```{r, include = FALSE}
+#powerEstimates3_ex <- getPower(output3_ex, alpha = .05)
+#findPower(powerEstimates3_ex, iv = "N", power = .80)
+```
+
+```{r, include = FALSE}
+getPower(output3_ex, alpha = 0.05, nVal = 150)
+
+power3_ex <- getPower(output3_ex, alpha = 0.05, nVal = 150)
+powerStress3_ex <- power3_ex["dem65~ind60"]
+powerHarshParenting3_ex <- power3_ex["dem65~dem60"]
+```
+
+### Questions
+
+Note: Several of the following questions use data from the Children of the National Longitudinal Survey of Youth Survey (CNLSY).
+The CNLSY is a publicly available longitudinal data set provided by the Bureau of Labor Statistics (https://www.bls.gov/nls/nlsy79-children.htm#topical-guide; archived at https://perma.cc/EH38-HDRN).
+The CNLSY data file for these exercises is located on the book's page of the Open Science Framework (https://osf.io/3pwza).
+Children's behavior problems were rated in 1988 (time 1: T1) and then again in 1990 (time 2: T2) on the Behavior Problems Index (BPI).
+Below are the items corresponding to the Antisocial subscale of the BPI:
+
+1) cheats or tells lies
+2) bullies or is cruel/mean to others
+3) does not seem to feel sorry after misbehaving
+4) breaks things deliberately
+5) is disobedient at school
+6) has trouble getting along with teachers
+7) has sudden changes in mood or feeling
+
+1. Fit a confirmatory factor analysis model to the seven items of the Antisocial subscale of the Behavior Problems Index at T1.
+Set the first indicator to be the referent indicator (to set the scale of the latent factor) by setting its loading to one.
+Allow the factor loadings of the other indicators to be freely estimated.
+Set the mean (intercept) of the latent factor to be zero.
+Do not allow the residuals to be correlated.
+Use full information maximum likelihood (FIML) to account for missing data.
+Use robust standard errors to account for non-normally distributed data.
+    a. This is an over-simplification, but for now let us assume a model fits "well" if CFI $\geq .95$, RMSEA $< .08$, and SRMR $< .08$ [@Schreiber2006].
+    Did the model fit well?
+    What does this indicate?
+    b. Examine the modification indices.
+    Which modification would result in the greatest improvement in model fit?
+    Why do you think this modification would improve model fit?
+2. Fit the modified confirmatory factor analysis model to make the suggested revision you identified in `1b`.
+    a. Provide a figure of the model with standardized coefficients.
+    b. The modified model and the original model are considered "nested" models.
+    The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.
+    Model fit of nested models can be directly compared with a chi-square difference test.
+    Did the modified model fit better than the original model?
+    c. Did the modified model fit well?
+    What does this indicate?
+    Which item is most strongly with the latent factor?
+    Which item is most weakly associated with the latent factor?
+    d. What is the estimate of internal consistency reliability of the items, based on coefficient omega?
+3. Fit a confirmatory factor analysis model to the seven items of the Antisocial subscale of the Behavior Problems Index at both T1 and T2 simultaneously in the same model.
+Allow the items at T1 to load onto a different factor than the items at T2 (i.e., a two-factor model—one antisocial at each time point).
+Set the scale of the latent factors by standardizing the latent factors—set their means to one and their variances to zero.
+This allows you to freely estimate the factor loadings of all items (instead of setting a reference indicator).
+Estimate the covariance between the two latent factors.
+Treat exogenous covariates as random variables (whose means, variances, and covariances are estimated) by specifying `fixed.x = FALSE`.
+Use full information maximum likelihood (FIML) to account for missing data.
+Use robust standard errors to account for non-normally distributed data.
+Apply the same modification you noted in 1b above to each factor.
+    a. Because the two latent factors are standardized, the "covariance" path between the two latent factors represents a correlation.
+    What is the correlation between the latent factors?
+    What is the correlation between the sum scores (`bpi_antisocialT1Sum`, `bpi_antisocialT2Sum`)?
+    Which is greater and why?
+    b. Change the covariance path to a regression path from the latent factor at T1 predicting the latent factor at T2.
+    Also include the sum score of anxious/depressed symptoms at T1 (`bpi_anxiousDepressedSum`) as a predictor of antisocial behavior at T2.
+    Do anxious/depressed symptoms at T1 predict antisocial behavior at T2 controlling for prior levels of antisocial behavior at T1?
+    Interpret the findings.
+4. You plan to conduct a study that would examine whether stress and harsh parenting predict children's antisocial behavior.
+Your hypothesis is that stress and harsh parenting both lead to children's antisocial behavior.
+You would like to apply for a grant to test these hypotheses, but you first want to know what sample size you would need to have adequate power to detect the hypothesized effects.
+Because you read this book, you remember that measurement error attenuates the associations you would observe, which would make it less likely that you would be able to detect the true effect (if there truly is an effect).
+As a result, you plan to assess each construct with multiple measurement methods/measures.
+You plan to model each construct with a latent variable in a structural equation modeling framework to account for measurement error and disattenuate the associations, which will make the associations more closely approximate the true effect and will make it more likely that you will detect the effect if it exists.
+You plan to assess stress with three methods (self-report, friend report, cortisol), harsh parenting with four methods (parents' self-report, spousal report, child report, observation), and children's antisocial behavior with four methods (parent report, teacher report, child report, observation).
+
+    You conduct a power analysis with the following assumptions that you made based on theory and prior empirical research:
+    - The factor loading for each measure on its latent variable is .75
+    - Stress influences children's antisocial behavior with a regression coefficient of .20
+    - Harsh parenting influences children's antisocial behavior with a regression coefficient of .45
+    - Stress influences harsh parenting with a regression coefficient of .4
+
+    Set the intercepts of the indicators to zero.
+    Set the scale of the latent factors by standardizing the latent factors—set their means to one and their variances to zero.
+    Do not estimate correlated errors.
+    You expect each measure to show 10% missingness, and for missingness to be completely at random (MCAR).
+    Use full information maximum likelihood (FIML) to handle missing values.
+    As is common with measures in clinical psychology, you expect each measure to be positively skewed with a skewness of 2.5 and leptokurtic with a kurtosis of 5.
+    Use robust standard errors to account for non-normally distributed data.
+    Using a seed of 52242, an alpha level of .05, and one repetition per sample size, in the `simsem` package:
+    a. What sample size would you need to have adequate power to detect the effect of stress on antisocial behavior and the effect of harsh parenting on antisocial behavior?
+    b. Due to financial and time constraints of the grant, you are only able to collect a sample size of 150.
+    What power would you have to detect the effect of stress on antisocial behavior and the effect of harsh parenting on antisocial behavior?
+    c. Your study finds that neither stress nor harsh parenting predicts antisocial behavior.
+    How would you interpret each of these findings?
+    d. Re-run the power analysis with normally distributed values (skewness $= 0$, kurtosis $= 0$), using 50 repetitions with a sample size of 150.
+    Did power to detect the hypothesized effects increase or decrease?
+    What does this indicate?
+
+### Answers
+
+1.
+    a. The model did not fit well according to CFI $(`r apa(measurementModel1CFI, decimals = 2)`)$ and RMSEA $(`r apa(measurementModel1RMSEA, decimals = 2)`)$.
+	SRMR $(`r apa(measurementModel1SRMR, decimals = 2)`)$ was acceptable.
+	The poor model fit indicates that it is unlikely that the causal process described by the hypothesized model gave rise to the observed data.
+    b. The modification that would result in the greatest model fit according to the modification indices is to allow indicators 5 and 6 to be correlated.
+	These indicators reflect "disobedience at school" and "trouble getting along with teachers," respectively.
+	It is likely that allowing these two residuals to correlate would improve model fit because they both assess children's behavior in the school context, and so they would continue to be associated with each other even after accounting for variance from the latent factor.
+2.
+    a.
+    
+```{r semFigureAnswer, out.width = "100%", fig.align = "center", fig.cap = "Figure of the Confirmatory Factor Analysis Model With Standardized Coefficients.", echo = FALSE}
+semPaths(measurementModelCorrelatedErrors1Fit,
+         what = "Std.all",
+         layout = "tree2",
+         edge.label.cex = 1.1)
+```
+
+2.
+    b. The modified model $(\chi^2[df = `r measurementModelCorrelatedErrors1DF`] = `r apa(measurementModelCorrelatedErrors1ChiSquare, decimals = 2)`)$ fit significantly better than the original model $(\chi^2[df = `r measurementModel1DF`] = `r apa(measurementModel1ChiSquare, decimals = 2)`)$ according to a chi-square difference test $(\Delta\chi^2[df = `r measurementModelDFDiff`] = `r apa(measurementModelChiSquareDiff, decimals = 2)`, p < .001)$.
+    c. The model fit well according to CFI $(`r measurementModelCorrelatedErrors1CFI`)$, RMSEA $(`r measurementModelCorrelatedErrors1RMSEA`)$, and SRMR $(`r measurementModelCorrelatedErrors1SRMR`)$.
+	This indicates that there is evidence that one factor may do a good job of explaining the covariance among the indicators, especially when allowing the residuals of items 5 and 6 to correlate.
+	The item that shows the strongest association with the latent factor is item 2 ("bullies or is cruel/mean to others": standardized factor loading = $`r apa(measurementModelCorrelatedErrors1FitFactorLoadingStdItem2, decimals = 2, leading = FALSE)`$).
+	The item that shows the weakest association with the latent factor is item 7 ("sudden changes in mood or feeling": standardized factor loading = $`r apa(measurementModelCorrelatedErrors1FitFactorLoadingStdItem7, decimals = 2, leading = FALSE)`$).
+	Thus, meanness seems more core to the construct of antisocial behavior compared to sudden mood changes.
+    d. The estimate of internal consistency reliability of items, based on coefficient omega ($\omega$), is $`r apa (measurementModelCorrelatedErrors1Omega, decimals = 2, leading = FALSE)`$.
+3.
+    a. The correlation between the latent factor at T1 and T2 is $\phi = `r apa(correlationLatentFactor, decimals = 2, leading = FALSE)`$.
+	The correlation between the sum score at T1 and T2 is $r = `r apa(correlationSumScores, decimals = 2, leading = FALSE)`$.
+	This indicates that the correlation of individual differences across time (rank-order stability) is stronger for the latent factor than for the sum scores.
+	This is likely because the latent factors account for measurement error whereas the sum scores do not, and associations are attenuated due to measurement error.
+	Thus, the association of the latent factor at T1 and T2 likely more accurately reflects the "true" cross-time association of the construct (compared to the association of the sum scores at T1 and T2).
+	b. Yes, anxious/depressed symptoms significantly predicted antisocial behavior at T2 while controlling for prior levels of antisocial behavior $(B = `r apa(semModel2UnstdB, decimals = 2)`, β = `r apa(semModel2StdBeta, decimals = 2, leading = FALSE)`, SE = `r apa(semModel2UnstdSE, decimals = 2)`, p < .001)$.
+	That is, anxious/depressed symptoms predicted relative (rank-order) changes in antisocial behavior from T1 to T2.
+	This suggests that anxiety/depression may be a pathway to antisocial behavior for some children.
+	Because the data come from an observational design, however, we cannot infer causality.
+	For instance, the association could owe to the opposite direction of effect (antisocial behavior could lead to anxiety/depression) or to a third variable (e.g., victimization could lead to both antisocial behavior and anxiety/depression; i.e., antisocial behavior and anxiety/depression could share a common cause).
+4.
+    a. You would need a sample size of $`r sampleSizeNeededStress1_ex`$ to detect the effect of stress on children's antisocial behavior.
+	You would need a sample size of $`r sampleSizeNeededHarshParenting1_ex`$ to detect the effect of harsh parenting on children's antisocial behavior.
+    b. You would have a power of $`r apa(powerStress1_ex, decimals = 2, leading = FALSE)`$ to detect the effect of stress on children's antisocial behavior.
+	You would have a power of $`r apa(powerHarshParenting1_ex, decimals = 2, leading = FALSE)`$ to detect the effect of harsh parenting on children's antisocial behavior.
+    c. Because your study was well-powered to detect the effect of harsh parenting ($\text{power} = `r apa(powerHarshParenting1_ex, decimals = 2, leading = FALSE)`$) and you found no statistically significant association between harsh parenting and children's antisocial behavior, it suggests that harsh parenting did not influence antisocial behavior in this sample (at least not with a large enough effect size to be practically significant).
+Because your study was under-powered to detect the effect of stress ($\text{power} = `r apa(powerStress1_ex, decimals = 2, leading = FALSE)`$) and you found no statistically significant association between stress and children's antisocial behavior, we do not know whether you did not detect an association because (a) stress did not influence antisocial behavior in this sample (i.e., your hypotheses were incorrect), or (b) there was an effect of stress (i.e., your hypotheses were correct), but your sample size was too small and/or your measurements were too unreliable to detect the effect given the effect size.
+    d. Power to detect the hypothesized effects increased when the data were normally distributed (compared to when the data were non-normally distributed).
+	You would have a power of $`r apa(powerStress3_ex, decimals = 2, leading = FALSE)`$ to detect the effect of stress on children's antisocial behavior.
+	You would have a power of $`r apa(powerHarshParenting3_ex, decimals = 2, leading = FALSE)`$ to detect the effect of harsh parenting on children's antisocial behavior.
+	This indicates that statistical power tends to be lower when data are non-normally distributed (compared to when data are normally distributed).

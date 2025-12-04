@@ -1,0 +1,1695 @@
+# Validity {#validity}
+
+> "What we know depends on how we know it."
+
+## Overview of Validity {#overview-validity}
+
+According to the *Standards for Educational and Psychological Testing* [@AERA2014, p. 11], measurement validity is "the degree to which evidence and theory support the interpretations of test scores for proposed uses of tests."\index{validity!overview}\index{Standards for Educational and Psychological Testing}
+We summarized [reliability](#reliability) with three words: repeatability, consistency, and precision.\index{reliability}\index{reliability!repeatability}\index{reliability!consistency}\index{reliability!precision}
+A summary of validity in three words is accuracy, utility, and meaningfulness.\index{validity!overview}\index{validity!accuracy}\index{validity!utility}\index{validity!meaningfulness}
+As with [reliability](#reliability), validity is not a property of the measure itself—the validity of a measure's scores reflects an interaction of the properties of the measure with the population for whom it is designed and the sample and context in which it is administered.\index{validity!overview}\index{reliability}
+Moreover, validity is tied to the *interpretation* of a measure's scores for the *proposed uses*, not (just) to the measure itself.\index{validity!overview}
+The same set of scores can have different degrees of validity for different purposes.\index{validity!overview}
+For instance, a measure's scores may have stronger validity for making a diagnostic decision than for making a prediction about future behavior.\index{validity!overview}\index{diagnosis}\index{prediction}
+Thus, as *the Standards* indicate, it is incorrect to use the unqualified phrase "the validity of the measure" or "the measure is (in)valid," because these phrases do not specify which scores were used from the test, what the use is (e.g., predicting whether a person will succeed in a given job), and what interpretation was made of the test scores for this purpose.^[For shorthand and to avoid repetition, we sometimes refer to the validity of the measure, but in such instances, we are actually referring to the validity of the interpretation of a measure's scores for a given use.]\index{validity!overview}\index{Standards for Educational and Psychological Testing}
+For these reasons, it is insufficient to cite evidence for the validity of the measure in other work; it is also important to evaluate the validity of the measure's scores for the intended use in your particular sample.\index{validity!overview}
+
+Below, we prepare the data to provide some validity-related examples throughout the rest of the chapter.\index{validity!overview}
+
+## Getting Started {#gettingStarted-validity}
+
+### Load Libraries {#loadLibraries-validity}
+
+```{r}
+library("petersenlab") #to install: install.packages("remotes"); remotes::install_github("DevPsyLab/petersenlab")
+library("lavaan")
+library("semPlot")
+library("rockchalk")
+library("semTools")
+library("semPlot")
+library("kableExtra")
+library("MASS")
+library("psych")
+library("simstandard")
+library("MOTE")
+library("tidyverse")
+library("tinytex")
+library("knitr")
+library("rmarkdown")
+library("bookdown")
+library("here")
+library("DT")
+```
+
+### Prepare Data {#prepareData-validity}
+
+#### Simulate Data {#simulateData-validity}
+
+For reproducibility, we set the seed below.\index{simulate data}
+Using the same seed will yield the same answer every time.
+There is nothing special about this particular seed.
+
+```{r}
+sampleSize <- 1000
+
+set.seed(52242)
+
+means <- c(50, 100)
+standardDeviations <- c(10, 15)
+
+correlationMatrix <- matrix(.7, nrow = 2, ncol = 2)
+diag(correlationMatrix) <- 1
+rownames(correlationMatrix) <- colnames(correlationMatrix) <- 
+  c("predictor","criterion")
+
+covarianceMatrix <- psych::cor2cov(
+  correlationMatrix,
+  sigma = standardDeviations)
+
+mydataValidity <- as.data.frame(mvrnorm(
+  n = sampleSize,
+  mu = means,
+  Sigma = covarianceMatrix,
+  empirical = TRUE))
+
+errorToAddToPredictor <- 3.20
+errorToAddToCriterion <- 6.15
+
+mydataValidity$predictorWithMeasurementErrorT1 <- 
+  mydataValidity$predictor + 
+  rnorm(n = sampleSize, mean = 0, sd = errorToAddToPredictor)
+
+mydataValidity$predictorWithMeasurementErrorT2 <- 
+  mydataValidity$predictor + 
+  rnorm(n = sampleSize, mean = 0, sd = errorToAddToPredictor)
+
+mydataValidity$criterionWithMeasurementErrorT1 <- 
+  mydataValidity$criterion + 
+  rnorm(n = sampleSize, mean = 0, sd = errorToAddToCriterion)
+
+mydataValidity$criterionWithMeasurementErrorT2 <- 
+  mydataValidity$criterion + 
+  rnorm(n = sampleSize, mean = 0, sd = errorToAddToCriterion)
+
+mydataValidity$oldpredictor <- mydataValidity$criterion + 
+  rnorm(n = sampleSize, mean = 0, sd = 7.5)
+
+latentCorrelation <- .8
+reliabilityPredictor <- .9
+reliabilityCriterion <- .85
+
+mydataValidity$predictorLatentSEM <- rnorm(sampleSize, 0 , 1)
+
+mydataValidity$criterionLatentSEM <- latentCorrelation * 
+  mydataValidity$predictorLatentSEM + rnorm(
+    sampleSize,
+    0,
+    sqrt(1 - latentCorrelation ^ 2))
+
+mydataValidity$predictorObservedSEM <- reliabilityPredictor * 
+  mydataValidity$predictorLatentSEM + rnorm(
+    sampleSize,
+    0,
+    sqrt(1 - reliabilityPredictor ^ 2))
+
+mydataValidity$criterionObservedSEM <- reliabilityCriterion * 
+  mydataValidity$criterionLatentSEM + rnorm(
+    sampleSize,
+    0,
+    sqrt(1 - reliabilityCriterion ^ 2))
+```
+
+#### Add Missing Data {#addMissingData-validity}
+
+Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
+
+```{r}
+missingValuesPredictor <- sample(
+  1:sampleSize,
+  size = 50,
+  replace = FALSE)
+missingValuesCriterion <- sample(
+  1:sampleSize,
+  size = 50,
+  replace = FALSE)
+
+mydataValidity$predictor[
+  missingValuesPredictor] <- NA
+mydataValidity$predictorWithMeasurementErrorT1[
+  missingValuesPredictor] <- NA
+mydataValidity$predictorWithMeasurementErrorT2[
+  missingValuesPredictor] <- NA
+mydataValidity$predictorObservedSEM[
+  missingValuesPredictor] <- NA
+
+mydataValidity$criterion[
+  missingValuesCriterion] <- NA
+mydataValidity$criterionWithMeasurementErrorT1[
+  missingValuesCriterion] <- NA
+mydataValidity$criterionWithMeasurementErrorT2[
+  missingValuesCriterion] <- NA
+mydataValidity$criterionObservedSEM[
+  missingValuesCriterion] <- NA
+
+mydataValidity$oldpredictor[
+  missingValuesPredictor] <- NA
+```
+
+## Types of Validity {#ValidityTypes}
+
+Like [reliability](#typesOfReliability), validity is not one thing.\index{validity}\index{reliability}
+There are many types of validity.\index{validity}\index{validity!types of}
+In this book, we discuss the following types of validity:\index{validity}\index{validity!types of}
+
+- [face validity](#faceValidity)\index{validity!face}
+- [content validity](#contentValidity)\index{validity!content}
+- [criterion-related validity](#criterionValidity)\index{validity!criterion}
+- [concurrent validity](#concurrentValidity)\index{validity!concurrent}
+- [predictive validity](#predictiveValidity)\index{validity!predictive}
+- [construct validity](#constructValidity)\index{validity!construct}
+- [convergent validity](#convergentValidity)\index{validity!convergent}
+- [discriminant (divergent) validity](#discriminantValidity)\index{validity!discriminant}
+- [incremental validity](#incrementalValidity)\index{validity!incremental}
+- [treatment utility of assessment](#treatmentUtility)\index{validity!treatment utility of assessment}
+- [discriminative validity](#discriminativeValidity)\index{validity!discriminative}
+- [elaborative validity](#elaborativeValidity)\index{validity!elaborative}
+- [consequential validity](#consequentialValidity)\index{validity!consequential}
+- [representational validity](#representationalValidity)\index{validity!representational}
+- [factorial (structural) validity](#factorialValidity)\index{validity!factorial}\index{validity!structural}
+- [ecological validity](#ecologicalValidity)\index{validity!ecological}
+- [process-focused validity](#processFocusedValidity)\index{validity!process focused}
+- [diagnostic validity](#diagnosticValidity)\index{validity!diagnostic}
+- [social validity](#socialValidity)\index{validity!social}
+- [cultural validity](#culturalValidity)\index{validity!cultural}
+- [internal validity](#internalValidity)\index{validity!internal}
+- [external validity](#externalValidity)\index{validity!external}
+- [(statistical) conclusion validity](#conclusionValidity)\index{validity!conclusion}\index{validity!statistical conclusion}
+
+We arrange these types of validity into two broader categories: [measurement validity](#measurementValidity) and [research design validity](#researchDesignValidity).\index{validity!measurement}\index{validity!research design}
+
+### Measurement Validity {#measurementValidity}
+
+Aspects of *measurement validity* involve the validity of a particular measure, or more specifically, the validity of interpretations of scores from that measure for the proposed uses.\index{validity!measurement}
+Aspects of measurement validity include:\index{validity!measurement}
+
+- [face validity](#faceValidity)\index{validity!face}
+- [content validity](#contentValidity)\index{validity!content}
+- [criterion-related validity](#criterionValidity)\index{validity!criterion}
+- [concurrent validity](#concurrentValidity)\index{validity!concurrent}
+- [predictive validity](#predictiveValidity)\index{validity!predictive}
+- [construct validity](#constructValidity)\index{validity!construct}
+- [convergent validity](#convergentValidity)\index{validity!convergent}
+- [discriminant (divergent) validity](#discriminantValidity)\index{validity!discriminant}
+- [incremental validity](#incrementalValidity)\index{validity!incremental}
+- [treatment utility of assessment](#treatmentUtility)\index{validity!treatment utility of assessment}
+- [discriminative validity](#discriminativeValidity)\index{validity!discriminative}
+- [elaborative validity](#elaborativeValidity)\index{validity!elaborative}
+- [consequential validity](#consequentialValidity)\index{validity!consequential}
+- [representational validity](#representationalValidity)\index{validity!representational}
+- [factorial (structural) validity](#factorialValidity)\index{validity!factorial}\index{validity!structural}
+- [ecological validity](#ecologicalValidity)\index{validity!ecological}
+- [process-focused validity](#processFocusedValidity)\index{validity!process focused}
+- [diagnostic validity](#diagnosticValidity)\index{validity!diagnostic}
+- [social validity](#socialValidity)\index{validity!social}
+- [cultural validity](#culturalValidity)\index{validity!cultural}
+
+#### Face Validity {#faceValidity}
+
+The interpretation of a measure's scores has *face validity* (for a given construct and a given use) if a typical person—a nonexpert—who looks at the content of each item will believe that the item belongs in the scale for this construct and for this use.\index{validity!face}\index{face validity!zzzzz@\igobble|seealso{validity}}
+The measure, and each item, looks "on its face" like it assesses the target construct.\index{validity!face}
+There are several advantages of a measure having face validity.\index{validity!face}
+First, outside groups will be less likely to be critical of the measure because it is intuitive.\index{validity!face}
+Second, use of a face valid measure is rarely objected to on ethical and bias charges for selling the measure to the public or clinicians.\index{validity!face}\index{ethics}\index{bias}
+Third, face validity can be helpful for dissemination because more people may be receptive to it.\index{dissemination}
+
+However, face validity also has important disadvantages.\index{validity!face}
+First, judgments of face validity are not based on theory.\index{validity!face}\index{theory}
+Second, face validity is based on subjective judgment, which can be inaccurate.\index{validity!face}\index{judgment}
+Third, these subjective judgments are made by laypeople whose judgments may be inaccurate because of biases and lack of awareness of scientific knowledge.\index{validity!face}\index{judgment}\index{bias}
+Fourth, a face valid measure may be too simple because anybody can understand the questions and what the questions are intended to assess, so (presumably) respondents can easily fake responses to achieve their goals.\index{validity!face}
+Faking of responses may be more of a concern in situations when there is an incentive for the respondent to achieve a particular outcome (e.g., be deemed competent to stand trial, be judged competent to obtain a job or custody of child, be judged to have a disorder to receive accommodations or disability benefits).\index{validity!face}
+
+It is disputed whether having face validity is good or bad.\index{validity!face}
+Whether face validity is important to a given measure depends on the construct that is intended to be assessed, the context in which the assessment will occur, who will be paying for and/or administering the assessment, whether the respondents have incentives to achieve particular scores, and the goals of the assessment (i.e., how the assessment will be used).\index{validity!face}
+There is also controversy about whether face validity is a true form of validity; many researchers have argued that it is not a true psychometric form of validity, because the *appearance* of validity is not validity [@Royal2016].\index{validity!face}
+
+#### Content Validity {#contentValidity}
+
+*Content validity* involves a judgment about whether or not the content (items) of the measure theoretically matches the construct that is intended to be assessed—that is, whether the operationalization accurately reflects the construct.\index{validity!content}\index{content validity!zzzzz@\igobble|seealso{validity}}
+Content validity is developed based on items generated and selected by experts of the construct and based on the subjective determination that the measure adequately assesses and covers the construct of interest.\index{validity!content}
+Content validity differs from [face validity](#faceValidity) in that, for [face validity](#faceValidity), a *layperson* determines whether or not the measure seems to assess the construct of interest.\index{validity!content}\index{validity!face}
+By contrast, for content validity, an *expert* determines whether or not the measure adheres to the construct of interest.\index{validity!content}
+
+For a measure to have content validity, its items should span the breadth of the construct.\index{validity!content}
+For instance, the construct of depression has many facets, such as sleep disturbances, weight/appetite changes, low mood, suicidality, etc., as depicted in Figure \@ref(fig:contentValidity).\index{validity!content}
+
+```{r contentValidity, out.width = "100%", fig.align = "center", fig.cap = "Content Facets of the Construct of Depression.", echo = FALSE}
+knitr::include_graphics("./images/contentValidity.png")
+```
+
+For a measure to have content validity, there should be no *gaps*—facets of the construct that are not assessed by the measure—and there should be no *intrusions*—facets of different constructs that are assessed by the measure.
+Consider the construct of depression.\index{validity!content}\index{validity!content!gap}\index{validity!content!intrusion}\index{construct!facet}
+If theory states the construct includes various facets such as sadness, loss of interest in activities, sleep disturbances, lack of energy, weight/appetite change, and suicidal thoughts, then a content-valid measure should assess all of these facets.\index{validity!content}\index{validity!content!gap}\index{construct!facet}
+If the measure does not assess sleep disturbances (a gap), the measure would lack content validity.\index{validity!content}\index{validity!content!gap}\index{construct!facet}
+If the measure assessed facets of other constructs, such as impulsivity (an intrusion), the measure would lack content validity.\index{validity!content}\index{validity!content!gap}\index{construct!facet}
+
+With content validity, it is important to consider the population of interest.\index{validity!content}
+The same construct may look different in different populations and may require different content to assess it.\index{validity!content}
+For instance, it is important to consider the cultural relativity of constructs.\index{validity!content}\index{culture}
+The content of a construct may depend on the culture, such as in the case of culture-bound syndromes.\index{validity!content}\index{culture}\index{culture!cultural bound syndrome}
+Culture-bound syndromes are syndromes that are limited to particular cultures.\index{validity!content}\index{culture}\index{culture!cultural bound syndrome}
+An example of a culture-bound syndrome among Korean women is *hwa-byung*, which is the feeling of an uncomfortable abdominal mass in response to emotional distress.\index{validity!content}\index{culture}\index{culture!cultural bound syndrome}
+Another important dimension to consider is development.\index{validity!content}
+Constructs can manifest differently at different points in development, known as [heterotypic continuity](#heterotypicContinuity), which is discussed in Section \@ref(heterotypicContinuity) of Chapter \@ref(repeated-assessments) on [repeated assessments across time](#repeated-assessments).\index{validity!content}\index{heterotypic continuity}
+When considering the different dimensions of your population, it can be helpful to remember the acronym [*ADDRESSING*](#addressing), which is described in Section \@ref(addressing) of Chapter \@ref(diversity) on [cultural and individual diversity](#diversity).\index{validity!content}\index{diversity}\index{diversity!ADDRESSING acronym}
+
+However, like [face validity](#faceValidity), content validity is based on subjective judgment, which can be inaccurate.\index{validity!content}\index{validity!face}\index{judgment}\index{clinical judgment}
+
+#### Criterion-Related Validity {#criterionValidity}
+
+*Criterion-related validity* examines whether a measure behaves the way it should given your theory of the construct.\index{validity!criterion}
+This is quantified by the correlation between a measure's scores and some (hopefully universally accepted) criterion we select.\index{validity!criterion}\index{criterion}\index{criterion validity!zzzzz@\igobble|seealso{validity}}
+For instance, a criterion could be a diagnosis, a child's achievement in school, an employee's performance in a job, etc.\index{validity!criterion}\index{criterion}
+
+Below, we provide an example of criterion-related validity by examining the [Pearson correlation](#correlationConsiderations) between a predictor and a criterion.\index{validity!criterion}
+
+```{r}
+cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)
+```
+
+```{r, include = FALSE}
+criterionValidity <- cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate
+```
+
+In this case, the estimate of criterion-related validity is $r = `r apa(criterionValidity, 2, leading = FALSE)`$.\index{validity!criterion}
+There are two types of criterion-related validity: concurrent validity and predictive validity.\index{validity!criterion}\index{validity!concurrent}\index{validity!predictive}
+
+##### Concurrent Validity {#concurrentValidity}
+
+*Concurrent validity* considers the *concurrent* association between the chosen measure and the criterion.\index{validity!criterion}\index{validity!concurrent}\index{concurrent validity!zzzzz@\igobble|seealso{validity}}
+That is, both the measure and the criterion are assessed at the same point in time.\index{validity!criterion}\index{validity!concurrent}
+An example of concurrent validity would be examining self-report of court involvement in relation to current court records.\index{validity!criterion}\index{validity!concurrent}
+
+###### Sensitivity to Change (Responsiveness) {#sensitivityToChange}
+
+An important aspect of validity that is related to [concurrent validity](#concurrentValidity) is the degree to which a measure's scores show *sensitivity to change* [also known as *responsiveness*; @Fok2015].\index{validity!concurrent}\index{change!sensitivity to}\index{responsiveness!zzzzz@\igobble|seealso{sensitivity}}
+If a researcher conducts an intervention that improves people's mood, it is important to have measures that are sensitive enough to detect the improvements in people's mood.\index{change!sensitivity to}
+
+###### Nonreactivity {#nonreactivity}
+
+As noted in Section \@ref(reactivity), the *reactivity* of a measure is how a measure's scores change in response to being measured.\index{observation!reactivity}
+In an intervention, reactivity can be valuable because having the person self-monitor their behavior can lead to behavior improvement, as described in Section \@ref(selfMonitoring).\index{observation!reactivity}\index{self-monitoring}
+However, when the goal is to measure change over time, reactivity can be a problem because it can lead to changes in the measure's scores that are not due to people's changes in the construct.\index{observation!reactivity}
+Thus, when merely monitoring changes over time, it is important to use measures that show nonreactivity [@Myers2002].\index{observation!reactivity}
+
+##### Predictive Validity {#predictiveValidity}
+
+*Predictive validity* considers the association between the chosen measure and the criterion at a *later* time point.\index{validity!criterion}\index{validity!predictive}\index{predictive validity!zzzzz@\igobble|seealso{validity}}
+An example of predictive validity would be examining the predictive association between children's scores on an academic achievement test in first grade and their eventual academic outcomes five years later.\index{validity!criterion}\index{validity!predictive}
+
+##### Empiricism and Theory {#theoryEmpiricism}
+
+Criterion-related validity arose out of a movement known as *radical operationalism*.\index{validity!criterion}\index{radical operationalism}\index{empiricism}
+Radical operationalism was a pushback against psychoanalysis.\index{radical operationalism}\index{empiricism}\index{psychoanalysis}
+Psychoanalysis focused on grand theoretical accounts for how constructs relate.\index{psychoanalysis}\index{theory}
+The goal of radical operationalism was to clarify concepts from a behavioristic perspective to allow predicting and changing behavior more successfully.\index{radical operationalism}\index{empiricism}
+An "operation" in radical operationalism refers to a fully described measurement.\index{radical operationalism}\index{empiricism}
+
+Proponents of radical operationalism argued that all constructs in psychology that could not be operationally defined should be excluded from the field as "nonscientific."\index{radical operationalism}\index{empiricism}
+They asserted that operations should be well-defined enough to be able to replicate the findings.\index{radical operationalism}\index{empiricism}
+So, constructs had to be defined precisely according to this perspective, but how precisely?\index{radical operationalism}\index{empiricism}
+You could go on forever trying to more precisely describe a behavior in terms of its form, frequency, duration, intensity, situation, antecedents, consequences, biological substrates, etc.\index{radical operationalism}\index{empiricism}
+So, radical operationalists asserted that we should use theory of the construct to determine what is essential and what is not.\index{radical operationalism}\index{empiricism}\index{theory}
+
+Radical operationalism was also related to *radical behavioralism*, which was espoused by B.F. Skinner.\index{radical operationalism}\index{radical behavioralism!zzzzz@\igobble|seealso{radical operationalism}}
+Skinner famously used a box (the "Skinner Box") to more directly control, describe, and assess behaviors.\index{radical operationalism}\index{empiricism}
+Skinner noted the major role that the environment played in influencing behavior.\index{radical operationalism}\index{empiricism}
+Skinner proposed a theory of implicit learning about a behavior or stimulus based on its consequences, known as operant conditioning.\index{radical operationalism}\index{empiricism}\index{theory}\index{operant conditioning}
+According to operant conditioning, something that increases the frequency of a given behavior is called a reinforcer (e.g., praise), and something that decreases the frequency of a behavior is called a punisher (e.g., loss of a privilege).\index{operant conditioning}
+Through this work, Skinner came to view everything an organism does (e.g., action, thought, feeling) as a behavior.\index{radical operationalism}\index{empiricism}
+
+Related to these historical perspectives was a perspective known as *dustbowl empiricism*.\index{radical operationalism}\index{empiricism}\index{dustbowl empiricism!zzzzz@\igobble|seealso{radical operationalism}}
+Dustbowl empiricism focused on the empirical connections between things—how things were associated using data.\index{radical operationalism}\index{empiricism}
+It was a completely atheoretical perspective in which interpretation was entirely data driven.\index{radical operationalism}\index{empiricism}\index{theory}
+An example of dustbowl empiricism is the approach that was used to develop the first version of the [Minnesota Multiphasic Personality Inventory](#mmpi) (MMPI).\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}
+The [MMPI](#mmpi) was developed using an approach known as empirical-criterion keying, where items were selected for the scale for no reason other than the items demonstrate an association with the criterion.\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}
+That is, an item was selected if it showed a strong ability to discriminate (differentiate) between clinical and control groups.\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}\index{validity!discriminative}
+Using this method with hundreds of items (and thousands of inter-item correlations), the [MMPI](#mmpi) developed 10 clinical scales, which involved operational rules based on previously collected empirical evidence.\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}
+
+But what do you know with this abundance of correlations?\index{radical operationalism}\index{empiricism}\index{validity!criterion}
+You can use data reduction methods to reduce the many variables, based on their inter-correlations, down to a more parsimonious set of factors.\index{data!reduction}
+But how do you name each factor, which is composed of many items?\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}
+The developers originally numbered the [MMPI](#mmpi) clinical scales from 1 to 10.\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}
+But numbered scales are not useful for other people, so the factors were eventually given labels (e.g., Paranoia).\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}
+And if a client received an elevated score on a factor, many people would label the clients as _____ [the name of the factor], such as "paranoid."\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}
+The [MMPI](#mmpi) is discussed in further detail in Chapter \@ref(objective-personality) on [objective personality testing](#objective-personality).\index{radical operationalism}\index{empiricism}\index{Minnesota Multiphasic Personality Inventory}\index{validity!criterion}
+
+The idea of dustbowl empiricism was to develop a strong empirical base that would provide a strong foundation to help build up to a broad understanding that was integrated, coherent, and systematic.\index{radical operationalism}\index{empiricism}\index{validity!criterion}
+However, this process was unclear when there was only a table of correlations.\index{radical operationalism}\index{empiricism}\index{validity!criterion}
+Radical operationalists were opposed to [content validity](#contentValidity) because it allows intrusion of our flawed thinking.\index{radical operationalism}\index{empiricism}\index{validity!criterion}\index{validity!content}
+According to operationalists, there are no experts.\index{radical operationalism}\index{empiricism}\index{validity!criterion}
+According to this perspective, the content does not matter; we just need enough data to bootstrap ourselves to a better understanding of the constructs.\index{radical operationalism}\index{empiricism}\index{validity!criterion}
+
+Although the atheoretical approach can perform reasonably well, it can be improved by making better use of theory.\index{radical operationalism}\index{empiricism}\index{validity!criterion}\index{theory}
+An empirical result (e.g., a correlation) might not necessarily have a lot of meaning associated with it.\index{radical operationalism}\index{empiricism}\index{validity!criterion}
+As the maxim goes, correlation does not imply causation.\index{radical operationalism}\index{empiricism}\index{validity!criterion}\index{association!causation}
+
+###### Correlation Does Not Imply Causation {#correlationCausation}
+
+Just because $X$ is associated with $Y$ does not mean that $X$ causes $Y$.\index{association!causation}\index{causality}
+Consider that you find an association between variables $X$ and $Y$, consistent with your hypothesis, as depicted in Figure \@ref(fig:commonCause1).\index{association!causation}\index{causality}
+
+```{r commonCause1, out.width = "100%", fig.align = "center", fig.cap = "Hypothesized Causal Effect Based on an Observed Association Between $X$ and $Y$, Such That $X$ Causes $Y$.", echo = FALSE}
+knitr::include_graphics("./images/commonCause_1.png")
+```
+
+There are three primary reasons that an observed association between $X$ and $Y$ does not necessarily mean that $X$ causes $Y$.\index{association!causation}\index{causality}
+
+First, the association could reflect the opposite direction of effect, where $Y$ actually causes $X$, as depicted in Figure \@ref(fig:commonCause2).\index{association!causation}\index{direction of effect}\index{causality}
+
+```{r commonCause2, out.width = "100%", fig.align = "center", fig.cap = "Reverse (Opposite) Direction of Effect From the Hypothesized Effect, Where $Y$ Causes $X$.", echo = FALSE}
+knitr::include_graphics("./images/commonCause_2.png")
+```
+
+Second, the association could reflect the influence of a third variable.
+If a third variable is a common cause of each and accounts for their association, it is a *confound*.\index{association!causation}\index{confound}\index{causality}
+An observed association between $X$ and $Y$ could reflect a confound—i.e., a cause ($Z$) that influences both $X$ and $Y$, which explains why $X$ and $Y$ are correlated even though they are not causally related.\index{association!causation}\index{confound}\index{causality}
+A third variable confound that is a common cause of both $X$ and $Y$ is depicted in Figure \@ref(fig:commonCause3).\index{association!causation}\index{confound}\index{causality}
+
+```{r commonCause3, out.width = "100%", fig.align = "center", fig.cap = "Confounded Association Between $X$ and $Y$ due to a Common Cause, $Z$.", echo = FALSE}
+knitr::include_graphics("./images/commonCause_3.png")
+```
+
+Third, the association might be spurious.\index{association!causation}\index{spurious}\index{causality}
+It might just reflect random variation (i.e., chance), and that when tested on an independent sample, what appeared as an association may not hold when testing whether the association generalizes.\index{association!causation}\index{spurious}\index{causality}
+
+However, even if the association between $X$ and $Y$ reflects a causal effect and that $X$ causes $Y$, it does not necessarily mean that the effect is clinically actionable or useful.\index{association!causation}\index{useful}\index{causality}
+An association may reflect a static or unmodifiable predictor that is not practically useful as a treatment target.\index{association!causation}\index{useful}\index{causality}
+
+###### Understanding the Causal System {#causalSystem}
+
+As @Silver2012 notes, "The numbers have no way of speaking for themselves.
+We speak for them.
+We imbue them with meaning." (p. 9).
+If we *understand* the variables in the system and how they influence each other, we can predict things more accurately than predicting for the sake of predicting.\index{causality}\index{prediction}
+For instance, we have made great strides in the last decades when it comes to more accurate weather forecasts (see [here](https://www.npr.org/sections/money/2023/07/11/1186458991/should-we-invest-more-in-weather-forecasting-it-may-save-your-life); archived at https://perma.cc/PF8P-BT3D and [here](https://www.bbc.com/news/articles/cwy1epz58pyo); archived at https://perma.cc/248N-9CW5), including extreme weather events like hurricanes.\index{causality}
+These great strides have more to do with a better causal understanding of the weather system and the ability to conduct simulations of the atmosphere than merely because of big data [@Silver2012].\index{causality}
+By contrast, other events are still incredibly difficult to predict, including earthquakes, in large part because we do not have a strong understanding of the system (and because we do not have ways of precisely measuring those causes because they occur at a depth below which we are realistically able to drill) [@Silver2012].\index{causality}\index{prediction}
+
+###### Model Over-Fitting {#overfitting}
+
+Statistical models applied to big data (i.e., lots of variables and lots of samples) can *over-fit* the data, which means that the statistical model accounts for error variance (an overly specific prediction), which will not generalize to future samples.\index{over-fitting}
+So, even though an over-fitting statistical model appears to be accurate, it is not actually that accurate—it will predict new data less accurately than how accurately it accounts for the data with which the model was built.\index{over-fitting}\index{prediction}
+
+In Figure \@ref(fig:overfittingModel), the blue line represents the true distribution of the data, and the red line is an over-fitting model:\index{over-fitting}
+
+```{r overfittingModel, echo = FALSE, out.width = "100%", fig.align = "center", fig.height = 8, fig.width = 8, fig.cap = "Over-fitting Model in Red Relative to the True Distribution of the Data in Blue."}
+sampleSize <- 200
+quadraticX <- rnorm(sampleSize)
+quadraticY <- quadraticX ^ 2 + rnorm(sampleSize)
+quadraticData <- cbind(quadraticX, quadraticY) %>%
+  data.frame %>%
+  arrange(quadraticX)
+
+quadraticModel <- lm(quadraticY ~ quadraticX + I(quadraticX ^ 2), data = quadraticData)
+quadraticNewData <- data.frame(quadraticX = seq(from = min(quadraticData$quadraticX), to = max(quadraticData$quadraticY), length.out = sampleSize))
+quadraticNewData$quadraticY <- predict(quadraticModel, newdata = quadraticNewData)
+
+loessFit <- loess(quadraticY ~ quadraticX, data = quadraticData, span = 0.01, degree = 1)
+loessNewData <- data.frame(quadraticX = seq(from = min(quadraticData$quadraticX), to = max(quadraticData$quadraticY), length.out = sampleSize))
+quadraticNewData$loessY <- predict(loessFit, newdata = quadraticNewData)
+
+plot(x = quadraticData$quadraticX, y = quadraticData$quadraticY, xlab = "", ylab = "")
+lines(quadraticNewData$quadraticY ~ quadraticNewData$quadraticX, lwd = 2, col = "blue")
+lines(quadraticNewData$loessY ~ quadraticNewData$quadraticX, lwd = 2, col = "red")
+```
+
+###### Criterion Contamination {#criterionContamination}
+
+An important issue in predictive validity is the criterion problem—finding the right criterion.\index{criterion}\index{validity!predictive}
+It is important to avoid *criterion contamination*, which is artificial commonality between the measure and the criterion.\index{criterion}\index{criterion!contamination}\index{validity!predictive}
+The criterion is not always a well-measured clear criterion to predict (like predicting death in the medical field).\index{criterion}\index{criterion!contamination}\index{validity!predictive}
+And you may not have access to a predictive criterion until a long time from now.\index{criterion}\index{validity!predictive}
+So, what researchers often do is adopt intermediate assessments, which are not actually what they are interested in, but it is related to the criterion of interest, and it is in a window of time that allows for some meaningful prediction.\index{criterion}\index{validity!predictive}
+For instance, intermediate graduate school markers of whether a graduate student will go on to have a successful career could include their grades in graduate school, whether they completed the dissertation, their performance in comprehensive/qualifying exams, etc.\index{criterion}\index{validity!predictive}
+However, these intermediate assessments do not always indicate whether or not a student will go on to have a successful career (i.e., they are not always correlated with the real criterion of interest).\index{criterion}\index{validity!predictive}
+
+###### Using Theory as a Guide {#theoryAsAGuide}
+
+So, empiricism is often not enough.\index{theory}\index{empiricism}
+It is important to use theory to guide selection of an intermediate criterion that will relate to the real criterion of interest.\index{theory}\index{empiricism}\index{criterion}
+In psychology, even our long-term criteria are not well defined relative to other sciences.\index{theory}\index{empiricism}\index{criterion}
+In clinical psychology, for example, we are often predicting a diagnosis, which is not that much more valid compared to our measure/predictor.\index{theory}\index{empiricism}\index{criterion}\index{diagnosis}
+
+At the same time, in psychology, our theories of the causal processes that influence outcomes are not yet very strong.\index{theory}\index{causality}
+Indeed, I have misgivings calling them theories because they do not meet the traditional scientific standard for a theory.\index{theory}
+A scientific theory is an explanation of the natural world that is testable and falsifiable, and that has withstood rigorous scientific testing and scrutiny.\index{theory}
+In psychology, our "theories" are more like conceptual frameworks.\index{theory}
+And these conceptual frameworks are often vague, do not make specific predictions of effects *and* noneffects, and do not hold up consistently when rigorously tested.\index{theory}
+As described by @Meehl1978:
+
+> I consider it unnecessary to persuade you that most so-called "theories" in the soft areas of psychology (clinical, counseling, social, personality, community, and school psychology) are scientifically unimpressive and technologically worthless ... Perhaps the easiest way to convince yourself is by scanning the literature of soft psychology over the last 30 years and noticing what happens to theories.
+> Most of them suffer the fate that General MacArthur ascribed to old generals—They never die, they just slowly fade away.
+> In the developed sciences, theories tend either to become widely accepted and built into the larger edifice of well-tested human knowledge or else they suffer destruction in the face of recalcitrant facts and are abandoned, perhaps regretfully as a "nice try." But in fields like personology and social psychology, this seems not to happen.
+> There is a period of enthusiasm about a new theory, a period of attempted application to several fact domains, a period of disillusionment as the negative data come in, a growing bafflement about inconsistent and unreplicable empirical results, multiple resort to ad hoc excuses, and then finally people just sort of lose interest in the thing and pursue other endeavors. (pp. 806–807).\index{theory}
+
+Even if we had strong theoretical understanding of the causal system that influences behavior, we would likely still have difficulty making accurate predictions because the field has largely relied on relatively crude instruments.\index{theory}\index{causality}\index{prediction}
+According to one philosophical perspective known as LaPlace's demon, if we were able to know the exact conditions of everything in the universe, we would be able to know how the conditions would be in the future.\index{LaPlace's demon}
+This is an example of scientific determinism, where if you know the initial conditions, you also know the future.\index{LaPlace's demon}
+Other perspectives, such as quantum mechanics and chaos theory, would say that, even if we knew the initial conditions with 100% certainty, there would still be uncertainty in our understanding of the future.\index{theory}\index{LaPlace's demon}
+But assume, for a moment, that LaPlace's demon is true.\index{theory}\index{LaPlace's demon}
+The challenge in psychology is that we have a relatively poor understanding of the initial conditions of the universe.\index{LaPlace's demon}
+Thus, our predictions would necessarily be probabilistic, similar to weather forecasts.\index{prediction}
+Despite having a strong understanding of how weather systems behave, we have imperfect understanding of the initial conditions (e.g., the position and movement of all molecules) [@Silver2012].\index{prediction}
+
+###### Psychoanalysis Versus Empiricism {#psychoanalysisVsEmpiricism}
+
+We can consider the difference between psychoanalysts and empiricists in cultural references.\index{psychoanalysis}\index{empiricism}
+
+Here is an excerpt from Douglas Adams' *The Restaurant at the End of the Universe* (from the series, *The Hitchhiker's Guide to the Galaxy*):
+
+> To explain—since every piece of matter in the Universe is in some way affected by every other piece of matter in the Universe, it is in theory possible to extrapolate the whole of creation—every sun, every planet, their orbits, their composition and their economic and social history from, say, one small piece of fairy cake.
+>
+> --- Douglas Adams (1980, p. 76)
+
+If we consider this idea that someone might be able to extrapolate a simulation of the universe from a single piece of cake, we find similarities to how psychoanalysts connect everything to everything else through grand theories.\index{psychoanalysis}\index{theory}
+Psychoanalysts try to reconstruct the entire universe from a sparse bit of data with supposedly strong theoretical understanding (when, in reality, our theories are not so strong).\index{psychoanalysis}\index{theory}
+Their "theories" make grand conceptual claims.\index{psychoanalysis}\index{theory}
+
+Let us contrast psychoanalysts with empiricists/radical operationalism.\index{psychoanalysis}\index{empiricism}\index{radical operationalism}
+Figure \@ref(fig:empiricism) presents a depiction of empiricism.\index{empiricism}\index{radical operationalism}
+Empiricists evaluate how an observed predictor relates to an observed outcome.\index{empiricism}\index{radical operationalism}
+The rectangles in the figure represent entities that can be observed.\index{empiricism}\index{radical operationalism}\index{path analysis}
+For instance, an empiricist might examine the extent to which a person's blood pressure is related to the number of words they speak per minute.\index{empiricism}\index{radical operationalism}
+
+```{r empiricism, out.width = "100%", fig.align = "center", fig.cap = "Conceptual Depiction of Empiricism.", echo = FALSE}
+knitr::include_graphics("./images/empiricism.png")
+```
+
+Contrast the empirical approach with psychoanalysis, as depicted in Figure \@ref(fig:psychoanalysis).
+
+```{r psychoanalysis, out.width = "100%", fig.align = "center", fig.cap = "Conceptual Depiction of Psychoanalysis.", echo = FALSE}
+knitr::include_graphics("./images/psychoanalysis.png")
+```
+
+Circles represent unobserved, latent entities.\index{latent variable}\index{path analysis}
+For instance a psychoanalyst may make a conceptual claim that one observed variable influences another observed variable through a complex chain of intervening processes that are unobservable.\index{psychoanalysis}\index{theory}\index{latent variable}
+
+There is a classic and hilarious [Monty Python video](https://osf.io/gc79d) (see below) that is an absurd example akin to radical operationalism taken to the extreme.\index{empiricism}\index{radical operationalism}
+
+![Monty Python video on penguin research](images/montyPythonPenguinResearch.mp4){width=100%}
+
+In the video, the researchers make lots of measurements and predictions.\index{empiricism}\index{radical operationalism}
+The researchers identify interspecies differences in intelligence where humans show better performance on the English-based intelligence test (who got an IQ score of 100) than the penguins, who got an IQ score of 2.\index{empiricism}\index{radical operationalism}
+But the penguins did not speak English and were unable to provide answers to the English-based intelligence test.\index{empiricism}\index{radical operationalism}
+So, the researchers also assessed a group of non-English speaking humans as an attempt to control for language ability.\index{empiricism}\index{radical operationalism}
+They found that the penguins' scores were equal to the scores of the non-English speaking humans.\index{empiricism}\index{radical operationalism}
+They argued that, based on their smaller brain and equal IQ when controlling for language ability, that penguins are smarter than humans.\index{empiricism}\index{radical operationalism}
+However, the researchers clearly made mistakes about confounding variables.
+And inclusion of a control group of non-English speaking humans does not solve the problem of validity or bias; it just obscures the problem.\index{empiricism}\index{radical operationalism}
+In summary, radical operationalism provides rich lower-level information, but lacks the broader picture.\index{empiricism}\index{radical operationalism}
+So, it seems, that we need both theory *and* empiricism.\index{theory}\index{empiricism}
+Theory and empiricism can—and should—inform each other.\index{theory}\index{empiricism}
+
+#### Construct Validity {#constructValidity}
+
+*Construct validity* is the extent to which a measure accurately assesses a target construct [@Cronbach1955].\index{validity!construct}\index{construct validity!zzzzz@\igobble|seealso{validity}}
+Construct validity is not quantified by a single index but rather consists of a "web of evidence" (the totality of evidence), which reflect the sum of inferences from multiple aspects of validity.\index{validity!construct}
+That is, construct validity is the extent to which a measure assesses a target construct.\index{validity!construct}
+Construct validity deals with the association between a measure and an unobservable criterion, i.e., a latent construct.\index{validity!construct}\index{criterion}\index{latent variable}
+By contrast, [criterion-related validity](#criterionValidity) deals with an observable criterion.\index{validity!criterion}\index{criterion}
+
+Construct validity encompasses all other types of [measurement validity](#measurementValidity) (e.g., [content](#contentValidity) and [criterion-related](#criterionValidity) validity), in addition to\index{validity!construct}\index{validity!measurement}\index{validity!content}\index{validity!criterion}
+
+- scores on the measure show homogeneity—i.e., scores on the measure assess a single construct\index{validity!construct}
+- scores on the measure show theoretically expected developmental changes (i.e., [criterion-related](#criterionValidity) validity with respect to age or development)\index{validity!construct}\index{validity!criterion}
+- scores on the measure show theoretically expected group differences (i.e., [criterion-related](#criterionValidity) validity with respect to some group status)—this is also called known groups validity (when the groups are known to differ in their level on the construct)\index{validity!construct}\index{validity!criterion}
+- scores on the measure show theoretically expected intervention effects (i.e., [criterion-related](#criterionValidity) validity with respect to intervention)\index{validity!construct}\index{validity!criterion}
+- establishing the *nomological network* of a construct\index{validity!construct}\index{nomological network}
+
+Threats to construct validity are described by @Shadish2002 (see Table 3.1).\index{validity!conclusion}\index{validity!statistical conclusion}
+
+##### Nomological Network {#nomologicalNetwork}
+
+A *nomological network* is the interlocking system of laws that constitute a theory.\index{validity!construct}\index{nomological network}\index{theory}
+It describes how the concepts (constructs) of interest are causally linked, including their observable manifestations and the causal relations among and between them.\index{validity!construct}\index{nomological network}\index{causality}
+An example of a nomological network is depicted in Figure \@ref(fig:nomologicalNetwork).\index{validity!construct}\index{nomological network}
+
+```{r nomologicalNetwork, out.width = "100%", fig.align = "center", fig.cap = "Example of a Nomological Network. O.M. = Observable Manifestation.", fig.scap = "Example of a Nomological Network.", echo = FALSE}
+knitr::include_graphics("./images/nomologicalNetwork.png")
+```
+
+With construct validity, we can judge the quality of a measure by how well or how sensibly it fits in a nomological network.\index{validity!construct}\index{nomological network}
+Latent constructs and observed measures improve each other step by step.\index{validity!construct}\index{nomological network}\index{latent variable}
+But there is no established way to evaluate the process.\index{validity!construct}\index{nomological network}
+Approaches such as [network analysis](#networkAnalysis) may be useful toward this aim.\index{network analysis}
+
+Historically, construct validity became a way for some researchers to skip out on other types of validity.\index{validity!construct}\index{nomological network}
+People found a correlation between a measure's scores and some group membership and argued, therefore, that the measure has construct validity because there was a theoretically expected correlation between some measure and ______ (insert whatever measure).\index{validity!construct}\index{nomological network}
+People started finding a correlation of a measure with other measures, asserting that it provides evidence of construct validity, and saying "that's my nomological network."\index{validity!construct}\index{nomological network}
+But a theoretically expected association is not enough!\index{validity!construct}\index{nomological network}
+For example, consider a measure of how quickly someone can count backward by seven.\index{validity!construct}\index{nomological network}
+Performance is impaired in those with schizophrenia, anxiety (due to greater distractibility), and depression (due to concentration difficulties and cognitive slowing).\index{validity!construct}\index{nomological network}
+Therefore, it is a low-quality claim that counting backward is part of the phenomenology of these disorders because it lacks differential deficit or [discriminant validity](#discriminantValidity) [@Campbell1959].\index{validity!construct}\index{nomological network}\index{validity!discriminant}
+This is related to the "glop problem," which asserts that every bad thing is associated with every other bad thing—there is high comorbidity.\index{validity!construct}\index{nomological network}\index{validity!discriminant}
+Therefore, researchers needed some way to distinguish method variance from construct variance.\index{method variance}\index{construct!construct variance}
+This led to the development of the multitrait-multimethod matrix.\index{multitrait-multimethod matrix}\index{validity!construct}
+
+##### Multitrait-Multimethod Matrix (MTMM) {#MTMM}
+
+The *multitrait-multimethod matrix* (MTMM), as proposed by Campbell and Fiske [-@Campbell1959], is a concrete way to evaluate the validity of a measure.\index{multitrait-multimethod matrix}\index{validity!construct}
+The MTMM allows you to split the variance of measures' scores into variance that is due to the method (i.e., [method variance or method bias](#methodBias)) and variance that is due to the construct (trait) of interest (i.e., construct variance).\index{multitrait-multimethod matrix}\index{validity!construct}\index{method variance}\index{construct!construct variance}
+To create an MTMM, you need at least two methods and at least two constructs.\index{multitrait-multimethod matrix}\index{validity!construct}\index{methods!multiple}
+For example, an MTMM could include self-report and observation of depression and introversion.\index{multitrait-multimethod matrix}\index{validity!construct}
+You would then examine the correlations across combinations of construct and method.\index{multitrait-multimethod matrix}\index{validity!construct}
+
+For an example of an MTMM, see Figure \@ref(fig:campbellFiske).\index{multitrait-multimethod matrix}\index{validity!construct}
+Several aspects of psychometrics can be evaluated with an MTMM, including [reliability](#reliability), [convergent validity](#convergentValidity), and [discriminant validity](#discriminantValidity).\index{multitrait-multimethod matrix}\index{validity!construct}\index{reliability}\index{validity!convergent}\index{validity!discriminant}
+The [reliability](#reliability) diagonal of an MTMM is the correlation of a variable with itself, i.e., the [test–retest reliability](#testRetest-reliability) or monotrait-monomethod correlations.\index{multitrait-multimethod matrix}\index{validity!construct}\index{reliability}\index{reliability!test–retest}
+The [reliability](#reliability) coefficients should be the highest values in the matrix because each measure should be more correlated with itself than with anything else.\index{multitrait-multimethod matrix}\index{validity!construct}\index{reliability}\index{reliability!test–retest}
+
+(ref:campbellFiskeCaption) Multitrait-Multimethod Matrix. (Figure reprinted from Campbell and Fiske [-@Campbell1959], Table 1, p. 82. Campbell, D. T., & Fiske, D. W. (1959). Convergent and discriminant validation by the multitrait-multimethod matrix. *Psychological Bulletin*, *56*, 81–105. [https://doi.org/10.1037/h0046016](https://doi.org/10.1037/h0046016))
+
+```{r campbellFiske, out.width = "100%", fig.align = "center", fig.cap = "(ref:campbellFiskeCaption)", fig.scap = "Multitrait-Multimethod Matrix.", echo = FALSE}
+knitr::include_graphics("./images/campbellFiske.png")
+```
+
+A multitrait-multimethod matrix can be organized by method and then by construct or vice versa.\index{multitrait-multimethod matrix}\index{validity!construct}
+An MTMM organized by method then by construct is depicted in Figure \@ref(fig:mtmmMethodConstruct).\index{multitrait-multimethod matrix}\index{validity!construct}
+
+```{r mtmmMethodConstruct, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Matrix Organized by Method Then by Construct.", echo = FALSE}
+knitr::include_graphics("./images/MTMM-02.png")
+```
+
+An MTMM organized by construct then by method is depicted in Figure \@ref(fig:mtmmConstructMethod).\index{multitrait-multimethod matrix}\index{validity!construct}
+
+```{r mtmmConstructMethod, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Matrix Organized by Construct Then by Method.", echo = FALSE}
+knitr::include_graphics("./images/MTMM-03.png")
+```
+
+###### Convergent Validity {#convergentValidity}
+
+*Convergent validity* is the extent to which a measure is associated with other measures of the same target construct.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}\index{convergent validity!zzzzz@\igobble|seealso{validity}}
+In an MTMM, convergent validity evaluates whether measures targeting the same construct, but using different methods, converge upon the same construct.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}\index{methods!multiple}
+These are observed in the validity diagonals, also known as the convergent correlations or the monotrait-heteromethod correlations.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}
+For strong convergent validity, we would expect the values in the validity diagonals to be significant and high-ish.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}
+
+###### Discriminant (Divergent) Validity {#discriminantValidity}
+
+You can also evaluate the *discriminant validity*, also called divergent validity, of a measure in the context of an MTMM.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}\index{discriminant validity!zzzzz@\igobble|seealso{validity}}
+Discriminant validity is the extent to which a measure is *not* associated (or less strongly associated) with measures of different constructs that are not theoretically expected to be related (compared to associations with measures of the same construct).\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+In an MTMM, discriminant validity determines the extent to which a measure does not correlate with measures that share a method but assess different constructs.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+For strong discriminant validity, we would expect the discriminant correlations (heterotrait monomethod) to be low.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+
+According to Campbell and Fiske [-@Campbell1959], discriminant validity of measures can be established when three criteria are met:\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+
+1. The convergent (monotrait-heteromethod) correlations are stronger than heterotrait-heteromethod correlations.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+This provides the weakest evidence for discriminant validity.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+That is, the convergent correlations are higher than the values in the same column or row in the same heteromethod block.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+This can be evaluated using the heterotrait-monotrait ratio (described below).\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}\index{validity!discriminant}
+1. The convergent (monotrait-heteromethod) correlations are stronger than discriminant correlations (monomethod-heterotrait).\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}\index{validity!discriminant}
+This provides stronger evidence of discriminant validity.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}\index{validity!discriminant}
+1. The patterns of intercorrelations between constructs are the same, regardless of which measurement method is used.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+That is, the pattern of inter-trait associations is the same in all triangles.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+For example, if extraversion and anxiety are moderately correlated with each other but uncorrelated with achievement, we would expect this pattern of interrelations between constructs would hold, regardless of which method was used to assess the construct.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+
+You can estimate a measure's degree of discriminant validity based on the *heterotrait-monotrait ratio* [HTMT; @Henseler2015; @Roemer2021].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+HTMT is the average of the heterotrait-heteromethod correlations (i.e., the correlations of measures from different measurement methods that assess different constructs), relative to the average of the monotrait-heteromethod correlations (i.e., the correlations of measures from different measurement methods that assess the same construct).\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}\index{methods!multiple}
+As described [here (https://www.henseler.com/htmt.html)](https://www.henseler.com/htmt.html) (archived at https://perma.cc/A9DU-WZWQ) based on evidence from @Voorhees2016,\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+
+> If the HTMT is clearly smaller than one, discriminant validity can be regarded as established.
+> In many practical situations, a threshold of 0.85 reliably distinguishes between those pairs of latent variables that are discriminant valid and those that are not.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+
+The authors updated the HTMT to use the geometric mean of the correlations rather than the arithmetic mean of the correlations to relax the assumption of [tau-equivalence](#cttTauEquivalent) [@Roemer2021].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+They called the updated index HTMT2.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+Unlike HTMT, HTMT2 can be used only if all inter-variable correlations are positive.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+HTMT2 was calculated below using the `semTools` package [@R-semTools].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+In this case, the HTMT values are less than .85, providing evidence of discriminant validity.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+
+```{r}
+modelCFA <- '
+  visual  =~ x1 + x2 + x3
+  textual =~ x4 + x5 + x6
+  speed   =~ x7 + x8 + x9
+'
+
+htmt(
+  modelCFA,
+  data = HolzingerSwineford1939,
+  missing = "ml")
+```
+
+Other indexes of discriminant validity include the $\text{CI}_\text{CFA}\text{(sys)}$ [@Ronkko2020], $\chi^2\text{(sys)}$ [@Ronkko2020], and the Fornell-Larcker Ratio [FLR; @Fornell1981].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+The FLR is based on the idea that a construct should be more strongly associated with its indicators than with other constructs, and is computed as the ratio of (a) the highest squared inter-correlation the construct has with other constructs to (b) the [average variance extracted](#averageVarianceExtracted) [AVE] by the construct.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}\index{reliability!internal consistency!average variance extracted}
+A criterion of FLR < 1 evaluates whether the [AVE](#averageVarianceExtracted) of a factor is greater than the highest squared inter-correlation between the factor and other factors in the model [@Fornell1981].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}\index{reliability!internal consistency!average variance extracted}
+Another index estimates the degree of correspondence of convergent and discriminant validity correlations with a priori hypotheses as an index of construct validity [@Furr2019].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+
+Using an MTMM, a researcher can learn a lot about the quality of a measure and build a nomological network.\index{multitrait-multimethod matrix}\index{validity!construct}\index{nomological network}
+For instance, we can estimate the extent of method variance, or variance that is attributable to the measurement method rather than the construct of interest.\index{multitrait-multimethod matrix}\index{validity!construct}\index{method variance}\index{construct!construct variance}
+Method variance is estimated by the difference between monomethod versus heteromethod blocks.\index{multitrait-multimethod matrix}\index{validity!construct}\index{method variance}
+
+A poor example of an MTMM would be having two constructs such as height and depression and two methods such as Likert and true/false.\index{multitrait-multimethod matrix}\index{validity!construct}\index{Likert scale}
+This would be a poor MTMM for two reasons: (1) there are trivial differences in the methods, which would lead to obvious convergence, and (2) the differences between the constructs are not important—they are obviously discriminant.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
+Using such an MTMM would find strong convergent associations because the methods are maximally similar and weak discriminant associations because the constructs are maximally different.\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!convergent}\index{validity!discriminant}
+It would be better to use maximally different measurement methods (e.g., self-report and performance-based measures) and to use constructs that are important to distinguish (e.g., depression and anxiey).\index{multitrait-multimethod matrix}\index{validity!construct}\index{methods!multiple}
+
+The paper by Campbell and Fiske [-@Campbell1959] that introduced the MTMM is one of the most widely cited papers in psychology of all time.\index{multitrait-multimethod matrix}\index{validity!construct}
+*Psychological Bulletin* published a more recent paper by Fiske and Campbell [-@Fiske1992], entitled "Citations Do Not Solve Problems."\index{multitrait-multimethod matrix}\index{validity!construct}
+They noted how their original paper was the most widely cited paper in the history of *Psychological Bulletin*, but they argued that nothing came of their paper.\index{multitrait-multimethod matrix}\index{validity!construct}
+The MTMM matrices published today show little-to-no improvement compared to the ones they published in 1959.\index{multitrait-multimethod matrix}\index{validity!construct}
+In part, this may be because we need better measures (i.e., a higher ratio of construct to method variance).\index{multitrait-multimethod matrix}\index{validity!construct}\index{construct!construct variance}\index{method variance}
+
+###### Multitrait-Multimethod Correlation Matrix {#mtmmCorrelationMatrix}
+
+This example is courtesy of W. Joel Schneider.\index{multitrait-multimethod matrix}\index{validity!construct}
+First, we simulate data for an MTMM model using a fixed model with population parameters using the `simstandard` package [@R-simstandard]:\index{simulate data}\index{multitrait-multimethod matrix}\index{validity!construct}
+
+```{r, class.source = "fold-hide"}
+model_fixed <- '
+ Verbal =~ .5*VO1 + .6*VO2 + .7*VO3 +
+           .7*VW1 + .6*VW2 + .5*VW3 + 
+           .6*VM1 + .7*VM2 + .5*VM3 
+ Spatial =~ .7*SO1 + .7*SO2 + .6*SO3 + 
+            .6*SW1 + .7*SW2 + .5*SW3 + 
+            .7*SM1 + .5*SM2 + .7*SM3 
+ Quant =~ .5*QO1 + .7*QO2 + .5*QO3 + 
+          .5*QW1 + .6*QW2 + .7*QW3 + 
+          .5*QM1 + .6*QM2 + .7*QM3 
+ Oral =~ .4*VO1 + .5*VO2 + .3*VO3 + 
+         .3*SO1 + .3*SO2 + .5*SO3 + 
+         .6*QO1 + .3*QO2 + .4*QO3
+ Written =~ .6*VW1 + .4*VW2 + .3*VW3 + 
+            .6*SW1 + .5*SW2 + .5*SW3 + 
+            .4*QW1 + .4*QW2 + .5*QW3
+ Manipulative =~ .5*VM1 + .5*VM2 + .3*VM3 + 
+                 .5*SM1 + .5*SM2 + .6*SM3 + 
+                 .4*QM1 + .3*QM2 + .3*QM3
+ Verbal ~~ .7*Spatial + .6*Quant
+ Spatial ~~ .5*Quant
+'
+
+MTMM_data <- sim_standardized(
+  model_fixed,
+  n = 10000,
+  observed = TRUE,
+  latent = FALSE,
+  errors = FALSE)
+```
+
+A multitrait-multimethod matrix correlation matrix is below.\index{multitrait-multimethod matrix}\index{validity!construct}
+
+```{r, eval = FALSE}
+round(cor(MTMM_data), 2)
+```
+
+```{r mtmmCorrelationHTML, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub"), echo = FALSE}
+paged_table(data.frame(round(cor(MTMM_data), 2)))
+```
+
+```{r mtmmCorrelationPDF, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_latex_output(), echo = knitr::is_latex_output(), echo = FALSE}
+kable(
+  data.frame(round(cor(MTMM_data), 2)),
+  format = "latex",
+  booktabs = TRUE
+  ) %>%
+  kable_styling(latex_options = "scale_down")
+```
+
+```{r mtmmCorrelationEPUB, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Correlation Matrix.", eval = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm")), echo = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm"))}
+kable(data.frame(round(cor(MTMM_data), 2)),
+      booktabs = TRUE)
+```
+
+###### Construct Validity Beyond Campbell and Fiske {#constructValidity-beyondCampbellFiske}
+
+There are a number of other approaches that can be helpful for establishing construct validity in ways that go beyond the approaches proposed by Campbell and Fiske [-@Campbell1959].\index{multitrait-multimethod matrix}\index{validity!construct}
+One way is known as triangulation.\index{validity!construct}\index{triangulation}
+Triangulation is conceptually depicted in Figure \@ref(fig:triangulation).\index{validity!construct}\index{triangulation}
+Triangulation involves testing a hypothesis with multiple measures and/or methods to see if the findings are consistent—that is, whether the findings triangulate.\index{validity!construct}\index{triangulation}\index{methods!multiple}
+
+```{r triangulation, out.width = "100%", fig.align = "center", fig.cap = "Using Triangulation to Arrive at a Closer Estimate of the Construct Using Multiple Measures and/or Methods.", echo = FALSE}
+knitr::include_graphics("./images/Triangulation.png")
+```
+
+A contemporary approach to multitrait-multimethod modeling uses [confirmatory factor analysis](#cfa), as described below.\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
+
+###### MTMM in Confirmatory Factor Analysis (CFA) {#mtmmCFA-validity}
+
+Using modern modeling approaches, there are even more advanced ways of examining an MTMM.\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
+For instance, you can use [structural equation modeling](#sem) (SEM) or [confirmatory factor analysis](#cfa) (CFA) to derive a latent variable of a construct from multiple methods to be free from method-related error variance to generate purer assessments of the construct to see how it relates to other constructs.\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}\index{latent variable}\index{structural equation modeling}\index{method variance}\index{measurement error}\index{methods!multiple}
+For an example of an MTMM in [confirmatory factor analysis](#cfa), see Figure \@ref(fig:mtmmCFA) and Section \@ref(mtmmCFA) in Chapter \@ref(factor-analysis-PCA) on [factor analysis](#factor-analysis-PCA).\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
+
+```{r mtmmCFA, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis With Three Constructs (Internalizing, Externalizing, and Thought-Disordered Problems) and Three Methods (Mother-, Father-, and Teacher-report).", echo = FALSE}
+knitr::include_graphics("./images/mtmmCFA.png")
+```
+
+The confirmatory factor analysis (CFA) model was fit in the `lavaan` package [@R-lavaan].\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
+
+```{r}
+modelMTMM <- '
+ g =~ Verbal + Spatial + Quant
+ Verbal =~ 
+   VO1 + VO2 + VO3 + 
+   VW1 + VW2 + VW3 + 
+   VM1 + VM2 + VM3
+ Spatial =~ 
+   SO1 + SO2 + SO3 + 
+   SW1 + SW2 + SW3 + 
+   SM1 + SM2 + SM3
+ Quant =~ 
+   QO1 + QO2 + QO3 + 
+   QW1 + QW2 + QW3 + 
+   QM1 + QM2 + QM3
+ Oral =~ 
+   VO1 + VO2 + VO3 + 
+   SO1 + SO2 + SO3 + 
+   QO1 + QO2 + QO3
+ Written =~ 
+   VW1 + VW2 + VW3 + 
+   SW1 + SW2 + SW3 + 
+   QW1 + QW2 + QW3
+ Manipulative =~ 
+   VM1 + VM2 + VM3 + 
+   SM1 + SM2 + SM3 + 
+   QM1 + QM2 + QM3
+'
+
+MTMM.fit <- cfa(
+  modelMTMM,
+  data = MTMM_data,
+  orthogonal = TRUE,
+  missing = "ml")
+
+summary(
+  MTMM.fit,
+  fit.measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+A path diagram of the model is depicted in Figure \@ref(fig:mtmmCFAFigure) using the `semPlot` package [@R-semPlot].\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
+
+```{r mtmmCFAFigure, out.width = "100%", fig.align = "center", fig.height = 8, fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
+semPaths(
+  MTMM.fit,
+  what = "std",
+  layout = "tree3",
+  bifactor = c("Verbal","Spatial","Quant","g"))
+```
+
+#### Incremental Validity {#incrementalValidity}
+
+Accuracy is not enough for a measure to be useful.\index{validity!accuracy}\index{useful}\index{validity!incremental}\index{accuracy!zzzzz@\igobble|seealso{validity}}\index{incremental validity!zzzzz@\igobble|seealso{validity}}
+Proposed by @Sechrest1963, measures should also be judged by the extent to which they provide an increment in predictive efficiency over the information otherwise easily and cheaply available.\index{validity!incremental}\index{prediction}
+*Incremental validity* deals with the incremental value or utility over a measure beyond other sources of information.\index{validity!incremental}
+It must be demonstrated that the addition of a measure will produce better predictions than are made on the basis of information ordinarily available.\index{validity!incremental}\index{prediction}
+It is not enough to show that the measure is better than chance, and the measure should not just be capitalizing on shared method variance with the criterion or on increased [reliability](#reliability) of the measure.\index{validity!incremental}\index{prediction}\index{method variance}\index{reliability}
+That is, the measure should explain truly unique variance—variance that was not explained before.\index{validity!incremental}\index{prediction}
+Incremental validity demonstrates added value, unless the other measure is cheaper or less time-consuming.\index{validity!incremental}\index{prediction}
+Incremental validity is a specific kind of [criterion-related validity](#criterionValidity): significantly increased $R^2$ in hierarchical regression.\index{validity!incremental}\index{prediction}\index{validity!criterion}
+The incremental validity of a measure can be evaluated by examining whether the measure explains significant unique variance in the criterion when accounting for other information, such as easily accessible information, traditionally available measures, or the current gold-standard measure.\index{validity!incremental}
+The extent of incremental validity of a measure can be quantified with the change in the coefficient of determination ($\Delta R^2$) that compares (a) the model that includes the old predictor(s) to (b) the model that includes old predictors and the new predictor (measure).\index{validity!incremental}\index{prediction}
+
+```{r}
+model1 <- lm(
+  criterion ~ oldpredictor,
+  data = na.omit(mydataValidity))
+
+model2 <- lm(
+  criterion ~ oldpredictor + predictor,
+  data = na.omit(mydataValidity))
+
+summary(model1)
+summary(model2)
+
+model1Rsquare <- summary(model1)$r.squared
+model2Rsquare <- summary(model2)$r.squared
+
+model1RsquareAdj <- summary(model1)$adj.r.squared
+model2RsquareAdj <- summary(model2)$adj.r.squared
+
+deltaRsquare <- getDeltaRsquare(model2)[["predictor"]]
+deltaRsquareAdj <- model2RsquareAdj - model1RsquareAdj
+
+deltaRsquareAdj
+anova(model1, model2)
+getDeltaRsquare(model2)
+```
+
+$\Delta R^2$ was calculated using the `rockchalk` package [@R-rockchalk].\index{validity!incremental}\index{prediction}
+The predictor shows significant incremental validity above the old predictor in predicting the criterion.\index{validity!incremental}\index{prediction}
+`Model 1` explains $`r round(model1Rsquare * 100, 2)`$% of the variance $(R^2 = `r round(model1Rsquare, 2)`)$, and `Model 2` explains $`r round(model2Rsquare * 100, 2)`$% of the variance $(R^2 = `r round(model2Rsquare, 2)`)$.\index{validity!incremental}\index{prediction}
+Thus, the predictor explains only $`r round(deltaRsquare * 100, 2)`$% additional variance in the criterion above the variance explained by the old predictor $(\Delta R^2)$.\index{validity!incremental}\index{prediction}
+Based on adjusted $R^2$ ($R^2_{adj}$), the predictor explains only $`r round(deltaRsquareAdj * 100, 2)`$% additional variance in the criterion above the variance explained by the old predictor ($\Delta R^2_{adj}$).\index{validity!incremental}\index{prediction}
+
+#### Treatment Utility of Assessment {#treatmentUtility}
+
+@Hayes1987 argued that it is not enough for measures to be [reliable](#reliability) and valid.\index{reliability}\index{validity}\index{useful}\index{validity!treatment utility of assessment}
+The authors raised another important consideration for the validity of a measure: its treatment utility or usefulness.\index{validity!treatment utility of assessment}\index{useful}
+They asked the question: What goal do assessments accomplish in clinical psychology?\index{validity!treatment utility of assessment}
+In clinical psychology, the goal of assessment is to lead to better treatment outcomes.\index{validity!treatment utility of assessment}
+Therefore, the *treatment utility* of a measure is the extent to which a measure is shown to contribute to beneficial treatment outcomes.\index{validity!treatment utility of assessment}
+That is, if a clinician has the information/results from having administered this measure, do the clients have better outcomes?\index{validity!treatment utility of assessment}
+The treatment utility of assessment is a specific kind of [criterion-related validity](#criterionValidity), with the idea that "all criteria are not created equal."\index{validity!treatment utility of assessment}\index{validity!criterion}
+And the criterion that is most important to optimize, from this perspective, when developing and selecting measures is a client's treatment outcomes.\index{validity!treatment utility of assessment}
+
+@Hayes1987 described different approaches to evaluating the extent to which a measure shows treatment utility.\index{validity!treatment utility of assessment}
+These are a priori group comparison approaches that examine whether a specific difference in the assessment approach relates to treatment outcome.\index{validity!treatment utility of assessment}
+They distinguished between (a) manipulated assessment and (b) manipulated use.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}\index{validity!treatment utility of assessment!manipulated use}
+Manipulated assessment and manipulated use are depicted in Figure \@ref(fig:treatmentUtility).\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}\index{validity!treatment utility of assessment!manipulated use}
+
+```{r treatmentUtility, out.width = "100%", fig.align = "center", fig.cap = "Research Designs That Evaluate the Treatment Utility of Assessment.", echo = FALSE}
+knitr::include_graphics("./images/treatmentUtility.png")
+```
+
+In *manipulated assessment*, a single group of subjects is randomly divided into two subgroups, and either the collection or availability of assessment data is varied systematically.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+Therapists then design or implement treatment in accord with the data available.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+As an example, the measure of interest may be administered in one condition, and the standard measure may be administered in the other condition.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+Then the treatment outcomes would be compared across the two conditions.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+An advantage of manipulated assessment is that this type of design is more realistic than manipulated use.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+Making the assessment data available but not assigning a certain treatment based on the assessment outcomes better simulates a realistic clinical environment.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+Also, because the control group has no access to the data, it might serve as a stronger control.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+A disadvantage of manipulated assessment is that it depends on whether and how clinicians use the measure, which depends on how positively the measure was received by the clinicians.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated assessment}
+
+In *manipulated use*, the same assessment information is available for all subjects, but the researcher manipulates the way in which the assessment information is used.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated use}
+For example, one group gets a treatment matched to assessment outcomes, and the other group gets a cross-matched treatment that does not target the problem identified by the assessment.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated use}
+So, in one group, the assessment information is used to match the treatment to the client based on their assessment results, whereas the other group receives a standard treatment regardless of their assessment results.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated use}
+An advantage of this design is that you can be certain that the treatment decisions are explicitly informed by the assessment results because the researcher ensures this, whereas the decision of how the assessment information is used is up to the clinician in manipulated assessment.\index{validity!treatment utility of assessment}\index{validity!treatment utility of assessment!manipulated use}
+
+Relatively few measures show evidence of treatment utility of assessment.\index{validity!treatment utility of assessment}
+For instance, a clinical trial using the manipulated assessment approach determined that the Development and Well-Being Assessment (DAWBA) did not show treatment utility as a diagnostic assessment for children and adolescents [@Sayal2025].\index{validity!treatment utility of assessment}
+A review on the treatment utility of assessment is provided by @NelsonGray2003.\index{validity!treatment utility of assessment}
+
+#### Discriminative Validity {#discriminativeValidity}
+
+*Discriminative validity* is the degree to which a measure accurately identifies persons placed into groups on the basis of another measure.\index{validity!discriminative}
+Discriminative validity is not to be confused with [discriminant (divergent) validity](#discriminantValidity) and discriminant analysis.\index{validity!discriminative}\index{validity!discriminant}
+A measure shows discriminant validity if it does not correlate with things that it would not be theoretically expected to correlate with.\index{validity!discriminant}
+A measure shows discriminative validity, by contrast, if the measure is able to accurately differentiate things (e.g., two groups such as men and women).\index{validity!discriminative}
+Discriminant analysis is a model that combines predictors to differentiate between multiple groups.
+
+#### Elaborative Validity {#elaborativeValidity}
+
+*Elaborative validity* involves the extent to which a measure increases our theoretical understanding of the target construct or of neighboring constructs.\index{validity!elaborative}
+It deals with a measure's meaningfulness.\index{validity!elaborative}
+Elaborative validity is a type of [incremental](#incrementalValidity) theoretical validity.\index{validity!elaborative}\index{validity!incremental}\index{theory}
+It is a combination of [criterion-related validity](#criterionValidity) and [construct validity](#constructValidity) that examines how much a given measure increases our understanding of a construct's [nomological network](#nomologicalNetwork).\index{validity!elaborative}\index{validity!criterion}\index{validity!construct}\index{nomological network}
+However, I am unaware of strong examples of measures that show strong elaborative validity in psychology.\index{validity!elaborative}
+
+#### Consequential Validity {#consequentialValidity}
+
+Consequential validity is a form of validity that differs from evidential validity, or a test's potential to provide accurate, useful information based on research.\index{validity!consequential}
+Consequential validity takes a more macro-view and deals with the community, sociological, and public policy perspective.\index{validity!consequential}
+*Consequential validity* evaluates the consequences of our measures beyond the circumstances of their development, based on their impact.\index{validity!consequential}
+Measures can have positive, negative, or mixed effects on society.\index{validity!consequential}
+An example of consequential validity would be asking what the impacts of aptitude testing are on society—how aptitude testing affects society in the long run.\index{validity!consequential}
+Some would argue that, even in cases where the aptitude tests have some degree of evidential validity (i.e., they accurately assess to some degree what they tend to assess), they are consequentially invalid—that is, they have had a net negative effect on society and, due to their low value to society, are invalid.\index{validity!consequential}
+The tests themselves may be fine in terms of their accuracy, but consequential validity says that their validity depends on what we do with the test, i.e., how the test is used.\index{validity!consequential}
+
+Another example of consequential validity is when the validity of a measure changes over time due to changes in people's or society's response, as depicted in Figure \@ref(fig:consequentialValidity).\index{validity!consequential}
+Judgments and predictions can change the way society reacts and the way people behave so that the predictions become either more or less accurate.\index{validity!consequential}
+A prediction that becomes more accurate as a result of people's response to a prediction is a self-fulfilling prediction or prophecy.\index{validity!consequential}\index{prediction}
+For instance, if school staff make a prediction that a child will be held back a grade, the teacher may not provide adequate opportunities for the child to learn, which may lead to the child being more likely to be held back.\index{validity!consequential}\index{prediction}
+
+```{r consequentialValidity, out.width = "100%", fig.align = "center", fig.cap = "Invalidation of a Measure Due to Society's Response to the Use of the Measure.", echo = FALSE}
+knitr::include_graphics("./images/consequentialValidity.png")
+```
+
+A prediction that becomes less accurate as a result of people's response to a prediction is a self-canceling prediction.\index{validity!consequential}\index{prediction}
+The most effective prediction about a flu outbreak might be one that leads people to safer behavior; therefore lowering flu rates, which does not correspond to the initial prediction [@Silver2012].\index{validity!consequential}\index{prediction}
+Society's response to a measure can invalidate the measure.\index{validity!consequential}
+For example, consider that an organization rates cities based on quality-of-life measures.\index{validity!consequential}
+If quality-of-life indices include the percent of solved cases by the city's police (i.e., the clearance rate), cities may try to improve their ratings of "quality-of-life" by increasing their clearance rate either by increasing the number of cases they mark as solved (such as by marking cases falsely as resolved) or by decreasing the number of cases (such as by investigating fewer cases).\index{validity!consequential}
+That is, cities may "game" the system based on the quality-of-life indices used by various organizations.\index{validity!consequential}
+In this case, the clearance rate becomes a less accurate measure of a city's quality of life.\index{validity!consequential}
+
+Another example of a measure that becomes less valid due to society's response is the use of alumni donations as an indicator of the strength of a university that is used for generating university rankings.\index{validity!consequential}
+Such an indicator could lead schools to admit wealthier students who give the most donations, and students whose parents were alumni and provide lavish donations to the university.\index{validity!consequential}
+Yet another example could be standardized testing, where instructors may "teach to the test" such that better performance might not necessarily reflect better underlying competence.\index{validity!consequential}
+
+#### Representational Validity {#representationalValidity}
+
+*Representational validity* examines the extent to which the items or content of a measure "flesh out" and mirror the true nature and mechanisms of the construct.\index{validity!representational}
+There are many different types of validity, but many of them are overlapping and can be considered types of other forms of validity.\index{validity!representational}
+For instance, representational validity is a type of [elaborative validity](#elaborativeValidity) and [content validity](#contentValidity).\index{validity!representational}\index{validity!elaborative}\index{validity!content}
+
+#### Factorial (Structural) Validity {#factorialValidity}
+
+Factorial validity is examined in Section \@ref(factorAnalysis) on factor analysis.\index{validity!factorial}\index{validity!structural}
+*Factorial validity* considers whether the factor structure of the measure(s) is consistent with the construct.\index{validity!factorial}\index{validity!structural}
+According to factorial validity, if you claim that the measure is unidimensional with four items, factor analysis should support the unidimensionality.\index{validity!factorial}\index{validity!structural}\index{dimensionality}
+Thus, it involves testing empirically whether the measure has the same structure as would be expected based on theory.\index{validity!factorial}\index{validity!structural}\index{dimensionality}\index{theory}
+It is a type of [construct validity](#constructValidity).\index{validity!factorial}\index{validity!structural}\index{validity!construct}
+
+#### Ecological Validity {#ecologicalValidity}
+
+*Ecological validity* examines the extent to which a measure provides scores that are indicative of the behavior of a person in the natural environment.\index{validity!ecological}\index{ecological validity!zzzzz@\igobble|seealso{validity}}
+
+#### Process-Focused Validity {#processFocusedValidity}
+
+Process-focused validity attempts to get closer to the underlying mechanisms.\index{validity!process focused}
+*Process-focused validity* examines the degree to which respondents engage in a predictable set of psychological processes (which are specified a priori) when completing the measure [@Bornstein2011; @Furr2017].\index{validity!process focused}
+These psychological processes include effects of the instrument (e.g., observer versus third-party report versus projective test) as well as effects of the context (e.g., assessment setting, assessment instructions, affect state of the participant, etc.).\index{validity!process focused}
+To determine whether a test is valid in the process-focused technique, one experimentally manipulates variables that moderate the test score–criterion association—to better understand the underlying processes.\index{validity!process focused}
+The ideal outcome is a measure that both (1) has an adequate outcome (correlations where expected) as well as (2) adequate process validity—the psychological processes that one engages in are well hypothesized.\index{validity!process focused}
+
+The idea of process-focused validity is that if a measure does not inform us about process or mechanisms, it is not worth doing.\index{validity!process focused}
+Process-focused validity is a type of [elaborative validity](#elaborativeValidity) and [construct validity](#constructValidity).\index{validity!process focused}\index{validity!elaborative}\index{validity!construct}
+For instance, consider the common finding that low socioeconomic status is associated with poorer outcomes.\index{validity!process focused}
+To make an impact, process-focused validity would argue that we need to know the mechanisms that underlie this association, and it involves how a measure helps us understand process.\index{validity!process focused}
+
+#### Diagnostic Validity {#diagnosticValidity}
+
+Diagnostic validity is the extent to which the diagnostic category accurately captures the abnormal phenomenon of interest.\index{validity!diagnostic}
+It is a form of [construct validity](#constructValidity) for diagnoses.\index{validity!diagnostic}
+
+#### Social Validity {#socialValidity}
+
+Social validity involves the extent to which the proposed procedures (assessment, intervention, etc.) will be well-liked and acceptable by those who receive and implement them.\index{validity!social}
+
+#### Cultural Validity {#culturalValidity}
+
+Cultural validity refers to "the effectiveness of a measure or the accuracy of a clinical diagnosis to address the existence and importance of essential cultural factors" [@Leong2016, p. 58].\index{validity!cultural}
+Essential cultural factors may include values, beliefs, experiences, communication patterns, and approaches to knowledge (epistemologies).\index{validity!cultural}
+
+### Research Design (Experimental) Validity {#researchDesignValidity}
+
+Aspects of *research design validity*, also called experimental validity, involve the validity of a research design for making various interpretations.\index{validity!research design}
+Research design validity includes [internal validity](#internalValidity), [external validity](#externalValidity), and [conclusion validity](#conclusionValidity).\index{validity!research design}\index{validity!internal}\index{validity!external}\index{validity!conclusion}\index{validity!statistical conclusion}
+
+#### Internal Validity {#internalValidity}
+
+*Internal validity* is the extent to which causal inference is justified from the research design.\index{validity!research design}\index{validity!internal}
+This encompasses multiple features including\index{validity!research design}\index{validity!internal}\index{internal validity!zzzzz@\igobble|seealso{validity}}
+
+- temporal precedence—does the (purported) cause occur before the (purported) effect?\index{validity!research design}\index{validity!internal}
+- covariation of cause and effect—correlation is necessary (even if insufficient) for causality\index{validity!research design}\index{validity!internal}
+- no plausible alternative explanations—such as third variables that could influence both variables and explain their covariation\index{validity!research design}\index{validity!internal}
+
+There are number of potential threats to internal validity, which are important to consider when designing studies and interpreting findings.\index{validity!research design}\index{validity!internal}
+Examples of potential threats to internal validity include history, maturation, testing, instrumentation, regression, selection, attrition, and an interaction of threats [@Slack2001; @Shadish2002, Table 2.4].\index{validity!research design}\index{validity!internal}
+
+Research designs differ in the extent to which they show internal validity versus [external validity](#externalValidity).\index{validity!research design}\index{validity!internal}\index{validity!external}
+An experiment is a research design in which one or more variables (independent variables) are manipulated to observe how the manipulation influences the dependent variable.\index{validity!research design}\index{validity!internal}
+In an experiment, the researcher has greater control over the variables and attempts to hold everything else constant (e.g., by standardization and random assignment).\index{validity!research design}\index{validity!internal}
+In correlational designs, however, the researcher has less control over the variables.\index{validity!research design}\index{validity!internal}
+They may be able to statistically account for potential confounds using covariates or for the reverse direction of effect using longitudinal designs.\index{validity!research design}\index{validity!internal}
+Nevertheless, we can have greater confidence about whether a variable influences another variable in an experiment.\index{validity!research design}\index{validity!internal}
+Thus, experiments tend to have higher internal validity than correlational designs.\index{validity!research design}\index{validity!internal}
+
+#### External Validity {#externalValidity}
+
+*External validity* is the extent to which the findings can be generalized across person, place, and time—e.g., to the broader population and the real world.\index{validity!research design}\index{validity!external}\index{external validity!zzzzz@\igobble|seealso{validity}}
+External validity is crucial to consider for studies that intend to make inferences to people outside of those who were assessed.\index{validity!research design}\index{validity!external}
+For instance, [norm-referenced](#norm) assessments attempt to identify the distribution of scores for a given population from a sample within that population.\index{validity!research design}\index{validity!external}\index{norm-referenced}
+The validity of the [norms](#norm) of a [norm-referenced](#norm) assessment are important to consider [@Achenbach2001c].\index{validity!research design}\index{validity!external}\index{norm-referenced}
+The validity of norms and external validity, more broadly, can depend highly on how representative the sample is of the target population and how appropriate this population is to a given participant.\index{validity!research design}\index{validity!external}\index{norm}
+Some measures are known to have poor norms, including the Exner Comprehensive System [@Exner1974; @Exner2005] for administering and scoring the [Rorschach Inkblot Test](#rorschach), which has been known to over-pathologize [@Wood2001a; @Wood2001b].\index{validity!research design}\index{validity!external}\index{norm}\index{Rorschach Inkblot Test}
+The [Rorschach](#rorschach) is discussed in greater detail in Chapter \@ref(projective).\index{Rorschach Inkblot Test}
+Threats to external validity are described by @Shadish2002 (see Table 3.2).\index{validity!conclusion}\index{validity!statistical conclusion}
+
+##### Tradeoffs of Internal Validity and External Validity {#internalExternalValidityTradeoffs}
+
+It is important to note that there is a tradeoff between [internal](#internalValidity) and [external](#externalValidity) validity—a single research design cannot have both high [internal](#internalValidity) and high [external](#externalValidity) validity.\index{validity!research design}\index{validity!internal}\index{validity!external}
+Some research designs are better suited for making causal inferences, whereas other designs tend to be better suited for making inferences that generalize to the real world.\index{validity!research design}\index{validity!internal}\index{validity!external}
+The research design that is best suited to making causal inferences is an experiment, where the researcher manipulates one variable (the independent variable) and holds all other variables constant to see how a change in the independent variable influences the outcome (dependent variable).\index{validity!research design}\index{validity!internal}\index{validity!external}
+Thus, experiments tend to have higher [internal validity](#internalValidity) than other research designs.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!experimental}
+However, by manipulating one variable and holding everything else constant, the research takes place in a very standardized fashion that can become like studying a process in a vacuum.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!experimental}
+So, even if a process is theoretically causal in a vacuum, it may act very differently in the real world when it interacts with other processes.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!experimental}
+
+Observational designs have greater capacity for [external validity](#externalValidity) than experimental designs because people can be observed in their natural environments to see how variables are related in the real world.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!observational}
+However, the greater [external validity](#externalValidity) comes at a cost of lower [internal validity](#internalValidity).\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!observational}
+Observational designs are not well-positioned to make causal inferences because they have multiple threats to [internal validity](#internalValidity), including issues of temporal precedence in cross-sectional observational designs, and there are numerous potential third variables (i.e., confounds) that could act as a common cause of both the predictor and outcome variables.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!observational}\index{correlation!causation}
+Thus, just because two variables are associated does not necessarily mean that they are causally related.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!observational}\index{correlation!causation}
+
+As the [internal validity](#internalValidity) of a study's design increases, its [external validity](#externalValidity) tends to decrease.\index{validity!research design}\index{validity!external}\index{validity!internal}
+The greater control we have over variables (and, therefore, have greater confidence about causal inferences), the lower the likelihood that the findings reflect what happens in the real world because it is studying things in a metaphorical vacuum.\index{validity!research design}\index{validity!external}\index{validity!internal}\index{research design!experimental}
+Because no single research design can have both high [internal](#internalValidity) and [external](#externalValidity) validity, scientific inquiry needs a combination of many different research designs so we can be more confident in our inferences—experimental designs for making causal inferences and observational designs for making inferences that are more likely to reflect the real world.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!experimental}\index{research design!observational}
+
+Case studies, because they have smaller sample sizes, tend to have lower [external validity](#externalValidity) than both experimental and observational studies.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!experimental}\index{research design!observational}\index{research design!case study}
+Case studies also tend to have lower [internal validity](#internalValidity) because they have less potential to control for threats to [internal validity](#internalValidity), such as potential confounds or temporal precedence.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!case study}
+Nevertheless, case studies can still be useful for generating hypotheses that can then be tested empirically with a larger sample in experimental or observational studies.\index{validity!research design}\index{validity!internal}\index{validity!external}\index{research design!case study}
+
+#### (Statistical) Conclusion Validity {#conclusionValidity}
+
+*Conclusion validity*, also called statistical conclusion validity, considers the extent to which conclusions are reasonable about the association among variables based on the data.\index{validity!research design}\index{validity!conclusion}\index{validity!statistical conclusion}
+That is, were the correct statistical analyses performed, and are the interpretations of the findings from those analyses correct?\index{validity!conclusion}\index{validity!statistical conclusion}
+Threats to conclusion validity are described by @Shadish2002 (see Table 2.2).\index{validity!conclusion}\index{validity!statistical conclusion}
+Did you have adequate statistical power, adequate [reliability](#reliability) of measures, accurate model estimation, and proper treatment of missing data?\index{validity!conclusion}\index{validity!statistical conclusion}
+Did you not violate assumptions of the statistical tests used?\index{validity!conclusion}\index{validity!statistical conclusion}
+Did any characteristics of the data distort the results (e.g., outliers, missingness, nonnormality, restriction of range, etc.)?\index{validity!conclusion}\index{validity!statistical conclusion}
+Did you avoid fishing for significant results (i.e., *p*-hacking) and inflating the Type I error rate by performing multiple tests?\index{validity!conclusion}\index{validity!statistical conclusion}
+Did you avoid making causal inferences from correlational data?\index{validity!conclusion}\index{validity!statistical conclusion}
+Were effect sizes estimated accurately?\index{validity!conclusion}\index{validity!statistical conclusion}
+To what extent are participants heterogeneous?\index{validity!conclusion}\index{validity!statistical conclusion}
+If a treatment was administered, was it implemented with fidelity for all participants?\index{validity!conclusion}\index{validity!statistical conclusion}
+To what extent was there extraneous variance in the research setting that may have contributed to error variance?\index{validity!conclusion}\index{validity!statistical conclusion}
+All of these considerations are important for ensuring that the conclusions drawn from a study are valid.\index{validity!conclusion}\index{validity!statistical conclusion}
+
+### Putting It All Together: An Organizational Framework {#organizationalFramework-validity}
+
+There are many types of [measurement validity](#measurementValidity), but the central psychometric aspect of [measurement validity](#measurementValidity) is [construct validity](#constructValidity).\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}
+That is, whether the measure accurately assesses the target construct is the most important consideration of [measurement validity](#measurementValidity).\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}
+As discussed earlier, [construct validity](#constructValidity) includes the [nomological network](#nomologicalNetwork) of the construct.
+[Construct validity](#constructValidity) also subsumes other key types of [measurement validity](#measurementValidity), including\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{nomological network}
+
+- [Convergent validity](#convergentValidity)\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{validity!convergent}
+- [Discriminant (divergent) validity](#discriminantValidity)\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{validity!discriminant}
+- [Criterion-related validity](#criterionValidity)\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{validity!criterion}
+    - [Concurrent validity](#concurrentValidity)\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{validity!concurrent}
+    - [Predictive validity](#predictiveValidity)\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{validity!predictive}
+- [Content validity](#contentValidity)\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{validity!content}
+
+The organization of types of [measurement validity](#measurementValidity) that are subsumed by [construct validity](#constructValidity) is depicted in Figure \@ref(fig:constructValidityOrganization).\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}
+
+```{r constructValidityOrganization, out.width = "100%", fig.align = "center", fig.cap = "Organization of Types of Measurement Validity That Are Subsumed by Construct Validity.", echo = FALSE}
+knitr::include_graphics("./images/Validity-03.png")
+```
+
+Moreover, many different types of [reliability](#reliability) and validity can be viewed through the lens of [construct validity](#constructValidity):\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{reliability}
+
+- [Internal consistency](#internalConsistency-reliability), which can be estimated as the [coefficient of internal consistency](#internalConsistency-reliability), where the criterion for [criterion-related validity](#criterionValidity) is other items on the same measure\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{reliability!internal consistency}\index{validity!criterion}
+- [Test–retest reliability](#testRetest-reliability), which can be estimated as the [coefficient of stability](#stability), where the criterion for [criterion-related validity](#criterionValidity) is the same measure at another time point\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{reliability!test–retest}\index{reliability!test–retest!coefficient of stability}\index{validity!criterion}
+- [Parallel-forms reliability](#parallelForms-reliability) or [convergent validity](#convergentValidity), which can be estimated as the [coefficient of equivalence](#parallelForms-reliability), where the criterion for [criterion-related validity](#criterionValidity) is the parallel form\index{validity}\index{validity!measurement}\index{validity!organizational framework}\index{validity!construct}\index{reliability!parallel forms}\index{reliability!parallel forms!coefficient of equivalence}\index{validity!criterion}
+
+## Validity Is a Process, Not an Outcome {#validityAsAProcess}
+
+Validity (and validation) is a continual process, not an outcome.\index{validity}
+Validation is never complete.\index{validity}
+When evaluating the validity of a measure, we must ask: Validity for what and to what degree?\index{validity}
+We would not just say that a measure is or is not valid.\index{validity}
+We would express the strength of evidence on a measure's validity across the different types of validity for a particular purpose, with a particular population, in a particular context (consistent with [generalizability theory](#gTheoryReliability)).\index{validity}\index{generalizability theory}
+
+## Reliability Versus Validity {#reliabilityVsValidity}
+
+[Reliability](#reliability) and validity are not the same thing.\index{validity}\index{reliability}
+[Reliability](#reliability) deals with consistency, whereas validity deals with accuracy.\index{validity}\index{reliability}
+A measure can be consistent but not accurate (see Figure \@ref(fig:reliabilityVsValidity2)).\index{validity}\index{reliability}
+That is, a measure can be [reliable](#reliability) but not valid.\index{validity}\index{reliability}
+However, a measure cannot be accurate if it is inconsistent; that is, a measure cannot be valid and [unreliable](#reliability).\index{validity}\index{reliability}
+
+```{r reliabilityVsValidity2, out.width = "100%", fig.align = "center", fig.cap = "Traditional Depiction of Reliability (Consistency) Versus Validity (Accuracy).", echo = FALSE}
+knitr::include_graphics("./images/ReliabilityvsValidity-02.png")
+```
+
+The typical way of depicting the distinction between [reliability](#reliability) and validity is in Figure \@ref(fig:reliabilityVsValidity2), in which a measure can either have (a) low [reliability](#reliability) and low validity, (b) high [reliability](#reliability) and low validity, or (c) high [reliability](#reliability) and high validity.\index{validity}\index{reliability}
+However, it can be worth thinking about validity in terms of accuracy at the person level versus group level.\index{validity}\index{reliability}\index{individual level}\index{group level}
+When we distinguish between person- versus group-level accuracy, we can distinguish four general combinations of [reliability](#reliability) and validity, as depicted in Figure \@ref(fig:reliabilityVsValidity1): (a) low [reliability](#reliability), low accuracy at the person level, and low accuracy at the group level, (b) low [reliability](#reliability), low accuracy at the person level, and high accuracy at the group level, (c) high [reliability](#reliability), low accuracy at the person level, and low accuracy at the group level, and (d) high [reliability](#reliability), high accuracy at the person level, and high accuracy at the group level.\index{validity}\index{reliability}\index{individual level}\index{group level}
+However, as discussed before, [reliability](#reliability) and validity are not binary states of low versus high—they exist to varying degrees.\index{validity}\index{reliability}
+
+```{r reliabilityVsValidity1, out.width = "100%", fig.align = "center", fig.cap = "Depiction of Reliability Versus Validity, While Distinguishing Between Validity (Accuracy) at the Person Versus Group Level.", echo = FALSE}
+knitr::include_graphics("./images/ReliabilityvsValidity-01.png")
+```
+
+Even though [reliability](#reliability) and validity are not the same thing, there is a relation between [reliability](#reliability) and validity.\index{validity}\index{reliability}
+Validity depends on [reliability](#reliability).\index{validity}\index{reliability}
+[Reliability](#reliability) is necessary but insufficient for validity.\index{validity}\index{reliability}
+However, [measurement error](#measurementError) ([unreliability](#reliability)) can be [systematic](#systematicError) or [random](#randomError).\index{validity}\index{reliability}\index{measurement error!systematic error}\index{measurement error!random error}
+If [measurement error](#measurementError) is [systematic](#systematicError), it reduces the validity of the measure.\index{validity}\index{reliability}\index{measurement error!systematic error}
+If measurement error is [random](#randomError), it reduces the precision of an individual's score on a measure, but the measure could still be a valid measure of the construct at the group level.\index{validity}\index{reliability}\index{measurement error!random error}\index{reliability!precision}
+However, [random error](#randomError) would make it more difficult to make an accurate prediction for an individual person.\index{validity}\index{reliability}\index{measurement error!random error}\index{reliability!precision}\index{individual level}
+
+[Reliability](#reliability) places the upper bound on validity because a measure can be no more valid than it is [reliable](#reliability).\index{validity}\index{reliability}
+In other words, a measure should not correlate more highly with another variable than it correlates with itself.\index{validity}\index{reliability}
+Therefore, the maximum validity coefficient is the square root of the product of the [reliability](#reliability) of each measure, as in Equation \@ref(eq:maximumAssociation):\index{validity}\index{reliability}
+
+$$
+\begin{aligned}
+  r_{xy_{\text{max}}} &= \sqrt{r_{xx}r_{yy}} \\
+  \text{maximum association between } x \text{ and } y &= \sqrt{\text{reliability of } x \text{ and } y}
+\end{aligned}
+(\#eq:maximumAssociation)
+$$
+
+So, the maximum validity coefficient is based on the [reliability](#reliability) of each measure.\index{validity}\index{reliability}
+To the extent that one of the measures is [unreliable](#reliability), the validity coefficient will be attenuated relative to the true validity (i.e., the true strength of association of the constructs), as we describe below.\index{validity}\index{reliability}\index{association!attenuation of}\index{measurement error!attenuation of association}
+
+## Effect of Measurement Error on Associations {#effectOfMeasurementErrorOnAssociations}
+
+Figure \@ref(fig:validity) depicts the [classical test theory](#ctt) approach to understanding the validity of a measure, i.e., its association with another measure, which is the validity coefficient ($r_{xy}$).\index{classical test theory}\index{validity!coefficient of}
+
+```{r validity, out.width = "30%", fig.align = "center", fig.cap = "The Criterion-Related Validity of a Measure, i.e., Its Association With Another Measure, as Depicted in a Path Diagram.", echo = FALSE}
+knitr::include_graphics("./images/Validity.png")
+```
+
+As described above, ([random](#randomError)) [measurement error](#measurementError) weakens (or attenuates) the association between variables [@Goodwin2006; @Schmidt1996].\index{measurement error!attenuation of association}\index{measurement error!random error}
+The greater the [random measurement error](#randomError), the weaker the association.\index{measurement error!attenuation of association}\index{measurement error!random error}
+Thus, the correlation between $x$ and $y$ depends on both the true correlation of $x$ and $y$ ($r_{x_{t}y_{t}}$) and the [reliabilities](#reliability) of $x$ ($r_{xx}$) and $y$ ($r_{yy}$).\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}
+So, [measurement error](#measurementError) in $x$ and $y$ can reduce the observed correlation below the true correlation.\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}
+This is known as the *attenuation formula* (Equation \@ref(eq:attenuationFormula)):\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}
+
+$$
+\small
+\begin{aligned}
+  r_{xy} &= r_{x_{t}y_{t}} \sqrt{r_{xx}r_{yy}} \\
+  \text{observed association between } x \text{ and } y &= (\text{true association of constructs}) \times \sqrt{\text{reliability of } x \text{ and } y}
+\end{aligned}
+(\#eq:attenuationFormula)
+$$
+
+The lower the [reliability](#reliability), the greater the attenuation of the validity coefficient relative to the true association between the constructs.\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+All of these $r$ values (excluding the true correlation) are just estimates unless the sample size is infinite, so the observed association is an imperfect estimate.\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+Hence, we need a correction for this attenuation [@Schmidt1996].\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+This correction for the attenuation of an association due to [measurement error](#measurementError) (unreliability) is known as the disattenuation of a correlation, i.e., correction for the attenuation of an association due to [measurement error](#measurementError) to get a more accurate estimate of the true association between constructs.\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+Rearranging the terms from the attenuation formula, the formula for disattenuation of a correlation (i.e., the *disattenuation formula*) is in Equation \@ref(eq:disattenuationFormula):\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+$$
+\begin{aligned}
+  r_{x_{t}y_{t}} &= \frac{r_{xy}}{\sqrt{r_{xx}r_{yy}}} \\
+  \text{true association of constructs} &= \frac{\text{observed association between } x \text{ and } y}{\sqrt{\text{reliability of } x \text{ and } y}}
+\end{aligned}
+(\#eq:disattenuationFormula)
+$$
+
+All of this is implied in the path diagram (see Figure \@ref(fig:validity)).\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{validity!path diagram}
+The attenuation and disattenuation formulas are based on [classical test theory](#ctt), and therefore assume that all [measurement error](#measurementError) is random, that errors are uncorrelated, etc.\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{classical test theory}
+Nevertheless, the attenuation formula can be informative for understanding how imperiled your research is when your measures have low [reliability](#reliability) (i.e., when there is instability in the measure).\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{reliability!problems of low reliability}
+Unreliability is a strong threat to statistical power—i.e., being able to detect an effect if it exists.\index{reliability!problems of low reliability}\index{statistical power}
+Many people do not account for [reliability](#reliability) of the measures when calculating statistical power, but you should if you want your study to be adequately powered!\index{reliability!problems of low reliability}
+For instance, one could determine what the expected observed association would be given the expected true association and the expected [reliability](#reliability) of the measures, and then use that expected *observed* association to calculate statistical power.\index{reliability!problems of low reliability}\index{statistical power}
+Researchers recommend accounting for measurement [reliability](#reliability), to better estimate the association between constructs, either with the disattenuation formula [@Schmidt1996] or with [structural equation modeling](#sem), as described in the next chapter.\index{measurement error!attenuation of association}\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+
+### Test with Simulated Data {#measurementErrorEffects-simulatedData}
+
+#### Reliability of Predictor {#measurementErrorEffects-reliabilityPredictor}
+
+```{r}
+cor.test(
+  x = mydataValidity$predictorWithMeasurementErrorT1,
+  y = mydataValidity$predictorWithMeasurementErrorT2)
+```
+
+```{r, include = FALSE}
+reliabilityPredictor_sim <- 
+  cor.test(
+    x = mydataValidity$predictorWithMeasurementErrorT1,
+    y = mydataValidity$predictorWithMeasurementErrorT2)$estimate
+```
+
+#### Reliability of Criterion {#measurementErrorEffects-reliabilityCriterion}
+
+```{r}
+cor.test(
+  x = mydataValidity$criterionWithMeasurementErrorT1,
+  y = mydataValidity$criterionWithMeasurementErrorT2)
+```
+
+```{r, include = FALSE}
+reliabilityCriterion_sim <- 
+  cor.test(
+    x = mydataValidity$criterionWithMeasurementErrorT1,
+    y = mydataValidity$criterionWithMeasurementErrorT2)$estimate
+```
+
+#### True Association {#measurementErrorEffects-trueAssociation}
+
+```{r}
+cor.test(
+  x = mydataValidity$predictor,
+  y = mydataValidity$criterion)
+```
+
+```{r, include = FALSE}
+trueAssociation_sim <- 
+  cor.test(
+    x = mydataValidity$predictor,
+    y = mydataValidity$criterion)$estimate
+```
+
+#### Observed Association (After Adding Measurement Error) {#measurementErrorEffects-observedAssociation}
+
+```{r}
+cor.test(
+  x = mydataValidity$predictorWithMeasurementErrorT1,
+  y = mydataValidity$criterionWithMeasurementErrorT1)
+```
+
+```{r, include = FALSE}
+observedAssociation_sim <- 
+  cor.test(
+    x = mydataValidity$predictorWithMeasurementErrorT1,
+    y = mydataValidity$criterionWithMeasurementErrorT1)$estimate
+```
+
+Using simulated data, when the [reliability](#reliability) of the predictor is `r apa(reliabilityPredictor_sim, 2, leading = FALSE)`, the [reliability](#reliability) of the criterion is `r apa(reliabilityCriterion_sim, 2, leading = FALSE)`, and the true association between the predictor and criterion is $r = `r apa(trueAssociation_sim, 2, leading = FALSE)`$, the observed association is attenuated to $r = `r apa(observedAssociation_sim, 2, leading = FALSE)`$.\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+### Attenuation of True Correlation Due to Measurement Error {#attenuation}
+
+The attenuation formula is presented in Equation \@ref(eq:attenuationFormula).
+We extend it to a specific example in Equation \@ref(eq:attenuationFormulaExample):\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+$$
+\small
+\begin{aligned}
+  r_{xy} &= r_{x_ty_t} \sqrt{r_{xx} r_{yy}} \\
+  \text{observed correlation between }x \text{ and } y &= \text{(true association between construct } A \text{ and construct } B) \times \\ & \;\;\; \sqrt{\text{reliability of } x \times \text{reliability of } y}
+\end{aligned}
+(\#eq:attenuationFormulaExample)
+$$
+
+where $x = \text{measure of construct} \ A$; $y = \text{measure of construct} \ B$.\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+Below is an example of how to find the observed correlation between the predictor and criterion if the true association between the constructs (i.e., correlation between true scores of constructs) is .70, the [reliability](#reliability) of the predictor is .90, and the [reliability](#reliability) of the criterion is .85:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+```{r}
+trueAssociation <- .7
+reliabilityOfPredictor <- 0.9
+reliabilityOfCriterion <- 0.85
+
+trueAssociation * sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
+```
+
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
+
+```{r}
+attenuationCorrelation(
+  trueAssociation = 0.7, 
+  reliabilityOfPredictor = 0.9,
+  reliabilityOfCriterion = 0.85)
+```
+
+```{r, include = FALSE}
+attenuatedAssociation <- attenuationCorrelation(
+  trueAssociation = 0.7, 
+  reliabilityOfPredictor = 0.9,
+  reliabilityOfCriterion = 0.85)
+```
+
+The observed association ($r = `r apa(attenuatedAssociation, 2, leading = FALSE)`$) is attenuated relative to the true association ($r = .70$).\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+### Disattenuation of Observed Correlation Due to Measurement Error {#disattenuation}
+
+The disattenuation formula is presented in Equation \@ref(eq:disattenuationFormula).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+We extend it to a specific example in Equation \@ref(eq:disattenuationFormulaExample):\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+$$
+\small
+\begin{aligned}
+  r_{x_ty_t} &= \frac{r_{xy}}{\sqrt{r_{xx} r_{yy}}} \\
+  \text{true association between construct } A \text{ and construct } B &= \frac{\text{observed correlation between } x \text{ and } y}{\sqrt{\text{reliability of } x \times \text{reliability of } y}}
+\end{aligned}
+(\#eq:disattenuationFormulaExample)
+$$
+
+where $x = \text{measure of construct} \ A$; $y = \text{measure of construct} \ B$\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+Find the true association between the construct assessed by the predictor and the construct assessed by the criterion given an observed association if the [reliability](#reliability) of the predictor is .9, and the [reliability](#reliability) of the criterion is .85:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+```{r}
+reliabilityOfPredictor <- 0.9
+reliabilityOfCriterion <- 0.85
+```
+
+The observed (attenuated) association is as follows:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+```{r}
+observedAssociation <- cor.test(
+  x = mydataValidity$predictor,
+  y = mydataValidity$criterion)$estimate
+
+observedAssociation
+```
+
+The true (disattenuated) association is as follows:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
+
+```{r}
+observedAssociation / sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
+```
+
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
+
+```{r}
+disattenuationCorrelation(
+  observedAssociation = observedAssociation, 
+  reliabilityOfPredictor = 0.9,
+  reliabilityOfCriterion = 0.85)
+```
+
+The disattenuation of an observed correlation due to [measurement error](#measurementError) can be demonstrated using [structural equation modeling](#sem).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+For instance, consider the following observed association:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+
+```{r}
+cor.test(
+  x = mydataValidity$predictorObservedSEM,
+  y = mydataValidity$criterionObservedSEM)$estimate
+```
+
+The observed association can be estimated in [structural equation modeling](#sem) in the `lavaan` package [@R-lavaan] using the following syntax:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+
+```{r}
+observedSEM_syntax <- '
+  criterionObservedSEM ~ predictorObservedSEM
+  
+  # Specify residual errors (measurement error)
+  predictorObservedSEM ~~ predictorObservedSEM
+  criterionObservedSEM ~~ criterionObservedSEM
+'
+
+observedSEM_fit <- sem(
+  observedSEM_syntax,
+  data = mydataValidity,
+  missing = "ML")
+
+summary(
+  observedSEM_fit,
+  standardized = TRUE)
+
+lavInspect(observedSEM_fit, "rsquare")
+```
+
+```{r, include = FALSE}
+observedSEM_parameters <- parameterEstimates(
+  observedSEM_fit,
+  standardized = TRUE)
+
+observedBeta <- observedSEM_parameters[
+  which(observedSEM_parameters$lhs == "criterionObservedSEM" &
+          observedSEM_parameters$rhs == "predictorObservedSEM"),
+  "std.all"]
+```
+
+A path diagram of the observed association is depicted in Figure \@ref(fig:observedSEM).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+
+```{r observedSEM, out.width = "100%", fig.align = "center", fig.cap = "Observed Association, as Depicted in a Structural Equation Model."}
+semPaths(
+  observedSEM_fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 2)
+```
+
+Now consider when we account for the degree of [unreliability](#measurementError) of each measure.\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+We can account for the [(un)reliability](#reliability) of each measure by specifying the residual errors as $1 - \text{reliability}$, as below:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+
+```{r}
+# Syntax that specifies the reliability programmatically
+disattenuationSEM_syntax <- 
+  paste(
+    '
+    # Factor loadings
+    predictorLatent =~ 1*predictorObservedSEM
+    criterionLatent =~ 1*criterionObservedSEM
+    
+    # Factor correlation
+    criterionLatent ~ predictorLatent
+    
+    # Specify residual errors (measurement error)
+    predictorObservedSEM ~~ (1 - ', reliabilityOfPredictor, ')*predictorObservedSEM
+    criterionObservedSEM ~~ (1 - ', reliabilityOfCriterion, ')*criterionObservedSEM
+    ',
+    sep = "")
+
+# Syntax that substitutes in the reliability values
+disattenuationTraditionalSEM_syntax <- '
+  # Factor loadings
+  predictorLatent =~ 1*predictorObservedSEM
+  criterionLatent =~ 1*criterionObservedSEM
+  
+  # Factor correlation
+  criterionLatent ~ predictorLatent
+  
+  # Specify residual errors (measurement error)
+  predictorObservedSEM ~~ (1 - .9)*predictorObservedSEM # where .9 is the reliability of the predictor
+  criterionObservedSEM ~~ (1 - .85)*criterionObservedSEM # where .85 is the reliability of the criterion
+'
+
+disattenuationSEM_fit <- sem(
+  disattenuationSEM_syntax,
+  data = mydataValidity,
+  missing = "ML")
+
+summary(
+  disattenuationSEM_fit,
+  standardized = TRUE,
+  rsquare = TRUE)
+```
+
+```{r, include = FALSE}
+disattenuationSEM_parameters <- parameterEstimates(
+  disattenuationSEM_fit,
+  standardized = TRUE)
+
+trueBeta <- disattenuationSEM_parameters[
+  which(disattenuationSEM_parameters$lhs == "criterionLatent" &
+          disattenuationSEM_parameters$rhs == "predictorLatent"),
+  "std.all"]
+```
+
+A path diagram of the true association is depicted in Figures \@ref(fig:disattenuationSEM) and \@ref(fig:semDisattenuation).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+
+```{r disattenuationSEM, out.width = "100%", fig.align = "center", fig.cap = "Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model."}
+semPaths(
+  disattenuationSEM_fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 2)
+```
+
+```{r semDisattenuation, out.width = "100%", fig.align = "center", fig.cap = "Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model.", echo = FALSE}
+knitr::include_graphics("./images/SEM-01.png")
+```
+
+The observed association ($\beta = `r apa(observedBeta, 2)`$) becomes $\beta = `r apa(trueBeta, 2)`$ when it is disattenuated for [measurement error](#measurementError).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
+
+## Generalizability Theory (G-Theory) {#gTheoryValidity}
+
+[Generalizability theory](#gTheory) (G-theory) is discussed in greater detail in the chapter on [reliability](#reliability) in Section \@ref(gTheoryReliability) and in the chapter on [generalizability theory](#gTheory).
+As a brief reminder, [G-theory](#gTheory) is a measurement theory that, unlike [classical test theory](#ctt), does not treat all measurement differences across time, rater, or situation as "error" but rather as a phenomenon of interest.\index{generalizability theory}\index{validity}\index{classical test theory}
+G-theory can simultaneously consider multiple aspects of [reliability](#reliability) and validity in the same model, something that [classical test theory](#ctt) cannot achieve.\index{generalizability theory}\index{validity}\index{reliability}\index{classical test theory}
+
+## Ways to Increase Validity
+
+Here are potential ways to increase the validity of the interpretation of a measure's scores for a particular purpose:\index{validity!ways to increase}
+
+- Make sure the measure's scores are [reliable](#reliability).\index{validity!ways to increase}\index{reliability}
+For potential ways to increase the [reliability](#reliability) of measurement, see Section \@ref(increaseReliability).\index{validity!ways to increase}\index{reliability}
+But do not switch to a less valid measure or to items that are less valid merely because they are more [reliable](#reliability).\index{validity!ways to increase}\index{reliability}
+- Use multiple measures and multiple methods to remedy the effects of [method bias](#methodBias).\index{validity!ways to increase}\index{method bias}\index{methods!multiple}
+- Design the measure with a particular population and purpose in mind.
+When describing the measure in papers or in public spheres, make it clear to others what the population and intended purposes are and what they are not.
+- Make sure each item's scores are valid, based on theory and empiricism, for the particular population and purpose.\index{validity!ways to increase}
+For instance, the items should show [content validity](#contentValidity)—the items should assess facets of the target construct for the target population as defined by experts, without item intrusions from other constructs.\index{validity!ways to increase}\index{validity!content}
+The items' scores should show [convergent validity](#convergentValidity)—the items' scores should be related to other measures of the construct, within the population of interest.\index{validity!ways to increase}\index{validity!convergent}
+The items' scores should show [discriminant validity](#discriminantValidity)—the items' scores should be more strongly related to measures that are intended to assess the same construct than they are to measures that are intended to assess other constructs.\index{validity!ways to increase}\index{validity!discriminant}
+- Combine the items with [latent variable modeling](#latentVariableModeling), such as with [item response theory](#irt) (IRT), [structural equation modeling](#sem) (SEM), or [factor analysis](#factorAnalysisOverview), to reduce the contribution of [random error](#randomError) and to [disattenuate associations for measurement error](#disattenuation).\index{validity!ways to increase}\index{latent variable}\index{structural equation modeling}\index{factor analysis}\index{factor analysis!confirmatory}\index{item response theory}
+- Obtain samples that are as representative of the population as possible, paying attention to including people who are traditionally under-represented in research (if such groups are part of the target population).\index{validity!ways to increase}\index{sample!representative}
+- Make sure that people in the population can understand, interpret, and respond to each item in a meaningful and comparable way.\index{validity!ways to increase}
+- Make sure the measure and its items are not biased against any subgroup within the population of interest.\index{validity!ways to increase}\index{bias}
+[Test bias](#bias) is discussed in Chapter \@ref(bias).\index{validity!ways to increase}\index{bias}
+- Be careful to administer the measure to the population of interest under the conditions in which it is designed.\index{validity!ways to increase}
+If the measure must be administered to people from a different population or under different conditions from which it was designed, be careful to (a) note that the measure was not designed to be administered for these other populations or conditions, and (b) note that individuals' scores may not accurately reflect their level on the construct.\index{validity!ways to increase}
+If interpretations are made based on these scores, make them cautiously and say how the differences in population or condition may have influenced the scores.\index{validity!ways to increase}
+- Continue to monitor the validity of the measure's scores for the given population and purpose.\index{validity!ways to increase}
+The validity of measures' scores can change over time for a number of reasons.\index{validity!ways to increase}
+Cohort effects can lead items to become obsolete over time.\index{validity!ways to increase}\index{cohort effect}
+If people or organizations change their behavior in response to a measure, this can invalidate a measure's scores for the intended purpose, as described in Section \@ref(consequentialValidity) when discussing consequential validity.\index{validity!ways to increase}\index{validity!consequential}
+
+## Conclusion {#conclusion-validity}
+
+Validity is how much accuracy, utility, and meaningfulness the interpretation of a measure's scores have for a particular purpose.\index{validity}\index{validity!accuracy}\index{validity!utility}\index{validity!meaningfulness}
+Like [reliability](#reliability), validity is not one thing.\index{validity}\index{reliability}
+There are multiple aspects of validity.\index{validity}
+Validity is also not a characteristic that resides in a test.\index{validity}
+The validity of a measure's scores reflect an interaction of the properties of the test with the population for whom it is designed and the sample and context in which it is administered.\index{validity}
+Thus, when reporting validity in papers, it is important to adequately describe the aspects of validity that have been considered and the population, sample, and context in which the measure is assessed.\index{validity!reporting}\index{reporting}
+
+## Suggested Readings {#readings-validity}
+
+@Cronbach1955; @Clark2019
+
+## Exercises {#exercises-validity}
+
+```{r, include = FALSE}
+library("MOTE")
+```
+
+```{r, include = FALSE}
+cnlsy <- read_csv(here("data", "cnlsy.csv"))
+```
+
+```{r, include = FALSE}
+# Criterion-Related Validity ----------------------------------------------
+
+cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)
+criterionValidity_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate)
+```
+
+```{r, include = FALSE}
+# Attenuation of True Correlation due to Measurement Error ----------------
+
+#observed correlation between x and y = (true association between construct A and construct B) * sqrt(reliability of x and y), where x = measure of construct A; y = measure of construct B
+trueAssociation_ex <- .8 #assume the true association between the constructs (i.e., correlation between true scores of constructs) is .8
+reliabilityOfPredictor_ex <- 0.7 #assume the reliability of the predictor is .8
+reliabilityOfCriterion_ex <- 0.7090234 #assume the reliability of the predictor is .7
+
+observedAssociation_ex <- trueAssociation_ex * sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
+```
+
+```{r, include = FALSE}
+# Disattenuation of Observed Correlation due to Measurement Error ---------
+
+#true association between construct A and construct B = (observed correlation between x and y)/sqrt(reliability of x and y), where x = measure of construct A; y = measure of construct B
+reliabilityOfPredictor_ex <- 0.7 #assume the reliability of the predictor is .8
+reliabilityOfCriterion_ex <- 0.8 #assume the reliability of the predictor is .7
+
+trueAssociation_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate)/sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
+```
+
+```{r, include = FALSE}
+# Incremental Validity ----------------------------------------------------
+
+model1_ex <- lm(bpi_hyperactiveSum ~ bpi_antisocialT1Sum, data = na.omit(cnlsy))
+model2_ex <- lm(bpi_hyperactiveSum ~ bpi_antisocialT1Sum + bpi_anxiousDepressedSum, data = na.omit(cnlsy))
+
+model1F_ex <- model1_ex$fstatistic
+
+incrementalValidity_ex <- anova(model1_ex, model2_ex) #anxiety/depression shows incremental validity above antisocial behavior for predicting hyperactivity
+
+incrementalValidityF_ex <- incrementalValidity_ex$F[2]
+incrementalValiditydf_ex <- incrementalValidity_ex$Df[2]
+
+getDeltaRsquare(model2_ex) #anxiety/depression explains 6% additional variance in hyperactivity above variance explained by antisocial behavior
+deltaRsquare_ex <- getDeltaRsquare(model2_ex)[[2]]
+```
+
+```{r, include = FALSE}
+# Multitrait-multimethod matrix -----------------------------------------
+
+round(cor(MTMM_data), 2)
+
+round(cor(MTMM_data[,c("VO1","SO1","QO1",
+                       "VW1","SW1","QW1",
+                       "VM1","SM1","QM1")]), 2)
+```
+
+```{r, include = FALSE}
+# Multitrait-multimethod CFA --------------------------------------------
+
+#Example from W. Joel Schneider: https://my.ilstu.edu/~wjschne/442/CFA.html#(15)
+modelMTMM <- '
+  g =~ Verbal + Spatial + Quant
+  Verbal =~ 
+    VO1 + VO2 + VO3 + 
+    VW1 + VW2 + VW3 + 
+    VM1 + VM2 + VM3
+  Spatial =~ 
+    SO1 + SO2 + SO3 + 
+    SW1 + SW2 + SW3 + 
+    SM1 + SM2 + SM3
+  Quant =~ 
+    QO1 + QO2 + QO3 + 
+    QW1 + QW2 + QW3 + 
+    QM1 + QM2 + QM3
+  Oral =~ 
+    VO1 + VO2 + VO3 + 
+    SO1 + SO2 + SO3 + 
+    QO1 + QO2 + QO3
+  Written =~ 
+    VW1 + VW2 + VW3 + 
+    SW1 + SW2 + SW3 + 
+    QW1 + QW2 + QW3
+  Manipulative =~ 
+    VM1 + VM2 + VM3 + 
+    SM1 + SM2 + SM3 + 
+    QM1 + QM2 + QM3
+'
+```
+
+```{r, include = FALSE}
+MTMM.fit <- cfa(modelMTMM,
+                data = MTMM_data,
+                orthogonal = TRUE)
+```
+
+```{r, include = FALSE}
+summary(MTMM.fit,
+        fit.measures = TRUE,
+        standardized = TRUE,
+        rsquare = TRUE)
+```
+
+```{r, include = FALSE}
+#Path Diagram
+semPaths(MTMM.fit,
+         what = "Std.all",
+         layout = "tree3",
+         bifactor = c("Verbal","Spatial","Quant","g"))
+```
+
+```{r, include = FALSE}
+# Discriminant Validity ---------------------------------------------------
+
+modelCFA <- '
+  Verbal =~ 
+    VO1 + 
+    VW1 + 
+    VM1
+  Spatial =~ 
+    SO1 + 
+    SW1 + 
+    SM1
+  Quant =~ 
+    QO1 + 
+    QW1 + 
+    QM1
+'
+```
+
+
+```{r, include = FALSE}
+htmt_ex <- htmt(modelCFA,
+     data = MTMM_data,
+     missing = "ml")
+
+htmtVerbSpatial_ex <- htmt_ex[row.names(htmt_ex) == "Spatial", "Verbal"]
+```
+
+### Questions {#exercisesQuestions-validity}
+
+Note: Several of the following questions use data from the Children of the National Longitudinal Survey of Youth (CNLSY).
+The CNLSY is a publicly available longitudinal data set provided by the Bureau of Labor Statistics (https://www.bls.gov/nls/nlsy79-children.htm#topical-guide; archived at https://perma.cc/EH38-HDRN).
+The CNLSY data file for these exercises is located on this book's page of the Open Science Framework (https://osf.io/3pwza).
+Children's behavior problems were rated in 1988 (time 1: T1) and then again in 1990 (time 2: T2) on the Behavior Problems Index (BPI).
+
+1. What is the criterion-related validity of the Antisocial Behavior subscale of the BPI in relation to the Hyperactive subscale of the BPI?
+2. Assume the true correlation between two constructs, antisocial behavior and hyperactivity, is $r = .8$.
+And assume the reliability of the measure of antisocial behavior is $r = .7$, and the reliability of the measure of hyperactivity is $r = .7090234$.
+According to the attenuation formula (that attenuates the association due to measurement error), what would be the correlation between measures of antisocial behavior and hyperactivity that we would actually observe?
+3. Assume the true correlation between two constructs, antisocial behavior and hyperactivity, is $r = .8$, the reliability of the Antisocial Behavior subscale of the BPI is $r = .7$, and the reliability of the measure of Hyperactive subscale of the BPI is $r = .8$.
+According to the disattenuation formula (to correct for attenuation of the association due to measurement error), what would be the true association between the constructs of antisocial behavior and hyperactivity?
+4. You are interested in whether a child's levels of anxiety/depression can explain unique variance in children's hyperactivity above and beyond their level of antisocial behavior.
+Is the child's level of anxiety/depression (as rated on the Anxiety/Depression subscale of the BPI) significantly associated with the child's level of hyperactivity (as rated on the Hyperactive subscale of the BPI) above and beyond the variance accounted for by the child's level of antisocial behavior (as rated on the Antisocial Behavior subscale of the BPI).
+How much unique variance in hyperactivity is accounted for by their anxiety/depression?
+5. In Section \@ref(mtmmCorrelationMatrix), we simulated data for a multitrait-multimethod matrix. The simulated data includes data on participants' verbal, spatial, and quantitative abilities, each assessed in three subtests in each of three methods: oral, written, and manipulative.
+    a. Provide a multitrait-multimethod matrix of the data from the first subtest of each trait-by-method combination (`VO1`, `SO1`, `QO1`, `VW1`, `SW1`, `QW1`, `VM1`, `SM1`, `QM1`).
+Assume the reliability of the variables assessed orally is .7, the reliability of the variables assessed using the written method is .8, and the reliability of variables assessed using the manipulative method is .9.
+    b. Interpret the multitrait-multimethod matrix you just created.
+    c. What is the Heterotrait-Monotrait (HTMT) ratio for the measures of the verbal (`VO1`, `VW1`, `VM1`) and spatial (`SO1`, `SW1`, `SM1`) constructs?
+What does this indicate?
+
+### Answers {#exercisesAnswers-validity}
+
+1. The criterion-related validity is $r = `r apa(criterionValidity_ex, decimals = 2, leading = FALSE)`$.
+2. The observed correlation would be $r = `r apa(observedAssociation_ex, decimals = 2, leading = FALSE)`$.
+3. The true association would be $r = `r apa(trueAssociation_ex, decimals = 2, leading = FALSE)`$.
+4. Yes, the child's level of anxiety/depression is significantly associated with their hyperactivity above and beyond their antisocial behavior $(F[df = `r (incrementalValiditydf_ex)`] = `r apa(incrementalValidityF_ex, decimals = 2)`, p < .001)$.
+The child's level of anxiety/depression accounted for $`r apa(deltaRsquare_ex * 100, decimals = 2)`\%$ unique variance in hyperactivity above and beyond their antisocial behavior.
+5.	
+    a. The multitrait-multimethod matrix is below:
+    
+```{r mtmmMatrix, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Matrix.", echo = FALSE}
+knitr::include_graphics("./images/MTMM.png")
+```
+
+5.
+    b. The convergent correlations (green cells) are statistically significant ($p\text{s} < .05$) and moderate in magnitude ($.45 < r\text{s} < .53$), supporting the convergent validity of the measures.
+[The reliabilities of these measures are not provided, so we are not able to compare the magnitude of the convergent validities to the magnitude of reliability to see the extent to which the convergent validities may be attenuated due to measurement unreliability].
+Evidence of discriminant validity is supported by three findings: First, the convergent correlations (green cells: $r\text{s} =$ .46–.53) are stronger than the heteromethod-heterotrait correlations (pink cells: $r\text{s} =$ .24–.34).
+Second, the convergent correlations (green cells: $r\text{s} =$ .46–.53) are stronger than the discriminant correlations (orange cells: $r\text{s} =$ .30–.43).
+Third, the patterns of intercorrelations between traits are the same, regardless of which measurement method is used.
+Verbal, spatial, and quantitative skills are intercorrelated for every measurement method used.
+    c. The HTMT ratio for the measures of the verbal and spatial constructs is $`r apa(htmtVerbSpatial_ex, decimals = 3, leading = TRUE)`$.
+The HTMT ratio is the average of the heterotrait-heteromethod correlations, relative to the average of the monotrait-heteromethod correlations.
+Given that the HTMT ratio is considerably less than 1 (and less than the common cutoff of .85), it indicates that the monotrait-heteromethod correlations are considerably larger than the heterotrait-heteromethod correlations.
+Thus, the HTMT provides evidence that the measures of verbal and spatial constructs show discriminant validity.
