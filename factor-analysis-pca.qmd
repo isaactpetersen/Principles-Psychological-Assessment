@@ -42,10 +42,9 @@ For instance, if you depict a covariance path between two variables, it means th
 
 In factor analysis, the relation between an indicator ($\text{X}$) and its underlying latent factor(s) ($\text{F}$) can be represented with a regression formula as in Equation \@ref(eq:indicatorLatentAssociation):\index{factor analysis}\index{structural equation modeling!factor loading}\index{structural equation modeling!intercept}
 
-\begin{equation}
+$$
 \text{X} = \lambda \cdot \text{F} + \text{Item Intercept} + \text{Error Term}
-(\#eq:indicatorLatentAssociation)
-\end{equation}
+$$ {#eq-indicatorLatentAssociation}
 
 where:
 
@@ -686,13 +685,17 @@ At the same time, weighted sums may be less generalizable than unit-weighted com
 
 A comparison of various measurement models is in Table \@ref(tab:measurementModelsComparison).\index{factor analysis}\index{principal component analysis}\index{structural equation modeling!measurement model}\index{linear composite}\index{measurement error}
 
-Table: (\#tab:measurementModelsComparison) Comparison of Various Measurement Models. "PCA" = principal component analysis; "CFA" = confirmatory factor analysis; "EFA" = exploratory factor analysis; "SEM" = structural equation modeling; "IRT" = item response theory.
+::: {#tbl-measurementModelsComparison}
 
 | Measurement Model                             | Items' Factor Loadings        | Items' Residuals/Error                                |
 |-----------------------------------------------|-------------------------------|-------------------------------------------------------|
 | Mean/Sum Score                                | All are the same (fixed to 1) | Assumes items are measured without error (fixed to 0) |
 | PCA or Weighted Mean/Sum Score                | Allowed to differ             | Assumes items are measured without error (fixed to 0) |
 | Latent Variable Modeling (CFA, EFA, SEM, IRT) | Allowed to differ             | Estimates error for each item                         |
+
+Comparison of Various Measurement Models. "PCA" = principal component analysis; "CFA" = confirmatory factor analysis; "EFA" = exploratory factor analysis; "SEM" = structural equation modeling; "IRT" = item response theory.
+
+:::
 
 ### Missing Data Handling {#missingDataHandling-factorAnalysis}
 
@@ -794,23 +797,40 @@ Before conducting a [factor analysis](#factorAnalysis), it is important examine 
 
 Descriptive statistics are presented in Table \@ref(tab:descriptiveStats).\index{descriptive statistics}
 
-```{r, eval = knitr::is_html_output(excludes = "epub"), echo = knitr::is_html_output(excludes = "epub")}
-paged_table(psych::describe(HolzingerSwineford1939[,vars]))
+::: {.content-visible when-format="html"}
+
+```{r}
+paged_table(psych::describe(HolzingerSwineford1939[, vars]))
 ```
 
-```{r, eval = knitr::is_latex_output(), echo = knitr::is_latex_output()}
+:::
+
+::: {.content-visible when-format="pdf"}
+
+```{r}
 kable(psych::describe(HolzingerSwineford1939[,vars]),
       format = "latex",
       booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
 ```
 
-```{r, eval = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm")), echo = knitr::is_html_output(excludes = c("markdown","html","html4","html5","revealjs","s5","slideous","slidy","gfm"))}
-kable(psych::describe(HolzingerSwineford1939[,vars]),
-      booktabs = TRUE)
+:::
+
+::: {.content-visible when-format="epub"}
+
+```{r}
+kable(
+  psych::describe(HolzingerSwineford1939[,vars]),
+  booktabs = TRUE
+)
 ```
 
-```{r descriptiveStats}
+:::
+
+```{r}
+#| label: tbl-descriptiveStats
+#| tbl-cap: "Descriptive Statistics."
+
 summaryTable <- HolzingerSwineford1939 %>% 
   dplyr::select(all_of(vars)) %>% 
   summarise(across(
@@ -852,7 +872,9 @@ cor(
 
 Correlation matrices of various types using the `cor.table()` function from the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] are in Tables \@ref(tab:corTable1), \@ref(tab:corTable2), and \@ref(tab:corTable3).\index{petersenlab package}\index{correlation}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 cor.table(
   HolzingerSwineford1939[,vars],
   dig = 2)
@@ -868,7 +890,9 @@ cor.table(
   dig = 2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 corTable1 <- cor.table(
   HolzingerSwineford1939[,vars],
   dig = 2)
@@ -884,7 +908,11 @@ corTable3 <- cor.table(
   dig = 2)
 ```
 
-```{r corTable1, echo = FALSE}
+```{r}
+#| label: tbl-corTable1
+#| tbl-cap: "Correlation Matrix with *r*, *n*, and *p*-values."
+#| echo: false
+
 corTable1 %>% 
   kable(.,
   caption = "Correlation Matrix with *r*, *n*, and *p*-values.",
@@ -893,7 +921,11 @@ corTable1 %>%
   escape = FALSE)
 ```
 
-```{r corTable2, echo = FALSE}
+```{r}
+#| label: tbl-corTable2
+#| tbl-cap: "Correlation Matrix with Asterisks for Significant Associations."
+#| echo: false
+
 corTable2 %>% 
   kable(.,
   caption = "Correlation Matrix with Asterisks for Significant Associations.",
@@ -902,7 +934,11 @@ corTable2 %>%
   escape = FALSE)
 ```
 
-```{r corTable3, echo = FALSE}
+```{r}
+#| label: tbl-corTable3
+#| tbl-cap: "Correlation Matrix."
+#| echo: false
+
 corTable3 %>% 
   kable(.,
   caption = "Correlation Matrix.",
@@ -915,13 +951,22 @@ Correlation plots were generated using the `corrplot` package [@R-corrplot].\ind
 
 A pairs panel plot is in Figure \@ref(fig:pairsPanel).\index{correlation}
 
-```{r pairsPanel, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot."}
+```{r}
+#| label: fig-pairsPanel
+#| fig-cap: "Pairs Panel Plot."
+#| fig-alt: "Pairs Panel Plot."
+#| echo: false
+
 pairs.panels(HolzingerSwineford1939[,vars])
 ```
 
 A correlation plot is in Figure \@ref(fig:correlationPlot).\index{correlation}
 
-```{r correlationPlot, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot."}
+```{r correlationPlot}
+#| label: fig-correlationPlot
+#| fig-cap: "Correlation Plot."
+#| fig-alt: "Correlation Plot."
+
 corrplot(cor(
   HolzingerSwineford1939[,vars],
   use = "pairwise.complete.obs"))
@@ -992,7 +1037,11 @@ Therefore, interpretability of the factors would be important for deciding betwe
 
 A scree plot from a parallel analysis is in Figure \@ref(fig:screePlotEFAparallel).\index{scree plot}\index{factor analysis!exploratory}
 
-```{r screePlotEFAparallel, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot from Parallel Analysis in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-screePlotEFAparallel
+#| fig-cap: "Scree Plot from Parallel Analysis in Exploratory Factor Analysis."
+#| fig-alt: "Scree Plot from Parallel Analysis in Exploratory Factor Analysis."
+
 fa.parallel(
   x = HolzingerSwineford1939[,vars],
   fm = "ml",
@@ -1001,7 +1050,11 @@ fa.parallel(
 
 A scree plot from EFA is in Figure \@ref(fig:screePlotEFA).\index{scree plot}\index{factor analysis!exploratory}
 
-```{r screePlotEFA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-screePlotEFA
+#| fig-cap: "Scree Plot in Exploratory Factor Analysis."
+#| fig-alt: "Scree Plot in Exploratory Factor Analysis."
+
 screeDataEFA <- nScree(
   x = cor(
     HolzingerSwineford1939[,vars],
@@ -1029,7 +1082,11 @@ A three-factor solution is supported by the lowest BIC, whereas a four-factor so
 
 A VSS plot is in Figure \@ref(fig:vssOrthogonal).\index{very simple structure plot}\index{orthogonal rotation}
 
-```{r vssOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-vssOrthogonal
+#| fig-cap: "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Very Simple Structure Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+
 vss(
   HolzingerSwineford1939[,vars],
   rotate = "varimax",
@@ -1039,6 +1096,10 @@ vss(
 Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOrthogonal).\index{very simple structure plot}\index{orthogonal rotation}
 
 ```{r vssComplexOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Orthogonal Rotation in Exploratory Factor Analysis."}
+#| label: fig-vssComplexOrthogonal
+#| fig-cap: "Very Simple Structure-Related Indices With Orthogonal Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Very Simple Structure-Related Indices With Orthogonal Rotation in Exploratory Factor Analysis."
+
 nfactors(
   HolzingerSwineford1939[,vars],
   rotate = "varimax",
@@ -1052,7 +1113,11 @@ A three-factor solution is supported by the lowest BIC.\index{very simple struct
 
 A VSS plot is in Figure \@ref(fig:vssOblique).\index{very simple structure plot}\index{oblique rotation}
 
-```{r vssOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-vssOblique
+#| fig-cap: "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Very Simple Structure Plot With Oblique Rotation in Exploratory Factor Analysis."
+
 vss(
   HolzingerSwineford1939[,vars],
   rotate = "oblimin",
@@ -1061,7 +1126,11 @@ vss(
 
 Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexOblique).\index{very simple structure plot}\index{oblique rotation}
 
-```{r vssComplexOblique, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With Oblique Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-vssComplexOblique
+#| fig-cap: "Very Simple Structure-Related Indices With Oblique Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Very Simple Structure-Related Indices With Oblique Rotation in Exploratory Factor Analysis."
+
 nfactors(
   HolzingerSwineford1939[,vars],
   rotate = "oblimin",
@@ -1075,7 +1144,11 @@ A three-factor solution is supported by the lowest BIC, whereas a four-factor so
 
 A VSS plot is in Figure \@ref(fig:vssUnrotated).\index{very simple structure plot}
 
-```{r vssUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-vssUnrotated
+#| fig-cap: "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Very Simple Structure Plot With no Rotation in Exploratory Factor Analysis."
+
 nfactors(
   HolzingerSwineford1939[,vars],
   rotate = "none",
@@ -1084,7 +1157,11 @@ nfactors(
 
 Multiple VSS-related fit indices are in Figure \@ref(fig:vssComplexUnrotated).\index{very simple structure plot}
 
-```{r vssComplexUnrotated, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure-Related Indices With no Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-vssComplexUnrotated
+#| fig-cap: "Very Simple Structure-Related Indices With no Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Very Simple Structure-Related Indices With no Rotation in Exploratory Factor Analysis."
+
 nfactors(
   HolzingerSwineford1939[,vars],
   rotate = "none",
@@ -1947,7 +2024,11 @@ Correlation plots were generated using the `corrplot` package [@R-corrplot].\ind
 
 A scree plot from a model with orthogonal rotation is in Figure \@ref(fig:screePlotPsychOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}
 
-```{r screePlotPsychOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: psych."}
+```{r}
+#| label: fig-screePlotPsychOrthogonal
+#| fig-cap: "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: psych."
+#| fig-alt: "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: psych."
+
 plot(
   efa9factorOrthogonal$e.values,
   xlab = "Factor",
@@ -1957,7 +2038,11 @@ plot(
 A scree plot based on factor loadings from `lavaan` is in Figure \@ref(fig:screePlotLavaanOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}
 When the factors are uncorrelated (orthogonal rotation), the eigenvalue for a factor is calculated as the sum of squared standardized factor loadings across all items, as described in Section \@ref(pca).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{scree plot}\index{eigenvalue}
 
-```{r screePlotLavaanOrthogonal, out.width = "100%", fig.align = "center", class.source = "fold-hide", fig.cap = "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: lavaan."}
+```{r}
+#| label: fig-screePlotLavaanOrthogonal
+#| fig-cap: "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: lavaan."
+#| fig-alt: "Scree Plot With Orthogonal Rotation in Exploratory Factor Analysis: lavaan."
+
 param1Factor <- parameterEstimates(
   efa1factorOrthogonalLavaan_fit,
   standardized = TRUE)
@@ -2121,32 +2206,52 @@ plot(
 
 A biplot is in Figure \@ref(fig:biplotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
 
-```{r biplotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-biplotOrthogonal
+#| fig-cap: "Biplot Using Orthogonal Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Biplot Using Orthogonal Rotation in Exploratory Factor Analysis."
+
 biplot(efa2factorOrthogonal)
 abline(h = 0, v = 0, lty = 2)
 ```
 
 A factor plot is in Figure \@ref(fig:factorPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}
 
-```{r factorPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-factorPlotOrthogonal
+#| fig-cap: "Factor Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Factor Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+
 factor.plot(efa3factorOrthogonal, cut = 0.5)
 ```
 
 A factor diagram is in Figure \@ref(fig:factorDiagramOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}
 
-```{r factorDiagramOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Orthogonal Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-factorDiagramOrthogonal
+#| fig-cap: "Factor Diagram With Orthogonal Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Factor Diagram With Orthogonal Rotation in Exploratory Factor Analysis."
+
 fa.diagram(efa3factorOrthogonal, digits = 2)
 ```
 
 A pairs panel plot is in Figure \@ref(fig:pairsPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
 
-```{r pairsPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-pairsPlotOrthogonal
+#| fig-cap: "Pairs Panel Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Pairs Panel Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+
 pairs.panels(fa3Orthogonal)
 ```
 
 A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonal).\index{factor analysis!exploratory}\index{orthogonal rotation}\index{correlation}
 
-```{r correlationPlotOrthogonal, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-correlationPlotOrthogonal
+#| fig-cap: "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Correlation Plot With Orthogonal Rotation in Exploratory Factor Analysis."
+
 corrplot(cor(
   fa3Orthogonal,
   use = "pairwise.complete.obs"))
@@ -2156,31 +2261,51 @@ corrplot(cor(
 
 A biplot is in Figure \@ref(fig:biplotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
 
-```{r biplotOblique, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Oblique Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-biplotOblique
+#| fig-cap: "Biplot Using Oblique Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Biplot Using Oblique Rotation in Exploratory Factor Analysis."
+
 biplot(efa2factorOblique)
 ```
 
 A factor plot is in Figure \@ref(fig:factorPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}
 
-```{r factorPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Factor Plot With Oblique Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-factorPlotOblique
+#| fig-cap: "Factor Plot With Oblique Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Factor Plot With Oblique Rotation in Exploratory Factor Analysis."
+
 factor.plot(efa3factorOblique, cut = 0.5)
 ```
 
 A factor diagram is in Figure \@ref(fig:factorDiagramOblique).\index{factor analysis!exploratory}\index{oblique rotation}
 
-```{r factorDiagramOblique, out.width = "100%", fig.align = "center", fig.cap = "Factor Diagram With Oblique Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-factorDiagramOblique
+#| fig-cap: "Factor Diagram With Oblique Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Factor Diagram With Oblique Rotation in Exploratory Factor Analysis."
+
 fa.diagram(efa3factorOblique, digits = 2)
 ```
 
 A pairs panel plot is in Figure \@ref(fig:pairsPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
 
-```{r pairsPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot With Oblique Rotation in Exploratory Factor Analysis."}
+```{r}
+#| label: fig-pairsPlotOblique
+#| fig-cap: "Pairs Panel Plot With Oblique Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Pairs Panel Plot With Oblique Rotation in Exploratory Factor Analysis."
+
 pairs.panels(fa3Oblique)
 ```
 
 A correlation plot is in Figure \@ref(fig:correlationPlotOblique).\index{factor analysis!exploratory}\index{oblique rotation}\index{correlation}
 
 ```{r correlationPlotOblique, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."}
+#| label: fig-correlationPlotOblique
+#| fig-cap: "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."
+#| fig-alt: "Correlation Plot With Oblique Rotation in Exploratory Factor Analysis."
+
 corrplot(cor(
   fa3Oblique,
   use = "pairwise.complete.obs"))
@@ -2352,7 +2477,11 @@ AVE(cfaModelFit)
 
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagram).\index{factor analysis!confirmatory}
 
-```{r cfaPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model Diagram."}
+```{r}
+#| label: fig-cfaPathDiagram
+#| fig-cap: "Confirmatory Factor Analysis Model Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model Diagram."
+
 semPaths(
   cfaModelFit,
   what = "std",
@@ -2454,7 +2583,11 @@ AVE(cfaModel1Fit)
 
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass1).\index{factor analysis!confirmatory}
 
-```{r cfaPathDiagramClass1, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 1 Diagram."}
+```{r}
+#| label: fig-cfaPathDiagramClass1
+#| fig-cap: "Confirmatory Factor Analysis Model 1 Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 1 Diagram."
+
 semPaths(
   cfaModel1Fit,
   what = "std",
@@ -2549,7 +2682,11 @@ AVE(cfaModel2Fit)
 
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:cfaPathDiagramClass2).\index{factor analysis!confirmatory}
 
-```{r cfaPathDiagramClass2, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 2 Diagram."}
+```{r}
+#| label: fig-cfaPathDiagramClass2
+#| fig-cap: "Confirmatory Factor Analysis Model 2 Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 2 Diagram."
+
 semPaths(
   cfaModel2Fit,
   what = "std",
@@ -2691,14 +2828,22 @@ AVE(cfaModel3BFit)
 
 Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaPathDiagramClass3A) and \@ref(fig:cfaPathDiagramClass3B).\index{factor analysis!confirmatory}
 
-```{r cfaPathDiagramClass3A, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 3a Diagram."}
+```{r}
+#| label: fig-cfaPathDiagramClass3A
+#| fig-cap: "Confirmatory Factor Analysis Model 3a Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 3a Diagram."
+
 semPaths(cfaModel3AFit,
          what = "std",
          layout = "tree2",
          edge.label.cex = 1.5)
 ```
 
-```{r cfaPathDiagramClass3B, out.width = "100%", fig.cap = "Confirmatory Factor Analysis Model 3b Diagram."}
+```{r}
+#| label: fig-cfaModel3BFit
+#| fig-cap: "Confirmatory Factor Analysis Model 3b Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 3b Diagram."
+
 semPaths(cfaModel3BFit,
          what = "std",
          layout = "tree2",
@@ -2938,7 +3083,11 @@ AVE(cfaModel4EFit)
 
 Path diagrams of the models generated using the `semPlot` package [@R-semPlot] are in Figures \@ref(fig:cfaModel4AFit), \@ref(fig:cfaModel4BFit), \@ref(fig:cfaModel4CFit), \@ref(fig:cfaModel4DFit), and \@ref(fig:cfaModel4EFit).\index{factor analysis!confirmatory}
 
-```{r cfaModel4AFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4a Diagram."}
+```{r}
+#| label: fig-cfaModel4AFit
+#| fig-cap: "Confirmatory Factor Analysis Model 4a Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 4a Diagram."
+
 semPaths(
   cfaModel4AFit,
   what = "std",
@@ -2946,7 +3095,11 @@ semPaths(
   edge.label.cex = 1.3)
 ```
 
-```{r cfaModel4BFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4b Diagram."}
+```{r}
+#| label: fig-cfaModel4BFit
+#| fig-cap: "Confirmatory Factor Analysis Model 4b Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 4b Diagram."
+
 semPaths(
   cfaModel4BFit,
   what = "std",
@@ -2954,7 +3107,11 @@ semPaths(
   edge.label.cex = 1.3)
 ```
 
-```{r cfaModel4CFit, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4c Diagram."}
+```{r}
+#| label: fig-cfaModel4CFit
+#| fig-cap: "Confirmatory Factor Analysis Model 4c Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 4c Diagram."
+
 semPaths(
   cfaModel4CFit,
   what = "std",
@@ -2962,7 +3119,11 @@ semPaths(
   edge.label.cex = 1.3)
 ```
 
-```{r cfaModel4DFit, fig.height = 6, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4d Diagram."}
+```{r}
+#| label: fig-cfaModel4DFit
+#| fig-cap: "Confirmatory Factor Analysis Model 4d Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 4d Diagram."
+
 semPaths(
   cfaModel4DFit,
   what = "std",
@@ -2971,6 +3132,10 @@ semPaths(
 ```
 
 ```{r cfaModel4EFit, fig.height = 6, out.width = "100%", fig.align = "center", fig.cap = "Confirmatory Factor Analysis Model 4e Diagram."}
+#| label: fig-cfaModel4EFit
+#| fig-cap: "Confirmatory Factor Analysis Model 4e Diagram."
+#| fig-alt: "Confirmatory Factor Analysis Model 4e Diagram."
+
 semPaths(
   cfaModel4EFit,
   what = "std",
@@ -2989,7 +3154,11 @@ dagModel <- lavaanToGraph(cfaModel4AFit)
 par(mfrow = c(4, 4))
 ```
 
-```{r cfaModel4equivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to Confirmatory Factor Analysis Model 4."}
+```{r}
+#| label: fig-cfaModel4equivalent
+#| fig-cap: "Equivalently Fitting Models to Confirmatory Factor Analysis Model 4."
+#| fig-alt: "Equivalently Fitting Models to Confirmatory Factor Analysis Model 4."
+
 lapply(equivalentDAGs(dagModel, n = 16), plot)
 ```
 
@@ -3229,7 +3398,11 @@ BifactorIndicesCalculator::bifactorIndices(
 
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:bifactorModelPathDiagram).\index{factor analysis!bifactor}
 
-```{r bifactorModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Bifactor Model."}
+```{r}
+#| label: fig-bifactorModelPathDiagram
+#| fig-cap: "Bifactor Model."
+#| fig-alt: "Bifactor Model."
+
 semPaths(
   cfaModelBifactorFit,
   what = "std",
@@ -3249,7 +3422,11 @@ dagModelBifactor <- lavaanToGraph(cfaModelBifactorFit)
 par(mfrow = c(2, 2))
 ```
 
-```{r bifactorModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Bifactor Model."}
+```{r}
+#| label: fig-bifactorModelEquivalent
+#| fig-cap: "Equivalently Fitting Models to a Bifactor Model."
+#| fig-alt: "Equivalently Fitting Models to a Bifactor Model."
+
 lapply(equivalentDAGs(dagModelBifactor, n = 4), plot)
 ```
 
@@ -3512,6 +3689,10 @@ BifactorIndicesCalculator::bifactorIndices(
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:mtmmCFApathDiagram).\index{multitrait-multimethod matrix}\index{factor analysis!confirmatory}
 
 ```{r mtmmCFApathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
+#| label: fig-mtmmCFApathDiagram
+#| fig-cap: "Multitrait-Multimethod Model in Confirmatory Factor Analysis."
+#| fig-alt: "Multitrait-Multimethod Model in Confirmatory Factor Analysis."
+
 semPaths(
   cfaModelMTMMFit,
   what = "std",
@@ -3531,7 +3712,11 @@ dagModelMTMM <- lavaanToGraph(cfaModelMTMMFit)
 par(mfrow = c(2, 2))
 ```
 
-```{r mtmmCFAequivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."}
+```{r}
+#| label: fig-mtmmCFAequivalent
+#| fig-cap: "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."
+#| fig-alt: "Equivalently Fitting Models to a Multitrait-Multimethod Model in Confirmatory Factor Analysis."
+
 lapply(equivalentDAGs(
   dagModelMTMM,
   n = 4),
@@ -3548,7 +3733,9 @@ To specify an [exploratory structural equation model](#efa-cfa-esem) (ESEM), you
 In this example, I use the factor loadings from the three-factor [EFA](#efa) model, as specified in Section \@ref(obliqueLavaan-efa).\index{structural equation modeling!exploratory}
 The factor loadings are in Table \@ref(tab:esemLoadings).
 
-```{r esemLoadings}
+```{r}
+#| label: tbl-esemLoadings
+
 esem_loadings <- parameterEstimates(
   efa3factorObliqueLavaan_fit,
   standardized = TRUE
@@ -3652,7 +3839,11 @@ AVE(esemModelFit)
 
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram).\index{structural equation modeling!exploratory}
 
-```{r esemModelPathDiagram, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With All Cross-loadings."}
+```{r}
+#| label: fig-esemModelPathDiagram
+#| fig-cap: "Exploratory Structural Equation Model With All Cross-loadings."
+#| fig-alt: "Exploratory Structural Equation Model With All Cross-loadings."
+
 semPaths(
   esemModelFit,
   what = "std",
@@ -3671,7 +3862,11 @@ dagModelESEM <- lavaanToGraph(esemModelFit)
 par(mfrow = c(2, 2))
 ```
 
-```{r esemModelEquivalent, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
+```{r}
+#| label: fig-esemModelEquivalent
+#| fig-cap: "Equivalently Fitting Models to an Exploratory Structural Equation Model."
+#| fig-alt: "Equivalently Fitting Models to an Exploratory Structural Equation Model."
+
 lapply(equivalentDAGs(
   dagModelESEM,
   n = 4),
@@ -3766,6 +3961,10 @@ AVE(esem_fit)
 A path diagram of the model generated using the `semPlot` package [@R-semPlot] is in Figure \@ref(fig:esemModelPathDiagram2).\index{structural equation modeling!exploratory}
 
 ```{r esemModelPathDiagram2, out.width = "100%", fig.align = "center", fig.cap = "Exploratory Structural Equation Model With Exploratory Factors, Confirmatory Factors, and Regression Paths."}
+#| label: fig-esemModelPathDiagram2
+#| fig-cap: "Exploratory Structural Equation Model With Exploratory Factors, Confirmatory Factors, and Regression Paths."
+#| fig-alt: "Exploratory Structural Equation Model With Exploratory Factors, Confirmatory Factors, and Regression Paths."
+
 semPaths(
   esem_fit,
   what = "std",
@@ -3785,6 +3984,10 @@ par(mfrow = c(2, 2))
 ```
 
 ```{r esemModelEquivalent2, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models to an Exploratory Structural Equation Model."}
+#| label: fig-esemModelEquivalent2
+#| fig-cap: "Equivalently Fitting Models to an Exploratory Structural Equation Model."
+#| fig-alt: "Equivalently Fitting Models to an Exploratory Structural Equation Model."
+
 lapply(equivalentDAGs(
   dagModelESEM2,
   n = 4),
@@ -3815,6 +4018,10 @@ However, based on the Cattell scree test (as operationalized by the optimal coor
 Therefore, interpretability of the factors would be important for deciding between whether to keep one, two, or three factors.\index{scree plot}
 
 ```{r screePlotPCAParallel, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot Based on Parallel Analysis in Principal Component Analysis."}
+#| label: fig-screePlotPCAParallel
+#| fig-cap: "Scree Plot Based on Parallel Analysis in Principal Component Analysis."
+#| fig-alt: "Scree Plot Based on Parallel Analysis in Principal Component Analysis."
+
 fa.parallel(
   x = HolzingerSwineford1939[,vars],
   fm = "ml",
@@ -3823,7 +4030,11 @@ fa.parallel(
 
 A scree plot is in Figure \@ref(fig:screePlotPCA).\index{scree plot}\index{principal component analysis}
 
-```{r screePlotPCA, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot in Principal Component Analysis."}
+```{r}
+#| label: fig-screePlotPCA
+#| fig-cap: "Scree Plot in Principal Component Analysis."
+#| fig-alt: "Scree Plot in Principal Component Analysis."
+
 screeDataPCA <- nScree(
   x = cor(
     HolzingerSwineford1939[,vars],
@@ -3843,7 +4054,11 @@ In the example with orthogonal rotation below, the very simple structure (VSS) c
 
 A VSS plot of PCA with orthogonal rotation is in Figure \@ref(fig:vssOrthogonalPCA).\index{very simple structure plot}\index{orthogonal rotation}\index{principal component analysis}
 
-```{r vssOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Orthogonal Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-vssOrthogonalPCA
+#| fig-cap: "Very Simple Structure Plot With Orthogonal Rotation in Principal Component Analysis."
+#| fig-alt: "Very Simple Structure Plot With Orthogonal Rotation in Principal Component Analysis."
+
 vss(
   HolzingerSwineford1939[,vars],
   rotate = "varimax",
@@ -3856,7 +4071,11 @@ In the example with orthogonal rotation below, the VSS criterion is highest with
 
 A VSS plot of PCA with oblique rotation is in Figure \@ref(fig:vssObliquePCA).\index{very simple structure plot}\index{oblique rotation}\index{principal component analysis}
 
-```{r vssObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With Oblique Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-vssObliquePCA
+#| fig-cap: "Very Simple Structure Plot With Oblique Rotation in Principal Component Analysis."
+#| fig-alt: "Very Simple Structure Plot With Oblique Rotation in Principal Component Analysis."
+
 vss(
   HolzingerSwineford1939[,vars],
   rotate = "oblimin",
@@ -3869,7 +4088,11 @@ In the example with no rotation below, the VSS criterion is highest with 3 or 4 
 
 A VSS plot of PCA with no rotation is in Figure \@ref(fig:vssUnrotatedPCA).\index{very simple structure plot}\index{principal component analysis}
 
-```{r vssUnrotatedPCA, out.width = "100%", fig.align = "center", fig.cap = "Very Simple Structure Plot With No Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-vssUnrotatedPCA
+#| fig-cap: "Very Simple Structure Plot With No Rotation in Principal Component Analysis."
+#| fig-alt: "Very Simple Structure Plot With No Rotation in Principal Component Analysis."
+
 vss(
   HolzingerSwineford1939[,vars],
   rotate = "none",
@@ -4032,7 +4255,11 @@ Correlation plots were generated using the `corrplot` package [@R-corrplot].\ind
 
 A biplot is in Figure \@ref(fig:pcaBiplot).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
 
-```{r pcaBiplot, out.width = "100%", fig.align = "center", fig.cap = "Biplot Using Orthogonal Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-pcaBiplot
+#| fig-cap: "Biplot Using Orthogonal Rotation in Principal Component Analysis."
+#| fig-alt: "Biplot Using Orthogonal Rotation in Principal Component Analysis."
+
 biplot(pca2factorOrthogonal)
 abline(h = 0, v = 0, lty = 2)
 ```
@@ -4041,13 +4268,21 @@ abline(h = 0, v = 0, lty = 2)
 
 A pairs panel plot is in Figure \@ref(fig:pairsPlotOrthogonalPCA).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
 
-```{r pairsPlotOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Orthogonal Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-pairsPlotOrthogonalPCA
+#| fig-cap: "Pairs Panel Plot Using Orthogonal Rotation in Principal Component Analysis."
+#| fig-alt: "Pairs Panel Plot Using Orthogonal Rotation in Principal Component Analysis."
+
 pairs.panels(pca3Orthogonal)
 ```
 
 A correlation plot is in Figure \@ref(fig:correlationPlotOrthogonalPCA).\index{principal component analysis}\index{correlation}\index{orthogonal rotation}
 
-```{r correlationPlotOrthogonalPCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Orthogonal Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-correlationPlotOrthogonalPCA
+#| fig-cap: "Correlation Plot Using Orthogonal Rotation in Principal Component Analysis."
+#| fig-alt: "Correlation Plot Using Orthogonal Rotation in Principal Component Analysis."
+
 corrplot(cor(
   pca3Orthogonal,
   use = "pairwise.complete.obs"))
@@ -4057,13 +4292,21 @@ corrplot(cor(
 
 A pairs panel plot is in Figure \@ref(fig:pairsPlotObliquePCA).\index{principal component analysis}\index{correlation}\index{oblique rotation}
 
-```{r pairsPlotObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Pairs Panel Plot Using Oblique Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-pairsPlotObliquePCA
+#| fig-cap: "Pairs Panel Plot Using Oblique Rotation in Principal Component Analysis."
+#| fig-alt: "Pairs Panel Plot Using Oblique Rotation in Principal Component Analysis."
+
 pairs.panels(pca3Oblique)
 ```
 
 A correlation plot is in Figure \@ref(fig:correlationPlotObliquePCA).\index{principal component analysis}\index{correlation}\index{oblique rotation}
 
-```{r correlationPlotObliquePCA, out.width = "100%", fig.align = "center", fig.cap = "Correlation Plot Using Oblique Rotation in Principal Component Analysis."}
+```{r}
+#| label: fig-correlationPlotObliquePCA
+#| fig-cap: "Correlation Plot Using Oblique Rotation in Principal Component Analysis."
+#| fig-alt: "Correlation Plot Using Oblique Rotation in Principal Component Analysis."
+
 corrplot(cor(
   pca3Oblique,
   use = "pairwise.complete.obs"))
@@ -4094,11 +4337,15 @@ Thus, it can be helpful for theory and interpretability to help guide decision-m
 
 ## Exercises {#exercises-factorAnalysis}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("MOTE")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Load data
 
 cnlsy <- read_csv(here("data", "cnlsy.csv"))
@@ -4366,7 +4613,13 @@ What are some possible alternative models?
 1.
     a. A scree plot is in Figure \@ref(fig:screePlot-ex).
 
-```{r screePlot-ex, echo = FALSE, results = "hide", message = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Scree Plot From Exploratory Factor Analysis."}
+```{r}
+#| label: fig-screePlot-ex
+#| fig-cap: "Scree Plot From Exploratory Factor Analysis."
+#| fig-alt: "Scree Plot From Exploratory Factor Analysis."
+#| echo: false
+#| output: false
+
 fa.parallel(x = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], fm = "ml", fa = "fa")
 ```
 
@@ -4399,7 +4652,13 @@ For instance, you could consider models with multiple factors, correlated factor
 Remember, an important part of science is specifying and testing plausible alternative explanations!
 Some alternative, equivalently fitting models are in Figure \@ref(fig:equivalentModels-ex).
 
-```{r equivalentModels-ex, echo = FALSE, results = "hide", message = FALSE, out.width = "100%", fig.align = "center", fig.cap = "Equivalently Fitting Models in Confirmatory Factor Analysis."}
+```{r}
+#| label: fig-equivalentModels-ex
+#| fig-cap: "Equivalently Fitting Models in Confirmatory Factor Analysis."
+#| fig-alt: "Equivalently Fitting Models in Confirmatory Factor Analysis."
+#| echo: false
+#| output: false
+
 par(mfrow = c(3, 3))
 lapply(equivalentDAGs(dagModel, n = 9), plot)
 ```
