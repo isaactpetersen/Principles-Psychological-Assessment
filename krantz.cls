@@ -1385,7 +1385,7 @@
       \leavevmode
       \@tempdima #3\relax
       \advance\leftskip\@tempdima\null\hskip-\leftskip
-      {#4\hfil}\nobreak
+      {#sec-4\hfil}\nobreak
       \if@pdf
       \else
         \leaders\hbox{$\m@th\mkern\@dotsep mu\hbox{.}\mkern\@dotsep mu$}\hfill

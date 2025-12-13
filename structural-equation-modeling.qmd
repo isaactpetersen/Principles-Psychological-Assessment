@@ -1,18 +1,18 @@
 {{< include _chunk-timing.qmd >}}
 
-# Structural Equation Modeling {#sem}
+# Structural Equation Modeling {#sec-sem}
 
 > "All models are wrong, but some are useful."
 >
 > --- George Box [-@Box1979, p. 202]
 
-## Overview of SEM {#overview-sem}
+## Overview of SEM {#sec-overview-sem}
 
 Structural equation modeling is an advanced modeling approach that allows estimating latent variables to account for [measurement error](#sec-measurementError) and to get purer estimates of constructs.\index{structural equation modeling}\index{measurement error}\index{latent variable}
 
-## Getting Started {#gettingStarted-sem}
+## Getting Started {#sec-gettingStarted-sem}
 
-### Load Libraries {#loadLibraries-sem}
+### Load Libraries {#sec-loadLibraries-sem}
 
 ```{r}
 library("petersenlab") #to install: install.packages("remotes"); remotes::install_github("DevPsyLab/petersenlab")
@@ -30,9 +30,9 @@ library("here")
 library("tinytex")
 ```
 
-### Prepare Data {#prepareData-sem}
+### Prepare Data {#sec-prepareData-sem}
 
-#### Simulate Data {#simulateData-sem}
+#### Simulate Data {#sec-simulateData-sem}
 
 For reproducibility, I set the seed below.\index{simulate data}
 Using the same seed will yield the same answer every time.
@@ -61,7 +61,7 @@ measure2 <- measure1 + rnorm(n = sampleSize, mean = 0, sd = 15)
 measure3 <- measure1 + measure2 + rnorm(n = sampleSize, mean = 0, sd = 15)
 ```
 
-#### Add Missing Data {#addMissingData-sem}
+#### Add Missing Data {#sec-addMissingData-sem}
 
 Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
 
@@ -79,18 +79,18 @@ PoliticalDemocracy <-
       replace = TRUE)]))
 ```
 
-#### Combine Data into Dataframe {#combineData-sem}
+#### Combine Data into Dataframe {#sec-combineData-sem}
 
 ```{r}
 mydataSEM <- data.frame(measure1, measure2, measure3)
 ```
 
-## Types of Models {#modelTypes-sem}
+## Types of Models {#sec-modelTypes-sem}
 
 Structural equation modeling (SEM) involves the use of models.\index{structural equation modeling}
 A model is a simplification of reality.\index{structural equation modeling}
 
-### Path Analysis Model {#pathAnalysis-sem}
+### Path Analysis Model {#sec-pathAnalysis-sem}
 
 To understand structural equation modeling (SEM), it is helpful to first understand *path analysis*.\index{path analysis}
 Path analysis is similar to multiple regression.\index{path analysis}\index{multiple regression}
@@ -100,9 +100,9 @@ Unlike SEM, path analysis uses only manifest (observed) variables, not latent va
 SEM is path analysis, but with latent (unobserved) variables.\index{structural equation modeling}\index{latent variable}
 That is, a SEM model is a model that includes latent variables in addition to observed variables, where one attempts to model (i.e., explain) the *structure* of associations between variance using a series of equations (hence structural equation modeling).\index{structural equation modeling}\index{latent variable}
 
-### Components of a Structural Equation Model {#semModelComponents}
+### Components of a Structural Equation Model {#sec-semModelComponents}
 
-#### Measurement Model {#measurementModel-sem}
+#### Measurement Model {#sec-measurementModel-sem}
 
 The measurement model is a crucial sub-component of any SEM model.\index{structural equation modeling!measurement model}
 A SEM model consists of two components: a measurement model and a structural model.\index{structural equation modeling!measurement model}
@@ -112,19 +112,19 @@ Basically, the measurement model specifies your best understanding of the struct
 Before fitting the structural component of a SEM, it is important to have a well-fitting measurement model for each construct in the model.\index{structural equation modeling!measurement model}\index{construct}
 In @sec-measurementModel-sem), I present an example of a measurement model.\index{structural equation modeling!measurement model}
 
-#### Structural Model {#structuralModel-sem}
+#### Structural Model {#sec-structuralModel-sem}
 
 The *structural component* of a SEM model includes the regression paths that specify the hypothesized causal relations among the latent variables.\index{structural equation modeling!structural model}\index{latent variable}
 The disturbance (error term) for endogenous latent factors (i.e., latent factors that are predicted by other predictors) in the structural model is called zeta ($\zeta$).\index{structural equation modeling!residual!disturbance}\index{structural equation modeling!structural model}
 
-### Confirmatory Factor Analysis Model {#cfa-sem}
+### Confirmatory Factor Analysis Model {#sec-cfa-sem}
 
 [Confirmatory factor analysis](#sec-cfa) (CFA) is a subset of SEM.
 CFA includes the [measurement model](#sec-measurementModel-sem) but not the [structural component](#sec-structuralModel-sem) of the model.\index{factor analysis!confirmatory}\index{structural equation modeling!measurement model}\index{structural equation modeling!structural model}
 In @sec-cfaExample-sem), I present an example of a [CFA](#sec-cfa) model.\index{factor analysis!confirmatory}
 I discuss [CFA](#sec-cfa) models in greater depth in Chapter \@ref(factor-analysis-PCA).\index{factor analysis!confirmatory}
 
-### Structural Equation Model {#semModel}
+### Structural Equation Model {#sec-semModel}
 
 SEM is [CFA](#sec-cfa), but it adds regression paths that specify hypothesized causal relations between the latent variables, which is called the [structural component](#sec-structuralModel-sem) of the model.\index{structural equation modeling}\index{structural equation modeling!structural model}\index{factor analysis!confirmatory}\index{latent variable}
 The [structural model](#sec-structuralModel-sem) includes the hypothesized causal relations between latent variables.\index{structural equation modeling!structural model}\index{latent variable}
@@ -147,11 +147,11 @@ If the model fit is unacceptable, you can try fitting a different model to see w
 Nevertheless, it is important to use theory as a guide when specifying and comparing competing models, and not just rely solely on model fit comparison.\index{structural equation modeling}\index{structural equation modeling!fit index}\index{theory}\index{empiricism}
 For example, the model you fit should depend on how you conceptualize each construct: as [reflective](#sec-reflectiveConstruct) or [formative](#sec-formativeConstruct).\index{construct!reflective}\index{construct!formative}
 
-## Estimating Latent Factors {#formativeReflective-sem}
+## Estimating Latent Factors {#sec-formativeReflective-sem}
 
-### Model Identification {#modelIdentification-sem}
+### Model Identification {#sec-modelIdentification-sem}
 
-#### Types of Model Identification {#modelIdentificationTypes-sem}
+#### Types of Model Identification {#sec-modelIdentificationTypes-sem}
 
 There are important practical issues to consider with both [reflective](#sec-reflectiveConstruct) and [formative](#sec-formativeConstruct) models.\index{construct!reflective}\index{construct!formative}
 An important practical issue is model identification—adding enough constraints so that there is only one, best answer.\index{structural equation modeling!model identification}
@@ -209,7 +209,7 @@ means4Measures <- apply(
 means4Measures
 ```
 
-#### Approaches to Model Identification {#modelIdentificationApproaches-sem}
+#### Approaches to Model Identification {#sec-modelIdentificationApproaches-sem}
 
 The three most widely used approaches to identifying latent factors are:\index{structural equation modeling!model identification}\index{latent variable}
 
@@ -217,7 +217,7 @@ The three most widely used approaches to identifying latent factors are:\index{s
 1. [Effects coding](#sec-effectsCoding-sem)\index{structural equation modeling!model identification}
 1. [Standardized latent factor](#sec-standardizedLatent-sem)\index{structural equation modeling!model identification}
 
-##### Marker Variable Method {#markerVariable-sem}
+##### Marker Variable Method {#sec-markerVariable-sem}
 
 In the marker variable method, one of the indicators (i.e., manifest variables) is set to have a loading of 1.\index{structural equation modeling!model identification}
 Here are examples of using the marker variable method for identification of a latent variable:\index{structural equation modeling!model identification}
@@ -273,7 +273,7 @@ semPaths(
   edge.label.cex = 0.8)
 ```
 
-##### Effects Coding Method {#effectsCoding-sem}
+##### Effects Coding Method {#sec-effectsCoding-sem}
 
 In the effects coding method, the average of the factor loadings is set to be 1.\index{structural equation modeling!model identification}
 The effects coding method is useful if you are interested in the means or variances of the latent factor, because the metric of the latent factor is on the metric of the indicators.\index{structural equation modeling!model identification}
@@ -348,7 +348,7 @@ semPaths(
   edge.label.cex = 0.8)
 ```
 
-##### Standardized Latent Factor Method {#standardizedLatent-sem}
+##### Standardized Latent Factor Method {#sec-standardizedLatent-sem}
 
 In the standardized latent factor method, the latent factor is set to have a mean of 0 and a standard deviation of 1.\index{structural equation modeling!model identification}
 The standardized latent factor method is a useful approach if you are not interested in the means or variances of the latent factors and want to freely estimate the factor loadings.\index{structural equation modeling!model identification}
@@ -426,9 +426,9 @@ semPaths(
   edge.label.cex = 0.8)
 ```
 
-### Types of Latent Factors {#latentFactorTypes-sem}
+### Types of Latent Factors {#sec-latentFactorTypes-sem}
 
-#### Reflective Latent Factors {#reflectiveFactors-sem}
+#### Reflective Latent Factors {#sec-reflectiveFactors-sem}
 
 For a [reflective model](#sec-reflectiveConstruct) with 4 indicators, we would need to estimate 12 parameters: a factor loading, error term, and intercept for each of the 4 indicators.\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 Here are the parameters estimated:
@@ -480,7 +480,7 @@ We have 2 degrees of freedom ($14 - 12 = 2$).\index{construct!reflective}\index{
 Because the degrees of freedom is greater than 0, it is easy to identify the model—the model is over-identified.\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 A [reflective model](#sec-reflectiveConstruct) with 3 indicators would have 9 known values ($\frac{3(3 + 1)}{2} + 3 = 9$), 9 parameters (3 factor loadings, 3 error terms, 3 intercepts), and 0 degrees of freedom, and it would be identifiable because it would be just-identified.\index{construct!reflective}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 
-#### Formative Latent Factors {#formativeFactors-sem}
+#### Formative Latent Factors {#sec-formativeFactors-sem}
 
 However, for a [formative model](#sec-formativeConstruct), we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 Here are the parameters estimated:
@@ -795,31 +795,31 @@ mxinv(loadingMatrix)
 
 Florian Schubert provides an `R` function to create the full `lavaan` syntax for confirmatory composite analysis at the following link: <https://github.com/FloSchuberth/HOspecification>
 
-## Additional Types of SEM {#additionalSEMmodels}
+## Additional Types of SEM {#sec-additionalSEMmodels}
 
 Up to this point, we have discussed SEM with dimensional constructs.\index{dimensional}
 It also worth knowing about additional types of SEM models, including latent class models and mixture models, that handle categorical constructs.\index{categorical}\index{latent class model}\index{mixture model}
 However, most disorders are more accurately conceptualized as dimensional than as categorical [@Markon2011], so just because you can estimate categorical latent factors does not necessarily mean that one should.\index{dimensional}\index{categorical}\index{latent class model}\index{mixture model}
 
-### Latent Class Models {#latentClassModels}
+### Latent Class Models {#sec-latentClassModels}
 
 In *latent class models*, the construct is not dimensional, but rather categorical.\index{categorical}\index{latent class model}\index{dimensional}
 The categorical constructs are latent classifications and are called latent classes.\index{categorical}\index{latent class model}
 For instance, the construct could be a diagnosis that influences scores on the measures.\index{categorical}\index{latent class model}\index{diagnosis}
 Latent class models examine qualitative differences in kind, rather than quantitative differences in degree.\index{categorical}\index{latent class model}\index{diagnosis}
 
-### Mixture Models {#MixtureModels}
+### Mixture Models {#sec-MixtureModels}
 
 *Mixture models* allow for a combination of latent categorical constructs (classes) and latent dimensional constructs.\index{dimensional}\index{categorical}\index{mixture model}
 That is, it allows for both qualitative and quantitative differences.\index{dimensional}\index{categorical}\index{mixture model}
 However, this additional model complexity also necessitates a larger sample size for estimation.\index{mixture model}
 SEM generally requires a 3-digit sample size ($N = 100+$), whereas mixture models typically require a 4- or 5-digit sample size ($N = 1,000+$).\index{mixture model}
 
-### Exploratory Structural Equation Models {#esemModels}
+### Exploratory Structural Equation Models {#sec-esemModels}
 
 We describe exploratory structural equation models in @sec-efa-cfa-esem).\index{structural equation modeling!exploratory}
 
-## Causal Diagrams: Directed Acyclic Graphs {#dag}
+## Causal Diagrams: Directed Acyclic Graphs {#sec-dag}
 
 A key tool when designing a structural equation model is a conceptual depiction of the hypothesized causal processes.\index{structural equation modeling!causal diagram}
 A causal diagram depicts the hypothesized causal processes that link two or more variables.\index{structural equation modeling!causal diagram}
@@ -829,7 +829,7 @@ Free tools to create DAGs include the `R` package `dagitty` [@Textor2017] and th
 Path analytic diagrams (i.e., causal diagrams with boxes, circles, and lines) are described in @sec-cttOverview) of Chapter \@ref(reliability).
 @KarchInPress provides a tool to create `lavaan` `R` syntax from a path analytic diagram: <https://lavaangui.org>.
 
-## Model Fit Indices {#modelFitIndices-sem}
+## Model Fit Indices {#sec-modelFitIndices-sem}
 
 Various model fit indices can be used for evaluating how well a model fits the data and for comparing the fit of two competing models.\index{structural equation modeling!fit index}
 Fit indices known as absolute fit indices compare whether the model fits better than the best-possible fitting model (i.e., a saturated model).\index{structural equation modeling!fit index}
@@ -890,7 +890,7 @@ If a correlation residual is negative, it suggests that the model overpredicts t
 If the two variables are connected by only indirect pathways, it may be helpful to respecify the model with direct pathways between the two variables, such as a direct effect (i.e., regression path) or a covariance path.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
 For guidance on evaluating local fit, see @Kline2024.\index{structural equation modeling!fit index}\index{structural equation modeling!residual}
 
-## Correlation Matrix {#correlationMatrix-sem}
+## Correlation Matrix {#sec-correlationMatrix-sem}
 
 ```{r}
 cor(mydataSEM, use = "pairwise.complete.obs")
@@ -962,7 +962,7 @@ corTable3b %>%
   linesep = "")
 ```
 
-## Measurement Model (of a Given Construct)  {#measurementModelExample-sem}
+## Measurement Model (of a Given Construct)  {#sec-measurementModelExample-sem}
 
 Even though [CFA models](#sec-cfa) are [measurement models](#sec-measurementModel-sem), I provide separate examples of a [measurement model](#sec-measurementModel-sem) and [CFA models](#sec-cfa) in my examples because [CFA](#sec-cfa) is often used to test competing factor structures.\index{structural equation modeling!measurement model}\index{factor analysis!confirmatory}
 For instance, you could use [CFA](#sec-cfa) to test whether the variance in several measures' scores is best explained with one factor or two factors.\index{factor analysis!confirmatory}
@@ -973,7 +973,7 @@ In @sec-cfaExample-sem), I present a [CFA model](#sec-cfa) with multiple latent 
 
 The measurement models were fit in the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement model}
 
-### Specify the Model {#measurementModelSyntax-sem}
+### Specify the Model {#sec-measurementModelSyntax-sem}
 
 ```{r}
 measurementModel_syntax <- '
@@ -1005,21 +1005,21 @@ measurementModel_fullSyntax <- '
 '
 ```
 
-#### Summary of Model Features {#measurementModelSummary-sem}
+#### Summary of Model Features {#sec-measurementModelSummary-sem}
 
 ```{r}
 summary(measurementModel_syntax)
 summary(measurementModel_fullSyntax)
 ```
 
-#### Model Syntax in Table Form: {#measurementModelTabular-sem}
+#### Model Syntax in Table Form: {#sec-measurementModelTabular-sem}
 
 ```{r}
 lavaanify(measurementModel_syntax)
 lavaanify(measurementModel_fullSyntax)
 ```
 
-### Fit the Model {#measurementModelFit-sem}
+### Fit the Model {#sec-measurementModelFit-sem}
 
 ```{r}
 measurementModelFit <- cfa(
@@ -1036,7 +1036,7 @@ measurementModelFit_full <- lavaan(
   estimator = "MLR")
 ```
 
-### Display Summary Output {#measurementModelOutput-sem}
+### Display Summary Output {#sec-measurementModelOutput-sem}
 
 ```{r}
 #| include: false
@@ -1085,7 +1085,7 @@ summary(
   rsquare = TRUE)
 ```
 
-### Estimates of Model Fit {#measurementModelFitCriteria-sem}
+### Estimates of Model Fit {#sec-measurementModelFitCriteria-sem}
 
 You can extract specific fit indices using the following syntax:\index{structural equation modeling!fit index}
 
@@ -1103,25 +1103,25 @@ fitMeasures(
 
 Because the model is just-identified, many fit statistics are not able to be estimated.\index{structural equation modeling!model identification}
 
-### Residuals {#measurementModelResiduals-sem}
+### Residuals {#sec-measurementModelResiduals-sem}
 
 ```{r}
 residuals(measurementModelFit, type = "cor")
 ```
 
-### Modification Indices {#measurementModelModIndices-sem}
+### Modification Indices {#sec-measurementModelModIndices-sem}
 
 ```{r}
 modificationindices(measurementModelFit, sort. = TRUE)
 ```
 
-### Factor Scores {#measurementModelFactorScores-sem}
+### Factor Scores {#sec-measurementModelFactorScores-sem}
 
 ```{r}
 measurementModelFit_factorScores <- lavPredict(measurementModelFit)
 ```
 
-### Internal Consistency Reliability {#measurementModelReliability-sem}
+### Internal Consistency Reliability {#sec-measurementModelReliability-sem}
 
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega) and [average variance extracted](#sec-averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
@@ -1130,7 +1130,7 @@ compRelSEM(measurementModelFit)
 AVE(measurementModelFit)
 ```
 
-### Path Diagram {#measurementModelPathDiagram-sem}
+### Path Diagram {#sec-measurementModelPathDiagram-sem}
 
 A path diagram of the model is in Figure \@ref(fig:measurementModel).
 
@@ -1146,14 +1146,14 @@ semPaths(
   edge.label.cex = 2)
 ```
 
-## Confirmatory Factor Analysis (CFA) {#cfaExample-sem}
+## Confirmatory Factor Analysis (CFA) {#sec-cfaExample-sem}
 
 The [confirmatory factor analysis](#sec-cfa) (CFA) models were fit in the `lavaan` package [@R-lavaan].\index{factor analysis!confirmatory}
 The examples were adapted from the `lavaan` documentation: <https://lavaan.ugent.be/tutorial/cfa.html> (archived at <https://perma.cc/GKY3-9YE4>).
 
 In this [CFA model](#sec-cfa), we estimate three latent factors with three indicators loading on each latent factor.\index{factor analysis!confirmatory}
 
-### Specify the Model {#cfaModelSyntax-sem}
+### Specify the Model {#sec-cfaModelSyntax-sem}
 
 ```{r}
 cfaModel_syntax <- '
@@ -1208,14 +1208,14 @@ cfaModel_fullSyntax <- '
 '
 ```
 
-#### Model Syntax in Table Form: {#cfaModelTabular-sem}
+#### Model Syntax in Table Form: {#sec-cfaModelTabular-sem}
 
 ```{r}
 lavaanify(cfaModel_syntax)
 lavaanify(cfaModel_fullSyntax)
 ```
 
-### Fit the Model {#cfaModelFit-sem}
+### Fit the Model {#sec-cfaModelFit-sem}
 
 ```{r}
 cfaModelFit <- cfa(
@@ -1232,7 +1232,7 @@ cfaModelFit_full <- lavaan(
   estimator = "MLR")
 ```
 
-### Display Summary Output {#cfaModelOutput-sem}
+### Display Summary Output {#sec-cfaModelOutput-sem}
 
 In this model, all nine indicators load strongly on their respective latent factor.\index{structural equation modeling!factor loading}
 Thus, this measurement model would be defensible.\index{structural equation modeling!measurement model}
@@ -1252,7 +1252,7 @@ summary(
   rsquare = TRUE)
 ```
 
-### Estimates of Model Fit {#cfaModelFitCriteria-sem}
+### Estimates of Model Fit {#sec-cfaModelFitCriteria-sem}
 
 According to model fit estimates, the model fit is good according to SRMR and acceptable according to CFI, but the model fit is weaker according to RMSEA and TLI.\index{structural equation modeling!fit index}
 Thus, we may want to consider adjustments to improve the model fit.\index{structural equation modeling!fit index}
@@ -1270,13 +1270,13 @@ fitMeasures(
     "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
-### Residuals {#cfaModelResiduals-sem}
+### Residuals {#sec-cfaModelResiduals-sem}
 
 ```{r}
 residuals(cfaModelFit, type = "cor")
 ```
 
-### Modification Indices {#cfaModelModIndices-sem}
+### Modification Indices {#sec-cfaModelModIndices-sem}
 
 Modification indices indicate potential additional parameters that could be estimated and that would improve model fit.\index{structural equation modeling!fit index}\index{structural equation modeling!modification indices}
 For instance, the modification indices in Table \@ref(tab:modIndicesCFAModel) (generated from the syntax below) indicate a few additional factor loadings (i.e., cross-loadings) or correlated residuals that could substantially improve model fit.\index{structural equation modeling!residual!correlated}\index{cross-loading}\index{structural equation modeling!fit index}\index{structural equation modeling!modification indices}
@@ -1289,13 +1289,13 @@ Rather, it is generally advised to consider modification indices in light of the
 modificationindices(cfaModelFit, sort. = TRUE)
 ```
 
-### Factor Scores {#cfaModelFactorScores-sem}
+### Factor Scores {#sec-cfaModelFactorScores-sem}
 
 ```{r}
 cfaModelFit_factorScores <- lavPredict(cfaModelFit)
 ```
 
-### Internal Consistency Reliability {#cfaModelReliability-sem}
+### Internal Consistency Reliability {#sec-cfaModelReliability-sem}
 
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega) and [average variance extracted](#sec-averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
@@ -1304,7 +1304,7 @@ compRelSEM(cfaModelFit)
 AVE(cfaModelFit)
 ```
 
-### Path Diagram {#cfaModelPathDiagram-sem}
+### Path Diagram {#sec-cfaModelPathDiagram-sem}
 
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
@@ -1320,14 +1320,14 @@ semPaths(
   edge.label.cex = 0.8)
 ```
 
-### Modify Model Based on Modification Indices {#cfaModelModification-sem}
+### Modify Model Based on Modification Indices {#sec-cfaModelModification-sem}
 
 In the model below, I modified the model based on estimating an additional factor loading (assuming the additional factor loading is theoretically supported).\index{structural equation modeling!modification indices}
 This could be supported, for instance, if a given test involves considerable skills in both the visual domain and in speed of processing.
 When the same indicator loads simultaneously on two factors, this is called a *cross-loading*.\index{cross-loading}
 Cross-loadings can complicate the interpretation of latent factors, as discussed in @sec-factorRotation) of the chapter on [factor analysis](#sec-factor-analysis-PCA).\index{cross-loading}
 
-#### Specify the Model {#cfaModelModifiedSyntax-sem}
+#### Specify the Model {#sec-cfaModelModifiedSyntax-sem}
 
 ```{r}
 cfaModel2_syntax <- '
@@ -1382,7 +1382,7 @@ cfaModel2_fullSyntax <- '
 '
 ```
 
-#### Fit the Model {#cfaModelModifiedFit-sem}
+#### Fit the Model {#sec-cfaModelModifiedFit-sem}
 
 ```{r}
 cfaModel2Fit <- cfa(
@@ -1399,7 +1399,7 @@ cfaModel2Fit_full <- lavaan(
   estimator = "MLR")
 ```
 
-#### Display Summary Output {#cfaModelModifiedOutput-sem}
+#### Display Summary Output {#sec-cfaModelModifiedOutput-sem}
 
 ```{r}
 summary(
@@ -1415,7 +1415,7 @@ summary(
   rsquare = TRUE)
 ```
 
-#### Estimates of Model Fit {#cfaModelModifiedFitCriteria-sem}
+#### Estimates of Model Fit {#sec-cfaModelModifiedFitCriteria-sem}
 
 After fitting the additional factor loading, the model fits well according to RMSEA, CFI, and SRMR, and the model fit is acceptable according to TLI.\index{structural equation modeling!fit index}
 Thus, this model could be defensible.
@@ -1432,13 +1432,13 @@ fitMeasures(
     "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
-#### Residuals {#cfaModelModifiedResiduals-sem}
+#### Residuals {#sec-cfaModelModifiedResiduals-sem}
 
 ```{r}
 residuals(cfaModel2Fit, type = "cor")
 ```
 
-#### Path Diagram {#cfaModelModifiedPathDiagram-sem}
+#### Path Diagram {#sec-cfaModelModifiedPathDiagram-sem}
 
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
@@ -1454,7 +1454,7 @@ semPaths(
   edge.label.cex = 0.8)
 ```
 
-#### Compare Model Fit {#nestedModelComparison-sem}
+#### Compare Model Fit {#sec-nestedModelComparison-sem}
 
 The modified model with the cross-loading and the original model are considered "nested" models.\index{nested model}\index{cross-loading}
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.\index{nested model}
@@ -1514,14 +1514,14 @@ vuongtest(
   nested = FALSE)
 ```
 
-## Structural Equation Model (SEM) {#semModelExample-sem}
+## Structural Equation Model (SEM) {#sec-semModelExample-sem}
 
 The structural equation models were fit in the `lavaan` package [@R-lavaan].
 The examples were adapted from the `lavaan` documentation: <https://lavaan.ugent.be/tutorial/sem.html> (archived at <https://perma.cc/8NG9-7JAG>).
 
 In this model, we fit a [measurement model](#sec-measurementModel-sem) with three latent factors in addition to a [structural model](#sec-structuralModel-sem) with regressions estimated among the latent factors.\index{structural equation modeling!measurement model}\index{structural equation modeling!structural model}
 
-### Specify the Model {#semModelSyntax-sem}
+### Specify the Model {#sec-semModelSyntax-sem}
 
 ```{r}
 semModel_syntax <- '
@@ -1599,14 +1599,14 @@ semModel_fullSyntax <- '
 '
 ```
 
-#### Model Syntax in Table Form: {#semModelTabular-sem}
+#### Model Syntax in Table Form: {#sec-semModelTabular-sem}
 
 ```{r}
 lavaanify(semModel_syntax)
 lavaanify(semModel_fullSyntax)
 ```
 
-### Fit the Model {#semModelFit-sem}
+### Fit the Model {#sec-semModelFit-sem}
 
 ```{r}
 semModelFit <- sem(
@@ -1623,7 +1623,7 @@ semModelFit_full <- lavaan(
   estimator = "MLR")
 ```
 
-### Display Summary Output {#semModelOutput-sem}
+### Display Summary Output {#sec-semModelOutput-sem}
 
 #### Interpreting `lavaan` Output
 
@@ -1664,7 +1664,7 @@ summary(
   rsquare = TRUE)
 ```
 
-### Estimates of Model Fit {#semModelFitCriteria-sem}
+### Estimates of Model Fit {#sec-semModelFitCriteria-sem}
 
 ```{r}
 fitMeasures(
@@ -1678,13 +1678,13 @@ fitMeasures(
     "rmsea.robust", "cfi.robust", "tli.robust"))
 ```
 
-### Residuals {#semModelResiduals-sem}
+### Residuals {#sec-semModelResiduals-sem}
 
 ```{r}
 residuals(semModelFit, type = "cor")
 ```
 
-### Modification Indices {#semModelModIndices-sem}
+### Modification Indices {#sec-semModelModIndices-sem}
 
 Modification indices are generated using the syntax below and are in Table \@ref(tab:modIndicesSEMModel).\index{structural equation modeling!modification indices}
 
@@ -1695,13 +1695,13 @@ Modification indices are generated using the syntax below and are in Table \@ref
 modificationindices(semModelFit, sort. = TRUE)
 ```
 
-### Factor Scores {#semModelFactorScores-sem}
+### Factor Scores {#sec-semModelFactorScores-sem}
 
 ```{r}
 semModelFit_factorScores <- lavPredict(semModelFit)
 ```
 
-### Internal Consistency Reliability {#semModelReliability-sem}
+### Internal Consistency Reliability {#sec-semModelReliability-sem}
 
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega) and [average variance extracted](#sec-averageVarianceExtracted) (AVE), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
@@ -1710,7 +1710,7 @@ compRelSEM(semModelFit)
 AVE(semModelFit)
 ```
 
-### Path Diagram {#semModelPathDiagram-sem}
+### Path Diagram {#sec-semModelPathDiagram-sem}
 
 Below is a path diagram of the model generated using the `semPlot` package [@R-semPlot].
 
@@ -1726,7 +1726,7 @@ semPaths(
   edge.label.cex = 0.7)
 ```
 
-## Benefits of SEM {#benefits-sem}
+## Benefits of SEM {#sec-benefits-sem}
 
 There are many benefits of fitting a model in SEM (or in other latent variable approaches).\index{structural equation modeling}\index{latent variable}
 First, unlike [classical test theory](#sec-ctt), SEM can allow correlated errors.
@@ -1739,12 +1739,12 @@ Fifth, SEM can estimate mediation in a single model.\index{structural equation m
 
 Sixth, as described in the next section (@sec-semMethodBias), SEM can be used to account for different forms of [measurement error](#sec-measurementError) (e.g., [method bias](#sec-methodBias)).\index{structural equation modeling}\index{measurement error}\index{method bias}
 Accounting for [measurement error](#sec-measurementError) allows [disattenuating](#sec-disattenuation) associations with other constructs.\index{structural equation modeling}\index{measurement error}\index{method bias}\index{association!disattenuation of}
-I provide an example showing that SEM disattenuates associations for [measurement error](#sec-measurementError) in @sec-disattenuation).\index{structural equation modeling}\index{measurement error}\index{method bias}\index{association!disattenuation of}\index{measurement error!disattenuation of association}
+I provide an example showing that SEM disattenuates associations for [measurement error](#sec-measurementError) in @sec-disattenuation.\index{structural equation modeling}\index{measurement error}\index{method bias}\index{association!disattenuation of}\index{measurement error!disattenuation of association}
 All of these benefits allow SEM to generate purer estimation of constructs, more accurate estimates of people's levels on constructs, and more accurate estimates of associations between constructs.\index{structural equation modeling}\index{measurement error}
 Our theories deal with constructs (latent variables), not with fallible measurements of constructs (manifest variables).\index{structural equation modeling}\index{measurement error}
 Thus, SEM allows for models that are better aligned with theory than other statistical approaches that do not account for [measurement error](#sec-measurementError).\index{structural equation modeling}\index{measurement error}
 
-### Accounting for Method Bias {#semMethodBias}
+### Accounting for Method Bias {#sec-semMethodBias}
 
 SEM/[CFA](#sec-cfa) can be used to account for [method biases](#sec-methodBias) and other forms of [measurement error](#sec-measurementError).\index{structural equation modeling}\index{measurement error}\index{method bias}
 You can use indicators that reflect different [method biases](#sec-methodBias), so that the [method biases](#sec-methodBias) are discarded as unique [errors](#sec-measurementError), and are not combined in the "common variance" of the latent construct.\index{structural equation modeling}\index{measurement error}\index{method bias}
@@ -1754,11 +1754,11 @@ But estimation of a [multitrait-multimethod matrix](#sec-MTMM) in [CFA](#sec-cfa
 
 A more practical utility of SEM is that it allows one to obtain "purer" estimates of latent constructs (and people's standing on them) by discarding [measurement error](#sec-measurementError), and you do not have to assume all [errors](#sec-measurementError) are uncorrelated!\index{structural equation modeling}\index{measurement error}
 
-## Guidelines for Reporting Reliability and Validity in SEM {#semReliabilityValidityReporting}
+## Guidelines for Reporting Reliability and Validity in SEM {#sec-semReliabilityValidityReporting}
 
 Guidelines for reporting [reliability](#sec-reliability) and [validity](#sec-validity) in structural equation modeling are provided by @Cheung2024.\index{structural equation modeling}\index{reliability}\index{validity}
 
-## Power Analysis Using Monte Carlo Simulation {#monteCarloPowerAnalysis}
+## Power Analysis Using Monte Carlo Simulation {#sec-monteCarloPowerAnalysis}
 
 Power analysis for latent variable modeling approaches like SEM is more complicated than it is for other statistical analyses, such as correlation, multiple regression, *t* tests, analysis of variance, etc.\index{power analysis}\index{structural equation modeling!power analysis}
 Statistical power for these more straightforward analytical approaches can be estimated in G*Power [@Faul2009]:\index{power analysis} <https://www.psychologie.hhu.de/arbeitsgruppen/allgemeine-psychologie-und-arbeitspsychologie/gpower.html> (archived at <https://perma.cc/F3RW-AXMQ>)
@@ -1788,7 +1788,7 @@ These examples were adapted from the `simsem` documentation:\index{power analysi
 
 <https://github.com/simsem/simsem/blob/master/SupportingDocs/Examples/Version05/ex19/ex19.R> (archived at <https://perma.cc/7DJY-QYSW>)
 
-### Specify Population Model {#monteCarloPowerAnalysis-populationModel}
+### Specify Population Model {#sec-monteCarloPowerAnalysis-populationModel}
 
 The population model was used to generate the simulated data.\index{power analysis}\index{structural equation modeling!power analysis}
 It is important to specify each parameter value in the population model based on theory and/or prior empirical research, especially meta-analysis of the target population (when possible).\index{power analysis}\index{structural equation modeling!power analysis}\index{theory}\index{empiricism}
@@ -1846,7 +1846,7 @@ populationModel <- '
 '
 ```
 
-#### Show the Model's Fixed and Default Values {#monteCarloPowerAnalysis-fixedDefaultValues}
+#### Show the Model's Fixed and Default Values {#sec-monteCarloPowerAnalysis-fixedDefaultValues}
 
 ```{r}
 #| label: powerAnalysisPopulationModelFit
@@ -1860,21 +1860,21 @@ summary(populationModel_fit,
         rsquare = TRUE)
 ```
 
-#### Model-Implied Covariance and Correlation Matrix {#monteCarloPowerAnalysis-covarianceCorrelationMatrix}
+#### Model-Implied Covariance and Correlation Matrix {#sec-monteCarloPowerAnalysis-covarianceCorrelationMatrix}
 
-##### Model-implied covariance matrix: {#monteCarloPowerAnalysis-covarianceMatrix}
+##### Model-implied covariance matrix: {#sec-monteCarloPowerAnalysis-covarianceMatrix}
 
 ```{r}
 fitted(populationModel_fit)
 ```
 
-##### Model-implied correlation matrix {#monteCarloPowerAnalysis-correlationMatrix}
+##### Model-implied correlation matrix {#sec-monteCarloPowerAnalysis-correlationMatrix}
 
 ```{r}
 cov2cor(fitted(populationModel_fit)$cov)
 ```
 
-### Specify Analysis Model {#monteCarloPowerAnalysis-analysisModel}
+### Specify Analysis Model {#sec-monteCarloPowerAnalysis-analysisModel}
 
 ```{r}
 #| label: powerAnalysisAnalysisModel
@@ -1929,7 +1929,7 @@ analysisModel_syntax <- '
 '
 ```
 
-### Specify Distribution of Data {#monteCarloPowerAnalysis-dataDistribution}
+### Specify Distribution of Data {#sec-monteCarloPowerAnalysis-dataDistribution}
 
 Specifying the expected distributions of the data variables is an optional step, but it can help give you more realistic estimates of your likely power, especially when the data are non-normally distributed.\index{power analysis}\index{structural equation modeling!power analysis}
 First, identify the order in which the indicator variables appear in the model, so you can know the order to specify skewness and kurtosis (which I specify in the next section):\index{power analysis}\index{structural equation modeling!power analysis}
@@ -1956,9 +1956,9 @@ indicatorDistributions <- bindDist(
   kurtosis = c(rep(1.8, 3), rep(4, 8)))
 ```
 
-### Specify Extent and Type of Missing Data {#monteCarloPowerAnalysis-missingness}
+### Specify Extent and Type of Missing Data {#sec-monteCarloPowerAnalysis-missingness}
 
-#### Specify Missingness {#monteCarloPowerAnalysis-missingData}
+#### Specify Missingness {#sec-monteCarloPowerAnalysis-missingData}
 
 Specifying the extent and pattern of missingness is an optional step, but it can help give you more realistic estimates of your likely power, especially when there is extensive missing data and/or the data are not missing completely at random (MCAR).\index{power analysis}\index{structural equation modeling!power analysis}
 For an example of specifying the extent and pattern of missingness in the context of a Monte Carlo power analysis, see @Beaujean2014.\index{power analysis}\index{structural equation modeling!power analysis}
@@ -1996,7 +1996,7 @@ missingnessModel <- miss(
   m = 0)
 ```
 
-#### Plot of Extent of Missing Data Specified {#monteCarloPowerAnalysis-missingDataPlot}
+#### Plot of Extent of Missing Data Specified {#sec-monteCarloPowerAnalysis-missingDataPlot}
 
 ```{r}
 #| label: fig-missingDataSpecified
@@ -2006,7 +2006,7 @@ missingnessModel <- miss(
 plotLogitMiss(percentMissingByVariable)
 ```
 
-### Specify Sample Sizes and Repetitions {#monteCarloPowerAnalysis-sampleSizeReps}
+### Specify Sample Sizes and Repetitions {#sec-monteCarloPowerAnalysis-sampleSizeReps}
 
 Specify the sample sizes to evaluate in the Monte Carlo simulation and the number of repetitions per sample size.\index{power analysis}\index{structural equation modeling!power analysis}
 
@@ -2017,7 +2017,7 @@ sampleSizes <- 150:700
 repetitionsPerSampleSize <- 2
 ```
 
-### Monte Carlo Simulation to Generate Data from the Population Parameter Values {#monteCarloPowerAnalysis-run}
+### Monte Carlo Simulation to Generate Data from the Population Parameter Values {#sec-monteCarloPowerAnalysis-run}
 
 Conduct Monte Carlo simulation with $`r repetitionsPerSampleSize`$ repetitions per sample size $(N\text{s} = `r min(sampleSizes)`–`r max(sampleSizes)`)$.
 The `multicore` backend was used for parallel processing.\index{power analysis}\index{structural equation modeling!power analysis}
@@ -2051,33 +2051,33 @@ Return the seed to the normal seed behavior so that future calls to `set.seed()`
 RNGkind("default", "default", "default")
 ```
 
-### Summary of Population Model {#monteCarloPowerAnalysis-outputPopulationModel}
+### Summary of Population Model {#sec-monteCarloPowerAnalysis-outputPopulationModel}
 
 ```{r}
 summaryPopulation(output)
 ```
 
-### Summary of Simulated Data {#monteCarloPowerAnalysis-outputSimulatedData}
+### Summary of Simulated Data {#sec-monteCarloPowerAnalysis-outputSimulatedData}
 
 ```{r}
 summary(output)
 ```
 
-### Summary of Parameters {#monteCarloPowerAnalysis-parameterSummary}
+### Summary of Parameters {#sec-monteCarloPowerAnalysis-parameterSummary}
 
 ```{r}
 summaryParam(output, alpha = .05, detail = TRUE)
 ```
 
-### Time to Completion {#monteCarloPowerAnalysis-completionTime}
+### Time to Completion {#sec-monteCarloPowerAnalysis-completionTime}
 
 ```{r}
 summaryTime(output)
 ```
 
-### Cutoffs of Fit Indices {#monteCarloPowerAnalysis-fitIndicesCutoffs}
+### Cutoffs of Fit Indices {#sec-monteCarloPowerAnalysis-fitIndicesCutoffs}
 
-#### Plot of Cutoffs of Fit Indices {#monteCarloPowerAnalysis-fitIndicesCutoffsPlot}
+#### Plot of Cutoffs of Fit Indices {#sec-monteCarloPowerAnalysis-fitIndicesCutoffsPlot}
 
 At $\alpha = .05$
 
@@ -2089,7 +2089,7 @@ At $\alpha = .05$
 plotCutoff(output, alpha = .05)
 ```
 
-#### Cutoffs of Fit Indices at Particular Sample Size {#monteCarloPowerAnalysis-fitIndicesCutoffsSampleSize}
+#### Cutoffs of Fit Indices at Particular Sample Size {#sec-monteCarloPowerAnalysis-fitIndicesCutoffsSampleSize}
 
 At $N = 200$, $\alpha = .05$
 
@@ -2097,9 +2097,9 @@ At $N = 200$, $\alpha = .05$
 getCutoff(output, alpha = .05, nVal = 200)
 ```
 
-### Statistical Power {#monteCarloPowerAnalysis-power}
+### Statistical Power {#sec-monteCarloPowerAnalysis-power}
 
-#### Plot of Power to Detect Various Parameters as a Function of Sample Size {#monteCarloPowerAnalysis-powerPlot}
+#### Plot of Power to Detect Various Parameters as a Function of Sample Size {#sec-monteCarloPowerAnalysis-powerPlot}
 
 At $\alpha = .05$; dashed horizontal line represents power ($1 - \beta$) of .8\index{power analysis}\index{structural equation modeling!power analysis}
 
@@ -2125,7 +2125,7 @@ plotPower(
 abline(h = 0.8, lwd = 2, lty = 2)
 ```
 
-#### Sample Size Needed to Detect a Given Parameter {#monteCarloPowerAnalysis-sampleSizeNeeded}
+#### Sample Size Needed to Detect a Given Parameter {#sec-monteCarloPowerAnalysis-sampleSizeNeeded}
 
 At power ($1 - \beta$) = .80, $\alpha = .05$\index{power analysis}\index{structural equation modeling!power analysis}
 
@@ -2134,7 +2134,7 @@ powerEstimates <- getPower(output, alpha = .05)
 findPower(powerEstimates, iv = "N", power = .80)
 ```
 
-#### Power to Detect Each Parameter at a Given Sample Size {#monteCarloPowerAnalysis-powerSampleSize}
+#### Power to Detect Each Parameter at a Given Sample Size {#sec-monteCarloPowerAnalysis-powerSampleSize}
 
 At $N = 200$, $\alpha = .05$\index{power analysis}\index{structural equation modeling!power analysis}
 
@@ -2142,21 +2142,21 @@ At $N = 200$, $\alpha = .05$\index{power analysis}\index{structural equation mod
 getPower(output, alpha = .05, nVal = 200)
 ```
 
-## Generalizability Theory {#generalizability-SEM}
+## Generalizability Theory {#sec-generalizability-SEM}
 
 There are also SEM approaches for performing [generalizability theory](#sec-gTheory) analyses.\index{generalizability theory}\index{structural equation modeling}
 The reader is referred to examples by @Vispoel2018, @Vispoel2019, @Vispoel2022, and @Vispoel2023.\index{generalizability theory}\index{structural equation modeling}
 
-## Conclusion {#conclusion-sem}
+## Conclusion {#sec-conclusion-sem}
 
 Structural equation modeling (SEM) is an advanced modeling approach that allows estimating latent variables as the common variance from multiple measures.\index{structural equation modeling}\index{latent variable}\index{aggregation}
 SEM holds promise to account for [measurement error](#sec-measurementError) and [method biases](#sec-methodBias), which allows one to get more accurate estimates of constructs, people's standing on constructs (i.e., individual differences), and associations between constructs.\index{structural equation modeling}\index{measurement error}\index{method bias}
 
-## Suggested Readings {#readings-sem}
+## Suggested Readings {#sec-readings-sem}
 
 @MacCallum2000
 
-## Exercises {#semExercises}
+## Exercises {#sec-semExercises}
 
 ```{r}
 #| include: false
