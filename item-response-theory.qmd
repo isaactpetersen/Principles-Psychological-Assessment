@@ -45,7 +45,14 @@ empiricalICCdata <- data.frame(
 )
 ```
 
-```{r empiricalICC, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.height = 8, fig.cap = "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score.", fig.scap = "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score."}
+```{r}
+#| label: fig-empiricalICC
+#| fig-cap: "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score."
+#| fig-alt: "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score."
+#| fig-height: 8
+#| echo: false
+#| output: false
+
 plot(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item1, type = "b", pch = "1")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item2, type = "b", pch = "2")
@@ -118,7 +125,13 @@ newdata$item10 <- predict(twoPLitem10, newdata = newdata)
 newdata$itemTotal <- rowSums(newdata[,paste("item", 1:10, sep = "")])
 ```
 
-```{r modelImpliedICC, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Level on the Latent Construct."}
+```{r}
+#| label: fig-modelImpliedICC
+#| fig-cap: "Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Level on the Latent Construct."
+#| fig-alt: "Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Level on the Latent Construct."
+#| echo: false
+#| output: false
+
 plot(newdata$itemSum, newdata$item1, type = "n", ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 lines(newdata$itemSum, newdata$item1, type = "l", lwd = 2, col = viridis(10)[1])
 lines(newdata$itemSum, newdata$item2, type = "l", lwd = 2, col = viridis(10)[2])
@@ -136,7 +149,13 @@ legend("topleft", legend = paste("item", 1:10, sep = " "), col = viridis(10), lw
 
 ICCs can be summed across items to get the test characteristic curve (TCC):\index{item response theory!item characteristic curve}\index{item response theory!test characteristic curve}
 
-```{r modelImpliedTCC, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve of the Expected Total Score on the Test as a Function of the Person's Level on the Latent Construct."}
+```{r}
+#| label: fig-modelImpliedTCC
+#| fig-cap: "Test Characteristic Curve of the Expected Total Score on the Test as a Function of the Person's Level on the Latent Construct."
+#| fig-alt: "Test Characteristic Curve of the Expected Total Score on the Test as a Function of the Person's Level on the Latent Construct."
+#| echo: false
+#| output: false
+
 plot(newdata$itemSum, newdata$itemTotal, type = "n", ylim = c(0,10), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Expected Total Score on Test", xaxt = "n")
 lines(newdata$itemSum, newdata$itemTotal, type = "l", lwd = 2)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
@@ -162,7 +181,13 @@ newdata$ceilingEffect <- predict(threePL_ceilingeffect, newdata = newdata)
 newdata$diagnosticallyUseful <- predict(threePL_diagnosticallyUseful, newdata = newdata)
 ```
 
-```{r iccCeilingEffect, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curve of an Item with a Ceiling Effect That is not Diagnostically Useful."}
+```{r}
+#| label: fig-iccCeilingEffect
+#| fig-cap: "Item Characteristic Curve of an Item with a Ceiling Effect That is not Diagnostically Useful."
+#| fig-alt: "Item Characteristic Curve of an Item with a Ceiling Effect That is not Diagnostically Useful."
+#| echo: false
+#| output: false
+
 plot(newdata$itemSum, newdata$ceilingEffect, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
@@ -173,7 +198,13 @@ But for those with a higher level on the construct, 70% respond with true (see F
 So, the item tells us something about the higher end of the distribution, and could be diagnostically useful.\index{item response theory!item characteristic curve}
 Thus, an ICC allows us to immediately tell the utility of items.\index{item response theory!item characteristic curve}
 
-```{r iccDiagnosticallyUseful, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curve of an Item With a Floor Effect That is Diagnostically Useful."}
+```{r}
+#| label: fig-iccDiagnosticallyUseful
+#| fig-cap: "Item Characteristic Curve of an Item With a Floor Effect That is Diagnostically Useful."
+#| fig-alt: "Item Characteristic Curve of an Item With a Floor Effect That is Diagnostically Useful."
+#| echo: false
+#| output: false
+
 plot(newdata$itemSum, newdata$diagnosticallyUseful, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
@@ -245,9 +276,14 @@ difficulty_long$Difficulty[which(difficulty_long$item == "lowDifficulty")] <- "L
 difficulty_long$Difficulty[which(difficulty_long$item == "highDifficulty")] <- "High"
 ```
 
-(ref:iccDifficulty) Item Characteristic Curves of an Item With Low Difficulty Versus High Difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%.
+```{r}
+#| label: fig-iccDifficulty
+#| fig-cap: "Item Characteristic Curves of an Item With Low Difficulty Versus High Difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."
+#| fig-alt: "Item Characteristic Curves of an Item With Low Difficulty Versus High Difficulty. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."
+#| fig-scap: "Item Characteristic Curves of an Item With Low Difficulty Versus High Difficulty."
+#| echo: false
+#| output: false
 
-```{r iccDifficulty, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "(ref:iccDifficulty)", fig.scap = "Item Characteristic Curves of an Item With Low Difficulty Versus High Difficulty."}
 ggplot(difficulty_long, aes(theta, value, group = Difficulty, color = Difficulty)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
@@ -300,7 +336,14 @@ discrimination_long$Discrimination[which(discrimination_long$item == "lowDiscrim
 discrimination_long$Discrimination[which(discrimination_long$item == "highDiscrimination")] <- "High"
 ```
 
-```{r iccDiscrimination, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves of an Item With Low Discrimination Versus High Discrimination. The discrimination of an item is the slope of the line at its inflection point.", fig.scap = "Item Characteristic Curves of an Item With Low Discrimination Versus High Discrimination."}
+```{r}
+#| label: fig-iccDiscrimination
+#| fig-cap: "Item Characteristic Curves of an Item With Low Discrimination Versus High Discrimination. The discrimination of an item is the slope of the line at its inflection point."
+#| fig-alt: "Item Characteristic Curves of an Item With Low Discrimination Versus High Discrimination. The discrimination of an item is the slope of the line at its inflection point."
+#| fig-scap: "Item Characteristic Curves of an Item With Low Discrimination Versus High Discrimination."
+#| echo: false
+#| output: false
+
 ggplot(discrimination_long, aes(theta, value, group = Discrimination, color = Discrimination)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
@@ -328,17 +371,25 @@ newdata$guessingTF <- predict(threePL_guessingTF, newdata = newdata)
 newdata$guessingMC <- predict(threePL_guessingMC, newdata = newdata)
 ```
 
-(ref:iccGuessingTFCaption) Item Characteristic Curve of an Item from a True/False Exam, There Test Takers Get the Item Correct at Least 50% of the Time.
+```{r}
+#| label: fig-iccGuessingTF
+#| fig-cap: "Item Characteristic Curve of an Item from a True/False Exam, There Test Takers Get the Item Correct at Least 50% of the Time."
+#| fig-alt: "Item Characteristic Curve of an Item from a True/False Exam, There Test Takers Get the Item Correct at Least 50% of the Time."
+#| echo: false
+#| output: false
 
-```{r iccGuessingTF, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "(ref:iccGuessingTFCaption)"}
 plot(newdata$itemSum, newdata$guessingTF, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
 ```
 
-(ref:iccGuessingMCCaption) Item Characteristic Curve of an Item From a 4-Option Multiple Choice Exam, Where Test Takers Get the Item Correct at Least 25% of the Time.
+```{r}
+#| label: fig-iccGuessingMC
+#| fig-cap: "Item Characteristic Curve of an Item From a 4-Option Multiple Choice Exam, Where Test Takers Get the Item Correct at Least 25% of the Time."
+#| fig-alt: "Item Characteristic Curve of an Item From a 4-Option Multiple Choice Exam, Where Test Takers Get the Item Correct at Least 25% of the Time."
+#| echo: false
+#| output: false
 
-```{r iccGuessingMC, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "(ref:iccGuessingMCCaption)"}
 plot(newdata$itemSum, newdata$guessingMC, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
@@ -358,7 +409,13 @@ threePL_inattention <- drm(inattention ~ itemSum, data = empiricalICCdata, fct =
 newdata$inattention <- predict(threePL_inattention, newdata = newdata)
 ```
 
-```{r iccInattention, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curve of an Item Where the Probability of Getting an Item Correct Never Exceeds .85."}
+```{r}
+#| label: fig-iccInattention
+#| fig-cap: "Item Characteristic Curve of an Item Where the Probability of Getting an Item Correct Never Exceeds .85."
+#| fig-alt: "Item Characteristic Curve of an Item Where the Probability of Getting an Item Correct Never Exceeds .85."
+#| echo: false
+#| output: false
+
 plot(newdata$itemSum, newdata$inattention, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
@@ -456,7 +513,13 @@ onePLitems_long$Item[which(onePLitems_long$item == "item4")] <- 4
 onePLitems_long$Item[which(onePLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt1PL, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "One-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-irt1PL
+#| fig-cap: "One-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "One-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -484,7 +547,15 @@ empiricalICCdata_noCrossing <- data.frame(
 )
 ```
 
-```{r empiricalICCnoCrossing, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.height = 8, fig.cap = "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score. The empirical item characteristic curves of these items do not cross each other.", fig.scap = "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score."}
+```{r}
+#| label: fig-empiricalICCnoCrossing
+#| fig-cap: "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score. The empirical item characteristic curves of these items do not cross each other."
+#| fig-alt: "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score. The empirical item characteristic curves of these items do not cross each other."
+#| fig-scap: "Empirical Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Sum Score."
+#| fig-height: 8
+#| echo: false
+#| output: false
+
 plot(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
 lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item1, type = "b", pch = "1")
 lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item2, type = "b", pch = "2")
@@ -557,7 +628,14 @@ twoPLitems_long$Item[which(twoPLitems_long$item == "item4")] <- 4
 twoPLitems_long$Item[which(twoPLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt2PL, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-irt2PL
+#| fig-cap: "Two-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Two-Parameter Logistic Model in Item Response Theory."
+#| fig-height: 8
+#| echo: false
+#| output: false
+
 ggplot(twoPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -627,7 +705,13 @@ threePLitems_long$Item[which(threePLitems_long$item == "item4")] <- 4
 threePLitems_long$Item[which(threePLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt3PL, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Three-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-irt3PL
+#| fig-cap: "Three-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Three-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(threePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -695,7 +779,13 @@ fourPLitems_long$Item[which(fourPLitems_long$item == "item4")] <- 4
 fourPLitems_long$Item[which(fourPLitems_long$item == "item5")] <- 5
 ```
 
-```{r irt4PL, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Four-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-irt4PL
+#| fig-cap: "Four-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Four-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(fourPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -778,7 +868,13 @@ polytomousItemResponseCategory_long$responseCategory[which(polytomousItemRespons
 polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory5")] <- 5
 ```
 
-```{r polytomousItemBoundaryCurves, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Boundary Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."}
+```{r}
+#| label: fig-polytomousItemBoundaryCurves
+#| fig-cap: "Item Boundary Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."
+#| fig-alt: "Item Boundary Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), color = factor(boundary))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Boundary") +
@@ -789,7 +885,13 @@ ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), 
   theme(axis.title.y = element_text(size = 9))
 ```
 
-```{r polytomousItemResponseCategoryCurves, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."}
+```{r}
+#| label: fig-polytomousItemResponseCategoryCurves
+#| fig-cap: "Item Response Category Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."
+#| fig-alt: "Item Response Category Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(polytomousItemResponseCategory_long, aes(theta, value, group = factor(responseCategory), color = factor(responseCategory))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Response Category") +
@@ -1018,9 +1120,14 @@ irtInformation_long$Item[which(irtInformation_long$item == "information3")] <- 3
 irtInformation_long$Item[which(irtInformation_long$item == "information4")] <- 4
 ```
 
-(ref:reliabilityIRTiccCaption) Item Characteristic Curves From Two-Parameter Logistic Model in Item Response Theory. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%.
+```{r}
+#| label: fig-reliabilityIRTicc
+#| fig-cap: "Item Characteristic Curves From Two-Parameter Logistic Model in Item Response Theory. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."
+#| fig-alt: "Item Characteristic Curves From Two-Parameter Logistic Model in Item Response Theory. The dashed horizontal line indicates a probability of item endorsement of .50. The dashed vertical line is the item difficulty, i.e., the person's level on the construct (the location on the x-axis) at the inflection point of the item characteristic curve. In a two-parameter logistic model, the inflection point corresponds to the probability of item endorsement is 50%. Thus, in a two-parameter logistic model, the difficulty of an item is the person's level on the construct where the probability of endorsing the item is 50%."
+#| fig-scap: "Item Characteristic Curves From Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
 
-```{r reliabilityIRTicc, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "(ref:reliabilityIRTiccCaption)", fig.scap = "Item Characteristic Curves From Two-Parameter Logistic Model in Item Response Theory."}
 ggplot(irtReliability_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -1039,7 +1146,14 @@ We can present the [ICC](#icc) in terms of an item information curve (see Figure
 On the x-axis, the information peak is located at the [difficulty/severity](#itemDifficulty) of the item.
 The higher the [discrimination](#itemDiscrimination), the higher the information peak on the y-axis.\index{item response theory}\index{item response theory!item characteristic curve}\index{item response theory!information}\index{reliability}\index{item response theory!item difficulty}\index{item response theory!item discrimination}
 
-```{r reliabilityIRTitemInformation, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Item Information From Two-Parameter Logistic Model in Item Response Theory. The dashed vertical line is the item difficulty, which is located at the peak of the item information curve.", fig.scap = "Item Information From Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-reliabilityIRTitemInformation
+#| fig-cap: "Item Information From Two-Parameter Logistic Model in Item Response Theory. The dashed vertical line is the item difficulty, which is located at the peak of the item information curve."
+#| fig-alt: "Item Information From Two-Parameter Logistic Model in Item Response Theory. The dashed vertical line is the item difficulty, which is located at the peak of the item information curve."
+#| fig-scap: "Item Information From Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(irtInformation_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -1058,7 +1172,13 @@ This is called the test information curve (see Figure \@ref(fig:reliabilityIRTte
 Note that we get more information from likert/multiple response items compared to binary/dichotomous items.\index{item response theory}\index{item response theory!item characteristic curve}\index{item response theory!information}\index{reliability}\index{data!dichotomous}\index{data!polytomous}\index{item response theory!test information curve}\index{Likert scale}
 Having 10 items with a 5-level response scale yields as much information as 40 dichotomous items.\index{item response theory}\index{item response theory!item characteristic curve}\index{item response theory!information}\index{reliability}\index{item response theory!test information curve}
 
-```{r reliabilityIRTtestInformation, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-reliabilityIRTtestInformation
+#| fig-cap: "Test Information Curve From Two-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Test Information Curve From Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(irtInformation, aes(theta, testInformation)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
@@ -1070,7 +1190,13 @@ ggplot(irtInformation, aes(theta, testInformation)) +
 Based on test information, we can calculate the [standard error of measurement](#standardErrorOfMeasurement) (see Figure \@ref(fig:reliabilityIRTtestSE)).\index{item response theory}\index{item response theory!item characteristic curve}\index{item response theory!information}\index{reliability}\index{reliability!standard error of measurement}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 Notice how the degree of [(un)reliability](#reliability) differs at different construct levels.\index{item response theory}\index{item response theory!item characteristic curve}\index{item response theory!information}\index{reliability}\index{reliability!standard error of measurement}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 
-```{r reliabilityIRTtestSE, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-reliabilityIRTtestSE
+#| fig-cap: "Test Standard Error of Measurement From Two-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Test Standard Error of Measurement From Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(irtInformation, aes(theta, standardError)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
@@ -1082,7 +1208,13 @@ ggplot(irtInformation, aes(theta, standardError)) +
 Based on test information, we can estimate the [reliability](#irtReliability) (see Figure \@ref(fig:reliabilityIRTtestReliability)).\index{item response theory}\index{item response theory!item characteristic curve}\index{item response theory!information}\index{reliability}\index{reliability!standard error of measurement}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 Notice how the degree of [(un)reliability](#reliability) differs at different construct levels.\index{item response theory}\index{item response theory!item characteristic curve}\index{item response theory!information}\index{reliability}\index{reliability!standard error of measurement}\index{item response theory!standard error of measurement}
 
-```{r reliabilityIRTtestReliability, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-reliabilityIRTtestReliability
+#| fig-cap: "Test Reliability From Two-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Test Reliability From Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(irtInformation, aes(theta, reliability)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
@@ -1114,7 +1246,13 @@ efficientAssessment_long$Item[which(efficientAssessment_long$item == "item1")] <
 efficientAssessment_long$Item[which(efficientAssessment_long$item == "item2")] <- 2
 ```
 
-```{r efficientAssessment, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Visual Representation of an Efficient Assessment Based on Item Characteristic Curves from Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-efficientAssessment
+#| fig-cap: "Visual Representation of an Efficient Assessment Based on Item Characteristic Curves from Two-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Visual Representation of an Efficient Assessment Based on Item Characteristic Curves from Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(efficientAssessment_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -1212,7 +1350,13 @@ badMeasure_long$Item[which(badMeasure_long$item == "item9")] <- 9
 badMeasure_long$Item[which(badMeasure_long$item == "item10")] <- 10
 ```
 
-```{r badMeasureICCs, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.cap = "Visual Representation of a Bad Measure Based on Item Characteristic Curves of Items From a Bad Measure Estimated from Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-badMeasureICCs
+#| fig-cap: "Visual Representation of a Bad Measure Based on Item Characteristic Curves of Items From a Bad Measure Estimated from Two-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Visual Representation of a Bad Measure Based on Item Characteristic Curves of Items From a Bad Measure Estimated from Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -1223,7 +1367,13 @@ ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(I
   theme(legend.key.size = unit(0.15, "in"))
 ```
 
-```{r badMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual Representation of a Bad Measure Based on the Test Information Curve."}
+```{r}
+#| label: fig-badMeasureInfo
+#| fig-cap: "Visual Representation of a Bad Measure Based on the Test Information Curve."
+#| fig-alt: "Visual Representation of a Bad Measure Based on the Test Information Curve."
+#| echo: false
+#| output: false
+
 ggplot(badMeasureInfo, aes(theta, information)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
@@ -1308,7 +1458,13 @@ goodMeasure_long$Item[which(goodMeasure_long$item == "item19")] <- 19
 goodMeasure_long$Item[which(goodMeasure_long$item == "item20")] <- 20
 ```
 
-```{r goodMeasureICCs, echo = FALSE, results = "hide", out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-clinical Range) Based on Item Characteristic Curves of Items From a Good Measure Estimated From Two-Parameter Logistic Model in Item Response Theory."}
+```{r}
+#| label: fig-goodMeasureICCs
+#| fig-cap: "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-Clinical Range) Based on Item Characteristic Curves of Items From a Good Measure Estimated From Two-Parameter Logistic Model in Item Response Theory."
+#| fig-alt: "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-cClinical Range) Based on Item Characteristic Curves of Items From a Good Measure Estimated From Two-Parameter Logistic Model in Item Response Theory."
+#| echo: false
+#| output: false
+
 ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
@@ -1318,7 +1474,13 @@ ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(
   theme_bw()
 ```
 
-```{r goodMeasureInfo, echo = FALSE, results = "hide", out.width = "100%", fig.cap = "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-clinical Range) Based on the Test Information Curve."}
+```{r}
+#| label: fig-goodMeasureInfo
+#| fig-cap: "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-Clinical Range) Based on the Test Information Curve."
+#| fig-alt: "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-Clinical Range) Based on the Test Information Curve."
+#| echo: false
+#| output: false
+
 ggplot(goodMeasureInfo, aes(theta, information)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
@@ -1481,7 +1643,11 @@ The test curves suggest that the measure is most [reliable](#reliability) (i.e.,
 
 A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:onePLtcc).\index{item response theory!item characteristic curve}
 
-```{r onePLtcc, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLtcc
+#| fig-cap: "Test Characteristic Curve From Rasch Item Response Theory Model."
+#| fig-alt: "Test Characteristic Curve From Rasch Item Response Theory Model."
+
 plot(raschModel, type = "score")
 ```
 
@@ -1489,7 +1655,11 @@ plot(raschModel, type = "score")
 
 A plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:onePLtif).\index{item response theory!information}\index{item response theory!test information curve}
 
-```{r onePLtif, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLtif
+#| fig-cap: "Test Information Curve From Rasch Item Response Theory Model."
+#| fig-alt: "Test Information Curve From Rasch Item Response Theory Model."
+
 plot(raschModel, type = "info")
 ```
 
@@ -1503,7 +1673,11 @@ marginal_rxx(raschModel)
 
 A plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:onePLreliability).\index{reliability}
 
-```{r onePLreliability, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLreliability
+#| fig-cap: "Test Reliability From Rasch Item Response Theory Model."
+#| fig-alt: "Test Reliability From Rasch Item Response Theory Model."
+
 plot(raschModel, type = "rxx")
 ```
 
@@ -1511,7 +1685,11 @@ plot(raschModel, type = "rxx")
 
 A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:onePLsem).\index{reliability!standard error of measurement}
 
-```{r onePLsem, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLsem
+#| fig-cap: "Test Standard Error of Measurement From Rasch Item Response Theory Model."
+#| fig-alt: "Test Standard Error of Measurement From Rasch Item Response Theory Model."
+
 plot(raschModel, type = "SE")
 ```
 
@@ -1519,7 +1697,11 @@ plot(raschModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:onePLtifSEM).\index{item response theory!information}\index{item response theory!standard error of measurement}\index{reliability!standard error of measurement}\index{item response theory!test information curve}
 
-```{r onePLtifSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLtifSEM
+#| fig-cap: "Test Information Curve and Standard Error of Measurement From Rasch Item Response Theory Model."
+#| fig-alt: "Test Information Curve and Standard Error of Measurement From Rasch Item Response Theory Model."
+
 plot(raschModel, type = "infoSE")
 ```
 
@@ -1529,11 +1711,19 @@ plot(raschModel, type = "infoSE")
 
 Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:onePLicc) and \@ref(fig:onePLiccFacet).\index{item response theory!item characteristic curve}
 
-```{r onePLicc, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLicc
+#| fig-cap: "Item Characteristic Curves From Rasch Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Rasch Item Response Theory Model."
+
 plot(raschModel, type = "itemscore", facet_items = FALSE)
 ```
 
-```{r onePLiccFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLiccFacet
+#| fig-cap: "Item Characteristic Curves From Rasch Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Rasch Item Response Theory Model."
+
 plot(raschModel, type = "itemscore", facet_items = TRUE)
 ```
 
@@ -1541,11 +1731,19 @@ plot(raschModel, type = "itemscore", facet_items = TRUE)
 
 Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:onePLiif) and \@ref(fig:onePLiifFacet).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r onePLiif, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLiif
+#| fig-cap: "Item Information Curves from Rasch Item Response Theory Model."
+#| fig-alt: "Item Information Curves from Rasch Item Response Theory Model."
+
 plot(raschModel, type = "infotrace", facet_items = FALSE)
 ```
 
-```{r onePLiifFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Rasch Item Response Theory Model."}
+```{r}
+#| label: fig-onePLiifFacet
+#| fig-cap: "Item Information Curves from Rasch Item Response Theory Model."
+#| fig-alt: "Item Information Curves from Rasch Item Response Theory Model."
+
 plot(raschModel, type = "infotrace", facet_items = TRUE)
 ```
 
@@ -1602,7 +1800,11 @@ onePLModel_cfa_factorScores <- lavPredict(onePLModel_cfa_fit)
 
 A path diagram of the one-parameter item factor analysis is in Figure \@ref(fig:onePLifa).\index{item response theory!one-parameter model}
 
-```{r onePLifa, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of One-Parameter Logistic Model."}
+```{r}
+#| label: fig-onePLifa
+#| fig-cap: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
+#| fig-alt: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
+
 semPaths(
   onePLModel_cfa_fit,
   what = "std",
@@ -1697,7 +1899,11 @@ The test curves suggest that the measure is most [reliable](#reliability) (i.e.,
 
 A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLtcc).\index{item response theory!item characteristic curve}
 
-```{r twoPLtcc, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLtcc
+#| fig-cap: "Test Characteristic Curve From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Characteristic Curve From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "score")
 ```
 
@@ -1705,7 +1911,11 @@ plot(twoPLModel, type = "score")
 
 A plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLtif).\index{item response theory!information}\index{item response theory!test information curve}
 
-```{r twoPLtif, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLtif
+#| fig-cap: "Test Information Curve From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Information Curve From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "info")
 ```
 
@@ -1719,7 +1929,11 @@ marginal_rxx(twoPLModel)
 
 A plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLreliability).\index{reliability}
 
-```{r twoPLreliability, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLreliability
+#| fig-cap: "Test Reliability From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Reliability From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "rxx")
 ```
 
@@ -1727,7 +1941,11 @@ plot(twoPLModel, type = "rxx")
 
 A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLsem).\index{item response theory!standard error of measurement}
 
-```{r twoPLsem, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLsem
+#| fig-cap: "Test Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "SE")
 ```
 
@@ -1735,7 +1953,11 @@ plot(twoPLModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLtifSEM).\index{item response theory!information}\index{reliability}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 
-```{r twoPLtifSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLtifSEM
+#| fig-cap: "Test Information Curve and Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Information Curve and Standard Error of Measurement From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "infoSE")
 ```
 
@@ -1745,11 +1967,19 @@ plot(twoPLModel, type = "infoSE")
 
 Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:twoPLicc) and \@ref(fig:twoPLiccFacet).\index{item response theory!item characteristic curve}
 
-```{r twoPLicc, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLicc
+#| fig-cap: "Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "itemscore", facet_items = FALSE)
 ```
 
-```{r twoPLiccFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLiccFacet
+#| fig-cap: "Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "itemscore", facet_items = TRUE)
 ```
 
@@ -1757,11 +1987,19 @@ plot(twoPLModel, type = "itemscore", facet_items = TRUE)
 
 Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:twoPLiif) and \@ref(fig:twoPLiifFacet).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r twoPLiif, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLiif
+#| fig-cap: "Item Information Curves From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "infotrace", facet_items = FALSE)
 ```
 
-```{r twoPLiifFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Two-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLiifFacet
+#| fig-cap: "Item Information Curves From Two-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Two-Parameter Logistic Item Response Theory Model."
+
 plot(twoPLModel, type = "infotrace", facet_items = TRUE)
 ```
 
@@ -1838,7 +2076,11 @@ AVE(twoPLModel_cfa_fit)
 twoPLModel_cfa_factorScores <- lavPredict(twoPLModel_cfa_fit)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of Two-Parameter Logistic Model."}
+```{r}
+#| label: fig-twoPLifa
+#| fig-cap: "Item Factor Analysis Diagram of Two-Parameter Logistic Model."
+#| fig-alt: "Item Factor Analysis Diagram of Two-Parameter Logistic Model."
+
 semPaths(
   twoPLModel_cfa_fit,
   what = "std",
@@ -1895,7 +2137,11 @@ Using a chi-square difference test to compare two nested models, the two-factor 
 
 A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on each latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLmultidimensionalTCC).\index{item response theory!item characteristic curve}
 
-```{r twoPLmultidimensionalTCC, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Two-Parameter Multidimensional Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalTCC
+#| fig-cap: "Test Characteristic Curve From Two-Parameter Multidimensional Item Response Theory Model."
+#| fig-alt: "Test Characteristic Curve From Two-Parameter Multidimensional Item Response Theory Model."
+
 plot(twoPL2FactorModel, type = "score")
 ```
 
@@ -1903,7 +2149,11 @@ plot(twoPL2FactorModel, type = "score")
 
 A plot of [test information](#irtReliability) as a function of a person's level on each latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLmultidimensionalTIF).\index{item response theory!information}\index{item response theory!test information curve}
 
-```{r twoPLmultidimensionalTIF, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Two-Parameter Multidimensional Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalTIF
+#| fig-cap: "Test Information Curve From Two-Parameter Multidimensional Item Response Theory Model."
+#| fig-alt: "Test Information Curve From Two-Parameter Multidimensional Item Response Theory Model."
+
 plot(twoPL2FactorModel, type = "info")
 ```
 
@@ -1911,7 +2161,11 @@ plot(twoPL2FactorModel, type = "info")
 
 A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on each latent construct (theta; $\theta$) is in Figure \@ref(fig:twoPLmultidimensionalSEM).\index{item response theory!standard error of measurement}
 
-```{r twoPLmultidimensionalSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Two-Parameter Multidimensional Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalSEM
+#| fig-cap: "Test Standard Error of Measurement From Two-Parameter Multidimensional Item Response Theory Model."
+#| fig-alt: "Test Standard Error of Measurement From Two-Parameter Multidimensional Item Response Theory Model."
+
 plot(twoPL2FactorModel, type = "SE")
 ```
 
@@ -1921,11 +2175,19 @@ plot(twoPL2FactorModel, type = "SE")
 
 Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on each latent construct (theta; $\theta$) are in Figures \@ref(fig:twoPLmultidimensionalICC) and \@ref(fig:twoPLmultidimensionalICCfacet).\index{item response theory!item characteristic curve}
 
-```{r twoPLmultidimensionalICC, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Two-Parameter Multidimensional Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalICC
+#| fig-cap: "Item Characteristic Curves From Two-Parameter Multidimensional Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Two-Parameter Multidimensional Item Response Theory Model."
+
 plot(twoPL2FactorModel, type = "itemscore", facet_items = FALSE)
 ```
 
-```{r twoPLmultidimensionalICCfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Two-Parameter Multidimensional Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalICCfacet
+#| fig-cap: "Item Characteristic Curves From Two-Parameter Multidimensional Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Two-Parameter Multidimensional Item Response Theory Model."
+
 plot(twoPL2FactorModel, type = "itemscore", facet_items = TRUE)
 ```
 
@@ -1933,11 +2195,19 @@ plot(twoPL2FactorModel, type = "itemscore", facet_items = TRUE)
 
 Plots of [item information](#irtReliability) as a function of a person's level on each latent construct (theta; $\theta$) are in Figures \@ref(fig:twoPLmultidimensionalIIF) and \@ref(fig:twoPLmultidimensionalIIFfacet).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r twoPLmultidimensionalIIF, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Item Information Curves From Two-Parameter Multidimensional Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalIIF
+#| fig-cap: "Item Information Curves From Two-Parameter Multidimensional Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Two-Parameter Multidimensional Item Response Theory Model."
+
 plot(twoPL2FactorModel, type = "infotrace", facet_items = FALSE)
 ```
 
-```{r twoPLmultidimensionalIIFfacet, out.width = "100%", fig.align = "center", fig.align = "center", fig.cap = "Item Information Curves From Two-Parameter Multidimensional Item Response Theory Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalIIFfacet
+#| fig-cap: "Item Information Curves From Two-Parameter Multidimensional Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Two-Parameter Multidimensional Item Response Theory Model."
+
 plot(twoPL2FactorModel, type = "infotrace", facet_items = TRUE)
 ```
 
@@ -1992,7 +2262,11 @@ AVE(twoPLModelMultidimensional_cfa_fit)
 twoPLModelMultidimensional_cfa_factorScores <- lavPredict(twoPLModelMultidimensional_cfa_fit)
 ```
 
-```{r, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of Two-Parameter Multidimensional Logistic Model."}
+```{r}
+#| label: fig-twoPLmultidimensionalIFA
+#| fig-cap: "Item Factor Analysis Diagram of Two-Parameter Multidimensional Logistic Model."
+#| fig-alt: "Item Factor Analysis Diagram of Two-Parameter Multidimensional Logistic Model."
+
 semPaths(
   twoPLModelMultidimensional_cfa_fit,
   what = "std",
@@ -2038,7 +2312,11 @@ The test curves suggest that the measure is most [reliable](#reliability) (i.e.,
 
 A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:threePLtcc).\index{item response theory!item characteristic curve}
 
-```{r threePLtcc, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLtcc
+#| fig-cap: "Test Characteristic Curve From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Characteristic Curve From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "score")
 ```
 
@@ -2046,7 +2324,11 @@ plot(threePLModel, type = "score")
 
 A plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:threePLtif).\index{item response theory!information}
 
-```{r threePLtif, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLtif
+#| fig-cap: "Test Information Curve From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Information Curve From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "info")
 ```
 
@@ -2060,7 +2342,11 @@ marginal_rxx(threePLModel)
 
 A plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:threePLreliability).\index{reliability}
 
-```{r threePLreliability, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLreliability
+#| fig-cap: "Test Reliability From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Reliability From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "rxx")
 ```
 
@@ -2068,7 +2354,11 @@ plot(threePLModel, type = "rxx")
 
 A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:threePLsem).\index{item response theory!standard error of measurement}
 
-```{r threePLsem, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLsem
+#| fig-cap: "Test Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "SE")
 ```
 
@@ -2076,7 +2366,11 @@ plot(threePLModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:threePLtifSEM).\index{item response theory!information}\index{reliability}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 
-```{r threePLtifSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLtifSEM
+#| fig-cap: "Test Information Curve and Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Information Curve and Standard Error of Measurement From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "infoSE")
 ```
 
@@ -2086,11 +2380,19 @@ plot(threePLModel, type = "infoSE")
 
 Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:threePLicc) and \@ref(fig:threePLiccFacet).\index{item response theory!item characteristic curve}
 
-```{r threePLicc, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLicc
+#| fig-cap: "Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "itemscore", facet_items = FALSE)
 ```
 
-```{r threePLiccFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLiccFacet
+#| fig-cap: "Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "itemscore", facet_items = TRUE)
 ```
 
@@ -2098,11 +2400,19 @@ plot(threePLModel, type = "itemscore", facet_items = TRUE)
 
 Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:threePLiif) and \@ref(fig:threePLiifFacet).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r threePLiif, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLiif
+#| fig-cap: "Item Information Curves From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "infotrace", facet_items = FALSE)
 ```
 
-```{r threePLiifFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Three-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-threePLiifFacet
+#| fig-cap: "Item Information Curves From Three-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Three-Parameter Logistic Item Response Theory Model."
+
 plot(threePLModel, type = "infotrace", facet_items = TRUE)
 ```
 
@@ -2145,7 +2455,11 @@ The test curves suggest that the measure is most [reliable](#reliability) (i.e.,
 
 A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:fourPLtcc).\index{item response theory!item characteristic curve}
 
-```{r fourPLtcc, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLtcc
+#| fig-cap: "Test Characteristic Curve From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Characteristic Curve From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "score")
 ```
 
@@ -2153,7 +2467,11 @@ plot(fourPLModel, type = "score")
 
 A plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:fourPLtif).\index{item response theory!information}\index{item response theory!test information curve}
 
-```{r fourPLtif, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLtif
+#| fig-cap: "Test Information Curve From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Information Curve From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "info")
 ```
 
@@ -2167,7 +2485,11 @@ marginal_rxx(fourPLModel)
 
 A plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:fourPLreliability).\index{reliability}
 
-```{r fourPLreliability, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLreliability
+#| fig-cap: "Test Reliability From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Reliability From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "rxx")
 ```
 
@@ -2175,7 +2497,11 @@ plot(fourPLModel, type = "rxx")
 
 A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:fourPLsem).\index{item response theory!standard error of measurement}
 
-```{r fourPLsem, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLsem
+#| fig-cap: "Test Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "SE")
 ```
 
@@ -2183,7 +2509,11 @@ plot(fourPLModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:fourPLtifSEM).\index{item response theory!information}\index{reliability}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 
-```{r fourPLtifSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLtifSEM
+#| fig-cap: "Test Information Curve and Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Test Information Curve and Standard Error of Measurement From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "infoSE")
 ```
 
@@ -2193,11 +2523,19 @@ plot(fourPLModel, type = "infoSE")
 
 Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:fourPLicc) and \@ref(fig:fourPLiccFacet).\index{item response theory!item characteristic curve}
 
-```{r fourPLicc, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLicc
+#| fig-cap: "Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "itemscore", facet_items = FALSE)
 ```
 
-```{r fourPLiccFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLiccFacet
+#| fig-cap: "Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "itemscore", facet_items = TRUE)
 ```
 
@@ -2205,11 +2543,19 @@ plot(fourPLModel, type = "itemscore", facet_items = TRUE)
 
 Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:fourPLiif) and \@ref(fig:fourPLiifFacet).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r fourPLiif, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLiif
+#| fig-cap: "Item Information Curves From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "infotrace", facet_items = FALSE)
 ```
 
-```{r fourPLiifFacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Four-Parameter Logistic Item Response Theory Model."}
+```{r}
+#| label: fig-fourPLiifFacet
+#| fig-cap: "Item Information Curves From Four-Parameter Logistic Item Response Theory Model."
+#| fig-alt: "Item Information Curves From Four-Parameter Logistic Item Response Theory Model."
+
 plot(fourPLModel, type = "infotrace", facet_items = TRUE)
 ```
 
@@ -2257,7 +2603,11 @@ This is consistent with the idea that polytomous items tend to provide more info
 
 A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelTCC).\index{item response theory!item characteristic curve}
 
-```{r gradedResponseModelTCC, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelTCC
+#| fig-cap: "Test Characteristic Curve From Graded Response Model."
+#| fig-alt: "Test Characteristic Curve From Graded Response Model."
+
 plot(gradedResponseModel, type = "score")
 ```
 
@@ -2265,7 +2615,11 @@ plot(gradedResponseModel, type = "score")
 
 A plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelTIF).\index{item response theory!information}\index{item response theory!test information curve}
 
-```{r gradedResponseModelTIF, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelTIF
+#| fig-cap: "Test Information Curve From Graded Response Model."
+#| fig-alt: "Test Information Curve From Graded Response Model."
+
 plot(gradedResponseModel, type = "info")
 ```
 
@@ -2279,7 +2633,11 @@ marginal_rxx(gradedResponseModel)
 
 A plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelReliability).\index{reliability}
 
-```{r gradedResponseModelReliability, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelReliability
+#| fig-cap: "Test Reliability From Graded Response Model."
+#| fig-alt: "Test Reliability From Graded Response Model."
+
 plot(gradedResponseModel, type = "rxx")
 ```
 
@@ -2287,7 +2645,11 @@ plot(gradedResponseModel, type = "rxx")
 
 A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelSEM).\index{item response theory!standard error of measurement}
 
-```{r gradedResponseModelSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelSEM
+#| fig-cap: "Test Standard Error of Measurement From Graded Response Model."
+#| fig-alt: "Test Standard Error of Measurement From Graded Response Model."
+
 plot(gradedResponseModel, type = "SE")
 ```
 
@@ -2295,7 +2657,11 @@ plot(gradedResponseModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelTIFsem).\index{item response theory!information}\index{reliability}\index{item response theory!standard error of measurement}\index{item response theory!test information curve}
 
-```{r gradedResponseModelTIFsem, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelTIFsem
+#| fig-cap: "Test Information Curve and Standard Error of Measurement From Graded Response Model."
+#| fig-alt: "Test Information Curve and Standard Error of Measurement From Graded Response Model."
+
 plot(gradedResponseModel, type = "infoSE")
 ```
 
@@ -2305,11 +2671,19 @@ plot(gradedResponseModel, type = "infoSE")
 
 Item characteristic curve ([ICC](#icc)) plots of the expected score on the item as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:gradedResponseModelICC) and \@ref(fig:gradedResponseModelICCfacet).\index{item response theory!item characteristic curve}
 
-```{r gradedResponseModelICC, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelICC
+#| fig-cap: "Item Characteristic Curves From Graded Response Model."
+#| fig-alt: "Item Characteristic Curves From Graded Response Model."
+
 plot(gradedResponseModel, type = "itemscore", facet_items = FALSE)
 ```
 
-```{r gradedResponseModelICCfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelICCfacet
+#| fig-cap: "Item Characteristic Curves From Graded Response Model."
+#| fig-alt: "Item Characteristic Curves From Graded Response Model."
+
 plot(gradedResponseModel, type = "itemscore", facet_items = TRUE)
 ```
 
@@ -2317,11 +2691,19 @@ plot(gradedResponseModel, type = "itemscore", facet_items = TRUE)
 
 Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:gradedResponseModelIIF) and \@ref(fig:gradedResponseModelIIFfacet).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r gradedResponseModelIIF, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelIIF
+#| fig-cap: "Item Information Curves From Graded Response Model."
+#| fig-alt: "Item Information Curves From Graded Response Model."
+
 plot(gradedResponseModel, type = "infotrace", facet_items = FALSE)
 ```
 
-```{r gradedResponseModelIIFfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelIIFfacet
+#| fig-cap: "Item Information Curves From Graded Response Model."
+#| fig-alt: "Item Information Curves From Graded Response Model."
+
 plot(gradedResponseModel, type = "infotrace", facet_items = TRUE)
 ```
 
@@ -2329,7 +2711,11 @@ plot(gradedResponseModel, type = "infotrace", facet_items = TRUE)
 
 A plot of the probability of item threshold endorsement as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:gradedResponseModelIRCCC).\index{item response theory!item response category characteristic curve}
 
-```{r gradedResponseModelIRCCC, out.width = "100%", fig.align = "center", fig.cap = "Item Response Category Characteristic Curves From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelIRCCC
+#| fig-cap: "Item Response Category Characteristic Curves From Graded Response Model."
+#| fig-alt: "Item Response Category Characteristic Curves From Graded Response Model."
+
 plot(gradedResponseModel, type = "trace")
 ```
 
@@ -2338,7 +2724,11 @@ plot(gradedResponseModel, type = "trace")
 A plot of item boundary characteristic curves is in Figure \@ref(fig:gradedResponseModelIOCC).\index{item response theory!item boundary characteristic curve}
 The plot of item boundary characteristic curves was adapted from an example by Aiden Loe:\index{item response theory!item boundary characteristic curve} <https://aidenloe.github.io/irtplots.html> (archived at <https://perma.cc/D4YH-RV6N>)
 
-```{r gradedResponseModelIOCC, out.width = "100%", fig.align = "center", fig.cap = "Item Boundary Category Characteristic Curves From Graded Response Model."}
+```{r}
+#| label: fig-gradedResponseModelIOCC
+#| fig-cap: "Item Boundary Category Characteristic Curves From Graded Response Model."
+#| fig-alt: "Item Boundary Category Characteristic Curves From Graded Response Model."
+
 modelCoefficients <- coef(
   gradedResponseModel,
   IRTpars = TRUE,
@@ -2439,7 +2829,12 @@ The test curves suggest that the measure is most [reliable](#reliability) (i.e.,
 
 A test characteristic curve ([TCC](#icc)) plot of the expected total score as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorTCC).\index{item response theory!item characteristic curve}
 
-```{r bifactorTCC, out.width = "100%", fig.align = "center", fig.cap = "Test Characteristic Curve From Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorTCC
+#| fig-cap: "Test Characteristic Curve From Bifactor Item Response Theory Model."
+#| fig-alt: "Test Characteristic Curve From Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "score")
 ```
 
@@ -2447,7 +2842,12 @@ plot(bifactorModel, type = "score")
 
 A plot of [test information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorTIF).\index{item response theory!information}\index{item response theory!test information curve}
 
-```{r bifactorTIF, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve From Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorTIF
+#| fig-cap: "Test Information Curve From Bifactor Item Response Theory Model."
+#| fig-alt: "Test Information Curve From Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "info")
 ```
 
@@ -2461,7 +2861,12 @@ marginal_rxx(bifactorModel)
 
 A plot of test [reliability](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorReliability).\index{reliability}
 
-```{r bifactorReliability, out.width = "100%", fig.align = "center", fig.cap = "Test Reliability From Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorReliability
+#| fig-cap: "Test Reliability From Bifactor Item Response Theory Model."
+#| fig-alt: "Test Reliability From Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "rxx")
 ```
 
@@ -2469,7 +2874,12 @@ plot(bifactorModel, type = "rxx")
 
 A plot of test [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorSEM).\index{reliability!standard error of measurement}
 
-```{r bifactorSEM, out.width = "100%", fig.align = "center", fig.cap = "Test Standard Error of Measurement From Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorSEM
+#| fig-cap: "Test Standard Error of Measurement From Bifactor Item Response Theory Model."
+#| fig-alt: "Test Standard Error of Measurement From Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "SE")
 ```
 
@@ -2477,7 +2887,12 @@ plot(bifactorModel, type = "SE")
 
 A plot of [test information](#irtReliability) and [standard error of measurement](#irtReliability) (SEM) as a function of a person's level on the latent construct (theta; $\theta$) is in Figure \@ref(fig:bifactorTIFsem).\index{item response theory!information}\index{item response theory!standard error of measurement}\index{reliability!standard error of measurement}\index{item response theory!test information curve}
 
-```{r bifactorTIFsem, out.width = "100%", fig.align = "center", fig.cap = "Test Information Curve and Standard Error of Measurement From Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorTIFsem
+#| fig-cap: "Test Information Curve and Standard Error of Measurement From Bifactor Item Response Theory Model."
+#| fig-alt: "Test Information Curve and Standard Error of Measurement From Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "infoSE")
 ```
 
@@ -2487,11 +2902,21 @@ plot(bifactorModel, type = "infoSE")
 
 Item characteristic curve ([ICC](#icc)) plots of the probability of item endorsement (or getting the item correct) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:bifactorICC) and \@ref(fig:bifactorICCfacet).\index{item response theory!item characteristic curve}
 
-```{r bifactorICC, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorICC
+#| fig-cap: "Item Characteristic Curves From Bifactor Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "itemscore", facet_items = FALSE)
 ```
 
-```{r bifactorICCfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Characteristic Curves From Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorICCfacet
+#| fig-cap: "Item Characteristic Curves From Bifactor Item Response Theory Model."
+#| fig-alt: "Item Characteristic Curves From Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "itemscore", facet_items = TRUE)
 ```
 
@@ -2499,11 +2924,21 @@ plot(bifactorModel, type = "itemscore", facet_items = TRUE)
 
 Plots of [item information](#irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) are in Figures \@ref(fig:bifactorIIF) and \@ref(fig:onePLiifFacet).\index{item response theory!information}\index{item response theory!item information curve}
 
-```{r bifactorIIF, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorIIF
+#| fig-cap: "Item Information Curves from Bifactor Item Response Theory Model."
+#| fig-alt: "Item Information Curves from Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "infotrace", facet_items = FALSE)
 ```
 
-```{r bifactorIIFfacet, out.width = "100%", fig.align = "center", fig.cap = "Item Information Curves from Bifactor Item Response Theory Model.", eval = FALSE}
+```{r}
+#| label: fig-bifactorIIFfacet
+#| fig-cap: "Item Information Curves from Bifactor Item Response Theory Model."
+#| fig-alt: "Item Information Curves from Bifactor Item Response Theory Model."
+#| eval: false
+
 plot(bifactorModel, type = "infotrace", facet_items = TRUE)
 ```
 
@@ -2606,7 +3041,11 @@ bifactorModel_cfa_factorScores <- lavPredict(bifactorModel_cfa_fit)
 
 A path diagram of the bifactor item factor analysis is in Figure \@ref(fig:bifactorIFA).\index{factor analysis!confirmatory}\index{item response theory!bifactor model}\index{factor analysis!bifactor}
 
-```{r bifactorIFA, out.width = "100%", fig.align = "center", fig.cap = "Item Factor Analysis Diagram of One-Parameter Logistic Model."}
+```{r}
+#| label: fig-bifactorIFA
+#| fig-cap: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
+#| fig-alt: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
+
 semPaths(
   bifactorModel_cfa_fit,
   what = "std",
@@ -2882,14 +3321,22 @@ Provide a possible explanation as two why some of the items "broke off" (from Fa
 2.
     a. Below is a figure of item characteristic curves:
 
-```{r, echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = c("Exercise 1a: Item Characteristic Curves.")}
+```{r}
+#| label: fig-exercise-icc
+#| fig-cap: "Exercise 1a: Item Characteristic Curves."
+#| fig-alt: "Exercise 1a: Item Characteristic Curves."
+
 plot(gradedResponseModel_ex, type = "itemscore", facet_items = FALSE, main = "Item Characteristic Curves")
 ```
 
 2.
     b. Below is a figure of item boundary characteristic curves:
     
-```{r, echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = c("Exercise 2b: Item Boundary Characteristic Curves.")}
+```{r}
+#| label: fig-exercise-ibc
+#| fig-cap: "Exercise 2b: Item Boundary Characteristic Curves."
+#| fig-alt: "Exercise 2b: Item Boundary Characteristic Curves."
+
 ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color = item)) +
   geom_line() +
   ylab("Probability of Item Boundary Endorsement") +
@@ -2906,7 +3353,11 @@ ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color =
 	That suggests that "trouble getting along with teachers" is more core to the construct of antisocial behavior than "sudden changes in mood."
     d. Below is a figure of item information curves:
 
-```{r, echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = c("Exercise 2c: Item Information Curves.")}
+```{r}
+#| label: fig-exercise-ibc
+#| fig-cap: "Exercise 2c: Item Information Curves."
+#| fig-alt: "Exercise 2c: Item Information Curves."
+
 plot(gradedResponseModel_ex, type = "infotrace", facet_items = FALSE, main = "Item Information Curves")
 ```
 
@@ -2916,7 +3367,11 @@ plot(gradedResponseModel_ex, type = "infotrace", facet_items = FALSE, main = "It
 	Item 1 ("cheats or tells lies") provides the most information at somewhat low construct levels (0–2 standard deviations below the mean).
     f.
     
-```{r, echo = FALSE, out.width = "100%", fig.align = "center", fig.cap = c("Exercise 2e: Test Information Curve.")}
+```{r}
+#| label: fig-exercise-iic
+#| fig-cap: "Exercise 2e: Test Information Curve."
+#| fig-alt: "Exercise 2e: Test Information Curve."
+
 plot(gradedResponseModel_ex, type = "info", main = "Test Information Curve")
 ```
 
