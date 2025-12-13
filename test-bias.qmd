@@ -2259,7 +2259,9 @@ Then, $\Delta \text{M}_\text{C}$ is computed as in Equation \@ref(eq:measurement
 
 Fix residual variances and intercepts of manifest variables to be equal across groups.\index{structural equation modeling!measurement invariance}
 
-```{r nullModel, cache = TRUE}
+```{r}
+#| label: nullModel
+
 nullModel <- '
 #Fix residual variances of manifest variables to be equal across groups
 x1 ~~ c(psi1, psi1)*x1
@@ -2287,7 +2289,9 @@ x9 ~ c(tau9, tau9)*1
 
 #### CFA Model {#measurementInvarianceCFAsyntax}
 
-```{r cfaModelChunk, cache = TRUE}
+```{r}
+#| label: cfaModelChunk
+
 cfaModel <- '
  #Factor loadings
  visual  =~ x1 + x2 + x3
@@ -2300,7 +2304,9 @@ cfaModel <- '
 
 Specify the same number of factors in each group, and which indicators load on which factors are the same in each group.\index{structural equation modeling!measurement invariance!configural}
 
-```{r configuralInvarianceModel, cache = TRUE}
+```{r}
+#| label: configuralInvarianceModel
+
 cfaModel_configuralInvariance <- '
  #Factor loadings (free the factor loading of the first indicator)
  visual  =~ NA*x1 + x2 + x3
@@ -2350,7 +2356,9 @@ cfaModel_configuralInvariance <- '
 
 Specify invariance of factor loadings across groups.\index{structural equation modeling!measurement invariance!metric}\index{structural equation modeling!factor loading}
 
-```{r metricInvarianceModel, cache = TRUE}
+```{r}
+#| label: metricInvarianceModel
+
 cfaModel_metricInvariance <- '
  #Fix factor loadings to be the same across groups
  visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
@@ -2400,7 +2408,9 @@ cfaModel_metricInvariance <- '
 
 Specify invariance of factor loadings and intercepts across groups.\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!factor loading}\index{structural equation modeling!intercept}
 
-```{r scalarInvarianceModel, cache = TRUE}
+```{r}
+#| label: scalarInvarianceModel
+
 cfaModel_scalarInvariance <- '
  #Fix factor loadings to be the same across groups
  visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
@@ -2450,7 +2460,9 @@ cfaModel_scalarInvariance <- '
 
 Specify invariance of factor loadings, intercepts, and residuals across groups.\index{structural equation modeling!measurement invariance!residual}\index{structural equation modeling!factor loading}\index{structural equation modeling!intercept}\index{structural equation modeling!residual}
 
-```{r residualInvarianceModel, cache = TRUE}
+```{r}
+#| label: residualInvarianceModel
+
 cfaModel_residualInvariance <- '
  #Fix factor loadings to be the same across groups
  visual  =~ c(lambdax1,lambdax1)*x1 + c(lambdax2,lambdax2)*x2 + c(lambdax3,lambdax3)*x3
@@ -2498,7 +2510,9 @@ cfaModel_residualInvariance <- '
 
 ### Specify the Fit Indices of Interest {#measurementInvarianceFitIndices}
 
-```{r fitIndices, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: fitIndices
+
 myAFIs <- c("chisq", "chisq.scaled",
             "rmsea", "cfi", "tli", "srmr",
             "rmsea.robust", "cfi.robust", "tli.robust")
@@ -2509,7 +2523,9 @@ moreAFIs <- NULL # c("gammaHat","gammaHat.scaled")
 
 #### Fit the Model {#measurementInvarianceNullModelFit}
 
-```{r nullFit, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: nullFit
+
 nullModelFit <- lavaan(
   nullModel,
   data = HolzingerSwineford1939,
@@ -2534,7 +2550,9 @@ Specify the same number of factors in each group, and which indicators load on w
 
 #### Model Syntax {#measurementInvarianceConfiguralModelSyntax}
 
-```{r configuralInvarianceModelSyntax1, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "cfaModelChunk"}
+```{r}
+#| label: configuralInvarianceModelSyntax1
+
 configuralInvarianceModel <- measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
@@ -2546,7 +2564,9 @@ configuralInvarianceModel <- measEq.syntax(
 cat(as.character(configuralInvarianceModel))
 ```
 
-```{r configuralInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "configuralInvarianceModelSyntax1"}
+```{r}
+#| label: configuralInvarianceModelSyntax2
+
 configuralInvarianceSyntax <- as.character(configuralInvarianceModel)
 ```
 
@@ -2564,7 +2584,9 @@ lavaanify(cfaModel, ngroups = 2)
 
 #### Fit the Model {#measurementInvarianceConfiguralModelFit}
 
-```{r configuralInvarianceModelFit, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "configuralInvarianceModelSyntax2"}
+```{r}
+#| label: configuralInvarianceModelFit
+
 configuralInvarianceModel_fit <- cfa(
   configuralInvarianceSyntax,
   data = HolzingerSwineford1939,
@@ -2573,7 +2595,9 @@ configuralInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r configuralInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "configuralInvarianceModel"}
+```{r}
+#| label: configuralInvarianceModelFitFull
+
 configuralInvarianceModelFullSyntax_fit <- lavaan(
   cfaModel_configuralInvariance,
   data = HolzingerSwineford1939,
@@ -2671,7 +2695,9 @@ The permutation test evaluates the null hypothesis that the model fit is not wor
 A significant *p*-value indicates that the model fits significanlty worse than the best-possible fitting model.\index{structural equation modeling!measurement invariance!configural}
 A non-significant *p*-value indicates that the model does not fit significantly worse than the best-possible fitting model.\index{structural equation modeling!measurement invariance!configural}
 
-```{r numPermutations, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: numPermutations
+
 numPermutations <- 100
 ```
 
@@ -2682,7 +2708,10 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 **Warning**: this code takes a while to run based on $`r numPermutations`$ iterations.
 You can reduce the number of iterations to be faster.
 
-```{r configuralInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","configuralInvarianceModelFit","fitIndices")}
+```{r}
+#| label: configuralInvarianceModelPermutation
+#| output: false
+
 set.seed(52242)
 configuralInvarianceTest <- permuteMeasEq(
   nPermute = numPermutations,
@@ -2737,7 +2766,10 @@ Specify invariance of factor loadings across groups.\index{structural equation m
 
 #### Model Syntax {#measurementInvarianceMetricModelSyntax}
 
-```{r metricInvarianceModelSyntax1, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "cfaModelChunk"}
+```{r}
+#| label: metricInvarianceModelSyntax1
+#| output: false
+
 metricInvarianceModel <- measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
@@ -2750,7 +2782,9 @@ metricInvarianceModel <- measEq.syntax(
 cat(as.character(metricInvarianceModel))
 ```
 
-```{r metricInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "metricInvarianceModelSyntax1"}
+```{r}
+#| label: metricInvarianceModelSyntax2
+
 metricInvarianceSyntax <- as.character(metricInvarianceModel)
 ```
 
@@ -2769,7 +2803,9 @@ lavaanify(cfaModel_metricInvariance, ngroups = 2)
 
 #### Fit the Model {#measurementInvarianceMetricModelFit}
 
-```{r metricInvarianceModelFit, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "metricInvarianceModelSyntax2"}
+```{r}
+#| label: metricInvarianceModelFit
+
 metricInvarianceModel_fit <- cfa(
   metricInvarianceSyntax,
   data = HolzingerSwineford1939,
@@ -2778,7 +2814,9 @@ metricInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r metricInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "metricInvarianceModel"}
+```{r}
+#| label: metricInvarianceModelFitFull
+
 metricInvarianceModelFullSyntax_fit <- lavaan(
   cfaModel_metricInvariance,
   data = HolzingerSwineford1939,
@@ -2951,7 +2989,10 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 **Warning**: this code takes a while to run based on $`r numPermutations`$ iterations.
 You can reduce the number of iterations to be faster.
 
-```{r metricInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","metricInvarianceModelFit","configuralInvarianceModelFit","fitIndices")}
+```{r}
+#| label: metricInvarianceModelPermutation
+#| output: false
+
 set.seed(52242)
 metricInvarianceTest <- permuteMeasEq(
   nPermute = numPermutations,
@@ -3006,7 +3047,9 @@ Specify invariance of factor loadings and intercepts across groups.\index{struct
 
 #### Model Syntax {#measurementInvarianceScalarModelSyntax}
 
-```{r scalarInvarianceModelSyntax1, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "cfaModelChunk"}
+```{r}
+#| label: scalarInvarianceModelSyntax1
+
 scalarInvarianceModel <- measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
@@ -3019,7 +3062,9 @@ scalarInvarianceModel <- measEq.syntax(
 cat(as.character(scalarInvarianceModel))
 ```
 
-```{r scalarInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "scalarInvarianceModelSyntax1"}
+```{r}
+#| label: scalarInvarianceModelSyntax2
+
 scalarInvarianceSyntax <- as.character(scalarInvarianceModel)
 ```
 
@@ -3038,7 +3083,9 @@ lavaanify(cfaModel_scalarInvariance, ngroups = 2)
 
 #### Fit the Model {#measurementInvarianceScalarModelFit}
 
-```{r scalarInvarianceModelFit, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "scalarInvarianceModelSyntax2"}
+```{r}
+#| label: scalarInvarianceModelFit
+
 scalarInvarianceModel_fit <- cfa(
   scalarInvarianceSyntax,
   data = HolzingerSwineford1939,
@@ -3047,7 +3094,9 @@ scalarInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r scalarInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "scalarInvarianceModel"}
+```{r}
+#| label: scalarInvarianceModelFitFull
+
 scalarInvarianceModelFullSyntax_fit <- lavaan(
   cfaModel_scalarInvariance,
   data = HolzingerSwineford1939,
@@ -3221,7 +3270,10 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 **Warning**: this code takes a while to run based on `r numPermutations` iterations.
 You can reduce the number of iterations to be faster.
 
-```{r scalarInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","scalarInvarianceModelFit","metricInvarianceModelFit","fitIndices")}
+```{r}
+#| label: scalarInvarianceModelPermutation
+#| output: false
+
 set.seed(52242)
 scalarInvarianceTest <- permuteMeasEq(
   nPermute = numPermutations,
@@ -3276,7 +3328,9 @@ Specify invariance of factor loadings, intercepts, and residuals across groups.\
 
 #### Model Syntax {#measurementInvarianceResidualModelSyntax}
 
-```{r residualInvarianceModelSyntax1, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "cfaModelChunk"}
+```{r}
+#| label: residualInvarianceModelSyntax1
+
 residualInvarianceModel <- measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
@@ -3289,7 +3343,9 @@ residualInvarianceModel <- measEq.syntax(
 cat(as.character(residualInvarianceModel))
 ```
 
-```{r residualInvarianceModelSyntax2, cache = TRUE, cache.comments = FALSE, dependson = "residualInvarianceModelSyntax1"}
+```{r}
+#| label: residualInvarianceModelSyntax2
+
 residualInvarianceSyntax <- as.character(residualInvarianceModel)
 ```
 
@@ -3308,7 +3364,9 @@ lavaanify(cfaModel_residualInvariance, ngroups = 2)
 
 #### Fit the Model {#measurementInvarianceResidualModelFit}
 
-```{r residualInvarianceModelFit, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "residualInvarianceModelSyntax2"}
+```{r}
+#| label: residualInvarianceModelFit
+
 residualInvarianceModel_fit <- cfa(
   residualInvarianceSyntax,
   data = HolzingerSwineford1939,
@@ -3317,7 +3375,9 @@ residualInvarianceModel_fit <- cfa(
   estimator = "MLR")
 ```
 
-```{r residualInvarianceModelFitFull, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = "residualInvarianceModel"}
+```{r}
+#| label: residualInvarianceModelFitFull
+
 residualInvarianceModelFullSyntax_fit <- lavaan(
   cfaModel_residualInvariance,
   data = HolzingerSwineford1939,
@@ -3490,7 +3550,10 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 **Warning**: this code takes a while to run based on $`r numPermutations`$ iterations.
 You can reduce the number of iterations to be faster.
 
-```{r residualInvarianceModelPermutation, results = "hide", cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("semTools"), HolzingerSwineford1939), cache.comments = FALSE, dependson = c("numPermutations","residualInvarianceModelFit","scalarInvarianceModelFit","fitIndices")}
+```{r}
+#| label: residualInvarianceModelPermutation
+#| output: false
+
 set.seed(52242)
 residualInvarianceTest <- permuteMeasEq(
   nPermute = numPermutations,

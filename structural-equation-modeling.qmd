@@ -1273,7 +1273,9 @@ For instance, the modification indices in Table \@ref(tab:modIndicesCFAModel) (g
 However, it is generally not recommended to blindly estimate additional parameters solely based on modification indices.\index{structural equation modeling!modification indices}
 Rather, it is generally advised to consider modification indices in light of theory.\index{structural equation modeling!modification indices}\index{theory}
 
-```{r modIndicesCFAModel}
+```{r}
+#| label: modIndicesCFAModel
+
 modificationindices(cfaModelFit, sort. = TRUE)
 ```
 
@@ -1779,7 +1781,9 @@ These examples were adapted from the `simsem` documentation:\index{power analysi
 The population model was used to generate the simulated data.\index{power analysis}\index{structural equation modeling!power analysis}
 It is important to specify each parameter value in the population model based on theory and/or prior empirical research, especially meta-analysis of the target population (when possible).\index{power analysis}\index{structural equation modeling!power analysis}\index{theory}\index{empiricism}
 
-```{r powerAnalysisPopulationModel, cache = TRUE}
+```{r}
+#| label: powerAnalysisPopulationModel
+
 populationModel <- '
  #Specify measurement model factor loadings
  ind60 =~ .7*x1 + .7*x2 + .7*x3
@@ -1832,7 +1836,9 @@ populationModel <- '
 
 #### Show the Model's Fixed and Default Values {#monteCarloPowerAnalysis-fixedDefaultValues}
 
-```{r powerAnalysisPopulationModelFit, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: powerAnalysisPopulationModelFit
+
 populationModel_fit <- lavaan(populationModel, do.fit = FALSE)
 ```
 
@@ -1858,7 +1864,9 @@ cov2cor(fitted(populationModel_fit)$cov)
 
 ### Specify Analysis Model {#monteCarloPowerAnalysis-analysisModel}
 
-```{r powerAnalysisAnalysisModel, cache = TRUE}
+```{r}
+#| label: powerAnalysisAnalysisModel
+
 analysisModel_syntax <- '
  #Measurement model factor loadings (free the factor loading of the first indicator)
  ind60 =~ NA*x1 + x2 + x3
@@ -1921,11 +1929,15 @@ names(fitted(populationModel_fit)$mean)
 Specify the skewness and kurtosis of the data variables.\index{power analysis}\index{structural equation modeling!power analysis}
 In this example, I set the variables $x1$–$x3$ (the first three variables) to have skewness of 1.3 and kurtosis of 1.8, and I set the variables $y1$–$y8$ (the next eight variables) to have a skewness of 2 and a kurtosis of 4.\index{power analysis}\index{structural equation modeling!power analysis}
 
-```{r powerAnalysisNumberIndicators, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisPopulationModel", "powerAnalysisPopulationModelFit")}
+```{r}
+#| label: powerAnalysisNumberIndicators
+
 numberOfIndicators <- length(fitted(populationModel_fit)$mean)
 ```
 
-```{r powerAnalysisIndicatorDistributions, cache = TRUE, cache.comments = FALSE, cache.extra=list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), dependson = "powerAnalysisNumberIndicators"}
+```{r}
+#| label: powerAnalysisIndicatorDistributions
+
 indicatorDistributions <- bindDist(
   p = numberOfIndicators,
   skewness = c(rep(1.3, 3), rep(2, 8)),
@@ -1946,7 +1958,9 @@ I set the model to use full information maximum likelihood (FIML) estimation to 
 If you set $m$ to a value greater than zero, it will allow use of multiple imputation instead of FIML.\index{power analysis}\index{structural equation modeling!power analysis}
 Statistical power with multiple imputation tends to be lower than with FIML unless the number of imputations is large [@Graham2007].\index{power analysis}\index{structural equation modeling!power analysis}
 
-```{r powerAnalysisMissingness, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: powerAnalysisMissingness
+
 percentMissingByVariable <- '
   x1 ~ p(0.10)
   x2 ~ p(0.10)
@@ -1962,7 +1976,9 @@ percentMissingByVariable <- '
 '
 ```
 
-```{r powerAnalysisMissingnessModel, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = "powerAnalysisMissingness"}
+```{r}
+#| label: powerAnalysisMissingnessModel
+
 missingnessModel <- miss(
   logit = percentMissingByVariable,
   m = 0)
@@ -1982,7 +1998,9 @@ plotLogitMiss(percentMissingByVariable)
 
 Specify the sample sizes to evaluate in the Monte Carlo simulation and the number of repetitions per sample size.\index{power analysis}\index{structural equation modeling!power analysis}
 
-```{r powerAnalysisSampleSizes, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: powerAnalysisSampleSizes
+
 sampleSizes <- 150:700
 repetitionsPerSampleSize <- 2
 ```
@@ -1996,7 +2014,9 @@ If you choose to do processing in serial rather than parallel (by setting `multi
 **Warning**: this code takes a while to run based on $`r length(sampleSizes)`$ different sample sizes $(`r max(sampleSizes)` - `r min(sampleSizes)` + 1)$ and $`r repetitionsPerSampleSize`$ repetitions per sample size, for a total of $`r length(sampleSizes) * repetitionsPerSampleSize`$ iterations $([`r max(sampleSizes)` - `r min(sampleSizes)` + 1]$ sample sizes $\times$ $`r repetitionsPerSampleSize`$ repetitions per sample size $= `r length(sampleSizes) * repetitionsPerSampleSize`$ iterations).\index{power analysis}\index{structural equation modeling!power analysis}
 You can reduce the number of sample sizes and/or repetitions per sample size to be faster.\index{power analysis}\index{structural equation modeling!power analysis}
 
-```{r powerAnalysis, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizes", "powerAnalysisPopulationModel", "powerAnalysisAnalysisModel", "powerAnalysisMissingnessModel", "powerAnalysisIndicatorDistributions")}
+```{r}
+#| label: powerAnalysis
+
 output <- simsem::sim(
   n = rep(
     sampleSizes,
@@ -2446,7 +2466,10 @@ semModel2UnstdSE <- semModel2Unstd$se[which(semModel2Unstd$lhs == "antisocialT2"
 semModel2StdBeta <- semModel2Std$std.all[which(semModel2Std$lhs == "antisocialT2" & semModel2Std$rhs == "bpi_anxiousDepressedSum")]
 ```
 
-```{r populationModelExercise, include = FALSE, cache = TRUE}
+```{r}
+#| label: populationModelExercise
+#| include: false
+
 # Power Analysis ----------------------------------------------------------
 
 # Specify population model
@@ -2501,11 +2524,17 @@ populationModel_ex <- '
 '
 ```
 
-```{r populationModelFitExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: populationModelFitExercise
+#| include: false
+
 populationModelFit_ex <- lavaan(populationModel_ex, do.fit = FALSE)
 ```
 
-```{r analysisModelExercise, include = FALSE, cache = TRUE}
+```{r}
+#| label: analysisModelExercise
+#| include: false
+
 # Specify analysis model
 
 analysisModelSyntax_ex <- '
@@ -2574,17 +2603,26 @@ cov2cor(fitted(populationModelFit_ex)$cov)
 names(fitted(populationModelFit_ex)$mean)
 ```
 
-```{r powerAnalysisNumberIndicatorsExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("populationModel_exExercise", "populationModel_exFitExercise")}
+```{r}
+#| label: powerAnalysisNumberIndicatorsExercise
+#| include: false
+
 numberOfIndicators_ex <- length(fitted(populationModelFit_ex)$mean)
 ```
 
-```{r dataDistributionExercise, include = FALSE, cache = TRUE, cache.comments = FALSE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), dependson = "powerAnalysisNumberIndicatorsExercise"}
+```{r}
+#| label: dataDistributionExercise
+#| include: false
+
 indicatorDistributions_ex <- bindDist(p = numberOfIndicators_ex,
                                       skewness = rep(2.5, 11),
                                       kurtosis = rep(5, 11))
 ```
 
-```{r specifyMissingnessExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: specifyMissingnessExercise
+#| include: false
+
 # Specify missingness
 percentMissingByVariable_ex <- '
   x1 ~ p(0.10)
@@ -2605,11 +2643,17 @@ percentMissingByVariable_ex <- '
 plotLogitMiss(percentMissingByVariable_ex)
 ```
 
-```{r missingnessModelExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = "specifyMissingnessExercise"}
+```{r}
+#| label: missingnessModelExercise
+#| include: false
+
 missingnessModelFIML_ex <- miss(logit = percentMissingByVariable_ex, m = 0)
 ```
 
-```{r powerAnalysisSampleSizeExercise, include = FALSE, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: powerAnalysisSampleSizeExercise
+#| include: false
+
 sampleSizes_ex <- 100:700
 repetitionsPerSampleSize_ex <- 1
 ```
@@ -2619,7 +2663,10 @@ detach("package:semTools", unload = TRUE)
 library("semTools")
 ```
 
-```{r powerAnalysisExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "dataDistributionExercise")}
+```{r}
+#| label: powerAnalysisExercise
+#| include: false
+
 output_ex <- simsem::sim(n = rep(sampleSizes_ex, each = repetitionsPerSampleSize_ex),
                          model = analysisModelSyntax_ex,
                          generate = populationModel_ex,
@@ -2679,13 +2726,19 @@ powerHarshParenting1_ex <- power1_ex[,"dem65~dem60"]
 names(fitted(populationModelFit_ex)$mean)
 ```
 
-```{r normallyDistrubutedDataExercise, include = FALSE, cache = TRUE, cache.comments = FALSE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), dependson = "powerAnalysisNumberIndicatorsExercise"}
+```{r}
+#| label: normallyDistrubutedDataExercise
+#| include: false
+
 indicatorDistributionsNormal <- bindDist(p = numberOfIndicators_ex,
                                          skewness = rep(0, 11),
                                          kurtosis = rep(0, 11))
 ```
 
-```{r powerAnalysisSampleSizeExercise3, include = FALSE, cache = TRUE, cache.comments = FALSE}
+```{r}
+#| label: powerAnalysisSampleSizeExercise3
+#| include: false
+
 sampleSizes3_ex <- 150
 repetitionsPerSampleSize3_ex <- 50
 ```
@@ -2695,7 +2748,10 @@ detach("package:semTools", unload = TRUE)
 library("semTools")
 ```
 
-```{r powerAnalysisNormallyDistributedExercise, include = FALSE, cache = TRUE, cache.extra = list(getRversion(), packageVersion("lavaan"), packageVersion("simsem")), cache.comments = FALSE, dependson = c("powerAnalysisSampleSizeExercise", "populationModelExercise", "analysisModelExercise", "missingnessModelExercise", "normallyDistrubutedDataExercise")}
+```{r}
+#| label: powerAnalysisSampleSizeExercise3
+#| include: false
+
 output3_ex <- simsem::sim(n = rep(sampleSizes3_ex, each = repetitionsPerSampleSize3_ex),
                model = analysisModelSyntax_ex,
                generate = populationModel_ex,
