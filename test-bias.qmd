@@ -4772,6 +4772,13 @@ cnlsy$disorder <- NA
 cnlsy$disorder[cnlsy$bpi_antisocialT2Sum > 6] <- 1
 cnlsy$disorder[cnlsy$bpi_antisocialT2Sum <= 6] <- 0
 
+selectionRatio <- function(TP, TN, FP, FN){
+  N <- TP + TN + FP + FN
+  value <- (TP + FP)/N
+  
+  return(value)
+}
+
 srBoys <- selectionRatio(TP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 1 & cnlsy$sex == "male")),
                TN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 0 & cnlsy$sex == "male")),
                FP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 0 & cnlsy$sex == "male")),
