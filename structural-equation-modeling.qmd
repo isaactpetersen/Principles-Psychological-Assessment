@@ -485,7 +485,9 @@ A [reflective model](#reflectiveConstruct) with 3 indicators would have 9 known 
 However, for a [formative model](#formativeConstruct), we must specify more parameters: a factor loading, intercept, and variance for each of the 4 indicators, all 6 permissive correlations, and 1 error term for the latent variable, for a total of 19 parameters.\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
 Here are the parameters estimated:
 
-```{r, error = TRUE}
+```{r}
+#| error: true
+
 formativeModel_syntax <- '
  #Formative model factor loadings
  formative <~ v1 + v2 + v3 + v4
@@ -775,7 +777,9 @@ semPaths(
 
 You can generate the weights for the indicators (to be used in the model syntax) for the refined Henseler-Ogasawara specification using the following code:
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 library("calculus")
 
 # First, construct the loading matrix
@@ -894,13 +898,17 @@ cor(mydataSEM, use = "pairwise.complete.obs")
 
 Correlation matrices of various types using the `cor.table()` function from the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] are in Tables \@ref(tab:corTable1b), \@ref(tab:corTable2b), and \@ref(tab:corTable3b).\index{petersenlab package}\index{correlation}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 cor.table(mydataSEM, dig = 2)
 cor.table(mydataSEM, type = "manuscript", dig = 2)
 cor.table(mydataSEM, type = "manuscriptBig", dig = 2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 corTable1b <- cor.table(
   mydataSEM,
   dig = 2)
@@ -1030,7 +1038,9 @@ measurementModelFit_full <- lavaan(
 
 ### Display Summary Output {#measurementModelOutput-sem}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 measurementModelParameters <- parameterEstimates(
   measurementModelFit,
   standardized = TRUE)
@@ -1617,7 +1627,9 @@ semModelFit_full <- lavaan(
 
 #### Interpreting `lavaan` Output
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("MOTE")
 
 chiSquareTestP <- fitMeasures(semModelFit,
@@ -2146,17 +2158,23 @@ SEM holds promise to account for [measurement error](#measurementError) and [met
 
 ## Exercises {#semExercises}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("MOTE")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Load Data ---------------------------------------------------------------
 
 cnlsy <- read_csv(here("data", "cnlsy.csv"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Measurement Model
 
 ## Specify the model
@@ -2166,14 +2184,18 @@ measurementModelT1 <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 measurementModelT2 <- '
  #Factor loadings
  antisocialT2 =~ bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + bpi_antisocialT2_4 + bpi_antisocialT2_5 + bpi_antisocialT2_6 + bpi_antisocialT2_7
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ### Summary of Model Features
 summary(measurementModelT1)
 
@@ -2181,7 +2203,9 @@ summary(measurementModelT1)
 lavaanify(measurementModelT1)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Fit the model
 measurementModel1Fit <- cfa(measurementModelT1,
                             data = cnlsy,
@@ -2194,7 +2218,9 @@ measurementModel2Fit <- cfa(measurementModelT2,
                             estimator = "MLR")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Display summary output
 summary(measurementModel1Fit,
         fit.measures = TRUE,
@@ -2207,7 +2233,9 @@ summary(measurementModel2Fit,
         rsquare = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 fitMeasures(measurementModel1Fit,
             fit.measures = c("chisq", "df", "pvalue",
                              "chisq.scaled", "df.scaled", "pvalue.scaled",
@@ -2223,26 +2251,34 @@ measurementModel1CFI <- fitMeasures(measurementModel1Fit, fit.measures = c("cfi"
 measurementModel1SRMR <- fitMeasures(measurementModel1Fit, fit.measures = c("srmr"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Modification indices
 modificationindices(measurementModel1Fit, sort. = TRUE)
 modificationindices(measurementModel2Fit, sort. = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Reliability
 compRelSEM(measurementModel1Fit)
 AVE(measurementModel1Fit)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Path Diagram
 semPaths(measurementModel1Fit,
          what = "Std.all",
          layout = "tree2")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Correlated Errors -------------------------------------------------------
 
 ## Specify the model
@@ -2257,7 +2293,9 @@ measurementModelCorrelatedErrorsT1 <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 measurementModelCorrelatedErrorsT2 <- '
  #Factor loadings
  antisocialT2 =~ bpi_antisocialT2_1 + bpi_antisocialT2_2 + bpi_antisocialT2_3 + 
@@ -2269,7 +2307,9 @@ measurementModelCorrelatedErrorsT2 <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ### Summary of Model Features
 summary(measurementModelCorrelatedErrorsT1)
 
@@ -2277,7 +2317,9 @@ summary(measurementModelCorrelatedErrorsT1)
 lavaanify(measurementModelCorrelatedErrorsT1)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Fit the model
 measurementModelCorrelatedErrors1Fit <- cfa(measurementModelCorrelatedErrorsT1,
                             data = cnlsy,
@@ -2290,7 +2332,9 @@ measurementModelCorrelatedErrors2Fit <- cfa(measurementModelCorrelatedErrorsT2,
                             estimator = "MLR")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Display summary output
 summary(measurementModelCorrelatedErrors1Fit,
         fit.measures = TRUE,
@@ -2303,20 +2347,26 @@ summary(measurementModelCorrelatedErrors2Fit,
         rsquare = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Factor loadings
 measurementModelCorrelatedErrors1FitFactorLoadingStd <- standardizedSolution(measurementModelCorrelatedErrors1Fit)
 measurementModelCorrelatedErrors1FitFactorLoadingStdItem2 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" & measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs == "bpi_antisocialT1_2")]
 measurementModelCorrelatedErrors1FitFactorLoadingStdItem7 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" & measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs == "bpi_antisocialT1_7")]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Modification indices
 modificationindices(measurementModelCorrelatedErrors1Fit, sort. = TRUE)
 modificationindices(measurementModelCorrelatedErrors2Fit, sort. = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Factor scores
 measurementModelCorrelatedErrors1Fit_factorScores <- lavPredict(measurementModelCorrelatedErrors1Fit)
 
@@ -2324,7 +2374,9 @@ measurementModelCorrelatedErrors1Fit_factorScores <- lavPredict(measurementModel
 measurementModelCorrelatedErrors1Omega <- compRelSEM(measurementModelCorrelatedErrors1Fit)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Path Diagram
 semPaths(measurementModelCorrelatedErrors1Fit,
          what = "Std.all",
@@ -2332,7 +2384,9 @@ semPaths(measurementModelCorrelatedErrors1Fit,
          edge.label.cex = 1.1)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("chisq", "df", "pvalue",
                                                    "chisq.scaled", "df.scaled", "pvalue.scaled",
                                                    "chisq.scaling.factor",
@@ -2347,14 +2401,18 @@ measurementModelCorrelatedErrors1CFI <- fitMeasures(measurementModelCorrelatedEr
 measurementModelCorrelatedErrors1SRMR <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit.measures = c("srmr"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 measurementModelComparison <- anova(measurementModel1Fit, measurementModelCorrelatedErrors1Fit)
 
 measurementModelChiSquareDiff <- measurementModelComparison$"Chisq diff"[2]
 measurementModelDFDiff <- measurementModelComparison$"Df diff"[2]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # SEM ---------------------------------------------------------------------
 
 ## Specify the model
@@ -2369,7 +2427,9 @@ semModel_ex <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ### Summary of Model Features
 summary(semModel_ex)
 
@@ -2377,7 +2437,9 @@ summary(semModel_ex)
 lavaanify(semModel_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Fit the model
 semModelFit_ex <- cfa(semModel_ex,
                    data = cnlsy,
@@ -2386,7 +2448,9 @@ semModelFit_ex <- cfa(semModel_ex,
                    std.lv = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Display summary output
 summary(semModelFit_ex,
         fit.measures = TRUE,
@@ -2394,13 +2458,17 @@ summary(semModelFit_ex,
         rsquare = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 semModelFactorLoadingStd_ex <- standardizedSolution(semModelFit_ex)
 
 correlationLatentFactor <- semModelFactorLoadingStd_ex$est.std[which(semModelFactorLoadingStd_ex$lhs == "antisocialT1" & semModelFactorLoadingStd_ex$rhs == "antisocialT2")]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Modification indices
 modificationindices(semModelFit_ex, sort. = TRUE)
 
@@ -2412,7 +2480,9 @@ compRelSEM(semModelFit_ex)
 AVE(semModelFit_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Path Diagram
 semPaths(semModelFit_ex,
          what = "Std.all",
@@ -2420,11 +2490,15 @@ semPaths(semModelFit_ex,
          edge.label.cex = 0.6)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 correlationSumScores <- cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_antisocialT2Sum)$estimate
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 semModel2 <- '
  #Factor loadings
  antisocialT1 =~ bpi_antisocialT1_1 + bpi_antisocialT1_2 + bpi_antisocialT1_3 + bpi_antisocialT1_4 + bpi_antisocialT1_5 + bpi_antisocialT1_6 + bpi_antisocialT1_7
@@ -2439,7 +2513,9 @@ semModel2 <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Fit the model
 semModel2Fit <- cfa(semModel2,
                    data = cnlsy,
@@ -2449,7 +2525,9 @@ semModel2Fit <- cfa(semModel2,
                    fixed.x = FALSE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Display summary output
 summary(semModel2Fit,
         fit.measures = TRUE,
@@ -2457,7 +2535,9 @@ summary(semModel2Fit,
         rsquare = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 semModel2Unstd <- parameterEstimates(semModel2Fit, standardized = FALSE)
 semModel2Std <- parameterEstimates(semModel2Fit, standardized = TRUE)
 
@@ -2587,18 +2667,24 @@ analysisModelSyntax_ex <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 summary(populationModelFit_ex,
         standardized = TRUE,
         rsquare = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 fitted(populationModelFit_ex)
 cov2cor(fitted(populationModelFit_ex)$cov)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Non-normally distributed data
 names(fitted(populationModelFit_ex)$mean)
 ```
@@ -2639,7 +2725,9 @@ percentMissingByVariable_ex <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 plotLogitMiss(percentMissingByVariable_ex)
 ```
 
@@ -2658,7 +2746,9 @@ sampleSizes_ex <- 100:700
 repetitionsPerSampleSize_ex <- 1
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 detach("package:semTools", unload = TRUE)
 library("semTools")
 ```
@@ -2680,7 +2770,9 @@ output_ex <- simsem::sim(n = rep(sampleSizes_ex, each = repetitionsPerSampleSize
                          multicore = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 RNGkind("default", "default", "default")
 
 summaryPopulation(output_ex)
@@ -2689,22 +2781,30 @@ summaryParam(output_ex, alpha = .05, detail = TRUE)
 summaryTime(output_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 plotCutoff(output_ex, alpha = .05)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 getCutoff(output_ex, alpha = .05, nVal = 150)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 plotPower(output_ex,
           powerParam = c("dem65~dem60", "dem65~ind60"),
           alpha = .05)
 abline(h = 0.8, lwd = 2, lty = 2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 powerEstimates1_ex <- getPower(output_ex, alpha = .05)
 findPower(powerEstimates1_ex, iv = "N", power = .80)
 
@@ -2713,7 +2813,9 @@ sampleSizeNeededStress1_ex <- sampleSizeNeeded1_ex[["dem65~ind60"]]
 sampleSizeNeededHarshParenting1_ex <- sampleSizeNeeded1_ex[["dem65~dem60"]]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 getPower(output_ex, alpha = 0.05, nVal = 150)
 
 power1_ex <- getPower(output_ex, alpha = 0.05, nVal = 150)
@@ -2721,7 +2823,9 @@ powerStress1_ex <- power1_ex[,"dem65~ind60"]
 powerHarshParenting1_ex <- power1_ex[,"dem65~dem60"]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Normally Distributed Data
 names(fitted(populationModelFit_ex)$mean)
 ```
@@ -2743,7 +2847,9 @@ sampleSizes3_ex <- 150
 repetitionsPerSampleSize3_ex <- 50
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 detach("package:semTools", unload = TRUE)
 library("semTools")
 ```
@@ -2765,7 +2871,9 @@ output3_ex <- simsem::sim(n = rep(sampleSizes3_ex, each = repetitionsPerSampleSi
                multicore = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 RNGkind("default", "default", "default")
 
 summaryPopulation(output3_ex)
@@ -2774,27 +2882,37 @@ summaryParam(output3_ex, alpha = .05, detail = TRUE)
 summaryTime(output3_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #plotCutoff(output3_ex, alpha = .05)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 getCutoff(output3_ex, alpha = .05, nVal = 150)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #plotPower(output3_ex,
 #          powerParam = c("dem65~dem60", "dem65~ind60"),
 #          alpha = .05)
 #abline(h = 0.8, lwd = 2, lty = 2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #powerEstimates3_ex <- getPower(output3_ex, alpha = .05)
 #findPower(powerEstimates3_ex, iv = "N", power = .80)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 getPower(output3_ex, alpha = 0.05, nVal = 150)
 
 power3_ex <- getPower(output3_ex, alpha = 0.05, nVal = 150)

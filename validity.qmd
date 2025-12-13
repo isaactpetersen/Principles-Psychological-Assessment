@@ -281,7 +281,9 @@ Below, we provide an example of criterion-related validity by examining the [Pea
 cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 criterionValidity <- cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate
 ```
 
@@ -702,7 +704,9 @@ In part, this may be because we need better measures (i.e., a higher ratio of co
 This example is courtesy of W. Joel Schneider.\index{multitrait-multimethod matrix}\index{validity!construct}
 First, we simulate data for an MTMM model using a fixed model with population parameters using the `simstandard` package [@R-simstandard]:\index{simulate data}\index{multitrait-multimethod matrix}\index{validity!construct}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 model_fixed <- '
  Verbal =~ .5*VO1 + .6*VO2 + .7*VO3 +
            .7*VW1 + .6*VW2 + .5*VW3 + 
@@ -736,7 +740,9 @@ MTMM_data <- sim_standardized(
 
 A multitrait-multimethod matrix correlation matrix is below.\index{multitrait-multimethod matrix}\index{validity!construct}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 round(cor(MTMM_data), 2)
 ```
 
@@ -1262,7 +1268,9 @@ cor.test(
   y = mydataValidity$predictorWithMeasurementErrorT2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 reliabilityPredictor_sim <- 
   cor.test(
     x = mydataValidity$predictorWithMeasurementErrorT1,
@@ -1277,7 +1285,9 @@ cor.test(
   y = mydataValidity$criterionWithMeasurementErrorT2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 reliabilityCriterion_sim <- 
   cor.test(
     x = mydataValidity$criterionWithMeasurementErrorT1,
@@ -1292,7 +1302,9 @@ cor.test(
   y = mydataValidity$criterion)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 trueAssociation_sim <- 
   cor.test(
     x = mydataValidity$predictor,
@@ -1307,7 +1319,9 @@ cor.test(
   y = mydataValidity$criterionWithMeasurementErrorT1)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 observedAssociation_sim <- 
   cor.test(
     x = mydataValidity$predictorWithMeasurementErrorT1,
@@ -1351,7 +1365,9 @@ attenuationCorrelation(
   reliabilityOfCriterion = 0.85)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 attenuatedAssociation <- attenuationCorrelation(
   trueAssociation = 0.7, 
   reliabilityOfPredictor = 0.9,
@@ -1440,7 +1456,9 @@ summary(
 lavInspect(observedSEM_fit, "rsquare")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 observedSEM_parameters <- parameterEstimates(
   observedSEM_fit,
   standardized = TRUE)
@@ -1511,7 +1529,9 @@ summary(
   rsquare = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 disattenuationSEM_parameters <- parameterEstimates(
   disattenuationSEM_fit,
   standardized = TRUE)
@@ -1592,22 +1612,30 @@ Thus, when reporting validity in papers, it is important to adequately describe 
 
 ## Exercises {#exercises-validity}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("MOTE")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 cnlsy <- read_csv(here("data", "cnlsy.csv"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Criterion-Related Validity ----------------------------------------------
 
 cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)
 criterionValidity_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Attenuation of True Correlation due to Measurement Error ----------------
 
 #observed correlation between x and y = (true association between construct A and construct B) * sqrt(reliability of x and y), where x = measure of construct A; y = measure of construct B
@@ -1618,7 +1646,9 @@ reliabilityOfCriterion_ex <- 0.7090234 #assume the reliability of the predictor 
 observedAssociation_ex <- trueAssociation_ex * sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Disattenuation of Observed Correlation due to Measurement Error ---------
 
 #true association between construct A and construct B = (observed correlation between x and y)/sqrt(reliability of x and y), where x = measure of construct A; y = measure of construct B
@@ -1628,7 +1658,9 @@ reliabilityOfCriterion_ex <- 0.8 #assume the reliability of the predictor is .7
 trueAssociation_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate)/sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Incremental Validity ----------------------------------------------------
 
 model1_ex <- lm(bpi_hyperactiveSum ~ bpi_antisocialT1Sum, data = na.omit(cnlsy))
@@ -1645,7 +1677,9 @@ getDeltaRsquare(model2_ex) #anxiety/depression explains 6% additional variance i
 deltaRsquare_ex <- getDeltaRsquare(model2_ex)[[2]]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Multitrait-multimethod matrix -----------------------------------------
 
 round(cor(MTMM_data), 2)
@@ -1655,7 +1689,9 @@ round(cor(MTMM_data[,c("VO1","SO1","QO1",
                        "VM1","SM1","QM1")]), 2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Multitrait-multimethod CFA --------------------------------------------
 
 #Example from W. Joel Schneider: https://my.ilstu.edu/~wjschne/442/CFA.html#(15)
@@ -1688,20 +1724,26 @@ modelMTMM <- '
 '
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 MTMM.fit <- cfa(modelMTMM,
                 data = MTMM_data,
                 orthogonal = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 summary(MTMM.fit,
         fit.measures = TRUE,
         standardized = TRUE,
         rsquare = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Path Diagram
 semPaths(MTMM.fit,
          what = "Std.all",
@@ -1709,7 +1751,9 @@ semPaths(MTMM.fit,
          bifactor = c("Verbal","Spatial","Quant","g"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Discriminant Validity ---------------------------------------------------
 
 modelCFA <- '
@@ -1729,7 +1773,9 @@ modelCFA <- '
 ```
 
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 htmt_ex <- htmt(modelCFA,
      data = MTMM_data,
      missing = "ml")

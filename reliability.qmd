@@ -787,7 +787,9 @@ cor(mydata[,c("time1","time2","time3")],
     use = "pairwise.complete.obs")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 corValue <- cor.test(
   x = mydata$time1,
   y = mydata$time2)$estimate
@@ -825,7 +827,9 @@ The smaller the absolute value of the correlation coefficient (i.e., the closer 
 The larger the absolute value of the correlation coefficient (i.e., the closer the absolute value of the $r$ value is to one), the stronger the association and the steeper the slope of the best-fit line in a scatterplot.\index{correlation}
 See Figure \@ref(fig:rangeOfCorrelations) for a range of different correlation coefficients and what some example data may look like for each direction and strength of association.\index{correlation}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Simulate data with specified correlation in relation to an existing variable (https://stats.stackexchange.com/a/313138/20338; archived at https://perma.cc/S26F-QSW3)
 complement <- function(y, rho, x){
   if (missing(x)) x <- rnorm(length(y)) # Optional: supply a default if `x` is not given
@@ -1181,7 +1185,9 @@ psych::ICC(mydata[,c("time1","time2")], missing = FALSE)
 There are various kinds of ICC coefficients.
 To read more about the various types of ICC coefficients, type the following command:
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 ?psych::ICC
 ```
 
@@ -1219,7 +1225,9 @@ CR = `r qnorm(.975)` \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 (\#eq:coefficientOfRepeatability)
 \end{equation}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 coefficientOfRepeatability <- function(measure1, measure2){
   value <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
   
@@ -1236,7 +1244,10 @@ coefficientOfRepeatability(
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#blandAltmanPlot) in Figure \@ref(fig:repeatability).\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{petersenlab package}
 The coefficient of repeatability is labeled `cr` in the output.\index{reliability!test–retest!coefficient of repeatability}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 repeatability <- function(measure1, measure2){
   cr <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
   bias <- mean((measure2 - measure1), na.rm = TRUE)
@@ -1324,7 +1335,9 @@ Estimated (test–retest) bias values that are closer to zero reflect stronger a
 However, (estimated) bias values can still be close to zero while individuals show large differences because large positive and negative differences could cancel each other out.\index{reliability!test–retest}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}
 As a result, it is also important to examine other indices of test–retest reliability, including the coefficient of stability and the coefficient of repeatability.\index{reliability!test–retest}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}\index{reliability!test–retest!coefficient of stability}\index{reliability!test–retest!coefficient of repeatability}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 bias <- function(measure1, measure2){
   value <- mean((measure2 - measure1), na.rm = TRUE)
   
@@ -1338,7 +1351,9 @@ bias(
   measure2 = mydata$time2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 biasValue <- bias(
   measure1 = mydata$time1,
   measure2 = mydata$time2)
@@ -1360,7 +1375,9 @@ The bias of `r apa(biasValue, 2)` indicates that the scores at time 2 are somewh
 
 It is expected that the 95% limits of agreement (LOA) include 95% of differences between the two measurement methods (assuming the scores are normally distributed), based on how the coefficient of repeatability is calculated.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!bias}\index{reliability!test–retest!limits of agreement}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 lowerLOA <- function(measure1, measure2){
   value <- bias(measure1, measure2) - coefficientOfRepeatability(measure1, measure2)
   
@@ -1383,7 +1400,9 @@ upperLOA(
   measure2 = mydata$time2)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 lowerLOAvalue <- lowerLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 upperLOAvalue <- upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
 ```
@@ -1451,7 +1470,9 @@ There are various kinds of ICC coefficients.\index{reliability!intra-rater}\inde
 To read more about the various types of ICC coefficients, see @Shrout1979 and @McGraw1996.\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 You can also type the following commands to learn more:\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 ?ICC
 ?iccNA
 ```
@@ -1950,7 +1971,10 @@ r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `reliabilityOfDifferenceScore()` function to estimate the reliability of a difference score:\index{reliability!difference score}\index{difference score!reliability}\index{petersenlab package}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY){
   rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
   sigmaX <- sd(x, na.rm = TRUE)
@@ -2056,7 +2080,10 @@ r_{x*y, x*y} = r_{xx} r_{yy}
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `reliabilityOfProductTerm()` function to estimate the reliability of a product term:\index{reliability!product term}\index{moderation}\index{moderation@\igobble|seealso{interaction}}\index{petersenlab package}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 reliabilityOfProductTerm <- function(x, y, reliabilityX, reliabilityY){
   rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
 
@@ -2158,7 +2185,9 @@ For reproducibility, we set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 # Simulate Data
 set.seed(52242)
 
@@ -2217,7 +2246,9 @@ For reproducibility, we set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 # Simulate Data
 set.seed(52242)
 
@@ -2286,7 +2317,9 @@ For reproducibility, we set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 # Simulate Data
 set.seed(52242)
 
@@ -2356,7 +2389,9 @@ For reproducibility, we set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 # Simulate Data
 set.seed(52242)
 
@@ -2422,7 +2457,9 @@ For reproducibility, we set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 # Simulate Data
 set.seed(52242)
 
@@ -2489,7 +2526,9 @@ For reproducibility, we set the seed below.
 Using the same seed will yield the same answer every time.
 There is nothing special about this particular seed.
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 # Simulate Data
 set.seed(52242)
 
@@ -2872,17 +2911,23 @@ For more information on [inter-rater reliability](#interrater-reliability), we s
 
 ## Exercises {#exercises-reliability}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("tidyverse")
 library("here")
 library("MOTE")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 cnlsy <- read_csv(here("data", "cnlsy.csv"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 mydata_ex <- data.frame(matrix(data = NA, ncol = 2, nrow = nrow(cnlsy)))
 names(mydata_ex) <- c("time1","time2")
 
@@ -2890,7 +2935,9 @@ mydata_ex$time1 <- cnlsy$bpi_antisocialT1Sum
 mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Add constant variance of 3 to all participants at only T2
 mydata_ex$time1 <- cnlsy$bpi_antisocialT1Sum
 mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
@@ -2902,7 +2949,9 @@ cr1_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$d
 bias1_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Add constant variance of 3 to all participants at all time points
 mydata_ex$time1 <- cnlsy$bpi_antisocialT1Sum
 mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
@@ -2915,7 +2964,9 @@ cr2_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$d
 bias2_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Add constant variance of 3 to first 500 participants at only T2
 mydata_ex$time1 <- cnlsy$bpi_antisocialT1Sum
 mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
@@ -2927,7 +2978,9 @@ cr3_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$d
 bias3_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Add constant variance of 3 to first 500 participants at all time points
 mydata_ex$time1 <- cnlsy$bpi_antisocialT1Sum
 mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
@@ -2940,7 +2993,9 @@ cr4_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$d
 bias4_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Test–Retest Reliability -------------------------------------------------
 
 #Coefficient of stability
@@ -2948,7 +3003,9 @@ stability_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi
 cor(cnlsy[,c("bpi_antisocialT1Sum","bpi_antisocialT2Sum")], use = "pairwise.complete.obs")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Repeatability -----------------------------------------------------------
 
 # Bland-Altman Plot
@@ -2978,7 +3035,9 @@ regressionSlope_ex <- BAstats_ex$regression.fixed.slope
 BAstats_ex
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Inter-Rater Reliability -------------------------------------------------
 
 #For categorical data: use Cohen's Kappa
@@ -2991,7 +3050,9 @@ iccSingleRandom_ex <- icc_ex$results[icc_ex$results$type == "ICC2", "ICC"]
 iccAverageRandom_ex <- icc_ex$results[icc_ex$results$type == "ICC2k", "ICC"]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Internal Consistency ----------------------------------------------------
 
 #Cronbach's alpha
@@ -2999,13 +3060,17 @@ alpha_ex <- psych::alpha(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi
 alphaVal_ex <- alpha_ex$total$raw_alpha
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Split-half reliability
 splitHalf_ex <- splitHalf(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], brute = TRUE)
 splitHalfValue_ex <- splitHalf_ex$meanr
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Other estimates of internal consistency (Omega total, Omega hierarchical, Revelle's omega total, Greatest Lower Bound, Coefficient H)
 #internalConsistency_ex <- scaleStructure(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")])
 ```
@@ -3039,7 +3104,9 @@ set.seed(52242)
 omegaCategorical_ex <- ci.reliability(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], type = "categorical", interval.type = "none")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Standard Error of Measurement (SEM) -------------------------------------
 
 #SEM = s*sqrt(1-r)
@@ -3051,7 +3118,9 @@ lower95PercentCI_ex <- 6 - qnorm(.975)*sem_ex
 upper95PercentCI_ex <- 6 + qnorm(.975)*sem_ex
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Attenuation of True Test–Retest Reliability due to Measurement Error --------
 
 #test–retest correlation of measure = (true test–retest reliability of construct) * (reliability of measure)
@@ -3068,7 +3137,9 @@ reliabilityOfMeasure_ex <- 0.6299494 #assume the reliability of the measure is .
 trueAssociation_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_antisocialT2Sum)$estimate)/reliabilityOfMeasure_ex
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Generalizability Theory -------------------------------------------------
 participant_ex <- rep(c(1,2,3), times = 6)
 occasion_ex <- rep(rep(c(1,2), each = 3), times = 3)
@@ -3127,7 +3198,9 @@ Also summarize the effects of measurement error in each case:
 The data are in Table \@ref(tab:evaluatingDiagnosticIRRTable) below.
 What is your inter-rater reliability with your colleague?
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 diagnosticTable_ex <- data.frame("Client" = 1:5,
                                  "yourDx" = c("Yes","No","Yes","No","No"),
                                  "colleagueDx" = c("Yes","No","No","Yes","No"))
@@ -3148,7 +3221,9 @@ kable(diagnosticTable_ex,
 The data are in Table \@ref(tab:evaluatingRatingsIRRTable) below.
 What is your inter-rater reliability with your colleague?
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ratingTable_ex <- data.frame("Client" = 1:5,
                              "yourRating" = c(5,3,4,2,1),
                              "colleagueRating" = c(4,2,3,2,2))

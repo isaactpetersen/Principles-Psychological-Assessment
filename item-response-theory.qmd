@@ -29,7 +29,9 @@ In IRT, we can plot an *item characteristic curve* (ICC).\index{item response th
 The ICC is a plot of the model-derived probability of a symptom being present (or a correct response) as a function of a person's standing on a latent continuum.\index{item response theory!item characteristic curve}
 For instance, we can create empirical ICCs that can take any shape (see Figure \@ref(fig:empiricalICC)).\index{item response theory!item characteristic curve}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 empiricalICCdata <- data.frame(
   item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
   item2 =  c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
@@ -72,7 +74,9 @@ axis(1, at = 1:9, labels = 1:9)
 In a model-implied ICC, we fit a logistic (sigmoid) curve to each item's probability of a symptom being present as a function of a person's level on the latent construct.\index{item response theory!item characteristic curve}
 The model-implied ICCs for the same 10 items from Figure \@ref(fig:empiricalICC) are depicted in Figure \@ref(fig:modelImpliedICC).\index{item response theory!item characteristic curve}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #https://www.statforbiology.com/nonlinearregression/usefulequations#logistic_curve; archived at https://perma.cc/8WFX-FCEQ
 #https://github.com/OnofriAndreaPG/aomisc/blob/1eb698b3bc5f55a718c37bfd2028b9ac73a6fbbe/R/SSL.R; archived at https://perma.cc/94CM-PSGY
 
@@ -168,7 +172,9 @@ For a particular item, among those with a low total score (level on the construc
 This item has a ceiling effect and provides only a little information about who would be considered above clinical threshold for a disorder.\index{item response theory!item characteristic curve}\index{ceiling effect}
 So, the item is not very clinically useful.\index{item response theory!item characteristic curve}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("drc")
 
 empiricalICCdata$ceilingEffect <- c(.90, .95, .98, 1, 1, 1, 1, 1, 1)
@@ -227,7 +233,9 @@ Item difficulty is similar to item means or intercepts in [structural equation m
 Some items are more useful at the higher levels of the construct, whereas other items are more useful at the lower levels of the construct.
 See Figure \@ref(fig:iccDifficulty) for an example of an item with a low difficulty and an item with a high difficulty.\index{item response theory!item difficulty}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("tidyverse")
 library("psych")
 
@@ -314,7 +322,9 @@ These items provide a fine distinction between people with lower versus higher l
 Some items go up gradually (less steep slope), so it provides less precision and information, and has a low discrimination.\index{item response theory!item discrimination}\index{item response theory!item characteristic curve}\index{item response theory!information}
 See Figure \@ref(fig:iccDiscrimination) for an example of an item with a low discrimination and an item with a high discrimination.\index{item response theory!item discrimination}\index{item response theory!item characteristic curve}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 discriminationData <- data.frame(itemSum = 1:length(-4:4))
 
 discriminationData$lowDiscrimination <- psych::logistic(-4:4, d = 0, a = 0.7)
@@ -360,7 +370,9 @@ On an educational test, this could correspond to the person's likelihood of bein
 For example, for a 4-option multiple choice test, a respondent would be expected to get a given item correct 25% of the time just by guessing.\index{item response theory!item guessing}
 See Figure \@ref(fig:iccGuessingTF) for an example of an item from a true/false exam and Figure \@ref(fig:iccGuessingMC) for an example of an item from a 4-option multiple choice exam.\index{item response theory!item guessing}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 empiricalICCdata$guessingTF <- psych::logistic(-4:4, c = 0.5)
 empiricalICCdata$guessingMC <- psych::logistic(-4:4, c = 0.25)
 
@@ -401,7 +413,9 @@ The item's *inattention* (or *careless error*) parameter is the reflected by the
 If the item has an upper asymptote below one, it suggests that the probability of getting the item correct (or endorsing the item) never reaches one, for any level on the construct.\index{item response theory!item careless errors}
 See Figure \@ref(fig:iccInattention) for an example of an item whose probability of endorsement (or getting it correct) exceeds .85.\index{item response theory!item careless errors}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 empiricalICCdata$inattention <- psych::logistic(-4:4, z = 0.85, a = 2)
 
 threePL_inattention <- drm(inattention ~ itemSum, data = empiricalICCdata, fct = LL.3(), type = "continuous") #fix lower asymptote at 0
@@ -438,17 +452,24 @@ P(X = 1|\theta_j, b_i) = \frac{e^{\theta_j - b_i}}{1 + e^{\theta_j - b_i}}
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `fourPL()` function that estimates the probability of item endorsement as function of the item characteristics from the Rasch model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory!one-parameter model}\index{item response theory!item difficulty}\index{item response theory!theta}
 To estimate the probability of endorsement from the Rasch model, specify $b$ and $\theta$, while keeping the defaults for the other parameters.\index{item response theory!theta}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 library("petersenlab") #to install: install.packages("remotes"); remotes::install_github("DevPsyLab/petersenlab")
 ```
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 fourPL <- function(a = 1, b, c = 0, d = 1, theta){
   c + (d - c) * (exp(a * (theta - b))) / (1 + exp(a * (theta - b)))
 }
 ```
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 fourPL(b, theta)
 ```
 
@@ -469,7 +490,9 @@ P(X = 1|\theta_j, b_i, a) = \frac{e^{a(\theta_j - b_i)}}{1 + e^{a(\theta_j - b_i
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `fourPL()` function that estimates the probability of item endorsement as function of the item characteristics from the one-parameter logistic model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory!one-parameter model}\index{item response theory!theta}
 To estimate the probability of endorsement from the one-parameter logistic model, specify $a$, $b$, and $\theta$, while keeping the defaults for the other parameters.\index{item response theory!one-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}\index{item response theory!theta}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 fourPL(a, b, theta)
 ```
 
@@ -477,7 +500,9 @@ Rasch and one-parameter logistic models are common and are the easiest to fit.\i
 However, they make fairly strict assumptions.
 They assume that items have the same [discrimination](#itemDiscrimination).\index{item response theory!one-parameter model}\index{item response theory!item discrimination}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("tidyverse")
 
 onePLitems <- data.frame(
@@ -531,7 +556,9 @@ ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(I
 
 A one-parameter logistic model is only valid if there is not crossing of lines in empirical [ICCs](#icc) (see Figure \@ref(fig:empiricalICCnoCrossing)).\index{item response theory!one-parameter model}\index{item response theory!item characteristic curve}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 empiricalICCdata_noCrossing <- data.frame(
   item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
   item2 =  c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
@@ -587,7 +614,9 @@ P(X = 1|\theta_j, b_i, a_i) = \frac{e^{a_i(\theta_j - b_i)}}{1 + e^{a_i(\theta_j
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `fourPL()` function that estimates the probability of item endorsement as function of the item characteristics from the two-parameter logistic model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory!two-parameter model}\index{item response theory!theta}
 To estimate the probability of endorsement from the two-parameter logistic model, specify $a$, $b$, and $\theta$, while keeping the defaults for the other parameters.\index{item response theory!two-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}\index{item response theory!theta}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 fourPL(a, b, theta)
 ```
 
@@ -595,7 +624,9 @@ fourPL(a, b, theta)
 fourPL(a = 0.6, b = 0, theta = -1)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 twoPLitems <- data.frame(theta = -6:6,
                          item1 = fourPL(a = 1.3, b = -2, theta = -6:6),
                          item2 = fourPL(a = 0.8, b = -1, theta = -6:6),
@@ -662,7 +693,9 @@ P(X = 1|\theta_j, b_i, a_i, c_i) = c_i + (1 - c_i) \frac{e^{a_i(\theta_j - b_i)}
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `fourPL()` function that estimates the probability of item endorsement as function of the item characteristics from the three-parameter logistic model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory!three-parameter model}\index{item response theory!item guessing}\index{item response theory!theta}
 To estimate the probability of endorsement from the three-parameter logistic model, specify $a$, $b$, $c$, and $\theta$, while keeping the defaults for the other parameters.\index{item response theory!three-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}\index{item response theory!item guessing}\index{item response theory!theta}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 fourPL(a, b, c, theta)
 ```
 
@@ -670,7 +703,9 @@ fourPL(a, b, c, theta)
 fourPL(a = 0.8, b = -1, c = .25, theta = -1)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 threePLitems <- data.frame(theta = 1:13,
                            item1 = fourPL(a = 1.3, b = -2, c = 0, theta = -6:6),
                            item2 = fourPL(a = 0.8, b = -1, c = .25, theta = -6:6),
@@ -736,7 +771,9 @@ P(X = 1|\theta_j, b_i, a_i, c_i, d_i) = c_i + (d_i - c_i) \frac{e^{a_i(\theta_j 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `fourPL()` function that estimates the probability of item endorsement as function of the item characteristics from the four-parameter logistic model and the person's level on the construct (theta).\index{petersenlab package}
 To estimate the probability of endorsement from the four-parameter logistic model, specify $a$, $b$, $c$, $d$, and $\theta$.\index{item response theory!four-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}\index{item response theory!item guessing}\index{item response theory!item careless errors}\index{item response theory!theta}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 fourPL(a, b, c, d, theta)
 ```
 
@@ -744,7 +781,9 @@ fourPL(a, b, c, d, theta)
 fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = 3)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 fourPLitems <- data.frame(theta = 1:13,
                           item1 = fourPL(a = 1.3, b = -2, c = 0, d = 1, theta = -6:6),
                           item2 = fourPL(a = 0.8, b = -1, c = .25, d = 0.9, theta = -6:6),
@@ -831,7 +870,9 @@ The item boundary characteristic curve is the probability that a person selects 
 As depicted, one likert scale item does equivalent work as 4 binary items.\index{item response theory}\index{item response theory!item boundary characteristic curve}\index{data!dichotomous}\index{data!polytomous}\index{Likert scale}
 See Figure \@ref(fig:polytomousItemResponseCategoryCurves) for the same 5-level likert scale item plotted with an item response category characteristic curve (based on a static, non-cumulative distribution).\index{item response theory}\index{item response theory!item response category characteristic curve}\index{Likert scale}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 polytomousItemBoundary <- data.frame(theta = seq(from = -4, to = 4, length.out= 1000),
                                      itemBoundary1 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = -2),
                                      itemBoundary2 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = -0.6667),
@@ -942,13 +983,18 @@ In IRT, the [standard error of measurement](#standardErrorOfMeasurement) (at a g
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `standardErrorIRT()` function that estimates the [standard error of measurement](#standardErrorOfMeasurement) at a person's level on the construct (theta) from the amount of information that the item (or test) provides.\index{petersenlab package}\index{item response theory}\index{item response theory!information}\index{reliability}\index{reliability!standard error of measurement}\index{item response theory!standard error of measurement}\index{item response theory!theta}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 standardErrorIRT <- function(information){
   1/sqrt(information)
 }
 ```
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 standardErrorIRT(information)
 ```
 
@@ -970,7 +1016,10 @@ where $P_i(\theta)$ is the probability of getting a one instead of a zero on ite
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the Rasch model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}
 To estimate the amount of information an item provides in a Rasch model, specify $b$ and $\theta$, while keeping the defaults for the other parameters.\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}\index{item response theory!one-parameter model}\index{item response theory!item difficulty}\index{item response theory!theta}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 itemInformation <- function(a = 1, b, c = 0, d = 1, theta){
   P <- NULL
   information <- NULL
@@ -984,7 +1033,9 @@ itemInformation <- function(a = 1, b, c = 0, d = 1, theta){
 }
 ```
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 itemInformation(b, theta)
 ```
 
@@ -1002,7 +1053,9 @@ The formula for information for item $i$ at construct level $\theta$ in a two-pa
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the two-parameter logistic model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}\index{item response theory!two-parameter model}
 To estimate the amount of information an item provides in a two-parameter logistic model, specify $a$, $b$, and $\theta$, while keeping the defaults for the other parameters.\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}\index{item response theory!one-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}\index{item response theory!theta}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 itemInformation(a, b, theta)
 ```
 
@@ -1020,7 +1073,9 @@ The formula for information for item $i$ at construct level $\theta$ in a three-
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the three-parameter logistic model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}\index{item response theory!three-parameter model}\index{item response theory!theta}
 To estimate the amount of information an item provides in a three-parameter logistic model, specify $a$, $b$, $c$, and $\theta$, while keeping the defaults for the other parameters.\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}\index{item response theory!three-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}\index{item response theory!item guessing}\index{item response theory!theta}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 itemInformation(a, b, c, theta)
 ```
 
@@ -1038,7 +1093,9 @@ The formula for information for item $i$ at construct level $\theta$ in a four-p
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `itemInformation()` function that estimates the amount of information an item provides as function of the item characteristics from the four-parameter logistic model and the person's level on the construct (theta).\index{petersenlab package}\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}\index{item response theory!four-parameter model}\index{item response theory!theta}
 To estimate the amount of information an item provides in a four-parameter logistic model, specify $a$, $b$, $c$, $d$, and $\theta$.\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}\index{item response theory!four-parameter model}\index{item response theory!item difficulty}\index{item response theory!item discrimination}\index{item response theory!item guessing}\index{item response theory!item careless errors}\index{item response theory!theta}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 itemInformation(a, b, c, d, theta)
 ```
 
@@ -1060,13 +1117,18 @@ where $\sigma^2(\theta)$ is the variance of theta, which is fixed to one in most
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `reliabilityIRT()` function that estimates the amount of [reliability](#irtReliability) an item or a measure provides as function of its information and the variance of people's construct levels ($\theta$).\index{petersenlab package}\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!theta}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 reliabilityIRT <- function(information, varTheta = 1){
   information / (information + varTheta)
 }
 ```
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 reliabilityIRT(information, varTheta = 1)
 ```
 
@@ -1076,7 +1138,9 @@ reliabilityIRT(10)
 
 Consider some hypothetical items depicted with [ICCs](#icc) in Figure \@ref(fig:reliabilityIRTicc).\index{item response theory!item characteristic curve}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #https://journals.sagepub.com/doi/full/10.1177/0146621613475471
 irtReliability <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
@@ -1232,7 +1296,9 @@ If two items perform similarly, that is, they have the same [difficulty](#itemDi
 This leads to greater efficiency and better measurement in terms of [reliability](#reliability) and [validity](#validity).\index{item response theory}\index{brief assessment}\index{reliability}\index{validity}
 For more information on designing and evaluating short forms compared to their full-scale counterparts, see @Smith2000.\index{brief assessment}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 efficientAssessment <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
 efficientAssessment$item1 <- fourPL(b = -1.5, a = 2, theta = efficientAssessment$theta)
@@ -1307,7 +1373,9 @@ This would allow it to efficiently and accurately assess the construct for the i
 An example of a bad measure for assessing the full range of individual differences is depicted in terms of [ICCs](#icc) in Figure \@ref(fig:badMeasureICCs) and in terms of [test information](#irtReliability) in Figure \@ref(fig:badMeasureInfo).\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!test information curve}
 The measure performs poorly for the intended purpose, because its items do not (a) span the range of interest (−3 to 3 standard deviations from the mean of the latent construct), (b) have high [discrimination](#itemDiscrimination) and [information](#irtReliability), and (c) densely cover the range of interest without redundancy.\index{item response theory}\index{item response theory!information}\index{item response theory!item discrimination}\index{reliability}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 badMeasure <- badMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
 badMeasure$item1 <- fourPL(b = -2.5, a = 0.4, theta = badMeasure$theta)
@@ -1385,7 +1453,9 @@ ggplot(badMeasureInfo, aes(theta, information)) +
 An example of a good measure for distinguishing clinical-range versus sub-clinical range is depicted in terms of [ICCs](#icc) in Figure \@ref(fig:goodMeasureICCs) and in terms of [test information](#irtReliability) in Figure \@ref(fig:goodMeasureInfo).\index{item response theory}\index{item response theory!information}\index{reliability}\index{item response theory!item characteristic curve}\index{item response theory!test information curve}
 The measure is good for the intended purpose, in terms of having items that (a) span the range of interest (1–3 standard deviations above the mean of the latent construct), (b) have high [discrimination](#itemDiscrimination) and [information](#irtReliability), and (c) densely cover the range of interest without redundancy.\index{item response theory}\index{item response theory!information}\index{item response theory!item discrimination}\index{reliability}\index{item response theory!test information curve}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 goodMeasure <- goodMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
 goodMeasure$item1 <-  fourPL(b = 1.0, a = 10, theta = goodMeasure$theta)
@@ -1610,7 +1680,9 @@ Rasch models were fit using the `mirt` package [@R-mirt].\index{item response th
 
 ### Fit Model {#irt-onePLfit}
 
-```{r, results = "hide"}
+```{r}
+#| output: false
+
 raschModel <- mirt(
   data = mydataIRT,
   model = 1,
@@ -1868,7 +1940,9 @@ A two-parameter logistic (2PL) IRT model is a model fit to dichotomous data, whi
 
 ### Fit Model {#irt-twoPLfit}
 
-```{r, results = "hide"}
+```{r}
+#| output: false
+
 twoPLModel <- mirt(
   data = mydataIRT,
   model = 1,
@@ -2096,7 +2170,9 @@ In this example, I estimate a 2PL multidimensional IRT model by estimating two f
 
 ### Fit Model {#irt-twoPLmultidimensionalFit}
 
-```{r, results = "hide"}
+```{r}
+#| output: false
+
 twoPL2FactorModel <- mirt(
   data = mydataIRT,
   model = 2,
@@ -2281,7 +2357,9 @@ A three-parameter logistic (3PL) IRT model is a model fit to dichotomous data, w
 
 ### Fit Model {#irt-threePLfit}
 
-```{r, results = "hide"}
+```{r}
+#| output: false
+
 threePLModel <- mirt(
   data = mydataIRT,
   model = 1,
@@ -2423,7 +2501,9 @@ A four-parameter logistic (4PL) IRT model is a model fit to dichotomous data, wh
 
 ### Fit Model {#irt-fourPLfit}
 
-```{r, results = "hide"}
+```{r}
+#| output: false
+
 fourPLModel <- mirt(
   data = mydataIRT,
   model = 1,
@@ -2570,7 +2650,9 @@ GRM models were fit using the `mirt` package [@R-mirt].\index{item response theo
 `Science` is a data set from the `mirt` package [@R-mirt] that contains four items evaluating people's attitudes to science and technology on a 1–4 Likert scale.\index{Likert scale}
 The data are from the Consumer Protection and Perceptions of Science and Technology section of the 1992 Euro-Barometer Survey of people in Great Britain.
 
-```{r, results = "hide"}
+```{r}
+#| output: false
+
 gradedResponseModel <- mirt(
   data = Science,
    model = 1,
@@ -2782,7 +2864,9 @@ Bifactor models were fit using the `mirt` package [@R-mirt].\index{item response
 
 ### Fit Model {#irt-bifactorFit}
 
-```{r, results = "hide"}
+```{r}
+#| output: false
+
 specific <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
              S2 = 1,3,6,8,16,29,32
              S3 = 2,4,5,12,14,19,20,23,25,26,28,30"
@@ -2855,7 +2939,9 @@ plot(bifactorModel, type = "info")
 
 The estimate of marginal [reliability](#irtReliability) is below:\index{reliability}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 marginal_rxx(bifactorModel)
 ```
 
@@ -3066,17 +3152,23 @@ If you are interested in learning more about IRT, I highly recommend the book by
 
 ## Exercises {#exercises-irt}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("MOTE")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Load Data ---------------------------------------------------------------
 
 cnlsy <- read_csv(here("data", "cnlsy.csv"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Rasch Model (1-parameter logistic)
 
 ## Fit Model
@@ -3086,7 +3178,9 @@ raschModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2",
                    SE = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Model Summary
 
 summary(raschModel_ex)
@@ -3097,7 +3191,9 @@ raschModelSmallestB1_ex <- min(raschModelCoefficients_ex[,"b1"], na.rm = TRUE)
 raschModelLargestB2_ex <- max(raschModelCoefficients_ex[,"b2"], na.rm = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Plots
 
 ### Test Curves
@@ -3128,7 +3224,9 @@ raschModelLargestB2_ex <- max(raschModelCoefficients_ex[,"b2"], na.rm = TRUE)
 #plot(raschModel_ex, type = "infotrace", facet_items = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Graded Response Model
 
 ## Fit Model
@@ -3138,7 +3236,9 @@ gradedResponseModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisoc
                             SE = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Model Summary
 
 summary(gradedResponseModel_ex)
@@ -3149,7 +3249,9 @@ gradedResponseModelSmallestA_ex <- min(gradedResponseModelCoefficients_ex[,"a"],
 gradedResponseModelLargestA_ex <- max(gradedResponseModelCoefficients_ex[,"a"], na.rm = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Plots
 
 #### Test Characteristic Curve
@@ -3181,7 +3283,9 @@ gradedResponseModelLargestA_ex <- max(gradedResponseModelCoefficients_ex[,"a"], 
 #plot(gradedResponseModel_ex, type = "trace")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #### Item Boundary Characteristic Curves (aka Item Operation Characteristic Curves)
 
 difficultyThresholds_ex <- grep("b", dimnames(gradedResponseModelCoefficients_ex)[[2]], value = TRUE)
@@ -3203,13 +3307,17 @@ dat_ex <- bind_rows(lst_ex, .id = "item")
 longerData_ex <- pivot_longer(dat_ex, cols = all_of(difficultyThresholds_ex))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color = item)) +
   geom_line() +
   ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Multidimensional graded response model ---------------------------------
 
 multidimensionalModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
@@ -3218,14 +3326,18 @@ multidimensionalModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antis
                               SE = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 ## Model Summary
 
 summary(multidimensionalModel_ex)
 coef(multidimensionalModel_ex, simplify = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 anova(gradedResponseModel_ex, multidimensionalModel_ex)
 
 multidimensionalModelDiffTest <- anova(gradedResponseModel_ex, multidimensionalModel_ex)
@@ -3233,7 +3345,9 @@ multidimensionalModelChiSquareDiff <- multidimensionalModelDiffTest$"X2"[2]
 multidimensionalModelDFDiff <- multidimensionalModelDiffTest$"df"[2]
 ```
 
-```{r, include = FALSE}
+````{r}
+#| include: false
+
 ## Plots
 
 #### Test Characteristic Curve

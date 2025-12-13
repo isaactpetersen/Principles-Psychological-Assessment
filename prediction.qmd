@@ -179,7 +179,10 @@ $$
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 pAgivenB <- function(pBgivenA, pA, pB){
   value <- pBgivenA * pA / pB
   
@@ -265,7 +268,10 @@ $$
 We can then estimate the marginal probability of the event, substititing in $P(R | \text{not } C)$, using the law of total probability.\index{Bayesian!Bayes' theorem}
 The [`petersenlab`](https://cran.r-project.org/web/packages/petersenlab/index.html) package [@R-petersenlab] contains the `pA()` function that estimates the marginal probability of one event, $A$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 pA <- function(pAgivenB, pB, pAgivenNotB){
   value <- (pAgivenB * pB) + pAgivenNotB * (1 - pB)
 
@@ -282,7 +288,10 @@ pA(
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `pBgivenNotA()` function that estimates the probability of one event, $B$, given that another event, $A$, did not occur.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 pBgivenNotA <- function(pBgivenA, pA, pB){
   value <- (pB - (pBgivenA * pA)) / (1 - pA)
   
@@ -308,7 +317,10 @@ $$
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `pB()` function that estimates the marginal probability of one event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
-```{r, eval = FALSE, class.source = "fold-hide"}
+```{r}
+#| eval: false
+#| code-fold: true
+
 pB <- function(pBgivenA, pA, pBgivenNotA){
   value <- (pBgivenA * pA) + pBgivenNotA * (1 - pA)
   
@@ -410,7 +422,9 @@ $$
 (\#eq:bayes4)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 pAgivenBalternative <- function(pBgivenA, pA, pBgivenNotA){
   value <- (pBgivenA * pA) / ((pBgivenA * pA) + (pBgivenNotA * (1 - pA)))
   
@@ -734,7 +748,9 @@ However, the fact that we are over-rejecting could be okay depending on our goal
 Consider the following example.
 Aliens visit Earth, and they develop a test to determine whether a berry is edible or inedible.
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("tidyverse")
 library("magrittr")
 library("viridis")
@@ -1312,7 +1328,9 @@ $$
 (\#eq:meanError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 meanError <- function(predicted, actual){
   value <- mean(predicted - actual, na.rm = TRUE)
   return(value)
@@ -1323,7 +1341,9 @@ meanError <- function(predicted, actual){
 meanError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 meanErrorValue <- meanError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
@@ -1344,7 +1364,9 @@ $$
 (\#eq:meanAbsoluteError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 meanAbsoluteError <- function(predicted, actual){
   value <- mean(abs(predicted - actual), na.rm = TRUE)
   return(value)
@@ -1355,7 +1377,9 @@ meanAbsoluteError <- function(predicted, actual){
 meanAbsoluteError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 meanAbsoluteErrorValue <- meanAbsoluteError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
@@ -1375,7 +1399,9 @@ $$
 (\#eq:meanSquaredError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 meanSquaredError = function(predicted, actual){
   value <- mean((predicted - actual)^2, na.rm = TRUE)
   return(value)
@@ -1386,7 +1412,9 @@ meanSquaredError = function(predicted, actual){
 meanSquaredError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 meanSquaredErrorValue <- meanSquaredError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
@@ -1406,7 +1434,9 @@ $$
 (\#eq:rootMeanSquaredError)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 rootMeanSquaredError = function(predicted, actual){
   value <- sqrt(mean((predicted - actual)^2, na.rm = TRUE))
   return(value)
@@ -1417,7 +1447,9 @@ rootMeanSquaredError = function(predicted, actual){
 rootMeanSquaredError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 rootMeanSquaredErrorValue <- rootMeanSquaredError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
@@ -1452,7 +1484,9 @@ $$
 Note: MPE is undefined when one or more of the observed values equals zero, due to division by zero.\index{mean percentage error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{mean percentage error}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 meanPercentageError = function(predicted, actual, dropUndefined = FALSE){
   percentageError <- 100 * (actual - predicted) / actual
   
@@ -1476,7 +1510,9 @@ meanPercentageError(
   dropUndefined = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 meanPercentageErrorValue <- meanPercentageError(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
 ```
 
@@ -1499,7 +1535,9 @@ $$
 Note: MAPE is undefined when one or more of the observed values equals zero, due to division by zero.\index{mean absolute percentage error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{mean absolute percentage error}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 meanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
   percentageError <- 100 * (actual - predicted) / actual
   
@@ -1523,7 +1561,9 @@ meanAbsolutePercentageError(
   dropUndefined = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 meanAbsolutePercentageErrorValue <- meanAbsolutePercentageError(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
 ```
 
@@ -1544,7 +1584,9 @@ $$
 Note: sMAPE is undefined when one or more of the individuals has a prediction–observed combination such that the sum of the absolute value of the predicted value and the absolute value of the observed value equals zero ($|\text{predicted}_i| + |\text{observed}_i|$), due to division by zero.\index{symmetric mean absolute percentage error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{symmetric mean absolute percentage error}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 symmetricMeanAbsolutePercentageError = function(predicted, actual, dropUndefined = FALSE){
   relativeError <- abs(predicted - actual)/(abs(predicted) + abs(actual))
   
@@ -1563,7 +1605,9 @@ symmetricMeanAbsolutePercentageError(
   mydataSDT$disorder)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 symmetricMeanAbsolutePercentageErrorValue <- symmetricMeanAbsolutePercentageError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
@@ -1597,7 +1641,9 @@ $$
 Note: MASE is undefined when the scaling factor is zero, due to division by zero.\index{mean absolute scaled error}
 With non-time series data, the scaling factor is the average of the absolute value of individuals' observed scores minus the average observed score ($\frac{1}{n} \sum\limits_{i = 1}^n |\text{observed}_i - \overline{\text{observed}}|$).\index{mean absolute scaled error}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 meanAbsoluteScaledError <- function(predicted, actual){
   mydata <- data.frame(na.omit(cbind(predicted, actual)))
   
@@ -1614,7 +1660,9 @@ meanAbsoluteScaledError <- function(predicted, actual){
 meanAbsoluteScaledError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 meanAbsoluteScaledErrorValue <- meanAbsoluteScaledError(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
@@ -1666,7 +1714,9 @@ Note: Root mean squared log error is undefined when one or more predicted values
 When predicted or actual values are -1, this leads to $log(0)$, which is undefined.\index{root mean squared log error}
 I provide the option in the function to drop undefined values so you can still generate an estimate of accuracy despite undefined values, but use this option at your own risk.\index{root mean squared log error}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 rootMeanSquaredLogError <- function(predicted, actual, dropUndefined = FALSE){
   logError <- log(predicted + 1) - log(actual + 1)
   
@@ -1691,7 +1741,9 @@ rootMeanSquaredLogError(
   dropUndefined = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 rootMeanSquaredLogErrorValue <- rootMeanSquaredLogError(mydataSDT$testScore, mydataSDT$disorder, dropUndefined = TRUE)
 ```
 
@@ -1733,7 +1785,9 @@ summary(lm(
   data = mydataSDT))$r.squared
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 rSquaredValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$r.squared
 ```
 
@@ -1768,7 +1822,9 @@ summary(lm(
   data = mydataSDT))$adj.r.squared
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 rSquaredAdjValue <- summary(lm(disorder ~ testScore, data = mydataSDT))$adj.r.squared
 ```
 
@@ -1788,7 +1844,9 @@ R^2_{pred} = 1 - \frac{\text{PRESS}}{\text{SS}_\text{total}}
 
 where PRESS is the predictive residual sum of squares, and $\text{SS}_\text{total}$ is the total sum of squares.\index{predictive $R^2$}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 #predictive residual sum of squares (PRESS)
 PRESS <- function(linear.model) {
   #calculate the predictive residuals
@@ -1820,7 +1878,9 @@ predictiveRSquared <- function(predicted, actual){
 predictiveRSquared(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 predictiveRSquaredValue <- predictiveRSquared(mydataSDT$testScore, mydataSDT$disorder)
 ```
 
@@ -1893,7 +1953,9 @@ Larger values reflect greater [discrimination accuracy](#discrimination).\index{
 rocCurve$auc
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 aucValue <- rocCurve$auc
 ```
 
@@ -1993,7 +2055,9 @@ lm(
   data = mydataSDT)$coef["scale(testScore)"]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 regressionBeta <- lm(scale(continuousOutcome) ~ scale(testScore), data = mydataSDT)$coef["scale(testScore)"]
 ```
 
@@ -2049,7 +2113,9 @@ There are four general patterns of miscalibration: overextremity, underextremity
 *Underprediction* exists when the predicted probabilities are consistently less than the observed probabilities.\index{calibration}\index{calibration!plot}
 For a more thorough description of these types of miscalibration, see @Lindhiem2020.\index{calibration}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Specify Data ------------------------------------------------------------
 
 examplePredictions <- seq(from = 0, to = 1, by = .1)
@@ -2179,7 +2245,9 @@ val.prob(
   mydataSDT$disorder, pl = FALSE)["Brier"]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 brierValue <- val.prob(mydataSDT$predictedProbability, mydataSDT$disorder, pl = FALSE)["Brier"]
 ```
 
@@ -2196,7 +2264,9 @@ For each number of bins ($g$) specified below, the predictions show statisticall
 
 $g = 2$
 
-```{r, fig.show = "hide"}
+```{r}
+#| fig-show: hide
+
 gValue <- 2
 
 hoslem.test(
@@ -2213,7 +2283,9 @@ plotCalibration(
 
 $g = 4$
 
-```{r, fig.show = "hide"}
+```{r}
+#| fig-show: hide
+
 gValue <- 4
 
 hoslem.test(
@@ -2230,7 +2302,9 @@ plotCalibration(
 
 $g = 6$
 
-```{r, fig.show = "hide"}
+```{r}
+#| fig-show: hide
+
 gValue <- 6
 
 hoslem.test(
@@ -2247,7 +2321,9 @@ plotCalibration(
 
 $g = 8$
 
-```{r, fig.show = "hide"}
+```{r}
+#| fig-show: hide
+
 gValue <- 8
 
 hoslem.test(
@@ -2264,7 +2340,9 @@ plotCalibration(
 
 $g = 10$
 
-```{r, fig.show = "hide"}
+```{r}
+#| fig-show: hide
+
 gValue <- 10
 
 hoslem.test(
@@ -2610,7 +2688,9 @@ FNvalue
 
 ### Sample Size (*N*) {#sampleSize-prediction}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 sampleSize <- function(TP, TN, FP, FN){
   value <- TP + TN + FP + FN
   
@@ -2626,7 +2706,9 @@ sampleSize(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 sampleSizeValue <- sampleSize(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
 ```
 
@@ -2643,7 +2725,9 @@ $$
 (\#eq:selectionRatio)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 selectionRatio <- function(TP, TN, FP, FN){
   N <- TP + TN + FP + FN
   value <- (TP + FP)/N
@@ -2660,7 +2744,9 @@ selectionRatio(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 selectionRatioValue <- selectionRatio(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
 ```
 
@@ -2678,7 +2764,9 @@ $$
 (\#eq:baseRate)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 baseRate <- function(TP, TN, FP, FN){
   N <- TP + TN + FP + FN
   value <- (TP + FN)/N
@@ -2695,7 +2783,9 @@ baseRate(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 baseRateValue <- baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
 ```
 
@@ -2711,7 +2801,9 @@ $$
 (\#eq:pretestOdds)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 pretestOdds <- function(TP, TN, FP, FN, pretestProb = NULL){
   if(!is.null(pretestProb)){
     pretestProbability <- pretestProb
@@ -2740,7 +2832,9 @@ pretestOdds(pretestProb = baseRate(
   FN = FNvalue))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 pretestOddsValue <- pretestOdds(TP = TPvalue,
                                 TN = TNvalue,
                                 FP = FPvalue,
@@ -2764,7 +2858,9 @@ Thus, it is also important to consider other aspects of accuracy.
 (\#eq:percentAccuracy)
 \end{equation}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 percentAccuracy <- function(TP, TN, FP, FN){
   N <- TP + TN + FP + FN
   value <- 100 * ((TP + TN)/N)
@@ -2781,7 +2877,9 @@ percentAccuracy(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 percentAccuracyValue <- percentAccuracy(TP = TPvalue,
                                         TN = TNvalue,
                                         FP = FPvalue,
@@ -2800,7 +2898,9 @@ $$
 (\#eq:PercentAccuracyByChance)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 percentAccuracyByChance <- function(TP, TN, FP, FN){
   N <- TP + TN + FP + FN
   BR <- (TP + FN)/N
@@ -2819,7 +2919,9 @@ percentAccuracyByChance(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 percentAccuracyByChanceValue <- percentAccuracyByChance(TP = TPvalue,
                                                         TN = TNvalue,
                                                         FP = FPvalue,
@@ -2834,7 +2936,9 @@ If the [base rate](#baseRate) is less than .50, it would involve predicting that
 If the [base rate](#baseRate) is .50 or above, it would involve predicting that the condition is present for every case.\index{base rate!predicting from}\index{selection ratio}
 [Predicting from the base rate](#predictingFromBaseRate) is a special case of [percent accuracy by chance](#percentAccuracyByChance) when the [selection ratio](#selectionRatio) is set to either one (if the [base rate](#baseRate) $\geq$ .5) or zero (if the [base rate](#baseRate) < .5).\index{base rate!predicting from}\index{selection ratio}\index{percent accuracy!by chance}\index{base rate}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 percentAccuracyPredictingFromBaseRate <- function(TP, TN, FP, FN){
   N <- TP + TN + FP + FN
   BR <- (TP + FN)/N
@@ -2856,7 +2960,9 @@ percentAccuracyPredictingFromBaseRate(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 percentAccuracyPredictingFromBaseRateValue <- percentAccuracyPredictingFromBaseRate(TP = TPvalue,
                                                                                     TN = TNvalue,
                                                                                     FP = FPvalue,
@@ -2876,7 +2982,9 @@ $$
 (\#eq:relativeImprovementOverChance)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 relativeImprovementOverChance <- function(TP, TN, FP, FN){
   N <- TP + TN + FP + FN
   actualYes <- TP + FN
@@ -2895,7 +3003,9 @@ relativeImprovementOverChance(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 relativeImprovementOverChanceValue <- relativeImprovementOverChance(TP = TPvalue,
                                                                     TN = TNvalue,
                                                                     FP = FPvalue,
@@ -2916,7 +3026,9 @@ $$
 (\#eq:relativeImprovementOverPredictingFromBaseRate)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 relativeImprovementOverPredictingFromBaseRate <- function(TP, TN, FP, FN){
   N <- TP + TN + FP + FN
   BR <- (TP + FN)/N
@@ -2940,7 +3052,9 @@ relativeImprovementOverPredictingFromBaseRate(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 relativeImprovementOverPredictingFromBaseRateValue <- relativeImprovementOverPredictingFromBaseRate(
   TP = TPvalue,
   TN = TNvalue,
@@ -2965,7 +3079,9 @@ $$
 (\#eq:sensitivity)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 sensitivity <- function(TP, TN, FP, FN){
   value <- TP/(TP + FN)
   
@@ -2979,13 +3095,17 @@ sensitivity(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 sensitivityValue <- sensitivity(TP = TPvalue, FN = FNvalue)
 ```
 
 Below I compute sensitivity and [specificity](#specificity) at every possible cutoff.\index{sensitivity}\index{specificity}\index{cutoff}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(
@@ -3077,7 +3197,9 @@ $$
 (\#eq:specificity)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 specificity <- function(TP, TN, FP, FN){
   value <- TN/(TN + FP)
   
@@ -3089,7 +3211,9 @@ specificity <- function(TP, TN, FP, FN){
 specificity(TN = TNvalue, FP = FPvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 specificityValue <- specificity(
   TN = TNvalue,
   FP = FPvalue)
@@ -3110,7 +3234,9 @@ $$
 (\#eq:falseNegativeRate)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 falseNegativeRate <- function(TP, TN, FP, FN){
   value <- FN/(FN + TP)
   
@@ -3124,7 +3250,9 @@ falseNegativeRate(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 falseNegativeRate(TP = TPvalue, FN = FNvalue)
 ```
 
@@ -3143,7 +3271,9 @@ $$
 (\#eq:falsePositiveRate)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 falsePositiveRate <- function(TP, TN, FP, FN){
   value <- FP/(FP + TN)
   
@@ -3157,7 +3287,9 @@ falsePositiveRate(
   FP = FPvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 falsePositiveRateValue <- falsePositiveRate(TN = TNvalue, FP = FPvalue)
 ```
 
@@ -3188,7 +3320,9 @@ $$
 (\#eq:positivePredictiveValue)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 positivePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
   if(is.null(BR)){
     value <- TP/(TP + FP)
@@ -3219,13 +3353,17 @@ positivePredictiveValue(
     FP = FPvalue))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 positivePredictivevalueValue <- positivePredictiveValue(TP = TPvalue, FP = FPvalue)
 ```
 
 Below I compute PPV and [NPV](#npv) at every possible [base rate](#baseRate) given the [sensitivity](#sensitivity) and [specificity](#specificity) at the current cutoff.\index{positive predictive value}\index{negative predictive value}\index{sensitivity}\index{specificity}\index{cutoff}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
   if(is.null(BR)){
     value <- TN/(TN + FN)
@@ -3280,7 +3418,9 @@ ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
 
 Below I compute PPV and [NPV](#npv) at every possible cutoff.\index{positive predictive value}\index{negative predictive value}\index{cutoff}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 accuracyStats$positivePredictiveValue <- positivePredictiveValue(
   TP = accuracyStats$TP,
   TN = accuracyStats$TN,
@@ -3341,7 +3481,9 @@ $$
 (\#eq:negativePredictiveValue)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 negativePredictiveValue <- function(TP, TN, FP, FN, BR = NULL, SN, SP){
   if(is.null(BR)){
     value <- TN/(TN + FN)
@@ -3372,7 +3514,9 @@ negativePredictiveValue(
     FP = FPvalue))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 negativePredictiveValueValue <- negativePredictiveValue(TN = TNvalue,
                                                         FN = FNvalue)
 ```
@@ -3392,7 +3536,9 @@ $$
 (\#eq:falseDiscoveryRate)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 falseDiscoveryRate <- function(TP, TN, FP, FN){
   value <- FP/(FP + TP)
   
@@ -3406,7 +3552,9 @@ falseDiscoveryRate(
   FP = FPvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 falseDiscoveryRateValue <- falseDiscoveryRate(TP = TPvalue, FP = FPvalue)
 ```
 
@@ -3425,7 +3573,9 @@ $$
 (\#eq:falseOmissionRate)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 falseOmissionRate <- function(TP, TN, FP, FN){
   value <- FN/(FN + TN)
   
@@ -3439,7 +3589,9 @@ falseOmissionRate(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 falseOmissionRateValue <- falseOmissionRate(TN = TNvalue, FN = FNvalue)
 ```
 
@@ -3457,7 +3609,9 @@ $$
 (\#eq:youdenIndex)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 youdenJ <- function(TP, TN, FP, FN){
   SN <- TP/(TP + FN)
   SP <- TN/(TN + FP)
@@ -3475,7 +3629,9 @@ youdenJ(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 youdenJValue <- youdenJ(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
 ```
 
@@ -3492,7 +3648,9 @@ $$
 (\#eq:balancedAccuracy)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 balancedAccuracy <- function(TP, TN, FP, FN){
   SN <- TP/(TP + FN)
   SP <- TN/(TN + FP)
@@ -3510,7 +3668,9 @@ balancedAccuracy(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 balancedAccuracyValue <- balancedAccuracy(TP = TPvalue,
                                           TN = TNvalue,
                                           FP = FPvalue,
@@ -3543,7 +3703,9 @@ $$
 (\#eq:F1Score)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 fScore <- function(TP, TN, FP, FN, beta = 1){
   value <- ((1 + beta^2) * TP) / ((1 + beta^2) * TP + beta^2 * FN + FP)
   
@@ -3570,7 +3732,9 @@ fScore(
   beta = 0.5)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 f1ScoreValue <- fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue)
 ```
 
@@ -3588,7 +3752,9 @@ $$
 (\#eq:matthewsCorrelationCoefficient)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 mcc <- function(TP, TN, FP, FN){
   TP <- as.double(TP)
   TN <- as.double(TN)
@@ -3608,7 +3774,9 @@ mcc(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 mccValue <- mcc(TP = TPvalue,
                 TN = TNvalue,
                 FP = FPvalue,
@@ -3638,7 +3806,9 @@ $$
 (\#eq:diagnosticOddsRatio)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 diagnosticOddsRatio <- function(TP, TN, FP, FN){
   value <- (TP * TN) / (FP * FN)
   
@@ -3654,7 +3824,9 @@ diagnosticOddsRatio(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 diagnosticOddsRatioValue <- diagnosticOddsRatio(TP = TPvalue,
                                                 TN = TNvalue,
                                                 FP = FPvalue,
@@ -3686,7 +3858,9 @@ $$
 (\#eq:positiveLikelihoodRatio)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 positiveLikelihoodRatio <- function(TP, TN, FP, FN){
   SN <- TP/(TP + FN)
   SP <- TN/(TN + FP)
@@ -3705,7 +3879,9 @@ positiveLikelihoodRatio(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 positiveLikelihoodRatioValue <- positiveLikelihoodRatio(TP = TPvalue,
                                                         TN = TNvalue,
                                                         FP = FPvalue,
@@ -3729,7 +3905,9 @@ $$
 (\#eq:negativeLikelihoodRatio)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 negativeLikelihoodRatio <- function(TP, TN, FP, FN){
   SN <- TP/(TP + FN)
   SP <- TN/(TN + FP)
@@ -3748,7 +3926,9 @@ negativeLikelihoodRatio(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 negativeLikelihoodRatioValue <- negativeLikelihoodRatio(TP = TPvalue,
                                                         TN = TNvalue,
                                                         FP = FPvalue,
@@ -3772,7 +3952,9 @@ $$
 For calculating the posttest odds of a [true positive](#truePositive) compared to a [false positive](#falsePositive), we use the [positive likelihood ratio](#positiveLikelihoodRatio), described later.\index{odds!posttest}\index{positive likelihood ratio}\index{true positive}\index{false positive}
 We would use the [negative likelihood ratio](#negativeLikelihoodRatio) if we wanted to calculate the posttest odds of a [false negative](#falseNegative) compared to a [true negative](#trueNegative).\index{odds!posttest}\index{positive likelihood ratio}\index{false negative}\index{true negative}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 posttestOdds <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, SP = NULL, likelihoodRatio = NULL){
   if(!is.null(pretestProb) & !is.null(SN) & !is.null(SP)){
     pretestProbability <- pretestProb
@@ -3833,7 +4015,9 @@ posttestOdds(
     FN = FNvalue))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 posttestOddsValue <- posttestOdds(TP = TPvalue,
                                   TN = TNvalue,
                                   FP = FPvalue,
@@ -3853,7 +4037,9 @@ $$
 (\#eq:posttestProbability)
 $$
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 posttestProbability <- function(TP, TN, FP, FN, pretestProb = NULL, SN = NULL, SP = NULL, likelihoodRatio = NULL){
   if(!is.null(pretestProb) & !is.null(SN) & !is.null(SP)){
     pretestProbability <- pretestProb
@@ -3915,7 +4101,9 @@ posttestProbability(
     FN = FNvalue))
 ```
 
-```{r, include}
+```{r}
+#| include: false
+
 posttestProbabilityValue <- posttestProbability(TP = TPvalue,
                                                 TN = TNvalue,
                                                 FP = FPvalue,
@@ -3969,7 +4157,9 @@ The blue line indicates the [posterior probability](#posttestProbability) of the
 The pink line indicates the [posterior probability](#posttestProbability) of the condition given a negative test.\index{petersenlab package}\index{probability!nomogram}\index{probability!posttest}
 One can also generate the probability nomogram from the [base rate](#pretestProbability) and the [sensitivity](#sensitivity) and [specificity](#specificity) of the test at a given cutoff:\index{petersenlab package}\index{probability!nomogram}\index{base rate}\index{sensitivity}\index{specificity}\index{cutoff}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 nomogrammer(
   pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
   SN = sensitivity(TP = TPvalue, FN = FNvalue),
@@ -3979,7 +4169,9 @@ nomogrammer(
 
 One can also generate the probability nomogram from the [base rate](#pretestProbability), [positive likelihood ratio](#positiveLikelihoodRatio), and [negative likelihood ratio](#negativeLikelihoodRatio) at a given cutoff:\index{petersenlab package}\index{probability!nomogram}\index{positive likelihood ratio}\index{negative likelihood ratio}\index{cutoff}
 
-```{r, eval = FALSE}
+```{r}
+#| eval: false
+
 nomogrammer(
   pretestProb = baseRate(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue),
   PLR = positiveLikelihoodRatio(
@@ -4006,7 +4198,9 @@ d' = z(\text{hit rate}) - z(\text{false alarm rate})
 (\#eq:dPrimeSDT)
 \end{equation}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 dPrimeSDT <- function(TP, TN, FP, FN){
   HR <- TP/(TP + FN)
   FAR <- FP/(FP + TN)
@@ -4024,7 +4218,9 @@ dPrimeSDT(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 dPrimeValue <- dPrimeSDT(TP = TPvalue,
                          TN = TNvalue,
                          FP = FPvalue,
@@ -4051,7 +4247,9 @@ A =
 
 where $H$ is the hit rate and $F$ is the false alarm rate.\index{signal detection theory!$A$}\index{sensitivity}\index{false positive!rate}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 aSDT <- function(TP, TN, FP, FN){
   HR <- TP/(TP + FN)
   FAR <- FP/(FP + TN)
@@ -4064,7 +4262,9 @@ aSDT <- function(TP, TN, FP, FN){
 }
 ```
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 aSDT(
   TP = TPvalue,
   TN = TNvalue,
@@ -4072,7 +4272,9 @@ aSDT(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 Avalue <- aSDT(TP = TPvalue,
                TN = TNvalue,
                FP = FPvalue,
@@ -4092,7 +4294,9 @@ The formula for calculating $\beta$ is in Equation \@ref(eq:betaSDT).\index{sign
 
 where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.\index{signal detection theory!$\beta$}\index{sensitivity}\index{false positive!rate}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 betaSDT <- function(TP, TN, FP, FN){
   HR <- TP/(TP + FN)
   FAR <- FP/(FP + TN)
@@ -4110,7 +4314,9 @@ betaSDT(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 betaValue <- betaSDT(TP = TPvalue,
                      TN = TNvalue,
                      FP = FPvalue,
@@ -4130,7 +4336,9 @@ c = - \frac{\phi^{-1}(H) + \phi^{-1}(F)}{2}
 
 where $H$ is the hit rate, $F$ is the false alarm rate, and $\phi$ (phi) is a mathematical function that converts a *z* score to a probability by determining the portion of the normal distribution that lies to the left of the *z* score.\index{signal detection theory!$c$}\index{sensitivity}\index{false positive!rate}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 cSDT <- function(TP, TN, FP, FN){
   HR <- TP/(TP + FN)
   FAR <- FP/(FP + TN)
@@ -4148,7 +4356,9 @@ cSDT(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 cValue <- cSDT(TP = TPvalue,
                TN = TNvalue,
                FP = FPvalue,
@@ -4171,7 +4381,9 @@ b =
 (\#eq:bSDT)
 \end{equation}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 bSDT <- function(TP, TN, FP, FN){
   HR <- TP/(TP + FN)
   FAR <- FP/(FP + TN)
@@ -4192,7 +4404,9 @@ bSDT(
   FN = FNvalue)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 bValue <- bSDT(TP = TPvalue,
                TN = TNvalue,
                FP = FPvalue,
@@ -4207,7 +4421,10 @@ Values closer to zero reflect greater accuracy.\index{calibration}
 Values above zero indicate that the predicted values are, on average, greater than the observed values.\index{calibration}
 Values below zero indicate that the observed values are, on average, greater than the predicted values.\index{calibration}
 
-```{r, fig.show = "hide", class.source = "fold-hide"}
+```{r}
+#| fig-show: hide
+#| code-fold: true
+
 miscalibration <- function(predicted, actual, cutoff, bins = 10){
   data <- data.frame(na.omit(cbind(predicted, actual)))
   
@@ -4257,7 +4474,9 @@ miscalibration <- function(predicted, actual, cutoff, bins = 10){
 }
 ```
 
-```{r, fig.show = "hide"}
+```{r}
+#| fig-show: hide
+
 miscalibration(
   predicted = mydataSDT$predictedProbability,
   actual = mydataSDT$disorder,
@@ -4297,7 +4516,9 @@ $$
 
 where $\text{BR} = \text{base rate}$, $\text{HR} = \text{hit rate (true positive rate)}$, $\text{FAR} = \text{false alarm rate (false positive rate)}$, $U_\text{H} = \text{utility of hits (true positives)}$, $U_\text{M} = \text{utility of misses (false negatives)}$, $U_\text{FA} = \text{utility of false alarms (false positives)}$, $U_\text{CR} = \text{utility of correct rejections (true negatives)}$.\index{cutoff!optimal}\index{decision theory}\index{true positive}\index{true negative}\index{false positive}\index{false negative}\index{base rate}\index{sensitivity}\index{false positive!rate}\index{overall utility}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 Uoverall <- function(BR, HR, FAR, UH, UM, UCR, UFA){
   (BR*HR*UH) + (BR*(1 - HR)*UM) + ((1 - BR)*FAR*UFA) + ((1 - BR)*(1 - FAR)*(UCR))
 }
@@ -4372,7 +4593,9 @@ The formula for calculating the utility ratio is in Equation \@ref(eq:utilityRat
 
 where $U_\text{H} = \text{utility of hits (true positives)}$, $U_\text{M} = \text{utility of misses (false negatives)}$, $U_\text{FA} = \text{utility of false alarms (false positives)}$, $U_\text{CR} = \text{utility of correct rejections (true negatives)}$.\index{cutoff!optimal}\index{decision theory}\index{true positive}\index{true negative}\index{false positive}\index{false negative}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 utilityRatio <- function(UH, UM, UCR, UFA){
   (UCR - UFA) / (UH - UM)
 }
@@ -4414,7 +4637,9 @@ $$
 
 where $\text{BR} =$ [base rate](#baseRate), $\text{HR} =$ [hit rate](#sensitivity) ([true positive rate](#sensitivity)), $\text{FAR} =$ [false alarm rate](#falsePositiveRate) ([false positive rate](#falsePositiveRate)), $G =$ [selection ratio](#selectionRatio) $= \text{BR} (\text{HR}) + (1 - \text{BR}) (\text{FAR})$, as reported in @Somoza1989 (see below).\index{cutoff!optimal}\index{information!theory}\index{base rate}\index{sensitivity}\index{false positive!rate}\index{selection ratio}\index{information!gain}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 Igain <- function(BR, HR, FAR){
   G <- BR*(HR) + (1 - BR)*(FAR)
   
@@ -4456,7 +4681,9 @@ $$
 
 where $p(S|s) =$ [sensitivity](#sensitivity) ([hit rate](#sensitivity) or [true positive rate](#sensitivity)); i.e., the [conditional probability](#conditionalProbability) of deciding a signal is present ($S$) when the signal is in fact present($s$), $p(S|n) =$ [false positive rate](#falsePositiveRate) ([false alarm rate](#falsePositiveRate)); i.e., the [conditional probability](#conditionalProbability) of deciding a signal is present ($S$) when the signal is in fact absent ($n$), $p(s) =$ [base rate](#baseRate), i.e., the probability that the signal is in fact present ($s$).\index{cutoff!optimal}\index{information!theory}\index{base rate}\index{sensitivity}\index{false positive!rate}\index{information!gain}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 Igain2 <- function(BR, HR, FAR){
   HR * BR * log2(HR / ((HR * BR) + (FAR * (1 - BR)))) +
     FAR * (1 - BR) * log2(FAR / ((HR * BR) + (FAR * (1 - BR)))) +
@@ -4496,7 +4723,9 @@ $$
 
 where $\text{TP} =$ [true positive rate](#sensitivity) ([hit rate](#sensitivity)), $\text{Pr} =$ [prevalence](#baseRate) ([base rate](#baseRate)), $\text{FP} =$ [false positive rate](#falsePositiveRate) ([false alarm rate](#falsePositiveRate)), $G = \text{Pr} (\text{TP}) + (1 - \text{Pr}) (\text{FP}) =$ [selection ratio](#selectionRatio)\index{cutoff!optimal}\index{information!theory}\index{base rate}\index{sensitivity}\index{false positive!rate}\index{selection ratio}\index{information!gain}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 Igain3 <- function(BR, HR, FAR){
   G <- BR*(HR) + (1 - BR)*(FAR)
   
@@ -4637,7 +4866,9 @@ utilityFalseAlarms <- 0.25
 
 ### Calculate Accuracy {#calculateAccuracyAtEveryPossibleCutoff}
 
-```{r, class.source = "fold-hide"}
+```{r}
+#| code-fold: true
+
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
 possibleCutoffs <- c(
@@ -5239,7 +5470,9 @@ y = b_0 + b_1 \cdot x_1 + e
 
 where $y$ is the outcome, $b_0$ is the intercept, $b_1$ is the slope of the association between the predictor ($x_1$) and outcome, and $e$ is the error term.\index{multiple regression}
 
-```{r, echo = FALSE}
+```{r}
+#| eval: false
+
 regression1 <- data.frame(
   "y" = c(7, 13, 29, 10),
   "x1" = c(1, 2, 7, 2))
@@ -5341,7 +5574,9 @@ Conceptual Depiction of Multicollinearity in Multiple Regression.
 
 Consider the following example where you have two predictors and one outcome, as shown in Table \@ref(tab:regression3).\index{multicollinearity}\index{multiple regression}
 
-```{r, echo = FALSE}
+```{r}
+#| eval: false
+
 regression3 <- data.frame(
   "y" = c(9, 11, 17, 3, 21, 13),
   "x1" = c(2, 3, 4, 1, 5, 3.5),
@@ -5474,17 +5709,23 @@ It is important to evaluate both [discrimination](#discrimination) and [calibrat
 
 ## Exercises {#exercises-prediction}
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 library("MOTE")
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Load Data ---------------------------------------------------------------
 
 titanic <- read_csv(here("data", "titanic.csv"))
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # ROC Curve ---------------------------------------------------------------
 
 rocCurve_ex <- roc(data = titanic, response = survived, predictor = prediction, smooth = FALSE)
@@ -5496,7 +5737,9 @@ rocCurveSmooth_ex <- roc(data = titanic, response = survived, predictor = predic
 plot(rocCurveSmooth_ex, legacy.axes = TRUE)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Overall Prediction Accuracy ---------------------------------------------
 
 meanError_ex <- meanError(predicted = titanic$prediction, actual = titanic$survived)
@@ -5515,19 +5758,25 @@ rsquaredAdj_ex <- summary(lm(survived ~ prediction, data = titanic))$adj.r.squar
 predictiveRsquaredValue_ex <- predictiveRSquared(predicted = titanic$prediction, actual = titanic$survived)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Discrimination: Area under the ROC curve (AUC)
 rocCurve_ex$auc
 
 auc_ex <- rocCurve_ex$auc
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Calibration Plot (see here: https://perma.cc/6J3J-69G7)
 val.prob(titanic$prediction, titanic$survived)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 g1_ex <- mutate(titanic, bin = cut_number(prediction, 10)) %>%
   # Bin prediction into 10ths
   group_by(bin) %>%
@@ -5566,7 +5815,9 @@ g_ex <- arrangeGrob(g1_ex, g2_ex, respect = TRUE, heights = c(1, 0.25), ncol = 1
 grid.arrange(g_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Calibration: Brier Scores
 val.prob(titanic$prediction, titanic$survived, pl = FALSE)["Brier"]
 
@@ -5584,7 +5835,9 @@ calibrationZ_ex <- val.prob(titanic$prediction, titanic$survived, pl = FALSE)["S
 calibrationP_ex <- val.prob(titanic$prediction, titanic$survived, pl = FALSE)["S:p"]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Set a Cutoff ------------------------------------------------------------
 
 cutoff_ex <- 0.5
@@ -5594,7 +5847,9 @@ titanic$diagnosis[titanic$prediction < cutoff_ex] <- 0
 titanic$diagnosis[titanic$prediction >= cutoff_ex] <- 1
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Prediction Accuracy at the Cutoff ---------------------------------------
 
 table(titanic$diagnosis, titanic$survived)
@@ -5648,7 +5903,9 @@ increasedAccuracyValue_ex <- percentAccuracyValue_ex - predictingFromTheBaseRate
 differenceBetweenPredictedAndObserved_ex <- miscalibration(predicted = titanic$prediction, actual = titanic$survived, cutoff = cutoff_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Decision Theory Approach to Cutoff Specification ------------------------
 
 #Overall utility of a specific cutoff value: utilities-weighted sum of the probabilities of the four decision-making outcomes
@@ -5662,7 +5919,9 @@ Uoverall(BR = baseRateValue_ex, HR = TPrate_ex, FAR = FPrateValue_ex, UH = 1, UM
 Uoverall_ex <- Uoverall(BR = baseRateValue_ex, HR = TPrate_ex, FAR = FPrateValue_ex, UH = 1, UM = 0, UCR = 0.25, UFA = 0)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Utility ratio: user-perceived relative importance of decisions about negative versus positive cases
 
 utilityRatio(UH = 1, UM = 0, UCR = (1/2), UFA = (1/2))
@@ -5681,14 +5940,18 @@ utilityRatio(UH = 1, UM = 0, UCR = 0.25, UFA = 0)
 utilityRatio_ex <- utilityRatio(UH = 1, UM = 0, UCR = 0.25, UFA = 0)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Information Theory Approach to Cutoff Specification ---------------------
 
 Igain(BR = baseRateValue_ex, HR = TPrate_ex, FAR = FPrateValue_ex)
 Igain_ex <- Igain(BR = baseRateValue_ex, HR = TPrate_ex, FAR = FPrateValue_ex)
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Accuracy at Every Possible Cutoff ---------------------------------------
 
 #Specify utility of each outcome
@@ -5772,7 +6035,9 @@ accuracyStats_ex <- do.call(data.frame, lapply(accuracyStats_ex, function(x) rep
 accuracyStats_ex
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Youden Index (maximum combination of sensitivity and specificity)
 youdenIndex_ex <- coords(roc(data = titanic, response = survived, predictor = prediction, smooth = FALSE), x = "best", best.method = "youden")[[1]]
 closestToTheTopLeft_ex <- coords(roc(data = titanic, response = survived, predictor = prediction, smooth = FALSE), x = "best", best.method = "closest.topleft")[[1]]
@@ -5782,12 +6047,16 @@ accuracyStats_ex[head(which(accuracyStats_ex$cutoff >= youdenIndex_ex), 1),]
 accuracyStats_ex[which(accuracyStats_ex$youdenJ == max(accuracyStats_ex$youdenJ, na.rm = TRUE)),]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Accuracy stats at cutoff where the ROC plot is closest to the Top Left
 accuracyStats_ex[head(which(accuracyStats_ex$cutoff >= closestToTheTopLeft_ex), 1),]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 #Cutoff that optimizes:
 percentAccuracyCutoff_ex <- accuracyStats_ex$cutoff[which(accuracyStats_ex$percentAccuracy == max(accuracyStats_ex$percentAccuracy, na.rm = TRUE))]
 percentAccuracyByChanceCutoff_ex <- accuracyStats_ex$cutoff[which(accuracyStats_ex$percentAccuracyByChance == max(accuracyStats_ex$percentAccuracyByChance, na.rm = TRUE))]
@@ -5814,7 +6083,9 @@ overallUtilityCutoff_ex <- accuracyStats_ex$cutoff[which(accuracyStats_ex$overal
 informationGainCutoff_ex <- accuracyStats_ex$cutoff[which(accuracyStats_ex$informationGain == max(accuracyStats_ex$informationGain, na.rm = TRUE))]
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Positive and Negative Predictive Value ----------------------------------
 
 sensitivity <- .9
@@ -5827,7 +6098,9 @@ prYouHadCovid <- 1 - negativePredictiveValue
 prFriendHadCovid <- positivePredictiveValue
 ```
 
-```{r, include = FALSE}
+```{r}
+#| include: false
+
 # Bayes' Theorem ----------------------------------------------------------
 
 #p(C|R)=(p(R|C)∙p(C))/(p(R))
