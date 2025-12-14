@@ -183,6 +183,12 @@ pAgivenB <- function(pBgivenA, pA, pB){
 ```
 
 ```{r}
+#| include: false
+
+library("petersenlab")
+```
+
+```{r}
 pAgivenB(pBgivenA = .95, pA = .003, pB = .01)
 ```
 
@@ -775,7 +781,6 @@ The extent of overlap of the distributions reflects the amount of [measurement e
 #| fig-cap: "Distribution of Test Scores by Berry Type."
 #| fig-alt: "Distribution of Test Scores by Berry Type."
 #| echo: false
-#| output: false
 
 #No Cutoff
 ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
@@ -801,7 +806,6 @@ Costs of [false positives](#sec-falsePositive) could include taking longer to fi
 #| fig-alt: "Classifications Based on a Cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."
 #| fig-scap: "Classifications Based on a Cutoff."
 #| echo: false
-#| output: false
 
 #Standard Cutoff
 ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
@@ -833,7 +837,6 @@ For instance, if the aliens cannot risk eating the inedible berries because the 
 #| fig-alt: "Classifications Based on Raising the Cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."
 #| fig-scap: "Classifications Based on Raising the Cutoff."
 #| echo: false
-#| output: false
 
 #Raise the cutoff
 cutoff <- 85
@@ -884,7 +887,6 @@ For instance, if the aliens cannot risk missing edible berries because they are 
 #| fig-alt: "Classifications Based on Lowering the Cutoff. Note that some true negatives and true positives are hidden behind the false positives and false negatives."
 #| fig-scap: "Classifications Based on Lowering the Cutoff."
 #| echo: false
-#| output: false
 
 #Lower the cutoff
 cutoff <- 65
@@ -980,7 +982,6 @@ Then, we can draw lines or a curve to connect the points.\index{receiver operati
 #| fig-width: 8
 #| fig-height: 8
 #| echo: false
-#| output: false
 
 library("pROC")
 
@@ -997,7 +998,6 @@ plot(roc(aSAH$outcome, aSAH$s100b), legacy.axes = TRUE, print.auc = TRUE)
 #| fig-width: 8
 #| fig-height: 8
 #| echo: false
-#| output: false
 
 plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE)
 ```
@@ -1024,7 +1024,6 @@ That is, a measure can be useful to the extent that its ROC curve is above the d
 #| fig-width: 8
 #| fig-height: 8
 #| echo: false
-#| output: false
 
 plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, auc.polygon = TRUE)
 ```
@@ -1036,7 +1035,6 @@ plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc
 #| fig-width: 8
 #| fig-height: 8
 #| echo: false
-#| output: false
 
 #From here: https://stats.stackexchange.com/questions/422926/generate-synthetic-data-given-auc/424213; archived at https://perma.cc/F6F9-VG2K
 simulateDataFromAUC <- function(auc, n){
@@ -1107,6 +1105,7 @@ library("tidyverse")
 library("here")
 library("tinytex")
 library("rmarkdown")
+library("knitr")
 ```
 
 ### Prepare Data {#sec-prepareData-prediction}
@@ -1176,7 +1175,6 @@ rocCurve <- roc(data = mydataSDT, response = disorder, predictor = testScore, sm
 #| fig-width: 8
 #| fig-height: 8
 #| echo: false
-#| output: false
 
 plot(rocCurve, legacy.axes = TRUE, print.auc = TRUE)
 ```
@@ -2442,7 +2440,6 @@ In this case, the 95% confidence interval of the observed value does not include
 #| fig-width: 8
 #| fig-height: 8
 #| echo: false
-#| output: false
 #| code-fold: true
 
 #95 prediction interval based on LOESS model
@@ -3119,7 +3116,6 @@ sensitivitySpecificityData <- pivot_longer(
 #| fig-cap: "Sensitivity and Specificity as a Function of the Cutoff."
 #| fig-alt: "Sensitivity and Specificity as a Function of the Cutoff."
 #| echo: false
-#| output: false
 
 ggplot(
   sensitivitySpecificityData,
@@ -3353,7 +3349,6 @@ ppvNPVbaseRateData_long <- pivot_longer(
 #| fig-cap: "Positive Predictive Value and Negative Predictive Value as a Function of the Base Rate."
 #| fig-alt: "Positive Predictive Value and Negative Predictive Value as a Function of the Base Rate."
 #| echo: false
-#| output: false
 
 ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
   geom_line(linewidth = 2) +
@@ -3393,7 +3388,6 @@ ppvNPVcutoffData <- pivot_longer(
 #| fig-cap: "Positive Predictive Value and Negative Predictive Value as a Function of the Cutoff."
 #| fig-alt: "Positive Predictive Value and Negative Predictive Value as a Function of the Cutoff."
 #| echo: false
-#| output: false
 
 ggplot(ppvNPVcutoffData, aes(x = cutoff, y = value, color = name)) +
   geom_line(linewidth = 2) +
@@ -4718,7 +4712,6 @@ If the [base rate](#sec-baseRate) is 0.05 of 0.95 (or more extreme), it is likel
 #| fig-alt: "Information Gain as a Function of the Base Rate (BR)."
 #| fig-height: 4
 #| echo: false
-#| output: false
 
 possibleCutoffs <- unique(na.omit(mydataSDT$testScore))
 possibleCutoffs <- possibleCutoffs[order(possibleCutoffs)]
@@ -6327,3 +6320,9 @@ For more info, see here: <https://www.scientificamerican.com/article/what-is-bay
 14.
     a. According to Bayes' theorem, the probability that you have the virus after testing positive on Test A is $`r apa(pctGivenTestA_ex, decimals = 1)`\%$.
     b. According to Bayes' theorem, the updated probability that you have the virus after testing positive on both Tests A and B is $`r apa(pctGivenTestAthenB_ex, decimals = 1)`\%$.
+
+## Session Info {#sec-sessionInfo-prediction}
+
+```{r}
+sessionInfo()
+```
