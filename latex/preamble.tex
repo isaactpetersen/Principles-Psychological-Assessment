@@ -38,7 +38,15 @@
  \at@end@of@kframe}
 \makeatother
 
-\renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}
+% Ensure Shaded exists (or create it empty) before redefining
+\usepackage{fancyvrb}  % <- needed for knitr
+\makeatletter
+\@ifundefined{Shaded}{
+  \newenvironment{Shaded}{\begin{kframe}}{\end{kframe}}
+}{
+  \renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}
+}
+\makeatother
 
 \usepackage{makeidx}
 \makeindex
