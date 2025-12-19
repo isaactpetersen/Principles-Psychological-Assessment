@@ -1797,7 +1797,7 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-onePLModel_cfa_fit = sem(
+onePLModel_cfa_fit <- sem(
   model = onePLModel_cfa,
   data = mydataIRT,
   ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
@@ -2076,10 +2076,10 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-twoPLModel_cfa_fit = sem(
+twoPLModel_cfa_fit <- sem(
   model = twoPLModel_cfa,
   data = mydataIRT,
-  ordered = c("Item.1", "Item.2", "Item.3", "Item.4","Item.5"),
+  ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
   mimic = "Mplus",
   estimator = "WLSMV",
   std.lv = TRUE,
@@ -2264,7 +2264,7 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-twoPLModelMultidimensional_cfa_fit = sem(
+twoPLModelMultidimensional_cfa_fit <- sem(
   model = twoPLModelMultidimensional_cfa,
   data = mydataIRT,
   ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
@@ -2613,9 +2613,9 @@ The data are from the Consumer Protection and Perceptions of Science and Technol
 
 gradedResponseModel <- mirt(
   data = Science,
-   model = 1,
-   itemtype = "graded",
-   SE = TRUE)
+  model = 1,
+  itemtype = "graded",
+  SE = TRUE)
 ```
 
 ```{r}
@@ -2823,6 +2823,68 @@ ggplot(
   ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
   theme_bw() +
   theme(axis.title.y = element_text(size = 10))
+```
+
+### CFA {#sec-irt-grmCFA}
+
+A two-parameter graded response model can also be fit in a [CFA](#sec-cfa) framework, sometimes called item factor analysis.\index{factor analysis}
+The item factor analysis models were fit in the `lavaan` package [@R-lavaan].\index{factor analysis}
+
+```{r}
+twoParameterGRM_cfa <- '
+# Factor Loadings (i.e., discrimination parameters)
+latent =~ loading1*Comfort + loading2*Work + loading3*Future + 
+  loading4*Benefit
+
+# Item Thresholds (i.e., difficulty parameters)
+Comfort | b11*t1 + b12*t2 + b13*t3
+Work    | b21*t1 + b22*t2 + b23*t3
+Future  | b31*t1 + b32*t2 + b33*t3
+Benefit | b41*t1 + b42*t2 + b43*t3
+'
+
+twoParameterGRM_cfa_fit <- sem(
+  model = twoParameterGRM_cfa,
+  data = Science,
+  ordered = c("Comfort", "Work", "Future", "Benefit"),
+  mimic = "Mplus",
+  estimator = "WLSMV",
+  std.lv = TRUE,
+  parameterization = "theta")
+
+summary(
+  twoParameterGRM_cfa_fit,
+  fit.measures = TRUE,
+  rsquare = TRUE,
+  standardized = TRUE)
+
+fitMeasures(
+  twoParameterGRM_cfa_fit,
+  fit.measures = c(
+    "chisq", "df", "pvalue",
+    "baseline.chisq","baseline.df","baseline.pvalue",
+    "rmsea", "cfi", "tli", "srmr"))
+
+residuals(twoParameterGRM_cfa_fit, type = "cor")
+
+modificationindices(twoParameterGRM_cfa_fit, sort. = TRUE)
+
+compRelSEM(twoParameterGRM_cfa_fit)
+AVE(twoParameterGRM_cfa_fit)
+
+twoParameterGRM_cfa_factorScores <- lavPredict(twoParameterGRM_cfa_fit)
+```
+
+```{r}
+#| label: fig-grmCFA
+#| fig-cap: "Item Factor Analysis Diagram of Two-Parameter Graded Response Model."
+#| fig-alt: "Item Factor Analysis Diagram of Two-Parameter Graded Response Model."
+
+semPaths(
+  twoParameterGRM_cfa_fit,
+  what = "std",
+  layout = "tree2",
+  edge.label.cex = 1.5)
 ```
 
 ## Bifactor Model {#sec-irt-bifactor}
