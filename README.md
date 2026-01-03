@@ -13,7 +13,7 @@ A print version is available for purchase: https://www.amazon.com/Principles-Psy
 
 The APA-style citation for the book is:
 
-Petersen, I. T. (2025). *Principles of psychological assessment: With applied examples in R*. Version 1.0.9. University of Iowa Libraries. https://isaactpetersen.github.io/Principles-Psychological-Assessment. https://doi.org/10.25820/work.007199
+Petersen, I. T. (2026). *Principles of psychological assessment: With applied examples in R*. Version 1.0.9. University of Iowa Libraries. https://isaactpetersen.github.io/Principles-Psychological-Assessment. https://doi.org/10.25820/work.007199
 
 The DOI for the code is below:
 
@@ -27,7 +27,7 @@ The BibTeX citation for the book is:
 @book{petersenPrinciplesPsychologicalAssessment,
   title = {Principles of psychological assessment: With applied examples in {R}},
   author = {Petersen, Isaac T.},
-  year = {2025},
+  year = {2026},
   publisher = {{University of Iowa Libraries}},
   note = {Version 1.0.9},
   doi = {10.25820/work.007199},
