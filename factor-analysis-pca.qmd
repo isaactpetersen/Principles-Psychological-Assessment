@@ -318,11 +318,12 @@ Principal component analysis (PCA) is used if you want to reduce your data matri
 PCA composites represent the variances of an observed measure in as economical a fashion as possible, with no latent underlying variables.\index{factor analysis!decisions}\index{principal component analysis}
 The goal of PCA is to identify a smaller number of components that explain as much variance in a set of variables as possible.\index{factor analysis!decisions}\index{principal component analysis}\index{data!reduction}
 It is an atheoretical way to decompose a matrix.\index{factor analysis!decisions}\index{principal component analysis}
-PCA involves decomposition of a data matrix into a set of eigenvectors, which are transformations of the old variables.\index{factor analysis!decisions}\index{principal component analysis}\index{eigenvector}
+PCA involves decomposition of a correlation (or covariance) matrix into a set of eigenvectors, which are transformations of the old variables.\index{factor analysis!decisions}\index{principal component analysis}\index{eigenvector}
 
 The eigenvectors attempt to simplify the data in the matrix.\index{parsimony}\index{factor analysis!decisions}\index{principal component analysis}\index{eigenvector}
-PCA takes the data matrix and identifies the weighted sum of all variables that does the best job at explaining variance: these are the principal components, also called eigenvectors.\index{factor analysis!decisions}\index{principal component analysis}\index{eigenvector}
+PCA takes the correlation matrix and identifies the weighted sum of all variables that does the best job at explaining variance: these are the principal components, also called eigenvectors.\index{factor analysis!decisions}\index{principal component analysis}\index{eigenvector}
 Principal components reflect optimally weighted sums.\index{factor analysis!decisions}\index{principal component analysis}
+That is, eigenvectors are vectors of component loadings, representing how strongly each variable is associated with the component.\index{factor analysis!decisions}\index{principal component analysis}
 In this way, PCA is a [formative model](#sec-formativeConstruct) (by contrast, [factor analysis](#sec-factorAnalysis) applies a [reflective model](#sec-reflectiveConstruct)).\index{factor analysis!decisions}\index{principal component analysis}\index{construct!formative}\index{factor analysis}\index{construct!reflective}
 
 PCA decomposes the data matrix into any number of components—as many as the number of variables, which will always account for all variance.\index{factor analysis!decisions}\index{principal component analysis}
@@ -379,10 +380,11 @@ There are several differences between (real) factor analysis versus [PCA](#sec-p
 Factor analysis has greater sophistication than [PCA](#sec-pca), but greater sophistication often results in greater assumptions.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}
 Factor analysis does not always work; the data may not always fit to a factor analysis model; therefore, use [PCA](#sec-pca) as a second/last option.\index{factor analysis!decisions}\index{factor analysis}\index{principal component analysis}
 [PCA](#sec-pca) can decompose any data matrix; it always works.\index{factor analysis!decisions}\index{principal component analysis}
+It just requires one more participant than the number of variables analyzed.\index{factor analysis!decisions}\index{principal component analysis}
 [PCA](#sec-pca) is okay if you are not interested in the factor structure.\index{factor analysis!decisions}\index{principal component analysis}
 [PCA](#sec-pca) uses all variance of variables and assumes variables have no error, so it does not account for measurement error.\index{factor analysis!decisions}\index{principal component analysis}\index{measurement error}
 [PCA](#sec-pca) is good if you just want to form a linear composite and if the causal structure is [formative](#sec-formativeConstruct) (rather than [reflective](#sec-reflectiveConstruct)).\index{factor analysis!decisions}\index{principal component analysis}\index{linear composite}\index{construct!formative}\index{construct!reflective}
-However, if you are interested in the factor structure, use factor analysis, which estimates a latent variable that accounts for the common variance and discards error variance.\index{factor analysis!decisions}\index{factor analysis}
+However, if you are interested in the factor structure, use factor analysis [@Widaman2018], which estimates a latent variable that accounts for the common variance and discards error variance.\index{factor analysis!decisions}\index{factor analysis}
 Factor analysis is useful for the identification of latent constructs—i.e., underlying dimensions or factors that explain (cause) scores on items.\index{factor analysis!decisions}\index{factor analysis}
 
 #### 3. EFA or CFA {#sec-efa-cfa}
@@ -993,8 +995,13 @@ psych::KMO(HolzingerSwineford1939[,vars])
 
 ### Determinant of a Correlation Matrix {#sec-determinantFactorAnalysis}
 
+The determinant of the correlation matrix represents the generalized variance among a set of items.
+It can also be calculated by multiplying all of the eigenvalues.
 The determinant of a correlation matrix can be used to evaluate the potential for [multicollinearity](#sec-multiCollinearity), which can be problematic in factor analysis.
-For purposes of pursuing factor analysis, the determinant of the correlation matrix should be greater than 0.00001 [@Field2012].
+To be able to invert the matrix for factor analysis, the determinant of the correlation matrix should be greater than zero.
+Thus, a practical heuristic for pursuing factor analysis is that the determinant should be greater than 0.00001 [@Field2012].
+If the determinant is zero, you cannot invert the matrix because the matrix is singular and is not positive definite—i.e., one or more eigenvalues is zero.
+This may an indication that two or more variables are nearly perfectly correlated or have low variance, and may thus require removing and/or combining variables.
 
 ```{r}
 corMatrix_HolzingerSwineford1939 <- cor(
