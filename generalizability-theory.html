@@ -1014,7 +1014,12 @@ Table&nbsp;6.2: Example Data Structure for Generalizability Theory With the Foll
 <span class="header-section-number">6.2.3</span> Universe Score for Each Person</h3>
 <p>Universe scores for each person are generated using the following syntax and are presented in <a href="#tbl-universeScores" class="quarto-xref">Table&nbsp;<span>6.3</span></a>.</p>
 <div class="cell">
-<div id="tbl-universeScores" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>pio_cross_dat <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">group_by</span>(Person) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="at">universeScore =</span> <span class="fu">mean</span>(Score, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details><div id="tbl-universeScores" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-universeScores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;6.3: Universe Scores.
 </figcaption><div aria-describedby="tbl-universeScores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1036,9 +1041,9 @@ Table&nbsp;6.3: Universe Scores.
 <span class="header-section-number">6.2.4.1</span> ANOVA Framework</h4>
 <p></p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(</span>
-<span id="cb5-2"><a href="#cb5-2"></a>  Score <span class="sc">~</span> Person<span class="sc">*</span>Item<span class="sc">*</span>Occasion,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">data =</span> pio_cross_dat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  Score <span class="sc">~</span> Person<span class="sc">*</span>Item<span class="sc">*</span>Occasion,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">data =</span> pio_cross_dat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>                     Df Sum Sq Mean Sq
 Person                5 112.95   22.59
@@ -1055,10 +1060,10 @@ Person:Item:Occasion 14  12.08    0.86
 <span class="header-section-number">6.2.4.2</span> Mixed Model Framework</h4>
 <p>The mixed model framework for estimating generalizability is described by <span class="citation" data-cites="Jiang2018a">Jiang (<a href="references.html#ref-Jiang2018a" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">summary</span>(<span class="fu">lmer</span>(</span>
-<span id="cb7-2"><a href="#cb7-2"></a>  Score <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> </span>
-<span id="cb7-3"><a href="#cb7-3"></a>    (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item),</span>
-<span id="cb7-4"><a href="#cb7-4"></a>  <span class="at">data =</span> pio_cross_dat)) <span class="co"># not enough observations to add three-way interaction: (1|Person:Item:Occasion)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">summary</span>(<span class="fu">lmer</span>(</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  Score <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> </span>
+<span id="cb8-3"><a href="#cb8-3"></a>    (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item),</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="at">data =</span> pio_cross_dat)) <span class="co"># not enough observations to add three-way interaction: (1|Person:Item:Occasion)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML ['lmerMod']
 Formula: Score ~ 1 + (1 | Person) + (1 | Item) + (1 | Occasion) + (1 |  
@@ -1087,12 +1092,12 @@ Fixed effects:
             Estimate Std. Error t value
 (Intercept)    5.957      1.234   4.827</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>PxIxO <span class="ot">&lt;-</span> <span class="fu">gstudy</span>(</span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="at">data =</span> pio_cross_dat,</span>
-<span id="cb9-3"><a href="#cb9-3"></a>  Score <span class="sc">~</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> </span>
-<span id="cb9-4"><a href="#cb9-4"></a>    (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item)) <span class="co"># not enough observations to add three-way interaction: (1|Person:Item:Occasion)</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a></span>
-<span id="cb9-6"><a href="#cb9-6"></a>PxIxO</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>PxIxO <span class="ot">&lt;-</span> <span class="fu">gstudy</span>(</span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="at">data =</span> pio_cross_dat,</span>
+<span id="cb10-3"><a href="#cb10-3"></a>  Score <span class="sc">~</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> </span>
+<span id="cb10-4"><a href="#cb10-4"></a>    (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item)) <span class="co"># not enough observations to add three-way interaction: (1|Person:Item:Occasion)</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a></span>
+<span id="cb10-6"><a href="#cb10-6"></a>PxIxO</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>$components
            source         var percent n
@@ -1112,18 +1117,18 @@ attr(,"class")
 <span class="header-section-number">6.2.5</span> Decision (D) Study</h3>
 <p>The <a href="#sec-decisionStudy">decision (D) study</a> and <a href="#sec-generalizabilityStudy">generalizability (G) study</a>, from which the <a href="#sec-generalizabilityCoefficient">generalizability</a> and <a href="#sec-dependabilityCoefficient">dependability</a> coefficients can be estimated, were analyzed using the <code>gtheory</code> package <span class="citation" data-cites="R-gtheory">(<a href="references.html#ref-R-gtheory" role="doc-biblioref">Moore, 2016</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>decisionStudy <span class="ot">&lt;-</span> <span class="fu">dstudy</span>(</span>
-<span id="cb11-2"><a href="#cb11-2"></a>  PxIxO,</span>
-<span id="cb11-3"><a href="#cb11-3"></a>  <span class="at">colname.objects =</span> <span class="st">"Person"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>  <span class="at">data =</span> pio_cross_dat,</span>
-<span id="cb11-5"><a href="#cb11-5"></a>  <span class="at">colname.scores =</span> <span class="st">"Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>decisionStudy <span class="ot">&lt;-</span> <span class="fu">dstudy</span>(</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  PxIxO,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="at">colname.objects =</span> <span class="st">"Person"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="at">data =</span> pio_cross_dat,</span>
+<span id="cb12-5"><a href="#cb12-5"></a>  <span class="at">colname.scores =</span> <span class="st">"Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-generalizabilityCoefficient" class="level3" data-number="6.2.6"><h3 data-number="6.2.6" class="anchored" data-anchor-id="sec-generalizabilityCoefficient">
 <span class="header-section-number">6.2.6</span> Generalizability Coefficient</h3>
 <p>The generalizability coefficient is analogous to the <a href="reliability.html">reliability</a> coefficient in CTT. It divides the estimated person variance component (the universe score variance) by the estimated observed-score variance (with some adjustment for the number of observations). In other words, variance in a <a href="reliability.html">reliable</a> measure should mostly be due to person variance rather than variance as a function of items, occasion, raters, methods, or other factors. The generalizability coefficient uses relative error variance, so it characterizes the similarity in the relative standing of individuals, similar to CTT-based estimates of relative reliability, such as <a href="reliability.html#sec-cronbachAlpha">Cronbach’s alpha</a>. Thus, the generalizability coefficient is an index of relative reliability. The generalizability coefficient ranges from 0–1, and higher scores reflect better reliability.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>decisionStudy<span class="sc">$</span>generalizability</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>decisionStudy<span class="sc">$</span>generalizability</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8731069</code></pre>
 </div>
@@ -1132,7 +1137,7 @@ attr(,"class")
 <span class="header-section-number">6.2.7</span> Dependability Coefficient</h3>
 <p>The dependability coefficient is similar to the <a href="#sec-generalizabilityCoefficient">generalizability coefficient</a>; however, it uses absolute error variance rather than relative error variance in the estimation. The dependability coefficient characterizes the absolute magnitude of differences across scores, not (just) the relative standing of individuals. Thus, the dependability coefficient is an index of absolute reliability. The dependability coefficient ranges from 0–1, and higher scores reflect better reliability.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>decisionStudy<span class="sc">$</span>dependability</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>decisionStudy<span class="sc">$</span>dependability</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.6374135</code></pre>
 </div>
@@ -1286,7 +1291,7 @@ Table&nbsp;6.4: Exercise 12: Table of Example Data for Evaluating Generalizabili
 </ol></section></section><section id="sec-sessionInfo-gTheory" class="level2" data-number="6.6"><h2 data-number="6.6" class="anchored" data-anchor-id="sec-sessionInfo-gTheory">
 <span class="header-section-number">6.6</span> Session Info</h2>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.2 (2025-10-31)
 Platform: x86_64-pc-linux-gnu
@@ -1331,7 +1336,7 @@ loaded via a namespace (and not attached):
 [49] jsonlite_2.0.0     hms_1.1.4          Formula_1.2-5      htmlTable_2.4.3   
 [53] glue_1.8.0         nloptr_2.2.1       stringi_1.8.7      gtable_0.3.6      
 [57] quadprog_1.5-8     pillar_1.11.1      htmltools_0.5.9    R6_2.6.1          
-[61] Rdpack_2.6.4       rprojroot_2.1.1    mix_1.0-13         evaluate_1.0.5    
+[61] Rdpack_2.6.5       rprojroot_2.1.1    mix_1.0-13         evaluate_1.0.5    
 [65] pbivnorm_0.6.0     lattice_0.22-7     rbibutils_2.4.1    backports_1.5.0   
 [69] Rcpp_1.1.1         gridExtra_2.3      nlme_3.1-168       checkmate_2.3.3   
 [73] xfun_0.56          pkgconfig_2.0.3   </code></pre>
