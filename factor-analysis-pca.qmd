@@ -2916,7 +2916,7 @@ cfaModel4C <- '
  f2 =~ V4 + V5 + V6
  
  #Higher-order factor
- A1 = ~ fixloading*f1 + fixloading*f2
+ A1 =~ fixloading*f1 + fixloading*f2
 '
 
 cfaModel4D <- '
@@ -3087,9 +3087,12 @@ modificationindices(cfaModel4EFit, sort. = TRUE)
 compRelSEM(cfaModel4AFit)
 compRelSEM(cfaModel4BFit)
 compRelSEM(cfaModel4CFit)
-compRelSEM(cfaModel4CFit, higher = "A1")
+compRelSEM(cfaModel4CFit)
 compRelSEM(cfaModel4DFit)
-compRelSEM(cfaModel4EFit)
+compRelSEM(cfaModel4EFit) # omega_total
+compRelSEM(cfaModel4EFit, true = "omegaH") # omega_hierarchical
+compRelSEM(cfaModel4EFit, return.total = -1, true = list(.TOTAL. = "f1")) # omega_hierarchical: proportion of variance in scale composite that is attributable to construct variance
+compRelSEM(cfaModel4EFit, return.total = -1, true = list(.TOTAL. = "f2")) # proportion of variance in scale composite that is attributable to method variance
 
 AVE(cfaModel4AFit)
 AVE(cfaModel4BFit)
@@ -3413,7 +3416,10 @@ modificationindices(cfaModelBifactorFit, sort. = TRUE)
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{factor analysis!bifactor}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(cfaModelBifactorFit)
+compRelSEM(cfaModelBifactorFit) # omega_total
+compRelSEM(cfaModelBifactorFit, true = "omegaH") # omega_hierarchical
+compRelSEM(cfaModelBifactorFit, return.total = -1, true = list(.TOTAL. = "g")) # proportion of variance in scale composite that is attributable to general factor
+
 AVE(cfaModelBifactorFit)
 maximalRelia(cfaModelBifactorFit)
 ```
@@ -3702,8 +3708,8 @@ modificationindices(cfaModelMTMMFit, sort. = TRUE)
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{multitrait-multimethod matrix}\index{factor analysis!confirmatory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(cfaModelMTMMFit)
-compRelSEM(cfaModelMTMMFit, higher = "g")
+compRelSEM(cfaModelMTMMFit) # omega_total
+compRelSEM(cfaModelMTMMFit, true = "omegaH") # omega_hierarchical
 
 AVE(cfaModelMTMMFit)
 
@@ -3866,7 +3872,8 @@ modificationindices(esemModelFit, sort. = TRUE)
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{structural equation modeling!exploratory}\index{reliability!internal consistency}\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(esemModelFit)
+compRelSEM(esemModelFit) # omega_total
+compRelSEM(esemModelFit, true = "omegaH") # omega_hierarchical: proportion of variance in scale composite that is attributable to each construct
 AVE(esemModelFit)
 maximalRelia(esemModelFit)
 ```
