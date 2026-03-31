@@ -30,7 +30,7 @@ The ICC is a plot of the model-derived probability of a symptom being present (o
 For instance, we can create empirical ICCs that can take any shape (see @fig-empiricalICC).\index{item response theory!item characteristic curve}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 empiricalICCdata <- data.frame(
   item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
@@ -74,7 +74,7 @@ In a model-implied ICC, we fit a logistic (sigmoid) curve to each item's probabi
 The model-implied ICCs for the same 10 items from @fig-empiricalICC are depicted in @fig-modelImpliedICC.\index{item response theory!item characteristic curve}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 #https://www.statforbiology.com/nonlinearregression/usefulequations#logistic_curve; archived at https://perma.cc/8WFX-FCEQ
 #https://github.com/OnofriAndreaPG/aomisc/blob/1eb698b3bc5f55a718c37bfd2028b9ac73a6fbbe/R/SSL.R; archived at https://perma.cc/94CM-PSGY
@@ -170,7 +170,7 @@ This item has a ceiling effect and provides only a little information about who 
 So, the item is not very clinically useful.\index{item response theory!item characteristic curve}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 library("drc")
 
@@ -229,7 +229,7 @@ Some items are more useful at the higher levels of the construct, whereas other 
 See @fig-iccDifficulty for an example of an item with a low difficulty and an item with a high difficulty.\index{item response theory!item difficulty}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 library("tidyverse")
 library("psych")
@@ -317,7 +317,7 @@ Some items go up gradually (less steep slope), so it provides less precision and
 See @fig-iccDiscrimination for an example of an item with a low discrimination and an item with a high discrimination.\index{item response theory!item discrimination}\index{item response theory!item characteristic curve}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 discriminationData <- data.frame(itemSum = 1:length(-4:4))
 
@@ -364,7 +364,7 @@ For example, for a 4-option multiple choice test, a respondent would be expected
 See @fig-iccGuessingTF for an example of an item from a true/false exam and @fig-iccGuessingMC for an example of an item from a 4-option multiple choice exam.\index{item response theory!item guessing}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 empiricalICCdata$guessingTF <- psych::logistic(-4:4, c = 0.5)
 empiricalICCdata$guessingMC <- psych::logistic(-4:4, c = 0.25)
@@ -405,7 +405,7 @@ If the item has an upper asymptote below one, it suggests that the probability o
 See @fig-iccInattention for an example of an item whose probability of endorsement (or getting it correct) exceeds .85.\index{item response theory!item careless errors}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 empiricalICCdata$inattention <- psych::logistic(-4:4, z = 0.85, a = 2)
 
@@ -489,7 +489,7 @@ However, they make fairly strict assumptions.
 They assume that items have the same [discrimination](#sec-itemDiscrimination).\index{item response theory!one-parameter model}\index{item response theory!item discrimination}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 library("tidyverse")
 
@@ -544,7 +544,7 @@ ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(I
 A one-parameter logistic model is only valid if there is not crossing of lines in empirical [ICCs](#sec-icc) (see @fig-empiricalICCnoCrossing).\index{item response theory!one-parameter model}\index{item response theory!item characteristic curve}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 empiricalICCdata_noCrossing <- data.frame(
   item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
@@ -610,7 +610,7 @@ fourPL(a = 0.6, b = 0, theta = -1)
 ```
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 twoPLitems <- data.frame(theta = -6:6,
                          item1 = fourPL(a = 1.3, b = -2, theta = -6:6),
@@ -686,7 +686,7 @@ fourPL(a = 0.8, b = -1, c = .25, theta = -1)
 ```
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 threePLitems <- data.frame(theta = 1:13,
                            item1 = fourPL(a = 1.3, b = -2, c = 0, theta = -6:6),
@@ -762,7 +762,7 @@ fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = 3)
 ```
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 fourPLitems <- data.frame(theta = 1:13,
                           item1 = fourPL(a = 1.3, b = -2, c = 0, d = 1, theta = -6:6),
@@ -848,7 +848,7 @@ As depicted, one likert scale item does equivalent work as 4 binary items.\index
 See @fig-polytomousItemResponseCategoryCurves for the same 5-level likert scale item plotted with an item response category characteristic curve (based on a static, non-cumulative distribution).\index{item response theory}\index{item response theory!item response category characteristic curve}\index{Likert scale}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 polytomousItemBoundary <- data.frame(theta = seq(from = -4, to = 4, length.out= 1000),
                                      itemBoundary1 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = -2),
@@ -1108,7 +1108,7 @@ reliabilityIRT(10)
 Consider some hypothetical items depicted with [ICCs](#sec-icc) in @fig-reliabilityIRTicc.\index{item response theory!item characteristic curve}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 #https://journals.sagepub.com/doi/full/10.1177/0146621613475471
 irtReliability <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
@@ -1261,7 +1261,7 @@ This leads to greater efficiency and better measurement in terms of [reliability
 For more information on designing and evaluating short forms compared to their full-scale counterparts, see @Smith2000.\index{brief assessment}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 efficientAssessment <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
@@ -1337,7 +1337,7 @@ An example of a bad measure for assessing the full range of individual differenc
 The measure performs poorly for the intended purpose, because its items do not (a) span the range of interest (−3 to 3 standard deviations from the mean of the latent construct), (b) have high [discrimination](#sec-itemDiscrimination) and [information](#sec-irtReliability), and (c) densely cover the range of interest without redundancy.\index{item response theory}\index{item response theory!information}\index{item response theory!item discrimination}\index{reliability}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 badMeasure <- badMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
@@ -1415,7 +1415,7 @@ An example of a good measure for distinguishing clinical-range versus sub-clinic
 The measure is good for the intended purpose, in terms of having items that (a) span the range of interest (1–3 standard deviations above the mean of the latent construct), (b) have high [discrimination](#sec-itemDiscrimination) and [information](#sec-irtReliability), and (c) densely cover the range of interest without redundancy.\index{item response theory}\index{item response theory!information}\index{item response theory!item discrimination}\index{reliability}\index{item response theory!test information curve}
 
 ```{r}
-#| include: false
+#| code-fold: true
 
 goodMeasure <- goodMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
