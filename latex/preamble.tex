@@ -70,4 +70,19 @@
 }
 \makeatother
 
+% Fix for tagpdf para hook mismatch under pdf-standard: ua-2.
+% Disables paragraph-level tagging (the source of the hook mismatch)
+% while keeping structural tagging (headings, figures, tables) intact.
+\AddToHook{begindocument/end}{%
+  \tagpdfsetup{para/tagging=false}%
+  % Also suppress hooks inside framed/verbatim environments that
+  % are not tagpdf-aware:
+  \AddToHook{env/VF/begin}{\tagpdfparaOff}%
+  \AddToHook{env/VF/end}{\tagpdfparaOn}%
+  \AddToHook{env/kframe/begin}{\tagpdfparaOff}%
+  \AddToHook{env/kframe/end}{\tagpdfparaOn}%
+  \AddToHook{env/snugshade/begin}{\tagpdfparaOff}%
+  \AddToHook{env/snugshade/end}{\tagpdfparaOn}%
+}
+
 \frontmatter
