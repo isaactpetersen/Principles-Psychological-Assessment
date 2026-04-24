@@ -14,13 +14,7 @@
 \renewcommand{\bottomfraction}{0.8}
 \renewcommand{\floatpagefraction}{0.75}
 
-\renewenvironment{quote}{%
-  \tagpdfparaOff
-  \begin{VF}%
-}{%
-  \end{VF}%
-  \tagpdfparaOn
-}
+\renewenvironment{quote}{\begin{VF}}{\end{VF}}
 \let\oldhref\href
 \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
 
@@ -78,5 +72,7 @@
 
 % Fix for tagpdf para hook mismatch under pdf-standard: ua-2.
 \tagpdfsetup{para/tagging=false}
+\AddToHook{cmd/maketitle/before}{\tagpdfparaOff}
+\AddToHook{cmd/maketitle/after}{\tagpdfparaOn}
 
 \frontmatter
