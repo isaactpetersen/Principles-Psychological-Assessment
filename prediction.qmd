@@ -759,14 +759,14 @@ edibleData <- data.frame(score = c(edibleScores, inedibleScores), type = c(rep("
 cutoff <- 75
 
 hist_edible <- density(edibleScores, from = 0, to = 150) %$%
-  data.frame(x = x, y = y) %>%
+  data.frame(x = x, y = y) |>
   mutate(area = x >= cutoff)
 
 hist_edible$type[hist_edible$area == TRUE] <- "edible_FP"
 hist_edible$type[hist_edible$area == FALSE] <- "edible_TN"
 
 hist_inedible <- density(inedibleScores, from = 0, to = 150) %$%
-  data.frame(x = x, y = y) %>%
+  data.frame(x = x, y = y) |>
   mutate(area = x < cutoff)
 
 hist_inedible$type[hist_inedible$area == TRUE] <- "inedible_FN"
@@ -849,14 +849,14 @@ For instance, if the aliens cannot risk eating the inedible berries because the 
 cutoff <- 85
 
 hist_edible <- density(edibleScores, from = 0, to = 150) %$%
-  data.frame(x = x, y = y) %>%
+  data.frame(x = x, y = y) |>
   mutate(area = x >= cutoff)
 
 hist_edible$type[hist_edible$area == TRUE] <- "edible_FP"
 hist_edible$type[hist_edible$area == FALSE] <- "edible_TN"
 
 hist_inedible <- density(inedibleScores, from = 0, to = 150) %$%
-  data.frame(x = x, y = y) %>%
+  data.frame(x = x, y = y) |>
   mutate(area = x < cutoff)
 
 hist_inedible$type[hist_inedible$area == TRUE] <- "inedible_FN"
@@ -899,14 +899,14 @@ For instance, if the aliens cannot risk missing edible berries because they are 
 cutoff <- 65
 
 hist_edible <- density(edibleScores, from = 0, to = 150) %$%
-  data.frame(x = x, y = y) %>%
+  data.frame(x = x, y = y) |>
   mutate(area = x >= cutoff)
 
 hist_edible$type[hist_edible$area == TRUE] <- "edible_FP"
 hist_edible$type[hist_edible$area == FALSE] <- "edible_TN"
 
 hist_inedible <- density(inedibleScores, from = 0, to = 150) %$%
-  data.frame(x = x, y = y) %>%
+  data.frame(x = x, y = y) |>
   mutate(area = x < cutoff)
 
 hist_inedible$type[hist_inedible$area == TRUE] <- "inedible_FN"
@@ -1136,7 +1136,7 @@ There is nothing special about this particular seed.
 set.seed(52242)
 
 mydataSDT$testScore <- mydataSDT$s100b
-mydataSDT <- mydataSDT %>%
+mydataSDT <- mydataSDT |>
   mutate(testScoreSimple = ntile(testScore, 10))
 
 mydataSDT$predictedProbability <- 
@@ -1273,15 +1273,15 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 ```{r}
 accuracyOverall(
   predicted = mydataSDT$testScore,
-  actual = mydataSDT$disorder) %>%
-  t %>%
+  actual = mydataSDT$disorder) |>
+  t |>
   round(., 2)
 
 accuracyOverall(
   predicted = mydataSDT$testScore, 
   actual = mydataSDT$disorder,
-  dropUndefined = TRUE) %>%
-  t %>%
+  dropUndefined = TRUE) |>
+  t |>
   round(., 2)
 ```
 
@@ -2159,16 +2159,16 @@ This calibration plot was adapted from Darren Dahly's example, and is depicted i
 ```{r}
 #| code-fold: true
 
-g1 <- mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) %>%
+g1 <- mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) |>
   # Bin prediction into 10ths
-  group_by(bin) %>%
+  group_by(bin) |>
   mutate(n = length(na.omit(predictedProbability)), # Get ests and CIs
          bin_pred = mean(predictedProbability, na.rm = TRUE), 
          bin_prob = mean(disorder, na.rm = TRUE),
          se = sd(disorder, na.rm = TRUE) / sqrt(n),
          ul = bin_prob + qnorm(.975) * se,
-         ll = bin_prob - qnorm(.975) * se) %>%
-  ungroup() %>%
+         ll = bin_prob - qnorm(.975) * se) |>
+  ungroup() |>
   ggplot(aes(x = bin_pred, y = bin_prob, ymin = ll, ymax = ul)) +
   geom_pointrange(size = 0.5, color = "black") +
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1)) +
@@ -2523,8 +2523,8 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 accuracyAtCutoff(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
-  cutoff = cutoff) %>% 
-  t %>% 
+  cutoff = cutoff) |> 
+  t |> 
   round(., 2)
 ```
 
@@ -4363,8 +4363,8 @@ miscalibration <- function(predicted, actual, cutoff, bins = 10){
     data,
     bin = cut_number(
       predicted,
-      n = 10)) %>%
-    group_by(bin) %>%
+      n = 10)) |>
+    group_by(bin) |>
     summarise(
       n = length(predicted),
       meanPredicted = mean(predicted, na.rm = TRUE),
@@ -4769,7 +4769,7 @@ ggplot(
     discrete = TRUE,
     option = "H") +
   geom_label_repel(
-    data = informationGainStats %>% 
+    data = informationGainStats |> 
       filter(cutoff == 0.5), 
     aes(label = paste("BR = ", baseRate, sep = "")),
     nudge_x = 0.10,
@@ -5038,13 +5038,13 @@ accuracyStats
 #| label: tbl-accuracyStatsPDF
 #| tbl-cap: "Accuracy Statistics."
 
-accuracyStats %>% 
-  head %>% 
-  t %>% 
-  round(., 2) %>% 
+accuracyStats |> 
+  head |> 
+  t |> 
+  round(., 2) |> 
   kable(.,
       format = "latex",
-      booktabs = TRUE) %>%
+      booktabs = TRUE) |>
   kable_styling(font_size = 7)
 ```
 
@@ -5056,10 +5056,10 @@ accuracyStats %>%
 #| label: tbl-accuracyStatsEPUB
 #| tbl-cap: "Accuracy Statistics."
 
-accuracyStats %>% 
-  head %>% 
-  t %>% 
-  round(., 2) %>% 
+accuracyStats |> 
+  head |> 
+  t |> 
+  round(., 2) |> 
   kable(., booktabs = TRUE)
 ```
 
@@ -5698,16 +5698,16 @@ val.prob(titanic$prediction, titanic$survived)
 ```{r}
 #| include: false
 
-g1_ex <- mutate(titanic, bin = cut_number(prediction, 10)) %>%
+g1_ex <- mutate(titanic, bin = cut_number(prediction, 10)) |>
   # Bin prediction into 10ths
-  group_by(bin) %>%
+  group_by(bin) |>
   mutate(n = length(na.omit(prediction)), # Get ests and CIs
          bin_pred = mean(prediction, na.rm = TRUE),
          bin_prob = mean(survived, na.rm = TRUE),
          se = sd(survived, na.rm = TRUE) / sqrt(n),
          ul = bin_prob + qnorm(.975) * se,
-         ll = bin_prob - qnorm(.975) * se) %>%
-  ungroup() %>%
+         ll = bin_prob - qnorm(.975) * se) |>
+  ungroup() |>
   ggplot(aes(x = bin_pred, y = bin_prob, ymin = ll, ymax = ul)) +
   geom_pointrange(size = 0.5, color = "black") +
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1)) +

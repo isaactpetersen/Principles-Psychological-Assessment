@@ -291,7 +291,7 @@ addRandomError <- data.frame(score = rawMeasure$score + rnorm(sampleSize), measu
 errorList <- list(rawMeasure, addSystematicError, addRandomError)
 errorData <- bind_rows(errorList)
 
-ggplot(errorData %>% filter(measure != "addRandomError"), aes(x = score, fill = measure)) +
+ggplot(errorData |> filter(measure != "addRandomError"), aes(x = score, fill = measure)) +
   geom_density(alpha = 0.25) +
   scale_fill_viridis_d(name = "",
                        breaks = c("rawMeasure", "addSystematicError"),
@@ -319,7 +319,7 @@ In other words, the group-level mean is still accurate, but individuals' scores 
 #| fig-alt: "Random Error."
 #| code-fold: true
 
-ggplot(errorData %>% filter(measure != "addSystematicError"), aes(x = score, fill = measure)) +
+ggplot(errorData |> filter(measure != "addSystematicError"), aes(x = score, fill = measure)) +
   geom_density(alpha = 0.25) +
   scale_fill_viridis_d(name = "",
                        breaks = c("rawMeasure", "addRandomError"),
@@ -3206,8 +3206,8 @@ score_ex <- c(7,2,0,10,5,1,8,3,1,11,6,1,6,2,4,12,6,5)
 
 por_data_ex <- data.frame(participant_ex, occasion_ex, rater_ex, score_ex)
 
-universeScores_ex <- por_data_ex %>%
-  group_by(participant_ex) %>%
+universeScores_ex <- por_data_ex |>
+  group_by(participant_ex) |>
   summarise(universeScore = mean(score_ex, na.rm = TRUE), .groups = "drop") #universe score for each participant
 
 person1_ex <- universeScores_ex$universeScore[which(universeScores_ex$participant_ex == 1)]

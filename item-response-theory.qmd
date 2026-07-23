@@ -271,7 +271,7 @@ newdata$theta <- seq(from = -4, to = 4, length.out = 1000)
 midpoint_lowDifficulty <- newdata$theta[which.min(abs(newdata$lowDifficulty - 0.5))]
 midpoint_highDifficulty <- newdata$theta[which.min(abs(newdata$highDifficulty - 0.5))]
 
-difficulty_long <- pivot_longer(newdata, cols = lowDifficulty:highDifficulty) %>%
+difficulty_long <- pivot_longer(newdata, cols = lowDifficulty:highDifficulty) |>
   rename(item = name)
 
 difficulty_long$Difficulty <- NA
@@ -332,7 +332,7 @@ newdata$highDiscrimination <- predict(twoPL_highDiscrimination, newdata = newdat
 
 newdata$theta <- seq(from = -4, to = 4, length.out = 1000)
 
-discrimination_long <- pivot_longer(newdata, cols = lowDiscrimination:highDiscrimination) %>%
+discrimination_long <- pivot_longer(newdata, cols = lowDiscrimination:highDiscrimination) |>
   rename(item = name)
 
 discrimination_long$Discrimination <- NA
@@ -515,7 +515,7 @@ onePLitems_newdata$item3 <- predict(onePL_item3, newdata = onePLitems_newdata)
 onePLitems_newdata$item4 <- predict(onePL_item4, newdata = onePLitems_newdata)
 onePLitems_newdata$item5 <- predict(onePL_item5, newdata = onePLitems_newdata)
 
-onePLitems_long <- pivot_longer(onePLitems_newdata, cols = item1:item5) %>%
+onePLitems_long <- pivot_longer(onePLitems_newdata, cols = item1:item5) |>
   rename(item = name)
 
 onePLitems_long$Item <- NA
@@ -633,7 +633,7 @@ twoPLitems_newdata$item3 <- predict(twoPL_item3, newdata = twoPLitems_newdata)
 twoPLitems_newdata$item4 <- predict(twoPL_item4, newdata = twoPLitems_newdata)
 twoPLitems_newdata$item5 <- predict(twoPL_item5, newdata = twoPLitems_newdata)
 
-twoPLitems_long <- pivot_longer(twoPLitems_newdata, cols = item1:item5) %>%
+twoPLitems_long <- pivot_longer(twoPLitems_newdata, cols = item1:item5) |>
   rename(item = name)
 
 twoPLitems_long$Item <- NA
@@ -711,7 +711,7 @@ threePLitems_newdata$item5 <- predict(threePL_item5, newdata = threePLitems_newd
 
 threePLitems_newdata$theta <- seq(from = -6, to = 6, length.out = 1000)
 
-threePLitems_long <- pivot_longer(threePLitems_newdata, cols = item1:item5) %>%
+threePLitems_long <- pivot_longer(threePLitems_newdata, cols = item1:item5) |>
   rename(item = name)
 
 threePLitems_long$Item <- NA
@@ -787,7 +787,7 @@ fourPLitems_newdata$item5 <- predict(fourPL_item5, newdata = fourPLitems_newdata
 
 fourPLitems_newdata$theta <- seq(from = -6, to = 6, length.out = 1000)
 
-fourPLitems_long <- pivot_longer(fourPLitems_newdata, cols = item1:item5) %>%
+fourPLitems_long <- pivot_longer(fourPLitems_newdata, cols = item1:item5) |>
   rename(item = name)
 
 fourPLitems_long$Item <- NA
@@ -863,10 +863,10 @@ polytomousItemResponseCategory$itemResponseCategory4 <- polytomousItemBoundary$i
 polytomousItemResponseCategory$itemResponseCategory3 <- polytomousItemBoundary$itemBoundary2 - rowSums(polytomousItemResponseCategory[,c("itemResponseCategory4","itemResponseCategory5")])
 polytomousItemResponseCategory$itemResponseCategory2 <- polytomousItemBoundary$itemBoundary1 - rowSums(polytomousItemResponseCategory[,c("itemResponseCategory3","itemResponseCategory4","itemResponseCategory5")])
 
-polytomousItemResponseCategory <- polytomousItemResponseCategory %>%
+polytomousItemResponseCategory <- polytomousItemResponseCategory |>
   dplyr::select(theta, itemResponseCategory1, itemResponseCategory2, itemResponseCategory3, itemResponseCategory4, itemResponseCategory5)
 
-polytomousItemBoundary_long <- pivot_longer(polytomousItemBoundary, cols = itemBoundary1:itemBoundary4) %>%
+polytomousItemBoundary_long <- pivot_longer(polytomousItemBoundary, cols = itemBoundary1:itemBoundary4) |>
   rename(item = name)
 
 polytomousItemBoundary_long$boundary <- NA
@@ -875,7 +875,7 @@ polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "
 polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary3")] <- 3
 polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary4")] <- 4
 
-polytomousItemResponseCategory_long <- pivot_longer(polytomousItemResponseCategory, cols = itemResponseCategory1:itemResponseCategory5) %>%
+polytomousItemResponseCategory_long <- pivot_longer(polytomousItemResponseCategory, cols = itemResponseCategory1:itemResponseCategory5) |>
   rename(item = name)
 
 polytomousItemResponseCategory_long$responseCategory <- NA
@@ -1134,10 +1134,10 @@ irtInformation$testInformation <- rowSums(irtInformation[,c("information1","info
 irtInformation$standardError <- standardErrorIRT(irtInformation$testInformation)
 irtInformation$reliability <- reliabilityIRT(irtInformation$testInformation)
 
-irtReliability_long <- pivot_longer(irtReliability, cols = item1:item4) %>%
+irtReliability_long <- pivot_longer(irtReliability, cols = item1:item4) |>
   rename(item = name)
 
-irtInformation_long <- pivot_longer(irtInformation, cols = information1:information4) %>% 
+irtInformation_long <- pivot_longer(irtInformation, cols = information1:information4) |> 
   rename(item = name)
 
 irtReliability_long$Item <- NA
@@ -1268,7 +1268,7 @@ efficientAssessment <- data.frame(theta = seq(from = -4, to = 4, length.out = 10
 efficientAssessment$item1 <- fourPL(b = -1.5, a = 2, theta = efficientAssessment$theta)
 efficientAssessment$item2 <- fourPL(b = 1.5, a = 2, theta = efficientAssessment$theta)
 
-efficientAssessment_long <- pivot_longer(efficientAssessment, cols = item1:item2) %>%
+efficientAssessment_long <- pivot_longer(efficientAssessment, cols = item1:item2) |>
   rename(item = name)
 
 efficientAssessment_long$Item <- NA
@@ -1365,7 +1365,7 @@ badMeasureInfo$info10 <- itemInformation(b = 2.5, a = 0.5, theta = badMeasureInf
 
 badMeasureInfo$information <- rowSums(badMeasureInfo[,paste("info", 1:10, sep = "")])
 
-badMeasure_long <- pivot_longer(badMeasure, cols = item1:item10) %>%
+badMeasure_long <- pivot_longer(badMeasure, cols = item1:item10) |>
   rename(item = name)
 
 badMeasure_long$Item <- NA
@@ -1463,7 +1463,7 @@ goodMeasureInfo$info20 <- itemInformation(b = 2.9, a = 10, theta = goodMeasureIn
 
 goodMeasureInfo$information <- rowSums(goodMeasureInfo[,paste("info", 1:20, sep = "")])
 
-goodMeasure_long <- pivot_longer(goodMeasure, cols = item1:item20) %>%
+goodMeasure_long <- pivot_longer(goodMeasure, cols = item1:item20) |>
   rename(item = name)
 
 goodMeasure_long$Item <- NA
@@ -1852,9 +1852,9 @@ The Rasch model below was fit using the `lme4` package [@R-lme4].\index{mixed mo
 First, we convert the data from wide form to long form for the mixed model:
 
 ```{r}
-mydataIRT_long <- mydataIRT %>% 
-  mutate(ID = 1:nrow(mydataIRT)) %>% 
-  pivot_longer(cols = Item.1:Item.5) %>% 
+mydataIRT_long <- mydataIRT |> 
+  mutate(ID = 1:nrow(mydataIRT)) |> 
+  pivot_longer(cols = Item.1:Item.5) |> 
   rename(
     item = name,
     response = value)
