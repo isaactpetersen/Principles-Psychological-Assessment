@@ -318,9 +318,11 @@ mydataActuarial <- aSAH
 
 mydataActuarial$disorder <- NA
 mydataActuarial$disorder[which(
-  mydataActuarial$outcome == "Poor")] <- 1
+  mydataActuarial$outcome == "Poor"
+)] <- 1
 mydataActuarial$disorder[which(
-  mydataActuarial$outcome == "Good")] <- 0
+  mydataActuarial$outcome == "Good"
+)] <- 0
 ```
 
 #### Simulate Data {#sec-simulateData-actuarial}
@@ -335,9 +337,10 @@ set.seed(52242)
 mydataActuarial$ordinal <- sample(
   0:2,
   nrow(mydataActuarial),
-  replace = TRUE)
+  replace = TRUE
+)
 
-mydataActuarial$ordinalFactor <- 
+mydataActuarial$ordinalFactor <-
   factor(mydataActuarial$ordinal, ordered = TRUE)
 ```
 
@@ -351,27 +354,33 @@ Dichotomous Outcome:\index{data!dichotomous}\index{multiple regression}
 
 ```{r}
 summary(
-  glm(disorder ~ s100b,
-  data = mydataActuarial))
+  glm(
+    disorder ~ s100b,
+    data = mydataActuarial)
+)
 ```
 
 Ordinal Outcome:
 
 ```{r}
 summary(
-  polr(ordinalFactor ~ s100b,
-  data = mydataActuarial))
+  polr(
+    ordinalFactor ~ s100b,
+    data = mydataActuarial)
+)
 
 lrm(
   ordinal ~ s100b,
   data = mydataActuarial,
   x = TRUE,
-  y = TRUE)
+  y = TRUE
+)
 
 ordinalModel <- train(
   ordinalFactor ~ s100b,
   data = mydataActuarial,
-  method = "polr")
+  method = "polr"
+)
 
 print(ordinalModel)
 ```
@@ -380,8 +389,10 @@ Continuous Outcome:
 
 ```{r}
 summary(
-  lm(s100b ~ ndka,
-  data = mydataActuarial))
+  lm(
+    s100b ~ ndka,
+    data = mydataActuarial)
+)
 ```
 
 ### Regression with Multiple Predictors {#sec-regressionMultiplePredictors}
@@ -390,27 +401,34 @@ Dichotomous Outcome:\index{data!dichotomous}\index{multiple regression}
 
 ```{r}
 summary(
-  glm(disorder ~ s100b + ndka + gender + age + wfns,
-  data = mydataActuarial))
+  glm(
+    disorder ~ s100b + ndka + gender + age + wfns,
+    data = mydataActuarial)
+)
 ```
 
 Ordinal Outcome:\index{data!ordinal}\index{multiple regression}
 
 ```{r}
 summary(
-  polr(ordinalFactor ~ s100b + ndka + gender + age + wfns,
-  data = mydataActuarial))
+  polr(
+    ordinalFactor ~ s100b + ndka + gender + age + wfns,
+    data = mydataActuarial
+  )
+)
 
 lrm(
   ordinal ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
   x = TRUE,
-  y = TRUE)
+  y = TRUE
+)
 
 ordinalModelPredictors <- train(
   ordinalFactor ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "polr")
+  method = "polr"
+)
 
 print(ordinalModelPredictors)
 ```
@@ -419,8 +437,10 @@ Continuous Outcome:\index{data!continuous}\index{multiple regression}
 
 ```{r}
 summary(
-  lm(s100b ~ ndka + gender + age + wfns,
-  data = mydataActuarial))
+  lm(
+    s100b ~ ndka + gender + age + wfns,
+    data = mydataActuarial)
+)
 ```
 
 ### Least Absolute Shrinkage and Selection Option (LASSO) {#sec-lasso}
@@ -433,7 +453,8 @@ Dichotomous Outcome:\index{least absolute shrinkage and selection option}\index{
 lassoModelDichotomous <- train(
   outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "glmnet")
+  method = "glmnet"
+)
 
 print(lassoModelDichotomous)
 ```
@@ -444,7 +465,8 @@ Continuous Outcome:\index{least absolute shrinkage and selection option}\index{d
 lassoModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "lasso")
+  method = "lasso"
+)
 
 print(lassoModelContinuous)
 ```
@@ -459,7 +481,8 @@ Dichotomous Outcome:\index{ridge regression}\index{multiple regression}\index{da
 ridgeModelDichotomous <- train(
   outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "regLogistic")
+  method = "regLogistic"
+)
 
 print(ridgeModelDichotomous)
 ```
@@ -470,7 +493,8 @@ Continuous Outcome:\index{ridge regression}\index{multiple regression}\index{dat
 ridgeModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "ridge")
+  method = "ridge"
+)
 
 print(ridgeModelContinuous)
 ```
@@ -485,7 +509,8 @@ Continuous Outcome:\index{elastic net}\index{multiple regression}\index{data!con
 elasticnetModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "enet")
+  method = "enet"
+)
 
 print(elasticnetModelContinuous)
 ```
@@ -500,7 +525,8 @@ Dichotomous Outcome:\index{machine learning}\index{random forest}\index{data!dic
 rfModelDichotomous <- train(
   outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "rf")
+  method = "rf"
+)
 
 print(rfModelDichotomous)
 ```
@@ -511,7 +537,8 @@ Ordinal Outcome:\index{machine learning}\index{random forest}\index{data!ordinal
 rfModelOrdinal <- train(
   ordinalFactor ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "ordinalRF")
+  method = "ordinalRF"
+)
 
 print(rfModelOrdinal)
 ```
@@ -522,7 +549,8 @@ Continuous Outcome:\index{machine learning}\index{random forest}\index{data!cont
 rfModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
-  method = "rf")
+  method = "rf"
+)
 
 print(rfModelContinuous)
 ```
@@ -536,7 +564,8 @@ kFolds <- 10
 
 train.control <- trainControl(
   method = "cv",
-  number = kFolds)
+  number = kFolds
+)
 ```
 
 Dichotomous Outcome:\index{cross-validation!$k$-fold}\index{data!dichotomous}
@@ -546,7 +575,8 @@ cvModelDichotomous <- train(
   outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "glm",
-  trControl = train.control)
+  trControl = train.control
+)
 
 print(cvModelDichotomous)
 ```
@@ -558,7 +588,8 @@ cvModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "lm",
-  trControl = train.control)
+  trControl = train.control
+)
 
 print(cvModelContinuous)
 ```
@@ -569,7 +600,8 @@ The leave-one-out (LOO) cross-validation models were fit in the `caret` package 
 
 ```{r}
 train.control <- trainControl(
-  method = "LOOCV")
+  method = "LOOCV"
+)
 ```
 
 Dichotomous Outcome:\index{cross-validation!leave one out}\index{data!dichotomous}
@@ -579,7 +611,8 @@ loocvModelDichotomous <- train(
   outcome ~ s100b + ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "glm",
-  trControl = train.control)
+  trControl = train.control
+)
 
 print(loocvModelDichotomous)
 ```
@@ -591,7 +624,8 @@ loocvModelContinuous <- train(
   s100b ~ ndka + gender + age + wfns,
   data = mydataActuarial,
   method = "lm",
-  trControl = train.control)
+  trControl = train.control
+)
 
 print(loocvModelContinuous)
 ```
