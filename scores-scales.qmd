@@ -121,9 +121,10 @@ An example histogram of raw scores is in @fig-rawScores.\index{data!raw}\index{h
 #| fig-alt: "Histogram of Raw Scores."
 #| code-fold: true
 
-hist(scores$rawData,
-     xlab = "Raw Scores",
-     main = "Histogram of Raw Scores")
+hist(
+  scores$rawData,
+  xlab = "Raw Scores",
+  main = "Histogram of Raw Scores")
 ```
 
 ### Norm-Referenced Scores {#sec-norm}
@@ -186,15 +187,29 @@ standardNormalStanines$stanineCumulativeStartingPercentZ <- qnorm(standardNormal
 standardNormalStanines$stanineCumulativeEndingPercentZ <- qnorm(standardNormalStanines$stanineCumulativeEndingPercent/100)
 standardNormalStanines[standardNormalStanines == -Inf] <- -4
 standardNormalStanines[standardNormalStanines == Inf] <- 4
-standardNormalStanines$midpointsZ <- rowMeans(standardNormalStanines[,c("stanineCumulativeStartingPercentZ","stanineCumulativeEndingPercentZ")])
+standardNormalStanines$midpointsZ <- rowMeans(standardNormalStanines[, c(
+  "stanineCumulativeStartingPercentZ",
+  "stanineCumulativeEndingPercentZ"
+)])
 
-par(xpd = NA,
-    mgp = c(3, 0.5 , 0), # gap between axis label and axis
-    mar = c(12, 8, 0, 0) + 0.1) # plot margins: default of the form c(bottom, left, top, right): c(5, 4, 4, 2) + 0.1
+par(
+  xpd = NA,
+  mgp = c(3, 0.5, 0), # gap between axis label and axis
+  mar = c(12, 8, 0, 0) + 0.1
+) # plot margins: default of the form c(bottom, left, top, right): c(5, 4, 4, 2) + 0.1
 x <- seq(-4, 4, length = 10000)
 y <- dnorm(x, mean = 0, sd = 1)
 
-plot(x, y, type = "l", lwd = 8, axes = FALSE, xlab = NA, ylab = NA, col = "gray")
+plot(
+  x,
+  y,
+  type = "l",
+  lwd = 8,
+  axes = FALSE,
+  xlab = NA,
+  ylab = NA,
+  col = "gray"
+)
 
 segments(x0 = -4, y0 = 0, y1 = 1)
 segments(x0 = -3, y0 = 0, y1 = 1)
@@ -207,18 +222,59 @@ segments(x0 = 3, y0 = 0, y1 = 1)
 segments(x0 = 4, y0 = 0, y1 = 1)
 
 axis(side = 1, at = standardNormal$zScore, pos = 0)
-axis(side = 1, at = standardNormal$zScore, pos = -.06, labels = standardNormal$Tscore)
-axis(side = 1, at = standardNormal$zScore, pos = -.12, labels = standardNormal$standardScore)
-axis(side = 1, at = standardNormal$zScore, pos = -.18, labels = standardNormal$cumulativePercentFigure)
-axis(side = 1, at = standardNormalPercentiles$percentileRankZ, pos = -.24, labels = standardNormalPercentiles$percentileRank, cex.axis = 0.5)
+axis(
+  side = 1,
+  at = standardNormal$zScore,
+  pos = -.06,
+  labels = standardNormal$Tscore
+)
+axis(
+  side = 1,
+  at = standardNormal$zScore,
+  pos = -.12,
+  labels = standardNormal$standardScore
+)
+axis(
+  side = 1,
+  at = standardNormal$zScore,
+  pos = -.18,
+  labels = standardNormal$cumulativePercentFigure
+)
+axis(
+  side = 1,
+  at = standardNormalPercentiles$percentileRankZ,
+  pos = -.24,
+  labels = standardNormalPercentiles$percentileRank,
+  cex.axis = 0.5
+)
 
-rect(xleft = standardNormalStanines$stanineCumulativeStartingPercentZ, ybottom = -.36, xright = standardNormalStanines$stanineCumulativeEndingPercentZ, ytop = -.31)
-mtext(standardNormalStanines$stanine, side = 1, line = 9, at = standardNormalStanines$midpointsZ)
+rect(
+  xleft = standardNormalStanines$stanineCumulativeStartingPercentZ,
+  ybottom = -.36,
+  xright = standardNormalStanines$stanineCumulativeEndingPercentZ,
+  ytop = -.31
+)
+mtext(
+  standardNormalStanines$stanine,
+  side = 1,
+  line = 9,
+  at = standardNormalStanines$midpointsZ
+)
 
 text(0.05, .02, labels = "Standard Deviations")
-text(standardNormal$midpointsZ, .06, labels = standardNormal$nonCumulativePercentFigure)
+text(
+  standardNormal$midpointsZ,
+  .06,
+  labels = standardNormal$nonCumulativePercentFigure
+)
 
-mtext("Percent of cases \n under segment of \n the normal curve", side = 2, line = 0, at = .05, las = 1)
+mtext(
+  "Percent of cases \n under segment of \n the normal curve",
+  side = 2,
+  line = 0,
+  at = .05,
+  las = 1
+)
 mtext("z scores", side = 2, line = 0, at = -.033, las = 1)
 mtext("T scores", side = 2, line = 0, at = -.0934, las = 1)
 mtext("Standard scores", side = 2, line = 0, at = -.1538, las = 1)
@@ -257,9 +313,11 @@ A histogram of percentile rank scores is in @fig-percentileRanks.\index{data!per
 #| fig-alt: "Histogram of Percentile Ranks."
 #| code-fold: true
 
-hist(scores$percentileRank,
-     xlab = "Percentile Ranks",
-     main = "Histogram of Percentile Ranks")
+hist(
+  scores$percentileRank,
+  xlab = "Percentile Ranks",
+  main = "Histogram of Percentile Ranks"
+)
 ```
 
 #### Deviation (Standardized) Scores {#sec-standardizedScores}
@@ -281,10 +339,12 @@ It might follow a folded distribution, as depicted in @fig-foldedDistribution:\i
 #| fig-alt: "Histogram of Hallucinations (Raw Score)."
 #| code-fold: true
 
-hist(rbinom(100000, 300, .01),
-     breaks = 8,
-     xlab = "Hallucinations (Raw Score)",
-     main = "Histogram of Hallucinations (Raw Score)")
+hist(
+  rbinom(100000, 300, .01),
+  breaks = 8,
+  xlab = "Hallucinations (Raw Score)",
+  main = "Histogram of Hallucinations (Raw Score)"
+)
 ```
 
 Now consider the same distribution converted to a standardized (*z*) score, as depicted in @fig-foldedDistributionZscore:\index{data!standardized}\index{data!\textit{z} score}\index{histogram}
@@ -295,10 +355,12 @@ Now consider the same distribution converted to a standardized (*z*) score, as d
 #| fig-alt: "Histogram of Hallucinations (z Score)."
 #| code-fold: true
 
-hist(scale(rbinom(100000, 300, .01)),
-     breaks = 8,
-     xlab = "Hallucinations (z Score)",
-     main = "Histogram of Hallucinations (z Score)")
+hist(
+  scale(rbinom(100000, 300, .01)),
+  breaks = 8,
+  xlab = "Hallucinations (z Score)",
+  main = "Histogram of Hallucinations (z Score)"
+)
 ```
 
 Thus, you can compute a deviation score, but it may not be meaningful if the data and underlying construct are not normally distributed.\index{data!standardized}\index{data!not normally distributed}
@@ -332,15 +394,16 @@ The area under a normal curve within one standard deviation of the mean is depic
 
 x <- seq(-4, 4, length = 200)
 y <- dnorm(x, mean = 0, sd = 1)
-plot(x, y, type = "l",
-     xlab = "z Score",
-     ylab = "Normal Density")
+plot(
+  x,
+  y,
+  type = "l",
+  xlab = "z Score",
+  ylab = "Normal Density")
 
 x <- seq(stdDeviations * -1, stdDeviations, length = 100)
 y <- dnorm(x, mean = 0, sd = 1)
-polygon(c(stdDeviations * -1, x, stdDeviations),
-        c(0, y, 0),
-        col = "blue")
+polygon(c(stdDeviations * -1, x, stdDeviations), c(0, y, 0), col = "blue")
 ```
 
 The area under a normal curve within two standard deviations of the mean is calculated below:\index{data!standardized}
@@ -362,15 +425,17 @@ The area under a normal curve within two standard deviations of the mean is depi
 
 x <- seq(-4, 4, length = 200)
 y <- dnorm(x, mean = 0, sd = 1)
-plot(x, y, type = "l",
-     xlab = "z Score",
-     ylab = "Normal Density")
+plot(
+  x,
+  y,
+  type = "l",
+  xlab = "z Score",
+  ylab = "Normal Density"
+)
 
 x <- seq(stdDeviations * -1, stdDeviations, length = 100)
 y <- dnorm(x, mean = 0, sd = 1)
-polygon(c(stdDeviations * -1, x, stdDeviations),
-        c(0, y, 0),
-        col = "blue")
+polygon(c(stdDeviations * -1, x, stdDeviations), c(0, y, 0), col = "blue")
 ```
 
 The area under a normal curve within three standard deviations of the mean is calculated below:\index{data!standardized}
@@ -392,15 +457,17 @@ The area under a normal curve within three standard deviations of the mean is de
 
 x <- seq(-4, 4, length = 200)
 y <- dnorm(x, mean = 0, sd = 1)
-plot(x, y, type = "l",
-     xlab = "z Score",
-     ylab = "Normal Density")
+plot(
+  x,
+  y,
+  type = "l",
+  xlab = "z Score",
+  ylab = "Normal Density"
+)
 
 x <- seq(stdDeviations * -1, stdDeviations, length = 100)
 y <- dnorm(x, mean = 0, sd = 1)
-polygon(c(stdDeviations * -1, x, stdDeviations),
-        c(0, y, 0),
-        col = "blue")
+polygon(c(stdDeviations * -1, x, stdDeviations), c(0, y, 0), col = "blue")
 ```
 
 Alternatively, if you want to determine the *z* score associated with a particular percentile in a normal distribution, you can use the `qnorm()` function.\index{data!standardized}\index{data!\textit{z} score}\index{data!percentile rank}
@@ -436,9 +503,11 @@ An example histogram of *z* scores is in @fig-zScores.\index{data!standardized}\
 #| fig-alt: "Histogram of *z* Scores."
 #| code-fold: true
 
-hist(scores$zScore,
-     xlab = "z Scores",
-     main = "Histogram of z Scores")
+hist(
+  scores$zScore,
+  xlab = "z Scores",
+  main = "Histogram of z Scores"
+)
 ```
 
 ##### *T* scores {#sec-tScores}
@@ -467,9 +536,11 @@ An example histogram of *T* scores is in @fig-tScores.\index{data!\textit{T} sco
 #| fig-alt: "Histogram of *T* Scores."
 #| code-fold: true
 
-hist(scores$tScore,
-     xlab = "T Scores",
-     main = "Histogram of T Scores")
+hist(
+  scores$tScore,
+  xlab = "T Scores",
+  main = "Histogram of T Scores"
+)
 ```
 
 ##### Standard scores {#sec-standardScores}
@@ -498,9 +569,11 @@ An example histogram of standard scores is in @fig-standardScores.\index{data!st
 #| fig-alt: "Histogram of Standard Scores."
 #| code-fold: true
 
-hist(scores$standardScore,
-     xlab = "Standard Scores",
-     main = "Histogram of Standard Scores")
+hist(
+  scores$standardScore,
+  xlab = "Standard Scores",
+  main = "Histogram of Standard Scores"
+)
 ```
 
 ##### Scaled scores {#sec-scaledScores}
@@ -529,9 +602,11 @@ An example histogram of scaled scores is in @fig-scaledScores.\index{data!standa
 #| fig-alt: "Histogram of Scaled Scores."
 #| code-fold: true
 
-hist(scores$scaledScore,
-     xlab = "Scale Scores",
-     main = "Histogram of Scaled Scores")
+hist(
+  scores$scaledScore,
+  xlab = "Scale Scores",
+  main = "Histogram of Scaled Scores"
+)
 ```
 
 ##### Stanine scores {#sec-stanineScores}
@@ -562,8 +637,10 @@ names(stanineConverstionTable) <- c("Stanine","Bracketed Percent","Cumulative Pe
 #| tbl-cap: "Calculating Stanine Scores."
 #| echo: false
 
-kable(stanineConverstionTable,
-      booktabs = TRUE)
+kable(
+  stanineConverstionTable,
+  booktabs = TRUE
+)
 ```
 
 ```{r}
@@ -594,12 +671,14 @@ A histogram of stanine scores is in @fig-stanineScores.\index{data!standardized}
 #| fig-alt: "Histogram of Stanine Scores."
 #| code-fold: true
 
-hist(scores$stanineScore,
-     xlab = "Stanine Scores",
-     main = "Histogram of Stanine Scores",
-     breaks = seq(from = 0.5, to = 9.5, by = 1),
-     xlim = c(0,10),
-     xaxp = c(1,9,8))
+hist(
+  scores$stanineScore,
+  xlab = "Stanine Scores",
+  main = "Histogram of Stanine Scores",
+  breaks = seq(from = 0.5, to = 9.5, by = 1),
+  xlim = c(0, 10),
+  xaxp = c(1, 9, 8)
+)
 ```
 
 ## Conclusion {#sec-conclusion-scoresScales}
