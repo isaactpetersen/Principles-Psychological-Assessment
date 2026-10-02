@@ -70,7 +70,7 @@ The horizontal line reflects the cutoff for good job performance (i.e., people w
 #| code-fold: true
 
 plot.new()
-plot.window(xlim = c(-5,5), ylim = c(-5,5))
+plot.window(xlim = c(-5, 5), ylim = c(-5, 5))
 axis(side = 1, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0)
 axis(side = 2, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0, las = 1)
 text(x = 2.5, y = -0.4, "Test Score", cex = 1.5)
@@ -91,8 +91,8 @@ The data points in the top left quadrant are [false negatives](#sec-falseNegativ
 
 set.seed(52242)
 predictor <- runif(100, min = -4, max = 4)
-outcomeGoodPredictor <- 0 + 1*predictor + rnorm(100)
-outcomeBadPredictor <- 0 + 0.1*predictor + rnorm(100)
+outcomeGoodPredictor <- 0 + 1 * predictor + rnorm(100)
+outcomeBadPredictor <- 0 + 0.1 * predictor + rnorm(100)
 ```
 
 @fig-jobSelection3 depicts a strong predictor.\index{bias!predictive}
@@ -107,7 +107,7 @@ The best-fit regression line has a steep slope where there are lots of data poin
 #| code-fold: true
 
 plot.new()
-plot.window(xlim = c(-5,5), ylim = c(-5,5))
+plot.window(xlim = c(-5, 5), ylim = c(-5, 5))
 points(x = predictor, y = outcomeGoodPredictor)
 abline(lm(outcomeGoodPredictor ~ predictor))
 axis(side = 1, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0)
@@ -133,7 +133,7 @@ In general, the steeper the slope, the better the predictor.\index{bias!predicti
 #| code-fold: true
 
 plot.new()
-plot.window(xlim = c(-5,5), ylim = c(-5,5))
+plot.window(xlim = c(-5, 5), ylim = c(-5, 5))
 points(x = predictor, y = outcomeBadPredictor)
 abline(lm(outcomeBadPredictor ~ predictor))
 axis(side = 1, labels = c("Bad", "Good"), at = c(-5, 5), pos = 0)
@@ -905,8 +905,7 @@ set.seed(52242)
 
 mydataBias <- data.frame(
   ID = 1:sampleSize,
-  group = factor(c("male","female"),
-                 levels = c("male","female")),
+  group = factor(c("male", "female"), levels = c("male", "female")),
   unbiasedPredictor1 = NA,
   unbiasedPredictor2 = NA,
   unbiasedPredictor3 = NA,
@@ -918,54 +917,68 @@ mydataBias <- data.frame(
   criterion2 = NA,
   criterion3 = NA,
   criterion4 = NA,
-  criterion5 = NA)
+  criterion5 = NA
+)
 
 mydataBias$unbiasedPredictor1 <- rnorm(sampleSize, mean = 100, sd = 15)
-mydataBias$unbiasedPredictor2[which(mydataBias$group == "male")] <- 
+mydataBias$unbiasedPredictor2[which(mydataBias$group == "male")] <-
   rnorm(length(which(mydataBias$group == "male")), mean = 70, sd = 15)
-mydataBias$unbiasedPredictor2[which(mydataBias$group == "female")] <- 
+mydataBias$unbiasedPredictor2[which(mydataBias$group == "female")] <-
   rnorm(length(which(mydataBias$group == "female")), mean = 130, sd = 15)
-mydataBias$unbiasedPredictor3[which(mydataBias$group == "male")] <- 
+mydataBias$unbiasedPredictor3[which(mydataBias$group == "male")] <-
   rnorm(length(which(mydataBias$group == "male")), mean = 130, sd = 15)
-mydataBias$unbiasedPredictor3[which(mydataBias$group == "female")] <- 
+mydataBias$unbiasedPredictor3[which(mydataBias$group == "female")] <-
   rnorm(length(which(mydataBias$group == "female")), mean = 70, sd = 15)
 
-mydataBias$unbiasedCriterion1 <- 1 * mydataBias$unbiasedPredictor1 + 
+mydataBias$unbiasedCriterion1 <- 1 *
+  mydataBias$unbiasedPredictor1 +
   rnorm(sampleSize, mean = 0, sd = 15)
-mydataBias$unbiasedCriterion2 <- 1 * mydataBias$unbiasedPredictor2 + 
+mydataBias$unbiasedCriterion2 <- 1 *
+  mydataBias$unbiasedPredictor2 +
   rnorm(sampleSize, mean = 0, sd = 15)
-mydataBias$unbiasedCriterion3 <- 1 * mydataBias$unbiasedPredictor3 + 
+mydataBias$unbiasedCriterion3 <- 1 *
+  mydataBias$unbiasedPredictor3 +
   rnorm(sampleSize, mean = 0, sd = 15)
 
-mydataBias$criterion1[which(mydataBias$group == "male")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "male")] + 
+mydataBias$criterion1[which(mydataBias$group == "male")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "male")] +
   rnorm(length(which(mydataBias$group == "male")), mean = 0, sd = 5)
-mydataBias$criterion1[which(mydataBias$group == "female")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "female")] + 
+mydataBias$criterion1[which(mydataBias$group == "female")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "female")] +
   rnorm(length(which(mydataBias$group == "female")), mean = 0, sd = 5)
-mydataBias$criterion2[which(mydataBias$group == "male")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "male")] + 
+mydataBias$criterion2[which(mydataBias$group == "male")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "male")] +
   rnorm(length(which(mydataBias$group == "male")), mean = 10, sd = 5)
-mydataBias$criterion2[which(mydataBias$group == "female")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "female")] + 
+mydataBias$criterion2[which(mydataBias$group == "female")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "female")] +
   rnorm(length(which(mydataBias$group == "female")), mean = 0, sd = 5)
-mydataBias$criterion3[which(mydataBias$group == "male")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "male")] + 
+mydataBias$criterion3[which(mydataBias$group == "male")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "male")] +
   rnorm(length(which(mydataBias$group == "male")), mean = 0, sd = 5)
-mydataBias$criterion3[which(mydataBias$group == "female")] <- 
-  .3 * mydataBias$predictor[which(mydataBias$group == "female")] + 
+mydataBias$criterion3[which(mydataBias$group == "female")] <-
+  .3 *
+  mydataBias$predictor[which(mydataBias$group == "female")] +
   rnorm(length(which(mydataBias$group == "female")), mean = 0, sd = 5)
-mydataBias$criterion4[which(mydataBias$group == "male")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "male")] + 
+mydataBias$criterion4[which(mydataBias$group == "male")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "male")] +
   rnorm(length(which(mydataBias$group == "male")), mean = 0, sd = 5)
-mydataBias$criterion4[which(mydataBias$group == "female")] <- 
-  .3 * mydataBias$predictor[which(mydataBias$group == "female")] + 
+mydataBias$criterion4[which(mydataBias$group == "female")] <-
+  .3 *
+  mydataBias$predictor[which(mydataBias$group == "female")] +
   rnorm(length(which(mydataBias$group == "female")), mean = 30, sd = 5)
-mydataBias$criterion5[which(mydataBias$group == "male")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "male")] + 
+mydataBias$criterion5[which(mydataBias$group == "male")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "male")] +
   rnorm(length(which(mydataBias$group == "male")), mean = 0, sd = 30)
-mydataBias$criterion5[which(mydataBias$group == "female")] <- 
-  .7 * mydataBias$predictor[which(mydataBias$group == "female")] + 
+mydataBias$criterion5[which(mydataBias$group == "female")] <-
+  .7 *
+  mydataBias$predictor[which(mydataBias$group == "female")] +
   rnorm(length(which(mydataBias$group == "female")), mean = 0, sd = 5)
 ```
 
@@ -977,31 +990,38 @@ Adding missing data to dataframes helps make examples more realistic to real-lif
 
 ```{r}
 varNames <- names(mydataBias)
-dimensionsDf <- dim(mydataBias[,-c(1,2)])
-unlistedDf <- unlist(mydataBias[,-c(1,2)])
+dimensionsDf <- dim(mydataBias[, -c(1, 2)])
+unlistedDf <- unlist(mydataBias[, -c(1, 2)])
 unlistedDf[sample(
   1:length(unlistedDf),
-  size = .01 * length(unlistedDf))] <- NA
+  size = .01 * length(unlistedDf)
+)] <- NA
 mydataBias <- cbind(
-  mydataBias[,c("ID","group")],
+  mydataBias[, c("ID", "group")],
   as.data.frame(
     matrix(
       unlistedDf,
-      ncol = dimensionsDf[2])))
+      ncol = dimensionsDf[2]
+    )
+  )
+)
 names(mydataBias) <- varNames
 
 data("HolzingerSwineford1939")
 varNames <- names(HolzingerSwineford1939)
-dimensionsDf <- dim(HolzingerSwineford1939[,paste("x", 1:9, sep = "")])
-unlistedDf <- unlist(HolzingerSwineford1939[,paste("x", 1:9, sep = "")])
+dimensionsDf <- dim(HolzingerSwineford1939[, paste("x", 1:9, sep = "")])
+unlistedDf <- unlist(HolzingerSwineford1939[, paste("x", 1:9, sep = "")])
 unlistedDf[sample(
   1:length(unlistedDf),
-  size = .01 * length(unlistedDf))] <- NA
+  size = .01 * length(unlistedDf)
+)] <- NA
 HolzingerSwineford1939 <- cbind(
-  HolzingerSwineford1939[,1:6],
+  HolzingerSwineford1939[, 1:6],
   as.data.frame(matrix(
     unlistedDf,
-    ncol = dimensionsDf[2])))
+    ncol = dimensionsDf[2]
+  ))
+)
 names(HolzingerSwineford1939) <- varNames
 ```
 
@@ -1023,7 +1043,8 @@ The test is unbiased because there are no significant differences in the regress
 ```{r}
 summary(lm(
   unbiasedCriterion1 ~ unbiasedPredictor1 + group + unbiasedPredictor1:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1036,45 +1057,64 @@ plot(
   unbiasedCriterion1 ~ unbiasedPredictor1,
   data = mydataBias,
   xlim = c(
-    0, 
-    max(c(
-      mydataBias$unbiasedCriterion1,
-      mydataBias$unbiasedPredictor1),
-      na.rm = TRUE)),
+    0,
+    max(
+      c(
+        mydataBias$unbiasedCriterion1,
+        mydataBias$unbiasedPredictor1
+      ),
+      na.rm = TRUE
+    )
+  ),
   ylim = c(
-    0, 
-    max(c(
-      mydataBias$criterion1,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    0,
+    max(
+      c(
+        mydataBias$criterion1,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$unbiasedPredictor1[which(mydataBias$group == "male")],
   mydataBias$unbiasedCriterion1[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
-points(mydataBias$unbiasedPredictor1[which(mydataBias$group == "female")],
-       mydataBias$unbiasedCriterion1[which(mydataBias$group == "female")],
-       pch = 1,
-       col = "red")
-abline(lm(
-  unbiasedCriterion1 ~ unbiasedPredictor1,
-  data = mydataBias[which(mydataBias$group == "male"),]),
+  col = "blue"
+)
+points(
+  mydataBias$unbiasedPredictor1[which(mydataBias$group == "female")],
+  mydataBias$unbiasedCriterion1[which(mydataBias$group == "female")],
+  pch = 1,
+  col = "red"
+)
+abline(
+  lm(
+    unbiasedCriterion1 ~ unbiasedPredictor1,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
   lty = 1,
-  col = "blue")
-abline(lm(
-  unbiasedCriterion1 ~ unbiasedPredictor1,
-  data = mydataBias[which(mydataBias$group == "female"),]),
+  col = "blue"
+)
+abline(
+  lm(
+    unbiasedCriterion1 ~ unbiasedPredictor1,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
   lty = 2,
-  col = "red")
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ### Unbiased test where females have higher means than males on predictor and criterion {#sec-unbiasedTestsFemalesHigherMeans}
@@ -1085,7 +1125,8 @@ The test is unbiased because there are no differences in the regression lines (o
 ```{r}
 summary(lm(
   unbiasedCriterion2 ~ unbiasedPredictor2 + group + unbiasedPredictor2:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1098,46 +1139,64 @@ plot(
   unbiasedCriterion2 ~ unbiasedPredictor2,
   data = mydataBias,
   xlim = c(
-    0, 
-    max(c(
-      mydataBias$unbiasedCriterion2,
-      mydataBias$unbiasedPredictor2),
-      na.rm = TRUE)),
+    0,
+    max(
+      c(
+        mydataBias$unbiasedCriterion2,
+        mydataBias$unbiasedPredictor2
+      ),
+      na.rm = TRUE
+    )
+  ),
   ylim = c(
-    0, 
-    max(c(
-      mydataBias$criterion1,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    0,
+    max(
+      c(
+        mydataBias$criterion1,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$unbiasedPredictor2[which(mydataBias$group == "male")],
   mydataBias$unbiasedCriterion2[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
+  col = "blue"
+)
 points(
   mydataBias$unbiasedPredictor2[which(mydataBias$group == "female")],
   mydataBias$unbiasedCriterion2[which(mydataBias$group == "female")],
   pch = 1,
-  col = "red")
-abline(lm(
-  unbiasedCriterion2 ~ unbiasedPredictor2,
-  data = mydataBias[which(mydataBias$group == "male"),]),
+  col = "red"
+)
+abline(
+  lm(
+    unbiasedCriterion2 ~ unbiasedPredictor2,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
   lty = 1,
-  col = "blue")
-abline(lm(
-  unbiasedCriterion2 ~ unbiasedPredictor2,
-  data = mydataBias[which(mydataBias$group == "female"),]),
+  col = "blue"
+)
+abline(
+  lm(
+    unbiasedCriterion2 ~ unbiasedPredictor2,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
   lty = 2,
-  col = "red")
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ### Unbiased test where males have higher means than females on predictor and criterion {#sec-unbiasedTestsMalesHigherMeans}
@@ -1148,7 +1207,8 @@ The test is unbiased because there are no differences in the regression lines (o
 ```{r}
 summary(lm(
   unbiasedCriterion3 ~ unbiasedPredictor3 + group + unbiasedPredictor3:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1162,43 +1222,63 @@ plot(
   data = mydataBias,
   xlim = c(
     0,
-    max(c(
-      mydataBias$unbiasedCriterion3,
-      mydataBias$unbiasedPredictor3),
-      na.rm = TRUE)),
-  ylim = c(0, max(c(
-    mydataBias$criterion1,
-    mydataBias$predictor),
-    na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$unbiasedCriterion3,
+        mydataBias$unbiasedPredictor3
+      ),
+      na.rm = TRUE
+    )
+  ),
+  ylim = c(
+    0,
+    max(
+      c(
+        mydataBias$criterion1,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$unbiasedPredictor3[which(mydataBias$group == "male")],
   mydataBias$unbiasedCriterion3[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
+  col = "blue"
+)
 points(
   mydataBias$unbiasedPredictor3[which(mydataBias$group == "female")],
   mydataBias$unbiasedCriterion3[which(mydataBias$group == "female")],
   pch = 1,
-  col = "red")
-abline(lm(
-  unbiasedCriterion3 ~ unbiasedPredictor3,
-  data = mydataBias[which(mydataBias$group == "male"),]),
+  col = "red"
+)
+abline(
+  lm(
+    unbiasedCriterion3 ~ unbiasedPredictor3,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
   lty = 1,
-  col = "blue")
-abline(lm(
-  unbiasedCriterion3 ~ unbiasedPredictor3,
-  data = mydataBias[which(mydataBias$group == "female"),]),
+  col = "blue"
+)
+abline(
+  lm(
+    unbiasedCriterion3 ~ unbiasedPredictor3,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
   lty = 2,
-  col = "red")
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ## Predictive Bias: Different Regression Lines {#sec-predictiveBiasExamples}
@@ -1211,7 +1291,8 @@ The test is unbiased because there are no differences in the regression lines (o
 ```{r}
 summary(lm(
   criterion1 ~ predictor + group + predictor:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1225,45 +1306,63 @@ plot(
   data = mydataBias,
   xlim = c(
     0,
-    max(c(
-      mydataBias$criterion1,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$criterion1,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   ylim = c(
-    0, 
-    max(c(
-      mydataBias$criterion1,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    0,
+    max(
+      c(
+        mydataBias$criterion1,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "male")],
   mydataBias$criterion1[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
+  col = "blue"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "female")],
   mydataBias$criterion1[which(mydataBias$group == "female")],
   pch = 1,
-  col = "red")
-abline(lm(
-  criterion1 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "male"),]),
+  col = "red"
+)
+abline(
+  lm(
+    criterion1 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
   lty = 1,
-  col = "blue")
-abline(lm(
-  criterion1 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "female"),]),
+  col = "blue"
+)
+abline(
+  lm(
+    criterion1 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
   lty = 2,
-  col = "red")
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ### Example of intercept bias {#sec-interceptBias}
@@ -1275,7 +1374,8 @@ That is, the same score on the predictor results in higher predictions for males
 ```{r}
 summary(lm(
   criterion2 ~ predictor + group + predictor:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1289,44 +1389,63 @@ plot(
   data = mydataBias,
   xlim = c(
     0,
-    max(c(
-      mydataBias$criterion2,
-      mydataBias$predictor), na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$criterion2,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   ylim = c(
     0,
-    max(c(
-      mydataBias$criterion2,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$criterion2,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "male")],
   mydataBias$criterion2[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
+  col = "blue"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "female")],
   mydataBias$criterion2[which(mydataBias$group == "female")],
   pch = 1,
-  col = "red")
-abline(lm(
-  criterion2 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "male"),]),
+  col = "red"
+)
+abline(
+  lm(
+    criterion2 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
   lty = 1,
-  col = "blue")
-abline(lm(
-  criterion2 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "female"),]),
+  col = "blue"
+)
+abline(
+  lm(
+    criterion2 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
   lty = 2,
-  col = "red")
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ### Example of slope bias {#sec-slopeBias}
@@ -1338,7 +1457,8 @@ That is, scores have stronger [predictive validity](#sec-predictiveValidity) for
 ```{r}
 summary(lm(
   criterion3 ~ predictor + group + predictor:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1352,45 +1472,63 @@ plot(
   data = mydataBias,
   xlim = c(
     0,
-    max(c(
-      mydataBias$criterion3,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$criterion3,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   ylim = c(
     0,
-    max(c(
-      mydataBias$criterion3,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$criterion3,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "male")],
   mydataBias$criterion3[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
+  col = "blue"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "female")],
   mydataBias$criterion3[which(mydataBias$group == "female")],
   pch = 1,
-  col = "red")
-abline(lm(
-  criterion3 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "male"),]),
+  col = "red"
+)
+abline(
+  lm(
+    criterion3 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
   lty = 1,
-  col = "blue")
-abline(lm(
-  criterion3 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "female"),]),
+  col = "blue"
+)
+abline(
+  lm(
+    criterion3 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
   lty = 2,
-  col = "red")
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ### Example of intercept and slope bias {#sec-interceptSlopeBias}
@@ -1404,7 +1542,8 @@ That is, at lower scores, the same score on the predictor results in higher pred
 ```{r}
 summary(lm(
   criterion4 ~ predictor + group + predictor:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1418,45 +1557,63 @@ plot(
   data = mydataBias,
   xlim = c(
     0,
-    max(c(
-      mydataBias$criterion4,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$criterion4,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   ylim = c(
     0,
-    max(c(
-      mydataBias$criterion4,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    max(
+      c(
+        mydataBias$criterion4,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "male")],
   mydataBias$criterion4[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
+  col = "blue"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "female")],
   mydataBias$criterion4[which(mydataBias$group == "female")],
   pch = 1,
-  col = "red")
-abline(lm(
-  criterion4 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "male"),]),
+  col = "red"
+)
+abline(
+  lm(
+    criterion4 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
   lty = 1,
-  col = "blue")
-abline(lm(
-  criterion4 ~ predictor,
-  data = mydataBias[which(mydataBias$group == "female"),]),
+  col = "blue"
+)
+abline(
+  lm(
+    criterion4 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
   lty = 2,
-  col = "red")
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ### Example of different measurement reliability/error across groups {#sec-differentialReliability}
@@ -1467,7 +1624,8 @@ That is, we are more confident about a female's level on the criterion given a p
 ```{r}
 summary(lm(
   criterion5 ~ predictor + group + predictor:group,
-  data = mydataBias))
+  data = mydataBias
+))
 ```
 
 ```{r}
@@ -1481,41 +1639,57 @@ plot(
   data = mydataBias,
   xlim = c(
     0,
-    max(c(mydataBias$criterion5,
-          mydataBias$predictor),
-        na.rm = TRUE)),
+    max(c(mydataBias$criterion5, mydataBias$predictor), na.rm = TRUE)
+  ),
   ylim = c(
-    0, 
-    max(c(
-      mydataBias$criterion5,
-      mydataBias$predictor),
-      na.rm = TRUE)),
+    0,
+    max(
+      c(
+        mydataBias$criterion5,
+        mydataBias$predictor
+      ),
+      na.rm = TRUE
+    )
+  ),
   type = "n",
   xlab = "predictor",
-  ylab = "criterion")
+  ylab = "criterion"
+)
 points(
   mydataBias$predictor[which(mydataBias$group == "male")],
   mydataBias$criterion5[which(mydataBias$group == "male")],
   pch = 20,
-  col = "blue")
-points(mydataBias$predictor[which(mydataBias$group == "female")],
-       mydataBias$criterion5[which(mydataBias$group == "female")],
-       pch = 1,
-       col = "red")
-abline(lm(criterion5 ~ predictor,
-          data = mydataBias[which(mydataBias$group == "male"),]),
-       lty = 1,
-       col = "blue")
-abline(lm(criterion5 ~ predictor,
-          data = mydataBias[which(mydataBias$group == "female"),]),
-       lty = 2,
-       col = "red")
+  col = "blue"
+)
+points(
+  mydataBias$predictor[which(mydataBias$group == "female")],
+  mydataBias$criterion5[which(mydataBias$group == "female")],
+  pch = 1,
+  col = "red"
+)
+abline(
+  lm(
+    criterion5 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "male"), ]
+  ),
+  lty = 1,
+  col = "blue"
+)
+abline(
+  lm(
+    criterion5 ~ predictor,
+    data = mydataBias[which(mydataBias$group == "female"), ]
+  ),
+  lty = 2,
+  col = "red"
+)
 legend(
   "bottomright",
-  c("Male","Female"),
-  lty = c(1,2),
-  pch = c(20,1),
-  col = c("blue","red"))
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 ```
 
 ## Differential Item Functioning (DIF) {#sec-dif}
@@ -1539,12 +1713,18 @@ Tests of DIF were conducted using the `mirt` package [@R-mirt].\index{item respo
 
 ```{r}
 itemstats(
-  data = cnlsy[,c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7")],
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
   group = cnlsy$sex,
-  ts.tables = TRUE)
+  ts.tables = TRUE
+)
 ```
 
 ### Unconstrained Model {#sec-difUnconstrained}
@@ -1555,13 +1735,19 @@ itemstats(
 #| output: false
 
 unconstrainedModel <- multipleGroup(
-  data = cnlsy[,c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7")],
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
   model = 1,
   group = cnlsy$sex,
-  SE = TRUE)
+  SE = TRUE
+)
 ```
 
 #### Model Summary {#sec-difUnconstrainedSummary}
@@ -1573,9 +1759,7 @@ Items that appear to differ:\index{item response theory!differential item functi
 
 ```{r}
 summary(unconstrainedModel)
-coef(unconstrainedModel,
-     simplify = TRUE,
-     IRTpars = TRUE)
+coef(unconstrainedModel, simplify = TRUE, IRTpars = TRUE)
 ```
 
 ### Constrained Model {#sec-difConstrained}
@@ -1588,18 +1772,32 @@ Constrain item parameters to be equal across groups (to use as baseline model fo
 #| output: false
 
 constrainedModel <- multipleGroup(
-  data = cnlsy[,c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7")],
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
   model = 1,
   group = cnlsy$sex,
-  invariance = c(c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7"),
-    "free_means", "free_var"),
-  SE = TRUE)
+  invariance = c(
+    c(
+      "bpi_antisocialT1_1",
+      "bpi_antisocialT1_2",
+      "bpi_antisocialT1_3",
+      "bpi_antisocialT1_4",
+      "bpi_antisocialT1_5",
+      "bpi_antisocialT1_6",
+      "bpi_antisocialT1_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 ```
 
 #### Model Summary {#sec-difConstrainedSummary}
@@ -1609,7 +1807,8 @@ summary(constrainedModel)
 coef(
   constrainedModel,
   simplify = TRUE,
-  IRTpars = TRUE)
+  IRTpars = TRUE
+)
 ```
 
 ### Compare model fit of constrained model to unconstrained model {#sec-difCompareConstrainedUnconstrained}
@@ -1637,9 +1836,10 @@ Items 1, 3, 4, 5, 6, and 7 showed [DIF](#sec-dif) in [discrimination](#sec-itemD
 ```{r}
 difDropItems <- DIF(
   constrainedModel,
-  c("a1","d1","d2"),
+  c("a1", "d1", "d2"),
   scheme = "drop",
-  simplify = TRUE)
+  simplify = TRUE
+)
 
 difDropItems
 ```
@@ -1653,7 +1853,8 @@ difDropItemsDiscrimination <- DIF(
   constrainedModel,
   c("a1"),
   scheme = "drop",
-  simplify = TRUE)
+  simplify = TRUE
+)
 
 difDropItemsDiscrimination
 ```
@@ -1665,9 +1866,10 @@ Items 1, 3, 4, 5, and 7 showed [DIF](#sec-dif) in [difficulty/severity](#sec-ite
 ```{r}
 difDropItemsSeverity <- DIF(
   constrainedModel,
-  c("d1","d2"),
+  c("d1", "d2"),
   scheme = "drop",
-  simplify = TRUE)
+  simplify = TRUE
+)
 
 difDropItemsSeverity
 ```
@@ -1689,10 +1891,11 @@ The [DIF](#sec-dif) in [discrimination](#sec-itemDiscrimination) and/or [severit
 
 difAddItems <- DIF(
   unconstrainedModel,
-  c("a1","d1","d2"),
+  c("a1", "d1", "d2"),
   scheme = "add",
   simplify = TRUE,
-  plotdif = TRUE)
+  plotdif = TRUE
+)
 
 difAddItems
 ```
@@ -1713,7 +1916,8 @@ difAddItemsDiscrimination <- DIF(
   c("a1"),
   scheme = "add",
   simplify = TRUE,
-  plotdif = TRUE)
+  plotdif = TRUE
+)
 
 difAddItemsDiscrimination
 ```
@@ -1731,10 +1935,11 @@ The [DIF](#sec-dif) in [difficulty/severity](#sec-itemDifficulty) is depicted in
 
 difAddItemsSeverity <- DIF(
   unconstrainedModel,
-  c("d1","d2"),
+  c("d1", "d2"),
   scheme = "add",
   simplify = TRUE,
-  plotdif = TRUE)
+  plotdif = TRUE
+)
 
 difAddItemsSeverity
 ```
@@ -1756,7 +1961,8 @@ Estimates of differential test functioning are in @tbl-testLevelDIF.\index{item 
 
 empirical_ES(
   unconstrainedModel,
-  DIF = FALSE)
+  DIF = FALSE
+)
 ```
 
 In general, the measure showed greater [difficulty](#sec-itemDifficulty) for females than for males.\index{item response theory!differential item functioning}\index{effect size}\index{item response theory!item difficulty}
@@ -1771,7 +1977,8 @@ Otherwise said, it takes a higher construct level for females to obtain the same
 empirical_ES(
   unconstrainedModel,
   DIF = FALSE,
-  plot = TRUE)
+  plot = TRUE
+)
 ```
 
 #### Item-level DIF {#sec-difItemLevel}
@@ -1785,7 +1992,8 @@ Estimates of [differential item functioning](#sec-dif) are in @tbl-itemLevelDIF.
 
 empirical_ES(
   unconstrainedModel,
-  DIF = TRUE) |> 
+  DIF = TRUE
+) |>
   round(2)
 ```
 
@@ -1801,7 +2009,8 @@ Otherwise said, it takes a higher construct level for females than males to endo
 empirical_ES(
   unconstrainedModel,
   DIF = TRUE,
-  plot = TRUE)
+  plot = TRUE
+)
 ```
 
 ### Item plots {#sec-difItemPlots}
@@ -1817,7 +2026,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_1",
   type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1829,7 +2039,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_2",
   type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1841,7 +2052,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_3",
   type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1853,7 +2065,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
   type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1865,7 +2078,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_5",
   type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1877,7 +2091,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
   type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1889,7 +2104,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_7",
   type = "trace",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 Plots of item [information](#sec-irtReliability) functions by sex are in Figures [-@fig-itemInfo1]–[-@fig-itemInfo7] below.\index{item response theory!differential item functioning}\index{item response theory!item information curve}
@@ -1905,7 +2121,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_1",
   type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1917,7 +2134,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_2",
   type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1929,7 +2147,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_3",
   type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1941,7 +2160,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
   type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1953,7 +2173,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_5",
   type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1965,7 +2186,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
   type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -1977,7 +2199,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_7",
   type = "info",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 Plots of expected item scores by sex are are in Figures [-@fig-itemScore1]–[-@fig-itemScore7] below.\index{item response theory!differential item functioning}
@@ -1991,7 +2214,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_1",
   type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -2003,7 +2227,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_2",
   type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -2015,7 +2240,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_3",
   type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -2027,7 +2253,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
   type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -2039,7 +2266,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_5",
   type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -2051,7 +2279,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
   type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ```{r}
@@ -2063,7 +2292,8 @@ itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_7",
   type = "score",
-  par.settings = standard.theme("pdf", color = FALSE))
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 ```
 
 ### Addressing DIF {#sec-addressingDIF}
@@ -2083,16 +2313,30 @@ However, this can lead to lower [reliability](#sec-reliability) and weaker abili
 #| output: false
 
 constrainedModelDropItem5 <- multipleGroup(
-  data = cnlsy[,c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_6","bpi_antisocialT1_7")],
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
   model = 1,
   group = cnlsy$sex,
-  invariance = c(c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_6","bpi_antisocialT1_7"),
-    "free_means", "free_var"),
-  SE = TRUE)
+  invariance = c(
+    c(
+      "bpi_antisocialT1_1",
+      "bpi_antisocialT1_2",
+      "bpi_antisocialT1_3",
+      "bpi_antisocialT1_4",
+      "bpi_antisocialT1_6",
+      "bpi_antisocialT1_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 
 coef(constrainedModelDropItem5, simplify = TRUE)
 ```
@@ -2107,23 +2351,40 @@ The coefficients show an item parameter for item 5 for men, but it was constrain
 #| output: false
 
 dropItem5ForMen <- cnlsy
-dropItem5ForMen[which(
-  dropItem5ForMen$sex == "male"),
-  "bpi_antisocialT1_5"] <- NA
+dropItem5ForMen[
+  which(
+    dropItem5ForMen$sex == "male"
+  ),
+  "bpi_antisocialT1_5"
+] <- NA
 
 constrainedModelDropItem5ForMen <- multipleGroup(
-  data = dropItem5ForMen[,c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7")],
+  data = dropItem5ForMen[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
   model = 1,
   group = dropItem5ForMen$sex,
-  invariance = c(c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7"),
-    "free_means", "free_var"),
-  SE = TRUE)
+  invariance = c(
+    c(
+      "bpi_antisocialT1_1",
+      "bpi_antisocialT1_2",
+      "bpi_antisocialT1_3",
+      "bpi_antisocialT1_4",
+      "bpi_antisocialT1_5",
+      "bpi_antisocialT1_6",
+      "bpi_antisocialT1_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 
 coef(constrainedModelDropItem5ForMen, simplify = TRUE)
 ```
@@ -2137,17 +2398,31 @@ You might do this if the item is [valid](#sec-validity) for both men and women, 
 #| output: false
 
 constrainedModelResolveItem5 <- multipleGroup(
-  data = cnlsy[,c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6",
-    "bpi_antisocialT1_7")],
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
   model = 1,
   group = cnlsy$sex,
-  invariance = c(c(
-    "bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3",
-    "bpi_antisocialT1_4","bpi_antisocialT1_6","bpi_antisocialT1_7"),
-    "free_means", "free_var"),
-  SE = TRUE)
+  invariance = c(
+    c(
+      "bpi_antisocialT1_1",
+      "bpi_antisocialT1_2",
+      "bpi_antisocialT1_3",
+      "bpi_antisocialT1_4",
+      "bpi_antisocialT1_6",
+      "bpi_antisocialT1_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 
 coef(constrainedModelResolveItem5, simplify = TRUE)
 ```
@@ -2171,9 +2446,10 @@ For instance, if we chose to resolve [DIF](#sec-dif) in item 5 by allowing the i
 ```{r}
 difDropItemsNew <- DIF(
   constrainedModelResolveItem5,
-  c("a1","d1","d2"),
+  c("a1", "d1", "d2"),
   scheme = "drop",
-  simplify = TRUE)
+  simplify = TRUE
+)
 ```
 
 ```{r}
@@ -2181,10 +2457,11 @@ difDropItemsNew <- DIF(
 #| tbl-cap: "Differential Item Functioning After Resolving DIF in Item 5."
 #| echo: false
 
-difDropItemsNew |> 
+difDropItemsNew |>
   kable(
     booktabs = TRUE,
-    linesep = "")
+    linesep = ""
+  )
 ```
 
 Estimates of [DIF](#sec-dif) after resolving item 5 are in @tbl-itemLevelDIFAfterResolving.\index{item response theory!differential item functioning}
@@ -2565,9 +2842,17 @@ cfaModel_residualInvariance <- '
 ```{r}
 #| label: fitIndices
 
-myAFIs <- c("chisq", "chisq.scaled",
-            "rmsea", "cfi", "tli", "srmr",
-            "rmsea.robust", "cfi.robust", "tli.robust")
+myAFIs <- c(
+  "chisq",
+  "chisq.scaled",
+  "rmsea",
+  "cfi",
+  "tli",
+  "srmr",
+  "rmsea.robust",
+  "cfi.robust",
+  "tli.robust"
+)
 moreAFIs <- NULL # c("gammaHat","gammaHat.scaled")
 ```
 
@@ -2583,7 +2868,8 @@ nullModelFit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 #### Model Summary {#sec-measurementInvarianceNullModelSummary}
@@ -2593,7 +2879,8 @@ summary(
   nullModelFit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ### Configural Invariance {#sec-measurementInvarianceConfigural}
@@ -2609,7 +2896,8 @@ configuralInvarianceModel <- measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
-  group = "school")
+  group = "school"
+)
 ```
 
 ```{r}
@@ -2644,7 +2932,8 @@ configuralInvarianceModel_fit <- cfa(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ```{r}
@@ -2655,7 +2944,8 @@ configuralInvarianceModelFullSyntax_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 #### Model Summary {#sec-measurementInvarianceConfiguralModelSummary}
@@ -2665,7 +2955,8 @@ summary(
   configuralInvarianceModel_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ```{r}
@@ -2673,7 +2964,8 @@ summary(
   configuralInvarianceModelFullSyntax_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 #### Model Fit {#sec-measurementInvarianceConfiguralModelFitCriteria}
@@ -2684,21 +2976,29 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(configuralInvarianceModel_fit)
 
 configuralInvarianceModelFitIndices <- fitMeasures(
-  configuralInvarianceModel_fit)[c(
-    "cfi.robust", "rmsea.robust", "srmr")]
+  configuralInvarianceModel_fit
+)[c(
+  "cfi.robust",
+  "rmsea.robust",
+  "srmr"
+)]
 
 configuralInvarianceModel_chisquare <- fitMeasures(
-  configuralInvarianceModel_fit)[c("chisq.scaled")]
+  configuralInvarianceModel_fit
+)[c("chisq.scaled")]
 
 configuralInvarianceModel_chisquareScaling <- fitMeasures(
-  configuralInvarianceModel_fit)[c("chisq.scaling.factor")]
+  configuralInvarianceModel_fit
+)[c("chisq.scaling.factor")]
 
 configuralInvarianceModel_df <- fitMeasures(
-  configuralInvarianceModel_fit)[c("df.scaled")]
+  configuralInvarianceModel_fit
+)[c("df.scaled")]
 
 configuralInvarianceModel_N <- lavInspect(
   configuralInvarianceModel_fit,
-  what = "ntotal")
+  what = "ntotal"
+)
 ```
 
 #### Effect Size of Non-Invariancee {#sec-measurementInvarianceConfiguralModelEffectSize}
@@ -2737,7 +3037,8 @@ equiv_chi(
   df = configuralInvarianceModel_df,
   m = 2,
   N_sample = configuralInvarianceModel_N,
-  popRMSEA = .08)
+  popRMSEA = .08
+)
 ```
 
 #### Permutation Test {#sec-measurementInvarianceConfiguralModelPermutationTest}
@@ -2773,7 +3074,8 @@ configuralInvarianceTest <- permuteMeasEq(
   AFIs = myAFIs,
   moreAFIs = moreAFIs,
   parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
-  iseed = 52242)
+  iseed = 52242
+)
 ```
 
 ```{r}
@@ -2810,7 +3112,8 @@ semPaths(
   what = "est",
   layout = "tree2",
   ask = FALSE,
-  edge.label.cex = 1.2)
+  edge.label.cex = 1.2
+)
 ```
 
 ### Metric ("Weak Factorial") Invariance Model {#sec-measurementInvarianceMetricModel}
@@ -2828,7 +3131,8 @@ metricInvarianceModel <- measEq.syntax(
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
   group = "school",
-  group.equal = "loadings")
+  group.equal = "loadings"
+)
 ```
 
 ```{r}
@@ -2864,7 +3168,8 @@ metricInvarianceModel_fit <- cfa(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ```{r}
@@ -2875,7 +3180,8 @@ metricInvarianceModelFullSyntax_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 #### Model Summary {#sec-measurementInvarianceMetricModelOutput}
@@ -2885,7 +3191,8 @@ summary(
   metricInvarianceModel_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ```{r}
@@ -2893,7 +3200,8 @@ summary(
   metricInvarianceModelFullSyntax_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 #### Model Fit {#sec-measurementInvarianceMetricModelFitCriteria}
@@ -2904,20 +3212,29 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(metricInvarianceModel_fit)
 
 metricInvarianceModelFitIndices <- fitMeasures(
-  metricInvarianceModel_fit)[c(
-    "cfi.robust", "rmsea.robust", "srmr")]
+  metricInvarianceModel_fit
+)[c(
+  "cfi.robust",
+  "rmsea.robust",
+  "srmr"
+)]
 
 metricInvarianceModel_chisquare <- fitMeasures(
-  metricInvarianceModel_fit)[c("chisq.scaled")]
+  metricInvarianceModel_fit
+)[c("chisq.scaled")]
 
 metricInvarianceModel_chisquareScaling <- fitMeasures(
-  metricInvarianceModel_fit)[c("chisq.scaling.factor")]
+  metricInvarianceModel_fit
+)[c("chisq.scaling.factor")]
 
 metricInvarianceModel_df <- fitMeasures(
-  metricInvarianceModel_fit)[c("df.scaled")]
+  metricInvarianceModel_fit
+)[c("df.scaled")]
 
 metricInvarianceModel_N <- lavInspect(
-  metricInvarianceModel_fit, what = "ntotal")
+  metricInvarianceModel_fit,
+  what = "ntotal"
+)
 ```
 
 #### Compare Model Fit {#sec-measurementInvarianceMetricModelCompare}
@@ -2941,14 +3258,15 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 Below is a Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
-metricInvarianceModel_chisquareDiff <- 
+metricInvarianceModel_chisquareDiff <-
   satorraBentlerScaledChiSquareDifferenceTestStatistic(
     T0 = metricInvarianceModel_chisquare,
     c0 = metricInvarianceModel_chisquareScaling,
     d0 = metricInvarianceModel_df,
     T1 = configuralInvarianceModel_chisquare,
     c1 = configuralInvarianceModel_chisquareScaling,
-    d1 = configuralInvarianceModel_df)
+    d1 = configuralInvarianceModel_df
+  )
 
 metricInvarianceModel_chisquareDiff
 ```
@@ -2956,7 +3274,10 @@ metricInvarianceModel_chisquareDiff
 ##### Compare Other Fit Criteria {#sec-measurementInvarianceMetricModelCompareFitCriteria}
 
 ```{r}
-round(metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices, digits = 3)
+round(
+  metricInvarianceModelFitIndices - configuralInvarianceModelFitIndices,
+  digits = 3
+)
 ```
 
 ##### Score-Based Test {#sec-measurementInvarianceMetricModelScoreBasedTest}
@@ -2971,7 +3292,8 @@ strucchange::sctest(
   metricInvarianceModel_fit,
   order.by = HolzingerSwineford1939$school,
   parm = 1:9,
-  functional = "LMuo")
+  functional = "LMuo"
+)
 ```
 
 A score-based test and expected parameter change (EPC) estimates [@Oberski2014; @Oberski2015] are provided by the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement invariance!metric}
@@ -3012,14 +3334,15 @@ equiv_chi(
   df = metricInvarianceModel_df,
   m = 2,
   N_sample = metricInvarianceModel_N,
-  popRMSEA = .08)
+  popRMSEA = .08
+)
 ```
 
 Moreover, the equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.\index{structural equation modeling!measurement invariance!metric}\index{chi-square!equivalence test}
 In other words, metric invariance failed.\index{structural equation modeling!measurement invariance!metric}\index{chi-square!equivalence test}
 
 ```{r}
-metricInvarianceModel_dfDiff <- 
+metricInvarianceModel_dfDiff <-
   metricInvarianceModel_df - configuralInvarianceModel_df
 
 equiv_chi(
@@ -3028,7 +3351,8 @@ equiv_chi(
   df = metricInvarianceModel_dfDiff,
   m = 2,
   N_sample = metricInvarianceModel_N,
-  popRMSEA = .08)
+  popRMSEA = .08
+)
 ```
 
 ##### Permutation Test {#sec-measurementInvarianceMetricModelPermutationTest}
@@ -3055,7 +3379,8 @@ metricInvarianceTest <- permuteMeasEq(
   AFIs = myAFIs,
   moreAFIs = moreAFIs,
   parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
-  iseed = 52242)
+  iseed = 52242
+)
 ```
 
 ```{r}
@@ -3092,7 +3417,8 @@ semPaths(
   what = "est",
   layout = "tree2",
   ask = FALSE,
-  edge.label.cex = 1.2)
+  edge.label.cex = 1.2
+)
 ```
 
 ### Scalar ("Strong Factorial") Invariance Model {#sec-measurementInvarianceScalarModel}
@@ -3109,7 +3435,8 @@ scalarInvarianceModel <- measEq.syntax(
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
   group = "school",
-  group.equal = c("loadings","intercepts"))
+  group.equal = c("loadings", "intercepts")
+)
 ```
 
 ```{r}
@@ -3145,7 +3472,8 @@ scalarInvarianceModel_fit <- cfa(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ```{r}
@@ -3156,7 +3484,8 @@ scalarInvarianceModelFullSyntax_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 #### Model Summary {#sec-measurementInvarianceScalarModelOutput}
@@ -3166,7 +3495,8 @@ summary(
   scalarInvarianceModel_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ```{r}
@@ -3174,7 +3504,8 @@ summary(
   scalarInvarianceModelFullSyntax_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 #### Model Fit {#sec-measurementInvarianceScalarModelFitCriteria}
@@ -3185,20 +3516,29 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(scalarInvarianceModel_fit)
 
 scalarInvarianceModelFitIndices <- fitMeasures(
-  scalarInvarianceModel_fit)[c(
-    "cfi.robust", "rmsea.robust", "srmr")]
+  scalarInvarianceModel_fit
+)[c(
+  "cfi.robust",
+  "rmsea.robust",
+  "srmr"
+)]
 
 scalarInvarianceModel_chisquare <- fitMeasures(
-  scalarInvarianceModel_fit)[c("chisq.scaled")]
+  scalarInvarianceModel_fit
+)[c("chisq.scaled")]
 
 scalarInvarianceModel_chisquareScaling <- fitMeasures(
-  scalarInvarianceModel_fit)[c("chisq.scaling.factor")]
+  scalarInvarianceModel_fit
+)[c("chisq.scaling.factor")]
 
 scalarInvarianceModel_df <- fitMeasures(
-  scalarInvarianceModel_fit)[c("df.scaled")]
+  scalarInvarianceModel_fit
+)[c("df.scaled")]
 
 scalarInvarianceModel_N <- lavInspect(
-  scalarInvarianceModel_fit, what = "ntotal")
+  scalarInvarianceModel_fit,
+  what = "ntotal"
+)
 ```
 
 #### Compare Model Fit {#sec-measurementInvarianceScalarModelCompare}
@@ -3221,14 +3561,15 @@ Measurement non-invariance of indicator intercepts poses challenges to being abl
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
 
 ```{r}
-scalarInvarianceModel_chisquareDiff <- 
+scalarInvarianceModel_chisquareDiff <-
   satorraBentlerScaledChiSquareDifferenceTestStatistic(
     T0 = scalarInvarianceModel_chisquare,
     c0 = scalarInvarianceModel_chisquareScaling,
     d0 = scalarInvarianceModel_df,
     T1 = metricInvarianceModel_chisquare,
     c1 = metricInvarianceModel_chisquareScaling,
-    d1 = metricInvarianceModel_df)
+    d1 = metricInvarianceModel_df
+  )
 
 scalarInvarianceModel_chisquareDiff
 ```
@@ -3238,7 +3579,8 @@ scalarInvarianceModel_chisquareDiff
 ```{r}
 round(
   scalarInvarianceModelFitIndices - metricInvarianceModelFitIndices,
-  digits = 3)
+  digits = 3
+)
 ```
 
 ##### Score-Based Test {#sec-measurementInvarianceScalarScoreBasedTest}
@@ -3253,7 +3595,8 @@ strucchange::sctest(
   scalarInvarianceModel_fit,
   order.by = HolzingerSwineford1939$school,
   parm = 10:18,
-  functional = "LMuo")
+  functional = "LMuo"
+)
 ```
 
 A score-based test and expected parameter change (EPC) estimates [@Oberski2014; @Oberski2015] are provided by the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement invariance!scalar}
@@ -3294,14 +3637,15 @@ equiv_chi(
   df = scalarInvarianceModel_df,
   m = 2,
   N_sample = scalarInvarianceModel_N,
-  popRMSEA = .08)
+  popRMSEA = .08
+)
 ```
 
 Moreover, the equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.\index{structural equation modeling!measurement invariance!scalar}\index{chi-square!equivalence test}
 In other words, scalar invariance failed.\index{structural equation modeling!measurement invariance!scalar}\index{chi-square!equivalence test}
 
 ```{r}
-scalarInvarianceModel_dfDiff <- 
+scalarInvarianceModel_dfDiff <-
   scalarInvarianceModel_df - metricInvarianceModel_df
 
 equiv_chi(
@@ -3310,7 +3654,8 @@ equiv_chi(
   df = scalarInvarianceModel_dfDiff,
   m = 2,
   N_sample = scalarInvarianceModel_N,
-  popRMSEA = .08)
+  popRMSEA = .08
+)
 ```
 
 ##### Permutation Test {#sec-measurementInvarianceScalarModelPermutationTest}
@@ -3337,7 +3682,8 @@ scalarInvarianceTest <- permuteMeasEq(
   AFIs = myAFIs,
   moreAFIs = moreAFIs,
   parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
-  iseed = 52242)
+  iseed = 52242
+)
 ```
 
 ```{r}
@@ -3374,7 +3720,8 @@ semPaths(
   what = "est",
   layout = "tree2",
   ask = FALSE,
-  edge.label.cex = 1.2)
+  edge.label.cex = 1.2
+)
 ```
 
 ### Residual ("Strict Factorial") Invariance Model {#sec-measurementInvarianceResidualModel}
@@ -3391,7 +3738,8 @@ residualInvarianceModel <- measEq.syntax(
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
   group = "school",
-  group.equal = c("loadings","intercepts","residuals"))
+  group.equal = c("loadings", "intercepts", "residuals")
+)
 ```
 
 ```{r}
@@ -3427,7 +3775,8 @@ residualInvarianceModel_fit <- cfa(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ```{r}
@@ -3438,7 +3787,8 @@ residualInvarianceModelFullSyntax_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 #### Model Summary {#sec-measurementInvarianceResidualModelOutput}
@@ -3448,7 +3798,8 @@ summary(
   residualInvarianceModel_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ```{r}
@@ -3456,7 +3807,8 @@ summary(
   residualInvarianceModelFullSyntax_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 #### Model Fit {#sec-measurementInvarianceResidualModelFitCriteria}
@@ -3467,21 +3819,29 @@ You can specify the null model as the baseline model using: `baseline.model = nu
 fitMeasures(residualInvarianceModel_fit)
 
 residualInvarianceModelFitIndices <- fitMeasures(
-  residualInvarianceModel_fit)[c(
-    "cfi.robust", "rmsea.robust", "srmr")]
+  residualInvarianceModel_fit
+)[c(
+  "cfi.robust",
+  "rmsea.robust",
+  "srmr"
+)]
 
 residualInvarianceModel_chisquare <- fitMeasures(
-  residualInvarianceModel_fit)[c("chisq.scaled")]
+  residualInvarianceModel_fit
+)[c("chisq.scaled")]
 
 residualInvarianceModel_chisquareScaling <- fitMeasures(
-  residualInvarianceModel_fit)[c("chisq.scaling.factor")]
+  residualInvarianceModel_fit
+)[c("chisq.scaling.factor")]
 
 residualInvarianceModel_df <- fitMeasures(
-  residualInvarianceModel_fit)[c("df.scaled")]
+  residualInvarianceModel_fit
+)[c("df.scaled")]
 
 residualInvarianceModel_N <- lavInspect(
   residualInvarianceModel_fit,
-  what = "ntotal")
+  what = "ntotal"
+)
 ```
 
 #### Compare Model Fit {#sec-measurementInvarianceResidualModelCompare}
@@ -3502,14 +3862,15 @@ In this instance, you do not need to examine whether residual invariance held be
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
 
 ```{r}
-residualInvarianceModel_chisquareDiff <- 
+residualInvarianceModel_chisquareDiff <-
   satorraBentlerScaledChiSquareDifferenceTestStatistic(
     T0 = residualInvarianceModel_chisquare,
     c0 = residualInvarianceModel_chisquareScaling,
     d0 = residualInvarianceModel_df,
     T1 = scalarInvarianceModel_chisquare,
     c1 = scalarInvarianceModel_chisquareScaling,
-    d1 = scalarInvarianceModel_df)
+    d1 = scalarInvarianceModel_df
+  )
 
 residualInvarianceModel_chisquareDiff
 ```
@@ -3519,14 +3880,19 @@ residualInvarianceModel_chisquareDiff
 ```{r}
 round(
   residualInvarianceModelFitIndices - scalarInvarianceModelFitIndices,
-  digits = 3)
+  digits = 3
+)
 
-round(cbind(
-  null = inspect(nullModelFit, "fit_measures"),
-  configural = inspect(configuralInvarianceModel_fit, "fit_measures"), 
-  weak = inspect(metricInvarianceModel_fit, "fit_measures"),
-  strong = inspect(scalarInvarianceModel_fit, "fit_measures"),
-  strict = inspect(residualInvarianceModel_fit, "fit_measures")), 3)
+round(
+  cbind(
+    null = inspect(nullModelFit, "fit_measures"),
+    configural = inspect(configuralInvarianceModel_fit, "fit_measures"),
+    weak = inspect(metricInvarianceModel_fit, "fit_measures"),
+    strong = inspect(scalarInvarianceModel_fit, "fit_measures"),
+    strict = inspect(residualInvarianceModel_fit, "fit_measures")
+  ),
+  3
+)
 ```
 
 ##### Score-Based Test {#sec-measurementInvarianceResidualModelScoreBasedTest}
@@ -3541,7 +3907,8 @@ strucchange::sctest(
   residualInvarianceModel_fit,
   order.by = HolzingerSwineford1939$school,
   parm = 19:27,
-  functional = "LMuo")
+  functional = "LMuo"
+)
 ```
 
 A score-based test and expected parameter change (EPC) estimates [@Oberski2014; @Oberski2015] are provided by the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement invariance!residual}
@@ -3583,14 +3950,15 @@ equiv_chi(
   df = residualInvarianceModel_df,
   m = 2,
   N_sample = residualInvarianceModel_N,
-  popRMSEA = .08)
+  popRMSEA = .08
+)
 ```
 
 Moreover, the equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
 In other words, residual invariance failed.\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
 
 ```{r}
-residualInvarianceModel_dfDiff <- 
+residualInvarianceModel_dfDiff <-
   residualInvarianceModel_df - scalarInvarianceModel_df
 
 equiv_chi(
@@ -3599,7 +3967,8 @@ equiv_chi(
   df = residualInvarianceModel_dfDiff,
   m = 2,
   N_sample = residualInvarianceModel_N,
-  popRMSEA = .08)
+  popRMSEA = .08
+)
 ```
 
 ##### Permutation Test {#sec-measurementInvarianceResidualModelPermutationTest}
@@ -3626,7 +3995,8 @@ residualInvarianceTest <- permuteMeasEq(
   AFIs = myAFIs,
   moreAFIs = moreAFIs,
   parallelType = "multicore", #only 'snow' works on Windows, but right now, it is throwing an error
-  iseed = 52242)
+  iseed = 52242
+)
 ```
 
 ```{r}
@@ -3662,7 +4032,8 @@ semPaths(
   what = "est",
   layout = "tree2",
   ask = FALSE,
-  edge.label.cex = 1.2)
+  edge.label.cex = 1.2
+)
 ```
 
 ### Addressing Measurement Non-Invariance {#sec-addressingMeasurementNonInvariance}
@@ -3731,7 +4102,8 @@ cfaModel_metricInvarianceV1_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV1_fit)
 ```
@@ -3790,7 +4162,8 @@ cfaModel_metricInvarianceV2_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV2_fit)
 ```
@@ -3857,7 +4230,8 @@ cfaModel_metricInvarianceV3_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV3_fit)
 ```
@@ -3916,7 +4290,8 @@ cfaModel_metricInvarianceV4_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV4_fit)
 ```
@@ -3975,7 +4350,8 @@ cfaModel_metricInvarianceV5_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV5_fit)
 ```
@@ -4034,7 +4410,8 @@ cfaModel_metricInvarianceV6_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV6_fit)
 ```
@@ -4093,7 +4470,8 @@ cfaModel_metricInvarianceV7_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV7_fit)
 ```
@@ -4152,7 +4530,8 @@ cfaModel_metricInvarianceV8_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV8_fit)
 ```
@@ -4211,7 +4590,8 @@ cfaModel_metricInvarianceV9_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV9_fit)
 ```
@@ -4282,7 +4662,8 @@ cfaModel_scalarInvarianceV1_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV1_fit)
 ```
@@ -4342,7 +4723,8 @@ cfaModel_scalarInvarianceV2_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV2_fit)
 ```
@@ -4402,7 +4784,8 @@ cfaModel_scalarInvarianceV3_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV3_fit)
 ```
@@ -4462,7 +4845,8 @@ cfaModel_scalarInvarianceV4_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV4_fit)
 ```
@@ -4522,7 +4906,8 @@ cfaModel_scalarInvarianceV5_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV5_fit)
 ```
@@ -4582,7 +4967,8 @@ cfaModel_scalarInvarianceV6_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV6_fit)
 ```
@@ -4643,7 +5029,8 @@ cfaModel_scalarInvarianceV7_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV7_fit)
 ```
@@ -4703,7 +5090,8 @@ cfaModel_scalarInvarianceV8_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV8_fit)
 ```
@@ -4763,7 +5151,8 @@ cfaModel_scalarInvarianceV9_fit <- lavaan(
   data = HolzingerSwineford1939,
   group = "school",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV9_fit)
 ```
@@ -4810,14 +5199,53 @@ However, even if a test does not show bias, it does not mean that the test is [f
 library("MOTE")
 
 # Predictive Bias
-summary(lm(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum + sex + bpi_antisocialT1Sum:sex, data = cnlsy))
+summary(lm(
+  bpi_antisocialT2Sum ~ bpi_antisocialT1Sum + sex + bpi_antisocialT1Sum:sex,
+  data = cnlsy
+))
 
-plot(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum, data = cnlsy, type = "n", xlab = "predictor", ylab = "criterion")
-points(cnlsy$bpi_antisocialT1Sum[which(cnlsy$sex == "male")], cnlsy$bpi_antisocialT2Sum[which(cnlsy$sex == "male")], pch = 20, col = "blue")
-points(cnlsy$bpi_antisocialT1Sum[which(cnlsy$sex == "female")], cnlsy$bpi_antisocialT2Sum[which(cnlsy$sex == "female")], pch = 1, col = "red")
-abline(lm(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum, data = cnlsy[which(cnlsy$sex == "male"),]), lty = 1, col = "blue")
-abline(lm(bpi_antisocialT2Sum ~ bpi_antisocialT1Sum, data = cnlsy[which(cnlsy$sex == "female"),]), lty = 2, col = "red")
-legend("bottomright", c("Male","Female"), lty = c(1,2), pch = c(20,1), col = c("blue","red"))
+plot(
+  bpi_antisocialT2Sum ~ bpi_antisocialT1Sum,
+  data = cnlsy,
+  type = "n",
+  xlab = "predictor",
+  ylab = "criterion"
+)
+points(
+  cnlsy$bpi_antisocialT1Sum[which(cnlsy$sex == "male")],
+  cnlsy$bpi_antisocialT2Sum[which(cnlsy$sex == "male")],
+  pch = 20,
+  col = "blue"
+)
+points(
+  cnlsy$bpi_antisocialT1Sum[which(cnlsy$sex == "female")],
+  cnlsy$bpi_antisocialT2Sum[which(cnlsy$sex == "female")],
+  pch = 1,
+  col = "red"
+)
+abline(
+  lm(
+    bpi_antisocialT2Sum ~ bpi_antisocialT1Sum,
+    data = cnlsy[which(cnlsy$sex == "male"), ]
+  ),
+  lty = 1,
+  col = "blue"
+)
+abline(
+  lm(
+    bpi_antisocialT2Sum ~ bpi_antisocialT1Sum,
+    data = cnlsy[which(cnlsy$sex == "female"), ]
+  ),
+  lty = 2,
+  col = "red"
+)
+legend(
+  "bottomright",
+  c("Male", "Female"),
+  lty = c(1, 2),
+  pch = c(20, 1),
+  col = c("blue", "red")
+)
 
 cnlsy$preventative <- NA
 cnlsy$preventative[cnlsy$bpi_antisocialT1Sum > 6] <- 1
@@ -4827,86 +5255,165 @@ cnlsy$disorder <- NA
 cnlsy$disorder[cnlsy$bpi_antisocialT2Sum > 6] <- 1
 cnlsy$disorder[cnlsy$bpi_antisocialT2Sum <= 6] <- 0
 
-selectionRatio <- function(TP, TN, FP, FN){
+selectionRatio <- function(TP, TN, FP, FN) {
   N <- TP + TN + FP + FN
-  value <- (TP + FP)/N
-  
+  value <- (TP + FP) / N
+
   return(value)
 }
 
-srBoys <- selectionRatio(TP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 1 & cnlsy$sex == "male")),
-               TN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 0 & cnlsy$sex == "male")),
-               FP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 0 & cnlsy$sex == "male")),
-               FN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 1 & cnlsy$sex == "male")))
+srBoys <- selectionRatio(
+  TP = length(which(
+    cnlsy$preventative == 1 & cnlsy$disorder == 1 & cnlsy$sex == "male"
+  )),
+  TN = length(which(
+    cnlsy$preventative == 0 & cnlsy$disorder == 0 & cnlsy$sex == "male"
+  )),
+  FP = length(which(
+    cnlsy$preventative == 1 & cnlsy$disorder == 0 & cnlsy$sex == "male"
+  )),
+  FN = length(which(
+    cnlsy$preventative == 0 & cnlsy$disorder == 1 & cnlsy$sex == "male"
+  ))
+)
 
-srGirls <- selectionRatio(TP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 1 & cnlsy$sex == "female")),
-               TN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 0 & cnlsy$sex == "female")),
-               FP = length(which(cnlsy$preventative == 1 & cnlsy$disorder == 0 & cnlsy$sex == "female")),
-               FN = length(which(cnlsy$preventative == 0 & cnlsy$disorder == 1 & cnlsy$sex == "female")))
+srGirls <- selectionRatio(
+  TP = length(which(
+    cnlsy$preventative == 1 & cnlsy$disorder == 1 & cnlsy$sex == "female"
+  )),
+  TN = length(which(
+    cnlsy$preventative == 0 & cnlsy$disorder == 0 & cnlsy$sex == "female"
+  )),
+  FP = length(which(
+    cnlsy$preventative == 1 & cnlsy$disorder == 0 & cnlsy$sex == "female"
+  )),
+  FN = length(which(
+    cnlsy$preventative == 0 & cnlsy$disorder == 1 & cnlsy$sex == "female"
+  ))
+)
 
 # DIF
-itemstats(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
-          group = cnlsy$sex,
-          ts.tables = TRUE)
+itemstats(
+  data = cnlsy[, c(
+    "bpi_antisocialT2_1",
+    "bpi_antisocialT2_2",
+    "bpi_antisocialT2_3",
+    "bpi_antisocialT2_4",
+    "bpi_antisocialT2_5",
+    "bpi_antisocialT2_6",
+    "bpi_antisocialT2_7"
+  )],
+  group = cnlsy$sex,
+  ts.tables = TRUE
+)
 
-unconstrainedModel_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
-                                    model = 1,
-                                    group = cnlsy$sex,
-                                    SE = TRUE)
+unconstrainedModel_ex <- multipleGroup(
+  data = cnlsy[, c(
+    "bpi_antisocialT2_1",
+    "bpi_antisocialT2_2",
+    "bpi_antisocialT2_3",
+    "bpi_antisocialT2_4",
+    "bpi_antisocialT2_5",
+    "bpi_antisocialT2_6",
+    "bpi_antisocialT2_7"
+  )],
+  model = 1,
+  group = cnlsy$sex,
+  SE = TRUE
+)
 
 summary(unconstrainedModel_ex)
 coef(unconstrainedModel_ex, simplify = TRUE, IRTpars = TRUE)
 
-constrainedModel_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
-                                  model = 1,
-                                  group = cnlsy$sex,
-                                  invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
-                                  SE = TRUE)
+constrainedModel_ex <- multipleGroup(
+  data = cnlsy[, c(
+    "bpi_antisocialT2_1",
+    "bpi_antisocialT2_2",
+    "bpi_antisocialT2_3",
+    "bpi_antisocialT2_4",
+    "bpi_antisocialT2_5",
+    "bpi_antisocialT2_6",
+    "bpi_antisocialT2_7"
+  )],
+  model = 1,
+  group = cnlsy$sex,
+  invariance = c(
+    c(
+      "bpi_antisocialT2_1",
+      "bpi_antisocialT2_2",
+      "bpi_antisocialT2_3",
+      "bpi_antisocialT2_4",
+      "bpi_antisocialT2_5",
+      "bpi_antisocialT2_6",
+      "bpi_antisocialT2_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 
 summary(constrainedModel_ex)
 coef(constrainedModel_ex, simplify = TRUE, IRTpars = TRUE)
 
-unconstrainedVsConstrainedAnova_ex <- anova(unconstrainedModel_ex, constrainedModel_ex)
-unconstrainedVsConstrainedChiSquare_ex <- unconstrainedVsConstrainedAnova_ex$X2[2]
+unconstrainedVsConstrainedAnova_ex <- anova(
+  unconstrainedModel_ex,
+  constrainedModel_ex
+)
+unconstrainedVsConstrainedChiSquare_ex <- unconstrainedVsConstrainedAnova_ex$X2[
+  2
+]
 unconstrainedVsConstrainedDF_ex <- unconstrainedVsConstrainedAnova_ex$df[2]
 
-difDropItems_ex <- DIF(constrainedModel_ex,
-                    c("a1","d1","d2"),
-                    scheme = "drop",
-                    simplify = TRUE)
+difDropItems_ex <- DIF(
+  constrainedModel_ex,
+  c("a1", "d1", "d2"),
+  scheme = "drop",
+  simplify = TRUE
+)
 difDropItems_ex
 
-difDropItemsDiscrimination_ex <- DIF(constrainedModel_ex,
-                                  c("a1"),
-                                  scheme = "drop",
-                                  simplify = TRUE)
+difDropItemsDiscrimination_ex <- DIF(
+  constrainedModel_ex,
+  c("a1"),
+  scheme = "drop",
+  simplify = TRUE
+)
 difDropItemsDiscrimination_ex
 
-difDropItemsSeverity_ex <- DIF(constrainedModel_ex,
-                            c("d1","d2"),
-                            scheme = "drop",
-                            simplify = TRUE)
+difDropItemsSeverity_ex <- DIF(
+  constrainedModel_ex,
+  c("d1", "d2"),
+  scheme = "drop",
+  simplify = TRUE
+)
 difDropItemsSeverity_ex
 
-difAddItems_ex <- DIF(unconstrainedModel_ex,
-                   c("a1","d1","d2"),
-                   scheme = "add",
-                   simplify = TRUE,
-                   plotdif = TRUE)
+difAddItems_ex <- DIF(
+  unconstrainedModel_ex,
+  c("a1", "d1", "d2"),
+  scheme = "add",
+  simplify = TRUE,
+  plotdif = TRUE
+)
 difAddItems_ex
 
-difAddItemsDiscrimination_ex <- DIF(unconstrainedModel_ex,
-                                 c("a1"),
-                                 scheme = "add",
-                                 simplify = TRUE,
-                                 plotdif = TRUE)
+difAddItemsDiscrimination_ex <- DIF(
+  unconstrainedModel_ex,
+  c("a1"),
+  scheme = "add",
+  simplify = TRUE,
+  plotdif = TRUE
+)
 difAddItemsDiscrimination_ex
 
-difAddItemsSeverity_ex <- DIF(unconstrainedModel_ex,
-                           c("d1","d2"),
-                           scheme = "add",
-                           simplify = TRUE,
-                           plotdif = TRUE)
+difAddItemsSeverity_ex <- DIF(
+  unconstrainedModel_ex,
+  c("d1", "d2"),
+  scheme = "add",
+  simplify = TRUE,
+  plotdif = TRUE
+)
 difAddItemsSeverity_ex
 
 empirical_ES(unconstrainedModel_ex, DIF = FALSE)
@@ -4917,54 +5424,225 @@ empirical_ES(unconstrainedModel_ex, DIF = TRUE)
 
 empirical_ES(unconstrainedModel_ex, DIF = TRUE, plot = TRUE)
 
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_1", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_2", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_3", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_4", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_5", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_6", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_7", type = "trace", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_1",
+  type = "trace",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_2",
+  type = "trace",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_3",
+  type = "trace",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_4",
+  type = "trace",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_5",
+  type = "trace",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_6",
+  type = "trace",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_7",
+  type = "trace",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_1", type = "info", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_2", type = "info", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_3", type = "info", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_4", type = "info", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_5", type = "info", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_6", type = "info", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_7", type = "info", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_1",
+  type = "info",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_2",
+  type = "info",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_3",
+  type = "info",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_4",
+  type = "info",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_5",
+  type = "info",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_6",
+  type = "info",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_7",
+  type = "info",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_1", type = "score", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_2", type = "score", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_3", type = "score", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_4", type = "score", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_5", type = "score", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_6", type = "score", par.settings = standard.theme("pdf", color = FALSE))
-itemplot(unconstrainedModel_ex, "bpi_antisocialT2_7", type = "score", par.settings = standard.theme("pdf", color = FALSE))
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_1",
+  type = "score",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_2",
+  type = "score",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_3",
+  type = "score",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_4",
+  type = "score",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_5",
+  type = "score",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_6",
+  type = "score",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
+itemplot(
+  unconstrainedModel_ex,
+  "bpi_antisocialT2_7",
+  type = "score",
+  par.settings = standard.theme("pdf", color = FALSE)
+)
 
-constrainedModelDropItem5_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_6","bpi_antisocialT2_7")],
-                                           model = 1,
-                                           group = cnlsy$sex,
-                                           invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
-                                           SE = TRUE)
+constrainedModelDropItem5_ex <- multipleGroup(
+  data = cnlsy[, c(
+    "bpi_antisocialT2_1",
+    "bpi_antisocialT2_2",
+    "bpi_antisocialT2_3",
+    "bpi_antisocialT2_4",
+    "bpi_antisocialT2_6",
+    "bpi_antisocialT2_7"
+  )],
+  model = 1,
+  group = cnlsy$sex,
+  invariance = c(
+    c(
+      "bpi_antisocialT2_1",
+      "bpi_antisocialT2_2",
+      "bpi_antisocialT2_3",
+      "bpi_antisocialT2_4",
+      "bpi_antisocialT2_6",
+      "bpi_antisocialT2_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 
 coef(constrainedModelDropItem5_ex, simplify = TRUE)
 
 dropItem5ForMen_ex <- cnlsy
-dropItem5ForMen_ex[which(dropItem5ForMen_ex$sex == "male"), "bpi_antisocialT2_5"] <- NA
+dropItem5ForMen_ex[
+  which(dropItem5ForMen_ex$sex == "male"),
+  "bpi_antisocialT2_5"
+] <- NA
 
-constrainedModelDropItem5ForMen_ex <- multipleGroup(data = dropItem5ForMen_ex[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
-                                                 model = 1,
-                                                 group = dropItem5ForMen_ex$sex,
-                                                 invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
-                                                 SE = TRUE)
+constrainedModelDropItem5ForMen_ex <- multipleGroup(
+  data = dropItem5ForMen_ex[, c(
+    "bpi_antisocialT2_1",
+    "bpi_antisocialT2_2",
+    "bpi_antisocialT2_3",
+    "bpi_antisocialT2_4",
+    "bpi_antisocialT2_5",
+    "bpi_antisocialT2_6",
+    "bpi_antisocialT2_7"
+  )],
+  model = 1,
+  group = dropItem5ForMen_ex$sex,
+  invariance = c(
+    c(
+      "bpi_antisocialT2_1",
+      "bpi_antisocialT2_2",
+      "bpi_antisocialT2_3",
+      "bpi_antisocialT2_4",
+      "bpi_antisocialT2_5",
+      "bpi_antisocialT2_6",
+      "bpi_antisocialT2_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 
 coef(constrainedModelDropItem5ForMen_ex, simplify = TRUE)
 
-constrainedModelResolveItem5_ex <- multipleGroup(data = cnlsy[,c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_5","bpi_antisocialT2_6","bpi_antisocialT2_7")],
-                                              model = 1,
-                                              group = cnlsy$sex,
-                                              invariance = c(c("bpi_antisocialT2_1","bpi_antisocialT2_2","bpi_antisocialT2_3","bpi_antisocialT2_4","bpi_antisocialT2_6","bpi_antisocialT2_7"), "free_means", "free_var"),
-                                              SE = TRUE)
+constrainedModelResolveItem5_ex <- multipleGroup(
+  data = cnlsy[, c(
+    "bpi_antisocialT2_1",
+    "bpi_antisocialT2_2",
+    "bpi_antisocialT2_3",
+    "bpi_antisocialT2_4",
+    "bpi_antisocialT2_5",
+    "bpi_antisocialT2_6",
+    "bpi_antisocialT2_7"
+  )],
+  model = 1,
+  group = cnlsy$sex,
+  invariance = c(
+    c(
+      "bpi_antisocialT2_1",
+      "bpi_antisocialT2_2",
+      "bpi_antisocialT2_3",
+      "bpi_antisocialT2_4",
+      "bpi_antisocialT2_6",
+      "bpi_antisocialT2_7"
+    ),
+    "free_means",
+    "free_var"
+  ),
+  SE = TRUE
+)
 
 coef(constrainedModelResolveItem5_ex, simplify = TRUE)
 
@@ -4972,10 +5650,12 @@ anova(constrainedModelDropItem5_ex, constrainedModel_ex)
 anova(constrainedModelDropItem5ForMen_ex, constrainedModel_ex)
 anova(constrainedModelResolveItem5_ex, constrainedModel_ex)
 
-difDropItemsNew_ex <- DIF(constrainedModelResolveItem5_ex,
-                       c("a1","d1","d2"),
-                       scheme = "drop",
-                       simplify = TRUE)
+difDropItemsNew_ex <- DIF(
+  constrainedModelResolveItem5_ex,
+  c("a1", "d1", "d2"),
+  scheme = "drop",
+  simplify = TRUE
+)
 difDropItemsNew_ex
 
 # Measurement Invariance
@@ -5226,83 +5906,127 @@ cfaModel_residualInvariance_ex <- '
  bpi_antisocialT2_7 ~ intx7*1
 '
 
-configuralInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_configuralInvariance_ex,
-               data = cnlsy,
-               missing = "ML",
-               estimator = "MLR")
+configuralInvarianceModelFullSyntax_fit_ex <- lavaan(
+  cfaModel_configuralInvariance_ex,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 
-summary(configuralInvarianceModelFullSyntax_fit_ex,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  configuralInvarianceModelFullSyntax_fit_ex,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 
 fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)
 
-configuralInvarianceModelFitIndices_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("cfi.robust", "rmsea.robust", "srmr")]
+configuralInvarianceModelFitIndices_ex <- fitMeasures(
+  configuralInvarianceModelFullSyntax_fit_ex
+)[c("cfi.robust", "rmsea.robust", "srmr")]
 
-configuralInvarianceCFI <- as.numeric(fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)["cfi.robust"])
-configuralInvarianceRMSEA <- as.numeric(fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)["rmsea.robust"])
-configuralInvarianceSRMR <- as.numeric(fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)["srmr"])
+configuralInvarianceCFI <- as.numeric(fitMeasures(
+  configuralInvarianceModelFullSyntax_fit_ex
+)["cfi.robust"])
+configuralInvarianceRMSEA <- as.numeric(fitMeasures(
+  configuralInvarianceModelFullSyntax_fit_ex
+)["rmsea.robust"])
+configuralInvarianceSRMR <- as.numeric(fitMeasures(
+  configuralInvarianceModelFullSyntax_fit_ex
+)["srmr"])
 
-configuralInvarianceModel_chisquare_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("chisq.scaled")]
-configuralInvarianceModel_chisquareScaling_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("chisq.scaling.factor")]
-configuralInvarianceModel_df_ex <- fitMeasures(configuralInvarianceModelFullSyntax_fit_ex)[c("df.scaled")]
-configuralInvarianceModel_N_ex <- lavInspect(configuralInvarianceModelFullSyntax_fit_ex, what = "ntotal")
+configuralInvarianceModel_chisquare_ex <- fitMeasures(
+  configuralInvarianceModelFullSyntax_fit_ex
+)[c("chisq.scaled")]
+configuralInvarianceModel_chisquareScaling_ex <- fitMeasures(
+  configuralInvarianceModelFullSyntax_fit_ex
+)[c("chisq.scaling.factor")]
+configuralInvarianceModel_df_ex <- fitMeasures(
+  configuralInvarianceModelFullSyntax_fit_ex
+)[c("df.scaled")]
+configuralInvarianceModel_N_ex <- lavInspect(
+  configuralInvarianceModelFullSyntax_fit_ex,
+  what = "ntotal"
+)
 
-equiv_chi(alpha = .05,
-          chi = configuralInvarianceModel_chisquare_ex,
-          df = configuralInvarianceModel_df_ex,
-          m = 2,
-          N_sample = configuralInvarianceModel_N_ex,
-          popRMSEA = .08)
+equiv_chi(
+  alpha = .05,
+  chi = configuralInvarianceModel_chisquare_ex,
+  df = configuralInvarianceModel_df_ex,
+  m = 2,
+  N_sample = configuralInvarianceModel_N_ex,
+  popRMSEA = .08
+)
 
-metricInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_metricInvariance_ex,
-               data = cnlsy,
-               missing = "ML",
-               estimator = "MLR")
+metricInvarianceModelFullSyntax_fit_ex <- lavaan(
+  cfaModel_metricInvariance_ex,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 
-summary(metricInvarianceModelFullSyntax_fit_ex,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  metricInvarianceModelFullSyntax_fit_ex,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 
 fitMeasures(metricInvarianceModelFullSyntax_fit_ex)
 
-metricInvarianceAnova_ex <- anova(configuralInvarianceModelFullSyntax_fit_ex, metricInvarianceModelFullSyntax_fit_ex)
+metricInvarianceAnova_ex <- anova(
+  configuralInvarianceModelFullSyntax_fit_ex,
+  metricInvarianceModelFullSyntax_fit_ex
+)
 metricInvarianceChiSquare_ex <- metricInvarianceAnova_ex$`Chisq diff`[2]
 metricInvarianceDF_ex <- metricInvarianceAnova_ex$`Df diff`[2]
 metricInvarianceP_ex <- metricInvarianceAnova_ex$`Pr(>Chisq)`[2]
 
-scalarInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_scalarInvariance_ex,
-               data = cnlsy,
-               missing = "ML",
-               estimator = "MLR")
+scalarInvarianceModelFullSyntax_fit_ex <- lavaan(
+  cfaModel_scalarInvariance_ex,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 
-summary(scalarInvarianceModelFullSyntax_fit_ex,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  scalarInvarianceModelFullSyntax_fit_ex,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 
 fitMeasures(scalarInvarianceModelFullSyntax_fit_ex)
 
-scalarInvarianceAnova_ex <- anova(metricInvarianceModelFullSyntax_fit_ex, scalarInvarianceModelFullSyntax_fit_ex)
+scalarInvarianceAnova_ex <- anova(
+  metricInvarianceModelFullSyntax_fit_ex,
+  scalarInvarianceModelFullSyntax_fit_ex
+)
 scalarInvarianceChiSquare_ex <- scalarInvarianceAnova_ex$`Chisq diff`[2]
 scalarInvarianceDF_ex <- scalarInvarianceAnova_ex$`Df diff`[2]
 scalarInvarianceP_ex <- scalarInvarianceAnova_ex$`Pr(>Chisq)`[2]
 
-residualInvarianceModelFullSyntax_fit_ex <- lavaan(cfaModel_residualInvariance_ex,
-               data = cnlsy,
-               missing = "ML",
-               estimator = "MLR")
+residualInvarianceModelFullSyntax_fit_ex <- lavaan(
+  cfaModel_residualInvariance_ex,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 
-summary(residualInvarianceModelFullSyntax_fit_ex,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  residualInvarianceModelFullSyntax_fit_ex,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 
 fitMeasures(residualInvarianceModelFullSyntax_fit_ex)
 
-residualInvarianceAnova_ex <- anova(scalarInvarianceModelFullSyntax_fit_ex, residualInvarianceModelFullSyntax_fit_ex)
+residualInvarianceAnova_ex <- anova(
+  scalarInvarianceModelFullSyntax_fit_ex,
+  residualInvarianceModelFullSyntax_fit_ex
+)
 residualInvarianceChiSquare_ex <- residualInvarianceAnova_ex$`Chisq diff`[2]
 residualInvarianceDF_ex <- residualInvarianceAnova_ex$`Df diff`[2]
 residualInvarianceP_ex <- residualInvarianceAnova_ex$`Pr(>Chisq)`[2]

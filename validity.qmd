@@ -60,64 +60,72 @@ standardDeviations <- c(10, 15)
 
 correlationMatrix <- matrix(.7, nrow = 2, ncol = 2)
 diag(correlationMatrix) <- 1
-rownames(correlationMatrix) <- colnames(correlationMatrix) <- 
-  c("predictor","criterion")
+rownames(correlationMatrix) <- colnames(correlationMatrix) <-
+  c("predictor", "criterion")
 
 covarianceMatrix <- psych::cor2cov(
   correlationMatrix,
-  sigma = standardDeviations)
+  sigma = standardDeviations
+)
 
 mydataValidity <- as.data.frame(mvrnorm(
   n = sampleSize,
   mu = means,
   Sigma = covarianceMatrix,
-  empirical = TRUE))
+  empirical = TRUE
+))
 
 errorToAddToPredictor <- 3.20
 errorToAddToCriterion <- 6.15
 
-mydataValidity$predictorWithMeasurementErrorT1 <- 
-  mydataValidity$predictor + 
+mydataValidity$predictorWithMeasurementErrorT1 <-
+  mydataValidity$predictor +
   rnorm(n = sampleSize, mean = 0, sd = errorToAddToPredictor)
 
-mydataValidity$predictorWithMeasurementErrorT2 <- 
-  mydataValidity$predictor + 
+mydataValidity$predictorWithMeasurementErrorT2 <-
+  mydataValidity$predictor +
   rnorm(n = sampleSize, mean = 0, sd = errorToAddToPredictor)
 
-mydataValidity$criterionWithMeasurementErrorT1 <- 
-  mydataValidity$criterion + 
+mydataValidity$criterionWithMeasurementErrorT1 <-
+  mydataValidity$criterion +
   rnorm(n = sampleSize, mean = 0, sd = errorToAddToCriterion)
 
-mydataValidity$criterionWithMeasurementErrorT2 <- 
-  mydataValidity$criterion + 
+mydataValidity$criterionWithMeasurementErrorT2 <-
+  mydataValidity$criterion +
   rnorm(n = sampleSize, mean = 0, sd = errorToAddToCriterion)
 
-mydataValidity$oldpredictor <- mydataValidity$criterion + 
+mydataValidity$oldpredictor <- mydataValidity$criterion +
   rnorm(n = sampleSize, mean = 0, sd = 7.5)
 
 latentCorrelation <- .8
 reliabilityPredictor <- .9
 reliabilityCriterion <- .85
 
-mydataValidity$predictorLatentSEM <- rnorm(sampleSize, 0 , 1)
+mydataValidity$predictorLatentSEM <- rnorm(sampleSize, 0, 1)
 
-mydataValidity$criterionLatentSEM <- latentCorrelation * 
-  mydataValidity$predictorLatentSEM + rnorm(
+mydataValidity$criterionLatentSEM <- latentCorrelation *
+  mydataValidity$predictorLatentSEM +
+  rnorm(
     sampleSize,
     0,
-    sqrt(1 - latentCorrelation ^ 2))
+    sqrt(1 - latentCorrelation^2)
+  )
 
-mydataValidity$predictorObservedSEM <- reliabilityPredictor * 
-  mydataValidity$predictorLatentSEM + rnorm(
+mydataValidity$predictorObservedSEM <- reliabilityPredictor *
+  mydataValidity$predictorLatentSEM +
+  rnorm(
     sampleSize,
     0,
-    sqrt(1 - reliabilityPredictor ^ 2))
+    sqrt(1 - reliabilityPredictor^2)
+  )
 
-mydataValidity$criterionObservedSEM <- reliabilityCriterion * 
-  mydataValidity$criterionLatentSEM + rnorm(
+mydataValidity$criterionObservedSEM <- reliabilityCriterion *
+  mydataValidity$criterionLatentSEM +
+  rnorm(
     sampleSize,
     0,
-    sqrt(1 - reliabilityCriterion ^ 2))
+    sqrt(1 - reliabilityCriterion^2)
+  )
 ```
 
 #### Add Missing Data {#sec-addMissingData-validity}
@@ -128,32 +136,43 @@ Adding missing data to dataframes helps make examples more realistic to real-lif
 missingValuesPredictor <- sample(
   1:sampleSize,
   size = 50,
-  replace = FALSE)
+  replace = FALSE
+)
 missingValuesCriterion <- sample(
   1:sampleSize,
   size = 50,
-  replace = FALSE)
+  replace = FALSE
+)
 
 mydataValidity$predictor[
-  missingValuesPredictor] <- NA
+  missingValuesPredictor
+] <- NA
 mydataValidity$predictorWithMeasurementErrorT1[
-  missingValuesPredictor] <- NA
+  missingValuesPredictor
+] <- NA
 mydataValidity$predictorWithMeasurementErrorT2[
-  missingValuesPredictor] <- NA
+  missingValuesPredictor
+] <- NA
 mydataValidity$predictorObservedSEM[
-  missingValuesPredictor] <- NA
+  missingValuesPredictor
+] <- NA
 
 mydataValidity$criterion[
-  missingValuesCriterion] <- NA
+  missingValuesCriterion
+] <- NA
 mydataValidity$criterionWithMeasurementErrorT1[
-  missingValuesCriterion] <- NA
+  missingValuesCriterion
+] <- NA
 mydataValidity$criterionWithMeasurementErrorT2[
-  missingValuesCriterion] <- NA
+  missingValuesCriterion
+] <- NA
 mydataValidity$criterionObservedSEM[
-  missingValuesCriterion] <- NA
+  missingValuesCriterion
+] <- NA
 
 mydataValidity$oldpredictor[
-  missingValuesPredictor] <- NA
+  missingValuesPredictor
+] <- NA
 ```
 
 ## Types of Validity {#sec-ValidityTypes}
@@ -283,7 +302,10 @@ cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)
 ```{r}
 #| include: false
 
-criterionValidity <- cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)$estimate
+criterionValidity <- cor.test(
+  x = mydataValidity$predictor,
+  y = mydataValidity$criterion
+)$estimate
 ```
 
 In this case, the estimate of criterion-related validity is $r = `r apa(criterionValidity, 2, leading = FALSE)`$.\index{validity!criterion}
@@ -422,22 +444,58 @@ In @fig-overfittingModel, the blue line represents the true distribution of the 
 
 sampleSize <- 200
 quadraticX <- rnorm(sampleSize)
-quadraticY <- quadraticX ^ 2 + rnorm(sampleSize)
+quadraticY <- quadraticX^2 + rnorm(sampleSize)
 quadraticData <- cbind(quadraticX, quadraticY) |>
   data.frame() |>
   arrange(quadraticX)
 
-quadraticModel <- lm(quadraticY ~ quadraticX + I(quadraticX ^ 2), data = quadraticData)
-quadraticNewData <- data.frame(quadraticX = seq(from = min(quadraticData$quadraticX), to = max(quadraticData$quadraticY), length.out = sampleSize))
-quadraticNewData$quadraticY <- predict(quadraticModel, newdata = quadraticNewData)
+quadraticModel <- lm(
+  quadraticY ~ quadraticX + I(quadraticX^2),
+  data = quadraticData
+)
+quadraticNewData <- data.frame(
+  quadraticX = seq(
+    from = min(quadraticData$quadraticX),
+    to = max(quadraticData$quadraticY),
+    length.out = sampleSize
+  )
+)
+quadraticNewData$quadraticY <- predict(
+  quadraticModel,
+  newdata = quadraticNewData
+)
 
-loessFit <- loess(quadraticY ~ quadraticX, data = quadraticData, span = 0.01, degree = 1)
-loessNewData <- data.frame(quadraticX = seq(from = min(quadraticData$quadraticX), to = max(quadraticData$quadraticY), length.out = sampleSize))
+loessFit <- loess(
+  quadraticY ~ quadraticX,
+  data = quadraticData,
+  span = 0.01,
+  degree = 1
+)
+loessNewData <- data.frame(
+  quadraticX = seq(
+    from = min(quadraticData$quadraticX),
+    to = max(quadraticData$quadraticY),
+    length.out = sampleSize
+  )
+)
 quadraticNewData$loessY <- predict(loessFit, newdata = quadraticNewData)
 
-plot(x = quadraticData$quadraticX, y = quadraticData$quadraticY, xlab = "", ylab = "")
-lines(quadraticNewData$quadraticY ~ quadraticNewData$quadraticX, lwd = 2, col = "blue")
-lines(quadraticNewData$loessY ~ quadraticNewData$quadraticX, lwd = 2, col = "red")
+plot(
+  x = quadraticData$quadraticX,
+  y = quadraticData$quadraticY,
+  xlab = "",
+  ylab = ""
+)
+lines(
+  quadraticNewData$quadraticY ~ quadraticNewData$quadraticX,
+  lwd = 2,
+  col = "blue"
+)
+lines(
+  quadraticNewData$loessY ~ quadraticNewData$quadraticX,
+  lwd = 2,
+  col = "red"
+)
 ```
 
 ###### Criterion Contamination {#sec-criterionContamination}
@@ -677,7 +735,8 @@ modelCFA <- '
 htmt(
   modelCFA,
   data = HolzingerSwineford1939,
-  missing = "ml")
+  missing = "ml"
+)
 ```
 
 Other indexes of discriminant validity include the $\text{CI}_\text{CFA}\text{(sys)}$ [@Ronkko2020], $\chi^2\text{(sys)}$ [@Ronkko2020], and the Fornell-Larcker Ratio [FLR\; @Fornell1981].\index{multitrait-multimethod matrix}\index{validity!construct}\index{validity!discriminant}
@@ -736,7 +795,8 @@ MTMM_data <- sim_standardized(
   n = 10000,
   observed = TRUE,
   latent = FALSE,
-  errors = FALSE)
+  errors = FALSE
+)
 ```
 
 ```{r}
@@ -783,7 +843,7 @@ kable(
   data.frame(round(cor(MTMM_data), 2)),
   format = "latex",
   booktabs = TRUE
-  ) |>
+) |>
   kable_styling(font_size = 7)
 ```
 
@@ -795,8 +855,7 @@ kable(
 #| label: tbl-mtmmCorrelationEPUB
 #| tbl-cap: "Multitrait-Multimethod Correlation Matrix."
 
-kable(data.frame(round(cor(MTMM_data), 2)),
-      booktabs = TRUE)
+kable(data.frame(round(cor(MTMM_data), 2)), booktabs = TRUE)
 ```
 
 :::
@@ -864,13 +923,15 @@ MTMM.fit <- cfa(
   modelMTMM,
   data = MTMM_data,
   orthogonal = TRUE,
-  missing = "ml")
+  missing = "ml"
+)
 
 summary(
   MTMM.fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 A path diagram of the model is depicted in @fig-mtmmCFAFigure using the `semPlot` package [@R-semPlot].\index{multitrait-multimethod matrix}\index{multitrait-multimethod matrix!confirmatory factor analysis}\index{validity!construct}\index{factor analysis!confirmatory}
@@ -884,7 +945,8 @@ semPaths(
   MTMM.fit,
   what = "std",
   layout = "tree3",
-  bifactor = c("Verbal","Spatial","Quant","g"))
+  bifactor = c("Verbal", "Spatial", "Quant", "g")
+)
 ```
 
 #### Incremental Validity {#sec-incrementalValidity}
@@ -903,11 +965,13 @@ The extent of incremental validity of a measure can be quantified with the chang
 ```{r}
 model1 <- lm(
   criterion ~ oldpredictor,
-  data = na.omit(mydataValidity))
+  data = na.omit(mydataValidity)
+)
 
 model2 <- lm(
   criterion ~ oldpredictor + predictor,
-  data = na.omit(mydataValidity))
+  data = na.omit(mydataValidity)
+)
 
 summary(model1)
 summary(model2)
@@ -1297,16 +1361,18 @@ Although [unreliability](#sec-reliability) tends to weaken *bivariate* associati
 ```{r}
 cor.test(
   x = mydataValidity$predictorWithMeasurementErrorT1,
-  y = mydataValidity$predictorWithMeasurementErrorT2)
+  y = mydataValidity$predictorWithMeasurementErrorT2
+)
 ```
 
 ```{r}
 #| include: false
 
-reliabilityPredictor_sim <- 
+reliabilityPredictor_sim <-
   cor.test(
     x = mydataValidity$predictorWithMeasurementErrorT1,
-    y = mydataValidity$predictorWithMeasurementErrorT2)$estimate
+    y = mydataValidity$predictorWithMeasurementErrorT2
+  )$estimate
 ```
 
 #### Reliability of Criterion {#sec-measurementErrorEffects-reliabilityCriterion}
@@ -1314,16 +1380,18 @@ reliabilityPredictor_sim <-
 ```{r}
 cor.test(
   x = mydataValidity$criterionWithMeasurementErrorT1,
-  y = mydataValidity$criterionWithMeasurementErrorT2)
+  y = mydataValidity$criterionWithMeasurementErrorT2
+)
 ```
 
 ```{r}
 #| include: false
 
-reliabilityCriterion_sim <- 
+reliabilityCriterion_sim <-
   cor.test(
     x = mydataValidity$criterionWithMeasurementErrorT1,
-    y = mydataValidity$criterionWithMeasurementErrorT2)$estimate
+    y = mydataValidity$criterionWithMeasurementErrorT2
+  )$estimate
 ```
 
 #### True Association {#sec-measurementErrorEffects-trueAssociation}
@@ -1331,16 +1399,18 @@ reliabilityCriterion_sim <-
 ```{r}
 cor.test(
   x = mydataValidity$predictor,
-  y = mydataValidity$criterion)
+  y = mydataValidity$criterion
+)
 ```
 
 ```{r}
 #| include: false
 
-trueAssociation_sim <- 
+trueAssociation_sim <-
   cor.test(
     x = mydataValidity$predictor,
-    y = mydataValidity$criterion)$estimate
+    y = mydataValidity$criterion
+  )$estimate
 ```
 
 #### Observed Association (After Adding Measurement Error) {#sec-measurementErrorEffects-observedAssociation}
@@ -1348,16 +1418,18 @@ trueAssociation_sim <-
 ```{r}
 cor.test(
   x = mydataValidity$predictorWithMeasurementErrorT1,
-  y = mydataValidity$criterionWithMeasurementErrorT1)
+  y = mydataValidity$criterionWithMeasurementErrorT1
+)
 ```
 
 ```{r}
 #| include: false
 
-observedAssociation_sim <- 
+observedAssociation_sim <-
   cor.test(
     x = mydataValidity$predictorWithMeasurementErrorT1,
-    y = mydataValidity$criterionWithMeasurementErrorT1)$estimate
+    y = mydataValidity$criterionWithMeasurementErrorT1
+  )$estimate
 ```
 
 Using simulated data, when the [reliability](#sec-reliability) of the predictor is `r apa(reliabilityPredictor_sim, 2, leading = FALSE)`, the [reliability](#sec-reliability) of the criterion is `r apa(reliabilityCriterion_sim, 2, leading = FALSE)`, and the true association between the predictor and criterion is $r = `r apa(trueAssociation_sim, 2, leading = FALSE)`$, the observed association is attenuated to $r = `r apa(observedAssociation_sim, 2, leading = FALSE)`$.\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
@@ -1391,18 +1463,20 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 
 ```{r}
 attenuationCorrelation(
-  trueAssociation = 0.7, 
+  trueAssociation = 0.7,
   reliabilityOfPredictor = 0.9,
-  reliabilityOfCriterion = 0.85)
+  reliabilityOfCriterion = 0.85
+)
 ```
 
 ```{r}
 #| include: false
 
 attenuatedAssociation <- attenuationCorrelation(
-  trueAssociation = 0.7, 
+  trueAssociation = 0.7,
   reliabilityOfPredictor = 0.9,
-  reliabilityOfCriterion = 0.85)
+  reliabilityOfCriterion = 0.85
+)
 ```
 
 The observed association ($r = `r apa(attenuatedAssociation, 2, leading = FALSE)`$) is attenuated relative to the true association ($r = .70$).\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}
@@ -1434,7 +1508,8 @@ The observed (attenuated) association is as follows:\index{measurement error!att
 ```{r}
 observedAssociation <- cor.test(
   x = mydataValidity$predictor,
-  y = mydataValidity$criterion)$estimate
+  y = mydataValidity$criterion
+)$estimate
 
 observedAssociation
 ```
@@ -1449,9 +1524,10 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 
 ```{r}
 disattenuationCorrelation(
-  observedAssociation = observedAssociation, 
+  observedAssociation = observedAssociation,
   reliabilityOfPredictor = 0.9,
-  reliabilityOfCriterion = 0.85)
+  reliabilityOfCriterion = 0.85
+)
 ```
 
 The disattenuation of an observed correlation due to [measurement error](#sec-measurementError) can be demonstrated using [structural equation modeling](#sec-sem).\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
@@ -1460,7 +1536,8 @@ For instance, consider the following observed association:\index{measurement err
 ```{r}
 cor.test(
   x = mydataValidity$predictorObservedSEM,
-  y = mydataValidity$criterionObservedSEM)$estimate
+  y = mydataValidity$criterionObservedSEM
+)$estimate
 ```
 
 The observed association can be estimated in [structural equation modeling](#sec-sem) in the `lavaan` package [@R-lavaan] using the following syntax:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
@@ -1477,11 +1554,13 @@ observedSEM_syntax <- '
 observedSEM_fit <- sem(
   observedSEM_syntax,
   data = mydataValidity,
-  missing = "ML")
+  missing = "ML"
+)
 
 summary(
   observedSEM_fit,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 lavInspect(observedSEM_fit, "rsquare")
 ```
@@ -1491,12 +1570,16 @@ lavInspect(observedSEM_fit, "rsquare")
 
 observedSEM_parameters <- parameterEstimates(
   observedSEM_fit,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 observedBeta <- observedSEM_parameters[
-  which(observedSEM_parameters$lhs == "criterionObservedSEM" &
-          observedSEM_parameters$rhs == "predictorObservedSEM"),
-  "std.all"]
+  which(
+    observedSEM_parameters$lhs == "criterionObservedSEM" &
+      observedSEM_parameters$rhs == "predictorObservedSEM"
+  ),
+  "std.all"
+]
 ```
 
 A path diagram of the observed association is depicted in @fig-observedSEM.\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
@@ -1510,7 +1593,8 @@ semPaths(
   observedSEM_fit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 2)
+  edge.label.cex = 2
+)
 ```
 
 Now consider when we account for the degree of [unreliability](#sec-measurementError) of each measure.\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
@@ -1518,7 +1602,7 @@ We can account for the [(un)reliability](#sec-reliability) of each measure by sp
 
 ```{r}
 # Syntax that specifies the reliability programmatically
-disattenuationSEM_syntax <- 
+disattenuationSEM_syntax <-
   paste(
     '
     # Factor loadings
@@ -1529,10 +1613,15 @@ disattenuationSEM_syntax <-
     criterionLatent ~ predictorLatent
     
     # Specify residual errors (measurement error)
-    predictorObservedSEM ~~ (1 - ', reliabilityOfPredictor, ')*predictorObservedSEM
-    criterionObservedSEM ~~ (1 - ', reliabilityOfCriterion, ')*criterionObservedSEM
+    predictorObservedSEM ~~ (1 - ',
+    reliabilityOfPredictor,
+    ')*predictorObservedSEM
+    criterionObservedSEM ~~ (1 - ',
+    reliabilityOfCriterion,
+    ')*criterionObservedSEM
     ',
-    sep = "")
+    sep = ""
+  )
 
 # Syntax that substitutes in the reliability values
 disattenuationTraditionalSEM_syntax <- '
@@ -1551,12 +1640,14 @@ disattenuationTraditionalSEM_syntax <- '
 disattenuationSEM_fit <- sem(
   disattenuationSEM_syntax,
   data = mydataValidity,
-  missing = "ML")
+  missing = "ML"
+)
 
 summary(
   disattenuationSEM_fit,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ```{r}
@@ -1564,12 +1655,16 @@ summary(
 
 disattenuationSEM_parameters <- parameterEstimates(
   disattenuationSEM_fit,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 trueBeta <- disattenuationSEM_parameters[
-  which(disattenuationSEM_parameters$lhs == "criterionLatent" &
-          disattenuationSEM_parameters$rhs == "predictorLatent"),
-  "std.all"]
+  which(
+    disattenuationSEM_parameters$lhs == "criterionLatent" &
+      disattenuationSEM_parameters$rhs == "predictorLatent"
+  ),
+  "std.all"
+]
 ```
 
 A path diagram of the true association is depicted in Figures [-@fig-disattenuationSEM] and [-@fig-semDisattenuation].\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{structural equation modeling}
@@ -1583,7 +1678,8 @@ semPaths(
   disattenuationSEM_fit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 2)
+  edge.label.cex = 2
+)
 ```
 
 ::: {#fig-semDisattenuation}
@@ -1660,7 +1756,9 @@ cnlsy <- read_csv(here("data", "cnlsy.csv"))
 # Criterion-Related Validity ----------------------------------------------
 
 cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)
-criterionValidity_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate)
+criterionValidity_ex <- as.numeric(
+  cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate
+)
 ```
 
 ```{r}
@@ -1673,7 +1771,8 @@ trueAssociation_ex <- .8 #assume the true association between the constructs (i.
 reliabilityOfPredictor_ex <- 0.7 #assume the reliability of the predictor is .8
 reliabilityOfCriterion_ex <- 0.7090234 #assume the reliability of the predictor is .7
 
-observedAssociation_ex <- trueAssociation_ex * sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
+observedAssociation_ex <- trueAssociation_ex *
+  sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
 ```
 
 ```{r}
@@ -1685,7 +1784,10 @@ observedAssociation_ex <- trueAssociation_ex * sqrt(reliabilityOfPredictor_ex * 
 reliabilityOfPredictor_ex <- 0.7 #assume the reliability of the predictor is .8
 reliabilityOfCriterion_ex <- 0.8 #assume the reliability of the predictor is .7
 
-trueAssociation_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate)/sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
+trueAssociation_ex <- as.numeric(
+  cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_hyperactiveSum)$estimate
+) /
+  sqrt(reliabilityOfPredictor_ex * reliabilityOfCriterion_ex)
 ```
 
 ```{r}
@@ -1694,7 +1796,10 @@ trueAssociation_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnl
 # Incremental Validity ----------------------------------------------------
 
 model1_ex <- lm(bpi_hyperactiveSum ~ bpi_antisocialT1Sum, data = na.omit(cnlsy))
-model2_ex <- lm(bpi_hyperactiveSum ~ bpi_antisocialT1Sum + bpi_anxiousDepressedSum, data = na.omit(cnlsy))
+model2_ex <- lm(
+  bpi_hyperactiveSum ~ bpi_antisocialT1Sum + bpi_anxiousDepressedSum,
+  data = na.omit(cnlsy)
+)
 
 model1F_ex <- model1_ex$fstatistic
 
@@ -1714,9 +1819,20 @@ deltaRsquare_ex <- getDeltaRsquare(model2_ex)[[2]]
 
 round(cor(MTMM_data), 2)
 
-round(cor(MTMM_data[,c("VO1","SO1","QO1",
-                       "VW1","SW1","QW1",
-                       "VM1","SM1","QM1")]), 2)
+round(
+  cor(MTMM_data[, c(
+    "VO1",
+    "SO1",
+    "QO1",
+    "VW1",
+    "SW1",
+    "QW1",
+    "VM1",
+    "SM1",
+    "QM1"
+  )]),
+  2
+)
 ```
 
 ```{r}
@@ -1757,28 +1873,25 @@ modelMTMM <- '
 ```{r}
 #| include: false
 
-MTMM.fit <- cfa(modelMTMM,
-                data = MTMM_data,
-                orthogonal = TRUE)
+MTMM.fit <- cfa(modelMTMM, data = MTMM_data, orthogonal = TRUE)
 ```
 
 ```{r}
 #| include: false
 
-summary(MTMM.fit,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(MTMM.fit, fit_measures = TRUE, standardized = TRUE, rsquare = TRUE)
 ```
 
 ```{r}
 #| include: false
 
 #Path Diagram
-semPaths(MTMM.fit,
-         what = "Std.all",
-         layout = "tree3",
-         bifactor = c("Verbal","Spatial","Quant","g"))
+semPaths(
+  MTMM.fit,
+  what = "Std.all",
+  layout = "tree3",
+  bifactor = c("Verbal", "Spatial", "Quant", "g")
+)
 ```
 
 ```{r}
@@ -1806,9 +1919,7 @@ modelCFA <- '
 ```{r}
 #| include: false
 
-htmt_ex <- htmt(modelCFA,
-     data = MTMM_data,
-     missing = "ml")
+htmt_ex <- htmt(modelCFA, data = MTMM_data, missing = "ml")
 
 htmtVerbSpatial_ex <- htmt_ex[row.names(htmt_ex) == "Spatial", "Verbal"]
 ```
