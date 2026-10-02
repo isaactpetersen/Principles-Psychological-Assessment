@@ -67,17 +67,21 @@ measure3 <- measure1 + measure2 + rnorm(n = sampleSize, mean = 0, sd = 15)
 Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
 
 ```{r}
-measure1[c(5,10)] <- NA
-measure2[c(10,15)] <- NA
+measure1[c(5, 10)] <- NA
+measure2[c(10, 15)] <- NA
 measure3[c(10)] <- NA
-PoliticalDemocracy <- 
+PoliticalDemocracy <-
   as.data.frame(lapply(
     PoliticalDemocracy,
-    function(cc) cc[ sample(
-      c(TRUE, NA),
-      prob = c(0.9, 0.1),
-      size = length(cc),
-      replace = TRUE)]))
+    function(cc) {
+      cc[sample(
+        c(TRUE, NA),
+        prob = c(0.9, 0.1),
+        size = length(cc),
+        replace = TRUE
+      )]
+    }
+  ))
 ```
 
 #### Combine Data into Dataframe {#sec-combineData-sem}
@@ -236,8 +240,9 @@ Here is the variance-covariance matrix:
 
 ```{r}
 vcovMatrix4measures <- cov(
-  PoliticalDemocracy[,c("y1","y2","y3","y4")],
-  use = "pairwise.complete.obs")
+  PoliticalDemocracy[, c("y1", "y2", "y3", "y4")],
+  use = "pairwise.complete.obs"
+)
 
 vcovMatrix4measures[upper.tri(vcovMatrix4measures)] <- NA
 
@@ -264,8 +269,11 @@ Here are the means:
 
 ```{r}
 means4Measures <- apply(
-  PoliticalDemocracy[,c("y1","y2","y3","y4")],
-  2, mean, na.rm = TRUE)
+  PoliticalDemocracy[, c("y1", "y2", "y3", "y4")],
+  2,
+  mean,
+  na.rm = TRUE
+)
 
 means4Measures
 ```
@@ -313,13 +321,15 @@ markerVariableModelFit <- sem(
   markerVariable_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 markerVariableModelFit_full <- lavaan(
   markerVariable_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ```{r}
@@ -331,7 +341,8 @@ semPaths(
   markerVariableModelFit,
   what = "est",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 ##### Effects Coding Method {#sec-effectsCoding-sem}
@@ -382,19 +393,22 @@ effectsCodingModelFit_abbreviated <- sem(
   data = PoliticalDemocracy,
   effect_coding = "loadings",
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 effectsCodingModelFit <- sem(
   effectsCoding_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 effectsCodingModelFit_full <- lavaan(
   effectsCoding_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ```{r}
@@ -406,7 +420,8 @@ semPaths(
   effectsCodingModelFit,
   what = "est",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 ##### Standardized Latent Factor Method {#sec-standardizedLatent-sem}
@@ -460,19 +475,22 @@ standardizedLatentFit_abbreviated <- sem(
   data = PoliticalDemocracy,
   std_lv = TRUE,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 standardizedLatentFit <- sem(
   standardizedLatent_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 standardizedLatentFit_full <- lavaan(
   standardizedLatent_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ```{r}
@@ -484,7 +502,8 @@ semPaths(
   standardizedLatentFit,
   what = "est",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 ### Types of Latent Factors {#sec-latentFactorTypes-sem}
@@ -505,10 +524,12 @@ reflectiveModelFit <- sem(
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 reflectiveModelParameters <- parameterEstimates(
-  reflectiveModelFit)[!is.na(parameterEstimates(reflectiveModelFit)$z),]
+  reflectiveModelFit
+)[!is.na(parameterEstimates(reflectiveModelFit)$z), ]
 
 row.names(reflectiveModelParameters) <- NULL
 
@@ -532,7 +553,8 @@ semPaths(
   reflectiveModelFit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 Thus, for a [reflective model](#sec-reflectiveConstruct), we only have to estimate a small number of parameters to specify what is happening in our model, so the model is parsimonious.\index{construct!reflective}\index{structural equation modeling!degrees of freedom}
@@ -560,7 +582,8 @@ formativeModelFit <- sem(
   formativeModel_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 formativeModelParameters <- parameterEstimates(formativeModelFit)
 
@@ -574,7 +597,7 @@ PT <- lavaanify(
   formativeModel_syntax,
   fixed_x = TRUE, # sem() sets fixed_x = TRUE by default
   meanstructure = TRUE # estimator = "MLR" and missing = "ML" both set meanstructure = TRUE
-  )
+)
 
 lav_partable_df(PT)
 
@@ -592,7 +615,8 @@ semPaths(
   formativeModelFit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 For a [formative model](#sec-formativeConstruct) with 4 measures, the number of known values (14) is less than the number of parameters (19).\index{construct!formative}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
@@ -621,7 +645,8 @@ formativeModel2Fit <- sem(
   formativeModel2_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 formativeModel2Parameters <- parameterEstimates(formativeModel2Fit)
 formativeModel2Parameters
@@ -632,7 +657,8 @@ semPaths(
   formativeModel2Fit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 Thus, [formative constructs](#sec-formativeConstruct) are challenging to use in a SEM framework.\index{construct!formative}\index{structural equation modeling!model identification}
@@ -732,7 +758,8 @@ formativeModel3Fit <- sem(
   formativeModel3_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 formativeModel3Parameters <- parameterEstimates(formativeModel3Fit)
 formativeModel3Parameters
@@ -743,7 +770,8 @@ semPaths(
   formativeModel3Fit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 Below is an example of confirmatory composite analysis using the refined Henseler-Ogasawara specification [@Yu2023]:
@@ -821,7 +849,8 @@ formativeModel4Fit <- sem(
   formativeModel4_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 
 formativeModel4Parameters <- parameterEstimates(formativeModel4Fit)
 formativeModel4Parameters
@@ -832,7 +861,8 @@ semPaths(
   formativeModel4Fit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 You can generate the weights for the indicators (to be used in the model syntax) for the refined Henseler-Ogasawara specification using the following code:
@@ -843,7 +873,11 @@ You can generate the weights for the indicators (to be used in the model syntax)
 library("calculus")
 
 # First, construct the loading matrix
-loadingMatrix <- matrix(c('l11','l21',1,'l41','l12',1,0,0,0,'l23',1,0,0,0,'l34',1),4,4)
+loadingMatrix <- matrix(
+  c('l11', 'l21', 1, 'l41', 'l12', 1, 0, 0, 0, 'l23', 1, 0, 0, 0, 'l34', 1),
+  4,
+  4
+)
 
 # Check the structure
 loadingMatrix
@@ -971,17 +1005,20 @@ cor.table(mydataSEM, type = "manuscriptBig", dig = 2)
 
 corTable1b <- cor.table(
   mydataSEM,
-  dig = 2)
+  dig = 2
+)
 
 corTable2b <- cor.table(
   mydataSEM,
   type = "manuscript",
-  dig = 2)
+  dig = 2
+)
 
 corTable3b <- cor.table(
   mydataSEM,
   type = "manuscriptBig",
-  dig = 2)
+  dig = 2
+)
 ```
 
 ```{r}
@@ -989,11 +1026,12 @@ corTable3b <- cor.table(
 #| tbl-cap: "Correlation Matrix with *r*, *n*, and *p*-values."
 #| echo: false
 
-corTable1b |> 
+corTable1b |>
   kable(
     booktabs = TRUE,
     linesep = c("", "", "\\addlinespace"),
-    escape = FALSE)
+    escape = FALSE
+  )
 ```
 
 ```{r}
@@ -1001,11 +1039,12 @@ corTable1b |>
 #| tbl-cap: "Correlation Matrix with Asterisks for Significant Associations."
 #| echo: false
 
-corTable2b |> 
+corTable2b |>
   kable(
     booktabs = TRUE,
     linesep = "",
-    escape = FALSE)
+    escape = FALSE
+  )
 ```
 
 ```{r}
@@ -1013,10 +1052,11 @@ corTable2b |>
 #| tbl-cap: "Correlation Matrix."
 #| echo: false
 
-corTable3b |> 
+corTable3b |>
   kable(
     booktabs = TRUE,
-    linesep = "")
+    linesep = ""
+  )
 ```
 
 ## Measurement Model (of a Given Construct)  {#sec-measurementModelExample-sem}
@@ -1084,13 +1124,15 @@ measurementModelFit <- cfa(
   data = mydataSEM,
   missing = "ML",
   estimator = "MLR",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 measurementModelFit_full <- lavaan(
   measurementModel_fullSyntax,
   data = mydataSEM,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ### Display Summary Output {#sec-measurementModelOutput-sem}
@@ -1100,25 +1142,32 @@ measurementModelFit_full <- lavaan(
 
 measurementModelParameters <- parameterEstimates(
   measurementModelFit,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 measurementModelParameters_beta1 <- measurementModelParameters[
   which(
-    measurementModelParameters$lhs == "latentFactor" & 
-      measurementModelParameters$rhs == "measure1"),
-  "std.all"]
+    measurementModelParameters$lhs == "latentFactor" &
+      measurementModelParameters$rhs == "measure1"
+  ),
+  "std.all"
+]
 
 measurementModelParameters_beta2 <- measurementModelParameters[
   which(
-    measurementModelParameters$lhs == "latentFactor" & 
-      measurementModelParameters$rhs == "measure2"),
-  "std.all"]
+    measurementModelParameters$lhs == "latentFactor" &
+      measurementModelParameters$rhs == "measure2"
+  ),
+  "std.all"
+]
 
 measurementModelParameters_beta3 <- measurementModelParameters[
   which(
-    measurementModelParameters$lhs == "latentFactor" & 
-      measurementModelParameters$rhs == "measure3"),
-  "std.all"]
+    measurementModelParameters$lhs == "latentFactor" &
+      measurementModelParameters$rhs == "measure3"
+  ),
+  "std.all"
+]
 ```
 
 This measurement model with three indicators is just-identified—the number of parameters estimated is equal to the number of known values, thus leaving 0 degrees of freedom.\index{structural equation modeling!measurement model}\index{structural equation modeling!model identification}\index{structural equation modeling!degrees of freedom}
@@ -1133,13 +1182,15 @@ summary(
   measurementModelFit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 
 summary(
   measurementModelFit_full,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ### Estimates of Model Fit {#sec-measurementModelFitCriteria-sem}
@@ -1150,12 +1201,25 @@ You can extract specific fit indices using the following syntax:\index{structura
 fitMeasures(
   measurementModelFit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq",
+    "df",
+    "pvalue",
+    "chisq.scaled",
+    "df.scaled",
+    "pvalue.scaled",
     "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr",
+    "rmsea.robust",
+    "cfi.robust",
+    "tli.robust"
+  )
+)
 ```
 
 Because the model is just-identified, many fit statistics are not able to be estimated.\index{structural equation modeling!model identification}
@@ -1201,7 +1265,8 @@ semPaths(
   measurementModelFit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 2)
+  edge.label.cex = 2
+)
 ```
 
 ## Confirmatory Factor Analysis (CFA) {#sec-cfaExample-sem}
@@ -1281,13 +1346,15 @@ cfaModelFit <- cfa(
   data = HolzingerSwineford1939,
   missing = "ML",
   estimator = "MLR",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 cfaModelFit_full <- lavaan(
   cfaModel_fullSyntax,
   data = HolzingerSwineford1939,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ### Display Summary Output {#sec-cfaModelOutput-sem}
@@ -1301,13 +1368,15 @@ summary(
   cfaModelFit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 
 summary(
   cfaModelFit_full,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ### Estimates of Model Fit {#sec-cfaModelFitCriteria-sem}
@@ -1320,12 +1389,25 @@ In general, we want to make decisions regarding what parameters to estimate base
 fitMeasures(
   cfaModelFit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq",
+    "df",
+    "pvalue",
+    "chisq.scaled",
+    "df.scaled",
+    "pvalue.scaled",
     "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr",
+    "rmsea.robust",
+    "cfi.robust",
+    "tli.robust"
+  )
+)
 ```
 
 ### Residuals {#sec-cfaModelResiduals-sem}
@@ -1376,7 +1458,8 @@ semPaths(
   cfaModelFit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 ### Modify Model Based on Modification Indices {#sec-cfaModelModification-sem}
@@ -1449,13 +1532,15 @@ cfaModel2Fit <- cfa(
   data = HolzingerSwineford1939,
   missing = "ML",
   estimator = "MLR",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 cfaModel2Fit_full <- lavaan(
   cfaModel2_fullSyntax,
   data = HolzingerSwineford1939,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 #### Display Summary Output {#sec-cfaModelModifiedOutput-sem}
@@ -1465,13 +1550,15 @@ summary(
   cfaModel2Fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 
 summary(
   cfaModel2Fit_full,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 #### Estimates of Model Fit {#sec-cfaModelModifiedFitCriteria-sem}
@@ -1483,12 +1570,25 @@ Thus, this model could be defensible.
 fitMeasures(
   cfaModel2Fit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq",
+    "df",
+    "pvalue",
+    "chisq.scaled",
+    "df.scaled",
+    "pvalue.scaled",
     "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr",
+    "rmsea.robust",
+    "cfi.robust",
+    "tli.robust"
+  )
+)
 ```
 
 #### Residuals {#sec-cfaModelModifiedResiduals-sem}
@@ -1510,7 +1610,8 @@ semPaths(
   cfaModel2Fit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.8)
+  edge.label.cex = 0.8
+)
 ```
 
 #### Compare Model Fit {#sec-nestedModelComparison-sem}
@@ -1539,19 +1640,22 @@ cfaModelFitML <- cfa(
   data = HolzingerSwineford1939,
   missing = "ML",
   estimator = "ML",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 cfaModel2FitML <- cfa(
   cfaModel2_syntax,
   data = HolzingerSwineford1939,
   missing = "ML",
   estimator = "ML",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 vuongtest(
   cfaModelFitML,
   cfaModel2FitML,
-  nested = TRUE)
+  nested = TRUE
+)
 ```
 
 For non-nested models, one can compare model fit with AIC, BIC, or the Vuong test.\index{structural equation modeling!model comparison}
@@ -1560,17 +1664,26 @@ For non-nested models, one can compare model fit with AIC, BIC, or the Vuong tes
 fitMeasures(
   cfaModelFitML,
   fit_measures = c(
-    "aic","bic","bic2"))
+    "aic",
+    "bic",
+    "bic2"
+  )
+)
 
 fitMeasures(
   cfaModel2FitML,
   fit_measures = c(
-    "aic","bic","bic2"))
+    "aic",
+    "bic",
+    "bic2"
+  )
+)
 
 vuongtest(
   cfaModelFitML,
   cfaModel2FitML,
-  nested = FALSE)
+  nested = FALSE
+)
 ```
 
 ## Structural Equation Model (SEM) {#sec-semModelExample-sem}
@@ -1673,13 +1786,15 @@ semModelFit <- sem(
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 semModelFit_full <- lavaan(
   semModel_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
-  estimator = "MLR")
+  estimator = "MLR"
+)
 ```
 
 ### Display Summary Output {#sec-semModelOutput-sem}
@@ -1691,10 +1806,11 @@ semModelFit_full <- lavaan(
 
 library("MOTE")
 
-chiSquareTestP <- fitMeasures(semModelFit,
-                              fit_measures = "pvalue.scaled")
-chiSquareTestBaselineP <- fitMeasures(semModelFit,
-                                      fit_measures = "baseline.pvalue")
+chiSquareTestP <- fitMeasures(semModelFit, fit_measures = "pvalue.scaled")
+chiSquareTestBaselineP <- fitMeasures(
+  semModelFit,
+  fit_measures = "baseline.pvalue"
+)
 ```
 
 Output from a SEM model includes information such as regression coefficients, intercepts, variances, and model fit indices.\index{structural equation modeling!fit index}
@@ -1714,13 +1830,15 @@ summary(
   semModelFit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 
 summary(
   semModelFit_full,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 ```
 
 ### Estimates of Model Fit {#sec-semModelFitCriteria-sem}
@@ -1729,12 +1847,25 @@ summary(
 fitMeasures(
   semModelFit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "chisq.scaled", "df.scaled", "pvalue.scaled",
+    "chisq",
+    "df",
+    "pvalue",
+    "chisq.scaled",
+    "df.scaled",
+    "pvalue.scaled",
     "chisq.scaling.factor",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr",
-    "rmsea.robust", "cfi.robust", "tli.robust"))
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr",
+    "rmsea.robust",
+    "cfi.robust",
+    "tli.robust"
+  )
+)
 ```
 
 ### Residuals {#sec-semModelResiduals-sem}
@@ -1783,7 +1914,8 @@ semPaths(
   semModelFit,
   what = "Std.all",
   layout = "tree2",
-  edge.label.cex = 0.7)
+  edge.label.cex = 0.7
+)
 ```
 
 ## Benefits of SEM {#sec-benefits-sem}
@@ -1915,9 +2047,7 @@ populationModel_fit <- lavaan(populationModel, do_fit = FALSE)
 ```
 
 ```{r}
-summary(populationModel_fit,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(populationModel_fit, standardized = TRUE, rsquare = TRUE)
 ```
 
 #### Model-Implied Covariance and Correlation Matrix {#sec-monteCarloPowerAnalysis-covarianceCorrelationMatrix}
@@ -2013,7 +2143,8 @@ numberOfIndicators <- length(fitted(populationModel_fit)$mean)
 indicatorDistributions <- bindDist(
   p = numberOfIndicators,
   skewness = c(rep(1.3, 3), rep(2, 8)),
-  kurtosis = c(rep(1.8, 3), rep(4, 8)))
+  kurtosis = c(rep(1.8, 3), rep(4, 8))
+)
 ```
 
 ### Specify Extent and Type of Missing Data {#sec-monteCarloPowerAnalysis-missingness}
@@ -2053,7 +2184,8 @@ percentMissingByVariable <- '
 
 missingnessModel <- miss(
   logit = percentMissingByVariable,
-  m = 0)
+  m = 0
+)
 ```
 
 #### Plot of Extent of Missing Data Specified {#sec-monteCarloPowerAnalysis-missingDataPlot}
@@ -2092,7 +2224,8 @@ You can reduce the number of sample sizes and/or repetitions per sample size to 
 output <- simsem::sim(
   n = rep(
     sampleSizes,
-    each = repetitionsPerSampleSize),
+    each = repetitionsPerSampleSize
+  ),
   model = analysisModel_syntax,
   generate = populationModel,
   miss = missingnessModel,
@@ -2102,7 +2235,8 @@ output <- simsem::sim(
   estimator = "MLR",
   std_lv = TRUE,
   seed = 52242,
-  multicore = TRUE)
+  multicore = TRUE
+)
 ```
 
 Return the seed to the normal seed behavior so that future calls to `set.seed()` use the default settings:
@@ -2168,19 +2302,21 @@ At $\alpha = .05$; dashed horizontal line represents power ($1 - \beta$) of .8\i
 #| fig-cap: "Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis."
 #| fig-alt: "Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis."
 
-par(mfrow = c(1,2))
+par(mfrow = c(1, 2))
 
 plotPower(
   output,
   powerParam = "dem65~dem60",
-  alpha = .05)
+  alpha = .05
+)
 
 abline(h = 0.8, lwd = 2, lty = 2)
 
 plotPower(
   output,
   powerParam = "dem65~ind60",
-  alpha = .05)
+  alpha = .05
+)
 
 abline(h = 0.8, lwd = 2, lty = 2)
 ```
@@ -2267,48 +2403,84 @@ lavaanify(measurementModelT1)
 #| include: false
 
 ## Fit the model
-measurementModel1Fit <- cfa(measurementModelT1,
-                            data = cnlsy,
-                            missing = "ML",
-                            estimator = "MLR")
+measurementModel1Fit <- cfa(
+  measurementModelT1,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 
-measurementModel2Fit <- cfa(measurementModelT2,
-                            data = cnlsy,
-                            missing = "ML",
-                            estimator = "MLR")
+measurementModel2Fit <- cfa(
+  measurementModelT2,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 ```
 
 ```{r}
 #| include: false
 
 ## Display summary output
-summary(measurementModel1Fit,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  measurementModel1Fit,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 
-summary(measurementModel2Fit,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  measurementModel2Fit,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 ```
 
 ```{r}
 #| include: false
 
-fitMeasures(measurementModel1Fit,
-            fit_measures = c("chisq", "df", "pvalue",
-                             "chisq.scaled", "df.scaled", "pvalue.scaled",
-                             "chisq.scaling.factor",
-                             "rmsea", "cfi", "tli", "srmr",
-                             "rmsea.robust", "cfi.robust", "tli.robust"))
+fitMeasures(
+  measurementModel1Fit,
+  fit_measures = c(
+    "chisq",
+    "df",
+    "pvalue",
+    "chisq.scaled",
+    "df.scaled",
+    "pvalue.scaled",
+    "chisq.scaling.factor",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr",
+    "rmsea.robust",
+    "cfi.robust",
+    "tli.robust"
+  )
+)
 
-measurementModel1ChiSquare <- fitMeasures(measurementModel1Fit, fit_measures = c("chisq.scaled"))
-measurementModel1DF <- fitMeasures(measurementModel1Fit, fit_measures = c("df.scaled"))
+measurementModel1ChiSquare <- fitMeasures(
+  measurementModel1Fit,
+  fit_measures = c("chisq.scaled")
+)
+measurementModel1DF <- fitMeasures(
+  measurementModel1Fit,
+  fit_measures = c("df.scaled")
+)
 
-measurementModel1RMSEA <- fitMeasures(measurementModel1Fit, fit_measures = c("rmsea"))
-measurementModel1CFI <- fitMeasures(measurementModel1Fit, fit_measures = c("cfi"))
-measurementModel1SRMR <- fitMeasures(measurementModel1Fit, fit_measures = c("srmr"))
+measurementModel1RMSEA <- fitMeasures(
+  measurementModel1Fit,
+  fit_measures = c("rmsea")
+)
+measurementModel1CFI <- fitMeasures(
+  measurementModel1Fit,
+  fit_measures = c("cfi")
+)
+measurementModel1SRMR <- fitMeasures(
+  measurementModel1Fit,
+  fit_measures = c("srmr")
+)
 ```
 
 ```{r}
@@ -2332,9 +2504,7 @@ maximalRelia(measurementModel1Fit)
 #| include: false
 
 ## Path Diagram
-semPaths(measurementModel1Fit,
-         what = "Std.all",
-         layout = "tree2")
+semPaths(measurementModel1Fit, what = "Std.all", layout = "tree2")
 ```
 
 ```{r}
@@ -2382,39 +2552,57 @@ lavaanify(measurementModelCorrelatedErrorsT1)
 #| include: false
 
 ## Fit the model
-measurementModelCorrelatedErrors1Fit <- cfa(measurementModelCorrelatedErrorsT1,
-                            data = cnlsy,
-                            missing = "ML",
-                            estimator = "MLR")
+measurementModelCorrelatedErrors1Fit <- cfa(
+  measurementModelCorrelatedErrorsT1,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 
-measurementModelCorrelatedErrors2Fit <- cfa(measurementModelCorrelatedErrorsT2,
-                            data = cnlsy,
-                            missing = "ML",
-                            estimator = "MLR")
+measurementModelCorrelatedErrors2Fit <- cfa(
+  measurementModelCorrelatedErrorsT2,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR"
+)
 ```
 
 ```{r}
 #| include: false
 
 ## Display summary output
-summary(measurementModelCorrelatedErrors1Fit,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  measurementModelCorrelatedErrors1Fit,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 
-summary(measurementModelCorrelatedErrors2Fit,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  measurementModelCorrelatedErrors2Fit,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 ```
 
 ```{r}
 #| include: false
 
 ## Factor loadings
-measurementModelCorrelatedErrors1FitFactorLoadingStd <- standardizedSolution(measurementModelCorrelatedErrors1Fit)
-measurementModelCorrelatedErrors1FitFactorLoadingStdItem2 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" & measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs == "bpi_antisocialT1_2")]
-measurementModelCorrelatedErrors1FitFactorLoadingStdItem7 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" & measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs == "bpi_antisocialT1_7")]
+measurementModelCorrelatedErrors1FitFactorLoadingStd <- standardizedSolution(
+  measurementModelCorrelatedErrors1Fit
+)
+measurementModelCorrelatedErrors1FitFactorLoadingStdItem2 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(
+  measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" &
+    measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs ==
+      "bpi_antisocialT1_2"
+)]
+measurementModelCorrelatedErrors1FitFactorLoadingStdItem7 <- measurementModelCorrelatedErrors1FitFactorLoadingStd$est.std[which(
+  measurementModelCorrelatedErrors1FitFactorLoadingStd$lhs == "antisocialT1" &
+    measurementModelCorrelatedErrors1FitFactorLoadingStd$rhs ==
+      "bpi_antisocialT1_7"
+)]
 ```
 
 ```{r}
@@ -2429,43 +2617,81 @@ modificationindices(measurementModelCorrelatedErrors2Fit, sort = TRUE)
 #| include: false
 
 ## Factor scores
-measurementModelCorrelatedErrors1Fit_factorScores <- lavPredict(measurementModelCorrelatedErrors1Fit)
+measurementModelCorrelatedErrors1Fit_factorScores <- lavPredict(
+  measurementModelCorrelatedErrors1Fit
+)
 
 ## Reliability
-measurementModelCorrelatedErrors1Omega <- as.numeric(compRelSEM(measurementModelCorrelatedErrors1Fit))
+measurementModelCorrelatedErrors1Omega <- as.numeric(compRelSEM(
+  measurementModelCorrelatedErrors1Fit
+))
 ```
 
 ```{r}
 #| include: false
 
 ## Path Diagram
-semPaths(measurementModelCorrelatedErrors1Fit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 1.1)
+semPaths(
+  measurementModelCorrelatedErrors1Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 1.1
+)
 ```
 
 ```{r}
 #| include: false
 
-fitMeasures(measurementModelCorrelatedErrors1Fit, fit_measures = c("chisq", "df", "pvalue",
-                                                   "chisq.scaled", "df.scaled", "pvalue.scaled",
-                                                   "chisq.scaling.factor",
-                                                   "rmsea", "cfi", "tli", "srmr",
-                                                   "rmsea.robust", "cfi.robust", "tli.robust"))
+fitMeasures(
+  measurementModelCorrelatedErrors1Fit,
+  fit_measures = c(
+    "chisq",
+    "df",
+    "pvalue",
+    "chisq.scaled",
+    "df.scaled",
+    "pvalue.scaled",
+    "chisq.scaling.factor",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr",
+    "rmsea.robust",
+    "cfi.robust",
+    "tli.robust"
+  )
+)
 
-measurementModelCorrelatedErrors1ChiSquare <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit_measures = c("chisq.scaled"))
-measurementModelCorrelatedErrors1DF <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit_measures = c("df.scaled"))
+measurementModelCorrelatedErrors1ChiSquare <- fitMeasures(
+  measurementModelCorrelatedErrors1Fit,
+  fit_measures = c("chisq.scaled")
+)
+measurementModelCorrelatedErrors1DF <- fitMeasures(
+  measurementModelCorrelatedErrors1Fit,
+  fit_measures = c("df.scaled")
+)
 
-measurementModelCorrelatedErrors1RMSEA <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit_measures = c("rmsea"))
-measurementModelCorrelatedErrors1CFI <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit_measures = c("cfi"))
-measurementModelCorrelatedErrors1SRMR <- fitMeasures(measurementModelCorrelatedErrors1Fit, fit_measures = c("srmr"))
+measurementModelCorrelatedErrors1RMSEA <- fitMeasures(
+  measurementModelCorrelatedErrors1Fit,
+  fit_measures = c("rmsea")
+)
+measurementModelCorrelatedErrors1CFI <- fitMeasures(
+  measurementModelCorrelatedErrors1Fit,
+  fit_measures = c("cfi")
+)
+measurementModelCorrelatedErrors1SRMR <- fitMeasures(
+  measurementModelCorrelatedErrors1Fit,
+  fit_measures = c("srmr")
+)
 ```
 
 ```{r}
 #| include: false
 
-measurementModelComparison <- anova(measurementModel1Fit, measurementModelCorrelatedErrors1Fit)
+measurementModelComparison <- anova(
+  measurementModel1Fit,
+  measurementModelCorrelatedErrors1Fit
+)
 
 measurementModelChiSquareDiff <- measurementModelComparison$"Chisq diff"[2]
 measurementModelDFDiff <- measurementModelComparison$"Df diff"[2]
@@ -2502,21 +2728,25 @@ lavaanify(semModel_ex)
 #| include: false
 
 ## Fit the model
-semModelFit_ex <- cfa(semModel_ex,
-                   data = cnlsy,
-                   missing = "ML",
-                   estimator = "MLR",
-                   std_lv = TRUE)
+semModelFit_ex <- cfa(
+  semModel_ex,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR",
+  std_lv = TRUE
+)
 ```
 
 ```{r}
 #| include: false
 
 ## Display summary output
-summary(semModelFit_ex,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(
+  semModelFit_ex,
+  fit_measures = TRUE,
+  standardized = TRUE,
+  rsquare = TRUE
+)
 ```
 
 ```{r}
@@ -2524,7 +2754,10 @@ summary(semModelFit_ex,
 
 semModelFactorLoadingStd_ex <- standardizedSolution(semModelFit_ex)
 
-correlationLatentFactor <- semModelFactorLoadingStd_ex$est.std[which(semModelFactorLoadingStd_ex$lhs == "antisocialT1" & semModelFactorLoadingStd_ex$rhs == "antisocialT2")]
+correlationLatentFactor <- semModelFactorLoadingStd_ex$est.std[which(
+  semModelFactorLoadingStd_ex$lhs == "antisocialT1" &
+    semModelFactorLoadingStd_ex$rhs == "antisocialT2"
+)]
 ```
 
 ```{r}
@@ -2546,16 +2779,21 @@ maximalRelia(semModelFit_ex)
 #| include: false
 
 ## Path Diagram
-semPaths(semModelFit_ex,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 0.6)
+semPaths(
+  semModelFit_ex,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 0.6
+)
 ```
 
 ```{r}
 #| include: false
 
-correlationSumScores <- cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_antisocialT2Sum)$estimate
+correlationSumScores <- cor.test(
+  x = cnlsy$bpi_antisocialT1Sum,
+  y = cnlsy$bpi_antisocialT2Sum
+)$estimate
 ```
 
 ```{r}
@@ -2579,22 +2817,21 @@ semModel2 <- '
 #| include: false
 
 ## Fit the model
-semModel2Fit <- cfa(semModel2,
-                   data = cnlsy,
-                   missing = "ML",
-                   estimator = "MLR",
-                   std_lv = TRUE,
-                   fixed_x = FALSE)
+semModel2Fit <- cfa(
+  semModel2,
+  data = cnlsy,
+  missing = "ML",
+  estimator = "MLR",
+  std_lv = TRUE,
+  fixed_x = FALSE
+)
 ```
 
 ```{r}
 #| include: false
 
 ## Display summary output
-summary(semModel2Fit,
-        fit_measures = TRUE,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(semModel2Fit, fit_measures = TRUE, standardized = TRUE, rsquare = TRUE)
 ```
 
 ```{r}
@@ -2603,9 +2840,18 @@ summary(semModel2Fit,
 semModel2Unstd <- parameterEstimates(semModel2Fit, standardized = FALSE)
 semModel2Std <- parameterEstimates(semModel2Fit, standardized = TRUE)
 
-semModel2UnstdB <- semModel2Unstd$est[which(semModel2Unstd$lhs == "antisocialT2" & semModel2Unstd$rhs == "bpi_anxiousDepressedSum")]
-semModel2UnstdSE <- semModel2Unstd$se[which(semModel2Unstd$lhs == "antisocialT2" & semModel2Unstd$rhs == "bpi_anxiousDepressedSum")]
-semModel2StdBeta <- semModel2Std$std.all[which(semModel2Std$lhs == "antisocialT2" & semModel2Std$rhs == "bpi_anxiousDepressedSum")]
+semModel2UnstdB <- semModel2Unstd$est[which(
+  semModel2Unstd$lhs == "antisocialT2" &
+    semModel2Unstd$rhs == "bpi_anxiousDepressedSum"
+)]
+semModel2UnstdSE <- semModel2Unstd$se[which(
+  semModel2Unstd$lhs == "antisocialT2" &
+    semModel2Unstd$rhs == "bpi_anxiousDepressedSum"
+)]
+semModel2StdBeta <- semModel2Std$std.all[which(
+  semModel2Std$lhs == "antisocialT2" &
+    semModel2Std$rhs == "bpi_anxiousDepressedSum"
+)]
 ```
 
 ```{r}
@@ -2732,9 +2978,7 @@ analysisModelSyntax_ex <- '
 ```{r}
 #| include: false
 
-summary(populationModelFit_ex,
-        standardized = TRUE,
-        rsquare = TRUE)
+summary(populationModelFit_ex, standardized = TRUE, rsquare = TRUE)
 ```
 
 ```{r}
@@ -2762,9 +3006,11 @@ numberOfIndicators_ex <- length(fitted(populationModelFit_ex)$mean)
 #| label: dataDistributionExercise
 #| include: false
 
-indicatorDistributions_ex <- bindDist(p = numberOfIndicators_ex,
-                                      skewness = rep(2.5, 11),
-                                      kurtosis = rep(5, 11))
+indicatorDistributions_ex <- bindDist(
+  p = numberOfIndicators_ex,
+  skewness = rep(2.5, 11),
+  kurtosis = rep(5, 11)
+)
 ```
 
 ```{r}
@@ -2819,17 +3065,19 @@ library("semTools")
 #| label: powerAnalysisExercise
 #| include: false
 
-output_ex <- simsem::sim(n = rep(sampleSizes_ex, each = repetitionsPerSampleSize_ex),
-                         model = analysisModelSyntax_ex,
-                         generate = populationModel_ex,
-                         miss = missingnessModelFIML_ex,
-                         indDist = indicatorDistributions_ex,
-                         lavaanfun = "lavaan",
-                         missing = "ML",
-                         estimator = "MLR",
-                         std_lv = TRUE,
-                         seed = 52242,
-                         multicore = TRUE)
+output_ex <- simsem::sim(
+  n = rep(sampleSizes_ex, each = repetitionsPerSampleSize_ex),
+  model = analysisModelSyntax_ex,
+  generate = populationModel_ex,
+  miss = missingnessModelFIML_ex,
+  indDist = indicatorDistributions_ex,
+  lavaanfun = "lavaan",
+  missing = "ML",
+  estimator = "MLR",
+  std_lv = TRUE,
+  seed = 52242,
+  multicore = TRUE
+)
 ```
 
 ```{r}
@@ -2858,9 +3106,7 @@ getCutoff(output_ex, alpha = .05, nVal = 150)
 ```{r}
 #| include: false
 
-plotPower(output_ex,
-          powerParam = c("dem65~dem60", "dem65~ind60"),
-          alpha = .05)
+plotPower(output_ex, powerParam = c("dem65~dem60", "dem65~ind60"), alpha = .05)
 abline(h = 0.8, lwd = 2, lty = 2)
 ```
 
@@ -2881,8 +3127,8 @@ sampleSizeNeededHarshParenting1_ex <- sampleSizeNeeded1_ex[["dem65~dem60"]]
 getPower(output_ex, alpha = 0.05, nVal = 150)
 
 power1_ex <- getPower(output_ex, alpha = 0.05, nVal = 150)
-powerStress1_ex <- power1_ex[,"dem65~ind60"]
-powerHarshParenting1_ex <- power1_ex[,"dem65~dem60"]
+powerStress1_ex <- power1_ex[, "dem65~ind60"]
+powerHarshParenting1_ex <- power1_ex[, "dem65~dem60"]
 ```
 
 ```{r}
@@ -2896,9 +3142,11 @@ names(fitted(populationModelFit_ex)$mean)
 #| label: normallyDistrubutedDataExercise
 #| include: false
 
-indicatorDistributionsNormal <- bindDist(p = numberOfIndicators_ex,
-                                         skewness = rep(0, 11),
-                                         kurtosis = rep(0, 11))
+indicatorDistributionsNormal <- bindDist(
+  p = numberOfIndicators_ex,
+  skewness = rep(0, 11),
+  kurtosis = rep(0, 11)
+)
 ```
 
 ```{r}
@@ -2920,17 +3168,19 @@ library("semTools")
 #| label: powerAnalysisSimulationExercise
 #| include: false
 
-output3_ex <- simsem::sim(n = rep(sampleSizes3_ex, each = repetitionsPerSampleSize3_ex),
-               model = analysisModelSyntax_ex,
-               generate = populationModel_ex,
-               miss = missingnessModelFIML_ex,
-               indDist = indicatorDistributionsNormal,
-               lavaanfun = "lavaan",
-               missing = "ML",
-               estimator = "MLR",
-               std_lv = TRUE,
-               seed = 52242,
-               multicore = TRUE)
+output3_ex <- simsem::sim(
+  n = rep(sampleSizes3_ex, each = repetitionsPerSampleSize3_ex),
+  model = analysisModelSyntax_ex,
+  generate = populationModel_ex,
+  miss = missingnessModelFIML_ex,
+  indDist = indicatorDistributionsNormal,
+  lavaanfun = "lavaan",
+  missing = "ML",
+  estimator = "MLR",
+  std_lv = TRUE,
+  seed = 52242,
+  multicore = TRUE
+)
 ```
 
 ```{r}
@@ -3088,10 +3338,12 @@ You plan to assess stress with three methods (self-report, friend report, cortis
 #| fig-alt: "Figure of the Confirmatory Factor Analysis Model With Standardized Coefficients."
 #| echo: false
 
-semPaths(measurementModelCorrelatedErrors1Fit,
-         what = "Std.all",
-         layout = "tree2",
-         edge.label.cex = 1.1)
+semPaths(
+  measurementModelCorrelatedErrors1Fit,
+  what = "Std.all",
+  layout = "tree2",
+  edge.label.cex = 1.1
+)
 ```
 
 2.
