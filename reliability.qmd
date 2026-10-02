@@ -285,17 +285,28 @@ sampleSize <- 1000
 set.seed(52242)
 
 rawMeasure <- data.frame(score = rnorm(sampleSize), measure = "rawMeasure")
-addSystematicError <- data.frame(score = rawMeasure$score + 1, measure = "addSystematicError")
-addRandomError <- data.frame(score = rawMeasure$score + rnorm(sampleSize), measure = "addRandomError")
+addSystematicError <- data.frame(
+  score = rawMeasure$score + 1,
+  measure = "addSystematicError"
+)
+addRandomError <- data.frame(
+  score = rawMeasure$score + rnorm(sampleSize),
+  measure = "addRandomError"
+)
 
 errorList <- list(rawMeasure, addSystematicError, addRandomError)
 errorData <- bind_rows(errorList)
 
-ggplot(errorData |> filter(measure != "addRandomError"), aes(x = score, fill = measure)) +
+ggplot(
+  errorData |> filter(measure != "addRandomError"),
+  aes(x = score, fill = measure)
+) +
   geom_density(alpha = 0.25) +
-  scale_fill_viridis_d(name = "",
-                       breaks = c("rawMeasure", "addSystematicError"),
-                       labels = c("Raw Measure", "Measure with Systematic Error Added")) +
+  scale_fill_viridis_d(
+    name = "",
+    breaks = c("rawMeasure", "addSystematicError"),
+    labels = c("Raw Measure", "Measure with Systematic Error Added")
+  ) +
   theme_bw() +
   theme(legend.position = "top")
 ```
@@ -319,11 +330,16 @@ In other words, the group-level mean is still accurate, but individuals' scores 
 #| fig-alt: "Random Error."
 #| code-fold: true
 
-ggplot(errorData |> filter(measure != "addSystematicError"), aes(x = score, fill = measure)) +
+ggplot(
+  errorData |> filter(measure != "addSystematicError"),
+  aes(x = score, fill = measure)
+) +
   geom_density(alpha = 0.25) +
-  scale_fill_viridis_d(name = "",
-                       breaks = c("rawMeasure", "addRandomError"),
-                       labels = c("Raw Measure", "Measure with Random Error Added")) +
+  scale_fill_viridis_d(
+    name = "",
+    breaks = c("rawMeasure", "addRandomError"),
+    labels = c("Raw Measure", "Measure with Random Error Added")
+  ) +
   theme_bw() +
   theme(legend.position = "top")
 ```
@@ -511,19 +527,31 @@ The standard error of measurement as a function of reliability of the measure an
 
 library("ggplot2")
 
-standardErrorOfMeasurementData <- expand.grid(reliability = seq(0, 1, by = 0.01),
-                                              sd = c(1, 3, 5, 10))
+standardErrorOfMeasurementData <- expand.grid(
+  reliability = seq(0, 1, by = 0.01),
+  sd = c(1, 3, 5, 10)
+)
 
-standardErrorOfMeasurementData$sem <- standardErrorOfMeasurementData$sd * sqrt(1 - standardErrorOfMeasurementData$reliability)
+standardErrorOfMeasurementData$sem <- standardErrorOfMeasurementData$sd *
+  sqrt(1 - standardErrorOfMeasurementData$reliability)
 
-ggplot(standardErrorOfMeasurementData, aes(reliability, sem, group = as.factor(sd), color = as.factor(sd))) +
+ggplot(
+  standardErrorOfMeasurementData,
+  aes(reliability, sem, group = as.factor(sd), color = as.factor(sd))
+) +
   geom_line(linewidth = 1.5) +
   theme_bw() +
   xlab("Reliability") +
   ylab("Standard Error of Measurement") +
   scale_color_viridis_d(name = "Standard Deviation of Scores") +
-  theme(legend.justification = c(1,1), legend.position = c(1,1)) +
-  theme(legend.background = element_rect(color = "black", fill = "white", linetype = "solid"))
+  theme(legend.justification = c(1, 1), legend.position = c(1, 1)) +
+  theme(
+    legend.background = element_rect(
+      color = "black",
+      fill = "white",
+      linetype = "solid"
+    )
+  )
 ```
 
 The derivation of the SEM (from W. Joel Schneider) is in @eq-standardErrorOfMeasurementDerivation:\index{reliability!standard error of measurement}
@@ -609,65 +637,61 @@ sampleSize <- 100
 set.seed(52242)
 
 rater1continuous <- rnorm(n = sampleSize, mean = 50, sd = 10)
-rater2continuous <- rater1continuous + 
+rater2continuous <- rater1continuous +
   rnorm(
     n = sampleSize,
     mean = 0,
-    sd = 4)
-rater3continuous <- rater2continuous + 
+    sd = 4
+  )
+rater3continuous <- rater2continuous +
   rnorm(
     n = sampleSize,
     mean = 0,
-    sd = 8)
+    sd = 8
+  )
 
 rater1categorical <- sample(
-  c(0,1),
+  c(0, 1),
   size = sampleSize,
-  replace = TRUE)
+  replace = TRUE
+)
 rater2categorical <- rater1categorical
 rater3categorical <- rater1categorical
 
 rater2categorical[
-  sample(1:length(rater2categorical),
-         size = 10,
-         replace = FALSE)] <- 0
+  sample(1:length(rater2categorical), size = 10, replace = FALSE)
+] <- 0
 rater3categorical[
-  sample(1:length(rater3categorical),
-         size = 10,
-         replace = FALSE)] <- 1
+  sample(1:length(rater3categorical), size = 10, replace = FALSE)
+] <- 1
 
 rater1ordinal <- sample(
-  c(0,1,2),
+  c(0, 1, 2),
   size = sampleSize,
-  replace = TRUE)
+  replace = TRUE
+)
 rater2ordinal <- rater1ordinal
 rater3ordinal <- rater1ordinal
 
 rater2ordinal[
-  sample(1:length(rater1ordinal),
-         size = 10,
-         replace = FALSE)] <- 0
+  sample(1:length(rater1ordinal), size = 10, replace = FALSE)
+] <- 0
 rater2ordinal[
-  sample(1:length(rater1ordinal),
-         size = 10,
-         replace = FALSE)] <- 1
+  sample(1:length(rater1ordinal), size = 10, replace = FALSE)
+] <- 1
 rater2ordinal[
-  sample(1:length(rater1ordinal),
-         size = 10,
-         replace = FALSE)] <- 2
+  sample(1:length(rater1ordinal), size = 10, replace = FALSE)
+] <- 2
 
 rater3ordinal[
-  sample(1:length(rater1ordinal),
-         size = 10,
-         replace = FALSE)] <- 0
+  sample(1:length(rater1ordinal), size = 10, replace = FALSE)
+] <- 0
 rater3ordinal[
-  sample(1:length(rater1ordinal),
-         size = 10,
-         replace = FALSE)] <- 1
+  sample(1:length(rater1ordinal), size = 10, replace = FALSE)
+] <- 1
 rater3ordinal[
-  sample(1:length(rater1ordinal),
-         size = 10,
-         replace = FALSE)] <- 2
+  sample(1:length(rater1ordinal), size = 10, replace = FALSE)
+] <- 2
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
 time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
@@ -679,7 +703,7 @@ item3 <- item2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 item4 <- item3 + rnorm(n = sampleSize, mean = 0, sd = 12)
 
 Person <- as.factor(rep(1:6, each = 8))
-Occasion <- Rater <- 
+Occasion <- Rater <-
   as.factor(rep(1:2, each = 4, times = 6))
 Item <- as.factor(rep(1:4, times = 12))
 Score <- c(
@@ -694,24 +718,24 @@ Score <- c(
 Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.
 
 ```{r}
-rater1continuous[c(5,10)] <- NA
-rater2continuous[c(10,15)] <- NA
+rater1continuous[c(5, 10)] <- NA
+rater2continuous[c(10, 15)] <- NA
 rater3continuous[c(10)] <- NA
 
-rater1categorical[c(5,10)] <- NA
-rater2categorical[c(10,15)] <- NA
+rater1categorical[c(5, 10)] <- NA
+rater2categorical[c(10, 15)] <- NA
 rater3categorical[c(10)] <- NA
 
-rater1ordinal[c(5,10)] <- NA
-rater2ordinal[c(10,15)] <- NA
+rater1ordinal[c(5, 10)] <- NA
+rater2ordinal[c(10, 15)] <- NA
 rater3ordinal[c(10)] <- NA
 
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
+time1[c(5, 10)] <- NA
+time2[c(10, 15)] <- NA
 time3[c(10)] <- NA
 
-item1[c(5,10)] <- NA
-item2[c(10,15)] <- NA
+item1[c(5, 10)] <- NA
+item2[c(10, 15)] <- NA
 item3[c(10)] <- NA
 item4[c(10)] <- NA
 ```
@@ -721,11 +745,23 @@ item4[c(10)] <- NA
 ```{r}
 mydata <- data.frame(
   subid = 1:sampleSize,
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  rater1ordinal, rater2ordinal, rater3ordinal,
-  time1, time2, time3,
-  item1, item2, item3, item4)
+  rater1continuous,
+  rater2continuous,
+  rater3continuous,
+  rater1categorical,
+  rater2categorical,
+  rater3categorical,
+  rater1ordinal,
+  rater2ordinal,
+  rater3ordinal,
+  time1,
+  time2,
+  time3,
+  item1,
+  item2,
+  item3,
+  item4
+)
 
 pio_cross_dat <- data.frame(Person, Item, Score, Occasion)
 ```
@@ -770,8 +806,7 @@ We estimate the coefficient of stability below:\index{reliability!test–retest}
 
 ```{r}
 cor.test(x = mydata$time1, y = mydata$time2)
-cor(mydata[,c("time1","time2","time3")],
-    use = "pairwise.complete.obs")
+cor(mydata[, c("time1", "time2", "time3")], use = "pairwise.complete.obs")
 ```
 
 ```{r}
@@ -779,7 +814,8 @@ cor(mydata[,c("time1","time2","time3")],
 
 corValue <- cor.test(
   x = mydata$time1,
-  y = mydata$time2)$estimate
+  y = mydata$time2
+)$estimate
 ```
 
 The *r* value of $`r apa(corValue, 2, leading = FALSE)`$ indicates a strong positive association.\index{correlation}
@@ -792,14 +828,17 @@ The *r* value of $`r apa(corValue, 2, leading = FALSE)`$ indicates a strong posi
 #| fig-scap: "Test–Retest Reliability Scatterplot."
 #| code-fold: true
 
-plot(mydata$time1, mydata$time2,
-     main = substitute(
-       paste(italic(r), " = ", x, sep = ""),
-       list(x = apa(corValue, 2, leading = FALSE))))
+plot(
+  mydata$time1,
+  mydata$time2,
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = apa(corValue, 2, leading = FALSE))
+  )
+)
 abline(lm(time2 ~ time1, data = mydata), col = "black")
-mydataNoMissing <- na.omit(mydata[,c("time1","time2")])
-lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2),
-      col = "red")
+mydataNoMissing <- na.omit(mydata[, c("time1", "time2")])
+lines(lowess(mydataNoMissing$time1, mydataNoMissing$time2), col = "red")
 ```
 
 ##### Considerations About the Correlation Coefficient {#sec-correlationConsiderations}
@@ -819,8 +858,10 @@ See @fig-rangeOfCorrelations for a range of different correlation coefficients a
 #| include: false
 
 #Simulate data with specified correlation in relation to an existing variable (https://stats.stackexchange.com/a/313138/20338; archived at https://perma.cc/S26F-QSW3)
-complement <- function(y, rho, x){
-  if (missing(x)) x <- rnorm(length(y)) # Optional: supply a default if `x` is not given
+complement <- function(y, rho, x) {
+  if (missing(x)) {
+    x <- rnorm(length(y))
+  } # Optional: supply a default if `x` is not given
   y.perp <- residuals(lm(x ~ y, na.action = na.omit))
   rho * sd(y.perp) * y + y.perp * sd(y, na.rm = TRUE) * sqrt(1 - rho^2)
 }
@@ -836,18 +877,18 @@ correlations$v6 <- complement(correlations$criterion, -.5)
 correlations$v7 <- complement(correlations$criterion, -.4)
 correlations$v8 <- complement(correlations$criterion, -.3)
 correlations$v9 <- complement(correlations$criterion, -.2)
-correlations$v10 <-complement(correlations$criterion, -.1)
-correlations$v11 <-complement(correlations$criterion, 0)
-correlations$v12 <-complement(correlations$criterion, .1)
-correlations$v13 <-complement(correlations$criterion, .2)
-correlations$v14 <-complement(correlations$criterion, .3)
-correlations$v15 <-complement(correlations$criterion, .4)
-correlations$v16 <-complement(correlations$criterion, .5)
-correlations$v17 <-complement(correlations$criterion, .6)
-correlations$v18 <-complement(correlations$criterion, .7)
-correlations$v19 <-complement(correlations$criterion, .8)
-correlations$v20 <-complement(correlations$criterion, .9)
-correlations$v21 <-complement(correlations$criterion, 1)
+correlations$v10 <- complement(correlations$criterion, -.1)
+correlations$v11 <- complement(correlations$criterion, 0)
+correlations$v12 <- complement(correlations$criterion, .1)
+correlations$v13 <- complement(correlations$criterion, .2)
+correlations$v14 <- complement(correlations$criterion, .3)
+correlations$v15 <- complement(correlations$criterion, .4)
+correlations$v16 <- complement(correlations$criterion, .5)
+correlations$v17 <- complement(correlations$criterion, .6)
+correlations$v18 <- complement(correlations$criterion, .7)
+correlations$v19 <- complement(correlations$criterion, .8)
+correlations$v20 <- complement(correlations$criterion, .9)
+correlations$v21 <- complement(correlations$criterion, 1)
 ```
 
 ```{r}
@@ -858,131 +899,446 @@ correlations$v21 <-complement(correlations$criterion, 1)
 #| code-fold: true
 
 .pardefault <- par(no.readonly = TRUE)
-par(mfrow = c(7,3), mar = c(1, 0, 1, 0))
+par(mfrow = c(7, 3), mar = c(1, 0, 1, 0))
 
 # -1.0
-plot(correlations$criterion, correlations$v1, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v1)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v1,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v1)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v1 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v1), col = "red")
 
 # -.9
-plot(correlations$criterion, correlations$v2, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v2)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v2,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v2)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v2 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v2), col = "red")
 
 # -.8
-plot(correlations$criterion, correlations$v3, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v3)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v3,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v3)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v3 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v3), col = "red")
 
 # -.7
-plot(correlations$criterion, correlations$v4, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v4)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v4,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v4)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v4 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v4), col = "red")
 
 # -.6
-plot(correlations$criterion, correlations$v5, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v5)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v5,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v5)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v5 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v5), col = "red")
 
 # -.5
-plot(correlations$criterion, correlations$v6, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v6)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v6,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v6)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v6 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v6), col = "red")
 
 # -.4
-plot(correlations$criterion, correlations$v7, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v7)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v7,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v7)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v7 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v7), col = "red")
 
 # -.3
-plot(correlations$criterion, correlations$v8, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v8)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v8,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v8)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v8 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v8), col = "red")
 
 # -.2
-plot(correlations$criterion, correlations$v9, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v9)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v9,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v9)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v9 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v9), col = "red")
 
 # -.1
-plot(correlations$criterion, correlations$v10, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v10)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v10,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v10)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v10 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v10), col = "red")
 
 # 0.0
-plot(correlations$criterion, correlations$v11, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v11)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v11,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v11)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v11 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v11), col = "red")
 
 # 0.1
-plot(correlations$criterion, correlations$v12, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v12)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v12,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v12)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v12 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v12), col = "red")
 
 # 0.2
-plot(correlations$criterion, correlations$v13, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v13)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v13,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v13)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v13 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v13), col = "red")
 
 # 0.3
-plot(correlations$criterion, correlations$v14, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v14)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v14,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v14)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v14 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v14), col = "red")
 
 # 0.4
-plot(correlations$criterion, correlations$v15, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v15)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v15,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v15)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v15 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v15), col = "red")
 
 # 0.5
-plot(correlations$criterion, correlations$v16, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v16)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v16,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v16)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v16 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v16), col = "red")
 
 # 0.6
-plot(correlations$criterion, correlations$v17, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v17)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v17,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v17)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v17 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v17), col = "red")
 
 # 0.7
-plot(correlations$criterion, correlations$v18, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v18)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v18,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v18)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v18 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v18), col = "red")
 
 # 0.8
-plot(correlations$criterion, correlations$v19, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v19)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v19,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v19)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v19 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v19), col = "red")
 
 # 0.9
-plot(correlations$criterion, correlations$v20, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v20)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v20,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v20)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v20 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v20), col = "red")
 
 # 1.0
-plot(correlations$criterion, correlations$v21, xaxt = "n", yaxt = "n", xlab = "" , ylab = "",
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = correlations$criterion, y = correlations$v21)$estimate, 2))))
+plot(
+  correlations$criterion,
+  correlations$v21,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(
+      x = round(
+        cor.test(x = correlations$criterion, y = correlations$v21)$estimate,
+        2
+      )
+    )
+  )
+)
 abline(lm(v21 ~ criterion, data = correlations), col = "black")
 lines(lowess(correlations$criterion, correlations$v21), col = "red")
 
@@ -1045,23 +1401,63 @@ For instance, Anscombe's quartet includes four sets of data that have nearly ide
 #| fig-height: 6
 #| code-fold: true
 
-plot(anscombe$x1, anscombe$y1, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x1, y = anscombe$y1)$estimate, 2))))
+plot(
+  anscombe$x1,
+  anscombe$y1,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x1, y = anscombe$y1)$estimate, 2))
+  )
+)
 abline(lm(y1 ~ x1, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x1, anscombe$y1), col = "red")
 
-plot(anscombe$x2, anscombe$y2, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x2, y = anscombe$y2)$estimate, 2))))
+plot(
+  anscombe$x2,
+  anscombe$y2,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x2, y = anscombe$y2)$estimate, 2))
+  )
+)
 abline(lm(y2 ~ x2, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x2, anscombe$y2), col = "red")
 
-plot(anscombe$x3, anscombe$y3, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x3, y = anscombe$y3)$estimate, 2))))
+plot(
+  anscombe$x3,
+  anscombe$y3,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x3, y = anscombe$y3)$estimate, 2))
+  )
+)
 abline(lm(y3 ~ x3, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x3, anscombe$y3), col = "red")
 
-plot(anscombe$x4, anscombe$y4, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x4, y = anscombe$y4)$estimate, 2))))
+plot(
+  anscombe$x4,
+  anscombe$y4,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x4, y = anscombe$y4)$estimate, 2))
+  )
+)
 abline(lm(y4 ~ x4, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x4, anscombe$y4), col = "red")
 ```
@@ -1080,23 +1476,63 @@ For instance, Anscombe's quartet includes four sets of data that have nearly ide
 #| fig-height: 6
 #| code-fold: true
 
-plot(anscombe$x1, anscombe$y1, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x1, y = anscombe$y1)$estimate, 2))))
+plot(
+  anscombe$x1,
+  anscombe$y1,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x1, y = anscombe$y1)$estimate, 2))
+  )
+)
 abline(lm(y1 ~ x1, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x1, anscombe$y1), col = "red")
 
-plot(anscombe$x2, anscombe$y2, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x2, y = anscombe$y2)$estimate, 2))))
+plot(
+  anscombe$x2,
+  anscombe$y2,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x2, y = anscombe$y2)$estimate, 2))
+  )
+)
 abline(lm(y2 ~ x2, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x2, anscombe$y2), col = "red")
 
-plot(anscombe$x3, anscombe$y3, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x3, y = anscombe$y3)$estimate, 2))))
+plot(
+  anscombe$x3,
+  anscombe$y3,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x3, y = anscombe$y3)$estimate, 2))
+  )
+)
 abline(lm(y3 ~ x3, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x3, anscombe$y3), col = "red")
 
-plot(anscombe$x4, anscombe$y4, xlab = "x", ylab = "y", xlim = c(0,20), ylim = c(0,15),
-     main = substitute(paste(italic(r), " = ", x, sep = ""), list(x = round(cor.test(x = anscombe$x4, y = anscombe$y4)$estimate, 2))))
+plot(
+  anscombe$x4,
+  anscombe$y4,
+  xlab = "x",
+  ylab = "y",
+  xlim = c(0, 20),
+  ylim = c(0, 15),
+  main = substitute(
+    paste(italic(r), " = ", x, sep = ""),
+    list(x = round(cor.test(x = anscombe$x4, y = anscombe$y4)$estimate, 2))
+  )
+)
 abline(lm(y4 ~ x4, data = anscombe), col = "black", lty = 2)
 #lines(lowess(anscombe$x4, anscombe$y4), col = "red")
 ```
@@ -1131,66 +1567,101 @@ Here is the correlation with and without restriction of range on $x$ (i.e., $x$ 
 #| fig-height: 5
 #| code-fold: true
 
-par(mfrow = c(1,2))
-par(mar = c(4, 0, 3, 0),
-    oma = c(0, 4, 0, 0))
+par(mfrow = c(1, 2))
+par(mar = c(4, 0, 3, 0), oma = c(0, 4, 0, 0))
 
 #Plot with no restricted range
 plot(
-  mydata$time1, mydata$time3,
+  mydata$time1,
+  mydata$time3,
   main = substitute(
     paste("No range restriction: ", italic(r), " = ", x, sep = ""),
-    list(x = apa(cor.test(x = mydata$time1,
-                          y = mydata$time3)$estimate, 2, leading = FALSE))),
+    list(
+      x = apa(
+        cor.test(x = mydata$time1, y = mydata$time3)$estimate,
+        2,
+        leading = FALSE
+      )
+    )
+  ),
   xlab = "time1",
   ylab = "time3",
-  xlim = c(25,85),
-  ylim = c(25,85))
+  xlim = c(25, 85),
+  ylim = c(25, 85)
+)
 points(
   mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
   mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
-  pch = 19)
+  pch = 19
+)
 abline(lm(time3 ~ time1, data = mydata), col = "black")
-mydataNoMissing <- na.omit(mydata[,c("time1","time3")])
-lines(lowess(mydataNoMissing$time1, mydataNoMissing$time3),
-      col = "red")
+mydataNoMissing <- na.omit(mydata[, c("time1", "time3")])
+lines(lowess(mydataNoMissing$time1, mydataNoMissing$time3), col = "red")
 
 #Plot with restricted range
 plot(
   mydata$time1[which(mydata$time1 > 55 & mydata$time1 < 65)],
   mydata$time3[which(mydata$time1 > 55 & mydata$time1 < 65)],
   main = substitute(
-    paste("Restricted range for time1 (55-65): ",
-          italic(r), " = ", x, sep = ""),
-    list(x = apa(cor.test(
-      x = mydata$time1[which(mydata$time1 > 55 & 
-                               mydata$time1 < 65)],
-      y = mydata$time3[which(mydata$time1 > 55 & 
-                               mydata$time1 < 65)])$estimate,
-      2, leading = FALSE))),
+    paste(
+      "Restricted range for time1 (55-65): ",
+      italic(r),
+      " = ",
+      x,
+      sep = ""
+    ),
+    list(
+      x = apa(
+        cor.test(
+          x = mydata$time1[which(
+            mydata$time1 > 55 &
+              mydata$time1 < 65
+          )],
+          y = mydata$time3[which(
+            mydata$time1 > 55 &
+              mydata$time1 < 65
+          )]
+        )$estimate,
+        2,
+        leading = FALSE
+      )
+    )
+  ),
   xlab = "time1",
   ylab = "time3",
-  xlim = c(25,85),
-  ylim = c(25,85),
+  xlim = c(25, 85),
+  ylim = c(25, 85),
   yaxt = "n",
-  pch = 19)
-abline(lm(time3 ~ time1,
-          data = mydata[which(mydata$time1 > 55 & 
-                                mydata$time1 < 65),]),
-       col = "black")
-mydataNoMissing <- na.omit(mydata[,c("time1","time3")])
-lines(lowess(
-  mydataNoMissing$time1[which(mydataNoMissing$time1 > 55 & 
-                                mydataNoMissing$time1 < 65)],
-  mydataNoMissing$time3[which(mydataNoMissing$time1 > 55 & 
-                                mydataNoMissing$time1 < 65)]),
-  col = "red")
+  pch = 19
+)
+abline(
+  lm(
+    time3 ~ time1,
+    data = mydata[
+      which(
+        mydata$time1 > 55 &
+          mydata$time1 < 65
+      ),
+    ]
+  ),
+  col = "black"
+)
+mydataNoMissing <- na.omit(mydata[, c("time1", "time3")])
+lines(
+  lowess(
+    mydataNoMissing$time1[which(
+      mydataNoMissing$time1 > 55 &
+        mydataNoMissing$time1 < 65
+    )],
+    mydataNoMissing$time3[which(
+      mydataNoMissing$time1 > 55 &
+        mydataNoMissing$time1 < 65
+    )]
+  ),
+  col = "red"
+)
 
-mtext("time3",
-      side = 2,
-      outer = TRUE,
-      line = 2.7,
-      adj = 0.6)
+mtext("time3", side = 2, outer = TRUE, line = 2.7, adj = 0.6)
 ```
 
 The observed correlation became much weaker due to restriction of range.\index{restricted range}\index{correlation}\index{observed association}
@@ -1226,7 +1697,7 @@ A higher ICC reflects greater between-person variability relative to within-pers
 ICC was estimated using the `psych` package [@R-psych].\index{reliability!test–retest}\index{reliability!test–retest!coefficient of agreement}
 
 ```{r}
-psych::ICC(mydata[,c("time1","time2")], missing = FALSE)
+psych::ICC(mydata[, c("time1", "time2")], missing = FALSE)
 ```
 
 There are various kinds of ICC coefficients.
@@ -1242,10 +1713,11 @@ Below, absolute agreement of test–retest reliability was estimated using the `
 
 ```{r}
 irr::icc(
-  mydata[,c("time1","time2")],
+  mydata[, c("time1", "time2")],
   model = "twoway",
   type = "agreement",
-  unit = "single")
+  unit = "single"
+)
 ```
 
 #### Coefficient of Repeatability {#sec-repeatability}
@@ -1274,9 +1746,9 @@ $$ {#eq-coefficientOfRepeatability}
 ```{r}
 #| code-fold: true
 
-coefficientOfRepeatability <- function(measure1, measure2){
+coefficientOfRepeatability <- function(measure1, measure2) {
   value <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
-  
+
   return(value)
 }
 ```
@@ -1284,7 +1756,8 @@ coefficientOfRepeatability <- function(measure1, measure2){
 ```{r}
 coefficientOfRepeatability(
   measure1 = mydata$time1,
-  measure2 = mydata$time2)
+  measure2 = mydata$time2
+)
 ```
 
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#sec-blandAltmanPlot) in @fig-repeatability.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{petersenlab package}
@@ -1294,7 +1767,7 @@ The coefficient of repeatability is labeled `cr` in the output.\index{reliabilit
 #| eval: false
 #| code-fold: true
 
-repeatability <- function(measure1, measure2){
+repeatability <- function(measure1, measure2) {
   cr <- qnorm(.975) * sd((measure1 - measure2), na.rm = TRUE)
   bias <- mean((measure2 - measure1), na.rm = TRUE)
   lowerLOA <- bias - cr
@@ -1310,9 +1783,12 @@ repeatability <- function(measure1, measure2){
     upperLOA = upperLOA
   )
 
-  plot(means, differences,
-       xlab = "Mean of measurements (measure2 and measure1)",
-       ylab = "Difference of measurements (measure2 − measure1)")
+  plot(
+    means,
+    differences,
+    xlab = "Mean of measurements (measure2 and measure1)",
+    ylab = "Difference of measurements (measure2 − measure1)"
+  )
   abline(h = 0)
   abline(h = bias, lty = 2, col = "red")
   abline(h = lowerLOA, lty = 2, col = "blue")
@@ -1331,7 +1807,8 @@ repeatability <- function(measure1, measure2){
 
 repeatability(
   measure1 = mydata$time1,
-  measure2 = mydata$time2)
+  measure2 = mydata$time2
+)
 ```
 
 :::
@@ -1358,7 +1835,8 @@ The Bland-Altman plot was created using the `blandr` package [@R-blandr].\index{
 ```{r}
 BAstats <- blandr.statistics(
   mydata$time1, #method1
-  mydata$time2) #method2
+  mydata$time2
+) #method2
 BAplotlimits <- blandr.plot.limits(BAstats)
 ```
 
@@ -1373,7 +1851,8 @@ blandr.plot.rplot(
   annotate = TRUE,
   method1name = "T1",
   method2name = "T2",
-  ciDisplay = FALSE)
+  ciDisplay = FALSE
+)
 ```
 
 ##### Bias {#sec-blandAltmanBias}
@@ -1388,9 +1867,9 @@ As a result, it is also important to examine other indices of test–retest reli
 ```{r}
 #| code-fold: true
 
-bias <- function(measure1, measure2){
+bias <- function(measure1, measure2) {
   value <- mean((measure2 - measure1), na.rm = TRUE)
-  
+
   return(value)
 }
 ```
@@ -1398,7 +1877,8 @@ bias <- function(measure1, measure2){
 ```{r}
 bias(
   measure1 = mydata$time1,
-  measure2 = mydata$time2)
+  measure2 = mydata$time2
+)
 ```
 
 ```{r}
@@ -1406,7 +1886,8 @@ bias(
 
 biasValue <- bias(
   measure1 = mydata$time1,
-  measure2 = mydata$time2)
+  measure2 = mydata$time2
+)
 ```
 
 The bias of `r apa(biasValue, 2)` indicates that the scores at time 2 are somewhat larger, on average, than the scores at time 1.\index{reliability!test–retest}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}
@@ -1426,15 +1907,17 @@ It is expected that the 95% limits of agreement (LOA) include 95% of differences
 ```{r}
 #| code-fold: true
 
-lowerLOA <- function(measure1, measure2){
-  value <- bias(measure1, measure2) - coefficientOfRepeatability(measure1, measure2)
-  
+lowerLOA <- function(measure1, measure2) {
+  value <- bias(measure1, measure2) -
+    coefficientOfRepeatability(measure1, measure2)
+
   return(value)
 }
 
-upperLOA <- function(measure1, measure2){
-  value <- bias(measure1, measure2) + coefficientOfRepeatability(measure1, measure2)
-  
+upperLOA <- function(measure1, measure2) {
+  value <- bias(measure1, measure2) +
+    coefficientOfRepeatability(measure1, measure2)
+
   return(value)
 }
 ```
@@ -1442,10 +1925,12 @@ upperLOA <- function(measure1, measure2){
 ```{r}
 lowerLOA(
   measure1 = mydata$time1,
-  measure2 = mydata$time2)
+  measure2 = mydata$time2
+)
 upperLOA(
   measure1 = mydata$time1,
-  measure2 = mydata$time2)
+  measure2 = mydata$time2
+)
 ```
 
 ```{r}
@@ -1485,33 +1970,80 @@ ICC ranges from 0–1, with higher scores indicating greater agreement.\index{re
 Below, ICC was estimated using the `psych` package [@R-psych].\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 
 ```{r}
-ICC(mydata[,c(
-  "rater1continuous","rater2continuous","rater3continuous")],
-  missing = FALSE)
+ICC(
+  mydata[, c(
+    "rater1continuous",
+    "rater2continuous",
+    "rater3continuous"
+  )],
+  missing = FALSE
+)
 ```
 
 Below, ICC was estimated using the `irrNA` package:
 
 ```{r}
-iccNA(mydata[,c(
-  "rater1continuous","rater2continuous","rater3continuous")])
+iccNA(mydata[, c(
+  "rater1continuous",
+  "rater2continuous",
+  "rater3continuous"
+)])
 ```
 
 Below, ICC was estimated using the `irrICC` package:
 
 ```{r}
-icc1a.fn(mydata[,c("subid",
-  "rater1continuous","rater2continuous","rater3continuous")])
-icc1b.fn(dropRowsWithAllNA(mydata[,c("subid",
-  "rater1continuous","rater2continuous","rater3continuous")], ignore = "subid"))
-icc2.inter.fn(dropRowsWithAllNA(mydata[,c("subid",
-  "rater1continuous","rater2continuous","rater3continuous")], ignore = "subid"))
-icc2.nointer.fn(dropRowsWithAllNA(mydata[,c("subid",
-  "rater1continuous","rater2continuous","rater3continuous")], ignore = "subid"))
-icc3.inter.fn(dropRowsWithAllNA(mydata[,c("subid",
-  "rater1continuous","rater2continuous","rater3continuous")], ignore = "subid"))
-icc3.nointer.fn(dropRowsWithAllNA(mydata[,c("subid",
-  "rater1continuous","rater2continuous","rater3continuous")], ignore = "subid"))
+icc1a.fn(mydata[, c(
+  "subid",
+  "rater1continuous",
+  "rater2continuous",
+  "rater3continuous"
+)])
+icc1b.fn(dropRowsWithAllNA(
+  mydata[, c(
+    "subid",
+    "rater1continuous",
+    "rater2continuous",
+    "rater3continuous"
+  )],
+  ignore = "subid"
+))
+icc2.inter.fn(dropRowsWithAllNA(
+  mydata[, c(
+    "subid",
+    "rater1continuous",
+    "rater2continuous",
+    "rater3continuous"
+  )],
+  ignore = "subid"
+))
+icc2.nointer.fn(dropRowsWithAllNA(
+  mydata[, c(
+    "subid",
+    "rater1continuous",
+    "rater2continuous",
+    "rater3continuous"
+  )],
+  ignore = "subid"
+))
+icc3.inter.fn(dropRowsWithAllNA(
+  mydata[, c(
+    "subid",
+    "rater1continuous",
+    "rater2continuous",
+    "rater3continuous"
+  )],
+  ignore = "subid"
+))
+icc3.nointer.fn(dropRowsWithAllNA(
+  mydata[, c(
+    "subid",
+    "rater1continuous",
+    "rater2continuous",
+    "rater3continuous"
+  )],
+  ignore = "subid"
+))
 ```
 
 There are various kinds of ICC coefficients.\index{reliability!intra-rater}\index{reliability!inter-rater!intraclass correlation}
@@ -1539,12 +2071,21 @@ These estimates of inter-rater reliability range from −1 to +1, with −1 indi
 Larger, more positive scores indicate greater agreement.
 
 ```{r}
-cohen.kappa(mydata[,c(
-  "rater1categorical","rater2categorical","rater3categorical")])
-fleiss.kappa.raw(na.omit(mydata[,c(
-  "rater1categorical","rater2categorical","rater3categorical")]))
-gwet.ac1.raw(na.omit(mydata[,c(
-  "rater1categorical","rater2categorical","rater3categorical")]))
+cohen.kappa(mydata[, c(
+  "rater1categorical",
+  "rater2categorical",
+  "rater3categorical"
+)])
+fleiss.kappa.raw(na.omit(mydata[, c(
+  "rater1categorical",
+  "rater2categorical",
+  "rater3categorical"
+)]))
+gwet.ac1.raw(na.omit(mydata[, c(
+  "rater1categorical",
+  "rater2categorical",
+  "rater3categorical"
+)]))
 ```
 
 #### Ordinal Data {#sec-interraterReliability-ordinal}
@@ -1561,10 +2102,16 @@ The values range from −1 to +1, with −1 indicating perfect disagreement, 0 i
 Larger, more positive scores indicate greater agreement.
 
 ```{r}
-cohen.kappa(mydata[,c(
-  "rater1ordinal","rater2ordinal","rater3ordinal")])
-kendallNA(mydata[,c(
-  "rater1ordinal","rater2ordinal","rater3ordinal")])
+cohen.kappa(mydata[, c(
+  "rater1ordinal",
+  "rater2ordinal",
+  "rater3ordinal"
+)])
+kendallNA(mydata[, c(
+  "rater1ordinal",
+  "rater2ordinal",
+  "rater3ordinal"
+)])
 ```
 
 ### Intra-Rater Reliability {#sec-intrarater-reliability}
@@ -1627,20 +2174,24 @@ One estimate of internal consistency is the average (mean or median) inter-item 
 
 ```{r}
 interItemCorrelations <- cor(
-  mydata[,c("item1","item2","item3","item4")],
-  use = "pairwise.complete.obs")
+  mydata[, c("item1", "item2", "item3", "item4")],
+  use = "pairwise.complete.obs"
+)
 diag(interItemCorrelations) <- NA
 
 interItemCorrelations_nodiag <- interItemCorrelations
 interItemCorrelations_nodiag[
-  upper.tri(interItemCorrelations_nodiag)] <- NA
+  upper.tri(interItemCorrelations_nodiag)
+] <- NA
 ```
 
 Here is the mean inter-item correlation for each item:\index{reliability!internal consistency!average inter-item correlation}
 
 ```{r}
 meanInterItemCorrelations <- colMeans(
-  interItemCorrelations, na.rm = TRUE)
+  interItemCorrelations,
+  na.rm = TRUE
+)
 meanInterItemCorrelations
 ```
 
@@ -1651,7 +2202,8 @@ mean(meanInterItemCorrelations)
 mean(interItemCorrelations_nodiag, na.rm = TRUE)
 
 psych::alpha(
-  mydata[,c("item1","item2","item3","item4")])$total$average_r
+  mydata[, c("item1", "item2", "item3", "item4")]
+)$total$average_r
 ```
 
 @fig-histogramITCs is a histogram of the inter-item correlations.\index{reliability!internal consistency!average inter-item correlation}
@@ -1662,9 +2214,11 @@ psych::alpha(
 #| fig-alt: "Histogram of Inter-Item Correlations. The vertical black line reflects the mean inter-item correlation."
 #| code-fold: true
 
-hist(meanInterItemCorrelations,
-     xlab = "Inter-Item Correlations",
-     main = "Histogram of Inter-Item Correlations")
+hist(
+  meanInterItemCorrelations,
+  xlab = "Inter-Item Correlations",
+  main = "Histogram of Inter-Item Correlations"
+)
 abline(v = mean(meanInterItemCorrelations), lwd = 2)
 ```
 
@@ -1672,8 +2226,10 @@ Here is the median inter-item correlation for each item:\index{reliability!inter
 
 ```{r}
 medianInterItemCorrelations <- apply(
-  interItemCorrelations, 2,
-  function(x) median(x, na.rm = TRUE))
+  interItemCorrelations,
+  2,
+  function(x) median(x, na.rm = TRUE)
+)
 medianInterItemCorrelations
 ```
 
@@ -1682,8 +2238,12 @@ Here is the median inter-item correlation across all items:\index{reliability!in
 ```{r}
 median(interItemCorrelations[lower.tri(interItemCorrelations)])
 
-psych::alpha(mydata[,c(
-  "item1","item2","item3","item4")])$total$median_r
+psych::alpha(mydata[, c(
+  "item1",
+  "item2",
+  "item3",
+  "item4"
+)])$total$median_r
 ```
 
 #### Average Item–Total Correlation {#sec-itemTotalCorrelation-reliability}
@@ -1692,7 +2252,8 @@ Another estimate of internal consistency is the average item–total correlation
 
 ```{r}
 itemTotalCorrelations <- psych::alpha(
-  mydata[,c("item1","item2","item3","item4")])$item.stats["raw.r"]
+  mydata[, c("item1", "item2", "item3", "item4")]
+)$item.stats["raw.r"]
 
 mean(itemTotalCorrelations$raw.r)
 ```
@@ -1702,7 +2263,8 @@ This reduces the extent to which the association reflects that the item is assoc
 
 ```{r}
 itemTotalCorrelationsDrop <- psych::alpha(
-  mydata[,c("item1","item2","item3","item4")])$item.stats["r.drop"]
+  mydata[, c("item1", "item2", "item3", "item4")]
+)$item.stats["r.drop"]
 
 mean(itemTotalCorrelationsDrop$r.drop)
 ```
@@ -1727,13 +2289,15 @@ latentFactorModel_fit <- cfa(
   data = mydata,
   missing = "ML",
   estimator = "MLR",
-  std_lv = TRUE)
+  std_lv = TRUE
+)
 
 summary(
   latentFactorModel_fit,
   fit_measures = TRUE,
   standardized = TRUE,
-  rsquare = TRUE)
+  rsquare = TRUE
+)
 
 AVE(latentFactorModel_fit)
 ```
@@ -1781,17 +2345,27 @@ Another challenge to split-half reliability is that the reliability differs depe
 One option is to calculate the split-half reliability of odd and even trials, while correcting for test length, as is performed with the `item_split_half()` function of the `performance` package [@R-performance]:
 
 ```{r}
-item_split_half(mydata[,c(
-  "item1","item2","item3","item4")])
+item_split_half(mydata[, c(
+  "item1",
+  "item2",
+  "item3",
+  "item4"
+)])
 ```
 
 Modern computational software allows for estimating the mean reliability estimate of all possible split-halves [@Revelle2019], while correcting for test length, as seen below.\index{reliability!internal consistency}\index{reliability!internal consistency!split-half}
 Split-half reliability was estimated using the `psych` package [@R-psych].\index{reliability!internal consistency}\index{reliability!internal consistency!split-half}
 
 ```{r}
-splitHalf(mydata[,c(
-  "item1","item2","item3","item4")],
-  brute = TRUE)
+splitHalf(
+  mydata[, c(
+    "item1",
+    "item2",
+    "item3",
+    "item4"
+  )],
+  brute = TRUE
+)
 ```
 
 #### Cronbach's Alpha (Coefficient Alpha) {#sec-cronbachAlpha}
@@ -1821,22 +2395,34 @@ However, Cronbach's alpha does not assess the dimensionality of the scale or any
 Cronbach's alpha ($\alpha$) was estimated using the `psych` package [@R-psych].\index{reliability!internal consistency}\index{reliability!internal consistency!Cronbach's alpha}
 
 ```{r}
-psych::alpha(mydata[,c(
-  "item1","item2","item3","item4")])$total$raw_alpha
+psych::alpha(mydata[, c(
+  "item1",
+  "item2",
+  "item3",
+  "item4"
+)])$total$raw_alpha
 ```
 
 Below is an estimate of standardized alpha (if the items are standardized before computing the scale score).
 
 ```{r}
-psych::alpha(mydata[,c(
-  "item1","item2","item3","item4")])$total$std.alpha
+psych::alpha(mydata[, c(
+  "item1",
+  "item2",
+  "item3",
+  "item4"
+)])$total$std.alpha
 ```
 
 Below are item statistics:
 
 ```{r}
-psych::alpha(mydata[,c(
-  "item1","item2","item3","item4")])
+psych::alpha(mydata[, c(
+  "item1",
+  "item2",
+  "item3",
+  "item4"
+)])
 ```
 
 However, because of the many weaknesses of Cronbach's alpha [@Cortina1993; @Dunn2014; @Flora2020; @Green2015; @Hayes2020; @Kelley2016; @McNeish2018; @Peters2014a; @Raykov2001; @Revelle2019; @Sijtsma2008; but see @Raykov2019], current recommendations are to use coefficient omega ($\omega$) instead, as described next.\index{reliability!internal consistency}\index{reliability!internal consistency!Cronbach's alpha}\index{reliability!internal consistency!omega}
@@ -1856,9 +2442,10 @@ This code quickly calculates a point estimate for omega total:\index{reliability
 
 ```{r}
 ci.reliability(
-  mydata[,c("item1","item2","item3","item4")],
+  mydata[, c("item1", "item2", "item3", "item4")],
   type = "omega",
-  interval.type = "none")$est
+  interval.type = "none"
+)$est
 ```
 
 If you want to calculate a confidence interval for omega, you will need to specify an `interval.type` and specify how many bootstrap replications.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
@@ -1882,10 +2469,11 @@ However, the number of bootstrap replications must be larger than the number of 
 
 set.seed(52242)
 ci.reliability(
-  mydata[,c("item1","item2","item3","item4")],
+  mydata[, c("item1", "item2", "item3", "item4")],
   type = "omega",
   interval.type = "bca",
-  B = bootstrapReplications)
+  B = bootstrapReplications
+)
 ```
 
 ##### Omega Hierarchical ($\omega_h$)
@@ -1899,9 +2487,10 @@ Omega hierarchical was calculated using the `MBESS` package [@R-MBESS].\index{re
 
 ```{r}
 ci.reliability(
-  mydata[,c("item1","item2","item3","item4")],
+  mydata[, c("item1", "item2", "item3", "item4")],
   type = "hierarchical",
-  interval.type = "none")$est
+  interval.type = "none"
+)$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
@@ -1917,10 +2506,11 @@ However, the number of bootstrap replications must be larger than the number of 
 
 set.seed(52242)
 ci.reliability(
-  mydata[,c("item1","item2","item3","item4")],
+  mydata[, c("item1", "item2", "item3", "item4")],
   type = "hierarchical",
   interval.type = "bca",
-  B = bootstrapReplications)
+  B = bootstrapReplications
+)
 ```
 
 ##### Omega Categorical ($\omega_C$)
@@ -1934,9 +2524,10 @@ Omega categorical was calculated using the `MBESS` package [@R-MBESS].\index{rel
 
 ```{r}
 ci.reliability(
-  mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
+  mydata[, c("rater1categorical", "rater2categorical", "rater3categorical")],
   type = "categorical",
-  interval.type = "none")$est
+  interval.type = "none"
+)$est
 ```
 
 The following code calculates a confidence interval from a bias-corrected bootstrap.\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
@@ -1953,10 +2544,11 @@ However, the number of bootstrap replications must be larger than the number of 
 
 set.seed(52242)
 ci.reliability(
-  mydata[,c("rater1categorical","rater2categorical","rater3categorical")],
+  mydata[, c("rater1categorical", "rater2categorical", "rater3categorical")],
   type = "categorical",
   interval.type = "bca",
-  B = bootstrapReplications)
+  B = bootstrapReplications
+)
 ```
 
 ### Comparison {#sec-comparison-reliability}
@@ -1988,12 +2580,15 @@ We specify items 2 and 3 to have twice the weight as item 1 in the composite, an
 
 ```{r}
 rxx <- c(0.70, 0.75, 0.80, 0.85) #reliability coefficients
-rho <- cor(mydata[,c("item1","item2","item3","item4")],
-           use = "pairwise.complete.obs")
+rho <- cor(
+  mydata[, c("item1", "item2", "item3", "item4")],
+  use = "pairwise.complete.obs"
+)
 sigma <- apply(
-  mydata[,c("item1","item2","item3","item4")],
+  mydata[, c("item1", "item2", "item3", "item4")],
   2,
-  function(x) sd(x, na.rm = TRUE)) #standard deviations
+  function(x) sd(x, na.rm = TRUE)
+) #standard deviations
 weights <- c(1, 2, 2, 1.5) #weights of each variable in the linear combination
 ```
 
@@ -2003,7 +2598,8 @@ Here is the reliability of an unweighted composite:\index{reliability!linear com
 composite_rel_matrix(
   rel_vec = rxx,
   r_mat = rho,
-  sd_vec = sigma)
+  sd_vec = sigma
+)
 ```
 
 Here is the reliability of a weighted composite:\index{reliability!linear composite}
@@ -2013,7 +2609,8 @@ composite_rel_matrix(
   rel_vec = rxx,
   r_mat = rho,
   sd_vec = sigma,
-  wt_vec = weights)
+  wt_vec = weights
+)
 ```
 
 ### Reliability of a Difference Score {#sec-differenceScore-reliability}
@@ -2036,13 +2633,17 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 #| eval: false
 #| code-fold: true
 
-reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY){
+reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY) {
   rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
   sigmaX <- sd(x, na.rm = TRUE)
   sigmaY <- sd(y, na.rm = TRUE)
-  
-  reliability <- (sigmaX^2 * reliabilityX + sigmaY^2 * reliabilityY - (2 * rxy * sigmaX * sigmaY)) / (sigmaX^2 + sigmaY^2 - (2 * rxy * sigmaX * sigmaY))
-  
+
+  reliability <- (sigmaX^2 *
+    reliabilityX +
+    sigmaY^2 * reliabilityY -
+    (2 * rxy * sigmaX * sigmaY)) /
+    (sigmaX^2 + sigmaY^2 - (2 * rxy * sigmaX * sigmaY))
+
   return(reliability)
 }
 ```
@@ -2052,7 +2653,8 @@ reliabilityOfDifferenceScore(
   x = mydata$item1,
   y = mydata$item2,
   reliabilityX = .95,
-  reliabilityY = .95)
+  reliabilityY = .95
+)
 ```
 
 For instance, in this case, the reliability of the difference score is .26, even though the reliability of both indices is .95.\index{reliability!difference score}\index{difference score!reliability}
@@ -2067,32 +2669,71 @@ As depicted, a variable would not be expected to be more strongly associated wit
 #| code-fold: true
 #| fig-height: 4
 
-reliabilityOfDifferenceScoreEqualVariances <- function(x, y, reliabilityX, reliabilityY){
+reliabilityOfDifferenceScoreEqualVariances <- function(
+  x,
+  y,
+  reliabilityX,
+  reliabilityY
+) {
   rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
   reliability <- (reliabilityX + reliabilityY - (2 * rxy)) / (2 * (1 - rxy))
-  
+
   return(reliability)
 }
 
-reliabilityOfDifferenceScoreEqualVariancesValues <- function(correlation, reliabilityX, reliabilityY){
-  reliability <- (reliabilityX + reliabilityY - (2 * correlation)) / (2 * (1 - correlation))
-  
+reliabilityOfDifferenceScoreEqualVariancesValues <- function(
+  correlation,
+  reliabilityX,
+  reliabilityY
+) {
+  reliability <- (reliabilityX + reliabilityY - (2 * correlation)) /
+    (2 * (1 - correlation))
+
   return(reliability)
 }
 
-newDataDifferenceScore <- expand.grid(reliability = seq(0, 1, by = 0.01),
-                                      correlation = c(0, .1, .3, .5, .7, .9))
+newDataDifferenceScore <- expand.grid(
+  reliability = seq(0, 1, by = 0.01),
+  correlation = c(0, .1, .3, .5, .7, .9)
+)
 
-newDataDifferenceScore$reliabilityOfDifferenceScore <- reliabilityOfDifferenceScoreEqualVariancesValues(correlation = newDataDifferenceScore$correlation, reliabilityX = newDataDifferenceScore$reliability, reliabilityY = newDataDifferenceScore$reliability)
+newDataDifferenceScore$reliabilityOfDifferenceScore <- reliabilityOfDifferenceScoreEqualVariancesValues(
+  correlation = newDataDifferenceScore$correlation,
+  reliabilityX = newDataDifferenceScore$reliability,
+  reliabilityY = newDataDifferenceScore$reliability
+)
 
-ggplot(newDataDifferenceScore, aes(reliability, reliabilityOfDifferenceScore, group = as.factor(correlation), color = as.factor(correlation))) +
+ggplot(
+  newDataDifferenceScore,
+  aes(
+    reliability,
+    reliabilityOfDifferenceScore,
+    group = as.factor(correlation),
+    color = as.factor(correlation)
+  )
+) +
   geom_line(linewidth = 1.5) +
   theme_bw() +
-  scale_x_continuous(name = "Reliability of Indices", breaks = seq(from = 0, to = 1, by = .1), labels = seq(from = 0, to = 1, by = .1)) +
-  scale_y_continuous(name = "Reliability of Difference Score", breaks = seq(from = 0, to = 1, by = .1), labels = seq(from = 0, to = 1, by = .1), limits = c(0,1)) +
+  scale_x_continuous(
+    name = "Reliability of Indices",
+    breaks = seq(from = 0, to = 1, by = .1),
+    labels = seq(from = 0, to = 1, by = .1)
+  ) +
+  scale_y_continuous(
+    name = "Reliability of Difference Score",
+    breaks = seq(from = 0, to = 1, by = .1),
+    labels = seq(from = 0, to = 1, by = .1),
+    limits = c(0, 1)
+  ) +
   scale_color_viridis_d(name = "Correlation between Indices") +
-  theme(legend.justification = c(0,1), legend.position = c(0,1)) +
-  theme(legend.background = element_rect(color = "black", fill = "white", linetype = "solid"))
+  theme(legend.justification = c(0, 1), legend.position = c(0, 1)) +
+  theme(
+    legend.background = element_rect(
+      color = "black",
+      fill = "white",
+      linetype = "solid"
+    )
+  )
 ```
 
 ```{r}
@@ -2102,19 +2743,48 @@ ggplot(newDataDifferenceScore, aes(reliability, reliabilityOfDifferenceScore, gr
 #| fig-height: 4
 #| code-fold: true
 
-newDataDifferenceScore2 <- expand.grid(reliability = c(0, .1, .3, .5, .7, .9),
-                                       correlation = seq(0, 1, by = 0.01))
+newDataDifferenceScore2 <- expand.grid(
+  reliability = c(0, .1, .3, .5, .7, .9),
+  correlation = seq(0, 1, by = 0.01)
+)
 
-newDataDifferenceScore2$reliabilityOfDifferenceScore <- reliabilityOfDifferenceScoreEqualVariancesValues(correlation = newDataDifferenceScore2$correlation, reliabilityX = newDataDifferenceScore2$reliability, reliabilityY = newDataDifferenceScore2$reliability)
+newDataDifferenceScore2$reliabilityOfDifferenceScore <- reliabilityOfDifferenceScoreEqualVariancesValues(
+  correlation = newDataDifferenceScore2$correlation,
+  reliabilityX = newDataDifferenceScore2$reliability,
+  reliabilityY = newDataDifferenceScore2$reliability
+)
 
-ggplot(newDataDifferenceScore2, aes(correlation, reliabilityOfDifferenceScore, group = as.factor(reliability), color = as.factor(reliability))) +
+ggplot(
+  newDataDifferenceScore2,
+  aes(
+    correlation,
+    reliabilityOfDifferenceScore,
+    group = as.factor(reliability),
+    color = as.factor(reliability)
+  )
+) +
   geom_line(linewidth = 1.5) +
   theme_bw() +
-  scale_x_continuous(name = "Correlation between Indices", breaks = seq(from = 0, to = 1, by = .1), labels = seq(from = 0, to = 1, by = .1)) +
-  scale_y_continuous(name = "Reliability of Difference Score", breaks = seq(from = 0, to = 1, by = .1), labels = seq(from = 0, to = 1, by = .1), limits = c(0,1)) +
+  scale_x_continuous(
+    name = "Correlation between Indices",
+    breaks = seq(from = 0, to = 1, by = .1),
+    labels = seq(from = 0, to = 1, by = .1)
+  ) +
+  scale_y_continuous(
+    name = "Reliability of Difference Score",
+    breaks = seq(from = 0, to = 1, by = .1),
+    labels = seq(from = 0, to = 1, by = .1),
+    limits = c(0, 1)
+  ) +
   scale_color_viridis_d(name = "Reliability of Indices") +
-  theme(legend.justification = c(1,1), legend.position = c(1,1)) +
-  theme(legend.background = element_rect(color = "black", fill = "white", linetype = "solid"))
+  theme(legend.justification = c(1, 1), legend.position = c(1, 1)) +
+  theme(
+    legend.background = element_rect(
+      color = "black",
+      fill = "white",
+      linetype = "solid"
+    )
+  )
 ```
 
 ### Reliability of a Product Term {#sec-productTerm-reliability}
@@ -2144,7 +2814,7 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 #| eval: false
 #| code-fold: true
 
-reliabilityOfProductTerm <- function(x, y, reliabilityX, reliabilityY){
+reliabilityOfProductTerm <- function(x, y, reliabilityX, reliabilityY) {
   rxy <- as.numeric(cor.test(x = x, y = y)$estimate)
 
   reliability <- (reliabilityX * reliabilityY + (rxy^2)) / (1 + (rxy^2))
@@ -2158,7 +2828,8 @@ reliabilityOfProductTerm(
   x = mydata$item1,
   y = mydata$item4,
   reliabilityX = .80,
-  reliabilityY = .70)
+  reliabilityY = .70
+)
 ```
 
 Power to detect interactions tends to be weaker than power to detect main effects because of lower reliability of the product term, [smaller effect sizes](https://statmodeling.stat.columbia.edu/2018/03/15/need-16-times-sample-size-estimate-interaction-estimate-main-effect) (archived at <https://perma.cc/E3KA-SGB7>), and smaller sample sizes of the intersecting groups.\index{reliability!product term}\index{moderation}\index{moderation@\igobble|seealso{interaction}}
@@ -2211,7 +2882,9 @@ The reliability of the measure was estimated here based on the test–retest rel
 reliabilityOfMeasure <- as.numeric(
   cor.test(
     x = mydata$time1,
-    y = mydata$time2)$estimate)
+    y = mydata$time2
+  )$estimate
+)
 sem <- sd(mydata$time1, na.rm = TRUE) * sqrt(1 - reliabilityOfMeasure)
 sem
 ```
@@ -2221,8 +2894,8 @@ A confidence interval indicates a range of plausible values for the person's tru
 The 95% confidence interval represents that, if we repeatedly observed this person under identical conditions and constructed a confidence interval each time (as observed score $\pm `r qnorm(.975)` \ \text{SEMs}$), about 95% of those intervals would contain the person's true score.\index{reliability!standard error of measurement}\index{confidence interval}\index{true score}\index{observed score}
 
 ```{r}
-lower95CI <- mean(mydata$time1, na.rm = TRUE) - qnorm(.975)*sem
-upper95CI <- mean(mydata$time1, na.rm = TRUE) + qnorm(.975)*sem
+lower95CI <- mean(mydata$time1, na.rm = TRUE) - qnorm(.975) * sem
+upper95CI <- mean(mydata$time1, na.rm = TRUE) + qnorm(.975) * sem
 
 lower95CI
 upper95CI
@@ -2252,26 +2925,40 @@ There is nothing special about this particular seed.
 set.seed(52242)
 
 time1 <- rnorm(n = sampleSize, mean = 50, sd = 10)
-time2 <- time1 + rnorm(
-  n = sampleSize,
-  mean = 0,
-  sd = 4)
-time3 <- time2 + rnorm(
-  n = sampleSize,
-  mean = 0,
-  sd = 8)
+time2 <- time1 +
+  rnorm(
+    n = sampleSize,
+    mean = 0,
+    sd = 4
+  )
+time3 <- time2 +
+  rnorm(
+    n = sampleSize,
+    mean = 0,
+    sd = 8
+  )
 
 # Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
+time1[c(5, 10)] <- NA
+time2[c(10, 15)] <- NA
 time3[c(10)] <- NA
 
 # Combine data into data frame
 mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
+  rater1continuous,
+  rater2continuous,
+  rater3continuous,
+  rater1categorical,
+  rater2categorical,
+  rater3categorical,
+  time1,
+  time2,
+  time3,
+  item1,
+  item2,
+  item3,
+  item4
+)
 ```
 
 #### Coefficient of stability {#sec-noError-stability}
@@ -2283,10 +2970,14 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#sec-noError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    mydata$time1,
-    mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) *
+  sd(
+    blandr.statistics(
+      mydata$time1,
+      mydata$time2
+    )$differences,
+    na.rm = TRUE
+  )
 ```
 
 #### Bias {#sec-noError-bias}
@@ -2294,7 +2985,8 @@ qnorm(.975) * sd(
 ```{r}
 blandr.statistics(
   mydata$time1,
-  mydata$time2)$bias
+  mydata$time2
+)$bias
 ```
 
 ### Add within-person random error {#sec-withinPersonRandomError-example}
@@ -2317,22 +3009,38 @@ time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
 # Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
+time1[c(5, 10)] <- NA
+time2[c(10, 15)] <- NA
 time3[c(10)] <- NA
 
 # Combine data into data frame
 mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
+  rater1continuous,
+  rater2continuous,
+  rater3continuous,
+  rater1categorical,
+  rater2categorical,
+  rater3categorical,
+  time1,
+  time2,
+  time3,
+  item1,
+  item2,
+  item3,
+  item4
+)
 
 # Add error
 set.seed(12345)
-for(i in 1:nrow(mydata)){
-  mydata[i, c("time1","time2","time3")] <- mydata[i, c(
-    "time1","time2","time3")] + 
+for (i in 1:nrow(mydata)) {
+  mydata[i, c("time1", "time2", "time3")] <- mydata[
+    i,
+    c(
+      "time1",
+      "time2",
+      "time3"
+    )
+  ] +
     rnorm(3, mean = 0, sd = 3)
 }
 ```
@@ -2346,11 +3054,14 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#sec-withinPersonRandomError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    mydata$time1,
-    mydata$time2)$differences,
-  na.rm = TRUE)
+qnorm(.975) *
+  sd(
+    blandr.statistics(
+      mydata$time1,
+      mydata$time2
+    )$differences,
+    na.rm = TRUE
+  )
 ```
 
 #### Bias {#sec-withinPersonRandomError-bias}
@@ -2358,7 +3069,8 @@ qnorm(.975) * sd(
 ```{r}
 blandr.statistics(
   mydata$time1,
-  mydata$time2)$bias
+  mydata$time2
+)$bias
 ```
 
 #### Findings {#sec-withinPersonRandomError-findings}
@@ -2388,22 +3100,38 @@ time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
 # Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
+time1[c(5, 10)] <- NA
+time2[c(10, 15)] <- NA
 time3[c(10)] <- NA
 
 # Combine data into data frame
 mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
+  rater1continuous,
+  rater2continuous,
+  rater3continuous,
+  rater1categorical,
+  rater2categorical,
+  rater3categorical,
+  time1,
+  time2,
+  time3,
+  item1,
+  item2,
+  item3,
+  item4
+)
 
 # Add error
 set.seed(12345)
-for(i in 1:nrow(mydata)){
-  mydata[i, c("time1","time2","time3")] <- mydata[i, c(
-    "time1","time2","time3")] + 
+for (i in 1:nrow(mydata)) {
+  mydata[i, c("time1", "time2", "time3")] <- mydata[
+    i,
+    c(
+      "time1",
+      "time2",
+      "time3"
+    )
+  ] +
     rnorm(1, mean = 5, sd = 3)
 }
 ```
@@ -2417,11 +3145,14 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#sec-withinPersonSystematicError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    mydata$time1,
-    mydata$time2)$differences,
-  na.rm = TRUE)
+qnorm(.975) *
+  sd(
+    blandr.statistics(
+      mydata$time1,
+      mydata$time2
+    )$differences,
+    na.rm = TRUE
+  )
 ```
 
 #### Bias {#sec-withinPersonSystematicError-bias}
@@ -2429,7 +3160,8 @@ qnorm(.975) * sd(
 ```{r}
 blandr.statistics(
   mydata$time1,
-  mydata$time2)$bias
+  mydata$time2
+)$bias
 ```
 
 #### Findings {#sec-withinPersonSystematicError-findings}
@@ -2460,20 +3192,30 @@ time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
 # Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
+time1[c(5, 10)] <- NA
+time2[c(10, 15)] <- NA
 time3[c(10)] <- NA
 
 # Combine data into data frame
 mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
+  rater1continuous,
+  rater2continuous,
+  rater3continuous,
+  rater1categorical,
+  rater2categorical,
+  rater3categorical,
+  time1,
+  time2,
+  time3,
+  item1,
+  item2,
+  item3,
+  item4
+)
 
 # Add error
 set.seed(12345)
-mydata$time2 <- mydata$time2 + 
+mydata$time2 <- mydata$time2 +
   rnorm(sampleSize, mean = 0, sd = 3)
 ```
 
@@ -2486,11 +3228,14 @@ cor.test(x = mydata$time1, y = mydata$time2)
 #### Coefficient of repeatability {#sec-betweenPersonRandomError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    mydata$time1,
-    mydata$time2)$differences,
-  na.rm = TRUE)
+qnorm(.975) *
+  sd(
+    blandr.statistics(
+      mydata$time1,
+      mydata$time2
+    )$differences,
+    na.rm = TRUE
+  )
 ```
 
 #### Bias {#sec-betweenPersonRandomError-bias}
@@ -2498,7 +3243,8 @@ qnorm(.975) * sd(
 ```{r}
 blandr.statistics(
   mydata$time1,
-  mydata$time2)$bias
+  mydata$time2
+)$bias
 ```
 
 #### Findings {#sec-betweenPersonRandomError-findings}
@@ -2528,16 +3274,26 @@ time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
 # Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
+time1[c(5, 10)] <- NA
+time2[c(10, 15)] <- NA
 time3[c(10)] <- NA
 
 # Combine data into data frame
 mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
+  rater1continuous,
+  rater2continuous,
+  rater3continuous,
+  rater1categorical,
+  rater2categorical,
+  rater3categorical,
+  time1,
+  time2,
+  time3,
+  item1,
+  item2,
+  item3,
+  item4
+)
 
 # Add error
 mydata$time2 <- mydata$time2 + 10
@@ -2548,17 +3304,21 @@ mydata$time2 <- mydata$time2 + 10
 ```{r}
 cor.test(
   x = mydata$time1,
-  y = mydata$time2)
+  y = mydata$time2
+)
 ```
 
 #### Coefficient of repeatability {#sec-betweenPersonSystematicError-repeatability}
 
 ```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    mydata$time1,
-    mydata$time2)$differences,
-  na.rm = TRUE)
+qnorm(.975) *
+  sd(
+    blandr.statistics(
+      mydata$time1,
+      mydata$time2
+    )$differences,
+    na.rm = TRUE
+  )
 ```
 
 #### Bias {#sec-betweenPersonSystematicError-bias}
@@ -2566,7 +3326,8 @@ qnorm(.975) * sd(
 ```{r}
 blandr.statistics(
   mydata$time1,
-  mydata$time2)$bias
+  mydata$time2
+)$bias
 ```
 
 #### Findings {#sec-betweenPersonSystematicError-findings}
@@ -2597,16 +3358,26 @@ time2 <- time1 + rnorm(n = sampleSize, mean = 0, sd = 4)
 time3 <- time2 + rnorm(n = sampleSize, mean = 0, sd = 8)
 
 # Add Missing Data
-time1[c(5,10)] <- NA
-time2[c(10,15)] <- NA
+time1[c(5, 10)] <- NA
+time2[c(10, 15)] <- NA
 time3[c(10)] <- NA
 
 # Combine data into data frame
 mydata <- data.frame(
-  rater1continuous, rater2continuous, rater3continuous,
-  rater1categorical, rater2categorical, rater3categorical,
-  time1, time2, time3,
-  item1, item2, item3, item4)
+  rater1continuous,
+  rater2continuous,
+  rater3continuous,
+  rater1categorical,
+  rater2categorical,
+  rater3categorical,
+  time1,
+  time2,
+  time3,
+  item1,
+  item2,
+  item3,
+  item4
+)
 
 # Add error
 mydata$time1 <- mydata$time1 + 10
@@ -2617,17 +3388,20 @@ mydata$time3 <- mydata$time3 + 10
 #### Coefficient of stability {#sec-constantVariance-stability}
 
 ```{r}
-cor.test(x = mydata$time1,
-         y = mydata$time2)
+cor.test(x = mydata$time1, y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#sec-constantVariance-repeatability}
 
 ```{r}
-qnorm(.975) * sd(
-  blandr.statistics(
-    mydata$time1,
-    mydata$time2)$differences, na.rm = TRUE)
+qnorm(.975) *
+  sd(
+    blandr.statistics(
+      mydata$time1,
+      mydata$time2
+    )$differences,
+    na.rm = TRUE
+  )
 ```
 
 #### Bias {#sec-constantVariance-bias}
@@ -2635,7 +3409,8 @@ qnorm(.975) * sd(
 ```{r}
 blandr.statistics(
   mydata$time1,
-  mydata$time2)$bias
+  mydata$time2
+)$bias
 ```
 
 #### Findings {#sec-constantVariance-findings}
@@ -2696,9 +3471,10 @@ When dealing with test–retest reliability, the predictor and criterion are the
 
 ```{r}
 attenuationCorrelation(
-  trueAssociation = 0.7, 
+  trueAssociation = 0.7,
   reliabilityOfPredictor = 0.9,
-  reliabilityOfCriterion = 0.9)
+  reliabilityOfCriterion = 0.9
+)
 ```
 
 ### Disattenuation of Observed Test–Retest Reliability Due to Measurement Error {#sec-measurementErrorEffects-disattenuationTestRetestReliability}
@@ -2718,9 +3494,12 @@ Find the true correlation of the construct across two time points given an obser
 ```{r}
 reliabilityOfMeasure <- 0.9
 
-observedAssociation <- as.numeric(cor.test(
-  x = mydata$time2,
-  y = mydata$time3)$estimate)
+observedAssociation <- as.numeric(
+  cor.test(
+    x = mydata$time2,
+    y = mydata$time3
+  )$estimate
+)
 
 observedAssociation / reliabilityOfMeasure
 ```
@@ -2730,9 +3509,10 @@ When dealing with test–retest reliability, the predictor and criterion are the
 
 ```{r}
 disattenuationCorrelation(
-  observedAssociation = observedAssociation, 
+  observedAssociation = observedAssociation,
   reliabilityOfPredictor = 0.9,
-  reliabilityOfCriterion = 0.9)
+  reliabilityOfCriterion = 0.9
+)
 ```
 
 The next section discusses [method biases](#sec-methodBias), including what they are, why they are important, and how to account for them.\index{method bias}
@@ -2993,7 +3773,7 @@ cnlsy <- read_csv(here("data", "cnlsy.csv"))
 #| include: false
 
 mydata_ex <- data.frame(matrix(data = NA, ncol = 2, nrow = nrow(cnlsy)))
-names(mydata_ex) <- c("time1","time2")
+names(mydata_ex) <- c("time1", "time2")
 
 mydata_ex$time1 <- cnlsy$bpi_antisocialT1Sum
 mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
@@ -3008,8 +3788,14 @@ mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
 
 mydata_ex$time2 <- mydata_ex$time2 + 3
 
-stability1_ex <- as.numeric(cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate)
-cr1_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences, na.rm = TRUE)
+stability1_ex <- as.numeric(
+  cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate
+)
+cr1_ex <- qnorm(.975) *
+  sd(
+    blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences,
+    na.rm = TRUE
+  )
 bias1_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
@@ -3023,8 +3809,14 @@ mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
 mydata_ex$time1 <- mydata_ex$time1 + 3
 mydata_ex$time2 <- mydata_ex$time2 + 3
 
-stability2_ex <- as.numeric(cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate)
-cr2_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences, na.rm = TRUE)
+stability2_ex <- as.numeric(
+  cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate
+)
+cr2_ex <- qnorm(.975) *
+  sd(
+    blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences,
+    na.rm = TRUE
+  )
 bias2_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
@@ -3037,8 +3829,14 @@ mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
 
 mydata_ex$time2[1:500] <- mydata_ex$time2[1:500] + 3
 
-stability3_ex <- as.numeric(cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate)
-cr3_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences, na.rm = TRUE)
+stability3_ex <- as.numeric(
+  cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate
+)
+cr3_ex <- qnorm(.975) *
+  sd(
+    blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences,
+    na.rm = TRUE
+  )
 bias3_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
@@ -3052,8 +3850,14 @@ mydata_ex$time2 <- cnlsy$bpi_antisocialT2Sum
 mydata_ex$time1[1:500] <- mydata_ex$time1[1:500] + 3
 mydata_ex$time2[1:500] <- mydata_ex$time2[1:500] + 3
 
-stability4_ex <- as.numeric(cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate)
-cr4_ex <- qnorm(.975) * sd(blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences, na.rm = TRUE)
+stability4_ex <- as.numeric(
+  cor.test(x = mydata_ex$time1, y = mydata_ex$time2)$estimate
+)
+cr4_ex <- qnorm(.975) *
+  sd(
+    blandr.statistics(mydata_ex$time1, mydata_ex$time2)$differences,
+    na.rm = TRUE
+  )
 bias4_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 ```
 
@@ -3063,8 +3867,16 @@ bias4_ex <- blandr.statistics(mydata_ex$time1, mydata_ex$time2)$bias
 # Test–Retest Reliability -------------------------------------------------
 
 #Coefficient of stability
-stability_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_antisocialT2Sum)$estimate)
-cor(cnlsy[,c("bpi_antisocialT1Sum","bpi_antisocialT2Sum")], use = "pairwise.complete.obs")
+stability_ex <- as.numeric(
+  cor.test(
+    x = cnlsy$bpi_antisocialT1Sum,
+    y = cnlsy$bpi_antisocialT2Sum
+  )$estimate
+)
+cor(
+  cnlsy[, c("bpi_antisocialT1Sum", "bpi_antisocialT2Sum")],
+  use = "pairwise.complete.obs"
+)
 ```
 
 ```{r}
@@ -3073,10 +3885,19 @@ cor(cnlsy[,c("bpi_antisocialT1Sum","bpi_antisocialT2Sum")], use = "pairwise.comp
 # Repeatability -----------------------------------------------------------
 
 # Bland-Altman Plot
-BAstats_ex <- blandr.statistics(cnlsy$bpi_antisocialT1Sum, cnlsy$bpi_antisocialT2Sum)
+BAstats_ex <- blandr.statistics(
+  cnlsy$bpi_antisocialT1Sum,
+  cnlsy$bpi_antisocialT2Sum
+)
 BAplotlimits_ex <- blandr.plot.limits(BAstats_ex)
 
-blandr.plot.rplot(BAstats_ex, plot.limits = BAplotlimits_ex, annotate = TRUE, method1name = "BPI_T1", method2name = "BPI_T2")
+blandr.plot.rplot(
+  BAstats_ex,
+  plot.limits = BAplotlimits_ex,
+  annotate = TRUE,
+  method1name = "BPI_T1",
+  method2name = "BPI_T2"
+)
 
 #Repeatability coefficient
 #-Coefficient of repeatability (CR) = 2 times the standard deviation of the differences between the two measurements (d2 and d1): https://www.medcalc.org/manual/bland-altman-plot.php (archived at https://perma.cc/MEH3-3TGN)
@@ -3105,11 +3926,11 @@ BAstats_ex
 # Inter-Rater Reliability -------------------------------------------------
 
 #For categorical data: use Cohen's Kappa
-kappa_ex <- cohen.kappa(cbind(c(1,0,1,0,0), c(1,0,0,1,0)))
+kappa_ex <- cohen.kappa(cbind(c(1, 0, 1, 0, 0), c(1, 0, 0, 1, 0)))
 kappaVal_ex <- kappa_ex$kappa
 
 #For ordinal/continuous data: use Intraclass Correlation (ICC)
-icc_ex <- ICC(cbind(c(5,3,4,2,1), c(4,2,3,2,2)), missing = FALSE)
+icc_ex <- ICC(cbind(c(5, 3, 4, 2, 1), c(4, 2, 3, 2, 2)), missing = FALSE)
 iccSingleRandom_ex <- icc_ex$results[icc_ex$results$type == "ICC2", "ICC"]
 iccAverageRandom_ex <- icc_ex$results[icc_ex$results$type == "ICC2k", "ICC"]
 ```
@@ -3120,7 +3941,15 @@ iccAverageRandom_ex <- icc_ex$results[icc_ex$results$type == "ICC2k", "ICC"]
 # Internal Consistency ----------------------------------------------------
 
 #Cronbach's alpha
-alpha_ex <- psych::alpha(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")])
+alpha_ex <- psych::alpha(cnlsy[, c(
+  "bpi_antisocialT1_1",
+  "bpi_antisocialT1_2",
+  "bpi_antisocialT1_3",
+  "bpi_antisocialT1_4",
+  "bpi_antisocialT1_5",
+  "bpi_antisocialT1_6",
+  "bpi_antisocialT1_7"
+)])
 alphaVal_ex <- alpha_ex$total$raw_alpha
 ```
 
@@ -3128,7 +3957,18 @@ alphaVal_ex <- alpha_ex$total$raw_alpha
 #| include: false
 
 #Split-half reliability
-splitHalf_ex <- splitHalf(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], brute = TRUE)
+splitHalf_ex <- splitHalf(
+  cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
+  brute = TRUE
+)
 splitHalfValue_ex <- splitHalf_ex$meanr
 ```
 
@@ -3145,7 +3985,19 @@ splitHalfValue_ex <- splitHalf_ex$meanr
 
 #Omega Total
 set.seed(52242)
-omegaTotal_ex <- ci.reliability(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], type = "omega", interval.type = "none")
+omegaTotal_ex <- ci.reliability(
+  cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
+  type = "omega",
+  interval.type = "none"
+)
 omegaTotalVal_ex <- omegaTotal_ex$est
 ```
 
@@ -3155,7 +4007,19 @@ omegaTotalVal_ex <- omegaTotal_ex$est
 
 #Calculate omega hierarchical (best for continuous items) using a bias-corrected bootstrap (can change the number of iterations to be faster)
 set.seed(52242)
-omegaHierarchical_ex <- ci.reliability(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], type = "hierarchical", interval.type = "none")
+omegaHierarchical_ex <- ci.reliability(
+  cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
+  type = "hierarchical",
+  interval.type = "none"
+)
 omegaHierarchicalVal_ex <- omegaHierarchical_ex$est
 ```
 
@@ -3165,7 +4029,19 @@ omegaHierarchicalVal_ex <- omegaHierarchical_ex$est
 
 #Calculate omega categorical (best for categorical items) using a bias-corrected bootstrap (can change the number of iterations to be faster)
 set.seed(52242)
-omegaCategorical_ex <- ci.reliability(cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")], type = "categorical", interval.type = "none")
+omegaCategorical_ex <- ci.reliability(
+  cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
+  type = "categorical",
+  interval.type = "none"
+)
 ```
 
 ```{r}
@@ -3174,12 +4050,18 @@ omegaCategorical_ex <- ci.reliability(cnlsy[,c("bpi_antisocialT1_1","bpi_antisoc
 # Standard Error of Measurement (SEM) -------------------------------------
 
 #SEM = s*sqrt(1-r)
-reliabilityOfMeasure_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_antisocialT2Sum)$estimate) #reliability of measure is estimated here based on the test–retest reliability of measure at T1 with measure at T2
-sem_ex <- sd(cnlsy$bpi_antisocialT1Sum, na.rm = TRUE) * sqrt(1 - reliabilityOfMeasure_ex)
+reliabilityOfMeasure_ex <- as.numeric(
+  cor.test(
+    x = cnlsy$bpi_antisocialT1Sum,
+    y = cnlsy$bpi_antisocialT2Sum
+  )$estimate
+) #reliability of measure is estimated here based on the test–retest reliability of measure at T1 with measure at T2
+sem_ex <- sd(cnlsy$bpi_antisocialT1Sum, na.rm = TRUE) *
+  sqrt(1 - reliabilityOfMeasure_ex)
 
 #95% of the time, the true score is expected to fall within +/- 2 SEMs of the observed score
-lower95PercentCI_ex <- 6 - qnorm(.975)*sem_ex
-upper95PercentCI_ex <- 6 + qnorm(.975)*sem_ex
+lower95PercentCI_ex <- 6 - qnorm(.975) * sem_ex
+upper95PercentCI_ex <- 6 + qnorm(.975) * sem_ex
 ```
 
 ```{r}
@@ -3198,17 +4080,23 @@ observedAssociation_ex <- trueAssociation_ex * reliabilityOfMeasure_ex
 #true test–retest reliability of construct = (test–retest correlation of measure)/(reliability of measure)
 reliabilityOfMeasure_ex <- 0.6299494 #assume the reliability of the measure is .9
 
-trueAssociation_ex <- as.numeric(cor.test(x = cnlsy$bpi_antisocialT1Sum, y = cnlsy$bpi_antisocialT2Sum)$estimate)/reliabilityOfMeasure_ex
+trueAssociation_ex <- as.numeric(
+  cor.test(
+    x = cnlsy$bpi_antisocialT1Sum,
+    y = cnlsy$bpi_antisocialT2Sum
+  )$estimate
+) /
+  reliabilityOfMeasure_ex
 ```
 
 ```{r}
 #| include: false
 
 # Generalizability Theory -------------------------------------------------
-participant_ex <- rep(c(1,2,3), times = 6)
-occasion_ex <- rep(rep(c(1,2), each = 3), times = 3)
-rater_ex <- rep(c(1,2,3), each = 6)
-score_ex <- c(7,2,0,10,5,1,8,3,1,11,6,1,6,2,4,12,6,5)
+participant_ex <- rep(c(1, 2, 3), times = 6)
+occasion_ex <- rep(rep(c(1, 2), each = 3), times = 3)
+rater_ex <- rep(c(1, 2, 3), each = 6)
+score_ex <- c(7, 2, 0, 10, 5, 1, 8, 3, 1, 11, 6, 1, 6, 2, 4, 12, 6, 5)
 
 por_data_ex <- data.frame(participant_ex, occasion_ex, rater_ex, score_ex)
 
@@ -3216,21 +4104,46 @@ universeScores_ex <- por_data_ex |>
   group_by(participant_ex) |>
   summarise(universeScore = mean(score_ex, na.rm = TRUE), .groups = "drop") #universe score for each participant
 
-person1_ex <- universeScores_ex$universeScore[which(universeScores_ex$participant_ex == 1)]
-person2_ex <- universeScores_ex$universeScore[which(universeScores_ex$participant_ex == 2)]
-person3_ex <- universeScores_ex$universeScore[which(universeScores_ex$participant_ex == 3)]
+person1_ex <- universeScores_ex$universeScore[which(
+  universeScores_ex$participant_ex == 1
+)]
+person2_ex <- universeScores_ex$universeScore[which(
+  universeScores_ex$participant_ex == 2
+)]
+person3_ex <- universeScores_ex$universeScore[which(
+  universeScores_ex$participant_ex == 3
+)]
 
-PxOxR_ex <- gstudy(data = por_data_ex,
-                score_ex ~ (1|participant_ex) + (1|occasion_ex) + (1|rater_ex) +
-                  (1|participant_ex:occasion_ex) + (1|participant_ex:rater_ex) + (1|rater_ex:occasion_ex))
+PxOxR_ex <- gstudy(
+  data = por_data_ex,
+  score_ex ~ (1 | participant_ex) +
+    (1 | occasion_ex) +
+    (1 | rater_ex) +
+    (1 | participant_ex:occasion_ex) +
+    (1 | participant_ex:rater_ex) +
+    (1 | rater_ex:occasion_ex)
+)
 
-varParticipant_ex <- PxOxR_ex$components$percent[which(PxOxR_ex$components$source == "participant_ex")]
-varRater_ex <- PxOxR_ex$components$percent[which(PxOxR_ex$components$source == "rater_ex")]
-varOccasion_ex <- PxOxR_ex$components$percent[which(PxOxR_ex$components$source == "occasion_ex")]
-varRaterXOccasion_ex <- PxOxR_ex$components$percent[which(PxOxR_ex$components$source == "rater_ex:occasion_ex")]
+varParticipant_ex <- PxOxR_ex$components$percent[which(
+  PxOxR_ex$components$source == "participant_ex"
+)]
+varRater_ex <- PxOxR_ex$components$percent[which(
+  PxOxR_ex$components$source == "rater_ex"
+)]
+varOccasion_ex <- PxOxR_ex$components$percent[which(
+  PxOxR_ex$components$source == "occasion_ex"
+)]
+varRaterXOccasion_ex <- PxOxR_ex$components$percent[which(
+  PxOxR_ex$components$source == "rater_ex:occasion_ex"
+)]
 
 #Calculate generalizability coefficients
-decisionStudy_ex <- dstudy(PxOxR_ex, colname.objects = "participant_ex", data = por_data_ex, colname.scores = "score_ex")
+decisionStudy_ex <- dstudy(
+  PxOxR_ex,
+  colname.objects = "participant_ex",
+  data = por_data_ex,
+  colname.scores = "score_ex"
+)
 decisionStudy_ex
 
 generalizabilityCoefficient_ex <- decisionStudy_ex$generalizability #analogous to reliability coefficient in classical test theory; uses relative error variance: relevant when relative (norm-referenced) decisions are made (e.g., percentiles)
@@ -3265,9 +4178,11 @@ What is your inter-rater reliability with your colleague?
 ```{r}
 #| include: false
 
-diagnosticTable_ex <- data.frame("Client" = 1:5,
-                                 "yourDx" = c("Yes","No","Yes","No","No"),
-                                 "colleagueDx" = c("Yes","No","No","Yes","No"))
+diagnosticTable_ex <- data.frame(
+  "Client" = 1:5,
+  "yourDx" = c("Yes", "No", "Yes", "No", "No"),
+  "colleagueDx" = c("Yes", "No", "No", "Yes", "No")
+)
 ```
 
 ```{r}
@@ -3275,9 +4190,15 @@ diagnosticTable_ex <- data.frame("Client" = 1:5,
 #| tbl-cap: "Exercise 12: Table of Diagnostic Decisions for Assessing Inter-Rater Reliability."
 #| echo: false
 
-kable(diagnosticTable_ex,
-      col.names = c("Client","Your Diagnosis of the Client","Your Colleague's Diagnosis of the Client"),
-      booktabs = TRUE)
+kable(
+  diagnosticTable_ex,
+  col.names = c(
+    "Client",
+    "Your Diagnosis of the Client",
+    "Your Colleague's Diagnosis of the Client"
+  ),
+  booktabs = TRUE
+)
 ```
 
 7. You and a colleague both rate the same five clients in the extent to which they are likely to be suicidal, where $1 =$ very low likelihood and $5 =$ very high likelihood.
@@ -3287,9 +4208,11 @@ What is your inter-rater reliability with your colleague?
 ```{r}
 #| include: false
 
-ratingTable_ex <- data.frame("Client" = 1:5,
-                             "yourRating" = c(5,3,4,2,1),
-                             "colleagueRating" = c(4,2,3,2,2))
+ratingTable_ex <- data.frame(
+  "Client" = 1:5,
+  "yourRating" = c(5, 3, 4, 2, 1),
+  "colleagueRating" = c(4, 2, 3, 2, 2)
+)
 ```
 
 ```{r}
@@ -3297,9 +4220,15 @@ ratingTable_ex <- data.frame("Client" = 1:5,
 #| tbl-cap: "Exercise 12: Table of Ratings for Assessing Inter-Rater Reliability."
 #| echo: false
 
-kable(ratingTable_ex,
-      col.names = c("Client","Your Rating of the Client","Your Colleague's Rating of the Client"),
-      booktabs = TRUE)
+kable(
+  ratingTable_ex,
+  col.names = c(
+    "Client",
+    "Your Rating of the Client",
+    "Your Colleague's Rating of the Client"
+  ),
+  booktabs = TRUE
+)
 ```
 
 8. What was the internal consistency of the items on the Antisocial Behavior subscale of the BPI at T1?
