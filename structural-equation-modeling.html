@@ -907,17 +907,21 @@ window.Quarto = {
 <span class="header-section-number">7.2.2.2</span> Add Missing Data</h4>
 <p>Adding missing data to dataframes helps make examples more realistic to real-life data and helps you get in the habit of programming to account for missing data.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a>measure1[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-label="2"></a>measure2[<span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a>measure1[<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-label="2"></a>measure2[<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-label="3"></a>measure3[<span class="fu">c</span>(<span class="dv">10</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-label="4"></a>PoliticalDemocracy <span class="ot">&lt;-</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-label="4"></a>PoliticalDemocracy <span class="ot">&lt;-</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-label="5"></a>  <span class="fu">as.data.frame</span>(<span class="fu">lapply</span>(</span>
 <span id="cb3-6"><a href="#cb3-6" aria-label="6"></a>    PoliticalDemocracy,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-label="7"></a>    <span class="cf">function</span>(cc) cc[ <span class="fu">sample</span>(</span>
-<span id="cb3-8"><a href="#cb3-8" aria-label="8"></a>      <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">NA</span>),</span>
-<span id="cb3-9"><a href="#cb3-9" aria-label="9"></a>      <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.9</span>, <span class="fl">0.1</span>),</span>
-<span id="cb3-10"><a href="#cb3-10" aria-label="10"></a>      <span class="at">size =</span> <span class="fu">length</span>(cc),</span>
-<span id="cb3-11"><a href="#cb3-11" aria-label="11"></a>      <span class="at">replace =</span> <span class="cn">TRUE</span>)]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-7"><a href="#cb3-7" aria-label="7"></a>    <span class="cf">function</span>(cc) {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-label="8"></a>      cc[<span class="fu">sample</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-label="9"></a>        <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">NA</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-label="10"></a>        <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.9</span>, <span class="fl">0.1</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-label="11"></a>        <span class="at">size =</span> <span class="fu">length</span>(cc),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-label="12"></a>        <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-label="13"></a>      )]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-label="14"></a>    }</span>
+<span id="cb3-15"><a href="#cb3-15" aria-label="15"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-combineData-sem" class="level4" data-number="7.2.2.3"><h4 data-number="7.2.2.3" class="anchored" data-anchor-id="sec-combineData-sem">
@@ -1012,12 +1016,13 @@ Figure&nbsp;7.2: Demarcation Between Measurement Model and Structural Model. Dis
 <p>Here is the variance-covariance matrix:</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-label="1"></a>vcovMatrix4measures <span class="ot">&lt;-</span> <span class="fu">cov</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-label="2"></a>  PoliticalDemocracy[,<span class="fu">c</span>(<span class="st">"y1"</span>,<span class="st">"y2"</span>,<span class="st">"y3"</span>,<span class="st">"y4"</span>)],</span>
-<span id="cb5-3"><a href="#cb5-3" aria-label="3"></a>  <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-label="4"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a>vcovMatrix4measures[<span class="fu">upper.tri</span>(vcovMatrix4measures)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>vcovMatrix4measures</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-label="2"></a>  PoliticalDemocracy[, <span class="fu">c</span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="st">"y4"</span>)],</span>
+<span id="cb5-3"><a href="#cb5-3" aria-label="3"></a>  <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-label="4"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>vcovMatrix4measures[<span class="fu">upper.tri</span>(vcovMatrix4measures)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>vcovMatrix4measures</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>         y1        y2        y3       y4
 y1 6.387379        NA        NA       NA
@@ -1048,10 +1053,13 @@ y4 5.393572  9.910746  7.151898 11.22069</code></pre>
 <p>Here are the means:</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>means4Measures <span class="ot">&lt;-</span> <span class="fu">apply</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-label="2"></a>  PoliticalDemocracy[,<span class="fu">c</span>(<span class="st">"y1"</span>,<span class="st">"y2"</span>,<span class="st">"y3"</span>,<span class="st">"y4"</span>)],</span>
-<span id="cb11-3"><a href="#cb11-3" aria-label="3"></a>  <span class="dv">2</span>, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-label="4"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-label="5"></a>means4Measures</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-2"><a href="#cb11-2" aria-label="2"></a>  PoliticalDemocracy[, <span class="fu">c</span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y3"</span>, <span class="st">"y4"</span>)],</span>
+<span id="cb11-3"><a href="#cb11-3" aria-label="3"></a>  <span class="dv">2</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-label="4"></a>  mean,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-label="5"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-label="6"></a>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-label="7"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-label="8"></a>means4Measures</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>      y1       y2       y3       y4 
 5.347059 4.284975 6.367156 4.356618 </code></pre>
@@ -1098,13 +1106,15 @@ y4 5.393572  9.910746  7.151898 11.22069</code></pre>
 <span id="cb13-27"><a href="#cb13-27" aria-label="27"></a>  markerVariable_syntax,</span>
 <span id="cb13-28"><a href="#cb13-28" aria-label="28"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb13-29"><a href="#cb13-29" aria-label="29"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb13-30"><a href="#cb13-30" aria-label="30"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb13-31"><a href="#cb13-31" aria-label="31"></a></span>
-<span id="cb13-32"><a href="#cb13-32" aria-label="32"></a>markerVariableModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb13-33"><a href="#cb13-33" aria-label="33"></a>  markerVariable_fullSyntax,</span>
-<span id="cb13-34"><a href="#cb13-34" aria-label="34"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb13-35"><a href="#cb13-35" aria-label="35"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb13-36"><a href="#cb13-36" aria-label="36"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-30"><a href="#cb13-30" aria-label="30"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-label="31"></a>)</span>
+<span id="cb13-32"><a href="#cb13-32" aria-label="32"></a></span>
+<span id="cb13-33"><a href="#cb13-33" aria-label="33"></a>markerVariableModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb13-34"><a href="#cb13-34" aria-label="34"></a>  markerVariable_fullSyntax,</span>
+<span id="cb13-35"><a href="#cb13-35" aria-label="35"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb13-36"><a href="#cb13-36" aria-label="36"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb13-37"><a href="#cb13-37" aria-label="37"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-label="38"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -1112,7 +1122,8 @@ y4 5.393572  9.910746  7.151898 11.22069</code></pre>
 <span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>  markerVariableModelFit,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"est"</span>,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-5"><a href="#cb14-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-markerVariable" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Identifying a Latent Variable Using the Marker Variable Approach.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-markerVariable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1169,19 +1180,22 @@ Figure&nbsp;7.3: Identifying a Latent Variable Using the Marker Variable Approac
 <span id="cb15-39"><a href="#cb15-39" aria-label="39"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb15-40"><a href="#cb15-40" aria-label="40"></a>  <span class="at">effect_coding =</span> <span class="st">"loadings"</span>,</span>
 <span id="cb15-41"><a href="#cb15-41" aria-label="41"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb15-42"><a href="#cb15-42" aria-label="42"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb15-43"><a href="#cb15-43" aria-label="43"></a></span>
-<span id="cb15-44"><a href="#cb15-44" aria-label="44"></a>effectsCodingModelFit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
-<span id="cb15-45"><a href="#cb15-45" aria-label="45"></a>  effectsCoding_syntax,</span>
-<span id="cb15-46"><a href="#cb15-46" aria-label="46"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb15-47"><a href="#cb15-47" aria-label="47"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb15-48"><a href="#cb15-48" aria-label="48"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb15-49"><a href="#cb15-49" aria-label="49"></a></span>
-<span id="cb15-50"><a href="#cb15-50" aria-label="50"></a>effectsCodingModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb15-51"><a href="#cb15-51" aria-label="51"></a>  effectsCoding_fullSyntax,</span>
-<span id="cb15-52"><a href="#cb15-52" aria-label="52"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb15-53"><a href="#cb15-53" aria-label="53"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb15-54"><a href="#cb15-54" aria-label="54"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-42"><a href="#cb15-42" aria-label="42"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-label="43"></a>)</span>
+<span id="cb15-44"><a href="#cb15-44" aria-label="44"></a></span>
+<span id="cb15-45"><a href="#cb15-45" aria-label="45"></a>effectsCodingModelFit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb15-46"><a href="#cb15-46" aria-label="46"></a>  effectsCoding_syntax,</span>
+<span id="cb15-47"><a href="#cb15-47" aria-label="47"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb15-48"><a href="#cb15-48" aria-label="48"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb15-49"><a href="#cb15-49" aria-label="49"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-label="50"></a>)</span>
+<span id="cb15-51"><a href="#cb15-51" aria-label="51"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-label="52"></a>effectsCodingModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb15-53"><a href="#cb15-53" aria-label="53"></a>  effectsCoding_fullSyntax,</span>
+<span id="cb15-54"><a href="#cb15-54" aria-label="54"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb15-55"><a href="#cb15-55" aria-label="55"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb15-56"><a href="#cb15-56" aria-label="56"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-label="57"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -1189,7 +1203,8 @@ Figure&nbsp;7.3: Identifying a Latent Variable Using the Marker Variable Approac
 <span id="cb16-2"><a href="#cb16-2" aria-label="2"></a>  effectsCodingModelFit,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"est"</span>,</span>
 <span id="cb16-4"><a href="#cb16-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-5"><a href="#cb16-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-effectsCoding" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Identifying a Latent Variable Using the Effects Coding Approach.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-effectsCoding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1249,19 +1264,22 @@ Figure&nbsp;7.4: Identifying a Latent Variable Using the Effects Coding Approach
 <span id="cb17-42"><a href="#cb17-42" aria-label="42"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb17-43"><a href="#cb17-43" aria-label="43"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb17-44"><a href="#cb17-44" aria-label="44"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb17-45"><a href="#cb17-45" aria-label="45"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb17-46"><a href="#cb17-46" aria-label="46"></a></span>
-<span id="cb17-47"><a href="#cb17-47" aria-label="47"></a>standardizedLatentFit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
-<span id="cb17-48"><a href="#cb17-48" aria-label="48"></a>  standardizedLatent_syntax,</span>
-<span id="cb17-49"><a href="#cb17-49" aria-label="49"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb17-50"><a href="#cb17-50" aria-label="50"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb17-51"><a href="#cb17-51" aria-label="51"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb17-52"><a href="#cb17-52" aria-label="52"></a></span>
-<span id="cb17-53"><a href="#cb17-53" aria-label="53"></a>standardizedLatentFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb17-54"><a href="#cb17-54" aria-label="54"></a>  standardizedLatent_fullSyntax,</span>
-<span id="cb17-55"><a href="#cb17-55" aria-label="55"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb17-56"><a href="#cb17-56" aria-label="56"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb17-57"><a href="#cb17-57" aria-label="57"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-45"><a href="#cb17-45" aria-label="45"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-label="46"></a>)</span>
+<span id="cb17-47"><a href="#cb17-47" aria-label="47"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-label="48"></a>standardizedLatentFit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb17-49"><a href="#cb17-49" aria-label="49"></a>  standardizedLatent_syntax,</span>
+<span id="cb17-50"><a href="#cb17-50" aria-label="50"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb17-51"><a href="#cb17-51" aria-label="51"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb17-52"><a href="#cb17-52" aria-label="52"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-label="53"></a>)</span>
+<span id="cb17-54"><a href="#cb17-54" aria-label="54"></a></span>
+<span id="cb17-55"><a href="#cb17-55" aria-label="55"></a>standardizedLatentFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb17-56"><a href="#cb17-56" aria-label="56"></a>  standardizedLatent_fullSyntax,</span>
+<span id="cb17-57"><a href="#cb17-57" aria-label="57"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb17-58"><a href="#cb17-58" aria-label="58"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb17-59"><a href="#cb17-59" aria-label="59"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-label="60"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
@@ -1269,7 +1287,8 @@ Figure&nbsp;7.4: Identifying a Latent Variable Using the Effects Coding Approach
 <span id="cb18-2"><a href="#cb18-2" aria-label="2"></a>  standardizedLatentFit,</span>
 <span id="cb18-3"><a href="#cb18-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"est"</span>,</span>
 <span id="cb18-4"><a href="#cb18-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-5"><a href="#cb18-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-standardizedLatent" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Identifying a Latent Variable Using the Standardized Latent Factor Approach.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-standardizedLatent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1297,14 +1316,16 @@ Figure&nbsp;7.5: Identifying a Latent Variable Using the Standardized Latent Fac
 <span id="cb19-8"><a href="#cb19-8" aria-label="8"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb19-9"><a href="#cb19-9" aria-label="9"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
 <span id="cb19-10"><a href="#cb19-10" aria-label="10"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
-<span id="cb19-11"><a href="#cb19-11" aria-label="11"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-label="12"></a></span>
-<span id="cb19-13"><a href="#cb19-13" aria-label="13"></a>reflectiveModelParameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(</span>
-<span id="cb19-14"><a href="#cb19-14" aria-label="14"></a>  reflectiveModelFit)[<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">parameterEstimates</span>(reflectiveModelFit)<span class="sc">$</span>z),]</span>
-<span id="cb19-15"><a href="#cb19-15" aria-label="15"></a></span>
-<span id="cb19-16"><a href="#cb19-16" aria-label="16"></a><span class="fu">row.names</span>(reflectiveModelParameters) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-label="11"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-label="12"></a>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-label="13"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-label="14"></a>reflectiveModelParameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(</span>
+<span id="cb19-15"><a href="#cb19-15" aria-label="15"></a>  reflectiveModelFit</span>
+<span id="cb19-16"><a href="#cb19-16" aria-label="16"></a>)[<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">parameterEstimates</span>(reflectiveModelFit)<span class="sc">$</span>z), ]</span>
 <span id="cb19-17"><a href="#cb19-17" aria-label="17"></a></span>
-<span id="cb19-18"><a href="#cb19-18" aria-label="18"></a>reflectiveModelParameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-18"><a href="#cb19-18" aria-label="18"></a><span class="fu">row.names</span>(reflectiveModelParameters) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-label="19"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-label="20"></a>reflectiveModelParameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1327,7 +1348,8 @@ Figure&nbsp;7.5: Identifying a Latent Variable Using the Standardized Latent Fac
 <span id="cb22-2"><a href="#cb22-2" aria-label="2"></a>  reflectiveModelFit,</span>
 <span id="cb22-3"><a href="#cb22-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb22-4"><a href="#cb22-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-5"><a href="#cb22-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-reflectiveModelFigure" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Example of a Reflective Model.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-reflectiveModelFigure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1355,11 +1377,12 @@ Figure&nbsp;7.6: Example of a Reflective Model.
 <span id="cb23-9"><a href="#cb23-9" aria-label="9"></a>  formativeModel_syntax,</span>
 <span id="cb23-10"><a href="#cb23-10" aria-label="10"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb23-11"><a href="#cb23-11" aria-label="11"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb23-13"><a href="#cb23-13" aria-label="13"></a></span>
-<span id="cb23-14"><a href="#cb23-14" aria-label="14"></a>formativeModelParameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModelFit)</span>
-<span id="cb23-15"><a href="#cb23-15" aria-label="15"></a></span>
-<span id="cb23-16"><a href="#cb23-16" aria-label="16"></a>formativeModelParameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb23-12"><a href="#cb23-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-label="13"></a>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-label="14"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-label="15"></a>formativeModelParameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModelFit)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-label="16"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-label="17"></a>formativeModelParameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1374,7 +1397,7 @@ Figure&nbsp;7.6: Example of a Reflective Model.
 <span id="cb24-2"><a href="#cb24-2" aria-label="2"></a>  formativeModel_syntax,</span>
 <span id="cb24-3"><a href="#cb24-3" aria-label="3"></a>  <span class="at">fixed_x =</span> <span class="cn">TRUE</span>, <span class="co"># sem() sets fixed_x = TRUE by default</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-label="4"></a>  <span class="at">meanstructure =</span> <span class="cn">TRUE</span> <span class="co"># estimator = "MLR" and missing = "ML" both set meanstructure = TRUE</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-label="5"></a>  )</span>
+<span id="cb24-5"><a href="#cb24-5" aria-label="5"></a>)</span>
 <span id="cb24-6"><a href="#cb24-6" aria-label="6"></a></span>
 <span id="cb24-7"><a href="#cb24-7" aria-label="7"></a><span class="fu">lav_partable_df</span>(PT)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
@@ -1404,7 +1427,8 @@ Model Test User Model:
 <span id="cb28-2"><a href="#cb28-2" aria-label="2"></a>  formativeModelFit,</span>
 <span id="cb28-3"><a href="#cb28-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb28-4"><a href="#cb28-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb28-5"><a href="#cb28-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb28-5"><a href="#cb28-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-formativeModelUnderidentifiedFigure" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Example of an Under-Identified Formative Model.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-formativeModelUnderidentifiedFigure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1432,10 +1456,11 @@ Figure&nbsp;7.7: Example of an Under-Identified Formative Model.
 <span id="cb29-11"><a href="#cb29-11" aria-label="11"></a>  formativeModel2_syntax,</span>
 <span id="cb29-12"><a href="#cb29-12" aria-label="12"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb29-13"><a href="#cb29-13" aria-label="13"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb29-14"><a href="#cb29-14" aria-label="14"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb29-15"><a href="#cb29-15" aria-label="15"></a></span>
-<span id="cb29-16"><a href="#cb29-16" aria-label="16"></a>formativeModel2Parameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModel2Fit)</span>
-<span id="cb29-17"><a href="#cb29-17" aria-label="17"></a>formativeModel2Parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb29-14"><a href="#cb29-14" aria-label="14"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-label="15"></a>)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-label="16"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-label="17"></a>formativeModel2Parameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModel2Fit)</span>
+<span id="cb29-18"><a href="#cb29-18" aria-label="18"></a>formativeModel2Parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div id="fig-formativeModelIdentifiedFigure-1" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-formativeModelIdentifiedFigure-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div data-pagedtable="false">
@@ -1457,7 +1482,8 @@ Figure&nbsp;7.8: Example of an Identified Formative Model.
 <span id="cb32-2"><a href="#cb32-2" aria-label="2"></a>  formativeModel2Fit,</span>
 <span id="cb32-3"><a href="#cb32-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb32-4"><a href="#cb32-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb32-5"><a href="#cb32-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-formativeModelIdentifiedFigure-2" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Example of an Identified Formative Model.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-formativeModelIdentifiedFigure-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1559,10 +1585,11 @@ Figure&nbsp;7.9: Example of an Identified Formative Model.
 <span id="cb33-85"><a href="#cb33-85" aria-label="85"></a>  formativeModel3_syntax,</span>
 <span id="cb33-86"><a href="#cb33-86" aria-label="86"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb33-87"><a href="#cb33-87" aria-label="87"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb33-88"><a href="#cb33-88" aria-label="88"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb33-89"><a href="#cb33-89" aria-label="89"></a></span>
-<span id="cb33-90"><a href="#cb33-90" aria-label="90"></a>formativeModel3Parameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModel3Fit)</span>
-<span id="cb33-91"><a href="#cb33-91" aria-label="91"></a>formativeModel3Parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb33-88"><a href="#cb33-88" aria-label="88"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb33-89"><a href="#cb33-89" aria-label="89"></a>)</span>
+<span id="cb33-90"><a href="#cb33-90" aria-label="90"></a></span>
+<span id="cb33-91"><a href="#cb33-91" aria-label="91"></a>formativeModel3Parameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModel3Fit)</span>
+<span id="cb33-92"><a href="#cb33-92" aria-label="92"></a>formativeModel3Parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1579,7 +1606,8 @@ Figure&nbsp;7.9: Example of an Identified Formative Model.
 <span id="cb36-2"><a href="#cb36-2" aria-label="2"></a>  formativeModel3Fit,</span>
 <span id="cb36-3"><a href="#cb36-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb36-4"><a href="#cb36-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb36-5"><a href="#cb36-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb36-5"><a href="#cb36-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><a href="structural-equation-modeling_files/figure-html/unnamed-chunk-16-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="structural-equation-modeling_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></a></p>
@@ -1661,10 +1689,11 @@ Figure&nbsp;7.9: Example of an Identified Formative Model.
 <span id="cb37-70"><a href="#cb37-70" aria-label="70"></a>  formativeModel4_syntax,</span>
 <span id="cb37-71"><a href="#cb37-71" aria-label="71"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb37-72"><a href="#cb37-72" aria-label="72"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb37-73"><a href="#cb37-73" aria-label="73"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span>
-<span id="cb37-74"><a href="#cb37-74" aria-label="74"></a></span>
-<span id="cb37-75"><a href="#cb37-75" aria-label="75"></a>formativeModel4Parameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModel4Fit)</span>
-<span id="cb37-76"><a href="#cb37-76" aria-label="76"></a>formativeModel4Parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb37-73"><a href="#cb37-73" aria-label="73"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb37-74"><a href="#cb37-74" aria-label="74"></a>)</span>
+<span id="cb37-75"><a href="#cb37-75" aria-label="75"></a></span>
+<span id="cb37-76"><a href="#cb37-76" aria-label="76"></a>formativeModel4Parameters <span class="ot">&lt;-</span> <span class="fu">parameterEstimates</span>(formativeModel4Fit)</span>
+<span id="cb37-77"><a href="#cb37-77" aria-label="77"></a>formativeModel4Parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
@@ -1681,7 +1710,8 @@ Figure&nbsp;7.9: Example of an Identified Formative Model.
 <span id="cb40-2"><a href="#cb40-2" aria-label="2"></a>  formativeModel4Fit,</span>
 <span id="cb40-3"><a href="#cb40-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb40-4"><a href="#cb40-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb40-5"><a href="#cb40-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb40-5"><a href="#cb40-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><a href="structural-equation-modeling_files/figure-html/unnamed-chunk-17-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="structural-equation-modeling_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></a></p>
@@ -1694,14 +1724,18 @@ Figure&nbsp;7.9: Example of an Identified Formative Model.
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-label="1"></a><span class="fu">library</span>(<span class="st">"calculus"</span>)</span>
 <span id="cb41-2"><a href="#cb41-2" aria-label="2"></a></span>
 <span id="cb41-3"><a href="#cb41-3" aria-label="3"></a><span class="co"># First, construct the loading matrix</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-label="4"></a>loadingMatrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="st">'l11'</span>,<span class="st">'l21'</span>,<span class="dv">1</span>,<span class="st">'l41'</span>,<span class="st">'l12'</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="st">'l23'</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="st">'l34'</span>,<span class="dv">1</span>),<span class="dv">4</span>,<span class="dv">4</span>)</span>
-<span id="cb41-5"><a href="#cb41-5" aria-label="5"></a></span>
-<span id="cb41-6"><a href="#cb41-6" aria-label="6"></a><span class="co"># Check the structure</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-label="7"></a>loadingMatrix</span>
-<span id="cb41-8"><a href="#cb41-8" aria-label="8"></a></span>
-<span id="cb41-9"><a href="#cb41-9" aria-label="9"></a><span class="co"># Invert matrix, the first row contains the (unstandardized) weights</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-label="10"></a><span class="co"># these can be copy and pasted to the lavaan model to specify the weights as new parameters</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-label="11"></a><span class="fu">mxinv</span>(loadingMatrix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb41-4"><a href="#cb41-4" aria-label="4"></a>loadingMatrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb41-5"><a href="#cb41-5" aria-label="5"></a>  <span class="fu">c</span>(<span class="st">'l11'</span>, <span class="st">'l21'</span>, <span class="dv">1</span>, <span class="st">'l41'</span>, <span class="st">'l12'</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="st">'l23'</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="st">'l34'</span>, <span class="dv">1</span>),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-label="6"></a>  <span class="dv">4</span>,</span>
+<span id="cb41-7"><a href="#cb41-7" aria-label="7"></a>  <span class="dv">4</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-label="8"></a>)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-label="9"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-label="10"></a><span class="co"># Check the structure</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-label="11"></a>loadingMatrix</span>
+<span id="cb41-12"><a href="#cb41-12" aria-label="12"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-label="13"></a><span class="co"># Invert matrix, the first row contains the (unstandardized) weights</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-label="14"></a><span class="co"># these can be copy and pasted to the lavaan model to specify the weights as new parameters</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-label="15"></a><span class="fu">mxinv</span>(loadingMatrix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Florian Schubert provides an <code>R</code> function to create the full <code>lavaan</code> syntax for confirmatory composite analysis at the following link: <a href="https://github.com/FloSchuberth/HOspecification" class="uri">https://github.com/FloSchuberth/HOspecification</a></p>
@@ -2027,13 +2061,15 @@ Table&nbsp;7.4: Correlation Matrix.
 <span id="cb52-3"><a href="#cb52-3" aria-label="3"></a>  <span class="at">data =</span> mydataSEM,</span>
 <span id="cb52-4"><a href="#cb52-4" aria-label="4"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
 <span id="cb52-5"><a href="#cb52-5" aria-label="5"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
-<span id="cb52-6"><a href="#cb52-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-7"><a href="#cb52-7" aria-label="7"></a></span>
-<span id="cb52-8"><a href="#cb52-8" aria-label="8"></a>measurementModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb52-9"><a href="#cb52-9" aria-label="9"></a>  measurementModel_fullSyntax,</span>
-<span id="cb52-10"><a href="#cb52-10" aria-label="10"></a>  <span class="at">data =</span> mydataSEM,</span>
-<span id="cb52-11"><a href="#cb52-11" aria-label="11"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb52-12"><a href="#cb52-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb52-6"><a href="#cb52-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-label="7"></a>)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-label="8"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-label="9"></a>measurementModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb52-10"><a href="#cb52-10" aria-label="10"></a>  measurementModel_fullSyntax,</span>
+<span id="cb52-11"><a href="#cb52-11" aria-label="11"></a>  <span class="at">data =</span> mydataSEM,</span>
+<span id="cb52-12"><a href="#cb52-12" aria-label="12"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb52-13"><a href="#cb52-13" aria-label="13"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb52-14"><a href="#cb52-14" aria-label="14"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-measurementModelOutput-sem" class="level3" data-number="7.9.3"><h3 data-number="7.9.3" class="anchored" data-anchor-id="sec-measurementModelOutput-sem">
@@ -2044,7 +2080,8 @@ Table&nbsp;7.4: Correlation Matrix.
 <span id="cb53-2"><a href="#cb53-2" aria-label="2"></a>  measurementModelFit,</span>
 <span id="cb53-3"><a href="#cb53-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb53-4"><a href="#cb53-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb53-5"><a href="#cb53-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb53-5"><a href="#cb53-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 23 iterations
 
@@ -2149,7 +2186,8 @@ R-Square:
 <span id="cb55-2"><a href="#cb55-2" aria-label="2"></a>  measurementModelFit_full,</span>
 <span id="cb55-3"><a href="#cb55-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb55-4"><a href="#cb55-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb55-5"><a href="#cb55-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb55-5"><a href="#cb55-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 23 iterations
 
@@ -2259,12 +2297,25 @@ R-Square:
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-label="1"></a><span class="fu">fitMeasures</span>(</span>
 <span id="cb57-2"><a href="#cb57-2" aria-label="2"></a>  measurementModelFit,</span>
 <span id="cb57-3"><a href="#cb57-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="fu">c</span>(</span>
-<span id="cb57-4"><a href="#cb57-4" aria-label="4"></a>    <span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
-<span id="cb57-5"><a href="#cb57-5" aria-label="5"></a>    <span class="st">"chisq.scaled"</span>, <span class="st">"df.scaled"</span>, <span class="st">"pvalue.scaled"</span>,</span>
-<span id="cb57-6"><a href="#cb57-6" aria-label="6"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
-<span id="cb57-7"><a href="#cb57-7" aria-label="7"></a>    <span class="st">"baseline.chisq"</span>,<span class="st">"baseline.df"</span>,<span class="st">"baseline.pvalue"</span>,</span>
-<span id="cb57-8"><a href="#cb57-8" aria-label="8"></a>    <span class="st">"rmsea"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"srmr"</span>,</span>
-<span id="cb57-9"><a href="#cb57-9" aria-label="9"></a>    <span class="st">"rmsea.robust"</span>, <span class="st">"cfi.robust"</span>, <span class="st">"tli.robust"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb57-4"><a href="#cb57-4" aria-label="4"></a>    <span class="st">"chisq"</span>,</span>
+<span id="cb57-5"><a href="#cb57-5" aria-label="5"></a>    <span class="st">"df"</span>,</span>
+<span id="cb57-6"><a href="#cb57-6" aria-label="6"></a>    <span class="st">"pvalue"</span>,</span>
+<span id="cb57-7"><a href="#cb57-7" aria-label="7"></a>    <span class="st">"chisq.scaled"</span>,</span>
+<span id="cb57-8"><a href="#cb57-8" aria-label="8"></a>    <span class="st">"df.scaled"</span>,</span>
+<span id="cb57-9"><a href="#cb57-9" aria-label="9"></a>    <span class="st">"pvalue.scaled"</span>,</span>
+<span id="cb57-10"><a href="#cb57-10" aria-label="10"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
+<span id="cb57-11"><a href="#cb57-11" aria-label="11"></a>    <span class="st">"baseline.chisq"</span>,</span>
+<span id="cb57-12"><a href="#cb57-12" aria-label="12"></a>    <span class="st">"baseline.df"</span>,</span>
+<span id="cb57-13"><a href="#cb57-13" aria-label="13"></a>    <span class="st">"baseline.pvalue"</span>,</span>
+<span id="cb57-14"><a href="#cb57-14" aria-label="14"></a>    <span class="st">"rmsea"</span>,</span>
+<span id="cb57-15"><a href="#cb57-15" aria-label="15"></a>    <span class="st">"cfi"</span>,</span>
+<span id="cb57-16"><a href="#cb57-16" aria-label="16"></a>    <span class="st">"tli"</span>,</span>
+<span id="cb57-17"><a href="#cb57-17" aria-label="17"></a>    <span class="st">"srmr"</span>,</span>
+<span id="cb57-18"><a href="#cb57-18" aria-label="18"></a>    <span class="st">"rmsea.robust"</span>,</span>
+<span id="cb57-19"><a href="#cb57-19" aria-label="19"></a>    <span class="st">"cfi.robust"</span>,</span>
+<span id="cb57-20"><a href="#cb57-20" aria-label="20"></a>    <span class="st">"tli.robust"</span></span>
+<span id="cb57-21"><a href="#cb57-21" aria-label="21"></a>  )</span>
+<span id="cb57-22"><a href="#cb57-22" aria-label="22"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>               chisq                   df               pvalue 
                  0.0                  0.0                   NA 
@@ -2356,7 +2407,8 @@ attr(,"weight")
 <span id="cb69-2"><a href="#cb69-2" aria-label="2"></a>  measurementModelFit,</span>
 <span id="cb69-3"><a href="#cb69-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb69-4"><a href="#cb69-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb69-5"><a href="#cb69-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb69-5"><a href="#cb69-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="dv">2</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-measurementModel" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Measurement Model.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-measurementModel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2455,13 +2507,15 @@ Figure&nbsp;7.10: Measurement Model.
 <span id="cb73-3"><a href="#cb73-3" aria-label="3"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
 <span id="cb73-4"><a href="#cb73-4" aria-label="4"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
 <span id="cb73-5"><a href="#cb73-5" aria-label="5"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
-<span id="cb73-6"><a href="#cb73-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb73-7"><a href="#cb73-7" aria-label="7"></a></span>
-<span id="cb73-8"><a href="#cb73-8" aria-label="8"></a>cfaModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb73-9"><a href="#cb73-9" aria-label="9"></a>  cfaModel_fullSyntax,</span>
-<span id="cb73-10"><a href="#cb73-10" aria-label="10"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
-<span id="cb73-11"><a href="#cb73-11" aria-label="11"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb73-12"><a href="#cb73-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb73-6"><a href="#cb73-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-label="7"></a>)</span>
+<span id="cb73-8"><a href="#cb73-8" aria-label="8"></a></span>
+<span id="cb73-9"><a href="#cb73-9" aria-label="9"></a>cfaModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb73-10"><a href="#cb73-10" aria-label="10"></a>  cfaModel_fullSyntax,</span>
+<span id="cb73-11"><a href="#cb73-11" aria-label="11"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
+<span id="cb73-12"><a href="#cb73-12" aria-label="12"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb73-13"><a href="#cb73-13" aria-label="13"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb73-14"><a href="#cb73-14" aria-label="14"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-cfaModelOutput-sem" class="level3" data-number="7.10.3"><h3 data-number="7.10.3" class="anchored" data-anchor-id="sec-cfaModelOutput-sem">
@@ -2472,7 +2526,8 @@ Figure&nbsp;7.10: Measurement Model.
 <span id="cb74-2"><a href="#cb74-2" aria-label="2"></a>  cfaModelFit,</span>
 <span id="cb74-3"><a href="#cb74-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb74-4"><a href="#cb74-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb74-5"><a href="#cb74-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb74-5"><a href="#cb74-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 42 iterations
 
@@ -2619,7 +2674,8 @@ R-Square:
 <span id="cb76-2"><a href="#cb76-2" aria-label="2"></a>  cfaModelFit_full,</span>
 <span id="cb76-3"><a href="#cb76-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb76-4"><a href="#cb76-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb76-5"><a href="#cb76-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb76-5"><a href="#cb76-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 42 iterations
 
@@ -2773,12 +2829,25 @@ R-Square:
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-label="1"></a><span class="fu">fitMeasures</span>(</span>
 <span id="cb78-2"><a href="#cb78-2" aria-label="2"></a>  cfaModelFit,</span>
 <span id="cb78-3"><a href="#cb78-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="fu">c</span>(</span>
-<span id="cb78-4"><a href="#cb78-4" aria-label="4"></a>    <span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
-<span id="cb78-5"><a href="#cb78-5" aria-label="5"></a>    <span class="st">"chisq.scaled"</span>, <span class="st">"df.scaled"</span>, <span class="st">"pvalue.scaled"</span>,</span>
-<span id="cb78-6"><a href="#cb78-6" aria-label="6"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
-<span id="cb78-7"><a href="#cb78-7" aria-label="7"></a>    <span class="st">"baseline.chisq"</span>,<span class="st">"baseline.df"</span>,<span class="st">"baseline.pvalue"</span>,</span>
-<span id="cb78-8"><a href="#cb78-8" aria-label="8"></a>    <span class="st">"rmsea"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"srmr"</span>,</span>
-<span id="cb78-9"><a href="#cb78-9" aria-label="9"></a>    <span class="st">"rmsea.robust"</span>, <span class="st">"cfi.robust"</span>, <span class="st">"tli.robust"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb78-4"><a href="#cb78-4" aria-label="4"></a>    <span class="st">"chisq"</span>,</span>
+<span id="cb78-5"><a href="#cb78-5" aria-label="5"></a>    <span class="st">"df"</span>,</span>
+<span id="cb78-6"><a href="#cb78-6" aria-label="6"></a>    <span class="st">"pvalue"</span>,</span>
+<span id="cb78-7"><a href="#cb78-7" aria-label="7"></a>    <span class="st">"chisq.scaled"</span>,</span>
+<span id="cb78-8"><a href="#cb78-8" aria-label="8"></a>    <span class="st">"df.scaled"</span>,</span>
+<span id="cb78-9"><a href="#cb78-9" aria-label="9"></a>    <span class="st">"pvalue.scaled"</span>,</span>
+<span id="cb78-10"><a href="#cb78-10" aria-label="10"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
+<span id="cb78-11"><a href="#cb78-11" aria-label="11"></a>    <span class="st">"baseline.chisq"</span>,</span>
+<span id="cb78-12"><a href="#cb78-12" aria-label="12"></a>    <span class="st">"baseline.df"</span>,</span>
+<span id="cb78-13"><a href="#cb78-13" aria-label="13"></a>    <span class="st">"baseline.pvalue"</span>,</span>
+<span id="cb78-14"><a href="#cb78-14" aria-label="14"></a>    <span class="st">"rmsea"</span>,</span>
+<span id="cb78-15"><a href="#cb78-15" aria-label="15"></a>    <span class="st">"cfi"</span>,</span>
+<span id="cb78-16"><a href="#cb78-16" aria-label="16"></a>    <span class="st">"tli"</span>,</span>
+<span id="cb78-17"><a href="#cb78-17" aria-label="17"></a>    <span class="st">"srmr"</span>,</span>
+<span id="cb78-18"><a href="#cb78-18" aria-label="18"></a>    <span class="st">"rmsea.robust"</span>,</span>
+<span id="cb78-19"><a href="#cb78-19" aria-label="19"></a>    <span class="st">"cfi.robust"</span>,</span>
+<span id="cb78-20"><a href="#cb78-20" aria-label="20"></a>    <span class="st">"tli.robust"</span></span>
+<span id="cb78-21"><a href="#cb78-21" aria-label="21"></a>  )</span>
+<span id="cb78-22"><a href="#cb78-22" aria-label="22"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>               chisq                   df               pvalue 
               85.306               24.000                0.000 
@@ -2907,7 +2976,8 @@ attr(,"weight")
 <span id="cb90-2"><a href="#cb90-2" aria-label="2"></a>  cfaModelFit,</span>
 <span id="cb90-3"><a href="#cb90-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb90-4"><a href="#cb90-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb90-5"><a href="#cb90-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb90-5"><a href="#cb90-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb90-6"><a href="#cb90-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-cfaPathDiagram" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Confirmatory Factor Analysis Model.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-cfaPathDiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2985,13 +3055,15 @@ Figure&nbsp;7.11: Confirmatory Factor Analysis Model.
 <span id="cb92-3"><a href="#cb92-3" aria-label="3"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
 <span id="cb92-4"><a href="#cb92-4" aria-label="4"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
 <span id="cb92-5"><a href="#cb92-5" aria-label="5"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
-<span id="cb92-6"><a href="#cb92-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb92-7"><a href="#cb92-7" aria-label="7"></a></span>
-<span id="cb92-8"><a href="#cb92-8" aria-label="8"></a>cfaModel2Fit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb92-9"><a href="#cb92-9" aria-label="9"></a>  cfaModel2_fullSyntax,</span>
-<span id="cb92-10"><a href="#cb92-10" aria-label="10"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
-<span id="cb92-11"><a href="#cb92-11" aria-label="11"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb92-12"><a href="#cb92-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb92-6"><a href="#cb92-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-label="7"></a>)</span>
+<span id="cb92-8"><a href="#cb92-8" aria-label="8"></a></span>
+<span id="cb92-9"><a href="#cb92-9" aria-label="9"></a>cfaModel2Fit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb92-10"><a href="#cb92-10" aria-label="10"></a>  cfaModel2_fullSyntax,</span>
+<span id="cb92-11"><a href="#cb92-11" aria-label="11"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
+<span id="cb92-12"><a href="#cb92-12" aria-label="12"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb92-13"><a href="#cb92-13" aria-label="13"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb92-14"><a href="#cb92-14" aria-label="14"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-cfaModelModifiedOutput-sem" class="level4" data-number="7.10.10.3"><h4 data-number="7.10.10.3" class="anchored" data-anchor-id="sec-cfaModelModifiedOutput-sem">
@@ -3001,7 +3073,8 @@ Figure&nbsp;7.11: Confirmatory Factor Analysis Model.
 <span id="cb93-2"><a href="#cb93-2" aria-label="2"></a>  cfaModel2Fit,</span>
 <span id="cb93-3"><a href="#cb93-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb93-4"><a href="#cb93-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb93-5"><a href="#cb93-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb93-5"><a href="#cb93-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb93-6"><a href="#cb93-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 39 iterations
 
@@ -3149,7 +3222,8 @@ R-Square:
 <span id="cb95-2"><a href="#cb95-2" aria-label="2"></a>  cfaModel2Fit_full,</span>
 <span id="cb95-3"><a href="#cb95-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb95-4"><a href="#cb95-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb95-5"><a href="#cb95-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb95-5"><a href="#cb95-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb95-6"><a href="#cb95-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 39 iterations
 
@@ -3305,12 +3379,25 @@ R-Square:
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-label="1"></a><span class="fu">fitMeasures</span>(</span>
 <span id="cb97-2"><a href="#cb97-2" aria-label="2"></a>  cfaModel2Fit,</span>
 <span id="cb97-3"><a href="#cb97-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="fu">c</span>(</span>
-<span id="cb97-4"><a href="#cb97-4" aria-label="4"></a>    <span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
-<span id="cb97-5"><a href="#cb97-5" aria-label="5"></a>    <span class="st">"chisq.scaled"</span>, <span class="st">"df.scaled"</span>, <span class="st">"pvalue.scaled"</span>,</span>
-<span id="cb97-6"><a href="#cb97-6" aria-label="6"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
-<span id="cb97-7"><a href="#cb97-7" aria-label="7"></a>    <span class="st">"baseline.chisq"</span>,<span class="st">"baseline.df"</span>,<span class="st">"baseline.pvalue"</span>,</span>
-<span id="cb97-8"><a href="#cb97-8" aria-label="8"></a>    <span class="st">"rmsea"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"srmr"</span>,</span>
-<span id="cb97-9"><a href="#cb97-9" aria-label="9"></a>    <span class="st">"rmsea.robust"</span>, <span class="st">"cfi.robust"</span>, <span class="st">"tli.robust"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb97-4"><a href="#cb97-4" aria-label="4"></a>    <span class="st">"chisq"</span>,</span>
+<span id="cb97-5"><a href="#cb97-5" aria-label="5"></a>    <span class="st">"df"</span>,</span>
+<span id="cb97-6"><a href="#cb97-6" aria-label="6"></a>    <span class="st">"pvalue"</span>,</span>
+<span id="cb97-7"><a href="#cb97-7" aria-label="7"></a>    <span class="st">"chisq.scaled"</span>,</span>
+<span id="cb97-8"><a href="#cb97-8" aria-label="8"></a>    <span class="st">"df.scaled"</span>,</span>
+<span id="cb97-9"><a href="#cb97-9" aria-label="9"></a>    <span class="st">"pvalue.scaled"</span>,</span>
+<span id="cb97-10"><a href="#cb97-10" aria-label="10"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
+<span id="cb97-11"><a href="#cb97-11" aria-label="11"></a>    <span class="st">"baseline.chisq"</span>,</span>
+<span id="cb97-12"><a href="#cb97-12" aria-label="12"></a>    <span class="st">"baseline.df"</span>,</span>
+<span id="cb97-13"><a href="#cb97-13" aria-label="13"></a>    <span class="st">"baseline.pvalue"</span>,</span>
+<span id="cb97-14"><a href="#cb97-14" aria-label="14"></a>    <span class="st">"rmsea"</span>,</span>
+<span id="cb97-15"><a href="#cb97-15" aria-label="15"></a>    <span class="st">"cfi"</span>,</span>
+<span id="cb97-16"><a href="#cb97-16" aria-label="16"></a>    <span class="st">"tli"</span>,</span>
+<span id="cb97-17"><a href="#cb97-17" aria-label="17"></a>    <span class="st">"srmr"</span>,</span>
+<span id="cb97-18"><a href="#cb97-18" aria-label="18"></a>    <span class="st">"rmsea.robust"</span>,</span>
+<span id="cb97-19"><a href="#cb97-19" aria-label="19"></a>    <span class="st">"cfi.robust"</span>,</span>
+<span id="cb97-20"><a href="#cb97-20" aria-label="20"></a>    <span class="st">"tli.robust"</span></span>
+<span id="cb97-21"><a href="#cb97-21" aria-label="21"></a>  )</span>
+<span id="cb97-22"><a href="#cb97-22" aria-label="22"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>               chisq                   df               pvalue 
               52.382               23.000                0.000 
@@ -3359,7 +3446,8 @@ x4 x5 x6 x1 x2 x3 x9 x7 x8
 <span id="cb101-2"><a href="#cb101-2" aria-label="2"></a>  cfaModel2Fit,</span>
 <span id="cb101-3"><a href="#cb101-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb101-4"><a href="#cb101-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb101-5"><a href="#cb101-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb101-5"><a href="#cb101-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.8</span></span>
+<span id="cb101-6"><a href="#cb101-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-cfaModifiedPathDiagram" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Modified Confirmatory Factor Analysis Model.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-cfaModifiedPathDiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3416,19 +3504,22 @@ cfaModelFit (df = 24)  TRUE                    </code></pre>
 <span id="cb105-3"><a href="#cb105-3" aria-label="3"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
 <span id="cb105-4"><a href="#cb105-4" aria-label="4"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
 <span id="cb105-5"><a href="#cb105-5" aria-label="5"></a>  <span class="at">estimator =</span> <span class="st">"ML"</span>,</span>
-<span id="cb105-6"><a href="#cb105-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb105-7"><a href="#cb105-7" aria-label="7"></a></span>
-<span id="cb105-8"><a href="#cb105-8" aria-label="8"></a>cfaModel2FitML <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
-<span id="cb105-9"><a href="#cb105-9" aria-label="9"></a>  cfaModel2_syntax,</span>
-<span id="cb105-10"><a href="#cb105-10" aria-label="10"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
-<span id="cb105-11"><a href="#cb105-11" aria-label="11"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb105-12"><a href="#cb105-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"ML"</span>,</span>
-<span id="cb105-13"><a href="#cb105-13" aria-label="13"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb105-14"><a href="#cb105-14" aria-label="14"></a></span>
-<span id="cb105-15"><a href="#cb105-15" aria-label="15"></a><span class="fu">vuongtest</span>(</span>
-<span id="cb105-16"><a href="#cb105-16" aria-label="16"></a>  cfaModelFitML,</span>
-<span id="cb105-17"><a href="#cb105-17" aria-label="17"></a>  cfaModel2FitML,</span>
-<span id="cb105-18"><a href="#cb105-18" aria-label="18"></a>  <span class="at">nested =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb105-6"><a href="#cb105-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb105-7"><a href="#cb105-7" aria-label="7"></a>)</span>
+<span id="cb105-8"><a href="#cb105-8" aria-label="8"></a></span>
+<span id="cb105-9"><a href="#cb105-9" aria-label="9"></a>cfaModel2FitML <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb105-10"><a href="#cb105-10" aria-label="10"></a>  cfaModel2_syntax,</span>
+<span id="cb105-11"><a href="#cb105-11" aria-label="11"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
+<span id="cb105-12"><a href="#cb105-12" aria-label="12"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb105-13"><a href="#cb105-13" aria-label="13"></a>  <span class="at">estimator =</span> <span class="st">"ML"</span>,</span>
+<span id="cb105-14"><a href="#cb105-14" aria-label="14"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb105-15"><a href="#cb105-15" aria-label="15"></a>)</span>
+<span id="cb105-16"><a href="#cb105-16" aria-label="16"></a></span>
+<span id="cb105-17"><a href="#cb105-17" aria-label="17"></a><span class="fu">vuongtest</span>(</span>
+<span id="cb105-18"><a href="#cb105-18" aria-label="18"></a>  cfaModelFitML,</span>
+<span id="cb105-19"><a href="#cb105-19" aria-label="19"></a>  cfaModel2FitML,</span>
+<span id="cb105-20"><a href="#cb105-20" aria-label="20"></a>  <span class="at">nested =</span> <span class="cn">TRUE</span></span>
+<span id="cb105-21"><a href="#cb105-21" aria-label="21"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
 Model 1 
@@ -3455,7 +3546,11 @@ Robust likelihood ratio test of distinguishable models
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-label="1"></a><span class="fu">fitMeasures</span>(</span>
 <span id="cb107-2"><a href="#cb107-2" aria-label="2"></a>  cfaModelFitML,</span>
 <span id="cb107-3"><a href="#cb107-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="fu">c</span>(</span>
-<span id="cb107-4"><a href="#cb107-4" aria-label="4"></a>    <span class="st">"aic"</span>,<span class="st">"bic"</span>,<span class="st">"bic2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb107-4"><a href="#cb107-4" aria-label="4"></a>    <span class="st">"aic"</span>,</span>
+<span id="cb107-5"><a href="#cb107-5" aria-label="5"></a>    <span class="st">"bic"</span>,</span>
+<span id="cb107-6"><a href="#cb107-6" aria-label="6"></a>    <span class="st">"bic2"</span></span>
+<span id="cb107-7"><a href="#cb107-7" aria-label="7"></a>  )</span>
+<span id="cb107-8"><a href="#cb107-8" aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>     aic      bic     bic2 
 7535.490 7646.703 7551.560 </code></pre>
@@ -3463,7 +3558,11 @@ Robust likelihood ratio test of distinguishable models
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-label="1"></a><span class="fu">fitMeasures</span>(</span>
 <span id="cb109-2"><a href="#cb109-2" aria-label="2"></a>  cfaModel2FitML,</span>
 <span id="cb109-3"><a href="#cb109-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="fu">c</span>(</span>
-<span id="cb109-4"><a href="#cb109-4" aria-label="4"></a>    <span class="st">"aic"</span>,<span class="st">"bic"</span>,<span class="st">"bic2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb109-4"><a href="#cb109-4" aria-label="4"></a>    <span class="st">"aic"</span>,</span>
+<span id="cb109-5"><a href="#cb109-5" aria-label="5"></a>    <span class="st">"bic"</span>,</span>
+<span id="cb109-6"><a href="#cb109-6" aria-label="6"></a>    <span class="st">"bic2"</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-label="7"></a>  )</span>
+<span id="cb109-8"><a href="#cb109-8" aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>     aic      bic     bic2 
 7504.566 7619.487 7521.172 </code></pre>
@@ -3471,7 +3570,8 @@ Robust likelihood ratio test of distinguishable models
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-label="1"></a><span class="fu">vuongtest</span>(</span>
 <span id="cb111-2"><a href="#cb111-2" aria-label="2"></a>  cfaModelFitML,</span>
 <span id="cb111-3"><a href="#cb111-3" aria-label="3"></a>  cfaModel2FitML,</span>
-<span id="cb111-4"><a href="#cb111-4" aria-label="4"></a>  <span class="at">nested =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb111-4"><a href="#cb111-4" aria-label="4"></a>  <span class="at">nested =</span> <span class="cn">FALSE</span></span>
+<span id="cb111-5"><a href="#cb111-5" aria-label="5"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
 Model 1 
@@ -3605,13 +3705,15 @@ Non-nested likelihood ratio test
 <span id="cb116-3"><a href="#cb116-3" aria-label="3"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
 <span id="cb116-4"><a href="#cb116-4" aria-label="4"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
 <span id="cb116-5"><a href="#cb116-5" aria-label="5"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
-<span id="cb116-6"><a href="#cb116-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb116-7"><a href="#cb116-7" aria-label="7"></a></span>
-<span id="cb116-8"><a href="#cb116-8" aria-label="8"></a>semModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
-<span id="cb116-9"><a href="#cb116-9" aria-label="9"></a>  semModel_fullSyntax,</span>
-<span id="cb116-10"><a href="#cb116-10" aria-label="10"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
-<span id="cb116-11"><a href="#cb116-11" aria-label="11"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb116-12"><a href="#cb116-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb116-6"><a href="#cb116-6" aria-label="6"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb116-7"><a href="#cb116-7" aria-label="7"></a>)</span>
+<span id="cb116-8"><a href="#cb116-8" aria-label="8"></a></span>
+<span id="cb116-9"><a href="#cb116-9" aria-label="9"></a>semModelFit_full <span class="ot">&lt;-</span> <span class="fu">lavaan</span>(</span>
+<span id="cb116-10"><a href="#cb116-10" aria-label="10"></a>  semModel_fullSyntax,</span>
+<span id="cb116-11"><a href="#cb116-11" aria-label="11"></a>  <span class="at">data =</span> PoliticalDemocracy,</span>
+<span id="cb116-12"><a href="#cb116-12" aria-label="12"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb116-13"><a href="#cb116-13" aria-label="13"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span></span>
+<span id="cb116-14"><a href="#cb116-14" aria-label="14"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-semModelOutput-sem" class="level3" data-number="7.11.3"><h3 data-number="7.11.3" class="anchored" data-anchor-id="sec-semModelOutput-sem">
@@ -3625,7 +3727,8 @@ Non-nested likelihood ratio test
 <span id="cb117-2"><a href="#cb117-2" aria-label="2"></a>  semModelFit,</span>
 <span id="cb117-3"><a href="#cb117-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb117-4"><a href="#cb117-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb117-5"><a href="#cb117-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb117-5"><a href="#cb117-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb117-6"><a href="#cb117-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 82 iterations
 
@@ -3796,7 +3899,8 @@ R-Square:
 <span id="cb119-2"><a href="#cb119-2" aria-label="2"></a>  semModelFit_full,</span>
 <span id="cb119-3"><a href="#cb119-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb119-4"><a href="#cb119-4" aria-label="4"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb119-5"><a href="#cb119-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb119-5"><a href="#cb119-5" aria-label="5"></a>  <span class="at">rsquare =</span> <span class="cn">TRUE</span></span>
+<span id="cb119-6"><a href="#cb119-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 ended normally after 82 iterations
 
@@ -3973,12 +4077,25 @@ R-Square:
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-label="1"></a><span class="fu">fitMeasures</span>(</span>
 <span id="cb121-2"><a href="#cb121-2" aria-label="2"></a>  semModelFit,</span>
 <span id="cb121-3"><a href="#cb121-3" aria-label="3"></a>  <span class="at">fit_measures =</span> <span class="fu">c</span>(</span>
-<span id="cb121-4"><a href="#cb121-4" aria-label="4"></a>    <span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
-<span id="cb121-5"><a href="#cb121-5" aria-label="5"></a>    <span class="st">"chisq.scaled"</span>, <span class="st">"df.scaled"</span>, <span class="st">"pvalue.scaled"</span>,</span>
-<span id="cb121-6"><a href="#cb121-6" aria-label="6"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
-<span id="cb121-7"><a href="#cb121-7" aria-label="7"></a>    <span class="st">"baseline.chisq"</span>,<span class="st">"baseline.df"</span>,<span class="st">"baseline.pvalue"</span>,</span>
-<span id="cb121-8"><a href="#cb121-8" aria-label="8"></a>    <span class="st">"rmsea"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"srmr"</span>,</span>
-<span id="cb121-9"><a href="#cb121-9" aria-label="9"></a>    <span class="st">"rmsea.robust"</span>, <span class="st">"cfi.robust"</span>, <span class="st">"tli.robust"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb121-4"><a href="#cb121-4" aria-label="4"></a>    <span class="st">"chisq"</span>,</span>
+<span id="cb121-5"><a href="#cb121-5" aria-label="5"></a>    <span class="st">"df"</span>,</span>
+<span id="cb121-6"><a href="#cb121-6" aria-label="6"></a>    <span class="st">"pvalue"</span>,</span>
+<span id="cb121-7"><a href="#cb121-7" aria-label="7"></a>    <span class="st">"chisq.scaled"</span>,</span>
+<span id="cb121-8"><a href="#cb121-8" aria-label="8"></a>    <span class="st">"df.scaled"</span>,</span>
+<span id="cb121-9"><a href="#cb121-9" aria-label="9"></a>    <span class="st">"pvalue.scaled"</span>,</span>
+<span id="cb121-10"><a href="#cb121-10" aria-label="10"></a>    <span class="st">"chisq.scaling.factor"</span>,</span>
+<span id="cb121-11"><a href="#cb121-11" aria-label="11"></a>    <span class="st">"baseline.chisq"</span>,</span>
+<span id="cb121-12"><a href="#cb121-12" aria-label="12"></a>    <span class="st">"baseline.df"</span>,</span>
+<span id="cb121-13"><a href="#cb121-13" aria-label="13"></a>    <span class="st">"baseline.pvalue"</span>,</span>
+<span id="cb121-14"><a href="#cb121-14" aria-label="14"></a>    <span class="st">"rmsea"</span>,</span>
+<span id="cb121-15"><a href="#cb121-15" aria-label="15"></a>    <span class="st">"cfi"</span>,</span>
+<span id="cb121-16"><a href="#cb121-16" aria-label="16"></a>    <span class="st">"tli"</span>,</span>
+<span id="cb121-17"><a href="#cb121-17" aria-label="17"></a>    <span class="st">"srmr"</span>,</span>
+<span id="cb121-18"><a href="#cb121-18" aria-label="18"></a>    <span class="st">"rmsea.robust"</span>,</span>
+<span id="cb121-19"><a href="#cb121-19" aria-label="19"></a>    <span class="st">"cfi.robust"</span>,</span>
+<span id="cb121-20"><a href="#cb121-20" aria-label="20"></a>    <span class="st">"tli.robust"</span></span>
+<span id="cb121-21"><a href="#cb121-21" aria-label="21"></a>  )</span>
+<span id="cb121-22"><a href="#cb121-22" aria-label="22"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>               chisq                   df               pvalue 
               38.748               35.000                0.304 
@@ -4109,7 +4226,8 @@ attr(,"weight")
 <span id="cb133-2"><a href="#cb133-2" aria-label="2"></a>  semModelFit,</span>
 <span id="cb133-3"><a href="#cb133-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb133-4"><a href="#cb133-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
-<span id="cb133-5"><a href="#cb133-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb133-5"><a href="#cb133-5" aria-label="5"></a>  <span class="at">edge.label.cex =</span> <span class="fl">0.7</span></span>
+<span id="cb133-6"><a href="#cb133-6" aria-label="6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-semPathDiagram" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Example Structural Equation Model.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-semPathDiagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -4210,9 +4328,7 @@ Figure&nbsp;7.13: Example Structural Equation Model.
 </details>
 </div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-label="1"></a><span class="fu">summary</span>(populationModel_fit,</span>
-<span id="cb136-2"><a href="#cb136-2" aria-label="2"></a>        <span class="at">standardized =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb136-3"><a href="#cb136-3" aria-label="3"></a>        <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-label="1"></a><span class="fu">summary</span>(populationModel_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>, <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>lavaan 0.7-2 did not run (perhaps do.fit = FALSE)?
 ** WARNING ** Estimates below are simply the starting values
@@ -4419,7 +4535,8 @@ y8 0.234 0.234 0.234 0.415 0.415 0.415 0.415 0.665 0.665 0.665 1.000</code></pre
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb146"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-label="1"></a>indicatorDistributions <span class="ot">&lt;-</span> <span class="fu">bindDist</span>(</span>
 <span id="cb146-2"><a href="#cb146-2" aria-label="2"></a>  <span class="at">p =</span> numberOfIndicators,</span>
 <span id="cb146-3"><a href="#cb146-3" aria-label="3"></a>  <span class="at">skewness =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">1.3</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">8</span>)),</span>
-<span id="cb146-4"><a href="#cb146-4" aria-label="4"></a>  <span class="at">kurtosis =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">1.8</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">8</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb146-4"><a href="#cb146-4" aria-label="4"></a>  <span class="at">kurtosis =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">1.8</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">4</span>, <span class="dv">8</span>))</span>
+<span id="cb146-5"><a href="#cb146-5" aria-label="5"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-monteCarloPowerAnalysis-missingness" class="level3" data-number="7.14.4"><h3 data-number="7.14.4" class="anchored" data-anchor-id="sec-monteCarloPowerAnalysis-missingness">
@@ -4446,7 +4563,8 @@ y8 0.234 0.234 0.234 0.415 0.415 0.415 0.415 0.665 0.665 0.665 1.000</code></pre
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb148"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-label="1"></a>missingnessModel <span class="ot">&lt;-</span> <span class="fu">miss</span>(</span>
 <span id="cb148-2"><a href="#cb148-2" aria-label="2"></a>  <span class="at">logit =</span> percentMissingByVariable,</span>
-<span id="cb148-3"><a href="#cb148-3" aria-label="3"></a>  <span class="at">m =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb148-3"><a href="#cb148-3" aria-label="3"></a>  <span class="at">m =</span> <span class="dv">0</span></span>
+<span id="cb148-4"><a href="#cb148-4" aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-monteCarloPowerAnalysis-missingDataPlot" class="level4" data-number="7.14.4.2"><h4 data-number="7.14.4.2" class="anchored" data-anchor-id="sec-monteCarloPowerAnalysis-missingDataPlot">
@@ -4479,17 +4597,19 @@ Figure&nbsp;7.14: Percent Missingness Specified for Each Variable.
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb151"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-label="1"></a>output <span class="ot">&lt;-</span> simsem<span class="sc">::</span><span class="fu">sim</span>(</span>
 <span id="cb151-2"><a href="#cb151-2" aria-label="2"></a>  <span class="at">n =</span> <span class="fu">rep</span>(</span>
 <span id="cb151-3"><a href="#cb151-3" aria-label="3"></a>    sampleSizes,</span>
-<span id="cb151-4"><a href="#cb151-4" aria-label="4"></a>    <span class="at">each =</span> repetitionsPerSampleSize),</span>
-<span id="cb151-5"><a href="#cb151-5" aria-label="5"></a>  <span class="at">model =</span> analysisModel_syntax,</span>
-<span id="cb151-6"><a href="#cb151-6" aria-label="6"></a>  <span class="at">generate =</span> populationModel,</span>
-<span id="cb151-7"><a href="#cb151-7" aria-label="7"></a>  <span class="at">miss =</span> missingnessModel,</span>
-<span id="cb151-8"><a href="#cb151-8" aria-label="8"></a>  <span class="at">indDist =</span> indicatorDistributions,</span>
-<span id="cb151-9"><a href="#cb151-9" aria-label="9"></a>  <span class="at">lavaanfun =</span> <span class="st">"lavaan"</span>,</span>
-<span id="cb151-10"><a href="#cb151-10" aria-label="10"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
-<span id="cb151-11"><a href="#cb151-11" aria-label="11"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
-<span id="cb151-12"><a href="#cb151-12" aria-label="12"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb151-13"><a href="#cb151-13" aria-label="13"></a>  <span class="at">seed =</span> <span class="dv">52242</span>,</span>
-<span id="cb151-14"><a href="#cb151-14" aria-label="14"></a>  <span class="at">multicore =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb151-4"><a href="#cb151-4" aria-label="4"></a>    <span class="at">each =</span> repetitionsPerSampleSize</span>
+<span id="cb151-5"><a href="#cb151-5" aria-label="5"></a>  ),</span>
+<span id="cb151-6"><a href="#cb151-6" aria-label="6"></a>  <span class="at">model =</span> analysisModel_syntax,</span>
+<span id="cb151-7"><a href="#cb151-7" aria-label="7"></a>  <span class="at">generate =</span> populationModel,</span>
+<span id="cb151-8"><a href="#cb151-8" aria-label="8"></a>  <span class="at">miss =</span> missingnessModel,</span>
+<span id="cb151-9"><a href="#cb151-9" aria-label="9"></a>  <span class="at">indDist =</span> indicatorDistributions,</span>
+<span id="cb151-10"><a href="#cb151-10" aria-label="10"></a>  <span class="at">lavaanfun =</span> <span class="st">"lavaan"</span>,</span>
+<span id="cb151-11"><a href="#cb151-11" aria-label="11"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
+<span id="cb151-12"><a href="#cb151-12" aria-label="12"></a>  <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
+<span id="cb151-13"><a href="#cb151-13" aria-label="13"></a>  <span class="at">std_lv =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb151-14"><a href="#cb151-14" aria-label="14"></a>  <span class="at">seed =</span> <span class="dv">52242</span>,</span>
+<span id="cb151-15"><a href="#cb151-15" aria-label="15"></a>  <span class="at">multicore =</span> <span class="cn">TRUE</span></span>
+<span id="cb151-16"><a href="#cb151-16" aria-label="16"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>Progress tracker is not available when 'multicore' is TRUE.</code></pre>
 </div>
@@ -4658,24 +4778,24 @@ NOTE: The data generation model is not the same as the analysis  model. See the 
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb159"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-label="1"></a><span class="fu">summaryTime</span>(output)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>============ Wall Time ============
-  1. Error Checking and setting up data-generation and analysis template:        0.001
-  2. Set combinations of n, pmMCAR, and pmMAR:                                   0.001
-  3. Setting up simulation conditions for each replication:                      0.018
-  4. Total time elapsed running all replications:                             1384.922
+  1. Error Checking and setting up data-generation and analysis template:        0.000
+  2. Set combinations of n, pmMCAR, and pmMAR:                                   0.000
+  3. Setting up simulation conditions for each replication:                      0.019
+  4. Total time elapsed running all replications:                             1582.773
   5. Combining outputs from different replications:                              0.072
 
 ============ Average Time in Each Replication ============
-  1. Data Generation:                                  0.064
-  2. Impose Missing Values:                            0.012
+  1. Data Generation:                                  0.071
+  2. Impose Missing Values:                            0.014
   3. User-defined Data-Transformation Function:        0.000
-  4. Main Data Analysis:                               2.623
-  5. Extracting Outputs:                               2.283
+  4. Main Data Analysis:                               3.154
+  5. Extracting Outputs:                               2.496
 
 ============ Summary ============
-  Start Time:                   2026-10-02 03:03:31
-  End Time:                     2026-10-02 03:26:36
-  Wall (Actual) Time:             1385.014
-  System (Processors) Time:       5491.369
+  Start Time:                   2026-10-02 03:16:40
+  End Time:                     2026-10-02 03:43:03
+  Wall (Actual) Time:             1582.864
+  System (Processors) Time:       6320.451
   Units:                        seconds</code></pre>
 </div>
 </div>
@@ -4716,21 +4836,23 @@ Figure&nbsp;7.15: Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis
 <span class="header-section-number">7.14.12.1</span> Plot of Power to Detect Various Parameters as a Function of Sample Size</h4>
 <p>At <span class="math inline">\(\alpha = .05\)</span>; dashed horizontal line represents power (<span class="math inline">\(1 - \beta\)</span>) of .8</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-label="1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-label="1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
 <span id="cb163-2"><a href="#cb163-2" aria-label="2"></a></span>
 <span id="cb163-3"><a href="#cb163-3" aria-label="3"></a><span class="fu">plotPower</span>(</span>
 <span id="cb163-4"><a href="#cb163-4" aria-label="4"></a>  output,</span>
 <span id="cb163-5"><a href="#cb163-5" aria-label="5"></a>  <span class="at">powerParam =</span> <span class="st">"dem65~dem60"</span>,</span>
-<span id="cb163-6"><a href="#cb163-6" aria-label="6"></a>  <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
-<span id="cb163-7"><a href="#cb163-7" aria-label="7"></a></span>
-<span id="cb163-8"><a href="#cb163-8" aria-label="8"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb163-9"><a href="#cb163-9" aria-label="9"></a></span>
-<span id="cb163-10"><a href="#cb163-10" aria-label="10"></a><span class="fu">plotPower</span>(</span>
-<span id="cb163-11"><a href="#cb163-11" aria-label="11"></a>  output,</span>
-<span id="cb163-12"><a href="#cb163-12" aria-label="12"></a>  <span class="at">powerParam =</span> <span class="st">"dem65~ind60"</span>,</span>
-<span id="cb163-13"><a href="#cb163-13" aria-label="13"></a>  <span class="at">alpha =</span> .<span class="dv">05</span>)</span>
-<span id="cb163-14"><a href="#cb163-14" aria-label="14"></a></span>
-<span id="cb163-15"><a href="#cb163-15" aria-label="15"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb163-6"><a href="#cb163-6" aria-label="6"></a>  <span class="at">alpha =</span> .<span class="dv">05</span></span>
+<span id="cb163-7"><a href="#cb163-7" aria-label="7"></a>)</span>
+<span id="cb163-8"><a href="#cb163-8" aria-label="8"></a></span>
+<span id="cb163-9"><a href="#cb163-9" aria-label="9"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb163-10"><a href="#cb163-10" aria-label="10"></a></span>
+<span id="cb163-11"><a href="#cb163-11" aria-label="11"></a><span class="fu">plotPower</span>(</span>
+<span id="cb163-12"><a href="#cb163-12" aria-label="12"></a>  output,</span>
+<span id="cb163-13"><a href="#cb163-13" aria-label="13"></a>  <span class="at">powerParam =</span> <span class="st">"dem65~ind60"</span>,</span>
+<span id="cb163-14"><a href="#cb163-14" aria-label="14"></a>  <span class="at">alpha =</span> .<span class="dv">05</span></span>
+<span id="cb163-15"><a href="#cb163-15" aria-label="15"></a>)</span>
+<span id="cb163-16"><a href="#cb163-16" aria-label="16"></a></span>
+<span id="cb163-17"><a href="#cb163-17" aria-label="17"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fl">0.8</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-monteCarloPowerAnalysis" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Plot of Power to Detect Various Parameters as a Function of Sample Size, From Monte Carlo Power Analysis.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-monteCarloPowerAnalysis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
