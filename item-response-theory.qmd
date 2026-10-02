@@ -33,15 +33,15 @@ For instance, we can create empirical ICCs that can take any shape (see @fig-emp
 #| code-fold: true
 
 empiricalICCdata <- data.frame(
-  item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
-  item2 =  c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
-  item3 =  c(.10, .28, .39, .58, .75, .82, .88, .94, .99),
-  item4 =  c(.05, .24, .30, .50, .68, .73, .84, .92, .99),
-  item5 =  c(.03, .19, .27, .38, .49, .53, .79, .97, .99),
-  item6 =  c(.02, .15, .25, .43, .57, .65, .75, .85, .95),
-  item7 =  c(.01, .07, .15, .29, .42, .59, .70, .82, .90),
-  item8 =  c(.01, .05, .10, .26, .35, .46, .60, .80, .85),
-  item9 =  c(.01, .02, .05, .16, .23, .35, .46, .55, .70),
+  item1 = c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
+  item2 = c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
+  item3 = c(.10, .28, .39, .58, .75, .82, .88, .94, .99),
+  item4 = c(.05, .24, .30, .50, .68, .73, .84, .92, .99),
+  item5 = c(.03, .19, .27, .38, .49, .53, .79, .97, .99),
+  item6 = c(.02, .15, .25, .43, .57, .65, .75, .85, .95),
+  item7 = c(.01, .07, .15, .29, .42, .59, .70, .82, .90),
+  item8 = c(.01, .05, .10, .26, .35, .46, .60, .80, .85),
+  item9 = c(.01, .02, .05, .16, .23, .35, .46, .55, .70),
   item10 = c(.01, .02, .03, .05, .06, .07, .10, .14, .20),
   itemSum = 1:9
 )
@@ -54,7 +54,16 @@ empiricalICCdata <- data.frame(
 #| fig-height: 8
 #| code-fold: true
 
-plot(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
+plot(
+  empiricalICCdata$itemSum,
+  empiricalICCdata$item10,
+  type = "n",
+  xlim = c(1, 9),
+  ylim = c(0, 1),
+  xlab = "Person's Sum Score",
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n"
+)
 lines(empiricalICCdata$itemSum, empiricalICCdata$item1, type = "b", pch = "1")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item2, type = "b", pch = "2")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item3, type = "b", pch = "3")
@@ -65,7 +74,14 @@ lines(empiricalICCdata$itemSum, empiricalICCdata$item7, type = "b", pch = "7")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item8, type = "b", pch = "8")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item9, type = "b", pch = "9")
 lines(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "l")
-points(empiricalICCdata$itemSum, empiricalICCdata$item10, type = "p", pch = 19, col = "white", cex = 3)
+points(
+  empiricalICCdata$itemSum,
+  empiricalICCdata$item10,
+  type = "p",
+  pch = 19,
+  col = "white",
+  cex = 3
+)
 text(empiricalICCdata$itemSum, empiricalICCdata$item10, labels = "10")
 axis(1, at = 1:9, labels = 1:9)
 ```
@@ -84,18 +100,20 @@ library("viridis")
 #Log-Logistic Function nlsL.2 (similar to L.3 from drc package)
 L2.fun <- function(predictor, a, b) {
   x <- predictor
-  1/(1 + exp( - a* (x - b)))
+  1 / (1 + exp(-a * (x - b)))
 }
 
 L2.Init <- function(mCall, LHS, data, ...) {
   xy <- sortedXyData(mCall[["predictor"]], LHS, data)
-  x <- xy[, "x"]; y <- xy[, "y"]
+  x <- xy[, "x"]
+  y <- xy[, "y"]
   d <- 1
   ## Linear regression on pseudo y values
-  pseudoY <- log((d - y)/(y+0.00001))
-  coefs <- coef( lm(pseudoY ~ x))
-  k <- coefs[1]; a <- - coefs[2]
-  b <- k/a
+  pseudoY <- log((d - y) / (y + 0.00001))
+  coefs <- coef(lm(pseudoY ~ x))
+  k <- coefs[1]
+  a <- -coefs[2]
+  b <- k / a
   value <- c(a, b)
   names(value) <- mCall[c("a", "b")]
   value
@@ -103,16 +121,56 @@ L2.Init <- function(mCall, LHS, data, ...) {
 
 NLS.L2 <- selfStart(L2.fun, L2.Init, parameters = c("a", "b"))
 
-twoPLitem1 <- nls(item1 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem2 <- nls(item2 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem3 <- nls(item3 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem4 <- nls(item4 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem5 <- nls(item5 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem6 <- nls(item6 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem7 <- nls(item7 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem8 <- nls(item8 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem9 <- nls(item9 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
-twoPLitem10 <- nls(item10 ~ NLS.L2(itemSum, a, b), data = empiricalICCdata, control = list(warnOnly = TRUE))
+twoPLitem1 <- nls(
+  item1 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem2 <- nls(
+  item2 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem3 <- nls(
+  item3 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem4 <- nls(
+  item4 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem5 <- nls(
+  item5 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem6 <- nls(
+  item6 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem7 <- nls(
+  item7 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem8 <- nls(
+  item8 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem9 <- nls(
+  item9 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
+twoPLitem10 <- nls(
+  item10 ~ NLS.L2(itemSum, a, b),
+  data = empiricalICCdata,
+  control = list(warnOnly = TRUE)
+)
 
 newdata <- data.frame(itemSum = seq(from = 1, to = 9, length.out = 1000))
 newdata$item1 <- predict(twoPLitem1, newdata = newdata)
@@ -125,7 +183,7 @@ newdata$item7 <- predict(twoPLitem7, newdata = newdata)
 newdata$item8 <- predict(twoPLitem8, newdata = newdata)
 newdata$item9 <- predict(twoPLitem9, newdata = newdata)
 newdata$item10 <- predict(twoPLitem10, newdata = newdata)
-newdata$itemTotal <- rowSums(newdata[,paste("item", 1:10, sep = "")])
+newdata$itemTotal <- rowSums(newdata[, paste("item", 1:10, sep = "")])
 ```
 
 ```{r}
@@ -134,7 +192,20 @@ newdata$itemTotal <- rowSums(newdata[,paste("item", 1:10, sep = "")])
 #| fig-alt: "Item Characteristic Curves of the Probability of Endorsement of a Given Item as a Function of the Person's Level on the Latent Construct."
 #| code-fold: true
 
-plot(newdata$itemSum, newdata$item1, type = "n", ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+plot(
+  newdata$itemSum,
+  newdata$item1,
+  type = "n",
+  ylim = c(0, 1),
+  xlab = expression(paste(
+    "Person's Level on the Latent Construct (",
+    theta,
+    ")",
+    sep = ""
+  )),
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n"
+)
 lines(newdata$itemSum, newdata$item1, type = "l", lwd = 2, col = viridis(10)[1])
 lines(newdata$itemSum, newdata$item2, type = "l", lwd = 2, col = viridis(10)[2])
 lines(newdata$itemSum, newdata$item3, type = "l", lwd = 2, col = viridis(10)[3])
@@ -144,9 +215,21 @@ lines(newdata$itemSum, newdata$item6, type = "l", lwd = 2, col = viridis(10)[6])
 lines(newdata$itemSum, newdata$item7, type = "l", lwd = 2, col = viridis(10)[7])
 lines(newdata$itemSum, newdata$item8, type = "l", lwd = 2, col = viridis(10)[8])
 lines(newdata$itemSum, newdata$item9, type = "l", lwd = 2, col = viridis(10)[9])
-lines(newdata$itemSum, newdata$item10, type = "l", lwd = 2, col = viridis(10)[10])
+lines(
+  newdata$itemSum,
+  newdata$item10,
+  type = "l",
+  lwd = 2,
+  col = viridis(10)[10]
+)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
-legend("topleft", legend = paste("item", 1:10, sep = " "), col = viridis(10), lwd = 2, cex = 0.6)
+legend(
+  "topleft",
+  legend = paste("item", 1:10, sep = " "),
+  col = viridis(10),
+  lwd = 2,
+  cex = 0.6
+)
 ```
 
 ICCs can be summed across items to get the test characteristic curve (TCC):\index{item response theory!item characteristic curve}\index{item response theory!test characteristic curve}
@@ -157,7 +240,20 @@ ICCs can be summed across items to get the test characteristic curve (TCC):\inde
 #| fig-alt: "Test Characteristic Curve of the Expected Total Score on the Test as a Function of the Person's Level on the Latent Construct."
 #| code-fold: true
 
-plot(newdata$itemSum, newdata$itemTotal, type = "n", ylim = c(0,10), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Expected Total Score on Test", xaxt = "n")
+plot(
+  newdata$itemSum,
+  newdata$itemTotal,
+  type = "n",
+  ylim = c(0, 10),
+  xlab = expression(paste(
+    "Person's Level on the Latent Construct (",
+    theta,
+    ")",
+    sep = ""
+  )),
+  ylab = "Expected Total Score on Test",
+  xaxt = "n"
+)
 lines(newdata$itemSum, newdata$itemTotal, type = "l", lwd = 2)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
@@ -177,11 +273,24 @@ library("drc")
 empiricalICCdata$ceilingEffect <- c(.90, .95, .98, 1, 1, 1, 1, 1, 1)
 empiricalICCdata$diagnosticallyUseful <- c(0, 0, 0, 0, 0, 0, .69, .70, .70)
 
-threePL_ceilingeffect <- drm(ceilingEffect ~ itemSum, data = empiricalICCdata, fct = LL.3u(), type = "continuous") #fix upper asymptote at 1
-threePL_diagnosticallyUseful <- drm(diagnosticallyUseful ~ itemSum, data = empiricalICCdata, fct = LL.3(), type = "continuous") #fix lower asymptote at 0
+threePL_ceilingeffect <- drm(
+  ceilingEffect ~ itemSum,
+  data = empiricalICCdata,
+  fct = LL.3u(),
+  type = "continuous"
+) #fix upper asymptote at 1
+threePL_diagnosticallyUseful <- drm(
+  diagnosticallyUseful ~ itemSum,
+  data = empiricalICCdata,
+  fct = LL.3(),
+  type = "continuous"
+) #fix lower asymptote at 0
 
 newdata$ceilingEffect <- predict(threePL_ceilingeffect, newdata = newdata)
-newdata$diagnosticallyUseful <- predict(threePL_diagnosticallyUseful, newdata = newdata)
+newdata$diagnosticallyUseful <- predict(
+  threePL_diagnosticallyUseful,
+  newdata = newdata
+)
 ```
 
 ```{r}
@@ -190,7 +299,21 @@ newdata$diagnosticallyUseful <- predict(threePL_diagnosticallyUseful, newdata = 
 #| fig-alt: "Item Characteristic Curve of an Item with a Ceiling Effect That is not Diagnostically Useful."
 #| code-fold: true
 
-plot(newdata$itemSum, newdata$ceilingEffect, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+plot(
+  newdata$itemSum,
+  newdata$ceilingEffect,
+  type = "l",
+  lwd = 2,
+  ylim = c(0, 1),
+  xlab = expression(paste(
+    "Person's Level on the Latent Construct (",
+    theta,
+    ")",
+    sep = ""
+  )),
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n"
+)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
 
@@ -206,7 +329,21 @@ Thus, an ICC allows us to immediately tell the utility of items.\index{item resp
 #| fig-alt: "Item Characteristic Curve of an Item With a Floor Effect That is Diagnostically Useful."
 #| code-fold: true
 
-plot(newdata$itemSum, newdata$diagnosticallyUseful, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+plot(
+  newdata$itemSum,
+  newdata$diagnosticallyUseful,
+  type = "l",
+  lwd = 2,
+  ylim = c(0, 1),
+  xlab = expression(paste(
+    "Person's Level on the Latent Construct (",
+    theta,
+    ")",
+    sep = ""
+  )),
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n"
+)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
 
@@ -241,16 +378,17 @@ difficultyData$highDifficulty <- psych::logistic(-4:4, d = 0.8)
 
 L1.fun <- function(predictor, b) {
   x <- predictor
-  1/(1 + exp( -(x - b)))
+  1 / (1 + exp(-(x - b)))
 }
 
 L1.Init <- function(mCall, LHS, data, ...) {
   xy <- sortedXyData(mCall[["predictor"]], LHS, data)
-  x <- xy[, "x"]; y <- xy[, "y"]
+  x <- xy[, "x"]
+  y <- xy[, "y"]
   d <- 1
   ## Linear regression on pseudo y values
-  pseudoY <- log((d - y)/(y+0.00001))
-  coefs <- coef( lm(pseudoY ~ x))
+  pseudoY <- log((d - y) / (y + 0.00001))
+  coefs <- coef(lm(pseudoY ~ x))
   k <- coefs[1]
   b <- coefs[2]
   value <- c(b)
@@ -260,23 +398,39 @@ L1.Init <- function(mCall, LHS, data, ...) {
 
 NLS.L1 <- selfStart(L1.fun, L1.Init, parameters = c("b"))
 
-onePL_lowDifficulty <- nls(lowDifficulty ~ NLS.L1(itemSum, b), data = difficultyData, control = list(warnOnly = TRUE))
-onePL_highDifficulty <- nls(highDifficulty ~ NLS.L1(itemSum, b), data = difficultyData, control = list(warnOnly = TRUE))
+onePL_lowDifficulty <- nls(
+  lowDifficulty ~ NLS.L1(itemSum, b),
+  data = difficultyData,
+  control = list(warnOnly = TRUE)
+)
+onePL_highDifficulty <- nls(
+  highDifficulty ~ NLS.L1(itemSum, b),
+  data = difficultyData,
+  control = list(warnOnly = TRUE)
+)
 
 newdata$lowDifficulty <- predict(onePL_lowDifficulty, newdata = newdata)
 newdata$highDifficulty <- predict(onePL_highDifficulty, newdata = newdata)
 
 newdata$theta <- seq(from = -4, to = 4, length.out = 1000)
 
-midpoint_lowDifficulty <- newdata$theta[which.min(abs(newdata$lowDifficulty - 0.5))]
-midpoint_highDifficulty <- newdata$theta[which.min(abs(newdata$highDifficulty - 0.5))]
+midpoint_lowDifficulty <- newdata$theta[which.min(abs(
+  newdata$lowDifficulty - 0.5
+))]
+midpoint_highDifficulty <- newdata$theta[which.min(abs(
+  newdata$highDifficulty - 0.5
+))]
 
 difficulty_long <- pivot_longer(newdata, cols = lowDifficulty:highDifficulty) |>
   rename(item = name)
 
 difficulty_long$Difficulty <- NA
-difficulty_long$Difficulty[which(difficulty_long$item == "lowDifficulty")] <- "Low"
-difficulty_long$Difficulty[which(difficulty_long$item == "highDifficulty")] <- "High"
+difficulty_long$Difficulty[which(
+  difficulty_long$item == "lowDifficulty"
+)] <- "Low"
+difficulty_long$Difficulty[which(
+  difficulty_long$item == "highDifficulty"
+)] <- "High"
 ```
 
 ```{r}
@@ -286,13 +440,44 @@ difficulty_long$Difficulty[which(difficulty_long$item == "highDifficulty")] <- "
 #| fig-scap: "Item Characteristic Curves of an Item With Low Difficulty Versus High Difficulty."
 #| code-fold: true
 
-ggplot(difficulty_long, aes(theta, value, group = Difficulty, color = Difficulty)) +
+ggplot(
+  difficulty_long,
+  aes(theta, value, group = Difficulty, color = Difficulty)
+) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
   geom_hline(yintercept = 0.5, linetype = "dashed") +
-  geom_segment(aes(x = midpoint_lowDifficulty, xend = midpoint_lowDifficulty, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_highDifficulty, xend = midpoint_highDifficulty, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  geom_segment(
+    aes(
+      x = midpoint_lowDifficulty,
+      xend = midpoint_lowDifficulty,
+      y = 0,
+      yend = 0.5
+    ),
+    linewidth = 0.5,
+    col = "black",
+    linetype = "dashed"
+  ) +
+  geom_segment(
+    aes(
+      x = midpoint_highDifficulty,
+      xend = midpoint_highDifficulty,
+      y = 0,
+      yend = 0.5
+    ),
+    linewidth = 0.5,
+    col = "black",
+    linetype = "dashed"
+  ) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -324,20 +509,38 @@ discriminationData <- data.frame(itemSum = 1:length(-4:4))
 discriminationData$lowDiscrimination <- psych::logistic(-4:4, d = 0, a = 0.7)
 discriminationData$highDiscrimination <- psych::logistic(-4:4, d = 0, a = 2)
 
-twoPL_lowDiscrimination <- nls(lowDiscrimination ~ NLS.L2(itemSum, a, b), data = discriminationData, control = list(warnOnly = TRUE))
-twoPL_highDiscrimination <- nls(highDiscrimination ~ NLS.L2(itemSum, a, b), data = discriminationData, control = list(warnOnly = TRUE))
+twoPL_lowDiscrimination <- nls(
+  lowDiscrimination ~ NLS.L2(itemSum, a, b),
+  data = discriminationData,
+  control = list(warnOnly = TRUE)
+)
+twoPL_highDiscrimination <- nls(
+  highDiscrimination ~ NLS.L2(itemSum, a, b),
+  data = discriminationData,
+  control = list(warnOnly = TRUE)
+)
 
 newdata$lowDiscrimination <- predict(twoPL_lowDiscrimination, newdata = newdata)
-newdata$highDiscrimination <- predict(twoPL_highDiscrimination, newdata = newdata)
+newdata$highDiscrimination <- predict(
+  twoPL_highDiscrimination,
+  newdata = newdata
+)
 
 newdata$theta <- seq(from = -4, to = 4, length.out = 1000)
 
-discrimination_long <- pivot_longer(newdata, cols = lowDiscrimination:highDiscrimination) |>
+discrimination_long <- pivot_longer(
+  newdata,
+  cols = lowDiscrimination:highDiscrimination
+) |>
   rename(item = name)
 
 discrimination_long$Discrimination <- NA
-discrimination_long$Discrimination[which(discrimination_long$item == "lowDiscrimination")] <- "Low"
-discrimination_long$Discrimination[which(discrimination_long$item == "highDiscrimination")] <- "High"
+discrimination_long$Discrimination[which(
+  discrimination_long$item == "lowDiscrimination"
+)] <- "Low"
+discrimination_long$Discrimination[which(
+  discrimination_long$item == "highDiscrimination"
+)] <- "High"
 ```
 
 ```{r}
@@ -347,10 +550,21 @@ discrimination_long$Discrimination[which(discrimination_long$item == "highDiscri
 #| fig-scap: "Item Characteristic Curves of an Item With Low Discrimination Versus High Discrimination."
 #| code-fold: true
 
-ggplot(discrimination_long, aes(theta, value, group = Discrimination, color = Discrimination)) +
+ggplot(
+  discrimination_long,
+  aes(theta, value, group = Discrimination, color = Discrimination)
+) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -369,8 +583,18 @@ See @fig-iccGuessingTF for an example of an item from a true/false exam and @fig
 empiricalICCdata$guessingTF <- psych::logistic(-4:4, c = 0.5)
 empiricalICCdata$guessingMC <- psych::logistic(-4:4, c = 0.25)
 
-threePL_guessingTF <- drm(guessingTF ~ itemSum, data = empiricalICCdata, fct = LL.3u(), type = "continuous") #fix upper asymptote at 1
-threePL_guessingMC <- drm(guessingMC ~ itemSum, data = empiricalICCdata, fct = LL.3u(), type = "continuous") #fix upper asymptote at 1
+threePL_guessingTF <- drm(
+  guessingTF ~ itemSum,
+  data = empiricalICCdata,
+  fct = LL.3u(),
+  type = "continuous"
+) #fix upper asymptote at 1
+threePL_guessingMC <- drm(
+  guessingMC ~ itemSum,
+  data = empiricalICCdata,
+  fct = LL.3u(),
+  type = "continuous"
+) #fix upper asymptote at 1
 
 newdata$guessingTF <- predict(threePL_guessingTF, newdata = newdata)
 newdata$guessingMC <- predict(threePL_guessingMC, newdata = newdata)
@@ -382,7 +606,22 @@ newdata$guessingMC <- predict(threePL_guessingMC, newdata = newdata)
 #| fig-alt: "Item Characteristic Curve of an Item from a True/False Exam, There Test Takers Get the Item Correct at Least 50% of the Time."
 #| code-fold: true
 
-plot(newdata$itemSum, newdata$guessingTF, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
+plot(
+  newdata$itemSum,
+  newdata$guessingTF,
+  type = "l",
+  lwd = 2,
+  ylim = c(0, 1),
+  xlab = expression(paste(
+    "Person's Level on the Latent Construct (",
+    theta,
+    ")",
+    sep = ""
+  )),
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n",
+  yaxt = "n"
+)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
 ```
@@ -393,7 +632,22 @@ axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
 #| fig-alt: "Item Characteristic Curve of an Item From a 4-Option Multiple Choice Exam, Where Test Takers Get the Item Correct at Least 25% of the Time."
 #| code-fold: true
 
-plot(newdata$itemSum, newdata$guessingMC, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n", yaxt = "n")
+plot(
+  newdata$itemSum,
+  newdata$guessingMC,
+  type = "l",
+  lwd = 2,
+  ylim = c(0, 1),
+  xlab = expression(paste(
+    "Person's Level on the Latent Construct (",
+    theta,
+    ")",
+    sep = ""
+  )),
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n",
+  yaxt = "n"
+)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 axis(2, at = c(0, .25, .5, .75, 1), labels = c(0, .25, .5, .75, 1))
 ```
@@ -409,7 +663,12 @@ See @fig-iccInattention for an example of an item whose probability of endorseme
 
 empiricalICCdata$inattention <- psych::logistic(-4:4, z = 0.85, a = 2)
 
-threePL_inattention <- drm(inattention ~ itemSum, data = empiricalICCdata, fct = LL.3(), type = "continuous") #fix lower asymptote at 0
+threePL_inattention <- drm(
+  inattention ~ itemSum,
+  data = empiricalICCdata,
+  fct = LL.3(),
+  type = "continuous"
+) #fix lower asymptote at 0
 
 newdata$inattention <- predict(threePL_inattention, newdata = newdata)
 ```
@@ -420,7 +679,21 @@ newdata$inattention <- predict(threePL_inattention, newdata = newdata)
 #| fig-alt: "Item Characteristic Curve of an Item Where the Probability of Getting an Item Correct Never Exceeds .85."
 #| code-fold: true
 
-plot(newdata$itemSum, newdata$inattention, type = "l", lwd = 2, ylim = c(0,1), xlab = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), ylab = "Probability of Item Endorsement", xaxt = "n")
+plot(
+  newdata$itemSum,
+  newdata$inattention,
+  type = "l",
+  lwd = 2,
+  ylim = c(0, 1),
+  xlab = expression(paste(
+    "Person's Level on the Latent Construct (",
+    theta,
+    ")",
+    sep = ""
+  )),
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n"
+)
 axis(1, at = seq(from = 1, to = 9, length.out = 9), labels = c(-4:4))
 ```
 
@@ -451,7 +724,7 @@ library("petersenlab") #to install: install.packages("remotes"); remotes::instal
 #| eval: false
 #| code-fold: true
 
-fourPL <- function(a = 1, b, c = 0, d = 1, theta){
+fourPL <- function(a = 1, b, c = 0, d = 1, theta) {
   c + (d - c) * (exp(a * (theta - b))) / (1 + exp(a * (theta - b)))
 }
 ```
@@ -499,15 +772,38 @@ onePLitems <- data.frame(
   item2 = fourPL(b = -1, theta = -4:4),
   item3 = fourPL(b = 0, theta = -4:4),
   item4 = fourPL(b = 1, theta = -4:4),
-  item5 = fourPL(b = 2, theta = -4:4))
+  item5 = fourPL(b = 2, theta = -4:4)
+)
 
-onePL_item1 <- nls(item1 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
-onePL_item2 <- nls(item2 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
-onePL_item3 <- nls(item3 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
-onePL_item4 <- nls(item4 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
-onePL_item5 <- nls(item5 ~ NLS.L1(theta, b), data = onePLitems, control = list(warnOnly = TRUE))
+onePL_item1 <- nls(
+  item1 ~ NLS.L1(theta, b),
+  data = onePLitems,
+  control = list(warnOnly = TRUE)
+)
+onePL_item2 <- nls(
+  item2 ~ NLS.L1(theta, b),
+  data = onePLitems,
+  control = list(warnOnly = TRUE)
+)
+onePL_item3 <- nls(
+  item3 ~ NLS.L1(theta, b),
+  data = onePLitems,
+  control = list(warnOnly = TRUE)
+)
+onePL_item4 <- nls(
+  item4 ~ NLS.L1(theta, b),
+  data = onePLitems,
+  control = list(warnOnly = TRUE)
+)
+onePL_item5 <- nls(
+  item5 ~ NLS.L1(theta, b),
+  data = onePLitems,
+  control = list(warnOnly = TRUE)
+)
 
-onePLitems_newdata <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+onePLitems_newdata <- data.frame(
+  theta = seq(from = -4, to = 4, length.out = 1000)
+)
 
 onePLitems_newdata$item1 <- predict(onePL_item1, newdata = onePLitems_newdata)
 onePLitems_newdata$item2 <- predict(onePL_item2, newdata = onePLitems_newdata)
@@ -532,11 +828,22 @@ onePLitems_long$Item[which(onePLitems_long$item == "item5")] <- 5
 #| fig-alt: "One-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(onePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  onePLitems_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -547,15 +854,15 @@ A one-parameter logistic model is only valid if there is not crossing of lines i
 #| code-fold: true
 
 empiricalICCdata_noCrossing <- data.frame(
-  item1 =  c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
-  item2 =  c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
-  item3 =  c(.10, .28, .39, .58, .75, .82, .88, .94, .99),
-  item4 =  c(.05, .24, .30, .50, .68, .73, .84, .92, .99),
-  item5 =  c(.03, .19, .27, .48, .57, .65, .79, .89, .99),
-  item6 =  c(.02, .15, .25, .38, .48, .59, .75, .85, .95),
-  item7 =  c(.01, .07, .15, .29, .42, .53, .70, .82, .90),
-  item8 =  c(.01, .05, .10, .26, .35, .46, .60, .80, .85),
-  item9 =  c(.01, .02, .05, .16, .23, .35, .46, .55, .70),
+  item1 = c(.40, .63, .73, .85, .93, .95, .97, .99, .99),
+  item2 = c(.20, .53, .56, .76, .90, .94, .95, .98, .99),
+  item3 = c(.10, .28, .39, .58, .75, .82, .88, .94, .99),
+  item4 = c(.05, .24, .30, .50, .68, .73, .84, .92, .99),
+  item5 = c(.03, .19, .27, .48, .57, .65, .79, .89, .99),
+  item6 = c(.02, .15, .25, .38, .48, .59, .75, .85, .95),
+  item7 = c(.01, .07, .15, .29, .42, .53, .70, .82, .90),
+  item8 = c(.01, .05, .10, .26, .35, .46, .60, .80, .85),
+  item9 = c(.01, .02, .05, .16, .23, .35, .46, .55, .70),
   item10 = c(.01, .02, .03, .05, .06, .07, .10, .14, .20),
   itemSum = 1:9
 )
@@ -569,19 +876,88 @@ empiricalICCdata_noCrossing <- data.frame(
 #| fig-height: 8
 #| code-fold: true
 
-plot(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "n", xlim = c(1,9), ylim = c(0,1), xlab = "Person's Sum Score", ylab = "Probability of Item Endorsement", xaxt = "n")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item1, type = "b", pch = "1")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item2, type = "b", pch = "2")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item3, type = "b", pch = "3")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item4, type = "b", pch = "4")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item5, type = "b", pch = "5")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item6, type = "b", pch = "6")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item7, type = "b", pch = "7")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item8, type = "b", pch = "8")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item9, type = "b", pch = "9")
-lines(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "l")
-points(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, type = "p", pch = 19, col = "white", cex = 3)
-text(empiricalICCdata_noCrossing$itemSum, empiricalICCdata_noCrossing$item10, labels = "10")
+plot(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item10,
+  type = "n",
+  xlim = c(1, 9),
+  ylim = c(0, 1),
+  xlab = "Person's Sum Score",
+  ylab = "Probability of Item Endorsement",
+  xaxt = "n"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item1,
+  type = "b",
+  pch = "1"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item2,
+  type = "b",
+  pch = "2"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item3,
+  type = "b",
+  pch = "3"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item4,
+  type = "b",
+  pch = "4"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item5,
+  type = "b",
+  pch = "5"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item6,
+  type = "b",
+  pch = "6"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item7,
+  type = "b",
+  pch = "7"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item8,
+  type = "b",
+  pch = "8"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item9,
+  type = "b",
+  pch = "9"
+)
+lines(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item10,
+  type = "l"
+)
+points(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item10,
+  type = "p",
+  pch = 19,
+  col = "white",
+  cex = 3
+)
+text(
+  empiricalICCdata_noCrossing$itemSum,
+  empiricalICCdata_noCrossing$item10,
+  labels = "10"
+)
 axis(1, at = 1:9, labels = 1:9)
 ```
 
@@ -612,20 +988,44 @@ fourPL(a = 0.6, b = 0, theta = -1)
 ```{r}
 #| code-fold: true
 
-twoPLitems <- data.frame(theta = -6:6,
-                         item1 = fourPL(a = 1.3, b = -2, theta = -6:6),
-                         item2 = fourPL(a = 0.8, b = -1, theta = -6:6),
-                         item3 = fourPL(a = 0.6, b = 0, theta = -6:6),
-                         item4 = fourPL(a = 1.5, b = 1, theta = -6:6),
-                         item5 = fourPL(a = 2.3, b = 2, theta = -6:6))
+twoPLitems <- data.frame(
+  theta = -6:6,
+  item1 = fourPL(a = 1.3, b = -2, theta = -6:6),
+  item2 = fourPL(a = 0.8, b = -1, theta = -6:6),
+  item3 = fourPL(a = 0.6, b = 0, theta = -6:6),
+  item4 = fourPL(a = 1.5, b = 1, theta = -6:6),
+  item5 = fourPL(a = 2.3, b = 2, theta = -6:6)
+)
 
-twoPL_item1 <- nls(item1 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
-twoPL_item2 <- nls(item2 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
-twoPL_item3 <- nls(item3 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
-twoPL_item4 <- nls(item4 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
-twoPL_item5 <- nls(item5 ~ NLS.L2(theta, a, b), data = twoPLitems, control = list(warnOnly = TRUE))
+twoPL_item1 <- nls(
+  item1 ~ NLS.L2(theta, a, b),
+  data = twoPLitems,
+  control = list(warnOnly = TRUE)
+)
+twoPL_item2 <- nls(
+  item2 ~ NLS.L2(theta, a, b),
+  data = twoPLitems,
+  control = list(warnOnly = TRUE)
+)
+twoPL_item3 <- nls(
+  item3 ~ NLS.L2(theta, a, b),
+  data = twoPLitems,
+  control = list(warnOnly = TRUE)
+)
+twoPL_item4 <- nls(
+  item4 ~ NLS.L2(theta, a, b),
+  data = twoPLitems,
+  control = list(warnOnly = TRUE)
+)
+twoPL_item5 <- nls(
+  item5 ~ NLS.L2(theta, a, b),
+  data = twoPLitems,
+  control = list(warnOnly = TRUE)
+)
 
-twoPLitems_newdata <- data.frame(theta = seq(from = -6, to = 6, length.out = 1000))
+twoPLitems_newdata <- data.frame(
+  theta = seq(from = -6, to = 6, length.out = 1000)
+)
 
 twoPLitems_newdata$item1 <- predict(twoPL_item1, newdata = twoPLitems_newdata)
 twoPLitems_newdata$item2 <- predict(twoPL_item2, newdata = twoPLitems_newdata)
@@ -650,11 +1050,23 @@ twoPLitems_long$Item[which(twoPLitems_long$item == "item5")] <- 5
 #| fig-alt: "Two-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(twoPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  twoPLitems_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = seq(from = -6, to = 6, by = 2),
+    limits = c(-6, 6)
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -688,26 +1100,70 @@ fourPL(a = 0.8, b = -1, c = .25, theta = -1)
 ```{r}
 #| code-fold: true
 
-threePLitems <- data.frame(theta = 1:13,
-                           item1 = fourPL(a = 1.3, b = -2, c = 0, theta = -6:6),
-                           item2 = fourPL(a = 0.8, b = -1, c = .25, theta = -6:6),
-                           item3 = fourPL(a = 0.6, b = 0, c = .3, theta = -6:6),
-                           item4 = fourPL(a = 1.5, b = 1, c = .15, theta = -6:6),
-                           item5 = fourPL(a = 2.3, b = 2, c = 0, theta = -6:6))
+threePLitems <- data.frame(
+  theta = 1:13,
+  item1 = fourPL(a = 1.3, b = -2, c = 0, theta = -6:6),
+  item2 = fourPL(a = 0.8, b = -1, c = .25, theta = -6:6),
+  item3 = fourPL(a = 0.6, b = 0, c = .3, theta = -6:6),
+  item4 = fourPL(a = 1.5, b = 1, c = .15, theta = -6:6),
+  item5 = fourPL(a = 2.3, b = 2, c = 0, theta = -6:6)
+)
 
-threePL_item1 <- drm(item1 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
-threePL_item2 <- drm(item2 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
-threePL_item3 <- drm(item3 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
-threePL_item4 <- drm(item4 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
-threePL_item5 <- drm(item5 ~ theta, data = threePLitems, fct = LL.3u(), type = "continuous")
+threePL_item1 <- drm(
+  item1 ~ theta,
+  data = threePLitems,
+  fct = LL.3u(),
+  type = "continuous"
+)
+threePL_item2 <- drm(
+  item2 ~ theta,
+  data = threePLitems,
+  fct = LL.3u(),
+  type = "continuous"
+)
+threePL_item3 <- drm(
+  item3 ~ theta,
+  data = threePLitems,
+  fct = LL.3u(),
+  type = "continuous"
+)
+threePL_item4 <- drm(
+  item4 ~ theta,
+  data = threePLitems,
+  fct = LL.3u(),
+  type = "continuous"
+)
+threePL_item5 <- drm(
+  item5 ~ theta,
+  data = threePLitems,
+  fct = LL.3u(),
+  type = "continuous"
+)
 
-threePLitems_newdata <- data.frame(theta = seq(from = 1, to = 13, length.out = 1000))
+threePLitems_newdata <- data.frame(
+  theta = seq(from = 1, to = 13, length.out = 1000)
+)
 
-threePLitems_newdata$item1 <- predict(threePL_item1, newdata = threePLitems_newdata)
-threePLitems_newdata$item2 <- predict(threePL_item2, newdata = threePLitems_newdata)
-threePLitems_newdata$item3 <- predict(threePL_item3, newdata = threePLitems_newdata)
-threePLitems_newdata$item4 <- predict(threePL_item4, newdata = threePLitems_newdata)
-threePLitems_newdata$item5 <- predict(threePL_item5, newdata = threePLitems_newdata)
+threePLitems_newdata$item1 <- predict(
+  threePL_item1,
+  newdata = threePLitems_newdata
+)
+threePLitems_newdata$item2 <- predict(
+  threePL_item2,
+  newdata = threePLitems_newdata
+)
+threePLitems_newdata$item3 <- predict(
+  threePL_item3,
+  newdata = threePLitems_newdata
+)
+threePLitems_newdata$item4 <- predict(
+  threePL_item4,
+  newdata = threePLitems_newdata
+)
+threePLitems_newdata$item5 <- predict(
+  threePL_item5,
+  newdata = threePLitems_newdata
+)
 
 threePLitems_newdata$theta <- seq(from = -6, to = 6, length.out = 1000)
 
@@ -728,11 +1184,23 @@ threePLitems_long$Item[which(threePLitems_long$item == "item5")] <- 5
 #| fig-alt: "Three-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(threePLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  threePLitems_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = seq(from = -6, to = 6, by = 2),
+    limits = c(-6, 6)
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -764,26 +1232,70 @@ fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = 3)
 ```{r}
 #| code-fold: true
 
-fourPLitems <- data.frame(theta = 1:13,
-                          item1 = fourPL(a = 1.3, b = -2, c = 0, d = 1, theta = -6:6),
-                          item2 = fourPL(a = 0.8, b = -1, c = .25, d = 0.9, theta = -6:6),
-                          item3 = fourPL(a = 0.6, b = 0, c = .3, d = 0.95, theta = -6:6),
-                          item4 = fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = -6:6),
-                          item5 = fourPL(a = 2.3, b = 2, c = 0, d = 0.98, theta = -6:6))
+fourPLitems <- data.frame(
+  theta = 1:13,
+  item1 = fourPL(a = 1.3, b = -2, c = 0, d = 1, theta = -6:6),
+  item2 = fourPL(a = 0.8, b = -1, c = .25, d = 0.9, theta = -6:6),
+  item3 = fourPL(a = 0.6, b = 0, c = .3, d = 0.95, theta = -6:6),
+  item4 = fourPL(a = 1.5, b = 1, c = .15, d = 0.85, theta = -6:6),
+  item5 = fourPL(a = 2.3, b = 2, c = 0, d = 0.98, theta = -6:6)
+)
 
-fourPL_item1 <- drm(item1 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
-fourPL_item2 <- drm(item2 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
-fourPL_item3 <- drm(item3 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
-fourPL_item4 <- drm(item4 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
-fourPL_item5 <- drm(item5 ~ theta, data = fourPLitems, fct = LL.4(), type = "continuous")
+fourPL_item1 <- drm(
+  item1 ~ theta,
+  data = fourPLitems,
+  fct = LL.4(),
+  type = "continuous"
+)
+fourPL_item2 <- drm(
+  item2 ~ theta,
+  data = fourPLitems,
+  fct = LL.4(),
+  type = "continuous"
+)
+fourPL_item3 <- drm(
+  item3 ~ theta,
+  data = fourPLitems,
+  fct = LL.4(),
+  type = "continuous"
+)
+fourPL_item4 <- drm(
+  item4 ~ theta,
+  data = fourPLitems,
+  fct = LL.4(),
+  type = "continuous"
+)
+fourPL_item5 <- drm(
+  item5 ~ theta,
+  data = fourPLitems,
+  fct = LL.4(),
+  type = "continuous"
+)
 
-fourPLitems_newdata <- data.frame(theta = seq(from = 1, to = 13, length.out = 1000))
+fourPLitems_newdata <- data.frame(
+  theta = seq(from = 1, to = 13, length.out = 1000)
+)
 
-fourPLitems_newdata$item1 <- predict(fourPL_item1, newdata = fourPLitems_newdata)
-fourPLitems_newdata$item2 <- predict(fourPL_item2, newdata = fourPLitems_newdata)
-fourPLitems_newdata$item3 <- predict(fourPL_item3, newdata = fourPLitems_newdata)
-fourPLitems_newdata$item4 <- predict(fourPL_item4, newdata = fourPLitems_newdata)
-fourPLitems_newdata$item5 <- predict(fourPL_item5, newdata = fourPLitems_newdata)
+fourPLitems_newdata$item1 <- predict(
+  fourPL_item1,
+  newdata = fourPLitems_newdata
+)
+fourPLitems_newdata$item2 <- predict(
+  fourPL_item2,
+  newdata = fourPLitems_newdata
+)
+fourPLitems_newdata$item3 <- predict(
+  fourPL_item3,
+  newdata = fourPLitems_newdata
+)
+fourPLitems_newdata$item4 <- predict(
+  fourPL_item4,
+  newdata = fourPLitems_newdata
+)
+fourPLitems_newdata$item5 <- predict(
+  fourPL_item5,
+  newdata = fourPLitems_newdata
+)
 
 fourPLitems_newdata$theta <- seq(from = -6, to = 6, length.out = 1000)
 
@@ -804,11 +1316,23 @@ fourPLitems_long$Item[which(fourPLitems_long$item == "item5")] <- 5
 #| fig-alt: "Four-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(fourPLitems_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  fourPLitems_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = seq(from = -6, to = 6, by = 2), limits = c(-6,6)) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = seq(from = -6, to = 6, by = 2),
+    limits = c(-6, 6)
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -850,40 +1374,98 @@ See @fig-polytomousItemResponseCategoryCurves for the same 5-level likert scale 
 ```{r}
 #| code-fold: true
 
-polytomousItemBoundary <- data.frame(theta = seq(from = -4, to = 4, length.out= 1000),
-                                     itemBoundary1 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = -2),
-                                     itemBoundary2 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = -0.6667),
-                                     itemBoundary3 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = 0.6667),
-                                     itemBoundary4 = psych::logistic(seq(from = -4, to = 4, length.out = 1000), d = 2))
+polytomousItemBoundary <- data.frame(
+  theta = seq(from = -4, to = 4, length.out = 1000),
+  itemBoundary1 = psych::logistic(
+    seq(from = -4, to = 4, length.out = 1000),
+    d = -2
+  ),
+  itemBoundary2 = psych::logistic(
+    seq(from = -4, to = 4, length.out = 1000),
+    d = -0.6667
+  ),
+  itemBoundary3 = psych::logistic(
+    seq(from = -4, to = 4, length.out = 1000),
+    d = 0.6667
+  ),
+  itemBoundary4 = psych::logistic(
+    seq(from = -4, to = 4, length.out = 1000),
+    d = 2
+  )
+)
 
-polytomousItemResponseCategory <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
-polytomousItemResponseCategory$itemResponseCategory1 <- 1 - polytomousItemBoundary$itemBoundary1
+polytomousItemResponseCategory <- data.frame(
+  theta = seq(from = -4, to = 4, length.out = 1000)
+)
+polytomousItemResponseCategory$itemResponseCategory1 <- 1 -
+  polytomousItemBoundary$itemBoundary1
 polytomousItemResponseCategory$itemResponseCategory5 <- polytomousItemBoundary$itemBoundary4
-polytomousItemResponseCategory$itemResponseCategory4 <- polytomousItemBoundary$itemBoundary3 - polytomousItemResponseCategory$itemResponseCategory5
-polytomousItemResponseCategory$itemResponseCategory3 <- polytomousItemBoundary$itemBoundary2 - rowSums(polytomousItemResponseCategory[,c("itemResponseCategory4","itemResponseCategory5")])
-polytomousItemResponseCategory$itemResponseCategory2 <- polytomousItemBoundary$itemBoundary1 - rowSums(polytomousItemResponseCategory[,c("itemResponseCategory3","itemResponseCategory4","itemResponseCategory5")])
+polytomousItemResponseCategory$itemResponseCategory4 <- polytomousItemBoundary$itemBoundary3 -
+  polytomousItemResponseCategory$itemResponseCategory5
+polytomousItemResponseCategory$itemResponseCategory3 <- polytomousItemBoundary$itemBoundary2 -
+  rowSums(polytomousItemResponseCategory[, c(
+    "itemResponseCategory4",
+    "itemResponseCategory5"
+  )])
+polytomousItemResponseCategory$itemResponseCategory2 <- polytomousItemBoundary$itemBoundary1 -
+  rowSums(polytomousItemResponseCategory[, c(
+    "itemResponseCategory3",
+    "itemResponseCategory4",
+    "itemResponseCategory5"
+  )])
 
 polytomousItemResponseCategory <- polytomousItemResponseCategory |>
-  dplyr::select(theta, itemResponseCategory1, itemResponseCategory2, itemResponseCategory3, itemResponseCategory4, itemResponseCategory5)
+  dplyr::select(
+    theta,
+    itemResponseCategory1,
+    itemResponseCategory2,
+    itemResponseCategory3,
+    itemResponseCategory4,
+    itemResponseCategory5
+  )
 
-polytomousItemBoundary_long <- pivot_longer(polytomousItemBoundary, cols = itemBoundary1:itemBoundary4) |>
+polytomousItemBoundary_long <- pivot_longer(
+  polytomousItemBoundary,
+  cols = itemBoundary1:itemBoundary4
+) |>
   rename(item = name)
 
 polytomousItemBoundary_long$boundary <- NA
-polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary1")] <- 1
-polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary2")] <- 2
-polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary3")] <- 3
-polytomousItemBoundary_long$boundary[which(polytomousItemBoundary_long$item == "itemBoundary4")] <- 4
+polytomousItemBoundary_long$boundary[which(
+  polytomousItemBoundary_long$item == "itemBoundary1"
+)] <- 1
+polytomousItemBoundary_long$boundary[which(
+  polytomousItemBoundary_long$item == "itemBoundary2"
+)] <- 2
+polytomousItemBoundary_long$boundary[which(
+  polytomousItemBoundary_long$item == "itemBoundary3"
+)] <- 3
+polytomousItemBoundary_long$boundary[which(
+  polytomousItemBoundary_long$item == "itemBoundary4"
+)] <- 4
 
-polytomousItemResponseCategory_long <- pivot_longer(polytomousItemResponseCategory, cols = itemResponseCategory1:itemResponseCategory5) |>
+polytomousItemResponseCategory_long <- pivot_longer(
+  polytomousItemResponseCategory,
+  cols = itemResponseCategory1:itemResponseCategory5
+) |>
   rename(item = name)
 
 polytomousItemResponseCategory_long$responseCategory <- NA
-polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory1")] <- 1
-polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory2")] <- 2
-polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory3")] <- 3
-polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory4")] <- 4
-polytomousItemResponseCategory_long$responseCategory[which(polytomousItemResponseCategory_long$item == "itemResponseCategory5")] <- 5
+polytomousItemResponseCategory_long$responseCategory[which(
+  polytomousItemResponseCategory_long$item == "itemResponseCategory1"
+)] <- 1
+polytomousItemResponseCategory_long$responseCategory[which(
+  polytomousItemResponseCategory_long$item == "itemResponseCategory2"
+)] <- 2
+polytomousItemResponseCategory_long$responseCategory[which(
+  polytomousItemResponseCategory_long$item == "itemResponseCategory3"
+)] <- 3
+polytomousItemResponseCategory_long$responseCategory[which(
+  polytomousItemResponseCategory_long$item == "itemResponseCategory4"
+)] <- 4
+polytomousItemResponseCategory_long$responseCategory[which(
+  polytomousItemResponseCategory_long$item == "itemResponseCategory5"
+)] <- 5
 ```
 
 ```{r}
@@ -892,12 +1474,25 @@ polytomousItemResponseCategory_long$responseCategory[which(polytomousItemRespons
 #| fig-alt: "Item Boundary Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), color = factor(boundary))) +
+ggplot(
+  polytomousItemBoundary_long,
+  aes(theta, value, group = factor(boundary), color = factor(boundary))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Boundary") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
-  scale_y_continuous(name = "Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
+  scale_y_continuous(
+    name = "Probability of Endorsing an Item Response Category that is Higher than the Boundary"
+  ) +
   theme_bw() +
   theme(axis.title.y = element_text(size = 9))
 ```
@@ -908,12 +1503,30 @@ ggplot(polytomousItemBoundary_long, aes(theta, value, group = factor(boundary), 
 #| fig-alt: "Item Response Category Characteristic Curves From Two-Parameter Graded Response Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(polytomousItemResponseCategory_long, aes(theta, value, group = factor(responseCategory), color = factor(responseCategory))) +
+ggplot(
+  polytomousItemResponseCategory_long,
+  aes(
+    theta,
+    value,
+    group = factor(responseCategory),
+    color = factor(responseCategory)
+  )
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Response Category") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
-  scale_y_continuous(name = "Probability of Item Response Category Endorsement") +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
+  scale_y_continuous(
+    name = "Probability of Item Response Category Endorsement"
+  ) +
   theme_bw()
 ```
 
@@ -961,8 +1574,8 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 #| eval: false
 #| code-fold: true
 
-standardErrorIRT <- function(information){
-  1/sqrt(information)
+standardErrorIRT <- function(information) {
+  1 / sqrt(information)
 }
 ```
 
@@ -993,13 +1606,14 @@ To estimate the amount of information an item provides in a Rasch model, specify
 #| eval: false
 #| code-fold: true
 
-itemInformation <- function(a = 1, b, c = 0, d = 1, theta){
+itemInformation <- function(a = 1, b, c = 0, d = 1, theta) {
   P <- NULL
   information <- NULL
 
-  for(i in 1:length(theta)){
+  for (i in 1:length(theta)) {
     P[i] <- fourPL(b = b, a = a, c = c, d = d, theta = theta[i])
-    information[i] <- ((a^2) * (P[i] - c)^2 * (d - P[i])^2) / ((d - c)^2 * P[i] * (1 - P[i]))
+    information[i] <- ((a^2) * (P[i] - c)^2 * (d - P[i])^2) /
+      ((d - c)^2 * P[i] * (1 - P[i]))
   }
 
   return(information)
@@ -1090,7 +1704,7 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 #| eval: false
 #| code-fold: true
 
-reliabilityIRT <- function(information, varTheta = 1){
+reliabilityIRT <- function(information, varTheta = 1) {
   information / (information + varTheta)
 }
 ```
@@ -1120,24 +1734,56 @@ irtReliability$item4 <- fourPL(b = 2, a = 2, theta = irtReliability$theta)
 
 irtInformation <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
 
-irtInformation$information1 <- itemInformation(b = -1, a = 1, theta = irtInformation$theta)
-irtInformation$information2 <- itemInformation(b = 0, a = 0.6, theta = irtInformation$theta)
-irtInformation$information3 <- itemInformation(b = 1, a = 1.5, theta = irtInformation$theta)
-irtInformation$information4 <- itemInformation(b = 2, a = 2, theta = irtInformation$theta)
+irtInformation$information1 <- itemInformation(
+  b = -1,
+  a = 1,
+  theta = irtInformation$theta
+)
+irtInformation$information2 <- itemInformation(
+  b = 0,
+  a = 0.6,
+  theta = irtInformation$theta
+)
+irtInformation$information3 <- itemInformation(
+  b = 1,
+  a = 1.5,
+  theta = irtInformation$theta
+)
+irtInformation$information4 <- itemInformation(
+  b = 2,
+  a = 2,
+  theta = irtInformation$theta
+)
 
-midpoint_item1 <- irtReliability$theta[which.min(abs(irtReliability$item1 - 0.5))]
-midpoint_item2 <- irtReliability$theta[which.min(abs(irtReliability$item2 - 0.5))]
-midpoint_item3 <- irtReliability$theta[which.min(abs(irtReliability$item3 - 0.5))]
-midpoint_item4 <- irtReliability$theta[which.min(abs(irtReliability$item4 - 0.5))]
+midpoint_item1 <- irtReliability$theta[which.min(abs(
+  irtReliability$item1 - 0.5
+))]
+midpoint_item2 <- irtReliability$theta[which.min(abs(
+  irtReliability$item2 - 0.5
+))]
+midpoint_item3 <- irtReliability$theta[which.min(abs(
+  irtReliability$item3 - 0.5
+))]
+midpoint_item4 <- irtReliability$theta[which.min(abs(
+  irtReliability$item4 - 0.5
+))]
 
-irtInformation$testInformation <- rowSums(irtInformation[,c("information1","information2","information3","information4")])
+irtInformation$testInformation <- rowSums(irtInformation[, c(
+  "information1",
+  "information2",
+  "information3",
+  "information4"
+)])
 irtInformation$standardError <- standardErrorIRT(irtInformation$testInformation)
 irtInformation$reliability <- reliabilityIRT(irtInformation$testInformation)
 
 irtReliability_long <- pivot_longer(irtReliability, cols = item1:item4) |>
   rename(item = name)
 
-irtInformation_long <- pivot_longer(irtInformation, cols = information1:information4) |> 
+irtInformation_long <- pivot_longer(
+  irtInformation,
+  cols = information1:information4
+) |>
   rename(item = name)
 
 irtReliability_long$Item <- NA
@@ -1160,16 +1806,47 @@ irtInformation_long$Item[which(irtInformation_long$item == "information4")] <- 4
 #| fig-scap: "Item Characteristic Curves From Two-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(irtReliability_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  irtReliability_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
   geom_hline(yintercept = 0.5, linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item1, xend = midpoint_item1, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item2, xend = midpoint_item2, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item3, xend = midpoint_item3, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
-  geom_segment(aes(x = midpoint_item4, xend = midpoint_item4, y = 0, yend = 0.5), linewidth = 0.5, col = "black", linetype = "dashed") +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  geom_segment(
+    aes(x = midpoint_item1, xend = midpoint_item1, y = 0, yend = 0.5),
+    linewidth = 0.5,
+    col = "black",
+    linetype = "dashed"
+  ) +
+  geom_segment(
+    aes(x = midpoint_item2, xend = midpoint_item2, y = 0, yend = 0.5),
+    linewidth = 0.5,
+    col = "black",
+    linetype = "dashed"
+  ) +
+  geom_segment(
+    aes(x = midpoint_item3, xend = midpoint_item3, y = 0, yend = 0.5),
+    linewidth = 0.5,
+    col = "black",
+    linetype = "dashed"
+  ) +
+  geom_segment(
+    aes(x = midpoint_item4, xend = midpoint_item4, y = 0, yend = 0.5),
+    linewidth = 0.5,
+    col = "black",
+    linetype = "dashed"
+  ) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -1185,7 +1862,10 @@ The higher the [discrimination](#sec-itemDiscrimination), the higher the informa
 #| fig-scap: "Item Information From Two-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(irtInformation_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  irtInformation_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
@@ -1193,7 +1873,15 @@ ggplot(irtInformation_long, aes(theta, value, group = factor(Item), color = fact
   geom_vline(xintercept = midpoint_item2, linetype = "dashed") +
   geom_vline(xintercept = midpoint_item3, linetype = "dashed") +
   geom_vline(xintercept = midpoint_item4, linetype = "dashed") +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Item Information") +
   theme_bw()
 ```
@@ -1212,8 +1900,16 @@ Having 10 items with a 5-level response scale yields as much information as 40 d
 ggplot(irtInformation, aes(theta, testInformation)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
-  scale_y_continuous(name = "Test Information", limits = c(0,2)) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
+  scale_y_continuous(name = "Test Information", limits = c(0, 2)) +
   theme_bw()
 ```
 
@@ -1229,8 +1925,16 @@ Notice how the degree of [(un)reliability](#sec-reliability) differs at differen
 ggplot(irtInformation, aes(theta, standardError)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
-  scale_y_continuous(name = "Standard Error of Measurement", limits = c(0,4)) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
+  scale_y_continuous(name = "Standard Error of Measurement", limits = c(0, 4)) +
   theme_bw()
 ```
 
@@ -1246,8 +1950,16 @@ Notice how the degree of [(un)reliability](#sec-reliability) differs at differen
 ggplot(irtInformation, aes(theta, reliability)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
-  scale_y_continuous(name = "Reliability", limits = c(0,1)) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
+  scale_y_continuous(name = "Reliability", limits = c(0, 1)) +
   theme_bw()
 ```
 
@@ -1263,17 +1975,34 @@ For more information on designing and evaluating short forms compared to their f
 ```{r}
 #| code-fold: true
 
-efficientAssessment <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+efficientAssessment <- data.frame(
+  theta = seq(from = -4, to = 4, length.out = 1000)
+)
 
-efficientAssessment$item1 <- fourPL(b = -1.5, a = 2, theta = efficientAssessment$theta)
-efficientAssessment$item2 <- fourPL(b = 1.5, a = 2, theta = efficientAssessment$theta)
+efficientAssessment$item1 <- fourPL(
+  b = -1.5,
+  a = 2,
+  theta = efficientAssessment$theta
+)
+efficientAssessment$item2 <- fourPL(
+  b = 1.5,
+  a = 2,
+  theta = efficientAssessment$theta
+)
 
-efficientAssessment_long <- pivot_longer(efficientAssessment, cols = item1:item2) |>
+efficientAssessment_long <- pivot_longer(
+  efficientAssessment,
+  cols = item1:item2
+) |>
   rename(item = name)
 
 efficientAssessment_long$Item <- NA
-efficientAssessment_long$Item[which(efficientAssessment_long$item == "item1")] <- 1
-efficientAssessment_long$Item[which(efficientAssessment_long$item == "item2")] <- 2
+efficientAssessment_long$Item[which(
+  efficientAssessment_long$item == "item1"
+)] <- 1
+efficientAssessment_long$Item[which(
+  efficientAssessment_long$item == "item2"
+)] <- 2
 ```
 
 ```{r}
@@ -1282,11 +2011,22 @@ efficientAssessment_long$Item[which(efficientAssessment_long$item == "item2")] <
 #| fig-alt: "Visual Representation of an Efficient Assessment Based on Item Characteristic Curves from Two-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(efficientAssessment_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  efficientAssessment_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -1339,7 +2079,9 @@ The measure performs poorly for the intended purpose, because its items do not (
 ```{r}
 #| code-fold: true
 
-badMeasure <- badMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+badMeasure <- badMeasureInfo <- data.frame(
+  theta = seq(from = -4, to = 4, length.out = 1000)
+)
 
 badMeasure$item1 <- fourPL(b = -2.5, a = 0.4, theta = badMeasure$theta)
 badMeasure$item2 <- fourPL(b = -2.4, a = 1, theta = badMeasure$theta)
@@ -1352,18 +2094,62 @@ badMeasure$item8 <- fourPL(b = 2.3, a = 1.3, theta = badMeasure$theta)
 badMeasure$item9 <- fourPL(b = 2.4, a = 0.6, theta = badMeasure$theta)
 badMeasure$item10 <- fourPL(b = 2.5, a = 0.5, theta = badMeasure$theta)
 
-badMeasureInfo$info1 <- itemInformation(b = -2.5, a = 0.4, theta = badMeasureInfo$theta)
-badMeasureInfo$info2 <- itemInformation(b = -2.4, a = 1, theta = badMeasureInfo$theta)
-badMeasureInfo$info3 <- itemInformation(b = -2.3, a = 0.8, theta = badMeasureInfo$theta)
-badMeasureInfo$info4 <- itemInformation(b = -2.2, a = 1.5, theta = badMeasureInfo$theta)
-badMeasureInfo$info5 <- itemInformation(b = 2.0, a = 0.6, theta = badMeasureInfo$theta)
-badMeasureInfo$info6 <- itemInformation(b = 2.1, a = 1.2, theta = badMeasureInfo$theta)
-badMeasureInfo$info7 <- itemInformation(b = 2.2, a = 0.8, theta = badMeasureInfo$theta)
-badMeasureInfo$info8 <- itemInformation(b = 2.3, a = 1.3, theta = badMeasureInfo$theta)
-badMeasureInfo$info9 <- itemInformation(b = 2.4, a = 0.6, theta = badMeasureInfo$theta)
-badMeasureInfo$info10 <- itemInformation(b = 2.5, a = 0.5, theta = badMeasureInfo$theta)
+badMeasureInfo$info1 <- itemInformation(
+  b = -2.5,
+  a = 0.4,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info2 <- itemInformation(
+  b = -2.4,
+  a = 1,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info3 <- itemInformation(
+  b = -2.3,
+  a = 0.8,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info4 <- itemInformation(
+  b = -2.2,
+  a = 1.5,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info5 <- itemInformation(
+  b = 2.0,
+  a = 0.6,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info6 <- itemInformation(
+  b = 2.1,
+  a = 1.2,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info7 <- itemInformation(
+  b = 2.2,
+  a = 0.8,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info8 <- itemInformation(
+  b = 2.3,
+  a = 1.3,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info9 <- itemInformation(
+  b = 2.4,
+  a = 0.6,
+  theta = badMeasureInfo$theta
+)
+badMeasureInfo$info10 <- itemInformation(
+  b = 2.5,
+  a = 0.5,
+  theta = badMeasureInfo$theta
+)
 
-badMeasureInfo$information <- rowSums(badMeasureInfo[,paste("info", 1:10, sep = "")])
+badMeasureInfo$information <- rowSums(badMeasureInfo[, paste(
+  "info",
+  1:10,
+  sep = ""
+)])
 
 badMeasure_long <- pivot_longer(badMeasure, cols = item1:item10) |>
   rename(item = name)
@@ -1387,11 +2173,22 @@ badMeasure_long$Item[which(badMeasure_long$item == "item10")] <- 10
 #| fig-alt: "Visual Representation of a Bad Measure Based on Item Characteristic Curves of Items From a Bad Measure Estimated from Two-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  badMeasure_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw() +
   theme(legend.key.size = unit(0.15, "in"))
@@ -1406,7 +2203,15 @@ ggplot(badMeasure_long, aes(theta, value, group = factor(Item), color = factor(I
 ggplot(badMeasureInfo, aes(theta, information)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Information") +
   theme_bw()
 ```
@@ -1417,17 +2222,19 @@ The measure is good for the intended purpose, in terms of having items that (a) 
 ```{r}
 #| code-fold: true
 
-goodMeasure <- goodMeasureInfo <- data.frame(theta = seq(from = -4, to = 4, length.out = 1000))
+goodMeasure <- goodMeasureInfo <- data.frame(
+  theta = seq(from = -4, to = 4, length.out = 1000)
+)
 
-goodMeasure$item1 <-  fourPL(b = 1.0, a = 10, theta = goodMeasure$theta)
-goodMeasure$item2 <-  fourPL(b = 1.1, a = 10, theta = goodMeasure$theta)
-goodMeasure$item3 <-  fourPL(b = 1.2, a = 10, theta = goodMeasure$theta)
-goodMeasure$item4 <-  fourPL(b = 1.3, a = 10, theta = goodMeasure$theta)
-goodMeasure$item5 <-  fourPL(b = 1.4, a = 10, theta = goodMeasure$theta)
-goodMeasure$item6 <-  fourPL(b = 1.5, a = 10, theta = goodMeasure$theta)
-goodMeasure$item7 <-  fourPL(b = 1.6, a = 10, theta = goodMeasure$theta)
-goodMeasure$item8 <-  fourPL(b = 1.7, a = 10, theta = goodMeasure$theta)
-goodMeasure$item9 <-  fourPL(b = 1.8, a = 10, theta = goodMeasure$theta)
+goodMeasure$item1 <- fourPL(b = 1.0, a = 10, theta = goodMeasure$theta)
+goodMeasure$item2 <- fourPL(b = 1.1, a = 10, theta = goodMeasure$theta)
+goodMeasure$item3 <- fourPL(b = 1.2, a = 10, theta = goodMeasure$theta)
+goodMeasure$item4 <- fourPL(b = 1.3, a = 10, theta = goodMeasure$theta)
+goodMeasure$item5 <- fourPL(b = 1.4, a = 10, theta = goodMeasure$theta)
+goodMeasure$item6 <- fourPL(b = 1.5, a = 10, theta = goodMeasure$theta)
+goodMeasure$item7 <- fourPL(b = 1.6, a = 10, theta = goodMeasure$theta)
+goodMeasure$item8 <- fourPL(b = 1.7, a = 10, theta = goodMeasure$theta)
+goodMeasure$item9 <- fourPL(b = 1.8, a = 10, theta = goodMeasure$theta)
 goodMeasure$item10 <- fourPL(b = 1.9, a = 10, theta = goodMeasure$theta)
 goodMeasure$item11 <- fourPL(b = 2.0, a = 10, theta = goodMeasure$theta)
 goodMeasure$item12 <- fourPL(b = 2.1, a = 10, theta = goodMeasure$theta)
@@ -1440,28 +2247,112 @@ goodMeasure$item18 <- fourPL(b = 2.7, a = 10, theta = goodMeasure$theta)
 goodMeasure$item19 <- fourPL(b = 2.8, a = 10, theta = goodMeasure$theta)
 goodMeasure$item20 <- fourPL(b = 2.9, a = 10, theta = goodMeasure$theta)
 
-goodMeasureInfo$info1 <- itemInformation(b = 1.0, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info2 <- itemInformation(b = 1.1, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info3 <- itemInformation(b = 1.2, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info4 <- itemInformation(b = 1.3, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info5 <- itemInformation(b = 1.4, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info6 <- itemInformation(b = 1.5, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info7 <- itemInformation(b = 1.6, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info8 <- itemInformation(b = 1.7, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info9 <- itemInformation(b = 1.8, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info10 <- itemInformation(b = 1.9, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info11 <- itemInformation(b = 2.0, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info12 <- itemInformation(b = 2.1, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info13 <- itemInformation(b = 2.2, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info14 <- itemInformation(b = 2.3, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info15 <- itemInformation(b = 2.4, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info16 <- itemInformation(b = 2.5, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info17 <- itemInformation(b = 2.6, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info18 <- itemInformation(b = 2.7, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info19 <- itemInformation(b = 2.8, a = 10, theta = goodMeasureInfo$theta)
-goodMeasureInfo$info20 <- itemInformation(b = 2.9, a = 10, theta = goodMeasureInfo$theta)
+goodMeasureInfo$info1 <- itemInformation(
+  b = 1.0,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info2 <- itemInformation(
+  b = 1.1,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info3 <- itemInformation(
+  b = 1.2,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info4 <- itemInformation(
+  b = 1.3,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info5 <- itemInformation(
+  b = 1.4,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info6 <- itemInformation(
+  b = 1.5,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info7 <- itemInformation(
+  b = 1.6,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info8 <- itemInformation(
+  b = 1.7,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info9 <- itemInformation(
+  b = 1.8,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info10 <- itemInformation(
+  b = 1.9,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info11 <- itemInformation(
+  b = 2.0,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info12 <- itemInformation(
+  b = 2.1,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info13 <- itemInformation(
+  b = 2.2,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info14 <- itemInformation(
+  b = 2.3,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info15 <- itemInformation(
+  b = 2.4,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info16 <- itemInformation(
+  b = 2.5,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info17 <- itemInformation(
+  b = 2.6,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info18 <- itemInformation(
+  b = 2.7,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info19 <- itemInformation(
+  b = 2.8,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
+goodMeasureInfo$info20 <- itemInformation(
+  b = 2.9,
+  a = 10,
+  theta = goodMeasureInfo$theta
+)
 
-goodMeasureInfo$information <- rowSums(goodMeasureInfo[,paste("info", 1:20, sep = "")])
+goodMeasureInfo$information <- rowSums(goodMeasureInfo[, paste(
+  "info",
+  1:20,
+  sep = ""
+)])
 
 goodMeasure_long <- pivot_longer(goodMeasure, cols = item1:item20) |>
   rename(item = name)
@@ -1495,11 +2386,22 @@ goodMeasure_long$Item[which(goodMeasure_long$item == "item20")] <- 20
 #| fig-alt: "Visual Representation of a Good Measure (For Distinguishing Clinical-Range Versus Sub-cClinical Range) Based on Item Characteristic Curves of Items From a Good Measure Estimated From Two-Parameter Logistic Model in Item Response Theory."
 #| code-fold: true
 
-ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(Item))) +
+ggplot(
+  goodMeasure_long,
+  aes(theta, value, group = factor(Item), color = factor(Item))
+) +
   geom_line(linewidth = 1.5) +
   labs(color = "Item") +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Probability of Item Endorsement") +
   theme_bw()
 ```
@@ -1513,7 +2415,15 @@ ggplot(goodMeasure_long, aes(theta, value, group = factor(Item), color = factor(
 ggplot(goodMeasureInfo, aes(theta, information)) +
   geom_line(linewidth = 1.5) +
   scale_color_viridis_d() +
-  scale_x_continuous(name = expression(paste("Person's Level on the Latent Construct (", theta, ")", sep = "")), breaks = -4:4) +
+  scale_x_continuous(
+    name = expression(paste(
+      "Person's Level on the Latent Construct (",
+      theta,
+      ")",
+      sep = ""
+    )),
+    breaks = -4:4
+  ) +
   scale_y_continuous(name = "Information") +
   theme_bw()
 ```
@@ -1588,7 +2498,41 @@ data(SAT12)
 ```{r}
 mydataSAT <- mirt::key2binary(
   SAT12,
-  key = c(1,4,5,2,3,1,2,1,3,1,2,4,2,1,5,3,4,4,1,4,3,3,4,1,3,5,1,3,1,5,4,5))
+  key = c(
+    1,
+    4,
+    5,
+    2,
+    3,
+    1,
+    2,
+    1,
+    3,
+    1,
+    2,
+    4,
+    2,
+    1,
+    5,
+    3,
+    4,
+    4,
+    1,
+    4,
+    3,
+    3,
+    4,
+    1,
+    3,
+    5,
+    1,
+    3,
+    1,
+    5,
+    4,
+    5
+  )
+)
 ```
 
 ### Descriptive Statistics {#sec-descriptiveStats-IRT}
@@ -1646,7 +2590,8 @@ raschModel <- mirt(
   data = mydataIRT,
   model = 1,
   itemtype = "Rasch",
-  SE = TRUE)
+  SE = TRUE
+)
 ```
 
 ### Model Summary {#sec-irt-onePLoutput}
@@ -1810,20 +2755,31 @@ onePLModel_cfa_fit <- sem(
   mimic = "Mplus",
   estimator = "WLSMV",
   std_lv = TRUE,
-  parameterization = "theta")
+  parameterization = "theta"
+)
 
 summary(
   onePLModel_cfa_fit,
   fit_measures = TRUE,
   rsquare = TRUE,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 fitMeasures(
   onePLModel_cfa_fit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
+    "chisq",
+    "df",
+    "pvalue",
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr"
+  )
+)
 
 residuals(onePLModel_cfa_fit, type = "cor")
 
@@ -1847,7 +2803,8 @@ semPaths(
   onePLModel_cfa_fit,
   what = "std",
   layout = "tree2",
-  edge.label.cex = 1.5)
+  edge.label.cex = 1.5
+)
 ```
 
 ### Mixed Model {#sec-irt-onePLmixed}
@@ -1858,28 +2815,31 @@ The Rasch model below was fit using the `lme4` package [@R-lme4].\index{mixed mo
 First, we convert the data from wide form to long form for the mixed model:
 
 ```{r}
-mydataIRT_long <- mydataIRT |> 
-  mutate(ID = 1:nrow(mydataIRT)) |> 
-  pivot_longer(cols = Item.1:Item.5) |> 
+mydataIRT_long <- mydataIRT |>
+  mutate(ID = 1:nrow(mydataIRT)) |>
+  pivot_longer(cols = Item.1:Item.5) |>
   rename(
     item = name,
-    response = value)
+    response = value
+  )
 ```
 
 Then, we can estimate the Rasch model using a logit or probit link:
 
 ```{r}
 raschModel_mixed_logit <- glmer(
-  response ~ -1 + item + (1|ID),
-  mydataIRT_long, 
-  family = binomial(link = "logit"))
+  response ~ -1 + item + (1 | ID),
+  mydataIRT_long,
+  family = binomial(link = "logit")
+)
 
 summary(raschModel_mixed_logit)
 
 raschModel_mixed_probit <- glmer(
-  response ~ -1 + item + (1|ID),
-  mydataIRT_long, 
-  family = binomial(link = "probit"))
+  response ~ -1 + item + (1 | ID),
+  mydataIRT_long,
+  family = binomial(link = "probit")
+)
 
 summary(raschModel_mixed_probit)
 ```
@@ -1888,15 +2848,18 @@ One can extract item difficulty and people's factor scores (i.e., theta), as ada
 
 ```{r}
 # Item difficulty
-item.diff <- -1 * coef(summary(raschModel_mixed_logit))[,"Estimate"] # Regression coefficients * -1
+item.diff <- -1 * coef(summary(raschModel_mixed_logit))[, "Estimate"] # Regression coefficients * -1
 item.diff <- data.frame(
   item = paste("Item", 1:5, sep = "."),
-  item.diff = as.numeric(item.diff))
+  item.diff = as.numeric(item.diff)
+)
 
 item.diff
 
 # Factor Scores (Theta)
-raschModel_mixed_logit_theta <- ranef(raschModel_mixed_logit)$ID[,"(Intercept)"]
+raschModel_mixed_logit_theta <- ranef(raschModel_mixed_logit)$ID[,
+  "(Intercept)"
+]
 ```
 
 ## Two-Parameter Logistic Model {#sec-irt-twoPL}
@@ -1913,7 +2876,8 @@ twoPLModel <- mirt(
   data = mydataIRT,
   model = 1,
   itemtype = "2PL",
-  SE = TRUE)
+  SE = TRUE
+)
 ```
 
 ### Model Summary {#sec-irt-twoPLoutput}
@@ -2064,7 +3028,8 @@ The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-peters
 ```{r}
 discriminationParameters <- coef(
   twoPLModel,
-  simplify = TRUE)$items[,1]
+  simplify = TRUE
+)$items[, 1]
 
 discriminationParameters
 discriminationToFactorLoading(discriminationParameters)
@@ -2096,20 +3061,31 @@ twoPLModel_cfa_fit <- sem(
   mimic = "Mplus",
   estimator = "WLSMV",
   std_lv = TRUE,
-  parameterization = "theta")
+  parameterization = "theta"
+)
 
 summary(
   twoPLModel_cfa_fit,
   fit_measures = TRUE,
   rsquare = TRUE,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 fitMeasures(
   twoPLModel_cfa_fit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
+    "chisq",
+    "df",
+    "pvalue",
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr"
+  )
+)
 
 residuals(twoPLModel_cfa_fit, type = "cor")
 
@@ -2131,7 +3107,8 @@ semPaths(
   twoPLModel_cfa_fit,
   what = "std",
   layout = "tree2",
-  edge.label.cex = 1.5)
+  edge.label.cex = 1.5
+)
 ```
 
 ## Two-Parameter Multidimensional Logistic Model {#sec-irt-twoPLmultidimensional}
@@ -2149,7 +3126,8 @@ twoPL2FactorModel <- mirt(
   data = mydataIRT,
   model = 2,
   itemtype = "2PL",
-  SE = TRUE)
+  SE = TRUE
+)
 ```
 
 ### Model Summary {#sec-irt-twoPLmultidimensionalOutput}
@@ -2162,7 +3140,10 @@ coef(twoPL2FactorModel, simplify = TRUE)
 ### Factor Scores {#sec-irt-twoPLmultidimensionalFactorScores}
 
 ```{r}
-twoPL2FactorModel_factorScores <- fscores(twoPL2FactorModel, full.scores.SE = TRUE)
+twoPL2FactorModel_factorScores <- fscores(
+  twoPL2FactorModel,
+  full.scores.SE = TRUE
+)
 ```
 
 ### Compare model fit {#sec-irt-twoPLmultidimensionalCompare}
@@ -2301,20 +3282,31 @@ twoPLModelMultidimensional_cfa_fit <- sem(
   mimic = "Mplus",
   estimator = "WLSMV",
   std_lv = TRUE,
-  parameterization = "theta")
+  parameterization = "theta"
+)
 
 summary(
   twoPLModelMultidimensional_cfa_fit,
   fit_measures = TRUE,
   rsquare = TRUE,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 fitMeasures(
   twoPLModelMultidimensional_cfa_fit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
+    "chisq",
+    "df",
+    "pvalue",
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr"
+  )
+)
 
 residuals(twoPLModelMultidimensional_cfa_fit, type = "cor")
 
@@ -2324,7 +3316,9 @@ compRelSEM(twoPLModelMultidimensional_cfa_fit)
 AVE(twoPLModelMultidimensional_cfa_fit)
 maximalRelia(twoPLModelMultidimensional_cfa_fit)
 
-twoPLModelMultidimensional_cfa_factorScores <- lavPredict(twoPLModelMultidimensional_cfa_fit)
+twoPLModelMultidimensional_cfa_factorScores <- lavPredict(
+  twoPLModelMultidimensional_cfa_fit
+)
 ```
 
 ```{r}
@@ -2336,7 +3330,8 @@ semPaths(
   twoPLModelMultidimensional_cfa_fit,
   what = "std",
   layout = "tree2",
-  edge.label.cex = 1.5)
+  edge.label.cex = 1.5
+)
 ```
 
 ## Three-Parameter Logistic Model {#sec-irt-threePL}
@@ -2353,7 +3348,8 @@ threePLModel <- mirt(
   data = mydataIRT,
   model = 1,
   itemtype = "3PL",
-  SE = TRUE)
+  SE = TRUE
+)
 ```
 
 ### Model Summary {#sec-irt-threePLoutput}
@@ -2504,7 +3500,8 @@ fourPLModel <- mirt(
   model = 1,
   itemtype = "4PL",
   SE = TRUE,
-  technical = list(NCYCLES = 2000))
+  technical = list(NCYCLES = 2000)
+)
 ```
 
 ### Model Summary {#sec-irt-fourPLoutput}
@@ -2658,7 +3655,8 @@ gradedResponseModel <- mirt::mirt(
   data = Science,
   model = 1,
   itemtype = "graded",
-  SE = TRUE)
+  SE = TRUE
+)
 ```
 
 ```{r}
@@ -2680,7 +3678,10 @@ coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)
 ### Factor Scores {#sec-irt-gradedResponseModelFactorScores}
 
 ```{r}
-gradedResponseModel_factorScores <- fscores(gradedResponseModel, full.scores.SE = TRUE)
+gradedResponseModel_factorScores <- fscores(
+  gradedResponseModel,
+  full.scores.SE = TRUE
+)
 ```
 
 ### Plots {#sec-irt-gradedResponseModelPlots}
@@ -2830,32 +3831,41 @@ The plot of item boundary characteristic curves was adapted from an example by A
 modelCoefficients <- coef(
   gradedResponseModel,
   IRTpars = TRUE,
-  simplify = TRUE)$items
+  simplify = TRUE
+)$items
 
 theta <- seq(from = -6, to = 6, by = .1)
 
 difficultyThresholds <- grep(
   "b",
   dimnames(modelCoefficients)[[2]],
-  value = TRUE)
+  value = TRUE
+)
 numberDifficultyThresholds <- length(difficultyThresholds)
 items <- dimnames(modelCoefficients)[[1]]
 numberOfItems <- length(items)
 
 lst <- lapply(
   1:numberOfItems,
-  function(x) data.frame(
-    matrix(ncol = numberDifficultyThresholds + 1,
-           nrow = length(theta),
-           dimnames = list(NULL, c("theta", difficultyThresholds)))))
+  function(x) {
+    data.frame(
+      matrix(
+        ncol = numberDifficultyThresholds + 1,
+        nrow = length(theta),
+        dimnames = list(NULL, c("theta", difficultyThresholds))
+      )
+    )
+  }
+)
 
-for(i in 1:numberOfItems){
-  for(j in 1:numberDifficultyThresholds){
-    lst[[i]][,1] <- theta
-    lst[[i]][,j + 1] <- fourPL(
-      a = modelCoefficients[i,1],
-      b = modelCoefficients[i,j + 1],
-      theta = theta)
+for (i in 1:numberOfItems) {
+  for (j in 1:numberDifficultyThresholds) {
+    lst[[i]][, 1] <- theta
+    lst[[i]][, j + 1] <- fourPL(
+      a = modelCoefficients[i, 1],
+      b = modelCoefficients[i, j + 1],
+      theta = theta
+    )
   }
 }
 
@@ -2863,13 +3873,17 @@ names(lst) <- items
 dat <- bind_rows(lst, .id = "item")
 longer_data <- pivot_longer(
   dat,
-  cols = all_of(difficultyThresholds))
+  cols = all_of(difficultyThresholds)
+)
 
 ggplot(
   longer_data,
-  aes(theta, value, group = interaction(item, name), color = item)) +
+  aes(theta, value, group = interaction(item, name), color = item)
+) +
   geom_line() +
-  ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary") +
+  ylab(
+    "Probability of Endorsing an Item Response Category that is Higher than the Boundary"
+  ) +
   theme_bw() +
   theme(axis.title.y = element_text(size = 10))
 ```
@@ -2899,20 +3913,31 @@ twoParameterGRM_cfa_fit <- sem(
   mimic = "Mplus",
   estimator = "WLSMV",
   std_lv = TRUE,
-  parameterization = "theta")
+  parameterization = "theta"
+)
 
 summary(
   twoParameterGRM_cfa_fit,
   fit_measures = TRUE,
   rsquare = TRUE,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 fitMeasures(
   twoParameterGRM_cfa_fit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
+    "chisq",
+    "df",
+    "pvalue",
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr"
+  )
+)
 
 residuals(twoParameterGRM_cfa_fit, type = "cor")
 
@@ -2934,7 +3959,8 @@ semPaths(
   twoParameterGRM_cfa_fit,
   what = "std",
   layout = "tree2",
-  edge.label.cex = 1.5)
+  edge.label.cex = 1.5
+)
 ```
 
 ## Bifactor Model {#sec-irt-bifactor}
@@ -2953,7 +3979,8 @@ specific <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
 bifactorModel <- bfactor(
   data = mydataSAT,
   model = specific,
-  SE = TRUE)
+  SE = TRUE
+)
 ```
 
 ### Model Summary {#sec-irt-bifactorOutput}
@@ -2979,7 +4006,8 @@ One can obtain factor scores (i.e., theta; and their associated standard errors)
 bifactorModel_factorScores <- fscores(
   bifactorModel,
   full.scores.SE = TRUE,
-  QMC = TRUE)
+  QMC = TRUE
+)
 ```
 
 ### Plots {#sec-irt-bifactorPlots}
@@ -3169,32 +4197,72 @@ Item.31 | t1
 Item.31 | t1
 '
 
-bifactorModel_cfa_fit = sem(
+bifactorModel_cfa_fit <- sem(
   model = bifactorModel_cfa,
   data = mydataSAT,
   ordered = c(
-    "Item.1","Item.2","Item.3","Item.4","Item.5","Item.6","Item.7","Item.8","Item.9",
-    "Item.10","Item.11","Item.12","Item.13","Item.14","Item.15","Item.16","Item.17","Item.18","Item.19",
-    "Item.20","Item.21","Item.22","Item.23","Item.24","Item.25","Item.26","Item.27","Item.28","Item.29",
-    "Item.30","Item.31","Item.32"),
+    "Item.1",
+    "Item.2",
+    "Item.3",
+    "Item.4",
+    "Item.5",
+    "Item.6",
+    "Item.7",
+    "Item.8",
+    "Item.9",
+    "Item.10",
+    "Item.11",
+    "Item.12",
+    "Item.13",
+    "Item.14",
+    "Item.15",
+    "Item.16",
+    "Item.17",
+    "Item.18",
+    "Item.19",
+    "Item.20",
+    "Item.21",
+    "Item.22",
+    "Item.23",
+    "Item.24",
+    "Item.25",
+    "Item.26",
+    "Item.27",
+    "Item.28",
+    "Item.29",
+    "Item.30",
+    "Item.31",
+    "Item.32"
+  ),
   mimic = "Mplus",
   estimator = "WLSMV",
   orthogonal = TRUE,
   std_lv = TRUE,
-  parameterization = "theta")
+  parameterization = "theta"
+)
 
 summary(
   bifactorModel_cfa_fit,
   fit_measures = TRUE,
   rsquare = TRUE,
-  standardized = TRUE)
+  standardized = TRUE
+)
 
 fitMeasures(
   bifactorModel_cfa_fit,
   fit_measures = c(
-    "chisq", "df", "pvalue",
-    "baseline.chisq","baseline.df","baseline.pvalue",
-    "rmsea", "cfi", "tli", "srmr"))
+    "chisq",
+    "df",
+    "pvalue",
+    "baseline.chisq",
+    "baseline.df",
+    "baseline.pvalue",
+    "rmsea",
+    "cfi",
+    "tli",
+    "srmr"
+  )
+)
 
 residuals(bifactorModel_cfa_fit, type = "cor")
 
@@ -3226,7 +4294,8 @@ semPaths(
   what = "std",
   layout = "tree3",
   bifactor = c("g"),
-  edge.label.cex = 1.5)
+  edge.label.cex = 1.5
+)
 ```
 
 ## Conclusion {#sec-conclusion-irt}
@@ -3261,10 +4330,20 @@ cnlsy <- read_csv(here("data", "cnlsy.csv"))
 # Rasch Model (1-parameter logistic)
 
 ## Fit Model
-raschModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
-                   model = 1,
-                   itemtype = "Rasch",
-                   SE = TRUE)
+raschModel_ex <- mirt(
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
+  model = 1,
+  itemtype = "Rasch",
+  SE = TRUE
+)
 ```
 
 ```{r}
@@ -3275,9 +4354,13 @@ raschModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2",
 summary(raschModel_ex)
 coef(raschModel_ex, simplify = TRUE, IRTpars = TRUE)
 
-raschModelCoefficients_ex <- coef(raschModel_ex, simplify = TRUE, IRTpars = TRUE)$items
-raschModelSmallestB1_ex <- min(raschModelCoefficients_ex[,"b1"], na.rm = TRUE)
-raschModelLargestB2_ex <- max(raschModelCoefficients_ex[,"b2"], na.rm = TRUE)
+raschModelCoefficients_ex <- coef(
+  raschModel_ex,
+  simplify = TRUE,
+  IRTpars = TRUE
+)$items
+raschModelSmallestB1_ex <- min(raschModelCoefficients_ex[, "b1"], na.rm = TRUE)
+raschModelLargestB2_ex <- max(raschModelCoefficients_ex[, "b2"], na.rm = TRUE)
 ```
 
 ```{r}
@@ -3319,10 +4402,20 @@ raschModelLargestB2_ex <- max(raschModelCoefficients_ex[,"b2"], na.rm = TRUE)
 # Graded Response Model
 
 ## Fit Model
-gradedResponseModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
-                            model = 1,
-                            itemtype = "graded",
-                            SE = TRUE)
+gradedResponseModel_ex <- mirt(
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
+  model = 1,
+  itemtype = "graded",
+  SE = TRUE
+)
 ```
 
 ```{r}
@@ -3333,9 +4426,19 @@ gradedResponseModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisoc
 summary(gradedResponseModel_ex)
 coef(gradedResponseModel_ex, simplify = TRUE, IRTpars = TRUE)
 
-gradedResponseModelCoefficients_ex <- coef(gradedResponseModel_ex, simplify = TRUE, IRTpars = TRUE)$items
-gradedResponseModelSmallestA_ex <- min(gradedResponseModelCoefficients_ex[,"a"], na.rm = TRUE)
-gradedResponseModelLargestA_ex <- max(gradedResponseModelCoefficients_ex[,"a"], na.rm = TRUE)
+gradedResponseModelCoefficients_ex <- coef(
+  gradedResponseModel_ex,
+  simplify = TRUE,
+  IRTpars = TRUE
+)$items
+gradedResponseModelSmallestA_ex <- min(
+  gradedResponseModelCoefficients_ex[, "a"],
+  na.rm = TRUE
+)
+gradedResponseModelLargestA_ex <- max(
+  gradedResponseModelCoefficients_ex[, "a"],
+  na.rm = TRUE
+)
 ```
 
 ```{r}
@@ -3377,17 +4480,31 @@ gradedResponseModelLargestA_ex <- max(gradedResponseModelCoefficients_ex[,"a"], 
 
 #### Item Boundary Characteristic Curves (aka Item Operation Characteristic Curves)
 
-difficultyThresholds_ex <- grep("b", dimnames(gradedResponseModelCoefficients_ex)[[2]], value = TRUE)
+difficultyThresholds_ex <- grep(
+  "b",
+  dimnames(gradedResponseModelCoefficients_ex)[[2]],
+  value = TRUE
+)
 numberDifficultyThresholds_ex <- length(difficultyThresholds_ex)
 items_ex <- dimnames(gradedResponseModelCoefficients_ex)[[1]]
 numberOfItems_ex <- length(items_ex)
 
-lst_ex <- lapply(1:numberOfItems_ex, function(x) data.frame(matrix(ncol = numberDifficultyThresholds_ex + 1, nrow = length(theta), dimnames = list(NULL, c("theta", difficultyThresholds_ex)))))
+lst_ex <- lapply(1:numberOfItems_ex, function(x) {
+  data.frame(matrix(
+    ncol = numberDifficultyThresholds_ex + 1,
+    nrow = length(theta),
+    dimnames = list(NULL, c("theta", difficultyThresholds_ex))
+  ))
+})
 
-for(i in 1:numberOfItems_ex){
-  for(j in 1:numberDifficultyThresholds_ex){
-    lst_ex[[i]][,1] <- theta
-    lst_ex[[i]][,j+1] <- fourPL(a = gradedResponseModelCoefficients_ex[i,1], b = gradedResponseModelCoefficients_ex[i,j+1], theta = theta)
+for (i in 1:numberOfItems_ex) {
+  for (j in 1:numberDifficultyThresholds_ex) {
+    lst_ex[[i]][, 1] <- theta
+    lst_ex[[i]][, j + 1] <- fourPL(
+      a = gradedResponseModelCoefficients_ex[i, 1],
+      b = gradedResponseModelCoefficients_ex[i, j + 1],
+      theta = theta
+    )
   }
 }
 
@@ -3399,9 +4516,14 @@ longerData_ex <- pivot_longer(dat_ex, cols = all_of(difficultyThresholds_ex))
 ```{r}
 #| include: false
 
-ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color = item)) +
+ggplot(
+  longerData_ex,
+  aes(theta, value, group = interaction(item, name), color = item)
+) +
   geom_line() +
-  ylab("Probability of Endorsing an Item Response Category that is Higher than the Boundary")
+  ylab(
+    "Probability of Endorsing an Item Response Category that is Higher than the Boundary"
+  )
 ```
 
 ```{r}
@@ -3409,10 +4531,20 @@ ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color =
 
 # Multidimensional graded response model ---------------------------------
 
-multidimensionalModel_ex <- mirt(data = cnlsy[,c("bpi_antisocialT1_1","bpi_antisocialT1_2","bpi_antisocialT1_3","bpi_antisocialT1_4","bpi_antisocialT1_5","bpi_antisocialT1_6","bpi_antisocialT1_7")],
-                              model = 2,
-                              itemtype = "graded",
-                              SE = TRUE)
+multidimensionalModel_ex <- mirt(
+  data = cnlsy[, c(
+    "bpi_antisocialT1_1",
+    "bpi_antisocialT1_2",
+    "bpi_antisocialT1_3",
+    "bpi_antisocialT1_4",
+    "bpi_antisocialT1_5",
+    "bpi_antisocialT1_6",
+    "bpi_antisocialT1_7"
+  )],
+  model = 2,
+  itemtype = "graded",
+  SE = TRUE
+)
 ```
 
 ```{r}
@@ -3429,7 +4561,10 @@ coef(multidimensionalModel_ex, simplify = TRUE)
 
 anova(gradedResponseModel_ex, multidimensionalModel_ex)
 
-multidimensionalModelDiffTest <- anova(gradedResponseModel_ex, multidimensionalModel_ex)
+multidimensionalModelDiffTest <- anova(
+  gradedResponseModel_ex,
+  multidimensionalModel_ex
+)
 multidimensionalModelChiSquareDiff <- multidimensionalModelDiffTest$"X2"[2]
 multidimensionalModelDFDiff <- multidimensionalModelDiffTest$"df"[2]
 ```
@@ -3529,7 +4664,12 @@ Provide a possible explanation as two why some of the items "broke off" (from Fa
 #| fig-cap: "Exercise 1a: Item Characteristic Curves."
 #| fig-alt: "Exercise 1a: Item Characteristic Curves."
 
-plot(gradedResponseModel_ex, type = "itemscore", facet_items = FALSE, main = "Item Characteristic Curves")
+plot(
+  gradedResponseModel_ex,
+  type = "itemscore",
+  facet_items = FALSE,
+  main = "Item Characteristic Curves"
+)
 ```
 
 2.
@@ -3540,7 +4680,10 @@ plot(gradedResponseModel_ex, type = "itemscore", facet_items = FALSE, main = "It
 #| fig-cap: "Exercise 2b: Item Boundary Characteristic Curves."
 #| fig-alt: "Exercise 2b: Item Boundary Characteristic Curves."
 
-ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color = item)) +
+ggplot(
+  longerData_ex,
+  aes(theta, value, group = interaction(item, name), color = item)
+) +
   geom_line() +
   ylab("Probability of Item Boundary Endorsement") +
   theme_bw()
@@ -3561,7 +4704,12 @@ ggplot(longerData_ex, aes(theta, value, group = interaction(item, name), color =
 #| fig-cap: "Exercise 2c: Item Information Curves."
 #| fig-alt: "Exercise 2c: Item Information Curves."
 
-plot(gradedResponseModel_ex, type = "infotrace", facet_items = FALSE, main = "Item Information Curves")
+plot(
+  gradedResponseModel_ex,
+  type = "infotrace",
+  facet_items = FALSE,
+  main = "Item Information Curves"
+)
 ```
 
 2.
