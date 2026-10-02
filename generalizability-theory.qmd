@@ -63,8 +63,18 @@ Venn Diagram of Variance Components from a Generalizability Theory Model with Pe
 #| include: false
 
 gTheoryTable <- data.frame(
-  "source" = c("Person (p)", "Item (i)", "Occasion (o)", "p x i", "p x o", "i x o", "p x i x o", "residual"),
-  "percentVariance" = c(30, 5, 3, 25, 5, 2, 10, 20))
+  "source" = c(
+    "Person (p)",
+    "Item (i)",
+    "Occasion (o)",
+    "p x i",
+    "p x o",
+    "i x o",
+    "p x i x o",
+    "residual"
+  ),
+  "percentVariance" = c(30, 5, 3, 25, 5, 2, 10, 20)
+)
 ```
 
 ```{r}
@@ -74,9 +84,10 @@ gTheoryTable <- data.frame(
 
 knitr::kable(
   gTheoryTable,
-  col.names = c("Source","Variance Accounted For (%)"),
+  col.names = c("Source", "Variance Accounted For (%)"),
   caption.short = "Percent of Variance from Different Sources in Generalizability Theory Model With Three Facets: Person, Item, and Occasion (and Their Interactions).",
-  booktabs = TRUE)
+  booktabs = TRUE
+)
 ```
 
 A score's usefulness largely depends on the extent to which it allows us to generalize accurately to behavior in a wider set of situations—i.e., a universe of generalization.\index{generalizability theory}\index{generalizability theory!universe}
@@ -217,7 +228,8 @@ pio_cross_dat |>
   group_by(Person) |>
   summarise(
     universeScore = mean(Score, na.rm = TRUE),
-    .groups = "drop")
+    .groups = "drop"
+  )
 ```
 
 ### Generalizability (G) Study {#sec-gStudy-example}
@@ -233,8 +245,9 @@ Thus, when designing future studies, it would be important to assess and evaluat
 
 ```{r}
 summary(aov(
-  Score ~ Person*Item*Occasion,
-  data = pio_cross_dat))
+  Score ~ Person * Item * Occasion,
+  data = pio_cross_dat
+))
 ```
 
 #### Mixed Model Framework {#sec-gTheoryMixedModel}
@@ -264,7 +277,8 @@ decisionStudy <- dstudy(
   PxIxO,
   colname.objects = "Person",
   data = pio_cross_dat,
-  colname.scores = "Score")
+  colname.scores = "Score"
+)
 ```
 
 ### Generalizability Coefficient {#sec-generalizabilityCoefficient}
@@ -315,10 +329,10 @@ library("MOTE")
 #| include: false
 
 # Generalizability Theory -------------------------------------------------
-participant_ex <- rep(c(1,2,3), times = 6)
-occasion_ex <- rep(rep(c(1,2), each = 3), times = 3)
-rater_ex <- rep(c(1,2,3), each = 6)
-score_ex <- c(7,2,0,10,5,1,8,3,1,11,6,1,6,2,4,12,6,5)
+participant_ex <- rep(c(1, 2, 3), times = 6)
+occasion_ex <- rep(rep(c(1, 2), each = 3), times = 3)
+rater_ex <- rep(c(1, 2, 3), each = 6)
+score_ex <- c(7, 2, 0, 10, 5, 1, 8, 3, 1, 11, 6, 1, 6, 2, 4, 12, 6, 5)
 
 por_data_ex <- data.frame(participant_ex, occasion_ex, rater_ex, score_ex)
 
@@ -340,7 +354,12 @@ varOccasion_ex <- PxOxR_ex$components$percent[which(PxOxR_ex$components$source =
 varRaterXOccasion_ex <- PxOxR_ex$components$percent[which(PxOxR_ex$components$source == "rater_ex:occasion_ex")]
 
 #Calculate generalizability coefficients
-decisionStudy_ex <- dstudy(PxOxR_ex, colname.objects = "participant_ex", data = por_data_ex, colname.scores = "score_ex")
+decisionStudy_ex <- dstudy(
+  PxOxR_ex,
+  colname.objects = "participant_ex",
+  data = por_data_ex,
+  colname.scores = "score_ex"
+)
 decisionStudy_ex
 
 generalizabilityCoefficient_ex <- decisionStudy_ex$generalizability #analogous to reliability coefficient in classical test theory; uses relative error variance: relevant when relative (norm-referenced) decisions are made (e.g., percentiles)
@@ -363,7 +382,7 @@ The data from your study are in @tbl-evaluatingGeneralizabilityTable below:
 
 por_data_ex2 <- por_data_ex
 
-names(por_data_ex2) <- c("Participant","Occasion","Rater","Score")
+names(por_data_ex2) <- c("Participant", "Occasion", "Rater", "Score")
 ```
 
 ```{r}
@@ -373,7 +392,8 @@ names(por_data_ex2) <- c("Participant","Occasion","Rater","Score")
 
 kable(
   por_data_ex2,
-  booktabs = TRUE)
+  booktabs = TRUE
+)
 ```
 
 ### Answers {#sec-exercisesAnswers-gTheory}
