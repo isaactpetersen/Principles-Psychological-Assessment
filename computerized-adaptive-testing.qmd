@@ -251,7 +251,8 @@ coef(mod, simplify = TRUE, IRTpars = TRUE)
 modItemParameters <- coef(
   mod,
   simplify = TRUE,
-  IRTpars = TRUE)$items
+  IRTpars = TRUE
+)$items
 ```
 
 ### Model Plots {#sec-modelPlots-cat}
@@ -356,22 +357,23 @@ questions <- answers <- character(nitems)
 choices <- matrix("a", nitems, 5)
 spacing <- floor(d - min(d)) + 1 #easier items have more variation
 
-for(i in 1:nitems){
+for (i in 1:nitems) {
   n1 <- sample(1:100, 1)
   n2 <- sample(101:200, 1)
   ans <- n1 + n2
   questions[i] <- paste(n1, " + ", n2, " = ?", sep = "")
   answers[i] <- as.character(ans)
-  ch <- ans + sample(c(-5:-1, 1:5) * spacing[i,], 5)
+  ch <- ans + sample(c(-5:-1, 1:5) * spacing[i, ], 5)
   ch[sample(1:5, 1)] <- ans
-  choices[i,] <- as.character(ch)
+  choices[i, ] <- as.character(ch)
 }
 
 df <- data.frame(
   Questions = questions,
   Answer = answers,
   Option = choices,
-  Type = "radio")
+  Type = "radio"
+)
 ```
 
 ### Run Computerized Adaptive Test (CAT) {#sec-runCAT}
@@ -396,7 +398,8 @@ result <- mirtCAT(
   start_item = "MI",
   method = "EAP",
   criteria = "MI",
-  design = list(min_SEM = minimum_SEM))
+  design = list(min_SEM = minimum_SEM)
+)
 ```
 
 ```{r}
@@ -465,10 +468,13 @@ load(file = "./data/gradedResponseModel.RData")
 ```
 
 ```{r}
-numItemsGRM <- nrow(coef(
-  gradedResponseModel,
-  simplify = TRUE,
-  IRTpars = TRUE)$items)
+numItemsGRM <- nrow(
+  coef(
+    gradedResponseModel,
+    simplify = TRUE,
+    IRTpars = TRUE
+  )$items
+)
 
 names(Science)
 
@@ -490,14 +496,15 @@ numResponseOptionsGRM <- length(responseOptionsGRM)
 
 choicesGRM <- matrix("a", numItemsGRM, numResponseOptionsGRM)
 
-for(i in 1:numItemsGRM){
-  choicesGRM[i,] <- responseOptionsGRM
+for (i in 1:numItemsGRM) {
+  choicesGRM[i, ] <- responseOptionsGRM
 }
 
 dfGRM <- data.frame(
   Questions = questionsGRM,
   Option = choicesGRM,
-  Type = "radio")
+  Type = "radio"
+)
 ```
 
 ### Run Computerized Adaptive Test {#sec-cat-runModel}
@@ -513,7 +520,8 @@ resultGRM <- mirtCAT(
   start_item = "MI",
   method = "EAP",
   criteria = "MI",
-  design = list(min_SEM = minimum_SEM))
+  design = list(min_SEM = minimum_SEM)
+)
 ```
 
 ## Conclusion {#sec-conclusion-cat}
