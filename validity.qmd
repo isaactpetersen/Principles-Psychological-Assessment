@@ -68,7 +68,7 @@ covarianceMatrix <- psych::cor2cov(
   sigma = standardDeviations
 )
 
-mydataValidity <- as.data.frame(mvrnorm(
+mydataValidity <- as.data.frame(rockchalk::mvrnorm(
   n = sampleSize,
   mu = means,
   Sigma = covarianceMatrix,
@@ -296,7 +296,9 @@ For instance, a criterion could be a diagnosis, a child's achievement in school,
 Below, we provide an example of criterion-related validity by examining the [Pearson correlation](#sec-correlationConsiderations) between a predictor and a criterion.\index{validity!criterion}
 
 ```{r}
-cor.test(x = mydataValidity$predictor, y = mydataValidity$criterion)
+cor.test(
+  x = mydataValidity$predictor,
+  y = mydataValidity$criterion)
 ```
 
 ```{r}
@@ -732,7 +734,7 @@ modelCFA <- '
   speed   =~ x7 + x8 + x9
 '
 
-htmt(
+semTools::htmt(
   modelCFA,
   data = HolzingerSwineford1939,
   missing = "ml"
@@ -790,7 +792,7 @@ model_fixed <- '
  Spatial ~~ .5*Quant
 '
 
-MTMM_data <- sim_standardized(
+MTMM_data <- simstandard::sim_standardized(
   model_fixed,
   n = 10000,
   observed = TRUE,
@@ -855,7 +857,7 @@ knitr::kable(
 #| label: tbl-mtmmCorrelationEPUB
 #| tbl-cap: "Multitrait-Multimethod Correlation Matrix."
 
-kable(data.frame(round(cor(MTMM_data), 2)), booktabs = TRUE)
+knitr::kable(data.frame(round(cor(MTMM_data), 2)), booktabs = TRUE)
 ```
 
 :::
@@ -919,7 +921,7 @@ modelMTMM <- '
    QM1 + QM2 + QM3
 '
 
-MTMM.fit <- cfa(
+MTMM.fit <- lavaan::cfa(
   modelMTMM,
   data = MTMM_data,
   orthogonal = TRUE,
@@ -941,7 +943,7 @@ A path diagram of the model is depicted in @fig-mtmmCFAFigure using the `semPlot
 #| fig-cap: "Multitrait-Multimethod Model in Confirmatory Factor Analysis."
 #| fig-alt: "Multitrait-Multimethod Model in Confirmatory Factor Analysis."
 
-semPaths(
+semPlot::semPaths(
   MTMM.fit,
   what = "std",
   layout = "tree3",
@@ -982,7 +984,7 @@ model2Rsquare <- summary(model2)$r.squared
 model1RsquareAdj <- summary(model1)$adj.r.squared
 model2RsquareAdj <- summary(model2)$adj.r.squared
 
-deltaRsquare <- getDeltaRsquare(model2)[["predictor"]]
+deltaRsquare <- rockchalk::getDeltaRsquare(model2)[["predictor"]]
 deltaRsquareAdj <- model2RsquareAdj - model1RsquareAdj
 
 deltaRsquareAdj
@@ -1459,10 +1461,10 @@ reliabilityOfCriterion <- 0.85
 trueAssociation * sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
 ```
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!attenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
 
 ```{r}
-attenuationCorrelation(
+petersenlab::attenuationCorrelation(
   trueAssociation = 0.7,
   reliabilityOfPredictor = 0.9,
   reliabilityOfCriterion = 0.85
@@ -1472,7 +1474,7 @@ attenuationCorrelation(
 ```{r}
 #| include: false
 
-attenuatedAssociation <- attenuationCorrelation(
+attenuatedAssociation <- petersenlab::attenuationCorrelation(
   trueAssociation = 0.7,
   reliabilityOfPredictor = 0.9,
   reliabilityOfCriterion = 0.85
@@ -1520,10 +1522,10 @@ The true (disattenuated) association is as follows:\index{measurement error!disa
 observedAssociation / sqrt(reliabilityOfPredictor * reliabilityOfCriterion)
 ```
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion:\index{measurement error!disattenuation of association}\index{measurement error!random error}\index{true association}\index{observed association}\index{reliability}\index{validity!coefficient of}\index{petersenlab package}
 
 ```{r}
-disattenuationCorrelation(
+petersenlab::disattenuationCorrelation(
   observedAssociation = observedAssociation,
   reliabilityOfPredictor = 0.9,
   reliabilityOfCriterion = 0.85
@@ -1551,7 +1553,7 @@ observedSEM_syntax <- '
   criterionObservedSEM ~~ criterionObservedSEM
 '
 
-observedSEM_fit <- sem(
+observedSEM_fit <- lavaan::sem(
   observedSEM_syntax,
   data = mydataValidity,
   missing = "ML"
@@ -1562,13 +1564,13 @@ summary(
   standardized = TRUE
 )
 
-lavInspect(observedSEM_fit, "rsquare")
+lavaan::lavInspect(observedSEM_fit, "rsquare")
 ```
 
 ```{r}
 #| include: false
 
-observedSEM_parameters <- parameterEstimates(
+observedSEM_parameters <- lavaan::parameterEstimates(
   observedSEM_fit,
   standardized = TRUE
 )
@@ -1589,7 +1591,7 @@ A path diagram of the observed association is depicted in @fig-observedSEM.\inde
 #| fig-cap: "Observed Association, as Depicted in a Structural Equation Model."
 #| fig-alt: "Observed Association, as Depicted in a Structural Equation Model."
 
-semPaths(
+semPlot::semPaths(
   observedSEM_fit,
   what = "Std.all",
   layout = "tree2",
@@ -1637,7 +1639,7 @@ disattenuationTraditionalSEM_syntax <- '
   criterionObservedSEM ~~ (1 - .85)*criterionObservedSEM # where .85 is the reliability of the criterion
 '
 
-disattenuationSEM_fit <- sem(
+disattenuationSEM_fit <- lavaan::sem(
   disattenuationSEM_syntax,
   data = mydataValidity,
   missing = "ML"
@@ -1653,7 +1655,7 @@ summary(
 ```{r}
 #| include: false
 
-disattenuationSEM_parameters <- parameterEstimates(
+disattenuationSEM_parameters <- lavaan::parameterEstimates(
   disattenuationSEM_fit,
   standardized = TRUE
 )
@@ -1674,7 +1676,7 @@ A path diagram of the true association is depicted in Figures [-@fig-disattenuat
 #| fig-cap: "Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model."
 #| fig-alt: "Disattenuation of an Observed Association Due to Measurement Error, as Depicted in a Structural Equation Model."
 
-semPaths(
+semPlot::semPaths(
   disattenuationSEM_fit,
   what = "Std.all",
   layout = "tree2",

@@ -1712,7 +1712,7 @@ Tests of DIF were conducted using the `mirt` package [@R-mirt].\index{item respo
 ### Item Descriptive Statistics {#sec-descriptiveStats-bias}
 
 ```{r}
-itemstats(
+mirt::itemstats(
   data = cnlsy[, c(
     "bpi_antisocialT1_1",
     "bpi_antisocialT1_2",
@@ -1734,7 +1734,7 @@ itemstats(
 ```{r}
 #| output: false
 
-unconstrainedModel <- multipleGroup(
+unconstrainedModel <- mirt::multipleGroup(
   data = cnlsy[, c(
     "bpi_antisocialT1_1",
     "bpi_antisocialT1_2",
@@ -1759,7 +1759,11 @@ Items that appear to differ:\index{item response theory!differential item functi
 
 ```{r}
 summary(unconstrainedModel)
-coef(unconstrainedModel, simplify = TRUE, IRTpars = TRUE)
+
+mirt::coef(
+  unconstrainedModel,
+  simplify = TRUE,
+  IRTpars = TRUE)
 ```
 
 ### Constrained Model {#sec-difConstrained}
@@ -1771,7 +1775,7 @@ Constrain item parameters to be equal across groups (to use as baseline model fo
 ```{r}
 #| output: false
 
-constrainedModel <- multipleGroup(
+constrainedModel <- mirt::multipleGroup(
   data = cnlsy[, c(
     "bpi_antisocialT1_1",
     "bpi_antisocialT1_2",
@@ -1804,7 +1808,8 @@ constrainedModel <- multipleGroup(
 
 ```{r}
 summary(constrainedModel)
-coef(
+
+mirt::coef(
   constrainedModel,
   simplify = TRUE,
   IRTpars = TRUE
@@ -1818,7 +1823,9 @@ The constrained model is nested within the unconstrained model because the uncon
 Model fit of nested models can be compared with a chi-square difference test.\index{item response theory!differential item functioning}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
-anova(constrainedModel, unconstrainedModel)
+anova(
+  constrainedModel,
+  unconstrainedModel)
 ```
 
 The constrained model fits significantly worse than the unconstrained model, which suggests that item parameters differ between males and females.\index{item response theory!differential item functioning}
@@ -1834,7 +1841,7 @@ Items 1, 3, 4, 5, 6, and 7 showed [DIF](#sec-dif) in [discrimination](#sec-itemD
 \index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{item response theory!item difficulty}
 
 ```{r}
-difDropItems <- DIF(
+difDropItems <- mirt::DIF(
   constrainedModel,
   c("a1", "d1", "d2"),
   scheme = "drop",
@@ -1849,7 +1856,7 @@ difDropItems
 Items 1, 3, 4, and 5 showed [DIF](#sec-dif) in [discrimination](#sec-itemDiscrimination), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item discrimination}\index{chi-square!difference test}
 
 ```{r}
-difDropItemsDiscrimination <- DIF(
+difDropItemsDiscrimination <- mirt::DIF(
   constrainedModel,
   c("a1"),
   scheme = "drop",
@@ -1864,7 +1871,7 @@ difDropItemsDiscrimination
 Items 1, 3, 4, 5, and 7 showed [DIF](#sec-dif) in [difficulty/severity](#sec-itemDifficulty), based on a significant chi-square difference test.\index{item response theory!differential item functioning}\index{item response theory!item difficulty}\index{chi-square!difference test}
 
 ```{r}
-difDropItemsSeverity <- DIF(
+difDropItemsSeverity <- mirt::DIF(
   constrainedModel,
   c("d1", "d2"),
   scheme = "drop",
@@ -1889,7 +1896,7 @@ The [DIF](#sec-dif) in [discrimination](#sec-itemDiscrimination) and/or [severit
 #| fig-alt: "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination and/or Severity."
 #| fig-show: "hold"
 
-difAddItems <- DIF(
+difAddItems <- mirt::DIF(
   unconstrainedModel,
   c("a1", "d1", "d2"),
   scheme = "add",
@@ -1911,7 +1918,7 @@ The [DIF](#sec-dif) in [discrimination](#sec-itemDiscrimination) is depicted in 
 #| fig-alt: "Item Probability Functions for Examining Differential Item Functioning in Terms of Discrimination."
 #| fig-show: "hold"
 
-difAddItemsDiscrimination <- DIF(
+difAddItemsDiscrimination <- mirt::DIF(
   unconstrainedModel,
   c("a1"),
   scheme = "add",
@@ -1933,7 +1940,7 @@ The [DIF](#sec-dif) in [difficulty/severity](#sec-itemDifficulty) is depicted in
 #| fig-alt: "Item Probability Functions for Examining Differential Item Functioning in Terms of Severity."
 #| fig-show: "hold"
 
-difAddItemsSeverity <- DIF(
+difAddItemsSeverity <- mirt::DIF(
   unconstrainedModel,
   c("d1", "d2"),
   scheme = "add",
@@ -1959,7 +1966,7 @@ Estimates of differential test functioning are in @tbl-testLevelDIF.\index{item 
 #| label: tbl-testLevelDIF
 #| tbl-cap: "Estimates of Differential Test Functioning."
 
-empirical_ES(
+mirt::empirical_ES(
   unconstrainedModel,
   DIF = FALSE
 )
@@ -1974,7 +1981,7 @@ Otherwise said, it takes a higher construct level for females to obtain the same
 #| fig-cap: "Differential Test Functioning by Sex."
 #| fig-alt: "Differential Test Functioning by Sex."
 
-empirical_ES(
+mirt::empirical_ES(
   unconstrainedModel,
   DIF = FALSE,
   plot = TRUE
@@ -1990,7 +1997,7 @@ Estimates of [differential item functioning](#sec-dif) are in @tbl-itemLevelDIF.
 #| label: tbl-itemLevelDIF
 #| tbl-cap: "Estimates of Differential Item Functioning."
 
-empirical_ES(
+mirt::empirical_ES(
   unconstrainedModel,
   DIF = TRUE
 ) |>
@@ -2006,7 +2013,7 @@ Otherwise said, it takes a higher construct level for females than males to endo
 #| fig-cap: "Differential Item Functioning by Sex."
 #| fig-alt: "Differential Item Functioning by Sex."
 
-empirical_ES(
+mirt::empirical_ES(
   unconstrainedModel,
   DIF = TRUE,
   plot = TRUE
@@ -2022,7 +2029,7 @@ Plots of item response category characteristic curves by sex are in Figures [-@f
 #| fig-cap: "Item Response Category Characteristic Curves by Sex: Item 1."
 #| fig-alt: "Item Response Category Characteristic Curves by Sex: Item 1."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_1",
   type = "trace",
@@ -2035,7 +2042,7 @@ itemplot(
 #| fig-cap: "Item Response Category Characteristic Curves by Sex: Item 2."
 #| fig-alt: "Item Response Category Characteristic Curves by Sex: Item 2."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_2",
   type = "trace",
@@ -2048,7 +2055,7 @@ itemplot(
 #| fig-cap: "Item Response Category Characteristic Curves by Sex: Item 3."
 #| fig-alt: "Item Response Category Characteristic Curves by Sex: Item 3."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_3",
   type = "trace",
@@ -2061,7 +2068,7 @@ itemplot(
 #| fig-cap: "Item Response Category Characteristic Curves by Sex: Item 4."
 #| fig-alt: "Item Response Category Characteristic Curves by Sex: Item 4."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
   type = "trace",
@@ -2074,7 +2081,7 @@ itemplot(
 #| fig-cap: "Item Response Category Characteristic Curves by Sex: Item 5."
 #| fig-alt: "Item Response Category Characteristic Curves by Sex: Item 5."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_5",
   type = "trace",
@@ -2087,7 +2094,7 @@ itemplot(
 #| fig-cap: "Item Response Category Characteristic Curves by Sex: Item 6."
 #| fig-alt: "Item Response Category Characteristic Curves by Sex: Item 6."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
   type = "trace",
@@ -2100,7 +2107,7 @@ itemplot(
 #| fig-cap: "Item Response Category Characteristic Curves by Sex: Item 7."
 #| fig-alt: "Item Response Category Characteristic Curves by Sex: Item 7."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_7",
   type = "trace",
@@ -2117,7 +2124,7 @@ Items 2, 4, and 7 showed greater [information](#sec-irtReliability) for females 
 #| fig-cap: "Item Information Curves by Sex: Item 1."
 #| fig-alt: "Item Information Curves by Sex: Item 1."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_1",
   type = "info",
@@ -2130,7 +2137,7 @@ itemplot(
 #| fig-cap: "Item Information Curves by Sex: Item 2."
 #| fig-alt: "Item Information Curves by Sex: Item 2."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_2",
   type = "info",
@@ -2143,7 +2150,7 @@ itemplot(
 #| fig-cap: "Item Information Curves by Sex: Item 3."
 #| fig-alt: "Item Information Curves by Sex: Item 3."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_3",
   type = "info",
@@ -2156,7 +2163,7 @@ itemplot(
 #| fig-cap: "Item Information Curves by Sex: Item 4."
 #| fig-alt: "Item Information Curves by Sex: Item 4."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
   type = "info",
@@ -2169,7 +2176,7 @@ itemplot(
 #| fig-cap: "Item Information Curves by Sex: Item 5."
 #| fig-alt: "Item Information Curves by Sex: Item 5."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_5",
   type = "info",
@@ -2182,7 +2189,7 @@ itemplot(
 #| fig-cap: "Item Information Curves by Sex: Item 6."
 #| fig-alt: "Item Information Curves by Sex: Item 6."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
   type = "info",
@@ -2195,7 +2202,7 @@ itemplot(
 #| fig-cap: "Item Information Curves by Sex: Item 7."
 #| fig-alt: "Item Information Curves by Sex: Item 7."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_7",
   type = "info",
@@ -2210,7 +2217,7 @@ Plots of expected item scores by sex are are in Figures [-@fig-itemScore1]–[-@
 #| fig-cap: "Expected Item Score by Sex: Item 1."
 #| fig-alt: "Expected Item Score by Sex: Item 1."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_1",
   type = "score",
@@ -2223,7 +2230,7 @@ itemplot(
 #| fig-cap: "Expected Item Score by Sex: Item 2."
 #| fig-alt: "Expected Item Score by Sex: Item 2."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_2",
   type = "score",
@@ -2236,7 +2243,7 @@ itemplot(
 #| fig-cap: "Expected Item Score by Sex: Item 3."
 #| fig-alt: "Expected Item Score by Sex: Item 3."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_3",
   type = "score",
@@ -2249,7 +2256,7 @@ itemplot(
 #| fig-cap: "Expected Item Score by Sex: Item 4."
 #| fig-alt: "Expected Item Score by Sex: Item 4."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_4",
   type = "score",
@@ -2262,7 +2269,7 @@ itemplot(
 #| fig-cap: "Expected Item Score by Sex: Item 5."
 #| fig-alt: "Expected Item Score by Sex: Item 5."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_5",
   type = "score",
@@ -2275,7 +2282,7 @@ itemplot(
 #| fig-cap: "Expected Item Score by Sex: Item 6."
 #| fig-alt: "Expected Item Score by Sex: Item 6."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_6",
   type = "score",
@@ -2288,7 +2295,7 @@ itemplot(
 #| fig-cap: "Expected Item Score by Sex: Item 7."
 #| fig-alt: "Expected Item Score by Sex: Item 7."
 
-itemplot(
+mirt::itemplot(
   unconstrainedModel,
   "bpi_antisocialT1_7",
   type = "score",
@@ -2312,7 +2319,7 @@ However, this can lead to lower [reliability](#sec-reliability) and weaker abili
 ```{r}
 #| output: false
 
-constrainedModelDropItem5 <- multipleGroup(
+constrainedModelDropItem5 <- mirt::multipleGroup(
   data = cnlsy[, c(
     "bpi_antisocialT1_1",
     "bpi_antisocialT1_2",
@@ -2338,7 +2345,9 @@ constrainedModelDropItem5 <- multipleGroup(
   SE = TRUE
 )
 
-coef(constrainedModelDropItem5, simplify = TRUE)
+mirt::coef(
+  constrainedModelDropItem5,
+  simplify = TRUE)
 ```
 
 #### Drop item for one group but not another group {#sec-dropItemForOneGroup}
@@ -2358,7 +2367,7 @@ dropItem5ForMen[
   "bpi_antisocialT1_5"
 ] <- NA
 
-constrainedModelDropItem5ForMen <- multipleGroup(
+constrainedModelDropItem5ForMen <- mirt::multipleGroup(
   data = dropItem5ForMen[, c(
     "bpi_antisocialT1_1",
     "bpi_antisocialT1_2",
@@ -2386,7 +2395,9 @@ constrainedModelDropItem5ForMen <- multipleGroup(
   SE = TRUE
 )
 
-coef(constrainedModelDropItem5ForMen, simplify = TRUE)
+mirt::coef(
+  constrainedModelDropItem5ForMen,
+  simplify = TRUE)
 ```
 
 #### Freely estimate item to have different parameters across groups {#sec-resolveItemAcrossGroups}
@@ -2397,7 +2408,7 @@ You might do this if the item is [valid](#sec-validity) for both men and women, 
 ```{r}
 #| output: false
 
-constrainedModelResolveItem5 <- multipleGroup(
+constrainedModelResolveItem5 <- mirt::multipleGroup(
   data = cnlsy[, c(
     "bpi_antisocialT1_1",
     "bpi_antisocialT1_2",
@@ -2424,7 +2435,9 @@ constrainedModelResolveItem5 <- multipleGroup(
   SE = TRUE
 )
 
-coef(constrainedModelResolveItem5, simplify = TRUE)
+mirt::coef(
+  constrainedModelResolveItem5,
+  simplify = TRUE)
 ```
 
 #### Compare model fit {#sec-difResolveItemsCompareModels}
@@ -2433,9 +2446,17 @@ We can compare the model fit against the fully constrained model.\index{item res
 In this case, all three of these approaches for handling [DIF](#sec-dif) resulted in improvement in model fit based on AIC and, for the two nested models, the chi-square difference test.\index{item response theory!differential item functioning}\index{bias!correcting for!resolve biased items}\index{bias!correcting for!remove biased items}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
-anova(constrainedModel, constrainedModelDropItem5)
-anova(constrainedModel, constrainedModelDropItem5ForMen)
-anova(constrainedModel, constrainedModelResolveItem5)
+anova(
+  constrainedModel,
+  constrainedModelDropItem5)
+
+anova(
+  constrainedModel,
+  constrainedModelDropItem5ForMen)
+  
+anova(
+  constrainedModel,
+  constrainedModelResolveItem5)
 ```
 
 #### Next steps {#sec-difNextSteps}
@@ -2444,7 +2465,7 @@ Whichever of these approaches we select, we would then identify and handle the r
 For instance, if we chose to resolve [DIF](#sec-dif) in item 5 by allowing the item to have different parameters across both groups, we would then iteratively drop constraints to see which items continue to show non-negligible [DIF](#sec-dif).\index{item response theory!differential item functioning}\index{bias!correcting for!resolve biased items}
 
 ```{r}
-difDropItemsNew <- DIF(
+difDropItemsNew <- mirt::DIF(
   constrainedModelResolveItem5,
   c("a1", "d1", "d2"),
   scheme = "drop",
@@ -2458,7 +2479,7 @@ difDropItemsNew <- DIF(
 #| echo: false
 
 difDropItemsNew |>
-  kable(
+  knitr::kable(
     booktabs = TRUE,
     linesep = ""
   )
@@ -2863,7 +2884,7 @@ moreAFIs <- NULL # c("gammaHat","gammaHat.scaled")
 ```{r}
 #| label: nullFit
 
-nullModelFit <- lavaan(
+nullModelFit <- lavaan::lavaan(
   nullModel,
   data = HolzingerSwineford1939,
   group = "school",
@@ -2892,7 +2913,7 @@ Specify the same number of factors in each group, and which indicators load on w
 ```{r}
 #| label: configuralInvarianceModelSyntax1
 
-configuralInvarianceModel <- measEq.syntax(
+configuralInvarianceModel <- semTools::measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
@@ -2919,7 +2940,7 @@ summary(configuralInvarianceModel)
 ##### Model Syntax in Table Form {#sec-measurementInvarianceConfiguralModelTabular}
 
 ```{r}
-lavaanify(cfaModel, ngroups = 2)
+lavaan::lavaanify(cfaModel, ngroups = 2)
 ```
 
 #### Fit the Model {#sec-measurementInvarianceConfiguralModelFit}
@@ -2927,7 +2948,7 @@ lavaanify(cfaModel, ngroups = 2)
 ```{r}
 #| label: configuralInvarianceModelFit
 
-configuralInvarianceModel_fit <- cfa(
+configuralInvarianceModel_fit <- lavaan::cfa(
   configuralInvarianceSyntax,
   data = HolzingerSwineford1939,
   group = "school",
@@ -2939,7 +2960,7 @@ configuralInvarianceModel_fit <- cfa(
 ```{r}
 #| label: configuralInvarianceModelFitFull
 
-configuralInvarianceModelFullSyntax_fit <- lavaan(
+configuralInvarianceModelFullSyntax_fit <- lavaan::lavaan(
   cfaModel_configuralInvariance,
   data = HolzingerSwineford1939,
   group = "school",
@@ -2973,9 +2994,9 @@ summary(
 You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!configural}
 
 ```{r}
-fitMeasures(configuralInvarianceModel_fit)
+lavaan::fitMeasures(configuralInvarianceModel_fit)
 
-configuralInvarianceModelFitIndices <- fitMeasures(
+configuralInvarianceModelFitIndices <- lavaan::fitMeasures(
   configuralInvarianceModel_fit
 )[c(
   "cfi.robust",
@@ -2983,19 +3004,19 @@ configuralInvarianceModelFitIndices <- fitMeasures(
   "srmr"
 )]
 
-configuralInvarianceModel_chisquare <- fitMeasures(
+configuralInvarianceModel_chisquare <- lavaan::fitMeasures(
   configuralInvarianceModel_fit
 )[c("chisq.scaled")]
 
-configuralInvarianceModel_chisquareScaling <- fitMeasures(
+configuralInvarianceModel_chisquareScaling <- lavaan::fitMeasures(
   configuralInvarianceModel_fit
 )[c("chisq.scaling.factor")]
 
-configuralInvarianceModel_df <- fitMeasures(
+configuralInvarianceModel_df <- lavaan::fitMeasures(
   configuralInvarianceModel_fit
 )[c("df.scaled")]
 
-configuralInvarianceModel_N <- lavInspect(
+configuralInvarianceModel_N <- lavaan::lavInspect(
   configuralInvarianceModel_fit,
   what = "ntotal"
 )
@@ -3006,10 +3027,10 @@ configuralInvarianceModel_N <- lavInspect(
 The effect size of measurement non-invariance, as described by @Nye2019, was calculated using the `dmacs` package [@R-dmacs].\index{structural equation modeling!measurement invariance!configural}\index{effect size}
 
 ```{r}
-lavaan_dmacs(configuralInvarianceModel_fit)
+dmacs::lavaan_dmacs(configuralInvarianceModel_fit)
 ```
 
-The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
+The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `petersenlab::measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
 
 ```{r}
 petersenlab::measurementNoninvarianceEffectSize(
@@ -3020,7 +3041,7 @@ petersenlab::measurementNoninvarianceEffectSize(
 
 #### Equivalence Test {#sec-measurementInvarianceConfiguralModelEquivalenceTest}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
 An equivalence test evaluates the null hypothesis that a model is equivalent to another model.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 In this case, the equivalence test evaluates the null hypothesis that a model is equivalent to another model in terms of (poor) fit.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 Here, we operationalize a mediocre-fitting model as a model whose RMSEA is .08 or greater.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
@@ -3031,7 +3052,7 @@ The chi-square equivalence test is non-significant, suggesting that the model fi
 In other words, configural invariance failed.\index{structural equation modeling!measurement invariance!configural}\index{chi-square!equivalence test}
 
 ```{r}
-equiv_chi(
+petersenlab::equiv_chi(
   alpha = .05,
   chi = configuralInvarianceModel_chisquare,
   df = configuralInvarianceModel_df,
@@ -3066,7 +3087,7 @@ You can reduce the number of iterations to be faster.
 #| output: false
 
 set.seed(52242)
-configuralInvarianceTest <- permuteMeasEq(
+configuralInvarianceTest <- semTools::permuteMeasEq(
   nPermute = numPermutations,
   modelType = "mgcfa",
   con = configuralInvarianceModel_fit,
@@ -3093,9 +3114,9 @@ In other words, configural invariance held.\index{structural equation modeling!m
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(configuralInvarianceModel_fit)
-AVE(configuralInvarianceModel_fit)
-maximalRelia(configuralInvarianceModel_fit)
+semTools::compRelSEM(configuralInvarianceModel_fit)
+semTools::AVE(configuralInvarianceModel_fit)
+semTools::maximalRelia(configuralInvarianceModel_fit)
 ```
 
 #### Path Diagram {#sec-measurementInvariancePathDiagram}
@@ -3107,7 +3128,7 @@ A path diagram of the model generated using the `semPlot` package [@R-semPlot] i
 #| fig-cap: "Configural Invariance Model in Confirmatory Factor Analysis (1 = Group 1; 2 = Group 2)."
 #| fig-alt: "Configural Invariance Model in Confirmatory Factor Analysis (1 = Group 1; 2 = Group 2)."
 
-semPaths(
+semPlot::semPaths(
   configuralInvarianceModel_fit,
   what = "est",
   layout = "tree2",
@@ -3126,7 +3147,7 @@ Specify invariance of factor loadings across groups.\index{structural equation m
 #| label: metricInvarianceModelSyntax1
 #| output: false
 
-metricInvarianceModel <- measEq.syntax(
+metricInvarianceModel <- semTools::measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
@@ -3154,8 +3175,8 @@ summary(metricInvarianceModel)
 #### Model Syntax in Table Form {#sec-measurementInvarianceMetricModelTabular}
 
 ```{r}
-lavaanify(metricInvarianceModel, ngroups = 2)
-lavaanify(cfaModel_metricInvariance, ngroups = 2)
+lavaan::lavaanify(metricInvarianceModel, ngroups = 2)
+lavaan::lavaanify(cfaModel_metricInvariance, ngroups = 2)
 ```
 
 #### Fit the Model {#sec-measurementInvarianceMetricModelFit}
@@ -3163,7 +3184,7 @@ lavaanify(cfaModel_metricInvariance, ngroups = 2)
 ```{r}
 #| label: metricInvarianceModelFit
 
-metricInvarianceModel_fit <- cfa(
+metricInvarianceModel_fit <- lavaan::cfa(
   metricInvarianceSyntax,
   data = HolzingerSwineford1939,
   group = "school",
@@ -3175,7 +3196,7 @@ metricInvarianceModel_fit <- cfa(
 ```{r}
 #| label: metricInvarianceModelFitFull
 
-metricInvarianceModelFullSyntax_fit <- lavaan(
+metricInvarianceModelFullSyntax_fit <- lavaan::lavaan(
   cfaModel_metricInvariance,
   data = HolzingerSwineford1939,
   group = "school",
@@ -3209,9 +3230,9 @@ summary(
 You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!metric}
 
 ```{r}
-fitMeasures(metricInvarianceModel_fit)
+lavaan::fitMeasures(metricInvarianceModel_fit)
 
-metricInvarianceModelFitIndices <- fitMeasures(
+metricInvarianceModelFitIndices <- lavaan::fitMeasures(
   metricInvarianceModel_fit
 )[c(
   "cfi.robust",
@@ -3219,19 +3240,19 @@ metricInvarianceModelFitIndices <- fitMeasures(
   "srmr"
 )]
 
-metricInvarianceModel_chisquare <- fitMeasures(
+metricInvarianceModel_chisquare <- lavaan::fitMeasures(
   metricInvarianceModel_fit
 )[c("chisq.scaled")]
 
-metricInvarianceModel_chisquareScaling <- fitMeasures(
+metricInvarianceModel_chisquareScaling <- lavaan::fitMeasures(
   metricInvarianceModel_fit
 )[c("chisq.scaling.factor")]
 
-metricInvarianceModel_df <- fitMeasures(
+metricInvarianceModel_df <- lavaan::fitMeasures(
   metricInvarianceModel_fit
 )[c("df.scaled")]
 
-metricInvarianceModel_N <- lavInspect(
+metricInvarianceModel_N <- lavaan::lavInspect(
   metricInvarianceModel_fit,
   what = "ntotal"
 )
@@ -3247,19 +3268,21 @@ Model fit of nested models can be compared with a chi-square difference test, al
 A significant chi-square difference test would indicate that the simplified model with additional constraints (the metric invariance model) is significantly worse fitting than the more complex model that has fewer constraints (the configural invariance model).\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}\index{structural equation modeling!measurement invariance!configural}
 
 ```{r}
-anova(configuralInvarianceModel_fit, metricInvarianceModel_fit)
+anova(
+  configuralInvarianceModel_fit,
+  metricInvarianceModel_fit)
 ```
 
 The metric invariance model did not fit significantly worse than the configural invariance model, so metric invariance held.\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}\index{structural equation modeling!measurement invariance!configural}
 This provides evidence of measurement invariance of factor loadings across groups.\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}\index{structural equation modeling!measurement invariance!configural}\index{structural equation modeling!factor loading}
 Measurement invariance of factor loadings across groups provides support for examining whether the groups show different associations of the factor with other constructs [@Little2007].\index{structural equation modeling!measurement invariance!metric}\index{structural equation modeling!factor loading}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
 Below is a Satorra-Bentler scaled chi-square difference test, where $c0$ and $c1$ are the scaling correction factor for the nested model and comparison model, respectively; $d0$ and $d1$ are the degrees of freedom of the nested model and comparison model, respectively; and $T0$ and $T1$ are the chi-square values of the nested model and comparison model, respectively.\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
 metricInvarianceModel_chisquareDiff <-
-  satorraBentlerScaledChiSquareDifferenceTestStatistic(
+  petersenlab::satorraBentlerScaledChiSquareDifferenceTestStatistic(
     T0 = metricInvarianceModel_chisquare,
     c0 = metricInvarianceModel_chisquareScaling,
     d0 = metricInvarianceModel_df,
@@ -3299,7 +3322,7 @@ strucchange::sctest(
 A score-based test and expected parameter change (EPC) estimates [@Oberski2014; @Oberski2015] are provided by the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement invariance!metric}
 
 ```{r}
-lavTestScore(
+lavaan::lavTestScore(
   metricInvarianceModel_fit,
   epc = TRUE
 )
@@ -3310,10 +3333,10 @@ lavTestScore(
 The effect size of measurement non-invariance, as described by @Nye2019, was calculated using the `dmacs` package [@R-dmacs].\index{structural equation modeling!measurement invariance!configural}\index{effect size}
 
 ```{r}
-lavaan_dmacs(metricInvarianceModel_fit)
+dmacs::lavaan_dmacs(metricInvarianceModel_fit)
 ```
 
-The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
+The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `petersenlab::measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
 
 ```{r}
 petersenlab::measurementNoninvarianceEffectSize(
@@ -3324,11 +3347,11 @@ petersenlab::measurementNoninvarianceEffectSize(
 
 ##### Equivalence Test {#sec-measurementInvarianceMetricModelEquivalenceTest}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.\index{structural equation modeling!measurement invariance!metric}\index{chi-square!equivalence test}
 
 ```{r}
-equiv_chi(
+petersenlab::equiv_chi(
   alpha = .05,
   chi = metricInvarianceModel_chisquare,
   df = metricInvarianceModel_df,
@@ -3345,7 +3368,7 @@ In other words, metric invariance failed.\index{structural equation modeling!mea
 metricInvarianceModel_dfDiff <-
   metricInvarianceModel_df - configuralInvarianceModel_df
 
-equiv_chi(
+petersenlab::equiv_chi(
   alpha = .05,
   chi = metricInvarianceModel_chisquareDiff,
   df = metricInvarianceModel_dfDiff,
@@ -3371,7 +3394,7 @@ You can reduce the number of iterations to be faster.
 #| output: false
 
 set.seed(52242)
-metricInvarianceTest <- permuteMeasEq(
+metricInvarianceTest <- semTools::permuteMeasEq(
   nPermute = numPermutations,
   modelType = "mgcfa",
   con = metricInvarianceModel_fit,
@@ -3398,9 +3421,9 @@ In other words, metric invariance held.\index{structural equation modeling!measu
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(metricInvarianceModel_fit)
-AVE(metricInvarianceModel_fit)
-maximalRelia(metricInvarianceModel_fit)
+semTools::compRelSEM(metricInvarianceModel_fit)
+semTools::AVE(metricInvarianceModel_fit)
+semTools::maximalRelia(metricInvarianceModel_fit)
 ```
 
 #### Path Diagram {#sec-measurementInvarianceMetricModelPathDiagram}
@@ -3412,7 +3435,7 @@ A path diagram of the model generated using the `semPlot` package [@R-semPlot] i
 #| fig-cap: "Metric Invariance Model in Confirmatory Factor Analysis."
 #| fig-alt: "Metric Invariance Model in Confirmatory Factor Analysis."
 
-semPaths(
+semPlot::semPaths(
   metricInvarianceModel_fit,
   what = "est",
   layout = "tree2",
@@ -3430,7 +3453,7 @@ Specify invariance of factor loadings and intercepts across groups.\index{struct
 ```{r}
 #| label: scalarInvarianceModelSyntax1
 
-scalarInvarianceModel <- measEq.syntax(
+scalarInvarianceModel <- semTools::measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
@@ -3458,8 +3481,8 @@ summary(scalarInvarianceModel)
 #### Model Syntax in Table Form {#sec-measurementInvarianceScalarModelTabular}
 
 ```{r}
-lavaanify(scalarInvarianceModel, ngroups = 2)
-lavaanify(cfaModel_scalarInvariance, ngroups = 2)
+lavaan::lavaanify(scalarInvarianceModel, ngroups = 2)
+lavaan::lavaanify(cfaModel_scalarInvariance, ngroups = 2)
 ```
 
 #### Fit the Model {#sec-measurementInvarianceScalarModelFit}
@@ -3467,7 +3490,7 @@ lavaanify(cfaModel_scalarInvariance, ngroups = 2)
 ```{r}
 #| label: scalarInvarianceModelFit
 
-scalarInvarianceModel_fit <- cfa(
+scalarInvarianceModel_fit <- lavaan::cfa(
   scalarInvarianceSyntax,
   data = HolzingerSwineford1939,
   group = "school",
@@ -3479,7 +3502,7 @@ scalarInvarianceModel_fit <- cfa(
 ```{r}
 #| label: scalarInvarianceModelFitFull
 
-scalarInvarianceModelFullSyntax_fit <- lavaan(
+scalarInvarianceModelFullSyntax_fit <- lavaan::lavaan(
   cfaModel_scalarInvariance,
   data = HolzingerSwineford1939,
   group = "school",
@@ -3513,9 +3536,9 @@ summary(
 You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!scalar}
 
 ```{r}
-fitMeasures(scalarInvarianceModel_fit)
+lavaan::fitMeasures(scalarInvarianceModel_fit)
 
-scalarInvarianceModelFitIndices <- fitMeasures(
+scalarInvarianceModelFitIndices <- lavaan::fitMeasures(
   scalarInvarianceModel_fit
 )[c(
   "cfi.robust",
@@ -3523,19 +3546,19 @@ scalarInvarianceModelFitIndices <- fitMeasures(
   "srmr"
 )]
 
-scalarInvarianceModel_chisquare <- fitMeasures(
+scalarInvarianceModel_chisquare <- lavaan::fitMeasures(
   scalarInvarianceModel_fit
 )[c("chisq.scaled")]
 
-scalarInvarianceModel_chisquareScaling <- fitMeasures(
+scalarInvarianceModel_chisquareScaling <- lavaan::fitMeasures(
   scalarInvarianceModel_fit
 )[c("chisq.scaling.factor")]
 
-scalarInvarianceModel_df <- fitMeasures(
+scalarInvarianceModel_df <- lavaan::fitMeasures(
   scalarInvarianceModel_fit
 )[c("df.scaled")]
 
-scalarInvarianceModel_N <- lavInspect(
+scalarInvarianceModel_N <- lavaan::lavInspect(
   scalarInvarianceModel_fit,
   what = "ntotal"
 )
@@ -3551,18 +3574,20 @@ Model fit of nested models can be compared with a chi-square difference test, al
 A significant chi-square difference test would indicate that the simplified model with additional constraints (the scalar invariance model) is significantly worse fitting than the more complex model that has fewer constraints (the metric invariance model).\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!measurement invariance!metric}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
-anova(metricInvarianceModel_fit, scalarInvarianceModel_fit)
+anova(
+  metricInvarianceModel_fit,
+  scalarInvarianceModel_fit)
 ```
 
 The scalar invariance model fit significantly worse than the configural invariance model, so scalar invariance did not hold.\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!measurement invariance!metric}
 This provides evidence of measurement non-invariance of indicator intercepts across groups.\index{structural equation modeling!measurement invariance!scalar}\index{structural equation modeling!measurement invariance!metric}\index{structural equation modeling!intercept}
 Measurement non-invariance of indicator intercepts poses challenges to being able to meaningfully compare levels on the latent factor across groups [@Little2007].\index{structural equation modeling!intercept}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
 
 ```{r}
 scalarInvarianceModel_chisquareDiff <-
-  satorraBentlerScaledChiSquareDifferenceTestStatistic(
+  petersenlab::satorraBentlerScaledChiSquareDifferenceTestStatistic(
     T0 = scalarInvarianceModel_chisquare,
     c0 = scalarInvarianceModel_chisquareScaling,
     d0 = scalarInvarianceModel_df,
@@ -3602,7 +3627,7 @@ strucchange::sctest(
 A score-based test and expected parameter change (EPC) estimates [@Oberski2014; @Oberski2015] are provided by the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement invariance!scalar}
 
 ```{r}
-lavTestScore(
+lavaan::lavTestScore(
   scalarInvarianceModel_fit,
   epc = TRUE
 )
@@ -3613,10 +3638,10 @@ lavTestScore(
 The effect size of measurement non-invariance, as described by @Nye2019, was calculated using the `dmacs` package [@R-dmacs].\index{structural equation modeling!measurement invariance!configural}\index{effect size}
 
 ```{r}
-lavaan_dmacs(scalarInvarianceModel_fit)
+dmacs::lavaan_dmacs(scalarInvarianceModel_fit)
 ```
 
-The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
+The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `petersenlab::measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
 
 ```{r}
 petersenlab::measurementNoninvarianceEffectSize(
@@ -3627,11 +3652,11 @@ petersenlab::measurementNoninvarianceEffectSize(
 
 ##### Equivalence Test {#sec-measurementInvarianceScalarModelEquivalenceTest}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!scalar}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!scalar}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.\index{structural equation modeling!measurement invariance!scalar}\index{chi-square!equivalence test}
 
 ```{r}
-equiv_chi(
+petersenlab::equiv_chi(
   alpha = .05,
   chi = scalarInvarianceModel_chisquare,
   df = scalarInvarianceModel_df,
@@ -3648,7 +3673,7 @@ In other words, scalar invariance failed.\index{structural equation modeling!mea
 scalarInvarianceModel_dfDiff <-
   scalarInvarianceModel_df - metricInvarianceModel_df
 
-equiv_chi(
+petersenlab::equiv_chi(
   alpha = .05,
   chi = scalarInvarianceModel_chisquareDiff,
   df = scalarInvarianceModel_dfDiff,
@@ -3674,7 +3699,7 @@ You can reduce the number of iterations to be faster.
 #| output: false
 
 set.seed(52242)
-scalarInvarianceTest <- permuteMeasEq(
+scalarInvarianceTest <- semTools::permuteMeasEq(
   nPermute = numPermutations,
   modelType = "mgcfa",
   con = scalarInvarianceModel_fit,
@@ -3701,9 +3726,9 @@ In other words, scalar invariance failed.\index{structural equation modeling!mea
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(scalarInvarianceModel_fit)
-AVE(scalarInvarianceModel_fit)
-maximalRelia(scalarInvarianceModel_fit)
+semTools::compRelSEM(scalarInvarianceModel_fit)
+semTools::AVE(scalarInvarianceModel_fit)
+semTools::maximalRelia(scalarInvarianceModel_fit)
 ```
 
 #### Path Diagram {#sec-measurementInvarianceScalarModelPathDiagram}
@@ -3715,7 +3740,7 @@ A path diagram of the model generated using the `semPlot` package [@R-semPlot] i
 #| fig-cap: "Scalar Invariance Model in Confirmatory Factor Analysis."
 #| fig-alt: "Scalar Invariance Model in Confirmatory Factor Analysis."
 
-semPaths(
+semPlot::semPaths(
   scalarInvarianceModel_fit,
   what = "est",
   layout = "tree2",
@@ -3733,7 +3758,7 @@ Specify invariance of factor loadings, intercepts, and residuals across groups.\
 ```{r}
 #| label: residualInvarianceModelSyntax1
 
-residualInvarianceModel <- measEq.syntax(
+residualInvarianceModel <- semTools::measEq.syntax(
   configural.model = cfaModel,
   data = HolzingerSwineford1939,
   ID.fac = "std.lv", # may be deprecated to snake_case (std_lv)
@@ -3761,8 +3786,8 @@ summary(residualInvarianceModel)
 #### Model Syntax in Table Form {#sec-measurementInvarianceResidualModelTabular}
 
 ```{r}
-lavaanify(residualInvarianceModel, ngroups = 2)
-lavaanify(cfaModel_residualInvariance, ngroups = 2)
+lavaan::lavaanify(residualInvarianceModel, ngroups = 2)
+lavaan::lavaanify(cfaModel_residualInvariance, ngroups = 2)
 ```
 
 #### Fit the Model {#sec-measurementInvarianceResidualModelFit}
@@ -3770,7 +3795,7 @@ lavaanify(cfaModel_residualInvariance, ngroups = 2)
 ```{r}
 #| label: residualInvarianceModelFit
 
-residualInvarianceModel_fit <- cfa(
+residualInvarianceModel_fit <- lavaan::cfa(
   residualInvarianceSyntax,
   data = HolzingerSwineford1939,
   group = "school",
@@ -3782,7 +3807,7 @@ residualInvarianceModel_fit <- cfa(
 ```{r}
 #| label: residualInvarianceModelFitFull
 
-residualInvarianceModelFullSyntax_fit <- lavaan(
+residualInvarianceModelFullSyntax_fit <- lavaan::lavaan(
   cfaModel_residualInvariance,
   data = HolzingerSwineford1939,
   group = "school",
@@ -3816,9 +3841,9 @@ summary(
 You can specify the null model as the baseline model using: `baseline.model = nullModelFit`\index{structural equation modeling!measurement invariance!residual}
 
 ```{r}
-fitMeasures(residualInvarianceModel_fit)
+lavaan::fitMeasures(residualInvarianceModel_fit)
 
-residualInvarianceModelFitIndices <- fitMeasures(
+residualInvarianceModelFitIndices <- lavaan::fitMeasures(
   residualInvarianceModel_fit
 )[c(
   "cfi.robust",
@@ -3826,19 +3851,19 @@ residualInvarianceModelFitIndices <- fitMeasures(
   "srmr"
 )]
 
-residualInvarianceModel_chisquare <- fitMeasures(
+residualInvarianceModel_chisquare <- lavaan::fitMeasures(
   residualInvarianceModel_fit
 )[c("chisq.scaled")]
 
-residualInvarianceModel_chisquareScaling <- fitMeasures(
+residualInvarianceModel_chisquareScaling <- lavaan::fitMeasures(
   residualInvarianceModel_fit
 )[c("chisq.scaling.factor")]
 
-residualInvarianceModel_df <- fitMeasures(
+residualInvarianceModel_df <- lavaan::fitMeasures(
   residualInvarianceModel_fit
 )[c("df.scaled")]
 
-residualInvarianceModel_N <- lavInspect(
+residualInvarianceModel_N <- lavaan::lavInspect(
   residualInvarianceModel_fit,
   what = "ntotal"
 )
@@ -3854,16 +3879,18 @@ Model fit of nested models can be compared with a chi-square difference test, al
 A significant chi-square difference test would indicate that the simplified model with additional constraints (the residual invariance model) is significantly worse fitting than the more complex model that has fewer constraints (the scalar invariance model).\index{structural equation modeling!measurement invariance!residual}\index{structural equation modeling!measurement invariance!scalar}\index{nested model}\index{chi-square!difference test}
 
 ```{r}
-anova(scalarInvarianceModel_fit, residualInvarianceModel_fit)
+anova(
+  scalarInvarianceModel_fit,
+  residualInvarianceModel_fit)
 ```
 
 In this instance, you do not need to examine whether residual invariance held because the preceding level of measurement invariance (scalar invariance) did not hold.\index{structural equation modeling!measurement invariance!residual}\index{structural equation modeling!measurement invariance!scalar}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::satorraBentlerScaledChiSquareDifferenceTestStatistic()` function that performs a Satorra-Bentler scaled chi-square difference test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!metric}\index{chi-square!difference test}
 
 ```{r}
 residualInvarianceModel_chisquareDiff <-
-  satorraBentlerScaledChiSquareDifferenceTestStatistic(
+  petersenlab::satorraBentlerScaledChiSquareDifferenceTestStatistic(
     T0 = residualInvarianceModel_chisquare,
     c0 = residualInvarianceModel_chisquareScaling,
     d0 = residualInvarianceModel_df,
@@ -3914,7 +3941,7 @@ strucchange::sctest(
 A score-based test and expected parameter change (EPC) estimates [@Oberski2014; @Oberski2015] are provided by the `lavaan` package [@R-lavaan].\index{structural equation modeling!measurement invariance!residual}
 
 ```{r}
-lavTestScore(
+lavaan::lavTestScore(
   residualInvarianceModel_fit,
   epc = TRUE
 )
@@ -3925,10 +3952,10 @@ lavTestScore(
 The effect size of measurement non-invariance, as described by @Nye2019, was calculated using the `dmacs` package [@R-dmacs].\index{structural equation modeling!measurement invariance!configural}\index{effect size}
 
 ```{r}
-lavaan_dmacs(residualInvarianceModel_fit)
+dmacs::lavaan_dmacs(residualInvarianceModel_fit)
 ```
 
-The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
+The $w$ and $\Delta \text{M}_\text{C}$ indices of the effect size of measurement non-invariance, as described by @Newsom2015, were calculated using the `petersenlab::measurementNoninvarianceEffectSize()` function of the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab].
 
 ```{r}
 petersenlab::measurementNoninvarianceEffectSize(
@@ -3939,12 +3966,12 @@ petersenlab::measurementNoninvarianceEffectSize(
 
 ##### Equivalence Test {#sec-measurementInvarianceResidualModelEquivalenceTest}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::equiv_chi()` function from @Counsell2020 that performs an equivalence test:\index{petersenlab package}\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test} <https://osf.io/cqu8v>.
 The chi-square equivalence test is non-significant, suggesting that the model fit is not acceptable.\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
 The equivalence test of the chi-square difference test is non-significant, suggesting that the degree of worsening of model fit is not acceptable.\index{structural equation modeling!measurement invariance!residual}\index{chi-square!equivalence test}
 
 ```{r}
-equiv_chi(
+petersenlab::equiv_chi(
   alpha = .05,
   chi = residualInvarianceModel_chisquare,
   df = residualInvarianceModel_df,
@@ -3961,7 +3988,7 @@ In other words, residual invariance failed.\index{structural equation modeling!m
 residualInvarianceModel_dfDiff <-
   residualInvarianceModel_df - scalarInvarianceModel_df
 
-equiv_chi(
+petersenlab::equiv_chi(
   alpha = .05,
   chi = residualInvarianceModel_chisquareDiff,
   df = residualInvarianceModel_dfDiff,
@@ -3987,7 +4014,7 @@ You can reduce the number of iterations to be faster.
 #| output: false
 
 set.seed(52242)
-residualInvarianceTest <- permuteMeasEq(
+residualInvarianceTest <- semTools::permuteMeasEq(
   nPermute = numPermutations,
   modelType = "mgcfa",
   con = residualInvarianceModel_fit,
@@ -4013,9 +4040,9 @@ The *p*-values are non-significant, indicating that the model did not fit signif
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(residualInvarianceModel_fit)
-AVE(residualInvarianceModel_fit)
-maximalRelia(residualInvarianceModel_fit)
+semTools::compRelSEM(residualInvarianceModel_fit)
+semTools::AVE(residualInvarianceModel_fit)
+semTools::maximalRelia(residualInvarianceModel_fit)
 ```
 
 #### Path Diagram {#sec-measurementInvarianceResidualModelPathDiagram}
@@ -4027,7 +4054,7 @@ A path diagram of the model generated using the `semPlot` package [@R-semPlot] i
 #| fig-cap: "Residual Invariance Model in Confirmatory Factor Analysis."
 #| fig-alt: "Residual Invariance Model in Confirmatory Factor Analysis."
 
-semPaths(
+semPlot::semPaths(
   residualInvarianceModel_fit,
   what = "est",
   layout = "tree2",
@@ -4097,7 +4124,7 @@ cfaModel_metricInvarianceV1 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV1_fit <- lavaan(
+cfaModel_metricInvarianceV1_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV1,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4105,7 +4132,9 @@ cfaModel_metricInvarianceV1_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV1_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV1_fit)
 ```
 
 ##### Variable 2 {#sec-measurementInvarianceAddConstraintsVariable2}
@@ -4157,7 +4186,7 @@ cfaModel_metricInvarianceV2 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV2_fit <- lavaan(
+cfaModel_metricInvarianceV2_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV2,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4165,7 +4194,9 @@ cfaModel_metricInvarianceV2_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV2_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV2_fit)
 ```
 
 Variable 2 appears to have larger intercepts in group 2 than in group 1:\index{structural equation modeling!intercept}
@@ -4225,7 +4256,7 @@ cfaModel_metricInvarianceV3 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV3_fit <- lavaan(
+cfaModel_metricInvarianceV3_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV3,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4233,7 +4264,9 @@ cfaModel_metricInvarianceV3_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV3_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV3_fit)
 ```
 
 ##### Variable 4 {#sec-measurementInvarianceAddConstraintsVariable4}
@@ -4285,7 +4318,7 @@ cfaModel_metricInvarianceV4 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV4_fit <- lavaan(
+cfaModel_metricInvarianceV4_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV4,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4293,7 +4326,9 @@ cfaModel_metricInvarianceV4_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV4_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV4_fit)
 ```
 
 ##### Variable 5 {#sec-measurementInvarianceAddConstraintsVariable5}
@@ -4345,7 +4380,7 @@ cfaModel_metricInvarianceV5 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV5_fit <- lavaan(
+cfaModel_metricInvarianceV5_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV5,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4353,7 +4388,9 @@ cfaModel_metricInvarianceV5_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV5_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV5_fit)
 ```
 
 ##### Variable 6 {#sec-measurementInvarianceAddConstraintsVariable6}
@@ -4405,7 +4442,7 @@ cfaModel_metricInvarianceV6 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV6_fit <- lavaan(
+cfaModel_metricInvarianceV6_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV6,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4413,7 +4450,9 @@ cfaModel_metricInvarianceV6_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV6_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV6_fit)
 ```
 
 ##### Variable 7 {#sec-measurementInvarianceAddConstraintsVariable7}
@@ -4465,7 +4504,7 @@ cfaModel_metricInvarianceV7 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV7_fit <- lavaan(
+cfaModel_metricInvarianceV7_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV7,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4473,7 +4512,9 @@ cfaModel_metricInvarianceV7_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV7_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV7_fit)
 ```
 
 ##### Variable 8 {#sec-measurementInvarianceAddConstraintsVariable8}
@@ -4525,7 +4566,7 @@ cfaModel_metricInvarianceV8 <- '
  x9 ~ NA*1
 '
 
-cfaModel_metricInvarianceV8_fit <- lavaan(
+cfaModel_metricInvarianceV8_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV8,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4533,7 +4574,9 @@ cfaModel_metricInvarianceV8_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV8_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV8_fit)
 ```
 
 ##### Variable 9 {#sec-measurementInvarianceAddConstraintsVariable9}
@@ -4585,7 +4628,7 @@ cfaModel_metricInvarianceV9 <- '
  x9 ~ c(intx1, intx1)*1
 '
 
-cfaModel_metricInvarianceV9_fit <- lavaan(
+cfaModel_metricInvarianceV9_fit <- lavaan::lavaan(
   cfaModel_metricInvarianceV9,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4593,7 +4636,9 @@ cfaModel_metricInvarianceV9_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_metricInvarianceV9_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_metricInvarianceV9_fit)
 ```
 
 ##### Summary {#sec-measurementInvarianceAddConstraintsSummary}
@@ -4657,7 +4702,7 @@ cfaModel_scalarInvarianceV1 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV1_fit <- lavaan(
+cfaModel_scalarInvarianceV1_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV1,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4665,7 +4710,9 @@ cfaModel_scalarInvarianceV1_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV1_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV1_fit)
 ```
 
 ##### Variable 2 {#sec-measurementInvarianceDropConstraintsVariable2}
@@ -4718,7 +4765,7 @@ cfaModel_scalarInvarianceV2 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV2_fit <- lavaan(
+cfaModel_scalarInvarianceV2_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV2,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4726,7 +4773,9 @@ cfaModel_scalarInvarianceV2_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV2_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV2_fit)
 ```
 
 ##### Variable 3 {#sec-measurementInvarianceDropConstraintsVariable3}
@@ -4779,7 +4828,7 @@ cfaModel_scalarInvarianceV3 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV3_fit <- lavaan(
+cfaModel_scalarInvarianceV3_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV3,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4787,7 +4836,9 @@ cfaModel_scalarInvarianceV3_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV3_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV3_fit)
 ```
 
 ##### Variable 4 {#sec-measurementInvarianceDropConstraintsVariable4}
@@ -4840,7 +4891,7 @@ cfaModel_scalarInvarianceV4 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV4_fit <- lavaan(
+cfaModel_scalarInvarianceV4_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV4,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4848,7 +4899,9 @@ cfaModel_scalarInvarianceV4_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV4_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV4_fit)
 ```
 
 ##### Variable 5 {#sec-measurementInvarianceDropConstraintsVariable5}
@@ -4901,7 +4954,7 @@ cfaModel_scalarInvarianceV5 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV5_fit <- lavaan(
+cfaModel_scalarInvarianceV5_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV5,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4909,7 +4962,9 @@ cfaModel_scalarInvarianceV5_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV5_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV5_fit)
 ```
 
 ##### Variable 6 {#sec-measurementInvarianceDropConstraintsVariable6}
@@ -4962,7 +5017,7 @@ cfaModel_scalarInvarianceV6 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV6_fit <- lavaan(
+cfaModel_scalarInvarianceV6_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV6,
   data = HolzingerSwineford1939,
   group = "school",
@@ -4970,7 +5025,9 @@ cfaModel_scalarInvarianceV6_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV6_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV6_fit)
 ```
 
 ##### Variable 7 {#sec-measurementInvarianceDropConstraintsVariable7}
@@ -5024,7 +5081,7 @@ cfaModel_scalarInvarianceV7 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV7_fit <- lavaan(
+cfaModel_scalarInvarianceV7_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV7,
   data = HolzingerSwineford1939,
   group = "school",
@@ -5032,7 +5089,9 @@ cfaModel_scalarInvarianceV7_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV7_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV7_fit)
 ```
 
 ##### Variable 8 {#sec-measurementInvarianceDropConstraintsVariable8}
@@ -5085,7 +5144,7 @@ cfaModel_scalarInvarianceV8 <- '
  x9 ~ c(intx9, intx9)*1
 '
 
-cfaModel_scalarInvarianceV8_fit <- lavaan(
+cfaModel_scalarInvarianceV8_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV8,
   data = HolzingerSwineford1939,
   group = "school",
@@ -5093,7 +5152,9 @@ cfaModel_scalarInvarianceV8_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV8_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV8_fit)
 ```
 
 ##### Variable 9 {#sec-measurementInvarianceDropConstraintsVariable9}
@@ -5146,7 +5207,7 @@ cfaModel_scalarInvarianceV9 <- '
  x9 ~ NA*1
 '
 
-cfaModel_scalarInvarianceV9_fit <- lavaan(
+cfaModel_scalarInvarianceV9_fit <- lavaan::lavaan(
   cfaModel_scalarInvarianceV9,
   data = HolzingerSwineford1939,
   group = "school",
@@ -5154,7 +5215,9 @@ cfaModel_scalarInvarianceV9_fit <- lavaan(
   estimator = "MLR"
 )
 
-anova(metricInvarianceModel_fit, cfaModel_scalarInvarianceV9_fit)
+anova(
+  metricInvarianceModel_fit,
+  cfaModel_scalarInvarianceV9_fit)
 ```
 
 ##### Summary {#sec-measurementInvarianceDropConstraintsSummary}
