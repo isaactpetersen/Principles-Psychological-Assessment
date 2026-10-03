@@ -794,7 +794,7 @@ window.Quarto = {
 <span id="cb2-15"><a href="#cb2-15" aria-label="15"></a>  <span class="at">sigma =</span> standardDeviations</span>
 <span id="cb2-16"><a href="#cb2-16" aria-label="16"></a>)</span>
 <span id="cb2-17"><a href="#cb2-17" aria-label="17"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-label="18"></a>mydataValidity <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(</span>
+<span id="cb2-18"><a href="#cb2-18" aria-label="18"></a>mydataValidity <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rockchalk<span class="sc">::</span><span class="fu">mvrnorm</span>(</span>
 <span id="cb2-19"><a href="#cb2-19" aria-label="19"></a>  <span class="at">n =</span> sampleSize,</span>
 <span id="cb2-20"><a href="#cb2-20" aria-label="20"></a>  <span class="at">mu =</span> means,</span>
 <span id="cb2-21"><a href="#cb2-21" aria-label="21"></a>  <span class="at">Sigma =</span> covarianceMatrix,</span>
@@ -979,22 +979,24 @@ Figure&nbsp;5.1: Content Facets of the Construct of Depression.
 <p><em>Criterion-related validity</em> examines whether a measure behaves the way it should given your theory of the construct. This is quantified by the correlation between a measure’s scores and some (hopefully universally accepted) criterion we select. For instance, a criterion could be a diagnosis, a child’s achievement in school, an employee’s performance in a job, etc.</p>
 <p>Below, we provide an example of criterion-related validity by examining the <a href="reliability.html#sec-correlationConsiderations">Pearson correlation</a> between a predictor and a criterion.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor, <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-label="2"></a>  <span class="at">x =</span> mydataValidity<span class="sc">$</span>predictor,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-label="3"></a>  <span class="at">y =</span> mydataValidity<span class="sc">$</span>criterion)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
 
 data:  mydataValidity$predictor and mydataValidity$criterion
-t = 30.07, df = 900, p-value &lt; 2.2e-16
+t = 29.547, df = 900, p-value &lt; 2.2e-16
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.6737883 0.7390515
+ 0.6669787 0.7333873
 sample estimates:
       cor 
-0.7079278 </code></pre>
+0.7017039 </code></pre>
 </div>
 </div>
-<p>In this case, the estimate of criterion-related validity is <span class="math inline">\(r = .71\)</span>. There are two types of criterion-related validity: concurrent validity and predictive validity.</p>
+<p>In this case, the estimate of criterion-related validity is <span class="math inline">\(r = .70\)</span>. There are two types of criterion-related validity: concurrent validity and predictive validity.</p>
 <section id="sec-concurrentValidity" class="level5" data-number="5.3.1.3.1"><h5 data-number="5.3.1.3.1" class="anchored" data-anchor-id="sec-concurrentValidity">
 <span class="header-section-number">5.3.1.3.1</span> Concurrent Validity</h5>
 <p><em>Concurrent validity</em> considers the <em>concurrent</em> association between the chosen measure and the criterion. That is, both the measure and the criterion are assessed at the same point in time. An example of concurrent validity would be examining self-report of court involvement in relation to current court records.</p>
@@ -1249,7 +1251,7 @@ Figure&nbsp;5.12: Multitrait-Multimethod Matrix Organized by Construct Then by M
 <span id="cb7-4"><a href="#cb7-4" aria-label="4"></a><span class="st">  speed   =~ x7 + x8 + x9</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-label="5"></a><span class="st">'</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-label="6"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-label="7"></a><span class="fu">htmt</span>(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-label="7"></a>semTools<span class="sc">::</span><span class="fu">htmt</span>(</span>
 <span id="cb7-8"><a href="#cb7-8" aria-label="8"></a>  modelCFA,</span>
 <span id="cb7-9"><a href="#cb7-9" aria-label="9"></a>  <span class="at">data =</span> HolzingerSwineford1939,</span>
 <span id="cb7-10"><a href="#cb7-10" aria-label="10"></a>  <span class="at">missing =</span> <span class="st">"ml"</span></span>
@@ -1292,7 +1294,7 @@ speed    0.387  0.280 1.000</code></pre>
 <span id="cb9-21"><a href="#cb9-21" aria-label="21"></a><span class="st"> Spatial ~~ .5*Quant</span></span>
 <span id="cb9-22"><a href="#cb9-22" aria-label="22"></a><span class="st">'</span></span>
 <span id="cb9-23"><a href="#cb9-23" aria-label="23"></a></span>
-<span id="cb9-24"><a href="#cb9-24" aria-label="24"></a>MTMM_data <span class="ot">&lt;-</span> <span class="fu">sim_standardized</span>(</span>
+<span id="cb9-24"><a href="#cb9-24" aria-label="24"></a>MTMM_data <span class="ot">&lt;-</span> simstandard<span class="sc">::</span><span class="fu">sim_standardized</span>(</span>
 <span id="cb9-25"><a href="#cb9-25" aria-label="25"></a>  model_fixed,</span>
 <span id="cb9-26"><a href="#cb9-26" aria-label="26"></a>  <span class="at">n =</span> <span class="dv">10000</span>,</span>
 <span id="cb9-27"><a href="#cb9-27" aria-label="27"></a>  <span class="at">observed =</span> <span class="cn">TRUE</span>,</span>
@@ -1376,7 +1378,7 @@ Figure&nbsp;5.14: Multitrait-Multimethod Model in Confirmatory Factor Analysis W
 <span id="cb12-26"><a href="#cb12-26" aria-label="26"></a><span class="st">   QM1 + QM2 + QM3</span></span>
 <span id="cb12-27"><a href="#cb12-27" aria-label="27"></a><span class="st">'</span></span>
 <span id="cb12-28"><a href="#cb12-28" aria-label="28"></a></span>
-<span id="cb12-29"><a href="#cb12-29" aria-label="29"></a>MTMM.fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb12-29"><a href="#cb12-29" aria-label="29"></a>MTMM.fit <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">cfa</span>(</span>
 <span id="cb12-30"><a href="#cb12-30" aria-label="30"></a>  modelMTMM,</span>
 <span id="cb12-31"><a href="#cb12-31" aria-label="31"></a>  <span class="at">data =</span> MTMM_data,</span>
 <span id="cb12-32"><a href="#cb12-32" aria-label="32"></a>  <span class="at">orthogonal =</span> <span class="cn">TRUE</span>,</span>
@@ -1644,7 +1646,7 @@ R-Square:
 </div>
 <p>A path diagram of the model is depicted in <a href="#fig-mtmmCFAFigure" class="quarto-xref">Figure&nbsp;<span>5.15</span></a> using the <code>semPlot</code> package <span class="citation" data-cites="R-semPlot">(<a href="references.html#ref-R-semPlot" role="doc-biblioref">Epskamp, 2022</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a><span class="fu">semPaths</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>  MTMM.fit,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"std"</span>,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree3"</span>,</span>
@@ -1683,18 +1685,18 @@ lm(formula = criterion ~ oldpredictor, data = na.omit(mydataValidity))
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--21.9998  -4.6383   0.0737   4.4824  24.3993 
+-18.4446  -4.8318  -0.0651   4.5515  22.3891 
 
 Coefficients:
              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  20.42618    1.41547   14.43   &lt;2e-16 ***
-oldpredictor  0.79479    0.01394   57.01   &lt;2e-16 ***
+(Intercept)  20.71104    1.40594   14.73   &lt;2e-16 ***
+oldpredictor  0.79180    0.01386   57.14   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 7.015 on 900 degrees of freedom
-Multiple R-squared:  0.7831,    Adjusted R-squared:  0.7829 
-F-statistic:  3250 on 1 and 900 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 6.987 on 900 degrees of freedom
+Multiple R-squared:  0.7839,    Adjusted R-squared:  0.7837 
+F-statistic:  3265 on 1 and 900 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a><span class="fu">summary</span>(model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
@@ -1704,19 +1706,19 @@ lm(formula = criterion ~ oldpredictor + predictor, data = na.omit(mydataValidity
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--20.7095  -4.2435  -0.1041   4.0814  23.1936 
+-17.7776  -4.4507  -0.1762   4.2865  20.1617 
 
 Coefficients:
              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  16.04252    1.33293   12.04   &lt;2e-16 ***
-oldpredictor  0.65476    0.01645   39.80   &lt;2e-16 ***
-predictor     0.36889    0.02745   13.44   &lt;2e-16 ***
+(Intercept)  16.38400    1.33328   12.29   &lt;2e-16 ***
+oldpredictor  0.65758    0.01639   40.11   &lt;2e-16 ***
+predictor     0.35607    0.02743   12.98   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.405 on 899 degrees of freedom
-Multiple R-squared:  0.8194,    Adjusted R-squared:  0.819 
-F-statistic:  2040 on 2 and 899 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 6.415 on 899 degrees of freedom
+Multiple R-squared:  0.818, Adjusted R-squared:  0.8176 
+F-statistic:  2021 on 2 and 899 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-label="1"></a>model1Rsquare <span class="ot">&lt;-</span> <span class="fu">summary</span>(model1)<span class="sc">$</span>r.squared</span>
 <span id="cb19-2"><a href="#cb19-2" aria-label="2"></a>model2Rsquare <span class="ot">&lt;-</span> <span class="fu">summary</span>(model2)<span class="sc">$</span>r.squared</span>
@@ -1724,26 +1726,26 @@ F-statistic:  2040 on 2 and 899 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb19-4"><a href="#cb19-4" aria-label="4"></a>model1RsquareAdj <span class="ot">&lt;-</span> <span class="fu">summary</span>(model1)<span class="sc">$</span>adj.r.squared</span>
 <span id="cb19-5"><a href="#cb19-5" aria-label="5"></a>model2RsquareAdj <span class="ot">&lt;-</span> <span class="fu">summary</span>(model2)<span class="sc">$</span>adj.r.squared</span>
 <span id="cb19-6"><a href="#cb19-6" aria-label="6"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-label="7"></a>deltaRsquare <span class="ot">&lt;-</span> <span class="fu">getDeltaRsquare</span>(model2)[[<span class="st">"predictor"</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-7"><a href="#cb19-7" aria-label="7"></a>deltaRsquare <span class="ot">&lt;-</span> rockchalk<span class="sc">::</span><span class="fu">getDeltaRsquare</span>(model2)[[<span class="st">"predictor"</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>The deltaR-square values: the change in the R-square
       observed when a single term is removed.
 Same as the square of the 'semi-partial correlation coefficient'
              deltaRsquare
-oldpredictor   0.31824800
-predictor      0.03627593</code></pre>
+oldpredictor   0.32564547
+predictor      0.03410553</code></pre>
 </div>
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-label="1"></a>deltaRsquareAdj <span class="ot">&lt;-</span> model2RsquareAdj <span class="sc">-</span> model1RsquareAdj</span>
 <span id="cb21-2"><a href="#cb21-2" aria-label="2"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-label="3"></a>deltaRsquareAdj</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.03611514</code></pre>
+<pre><code>[1] 0.03394079</code></pre>
 </div>
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-label="1"></a><span class="fu">anova</span>(model1, model2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Res.Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RSS"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sum of Sq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["F"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"900","2":"44294.85","3":"NA","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"899","2":"36885.50","3":"1","4":"7409.348","5":"180.586","6":"1.193205e-37","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Res.Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RSS"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sum of Sq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["F"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"900","2":"43936.29","3":"NA","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"899","2":"37001.23","3":"1","4":"6935.061","5":"168.4976","6":"1.937952e-35","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -1753,11 +1755,11 @@ predictor      0.03627593</code></pre>
       observed when a single term is removed.
 Same as the square of the 'semi-partial correlation coefficient'
              deltaRsquare
-oldpredictor   0.31824800
-predictor      0.03627593</code></pre>
+oldpredictor   0.32564547
+predictor      0.03410553</code></pre>
 </div>
 </div>
-<p><span class="math inline">\(\Delta R^2\)</span> was calculated using the <code>rockchalk</code> package <span class="citation" data-cites="R-rockchalk">(<a href="references.html#ref-R-rockchalk" role="doc-biblioref">Johnson, 2022</a>)</span>. The predictor shows significant incremental validity above the old predictor in predicting the criterion. <code>Model 1</code> explains <span class="math inline">\(78.31\)</span>% of the variance <span class="math inline">\((R^2 = 0.78)\)</span>, and <code>Model 2</code> explains <span class="math inline">\(81.94\)</span>% of the variance <span class="math inline">\((R^2 = 0.82)\)</span>. Thus, the predictor explains only <span class="math inline">\(3.63\)</span>% additional variance in the criterion above the variance explained by the old predictor <span class="math inline">\((\Delta R^2)\)</span>. Based on adjusted <span class="math inline">\(R^2\)</span> (<span class="math inline">\(R^2_{adj}\)</span>), the predictor explains only <span class="math inline">\(3.61\)</span>% additional variance in the criterion above the variance explained by the old predictor (<span class="math inline">\(\Delta R^2_{adj}\)</span>).</p>
+<p><span class="math inline">\(\Delta R^2\)</span> was calculated using the <code>rockchalk</code> package <span class="citation" data-cites="R-rockchalk">(<a href="references.html#ref-R-rockchalk" role="doc-biblioref">Johnson, 2022</a>)</span>. The predictor shows significant incremental validity above the old predictor in predicting the criterion. <code>Model 1</code> explains <span class="math inline">\(78.39\)</span>% of the variance <span class="math inline">\((R^2 = 0.78)\)</span>, and <code>Model 2</code> explains <span class="math inline">\(81.8\)</span>% of the variance <span class="math inline">\((R^2 = 0.82)\)</span>. Thus, the predictor explains only <span class="math inline">\(3.41\)</span>% additional variance in the criterion above the variance explained by the old predictor <span class="math inline">\((\Delta R^2)\)</span>. Based on adjusted <span class="math inline">\(R^2\)</span> (<span class="math inline">\(R^2_{adj}\)</span>), the predictor explains only <span class="math inline">\(3.39\)</span>% additional variance in the criterion above the variance explained by the old predictor (<span class="math inline">\(\Delta R^2_{adj}\)</span>).</p>
 </section><section id="sec-treatmentUtility" class="level4" data-number="5.3.1.6"><h4 data-number="5.3.1.6" class="anchored" data-anchor-id="sec-treatmentUtility">
 <span class="header-section-number">5.3.1.6</span> Treatment Utility of Assessment</h4>
 <p><span class="citation" data-cites="Hayes1987">Hayes et al. (<a href="references.html#ref-Hayes1987" role="doc-biblioref">1987</a>)</span> argued that it is not enough for measures to be <a href="reliability.html">reliable</a> and valid. The authors raised another important consideration for the validity of a measure: its treatment utility or usefulness. They asked the question: What goal do assessments accomplish in clinical psychology? In clinical psychology, the goal of assessment is to lead to better treatment outcomes. Therefore, the <em>treatment utility</em> of a measure is the extent to which a measure is shown to contribute to beneficial treatment outcomes. That is, if a clinician has the information/results from having administered this measure, do the clients have better outcomes? The treatment utility of assessment is a specific kind of <a href="#sec-criterionValidity">criterion-related validity</a>, with the idea that “all criteria are not created equal.” And the criterion that is most important to optimize, from this perspective, when developing and selecting measures is a client’s treatment outcomes.</p>
@@ -1948,13 +1950,13 @@ Figure&nbsp;5.21: The Criterion-Related Validity of a Measure, i.e., Its Associa
     Pearson's product-moment correlation
 
 data:  mydataValidity$predictorWithMeasurementErrorT1 and mydataValidity$predictorWithMeasurementErrorT2
-t = 63.6, df = 948, p-value &lt; 2.2e-16
+t = 63.574, df = 948, p-value &lt; 2.2e-16
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.8872651 0.9114970
+ 0.8871855 0.9114337
 sample estimates:
       cor 
-0.9000747 </code></pre>
+0.9000036 </code></pre>
 </div>
 </div>
 </section><section id="sec-measurementErrorEffects-reliabilityCriterion" class="level4" data-number="5.6.1.2"><h4 data-number="5.6.1.2" class="anchored" data-anchor-id="sec-measurementErrorEffects-reliabilityCriterion">
@@ -1969,13 +1971,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  mydataValidity$criterionWithMeasurementErrorT1 and mydataValidity$criterionWithMeasurementErrorT2
-t = 49.587, df = 948, p-value &lt; 2.2e-16
+t = 50.604, df = 948, p-value &lt; 2.2e-16
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.8308430 0.8663438
+ 0.8361227 0.8705937
 sample estimates:
       cor 
-0.8495525 </code></pre>
+0.8542947 </code></pre>
 </div>
 </div>
 </section><section id="sec-measurementErrorEffects-trueAssociation" class="level4" data-number="5.6.1.3"><h4 data-number="5.6.1.3" class="anchored" data-anchor-id="sec-measurementErrorEffects-trueAssociation">
@@ -1990,13 +1992,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  mydataValidity$predictor and mydataValidity$criterion
-t = 30.07, df = 900, p-value &lt; 2.2e-16
+t = 29.547, df = 900, p-value &lt; 2.2e-16
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.6737883 0.7390515
+ 0.6669787 0.7333873
 sample estimates:
       cor 
-0.7079278 </code></pre>
+0.7017039 </code></pre>
 </div>
 </div>
 </section><section id="sec-measurementErrorEffects-observedAssociation" class="level4" data-number="5.6.1.4"><h4 data-number="5.6.1.4" class="anchored" data-anchor-id="sec-measurementErrorEffects-observedAssociation">
@@ -2011,16 +2013,16 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  mydataValidity$predictorWithMeasurementErrorT1 and mydataValidity$criterionWithMeasurementErrorT1
-t = 23.73, df = 900, p-value &lt; 2.2e-16
+t = 23.774, df = 900, p-value &lt; 2.2e-16
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.5785273 0.6589657
+ 0.5793003 0.6596230
 sample estimates:
       cor 
-0.6203752 </code></pre>
+0.6210899 </code></pre>
 </div>
 </div>
-<p>Using simulated data, when the <a href="reliability.html">reliability</a> of the predictor is .90, the <a href="reliability.html">reliability</a> of the criterion is .85, and the true association between the predictor and criterion is <span class="math inline">\(r = .71\)</span>, the observed association is attenuated to <span class="math inline">\(r = .62\)</span>.</p>
+<p>Using simulated data, when the <a href="reliability.html">reliability</a> of the predictor is .90, the <a href="reliability.html">reliability</a> of the criterion is .85, and the true association between the predictor and criterion is <span class="math inline">\(r = .70\)</span>, the observed association is attenuated to <span class="math inline">\(r = .62\)</span>.</p>
 </section></section><section id="sec-attenuation" class="level3" data-number="5.6.2"><h3 data-number="5.6.2" class="anchored" data-anchor-id="sec-attenuation">
 <span class="header-section-number">5.6.2</span> Attenuation of True Correlation Due to Measurement Error</h3>
 <p>The attenuation formula is presented in <a href="#eq-attenuationFormula" class="quarto-xref">Equation&nbsp;<span>5.2</span></a>. We extend it to a specific example in <a href="#eq-attenuationFormulaExample" class="quarto-xref">Equation&nbsp;<span>5.4</span></a>:</p>
@@ -2043,9 +2045,9 @@ sample estimates:
 <pre><code>[1] 0.6122499</code></pre>
 </div>
 </div>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>attenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/attenuationCorrelation.html">petersenlab::attenuationCorrelation()</a></code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-label="1"></a><span class="fu">attenuationCorrelation</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">attenuationCorrelation</span>(</span>
 <span id="cb36-2"><a href="#cb36-2" aria-label="2"></a>  <span class="at">trueAssociation =</span> <span class="fl">0.7</span>,</span>
 <span id="cb36-3"><a href="#cb36-3" aria-label="3"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
 <span id="cb36-4"><a href="#cb36-4" aria-label="4"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.85</span></span>
@@ -2082,7 +2084,7 @@ sample estimates:
 <span id="cb39-6"><a href="#cb39-6" aria-label="6"></a>observedAssociation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>      cor 
-0.7079278 </code></pre>
+0.7017039 </code></pre>
 </div>
 </div>
 <p>The true (disattenuated) association is as follows:</p>
@@ -2090,19 +2092,19 @@ sample estimates:
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-label="1"></a>observedAssociation <span class="sc">/</span> <span class="fu">sqrt</span>(reliabilityOfPredictor <span class="sc">*</span> reliabilityOfCriterion)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>      cor 
-0.8093908 </code></pre>
+0.8022748 </code></pre>
 </div>
 </div>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>disattenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/disattenuationCorrelation.html">petersenlab::disattenuationCorrelation()</a></code> function that estimates the observed association given the true association and the reliability of the predictor and criterion:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-label="1"></a><span class="fu">disattenuationCorrelation</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">disattenuationCorrelation</span>(</span>
 <span id="cb43-2"><a href="#cb43-2" aria-label="2"></a>  <span class="at">observedAssociation =</span> observedAssociation,</span>
 <span id="cb43-3"><a href="#cb43-3" aria-label="3"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
 <span id="cb43-4"><a href="#cb43-4" aria-label="4"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.85</span></span>
 <span id="cb43-5"><a href="#cb43-5" aria-label="5"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>      cor 
-0.8093908 </code></pre>
+0.8022748 </code></pre>
 </div>
 </div>
 <p>The disattenuation of an observed correlation due to <a href="reliability.html#sec-measurementError">measurement error</a> can be demonstrated using <a href="structural-equation-modeling.html">structural equation modeling</a>. For instance, consider the following observed association:</p>
@@ -2126,7 +2128,7 @@ sample estimates:
 <span id="cb47-6"><a href="#cb47-6" aria-label="6"></a><span class="st">  criterionObservedSEM ~~ criterionObservedSEM</span></span>
 <span id="cb47-7"><a href="#cb47-7" aria-label="7"></a><span class="st">'</span></span>
 <span id="cb47-8"><a href="#cb47-8" aria-label="8"></a></span>
-<span id="cb47-9"><a href="#cb47-9" aria-label="9"></a>observedSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb47-9"><a href="#cb47-9" aria-label="9"></a>observedSEM_fit <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(</span>
 <span id="cb47-10"><a href="#cb47-10" aria-label="10"></a>  observedSEM_syntax,</span>
 <span id="cb47-11"><a href="#cb47-11" aria-label="11"></a>  <span class="at">data =</span> mydataValidity,</span>
 <span id="cb47-12"><a href="#cb47-12" aria-label="12"></a>  <span class="at">missing =</span> <span class="st">"ML"</span></span>
@@ -2137,7 +2139,7 @@ sample estimates:
 <span id="cb47-17"><a href="#cb47-17" aria-label="17"></a>  <span class="at">standardized =</span> <span class="cn">TRUE</span></span>
 <span id="cb47-18"><a href="#cb47-18" aria-label="18"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>lavaan 0.7-2 ended normally after 11 iterations
+<pre><code>lavaan 0.7-2 ended normally after 10 iterations
 
   Estimator                                         ML
   Optimization method                           NLMINB
@@ -2173,7 +2175,7 @@ Variances:
     prdctrObsrvSEM    0.971    0.044   21.932    0.000    0.971    1.000
    .crtrnObsrvdSEM    0.654    0.030   21.518    0.000    0.654    0.627</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-label="1"></a><span class="fu">lavInspect</span>(observedSEM_fit, <span class="st">"rsquare"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-label="1"></a>lavaan<span class="sc">::</span><span class="fu">lavInspect</span>(observedSEM_fit, <span class="st">"rsquare"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>criterionObservedSEM 
                0.373 </code></pre>
@@ -2181,7 +2183,7 @@ Variances:
 </div>
 <p>A path diagram of the observed association is depicted in <a href="#fig-observedSEM" class="quarto-xref">Figure&nbsp;<span>5.22</span></a>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-label="1"></a><span class="fu">semPaths</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-label="1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(</span>
 <span id="cb51-2"><a href="#cb51-2" aria-label="2"></a>  observedSEM_fit,</span>
 <span id="cb51-3"><a href="#cb51-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb51-4"><a href="#cb51-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
@@ -2236,7 +2238,7 @@ Figure&nbsp;5.22: Observed Association, as Depicted in a Structural Equation Mod
 <span id="cb52-34"><a href="#cb52-34" aria-label="34"></a><span class="st">  criterionObservedSEM ~~ (1 - .85)*criterionObservedSEM # where .85 is the reliability of the criterion</span></span>
 <span id="cb52-35"><a href="#cb52-35" aria-label="35"></a><span class="st">'</span></span>
 <span id="cb52-36"><a href="#cb52-36" aria-label="36"></a></span>
-<span id="cb52-37"><a href="#cb52-37" aria-label="37"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(</span>
+<span id="cb52-37"><a href="#cb52-37" aria-label="37"></a>disattenuationSEM_fit <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(</span>
 <span id="cb52-38"><a href="#cb52-38" aria-label="38"></a>  disattenuationSEM_syntax,</span>
 <span id="cb52-39"><a href="#cb52-39" aria-label="39"></a>  <span class="at">data =</span> mydataValidity,</span>
 <span id="cb52-40"><a href="#cb52-40" aria-label="40"></a>  <span class="at">missing =</span> <span class="st">"ML"</span></span>
@@ -2302,7 +2304,7 @@ R-Square:
 </div>
 <p>A path diagram of the true association is depicted in Figures <a href="#fig-disattenuationSEM" class="quarto-xref"><span>5.23</span></a> and <a href="#fig-semDisattenuation" class="quarto-xref"><span>5.24</span></a>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-label="1"></a><span class="fu">semPaths</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-label="1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(</span>
 <span id="cb54-2"><a href="#cb54-2" aria-label="2"></a>  disattenuationSEM_fit,</span>
 <span id="cb54-3"><a href="#cb54-3" aria-label="3"></a>  <span class="at">what =</span> <span class="st">"Std.all"</span>,</span>
 <span id="cb54-4"><a href="#cb54-4" aria-label="4"></a>  <span class="at">layout =</span> <span class="st">"tree2"</span>,</span>
