@@ -284,20 +284,28 @@ library("viridis")
 sampleSize <- 1000
 set.seed(52242)
 
-rawMeasure <- data.frame(score = rnorm(sampleSize), measure = "rawMeasure")
+rawMeasure <- data.frame(
+  score = rnorm(sampleSize),
+  measure = "rawMeasure")
+
 addSystematicError <- data.frame(
   score = rawMeasure$score + 1,
   measure = "addSystematicError"
 )
+
 addRandomError <- data.frame(
   score = rawMeasure$score + rnorm(sampleSize),
   measure = "addRandomError"
 )
 
-errorList <- list(rawMeasure, addSystematicError, addRandomError)
-errorData <- bind_rows(errorList)
+errorList <- list(
+  rawMeasure,
+  addSystematicError,
+  addRandomError)
 
-ggplot(
+errorData <- dplyr::bind_rows(errorList)
+
+ggplot2::ggplot(
   errorData |> filter(measure != "addRandomError"),
   aes(x = score, fill = measure)
 ) +
@@ -330,7 +338,7 @@ In other words, the group-level mean is still accurate, but individuals' scores 
 #| fig-alt: "Random Error."
 #| code-fold: true
 
-ggplot(
+ggplot2::ggplot(
   errorData |> filter(measure != "addSystematicError"),
   aes(x = score, fill = measure)
 ) +
@@ -535,9 +543,13 @@ standardErrorOfMeasurementData <- expand.grid(
 standardErrorOfMeasurementData$sem <- standardErrorOfMeasurementData$sd *
   sqrt(1 - standardErrorOfMeasurementData$reliability)
 
-ggplot(
+ggplot2::ggplot(
   standardErrorOfMeasurementData,
-  aes(reliability, sem, group = as.factor(sd), color = as.factor(sd))
+  aes(
+    reliability,
+    sem,
+    group = as.factor(sd),
+    color = as.factor(sd))
 ) +
   geom_line(linewidth = 1.5) +
   theme_bw() +
@@ -636,13 +648,18 @@ sampleSize <- 100
 
 set.seed(52242)
 
-rater1continuous <- rnorm(n = sampleSize, mean = 50, sd = 10)
+rater1continuous <- rnorm(
+  n = sampleSize,
+  mean = 50,
+  sd = 10)
+
 rater2continuous <- rater1continuous +
   rnorm(
     n = sampleSize,
     mean = 0,
     sd = 4
   )
+
 rater3continuous <- rater2continuous +
   rnorm(
     n = sampleSize,
@@ -655,11 +672,12 @@ rater1categorical <- sample(
   size = sampleSize,
   replace = TRUE
 )
+
 rater2categorical <- rater1categorical
 rater3categorical <- rater1categorical
 
 rater2categorical[
-  sample(1:length(rater2categorical), size = 10, replace = FALSE)
+  sample(1:length(rater2categorical),size = 10, replace = FALSE)
 ] <- 0
 rater3categorical[
   sample(1:length(rater3categorical), size = 10, replace = FALSE)
@@ -763,7 +781,11 @@ mydata <- data.frame(
   item4
 )
 
-pio_cross_dat <- data.frame(Person, Item, Score, Occasion)
+pio_cross_dat <- data.frame(
+  Person,
+  Item,
+  Score,
+  Occasion)
 ```
 
 ## Types of Reliability {#sec-typesOfReliability}
@@ -805,8 +827,13 @@ If the retest occurs almost at the same time as the original test (e.g., a 45-mi
 We estimate the coefficient of stability below:\index{reliability!test–retest}\index{reliability!test–retest!coefficient of stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
-cor(mydata[, c("time1", "time2", "time3")], use = "pairwise.complete.obs")
+cor.test(
+  x = mydata$time1,
+  y = mydata$time2)
+
+cor(
+  mydata[, c("time1", "time2", "time3")],
+  use = "pairwise.complete.obs")
 ```
 
 ```{r}
@@ -1697,7 +1724,9 @@ A higher ICC reflects greater between-person variability relative to within-pers
 ICC was estimated using the `psych` package [@R-psych].\index{reliability!test–retest}\index{reliability!test–retest!coefficient of agreement}
 
 ```{r}
-psych::ICC(mydata[, c("time1", "time2")], missing = FALSE)
+psych::ICC(
+  mydata[, c("time1", "time2")],
+  missing = FALSE)
 ```
 
 There are various kinds of ICC coefficients.
@@ -1760,7 +1789,7 @@ coefficientOfRepeatability(
 )
 ```
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#sec-blandAltmanPlot) in @fig-repeatability.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::repeatability()` function that estimates the repeatability of a measure's scores and generates a [Bland-Altman plot](#sec-blandAltmanPlot) in @fig-repeatability.\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{petersenlab package}
 The coefficient of repeatability is labeled `cr` in the output.\index{reliability!test–retest!coefficient of repeatability}
 
 ```{r}
@@ -1805,7 +1834,7 @@ repeatability <- function(measure1, measure2) {
 #| fig-cap: "Bland-Altman Plot."
 #| fig-alt: "Bland-Altman Plot."
 
-repeatability(
+petersenlab::repeatability(
   measure1 = mydata$time1,
   measure2 = mydata$time2
 )
@@ -1833,11 +1862,12 @@ The bottom dashed line reflects the lower LOA.\index{reliability!test–retest}\
 The Bland-Altman plot was created using the `blandr` package [@R-blandr].\index{reliability!test–retest}\index{reliability!test–retest!coefficient of repeatability}\index{reliability!test–retest!Bland-Altman plot}\index{reliability!test–retest!bias}\index{reliability!test–retest!limits of agreement}
 
 ```{r}
-BAstats <- blandr.statistics(
+BAstats <- blandr::blandr.statistics(
   mydata$time1, #method1
-  mydata$time2
-) #method2
-BAplotlimits <- blandr.plot.limits(BAstats)
+  mydata$time2 #method2
+)
+
+BAplotlimits <- blandr::blandr.plot.limits(BAstats)
 ```
 
 ```{r}
@@ -1845,7 +1875,7 @@ BAplotlimits <- blandr.plot.limits(BAstats)
 #| fig-cap: "Bland-Altman Plot."
 #| fig-alt: "Bland-Altman Plot."
 
-blandr.plot.rplot(
+blandr::blandr.plot.rplot(
   BAstats,
   plot.limits = BAplotlimits,
   annotate = TRUE,
@@ -1927,6 +1957,7 @@ lowerLOA(
   measure1 = mydata$time1,
   measure2 = mydata$time2
 )
+
 upperLOA(
   measure1 = mydata$time1,
   measure2 = mydata$time2
@@ -1936,8 +1967,13 @@ upperLOA(
 ```{r}
 #| include: false
 
-lowerLOAvalue <- lowerLOA(measure1 = mydata$time1, measure2 = mydata$time2)
-upperLOAvalue <- upperLOA(measure1 = mydata$time1, measure2 = mydata$time2)
+lowerLOAvalue <- lowerLOA(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
+
+upperLOAvalue <- upperLOA(
+  measure1 = mydata$time1,
+  measure2 = mydata$time2)
 ```
 
 The limits of agreement indicate that 95% of scores at time 2 are expected to fall within $[`r apa(lowerLOAvalue, 2)`, `r apa(upperLOAvalue, 2)`]$ of scores at time 1.
@@ -1970,7 +2006,7 @@ ICC ranges from 0–1, with higher scores indicating greater agreement.\index{re
 Below, ICC was estimated using the `psych` package [@R-psych].\index{reliability!inter-rater}\index{reliability!inter-rater!intraclass correlation}
 
 ```{r}
-ICC(
+psych::ICC(
   mydata[, c(
     "rater1continuous",
     "rater2continuous",
@@ -1983,7 +2019,7 @@ ICC(
 Below, ICC was estimated using the `irrNA` package:
 
 ```{r}
-iccNA(mydata[, c(
+irrNA::iccNA(mydata[, c(
   "rater1continuous",
   "rater2continuous",
   "rater3continuous"
@@ -1993,13 +2029,14 @@ iccNA(mydata[, c(
 Below, ICC was estimated using the `irrICC` package:
 
 ```{r}
-icc1a.fn(mydata[, c(
+irrICC::icc1a.fn(mydata[, c(
   "subid",
   "rater1continuous",
   "rater2continuous",
   "rater3continuous"
 )])
-icc1b.fn(dropRowsWithAllNA(
+
+irrICC::icc1b.fn(dropRowsWithAllNA(
   mydata[, c(
     "subid",
     "rater1continuous",
@@ -2008,7 +2045,8 @@ icc1b.fn(dropRowsWithAllNA(
   )],
   ignore = "subid"
 ))
-icc2.inter.fn(dropRowsWithAllNA(
+
+irrICC::icc2.inter.fn(dropRowsWithAllNA(
   mydata[, c(
     "subid",
     "rater1continuous",
@@ -2017,7 +2055,8 @@ icc2.inter.fn(dropRowsWithAllNA(
   )],
   ignore = "subid"
 ))
-icc2.nointer.fn(dropRowsWithAllNA(
+
+irrICC::icc2.nointer.fn(dropRowsWithAllNA(
   mydata[, c(
     "subid",
     "rater1continuous",
@@ -2026,7 +2065,8 @@ icc2.nointer.fn(dropRowsWithAllNA(
   )],
   ignore = "subid"
 ))
-icc3.inter.fn(dropRowsWithAllNA(
+
+irrICC::icc3.inter.fn(dropRowsWithAllNA(
   mydata[, c(
     "subid",
     "rater1continuous",
@@ -2035,7 +2075,8 @@ icc3.inter.fn(dropRowsWithAllNA(
   )],
   ignore = "subid"
 ))
-icc3.nointer.fn(dropRowsWithAllNA(
+
+irrICC::icc3.nointer.fn(dropRowsWithAllNA(
   mydata[, c(
     "subid",
     "rater1continuous",
@@ -2071,17 +2112,19 @@ These estimates of inter-rater reliability range from −1 to +1, with −1 indi
 Larger, more positive scores indicate greater agreement.
 
 ```{r}
-cohen.kappa(mydata[, c(
+psych::cohen.kappa(mydata[, c(
   "rater1categorical",
   "rater2categorical",
   "rater3categorical"
 )])
-fleiss.kappa.raw(na.omit(mydata[, c(
+
+irrCAC::fleiss.kappa.raw(na.omit(mydata[, c(
   "rater1categorical",
   "rater2categorical",
   "rater3categorical"
 )]))
-gwet.ac1.raw(na.omit(mydata[, c(
+
+irrCAC::gwet.ac1.raw(na.omit(mydata[, c(
   "rater1categorical",
   "rater2categorical",
   "rater3categorical"
@@ -2102,12 +2145,13 @@ The values range from −1 to +1, with −1 indicating perfect disagreement, 0 i
 Larger, more positive scores indicate greater agreement.
 
 ```{r}
-cohen.kappa(mydata[, c(
+psych::cohen.kappa(mydata[, c(
   "rater1ordinal",
   "rater2ordinal",
   "rater3ordinal"
 )])
-kendallNA(mydata[, c(
+
+irrNA::kendallNA(mydata[, c(
   "rater1ordinal",
   "rater2ordinal",
   "rater3ordinal"
@@ -2284,7 +2328,7 @@ latentFactorModel_syntax <- '
  latentFactor =~ item1 + item2 + item3 + item4
 '
 
-latentFactorModel_fit <- cfa(
+latentFactorModel_fit <- lavaan::cfa(
   latentFactorModel_syntax,
   data = mydata,
   missing = "ML",
@@ -2299,7 +2343,7 @@ summary(
   rsquare = TRUE
 )
 
-AVE(latentFactorModel_fit)
+semTools::AVE(latentFactorModel_fit)
 ```
 
 #### Maximal Reliability {#sec-maximalReliability}
@@ -2345,7 +2389,7 @@ Another challenge to split-half reliability is that the reliability differs depe
 One option is to calculate the split-half reliability of odd and even trials, while correcting for test length, as is performed with the `item_split_half()` function of the `performance` package [@R-performance]:
 
 ```{r}
-item_split_half(mydata[, c(
+performance::item_split_half(mydata[, c(
   "item1",
   "item2",
   "item3",
@@ -2357,7 +2401,7 @@ Modern computational software allows for estimating the mean reliability estimat
 Split-half reliability was estimated using the `psych` package [@R-psych].\index{reliability!internal consistency}\index{reliability!internal consistency!split-half}
 
 ```{r}
-splitHalf(
+psych::splitHalf(
   mydata[, c(
     "item1",
     "item2",
@@ -2441,7 +2485,7 @@ Omega total ($\omega_t$) was calculated using the `MBESS` package [@R-MBESS].\in
 This code quickly calculates a point estimate for omega total:\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
 ```{r}
-ci.reliability(
+MBESS::ci.reliability(
   mydata[, c("item1", "item2", "item3", "item4")],
   type = "omega",
   interval.type = "none"
@@ -2468,7 +2512,7 @@ However, the number of bootstrap replications must be larger than the number of 
 #| label: omegaTotal
 
 set.seed(52242)
-ci.reliability(
+MBESS::ci.reliability(
   mydata[, c("item1", "item2", "item3", "item4")],
   type = "omega",
   interval.type = "bca",
@@ -2486,7 +2530,7 @@ If the multidimensional items follow a higher-order structure, use omega higher-
 Omega hierarchical was calculated using the `MBESS` package [@R-MBESS].\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
 ```{r}
-ci.reliability(
+MBESS::ci.reliability(
   mydata[, c("item1", "item2", "item3", "item4")],
   type = "hierarchical",
   interval.type = "none"
@@ -2505,7 +2549,7 @@ However, the number of bootstrap replications must be larger than the number of 
 #| label: omegaHierarchical
 
 set.seed(52242)
-ci.reliability(
+MBESS::ci.reliability(
   mydata[, c("item1", "item2", "item3", "item4")],
   type = "hierarchical",
   interval.type = "bca",
@@ -2523,7 +2567,7 @@ If the categorical items are multidimensional and they follow a higher-order str
 Omega categorical was calculated using the `MBESS` package [@R-MBESS].\index{reliability!internal consistency}\index{reliability!internal consistency!omega}
 
 ```{r}
-ci.reliability(
+MBESS::ci.reliability(
   mydata[, c("rater1categorical", "rater2categorical", "rater3categorical")],
   type = "categorical",
   interval.type = "none"
@@ -2543,7 +2587,7 @@ However, the number of bootstrap replications must be larger than the number of 
 #| output: false
 
 set.seed(52242)
-ci.reliability(
+MBESS::ci.reliability(
   mydata[, c("rater1categorical", "rater2categorical", "rater3categorical")],
   type = "categorical",
   interval.type = "bca",
@@ -2595,7 +2639,7 @@ weights <- c(1, 2, 2, 1.5) #weights of each variable in the linear combination
 Here is the reliability of an unweighted composite:\index{reliability!linear composite}
 
 ```{r}
-composite_rel_matrix(
+psychmeta::composite_rel_matrix(
   rel_vec = rxx,
   r_mat = rho,
   sd_vec = sigma
@@ -2605,7 +2649,7 @@ composite_rel_matrix(
 Here is the reliability of a weighted composite:\index{reliability!linear composite}
 
 ```{r}
-composite_rel_matrix(
+psychmeta::composite_rel_matrix(
   rel_vec = rxx,
   r_mat = rho,
   sd_vec = sigma,
@@ -2627,7 +2671,7 @@ $$
 r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\sigma_{y}}{\sigma^2_x + \sigma^2_y - 2r_{xy} \sigma_{x}\sigma_{y}}
 $$ {#eq-reliabilityOfDifferenceScore}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `reliabilityOfDifferenceScore()` function to estimate the reliability of a difference score:\index{reliability!difference score}\index{difference score!reliability}\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::reliabilityOfDifferenceScore()` function to estimate the reliability of a difference score:\index{reliability!difference score}\index{difference score!reliability}\index{petersenlab package}
 
 ```{r}
 #| eval: false
@@ -2649,7 +2693,7 @@ reliabilityOfDifferenceScore <- function(x, y, reliabilityX, reliabilityY) {
 ```
 
 ```{r}
-reliabilityOfDifferenceScore(
+petersenlab::reliabilityOfDifferenceScore(
   x = mydata$item1,
   y = mydata$item2,
   reliabilityX = .95,
@@ -2703,7 +2747,7 @@ newDataDifferenceScore$reliabilityOfDifferenceScore <- reliabilityOfDifferenceSc
   reliabilityY = newDataDifferenceScore$reliability
 )
 
-ggplot(
+ggplot2::ggplot(
   newDataDifferenceScore,
   aes(
     reliability,
@@ -2754,7 +2798,7 @@ newDataDifferenceScore2$reliabilityOfDifferenceScore <- reliabilityOfDifferenceS
   reliabilityY = newDataDifferenceScore2$reliability
 )
 
-ggplot(
+ggplot2::ggplot(
   newDataDifferenceScore2,
   aes(
     correlation,
@@ -2808,7 +2852,7 @@ $$
 r_{x*y, x*y} = r_{xx} r_{yy}
 $$ {#eq-reliabilityOfProductTermUncorrelated}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `reliabilityOfProductTerm()` function to estimate the reliability of a product term:\index{reliability!product term}\index{moderation}\index{moderation@\igobble|seealso{interaction}}\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::reliabilityOfProductTerm()` function to estimate the reliability of a product term:\index{reliability!product term}\index{moderation}\index{moderation@\igobble|seealso{interaction}}\index{petersenlab package}
 
 ```{r}
 #| eval: false
@@ -2824,7 +2868,7 @@ reliabilityOfProductTerm <- function(x, y, reliabilityX, reliabilityY) {
 ```
 
 ```{r}
-reliabilityOfProductTerm(
+petersenlab::reliabilityOfProductTerm(
   x = mydata$item1,
   y = mydata$item4,
   reliabilityX = .80,
@@ -2964,7 +3008,9 @@ mydata <- data.frame(
 #### Coefficient of stability {#sec-noError-stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
+cor.test(
+  x = mydata$time1,
+  y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#sec-noError-repeatability}
@@ -2983,7 +3029,7 @@ qnorm(.975) *
 #### Bias {#sec-noError-bias}
 
 ```{r}
-blandr.statistics(
+blandr::blandr.statistics(
   mydata$time1,
   mydata$time2
 )$bias
@@ -3048,7 +3094,9 @@ for (i in 1:nrow(mydata)) {
 #### Coefficient of stability {#sec-withinPersonRandomError-stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
+cor.test(
+  x = mydata$time1,
+  y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#sec-withinPersonRandomError-repeatability}
@@ -3056,7 +3104,7 @@ cor.test(x = mydata$time1, y = mydata$time2)
 ```{r}
 qnorm(.975) *
   sd(
-    blandr.statistics(
+    blandr::blandr.statistics(
       mydata$time1,
       mydata$time2
     )$differences,
@@ -3067,7 +3115,7 @@ qnorm(.975) *
 #### Bias {#sec-withinPersonRandomError-bias}
 
 ```{r}
-blandr.statistics(
+blandr::blandr.statistics(
   mydata$time1,
   mydata$time2
 )$bias
@@ -3139,7 +3187,9 @@ for (i in 1:nrow(mydata)) {
 #### Coefficient of stability {#sec-withinPersonSystematicError-stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
+cor.test(
+  x = mydata$time1,
+  y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#sec-withinPersonSystematicError-repeatability}
@@ -3147,7 +3197,7 @@ cor.test(x = mydata$time1, y = mydata$time2)
 ```{r}
 qnorm(.975) *
   sd(
-    blandr.statistics(
+    blandr::blandr.statistics(
       mydata$time1,
       mydata$time2
     )$differences,
@@ -3158,7 +3208,7 @@ qnorm(.975) *
 #### Bias {#sec-withinPersonSystematicError-bias}
 
 ```{r}
-blandr.statistics(
+blandr::blandr.statistics(
   mydata$time1,
   mydata$time2
 )$bias
@@ -3222,7 +3272,9 @@ mydata$time2 <- mydata$time2 +
 #### Coefficient of stability {#sec-betweenPersonRandomError-stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
+cor.test(
+  x = mydata$time1,
+  y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#sec-betweenPersonRandomError-repeatability}
@@ -3230,7 +3282,7 @@ cor.test(x = mydata$time1, y = mydata$time2)
 ```{r}
 qnorm(.975) *
   sd(
-    blandr.statistics(
+    blandr::blandr.statistics(
       mydata$time1,
       mydata$time2
     )$differences,
@@ -3241,7 +3293,7 @@ qnorm(.975) *
 #### Bias {#sec-betweenPersonRandomError-bias}
 
 ```{r}
-blandr.statistics(
+blandr::blandr.statistics(
   mydata$time1,
   mydata$time2
 )$bias
@@ -3313,7 +3365,7 @@ cor.test(
 ```{r}
 qnorm(.975) *
   sd(
-    blandr.statistics(
+    blandr::blandr.statistics(
       mydata$time1,
       mydata$time2
     )$differences,
@@ -3324,7 +3376,7 @@ qnorm(.975) *
 #### Bias {#sec-betweenPersonSystematicError-bias}
 
 ```{r}
-blandr.statistics(
+blandr::blandr.statistics(
   mydata$time1,
   mydata$time2
 )$bias
@@ -3388,7 +3440,9 @@ mydata$time3 <- mydata$time3 + 10
 #### Coefficient of stability {#sec-constantVariance-stability}
 
 ```{r}
-cor.test(x = mydata$time1, y = mydata$time2)
+cor.test(
+  x = mydata$time1,
+  y = mydata$time2)
 ```
 
 #### Coefficient of repeatability {#sec-constantVariance-repeatability}
@@ -3396,7 +3450,7 @@ cor.test(x = mydata$time1, y = mydata$time2)
 ```{r}
 qnorm(.975) *
   sd(
-    blandr.statistics(
+    blandr::blandr.statistics(
       mydata$time1,
       mydata$time2
     )$differences,
@@ -3407,7 +3461,7 @@ qnorm(.975) *
 #### Bias {#sec-constantVariance-bias}
 
 ```{r}
-blandr.statistics(
+blandr::blandr.statistics(
   mydata$time1,
   mydata$time2
 )$bias
@@ -3466,11 +3520,11 @@ reliabilityOfMeasure <- 0.9
 trueAssociation * reliabilityOfMeasure
 ```
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::attenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}\index{petersenlab package}
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:\index{reliability!test–retest}\index{measurement error!attenuation of association}\index{observed association}\index{true association}
 
 ```{r}
-attenuationCorrelation(
+petersenlab::attenuationCorrelation(
   trueAssociation = 0.7,
   reliabilityOfPredictor = 0.9,
   reliabilityOfCriterion = 0.9
@@ -3504,11 +3558,11 @@ observedAssociation <- as.numeric(
 observedAssociation / reliabilityOfMeasure
 ```
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::disattenuationCorrelation()` function that estimates the observed association given the true association and the reliability of the predictor and criterion.\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}\index{petersenlab package}
 When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:\index{reliability!test–retest}\index{measurement error!disattenuation of association}\index{observed association}\index{true association}
 
 ```{r}
-disattenuationCorrelation(
+petersenlab::disattenuationCorrelation(
   observedAssociation = observedAssociation,
   reliabilityOfPredictor = 0.9,
   reliabilityOfCriterion = 0.9

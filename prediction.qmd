@@ -1255,6 +1255,7 @@ library("here")
 library("tinytex")
 library("rmarkdown")
 library("knitr")
+library("kableExtra")
 ```
 
 ### Prepare Data {#sec-prepareData-prediction}
@@ -2857,7 +2858,7 @@ mydataSDT$disorderFactor <- factor(
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `accuracyAtCutoff()` function that estimates the prediction accuracy at a given cutoff.\index{petersenlab package}
 
 ```{r}
-accuracyAtCutoff(
+petersenlab::accuracyAtCutoff(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
   cutoff = cutoff
@@ -3510,7 +3511,7 @@ accuracyStats$specificity <- accuracyStats$TNrate <- specificity(
   FN = accuracyStats$FN
 )
 
-sensitivitySpecificityData <- pivot_longer(
+sensitivitySpecificityData <- tidyr::pivot_longer(
   accuracyStats,
   cols = all_of(c("sensitivity", "specificity"))
 )
@@ -3522,7 +3523,7 @@ sensitivitySpecificityData <- pivot_longer(
 #| fig-alt: "Sensitivity and Specificity as a Function of the Cutoff."
 #| code-fold: true
 
-ggplot(
+ggplot2::ggplot(
   sensitivitySpecificityData,
   aes(
     x = cutoff,
@@ -3761,7 +3762,7 @@ ppvNPVbaseRateData$negativePredictiveValue <- negativePredictiveValue(
   SP = ppvNPVbaseRateData$SP
 )
 
-ppvNPVbaseRateData_long <- pivot_longer(
+ppvNPVbaseRateData_long <- tidyr::pivot_longer(
   ppvNPVbaseRateData,
   cols = all_of(c(
     "positivePredictiveValue",
@@ -3776,7 +3777,12 @@ ppvNPVbaseRateData_long <- pivot_longer(
 #| fig-alt: "Positive Predictive Value and Negative Predictive Value as a Function of the Base Rate."
 #| code-fold: true
 
-ggplot(ppvNPVbaseRateData_long, aes(x = BR, y = value, color = name)) +
+ggplot2::ggplot(
+  ppvNPVbaseRateData_long,
+  aes(
+    x = BR,
+    y = value,
+    color = name)) +
   geom_line(linewidth = 2) +
   scale_x_continuous(name = "base rate") +
   scale_y_continuous(name = "predictive value") +
@@ -3822,7 +3828,12 @@ ppvNPVcutoffData <- pivot_longer(
 #| fig-alt: "Positive Predictive Value and Negative Predictive Value as a Function of the Cutoff."
 #| code-fold: true
 
-ggplot(ppvNPVcutoffData, aes(x = cutoff, y = value, color = name)) +
+ggplot(
+  ppvNPVcutoffData,
+  aes(
+    x = cutoff,
+    y = value,
+    color = name)) +
   geom_line(linewidth = 2) +
   scale_x_continuous(
     name = "cutoff (liberal to conservative)",
@@ -3981,7 +3992,9 @@ falseOmissionRate(
 ```{r}
 #| include: false
 
-falseOmissionRateValue <- falseOmissionRate(TN = TNvalue, FN = FNvalue)
+falseOmissionRateValue <- falseOmissionRate(
+  TN = TNvalue,
+  FN = FNvalue)
 ```
 
 ### Youden's J Statistic {#sec-youdenJ-example}
@@ -4021,7 +4034,11 @@ youdenJ(
 ```{r}
 #| include: false
 
-youdenJValue <- youdenJ(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+youdenJValue <- youdenJ(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### Balanced Accuracy {#sec-balancedAccuracy}
@@ -4127,7 +4144,10 @@ fScore(
 ```{r}
 #| include: false
 
-f1ScoreValue <- fScore(TP = TPvalue, FP = FPvalue, FN = FNvalue)
+f1ScoreValue <- fScore(
+  TP = TPvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### Matthews Correlation Coefficient (MCC) {#sec-matthewsCorrelationCoefficient}
@@ -4170,7 +4190,11 @@ mcc(
 ```{r}
 #| include: false
 
-mccValue <- mcc(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+mccValue <- mcc(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### Diagnostic Odds Ratio {#sec-diagnosticOddsRatio}
@@ -4594,7 +4618,7 @@ One can also generate the probability nomogram from the [base rate](#sec-pretest
 ```{r}
 #| eval: false
 
-nomogrammer(
+petersenlab::nomogrammer(
   pretestProb = baseRate(
     TP = TPvalue,
     TN = TNvalue,
@@ -4611,7 +4635,7 @@ One can also generate the probability nomogram from the [base rate](#sec-pretest
 ```{r}
 #| eval: false
 
-nomogrammer(
+petersenlab::nomogrammer(
   pretestProb = baseRate(
     TP = TPvalue,
     TN = TNvalue,
@@ -4667,7 +4691,11 @@ dPrimeSDT(
 ```{r}
 #| include: false
 
-dPrimeValue <- dPrimeSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+dPrimeValue <- dPrimeSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### $A$ (Non-Parametric) Sensitivity from Signal Detection Theory {#sec-aSDT}
@@ -4730,7 +4758,11 @@ aSDT(
 ```{r}
 #| include: false
 
-Avalue <- aSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+Avalue <- aSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### $\beta$ Bias from Signal Detection Theory {#sec-betaSDT}
@@ -4769,7 +4801,11 @@ betaSDT(
 ```{r}
 #| include: false
 
-betaValue <- betaSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+betaValue <- betaSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### $c$ Bias from Signal Detection Theory {#sec-cSDT}
@@ -4808,7 +4844,11 @@ cSDT(
 ```{r}
 #| include: false
 
-cValue <- cSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+cValue <- cSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### $b$ (Non-Parametric) Bias from Signal Detection Theory {#sec-bSDT}
@@ -4857,7 +4897,11 @@ bSDT(
 ```{r}
 #| include: false
 
-bValue <- bSDT(TP = TPvalue, TN = TNvalue, FP = FPvalue, FN = FNvalue)
+bValue <- bSDT(
+  TP = TPvalue,
+  TN = TNvalue,
+  FP = FPvalue,
+  FN = FNvalue)
 ```
 
 ### Mean Difference between Predicted Versus Observed Values (Miscalibration) {#sec-miscalibration}
@@ -5326,7 +5370,7 @@ for (i in 1:length(possibleCutoffs)) {
   ))
 }
 
-informationGainStats <- full_join(
+informationGainStats <- dplyr::full_join(
   possibleCutoffsBaseRates,
   informationGainStats,
   by = "cutoff"
@@ -5352,7 +5396,7 @@ informationGainStats$informationGain <- Igain(
 )
 informationGainStats <- na.omit(informationGainStats)
 
-ggplot(
+ggplot2::ggplot(
   data = informationGainStats,
   aes(
     x = cutoff,
@@ -5659,10 +5703,10 @@ accuracyStats <- do.call(
 
 ### All Accuracy Statistics {#sec-allAccuracyStatistics}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains an R function that estimates the prediction accuracy at every possible cutoff.\index{petersenlab package}\index{cutoff}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::accuracyAtEachCutoff()` R function that estimates the prediction accuracy at every possible cutoff.\index{petersenlab package}\index{cutoff}
 
 ```{r}
-accuracyAtEachCutoff(
+petersenlab::accuracyAtEachCutoff(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
   UH = utilityHits,
@@ -5693,11 +5737,11 @@ accuracyStats |>
   head |>
   t() |>
   round(2) |>
-  kable(
+  knitr::kable(
     format = "latex",
     booktabs = TRUE
   ) |>
-  kable_styling(font_size = 7)
+  kableExtra::kable_styling(font_size = 7)
 ```
 
 :::
@@ -5712,7 +5756,7 @@ accuracyStats |>
   head |>
   t() |>
   round(2) |>
-  kable(booktabs = TRUE)
+  knitr::kable(booktabs = TRUE)
 ```
 
 :::
@@ -5726,8 +5770,8 @@ Threshold at maximum combination of [sensitivity](#sec-sensitivity) and [specifi
 $\text{max}(\text{sensitivity} + \text{specificity})$
 
 ```{r}
-youdenIndex <- coords(
-  roc(
+youdenIndex <- pROC::coords(
+  pROC::roc(
     data = mydataSDT,
     response = disorder,
     predictor = testScore,
@@ -5765,8 +5809,8 @@ accuracyStats[
 Threshold where the ROC plot is closest to the Top Left:
 
 ```{r}
-closestToTheTopLeft <- coords(
-  roc(
+closestToTheTopLeft <- pROC::coords(
+  pROC::roc(
     data = mydataSDT,
     response = disorder,
     predictor = testScore,
@@ -5792,10 +5836,10 @@ accuracyStats[
 
 ### Cutoff that optimizes each of the following criteria: {#sec-allAccuracyStatistics-cutoff}
 
-The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains an R function that identifies the cutoff that optimizes each of various accuracy estimates.\index{petersenlab package}
+The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `petersenlab::optimalCutoff()` R function that identifies the cutoff that optimizes each of various accuracy estimates.\index{petersenlab package}
 
 ```{r}
-optimalCutoff(
+petersenlab::optimalCutoff(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
   UH = utilityHits,
@@ -6196,7 +6240,10 @@ Consider the following example where you have one predictor and one outcome, as 
 #| tbl-cap: "Example Data of Predictor (x1) and Outcome (y) Used for Regression Model."
 #| echo: false
 
-kable(regression1, col.names = c("y", "x1"), booktabs = TRUE)
+knitr::kable(
+  regression1,
+  col.names = c("y", "x1"),
+  booktabs = TRUE)
 ```
 
 Using the data, the best fitting regression model is: $y = `r apa(regression1_intercept, decimals = 2)` + `r apa(regression1_slope, decimals = 2)` \cdot x_1$.\index{multiple regression}
@@ -6210,7 +6257,10 @@ Now consider the following example where you add a second predictor to the data 
 #| tbl-cap: "Example Data of Predictors (x1 and x2) and Outcome (y) Used for Regression Model."
 #| echo: false
 
-kable(regression2, col.names = c("y", "x1", "x2"), booktabs = TRUE)
+knitr::kable(
+  regression2,
+  col.names = c("y", "x1", "x2"),
+  booktabs = TRUE)
 ```
 
 With the second predictor, the best fitting regression model is: $y = `r apa(regression2_intercept, decimals = 2)` + `r apa(regression2_slope1, decimals = 2)` \cdot x_1 + `r apa(regression2_slope2, decimals = 2)` \cdot x_2$.\index{multiple regression}
@@ -6270,7 +6320,10 @@ regression3 <- data.frame(
 #| fig-width: 6
 #| echo: false
 
-kable(regression3, col.names = c("y", "x1", "x2"), booktabs = TRUE)
+kable(
+  regression3,
+  col.names = c("y", "x1", "x2"),
+  booktabs = TRUE)
 ```
 
 The second measure is not very good—it is exactly twice the value of the first measure.\index{multicollinearity}\index{multiple regression}
@@ -6308,7 +6361,7 @@ collinearRegression_model <- lm(
   data = mydataSDT
 )
 
-vif(collinearRegression_model)
+car::vif(collinearRegression_model)
 ```
 
 To address multicollinearity, you can drop a redundant predictor or you can also use [principal component analysis](#sec-pca) or [factor analysis](#sec-factorAnalysis) of the predictors to reduce the predictors down to a smaller number of meaningful predictors.\index{multicollinearity}\index{factor analysis}\index{principal component analysis}
@@ -7531,7 +7584,7 @@ The AUC of $`r apa(auc_ex, decimals = 2, leading = FALSE)`$ indicates that the p
 #| fig-height: 8
 #| echo: false
 
-grid.arrange(g_ex)
+gridExtra::grid.arrange(g_ex)
 ```
 
 6. In general, the predictions are well-calibrated.

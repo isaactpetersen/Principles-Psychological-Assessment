@@ -317,14 +317,14 @@ markerVariable_fullSyntax <- '
  y4 ~ 1
 '
 
-markerVariableModelFit <- sem(
+markerVariableModelFit <- lavaan::sem(
   markerVariable_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR"
 )
 
-markerVariableModelFit_full <- lavaan(
+markerVariableModelFit_full <- lavaan::lavaan(
   markerVariable_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
@@ -337,7 +337,7 @@ markerVariableModelFit_full <- lavaan(
 #| fig-cap: "Identifying a Latent Variable Using the Marker Variable Approach."
 #| fig-alt: "Identifying a Latent Variable Using the Marker Variable Approach."
 
-semPaths(
+semPlot::semPaths(
   markerVariableModelFit,
   what = "est",
   layout = "tree2",
@@ -388,7 +388,7 @@ effectsCoding_fullSyntax <- '
  y4 ~ 1
 '
 
-effectsCodingModelFit_abbreviated <- sem(
+effectsCodingModelFit_abbreviated <- lavaan::sem(
   effectsCoding_abbreviatedSyntax,
   data = PoliticalDemocracy,
   effect_coding = "loadings",
@@ -396,14 +396,14 @@ effectsCodingModelFit_abbreviated <- sem(
   estimator = "MLR"
 )
 
-effectsCodingModelFit <- sem(
+effectsCodingModelFit <- lavaan::sem(
   effectsCoding_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR"
 )
 
-effectsCodingModelFit_full <- lavaan(
+effectsCodingModelFit_full <- lavaan::lavaan(
   effectsCoding_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
@@ -416,7 +416,7 @@ effectsCodingModelFit_full <- lavaan(
 #| fig-cap: "Identifying a Latent Variable Using the Effects Coding Approach."
 #| fig-alt: "Identifying a Latent Variable Using the Effects Coding Approach."
 
-semPaths(
+semPlot::semPaths(
   effectsCodingModelFit,
   what = "est",
   layout = "tree2",
@@ -470,7 +470,7 @@ standardizedLatent_fullSyntax <- '
  y4 ~ 1
 '
 
-standardizedLatentFit_abbreviated <- sem(
+standardizedLatentFit_abbreviated <- lavaan::sem(
   standardizedLatent_abbreviatedsyntax,
   data = PoliticalDemocracy,
   std_lv = TRUE,
@@ -478,14 +478,14 @@ standardizedLatentFit_abbreviated <- sem(
   estimator = "MLR"
 )
 
-standardizedLatentFit <- sem(
+standardizedLatentFit <- lavaan::sem(
   standardizedLatent_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR"
 )
 
-standardizedLatentFit_full <- lavaan(
+standardizedLatentFit_full <- lavaan::lavaan(
   standardizedLatent_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
@@ -519,7 +519,7 @@ reflectiveModel_syntax <- '
  reflective =~ y1 + y2 + y3 + y4
 '
 
-reflectiveModelFit <- sem(
+reflectiveModelFit <- lavaan::sem(
   reflectiveModel_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
@@ -527,9 +527,9 @@ reflectiveModelFit <- sem(
   std_lv = TRUE
 )
 
-reflectiveModelParameters <- parameterEstimates(
+reflectiveModelParameters <- lavaan::parameterEstimates(
   reflectiveModelFit
-)[!is.na(parameterEstimates(reflectiveModelFit)$z), ]
+)[!is.na(lavaan::parameterEstimates(reflectiveModelFit)$z), ]
 
 row.names(reflectiveModelParameters) <- NULL
 
@@ -539,7 +539,7 @@ reflectiveModelParameters
 Here are the degrees of freedom:\index{structural equation modeling!degrees of freedom}
 
 ```{r}
-fitMeasures(reflectiveModelFit, "df")
+lavaan::fitMeasures(reflectiveModelFit, "df")
 ```
 
 Here is a model diagram:
@@ -549,7 +549,7 @@ Here is a model diagram:
 #| fig-cap: "Example of a Reflective Model."
 #| fig-alt: "Example of a Reflective Model."
 
-semPaths(
+semPlot::semPaths(
   reflectiveModelFit,
   what = "Std.all",
   layout = "tree2",
@@ -578,14 +578,14 @@ formativeModel_syntax <- '
  formative ~~ formative
 '
 
-formativeModelFit <- sem(
+formativeModelFit <- lavaan::sem(
   formativeModel_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR"
 )
 
-formativeModelParameters <- parameterEstimates(formativeModelFit)
+formativeModelParameters <- lavaan::parameterEstimates(formativeModelFit)
 
 formativeModelParameters
 ```
@@ -593,13 +593,13 @@ formativeModelParameters
 Here are the degrees of freedom:\index{structural equation modeling!degrees of freedom}
 
 ```{r}
-PT <- lavaanify(
+PT <- lavaan::lavaanify(
   formativeModel_syntax,
   fixed_x = TRUE, # sem() sets fixed_x = TRUE by default
   meanstructure = TRUE # estimator = "MLR" and missing = "ML" both set meanstructure = TRUE
 )
 
-lav_partable_df(PT)
+lavaan::parameterTable(PT)
 
 formativeModelFit
 ```
@@ -611,7 +611,7 @@ Here is a model diagram:
 #| fig-cap: "Example of an Under-Identified Formative Model."
 #| fig-alt: "Example of an Under-Identified Formative Model."
 
-semPaths(
+semPlot::semPaths(
   formativeModelFit,
   what = "Std.all",
   layout = "tree2",
@@ -641,19 +641,19 @@ formativeModel2_syntax <- '
  reflective ~ formative
 '
 
-formativeModel2Fit <- sem(
+formativeModel2Fit <- lavaan::sem(
   formativeModel2_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR"
 )
 
-formativeModel2Parameters <- parameterEstimates(formativeModel2Fit)
+formativeModel2Parameters <- lavaan::parameterEstimates(formativeModel2Fit)
 formativeModel2Parameters
 
-fitMeasures(formativeModel2Fit, "df")
+lavaan::fitMeasures(formativeModel2Fit, "df")
 
-semPaths(
+semPlot::semPaths(
   formativeModel2Fit,
   what = "Std.all",
   layout = "tree2",
@@ -754,19 +754,19 @@ formativeModel3_syntax <- '
   w4std := w4*(varv4/varformative)^(1/2)
 '
 
-formativeModel3Fit <- sem(
+formativeModel3Fit <- lavaan::sem(
   formativeModel3_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR"
 )
 
-formativeModel3Parameters <- parameterEstimates(formativeModel3Fit)
+formativeModel3Parameters <- lavaan::parameterEstimates(formativeModel3Fit)
 formativeModel3Parameters
 
-fitMeasures(formativeModel3Fit, "df")
+lavaan::fitMeasures(formativeModel3Fit, "df")
 
-semPaths(
+semPlot::semPaths(
   formativeModel3Fit,
   what = "Std.all",
   layout = "tree2",
@@ -845,19 +845,19 @@ formativeModel4_syntax <- '
   wstdv4 := ((w4) * (sqrt(varv4))) * (1/sqrt(varformative))
 '
 
-formativeModel4Fit <- sem(
+formativeModel4Fit <- lavaan::sem(
   formativeModel4_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
   estimator = "MLR"
 )
 
-formativeModel4Parameters <- parameterEstimates(formativeModel4Fit)
+formativeModel4Parameters <- lavaan::parameterEstimates(formativeModel4Fit)
 formativeModel4Parameters
 
-fitMeasures(formativeModel4Fit, "df")
+lavaan::fitMeasures(formativeModel4Fit, "df")
 
-semPaths(
+semPlot::semPaths(
   formativeModel4Fit,
   what = "Std.all",
   layout = "tree2",
@@ -884,7 +884,7 @@ loadingMatrix
 
 # Invert matrix, the first row contains the (unstandardized) weights
 # these can be copy and pasted to the lavaan model to specify the weights as new parameters
-mxinv(loadingMatrix)
+calculus::mxinv(loadingMatrix)
 ```
 
 Florian Schubert provides an `R` function to create the full `lavaan` syntax for confirmatory composite analysis at the following link: <https://github.com/FloSchuberth/HOspecification>
@@ -987,34 +987,46 @@ For guidance on evaluating local fit, see @Kline2024.\index{structural equation 
 ## Correlation Matrix {#sec-correlationMatrix-sem}
 
 ```{r}
-cor(mydataSEM, use = "pairwise.complete.obs")
+cor(
+  mydataSEM,
+  use = "pairwise.complete.obs")
 ```
 
-Correlation matrices of various types using the `cor.table()` function from the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] are in Tables [-@tbl-corTable1b], [-@tbl-corTable2b], and [-@tbl-corTable3b].\index{petersenlab package}\index{correlation}
+Correlation matrices of various types using the `petersenlab::cor.table()` function from the [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] are in Tables [-@tbl-corTable1b], [-@tbl-corTable2b], and [-@tbl-corTable3b].\index{petersenlab package}\index{correlation}
 
 ```{r}
 #| eval: false
 
-cor.table(mydataSEM, dig = 2)
-cor.table(mydataSEM, type = "manuscript", dig = 2)
-cor.table(mydataSEM, type = "manuscriptBig", dig = 2)
+petersenlab::cor.table(
+  mydataSEM,
+  dig = 2)
+
+petersenlab::cor.table(
+  mydataSEM,
+  type = "manuscript",
+  dig = 2)
+
+petersenlab::cor.table(
+  mydataSEM,
+  type = "manuscriptBig",
+  dig = 2)
 ```
 
 ```{r}
 #| include: false
 
-corTable1b <- cor.table(
+corTable1b <- petersenlab::cor.table(
   mydataSEM,
   dig = 2
 )
 
-corTable2b <- cor.table(
+corTable2b <- petersenlab::cor.table(
   mydataSEM,
   type = "manuscript",
   dig = 2
 )
 
-corTable3b <- cor.table(
+corTable3b <- petersenlab::cor.table(
   mydataSEM,
   type = "manuscriptBig",
   dig = 2
@@ -1027,7 +1039,7 @@ corTable3b <- cor.table(
 #| echo: false
 
 corTable1b |>
-  kable(
+  knitr::kable(
     booktabs = TRUE,
     linesep = c("", "", "\\addlinespace"),
     escape = FALSE
@@ -1040,7 +1052,7 @@ corTable1b |>
 #| echo: false
 
 corTable2b |>
-  kable(
+  knitr::kable(
     booktabs = TRUE,
     linesep = "",
     escape = FALSE
@@ -1053,7 +1065,7 @@ corTable2b |>
 #| echo: false
 
 corTable3b |>
-  kable(
+  knitr::kable(
     booktabs = TRUE,
     linesep = ""
   )
@@ -1112,14 +1124,14 @@ summary(measurementModel_fullSyntax)
 #### Model Syntax in Table Form: {#sec-measurementModelTabular-sem}
 
 ```{r}
-lavaanify(measurementModel_syntax)
-lavaanify(measurementModel_fullSyntax)
+lavaan::lavaanify(measurementModel_syntax)
+lavaan::lavaanify(measurementModel_fullSyntax)
 ```
 
 ### Fit the Model {#sec-measurementModelFit-sem}
 
 ```{r}
-measurementModelFit <- cfa(
+measurementModelFit <- lavaan::cfa(
   measurementModel_syntax,
   data = mydataSEM,
   missing = "ML",
@@ -1127,7 +1139,7 @@ measurementModelFit <- cfa(
   std_lv = TRUE
 )
 
-measurementModelFit_full <- lavaan(
+measurementModelFit_full <- lavaan::lavaan(
   measurementModel_fullSyntax,
   data = mydataSEM,
   missing = "ML",
@@ -1140,7 +1152,7 @@ measurementModelFit_full <- lavaan(
 ```{r}
 #| include: false
 
-measurementModelParameters <- parameterEstimates(
+measurementModelParameters <- lavaan::parameterEstimates(
   measurementModelFit,
   standardized = TRUE
 )
@@ -1198,7 +1210,7 @@ summary(
 You can extract specific fit indices using the following syntax:\index{structural equation modeling!fit index}
 
 ```{r}
-fitMeasures(
+lavaan::fitMeasures(
   measurementModelFit,
   fit_measures = c(
     "chisq",
@@ -1233,13 +1245,13 @@ residuals(measurementModelFit, type = "cor")
 ### Modification Indices {#sec-measurementModelModIndices-sem}
 
 ```{r}
-modificationindices(measurementModelFit, sort = TRUE)
+lavaan::modificationindices(measurementModelFit, sort = TRUE)
 ```
 
 ### Factor Scores {#sec-measurementModelFactorScores-sem}
 
 ```{r}
-measurementModelFit_factorScores <- lavPredict(measurementModelFit)
+measurementModelFit_factorScores <- lavaan::lavPredict(measurementModelFit)
 ```
 
 ### Internal Consistency Reliability {#sec-measurementModelReliability-sem}
@@ -1247,9 +1259,9 @@ measurementModelFit_factorScores <- lavPredict(measurementModelFit)
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(measurementModelFit)
-AVE(measurementModelFit)
-maximalRelia(measurementModelFit)
+semTools::compRelSEM(measurementModelFit)
+semTools::AVE(measurementModelFit)
+semTools::maximalRelia(measurementModelFit)
 ```
 
 ### Path Diagram {#sec-measurementModelPathDiagram-sem}
@@ -1261,7 +1273,7 @@ A path diagram of the model is in @fig-measurementModel.
 #| fig-cap: "Measurement Model."
 #| fig-alt: "Measurement Model."
 
-semPaths(
+semPlot::semPaths(
   measurementModelFit,
   what = "Std.all",
   layout = "tree2",
@@ -1334,14 +1346,14 @@ cfaModel_fullSyntax <- '
 #### Model Syntax in Table Form: {#sec-cfaModelTabular-sem}
 
 ```{r}
-lavaanify(cfaModel_syntax)
-lavaanify(cfaModel_fullSyntax)
+lavaan::lavaanify(cfaModel_syntax)
+lavaan::lavaanify(cfaModel_fullSyntax)
 ```
 
 ### Fit the Model {#sec-cfaModelFit-sem}
 
 ```{r}
-cfaModelFit <- cfa(
+cfaModelFit <- lavaan::cfa(
   cfaModel_syntax,
   data = HolzingerSwineford1939,
   missing = "ML",
@@ -1349,7 +1361,7 @@ cfaModelFit <- cfa(
   std_lv = TRUE
 )
 
-cfaModelFit_full <- lavaan(
+cfaModelFit_full <- lavaan::lavaan(
   cfaModel_fullSyntax,
   data = HolzingerSwineford1939,
   missing = "ML",
@@ -1386,7 +1398,7 @@ Thus, we may want to consider adjustments to improve the model fit.\index{struct
 In general, we want to make decisions regarding what parameters to estimate based on theory in conjunction with empiricism.\index{structural equation modeling!fit index}\index{theory}\index{empiricism}
 
 ```{r}
-fitMeasures(
+lavaan::fitMeasures(
   cfaModelFit,
   fit_measures = c(
     "chisq",
@@ -1426,13 +1438,13 @@ Rather, it is generally advised to consider modification indices in light of the
 ```{r}
 #| label: tbl-modIndicesCFAModel
 
-modificationindices(cfaModelFit, sort = TRUE)
+lavaan::modificationindices(cfaModelFit, sort = TRUE)
 ```
 
 ### Factor Scores {#sec-cfaModelFactorScores-sem}
 
 ```{r}
-cfaModelFit_factorScores <- lavPredict(cfaModelFit)
+cfaModelFit_factorScores <- lavaan::lavPredict(cfaModelFit)
 ```
 
 ### Internal Consistency Reliability {#sec-cfaModelReliability-sem}
@@ -1440,9 +1452,9 @@ cfaModelFit_factorScores <- lavPredict(cfaModelFit)
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(cfaModelFit)
-AVE(cfaModelFit)
-maximalRelia(cfaModelFit)
+semTools::compRelSEM(cfaModelFit)
+semTools::AVE(cfaModelFit)
+semTools::maximalRelia(cfaModelFit)
 ```
 
 ### Path Diagram {#sec-cfaModelPathDiagram-sem}
@@ -1454,7 +1466,7 @@ Below is a path diagram of the model generated using the `semPlot` package [@R-s
 #| fig-cap: "Confirmatory Factor Analysis Model."
 #| fig-alt: "Confirmatory Factor Analysis Model."
 
-semPaths(
+semPlot::semPaths(
   cfaModelFit,
   what = "Std.all",
   layout = "tree2",
@@ -1527,7 +1539,7 @@ cfaModel2_fullSyntax <- '
 #### Fit the Model {#sec-cfaModelModifiedFit-sem}
 
 ```{r}
-cfaModel2Fit <- cfa(
+cfaModel2Fit <- lavaan::cfa(
   cfaModel2_syntax,
   data = HolzingerSwineford1939,
   missing = "ML",
@@ -1535,7 +1547,7 @@ cfaModel2Fit <- cfa(
   std_lv = TRUE
 )
 
-cfaModel2Fit_full <- lavaan(
+cfaModel2Fit_full <- lavaan::lavaan(
   cfaModel2_fullSyntax,
   data = HolzingerSwineford1939,
   missing = "ML",
@@ -1567,7 +1579,7 @@ After fitting the additional factor loading, the model fits well according to RM
 Thus, this model could be defensible.
 
 ```{r}
-fitMeasures(
+lavaan::fitMeasures(
   cfaModel2Fit,
   fit_measures = c(
     "chisq",
@@ -1606,7 +1618,7 @@ Below is a path diagram of the model generated using the `semPlot` package [@R-s
 #| fig-cap: "Modified Confirmatory Factor Analysis Model."
 #| fig-alt: "Modified Confirmatory Factor Analysis Model."
 
-semPaths(
+semPlot::semPaths(
   cfaModel2Fit,
   what = "Std.all",
   layout = "tree2",
@@ -1618,16 +1630,20 @@ semPaths(
 
 The modified model with the cross-loading and the original model are considered "nested" models.\index{nested model}\index{cross-loading}
 The original model is nested within the modified model because the modified model includes all of the terms of the original model along with additional terms.\index{nested model}
-To confirm that the models are nested, I use the `net()` function from the `semTools` package [@R-semTools].
+To confirm that the models are nested, I use the `semTools::net()` function from the `semTools` package [@R-semTools].
 
 ```{r}
-net(cfaModelFit, cfaModel2Fit)
+semTools::net(
+  cfaModelFit,
+  cfaModel2Fit)
 ```
 
 Model fit of nested models can be compared with a chi-square difference test.\index{chi-square!difference test}\index{structural equation modeling!model comparison}\index{nested model}
 
 ```{r}
-anova(cfaModelFit, cfaModel2Fit)
+anova(
+  cfaModelFit,
+  cfaModel2Fit)
 ```
 
 In this case, the model with the cross-loading fits significantly better (i.e., has a significantly smaller chi-square value) than the model without the cross-loading.\index{cross-loading}\index{structural equation modeling!model comparison}\index{nested model}
@@ -1635,7 +1651,7 @@ In this case, the model with the cross-loading fits significantly better (i.e., 
 One can also compare nested models using a robust likelihood ratio test:\index{structural equation modeling!model comparison}\index{nested model}
 
 ```{r}
-cfaModelFitML <- cfa(
+cfaModelFitML <- lavaan::cfa(
   cfaModel_syntax,
   data = HolzingerSwineford1939,
   missing = "ML",
@@ -1643,7 +1659,7 @@ cfaModelFitML <- cfa(
   std_lv = TRUE
 )
 
-cfaModel2FitML <- cfa(
+cfaModel2FitML <- lavaan::cfa(
   cfaModel2_syntax,
   data = HolzingerSwineford1939,
   missing = "ML",
@@ -1651,7 +1667,7 @@ cfaModel2FitML <- cfa(
   std_lv = TRUE
 )
 
-vuongtest(
+nonnest2::vuongtest(
   cfaModelFitML,
   cfaModel2FitML,
   nested = TRUE
@@ -1661,7 +1677,7 @@ vuongtest(
 For non-nested models, one can compare model fit with AIC, BIC, or the Vuong test.\index{structural equation modeling!model comparison}
 
 ```{r}
-fitMeasures(
+lavaan::fitMeasures(
   cfaModelFitML,
   fit_measures = c(
     "aic",
@@ -1670,7 +1686,7 @@ fitMeasures(
   )
 )
 
-fitMeasures(
+lavaan::fitMeasures(
   cfaModel2FitML,
   fit_measures = c(
     "aic",
@@ -1679,7 +1695,7 @@ fitMeasures(
   )
 )
 
-vuongtest(
+nonnest2::vuongtest(
   cfaModelFitML,
   cfaModel2FitML,
   nested = FALSE
@@ -1774,14 +1790,14 @@ semModel_fullSyntax <- '
 #### Model Syntax in Table Form: {#sec-semModelTabular-sem}
 
 ```{r}
-lavaanify(semModel_syntax)
-lavaanify(semModel_fullSyntax)
+lavaan::lavaanify(semModel_syntax)
+lavaan::lavaanify(semModel_fullSyntax)
 ```
 
 ### Fit the Model {#sec-semModelFit-sem}
 
 ```{r}
-semModelFit <- sem(
+semModelFit <- lavaan::sem(
   semModel_syntax,
   data = PoliticalDemocracy,
   missing = "ML",
@@ -1789,7 +1805,7 @@ semModelFit <- sem(
   std_lv = TRUE
 )
 
-semModelFit_full <- lavaan(
+semModelFit_full <- lavaan::lavaan(
   semModel_fullSyntax,
   data = PoliticalDemocracy,
   missing = "ML",
@@ -1806,8 +1822,8 @@ semModelFit_full <- lavaan(
 
 library("MOTE")
 
-chiSquareTestP <- fitMeasures(semModelFit, fit_measures = "pvalue.scaled")
-chiSquareTestBaselineP <- fitMeasures(
+chiSquareTestP <- lavaan::fitMeasures(semModelFit, fit_measures = "pvalue.scaled")
+chiSquareTestBaselineP <- lavaan::fitMeasures(
   semModelFit,
   fit_measures = "baseline.pvalue"
 )
@@ -1844,7 +1860,7 @@ summary(
 ### Estimates of Model Fit {#sec-semModelFitCriteria-sem}
 
 ```{r}
-fitMeasures(
+lavaan::fitMeasures(
   semModelFit,
   fit_measures = c(
     "chisq",
@@ -1882,13 +1898,13 @@ Modification indices are generated using the syntax below and are in @tbl-modInd
 #| label: tbl-modIndicesSEMModel
 #| tbl-cap: "Modification Indices."
 
-modificationindices(semModelFit, sort = TRUE)
+lavaan::modificationindices(semModelFit, sort = TRUE)
 ```
 
 ### Factor Scores {#sec-semModelFactorScores-sem}
 
 ```{r}
-semModelFit_factorScores <- lavPredict(semModelFit)
+semModelFit_factorScores <- lavaan::lavPredict(semModelFit)
 ```
 
 ### Internal Consistency Reliability {#sec-semModelReliability-sem}
@@ -1896,9 +1912,9 @@ semModelFit_factorScores <- lavPredict(semModelFit)
 [Internal consistency reliability](#sec-internalConsistency-reliability) of items composing the latent factors, as quantified by [omega ($\omega$)](#sec-coefficientOmega), [average variance extracted](#sec-averageVarianceExtracted) (AVE), and [maximal reliability](#sec-maximalReliability), was estimated using the `semTools` package [@R-semTools].\index{reliability!internal consistency!omega}\index{reliability!internal consistency!average variance extracted}
 
 ```{r}
-compRelSEM(semModelFit)
-AVE(semModelFit)
-maximalRelia(semModelFit)
+semTools::compRelSEM(semModelFit)
+semTools::AVE(semModelFit)
+semTools::maximalRelia(semModelFit)
 ```
 
 ### Path Diagram {#sec-semModelPathDiagram-sem}
@@ -1910,7 +1926,7 @@ Below is a path diagram of the model generated using the `semPlot` package [@R-s
 #| fig-cap: "Example Structural Equation Model."
 #| fig-alt: "Example Structural Equation Model."
 
-semPaths(
+semPlot::semPaths(
   semModelFit,
   what = "Std.all",
   layout = "tree2",
@@ -2043,11 +2059,14 @@ populationModel <- '
 ```{r}
 #| label: powerAnalysisPopulationModelFit
 
-populationModel_fit <- lavaan(populationModel, do_fit = FALSE)
+populationModel_fit <- lavaan::lavaan(populationModel, do_fit = FALSE)
 ```
 
 ```{r}
-summary(populationModel_fit, standardized = TRUE, rsquare = TRUE)
+summary(
+  populationModel_fit,
+  standardized = TRUE,
+  rsquare = TRUE)
 ```
 
 #### Model-Implied Covariance and Correlation Matrix {#sec-monteCarloPowerAnalysis-covarianceCorrelationMatrix}
@@ -2140,7 +2159,7 @@ numberOfIndicators <- length(fitted(populationModel_fit)$mean)
 ```{r}
 #| label: powerAnalysisIndicatorDistributions
 
-indicatorDistributions <- bindDist(
+indicatorDistributions <- simsem::bindDist(
   p = numberOfIndicators,
   skewness = c(rep(1.3, 3), rep(2, 8)),
   kurtosis = c(rep(1.8, 3), rep(4, 8))
@@ -2182,7 +2201,7 @@ percentMissingByVariable <- '
 ```{r}
 #| label: powerAnalysisMissingnessModel
 
-missingnessModel <- miss(
+missingnessModel <- simsem::miss(
   logit = percentMissingByVariable,
   m = 0
 )
@@ -2195,7 +2214,7 @@ missingnessModel <- miss(
 #| fig-cap: "Percent Missingness Specified for Each Variable."
 #| fig-alt: "Percent Missingness Specified for Each Variable."
 
-plotLogitMiss(percentMissingByVariable)
+simsem::plotLogitMiss(percentMissingByVariable)
 ```
 
 ### Specify Sample Sizes and Repetitions {#sec-monteCarloPowerAnalysis-sampleSizeReps}
@@ -2248,7 +2267,7 @@ RNGkind("default", "default", "default")
 ### Summary of Population Model {#sec-monteCarloPowerAnalysis-outputPopulationModel}
 
 ```{r}
-summaryPopulation(output)
+simsem::summaryPopulation(output)
 ```
 
 ### Summary of Simulated Data {#sec-monteCarloPowerAnalysis-outputSimulatedData}
@@ -2260,7 +2279,10 @@ summary(output)
 ### Summary of Parameters {#sec-monteCarloPowerAnalysis-parameterSummary}
 
 ```{r}
-summaryParam(output, alpha = .05, detail = TRUE)
+simsem::summaryParam(
+  output,
+  alpha = .05,
+  detail = TRUE)
 ```
 
 ### Time to Completion {#sec-monteCarloPowerAnalysis-completionTime}
@@ -2280,7 +2302,7 @@ At $\alpha = .05$
 #| fig-cap: "Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis."
 #| fig-alt: "Plot of Cutoffs of Fit Indices From Monte Carlo Power Analysis."
 
-plotCutoff(output, alpha = .05)
+simsem::plotCutoff(output, alpha = .05)
 ```
 
 #### Cutoffs of Fit Indices at Particular Sample Size {#sec-monteCarloPowerAnalysis-fitIndicesCutoffsSampleSize}
@@ -2288,7 +2310,10 @@ plotCutoff(output, alpha = .05)
 At $N = 200$, $\alpha = .05$
 
 ```{r}
-getCutoff(output, alpha = .05, nVal = 200)
+simsem::getCutoff(
+  output,
+  alpha = .05,
+  nVal = 200)
 ```
 
 ### Statistical Power {#sec-monteCarloPowerAnalysis-power}
@@ -2304,7 +2329,7 @@ At $\alpha = .05$; dashed horizontal line represents power ($1 - \beta$) of .8\i
 
 par(mfrow = c(1, 2))
 
-plotPower(
+simsem::plotPower(
   output,
   powerParam = "dem65~dem60",
   alpha = .05
@@ -2312,7 +2337,7 @@ plotPower(
 
 abline(h = 0.8, lwd = 2, lty = 2)
 
-plotPower(
+simsem::plotPower(
   output,
   powerParam = "dem65~ind60",
   alpha = .05
@@ -2326,8 +2351,8 @@ abline(h = 0.8, lwd = 2, lty = 2)
 At power ($1 - \beta$) = .80, $\alpha = .05$\index{power analysis}\index{structural equation modeling!power analysis}
 
 ```{r}
-powerEstimates <- getPower(output, alpha = .05)
-findPower(powerEstimates, iv = "N", power = .80)
+powerEstimates <- simsem::getPower(output, alpha = .05)
+simsem::findPower(powerEstimates, iv = "N", power = .80)
 ```
 
 #### Power to Detect Each Parameter at a Given Sample Size {#sec-monteCarloPowerAnalysis-powerSampleSize}
@@ -2335,7 +2360,7 @@ findPower(powerEstimates, iv = "N", power = .80)
 At $N = 200$, $\alpha = .05$\index{power analysis}\index{structural equation modeling!power analysis}
 
 ```{r}
-getPower(output, alpha = .05, nVal = 200)
+simsem::getPower(output, alpha = .05, nVal = 200)
 ```
 
 ## Generalizability Theory {#sec-generalizability-SEM}
