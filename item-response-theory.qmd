@@ -2560,7 +2560,7 @@ Rasch models were fit using the `mirt` package [@R-mirt].\index{item response th
 ```{r}
 #| output: false
 
-raschModel <- mirt(
+raschModel <- mirt::mirt(
   data = mydataIRT,
   model = 1,
   itemtype = "Rasch",
@@ -2572,15 +2572,21 @@ raschModel <- mirt(
 
 ```{r}
 summary(raschModel)
-coef(raschModel, simplify = TRUE, IRTpars = TRUE)
+
+mirt::coef(
+  raschModel,
+  simplify = TRUE,
+  IRTpars = TRUE)
 ```
 
 ### Factor Scores {#sec-irt-onePLfactorScores}
 
-One can obtain factor scores (i.e., theta; and their associated standard errors) for each participant using the `fscores()` function.
+One can obtain factor scores (i.e., theta; and their associated standard errors) for each participant using the `mirt::fscores()` function.
 
 ```{r}
-raschModel_factorScores <- fscores(raschModel, full.scores.SE = TRUE)
+raschModel_factorScores <- mirt::fscores(
+  raschModel,
+  full.scores.SE = TRUE)
 ```
 
 ### Plots {#sec-irt-onePLplots}
@@ -2618,13 +2624,13 @@ plot(raschModel, type = "info")
 The estimate of marginal [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-marginal_rxx(raschModel)
+mirt::marginal_rxx(raschModel)
 ```
 
 The estimate of empirical [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-empirical_rxx(raschModel_factorScores)
+mirt::empirical_rxx(raschModel_factorScores)
 ```
 
 A plot of test [reliability](#sec-irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in @fig-onePLreliability.\index{reliability}
@@ -2722,7 +2728,7 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-onePLModel_cfa_fit <- sem(
+onePLModel_cfa_fit <- lavaan::sem(
   model = onePLModel_cfa,
   data = mydataIRT,
   ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
@@ -2739,7 +2745,7 @@ summary(
   standardized = TRUE
 )
 
-fitMeasures(
+lavaan::fitMeasures(
   onePLModel_cfa_fit,
   fit_measures = c(
     "chisq",
@@ -2757,13 +2763,13 @@ fitMeasures(
 
 residuals(onePLModel_cfa_fit, type = "cor")
 
-modificationindices(onePLModel_cfa_fit, sort = TRUE)
+lavaan::modificationindices(onePLModel_cfa_fit, sort = TRUE)
 
-compRelSEM(onePLModel_cfa_fit)
-AVE(onePLModel_cfa_fit)
-maximalRelia(onePLModel_cfa_fit)
+semTools::compRelSEM(onePLModel_cfa_fit)
+semTools::AVE(onePLModel_cfa_fit)
+semTools::maximalRelia(onePLModel_cfa_fit)
 
-onePLModel_cfa_factorScores <- lavPredict(onePLModel_cfa_fit)
+onePLModel_cfa_factorScores <- lavaan::lavPredict(onePLModel_cfa_fit)
 ```
 
 A path diagram of the one-parameter item factor analysis is in @fig-onePLifa.\index{item response theory!one-parameter model}
@@ -2773,7 +2779,7 @@ A path diagram of the one-parameter item factor analysis is in @fig-onePLifa.\in
 #| fig-cap: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
 #| fig-alt: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
 
-semPaths(
+semPlot::semPaths(
   onePLModel_cfa_fit,
   what = "std",
   layout = "tree2",
@@ -2801,7 +2807,7 @@ mydataIRT_long <- mydataIRT |>
 Then, we can estimate the Rasch model using a logit or probit link:
 
 ```{r}
-raschModel_mixed_logit <- glmer(
+raschModel_mixed_logit <- lme4::glmer(
   response ~ -1 + item + (1 | ID),
   mydataIRT_long,
   family = binomial(link = "logit")
@@ -2809,7 +2815,7 @@ raschModel_mixed_logit <- glmer(
 
 summary(raschModel_mixed_logit)
 
-raschModel_mixed_probit <- glmer(
+raschModel_mixed_probit <- lme4::glmer(
   response ~ -1 + item + (1 | ID),
   mydataIRT_long,
   family = binomial(link = "probit")
@@ -2831,7 +2837,7 @@ item.diff <- data.frame(
 item.diff
 
 # Factor Scores (Theta)
-raschModel_mixed_logit_theta <- ranef(raschModel_mixed_logit)$ID[,
+raschModel_mixed_logit_theta <- lme4::ranef(raschModel_mixed_logit)$ID[,
   "(Intercept)"
 ]
 ```
@@ -2846,7 +2852,7 @@ A two-parameter logistic (2PL) IRT model is a model fit to dichotomous data, whi
 ```{r}
 #| output: false
 
-twoPLModel <- mirt(
+twoPLModel <- mirt::mirt(
   data = mydataIRT,
   model = 1,
   itemtype = "2PL",
@@ -2858,13 +2864,19 @@ twoPLModel <- mirt(
 
 ```{r}
 summary(twoPLModel)
-coef(twoPLModel, simplify = TRUE, IRTpars = TRUE)
+
+mirt::coef(
+  twoPLModel,
+  simplify = TRUE,
+  IRTpars = TRUE)
 ```
 
 ### Factor Scores {#sec-irt-twoPLfactorScores}
 
 ```{r}
-twoPLModel_factorScores <- fscores(twoPLModel, full.scores.SE = TRUE)
+twoPLModel_factorScores <- mirt::fscores(
+  twoPLModel,
+  full.scores.SE = TRUE)
 ```
 
 ### Plots {#sec-irt-twoPLplots}
@@ -2902,13 +2914,13 @@ plot(twoPLModel, type = "info")
 The estimate of marginal [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-marginal_rxx(twoPLModel)
+mirt::marginal_rxx(twoPLModel)
 ```
 
 The estimate of empirical [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-empirical_rxx(twoPLModel_factorScores)
+mirt::empirical_rxx(twoPLModel_factorScores)
 ```
 
 A plot of test [reliability](#sec-irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in @fig-twoPLreliability.\index{reliability}
@@ -3000,7 +3012,7 @@ where $a$ is equal to: $\text{discrimination}/1.702$.\index{item response theory
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `discriminationToFactorLoading()` function that converts discrimination parameters to standardized factor loadings.\index{petersenlab package}
 
 ```{r}
-discriminationParameters <- coef(
+discriminationParameters <- mirt::coef(
   twoPLModel,
   simplify = TRUE
 )$items[, 1]
@@ -3028,7 +3040,7 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-twoPLModel_cfa_fit <- sem(
+twoPLModel_cfa_fit <- lavaan::sem(
   model = twoPLModel_cfa,
   data = mydataIRT,
   ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
@@ -3045,7 +3057,7 @@ summary(
   standardized = TRUE
 )
 
-fitMeasures(
+lavaan::fitMeasures(
   twoPLModel_cfa_fit,
   fit_measures = c(
     "chisq",
@@ -3063,13 +3075,13 @@ fitMeasures(
 
 residuals(twoPLModel_cfa_fit, type = "cor")
 
-modificationindices(twoPLModel_cfa_fit, sort = TRUE)
+lavaan::modificationindices(twoPLModel_cfa_fit, sort = TRUE)
 
-compRelSEM(twoPLModel_cfa_fit)
-AVE(twoPLModel_cfa_fit)
-maximalRelia(twoPLModel_cfa_fit)
+semTools::compRelSEM(twoPLModel_cfa_fit)
+semTools::AVE(twoPLModel_cfa_fit)
+semTools::maximalRelia(twoPLModel_cfa_fit)
 
-twoPLModel_cfa_factorScores <- lavPredict(twoPLModel_cfa_fit)
+twoPLModel_cfa_factorScores <- lavaan::lavPredict(twoPLModel_cfa_fit)
 ```
 
 ```{r}
@@ -3077,7 +3089,7 @@ twoPLModel_cfa_factorScores <- lavPredict(twoPLModel_cfa_fit)
 #| fig-cap: "Item Factor Analysis Diagram of Two-Parameter Logistic Model."
 #| fig-alt: "Item Factor Analysis Diagram of Two-Parameter Logistic Model."
 
-semPaths(
+semPlot::semPaths(
   twoPLModel_cfa_fit,
   what = "std",
   layout = "tree2",
@@ -3096,7 +3108,7 @@ In this example, I estimate a 2PL multidimensional IRT model by estimating two f
 ```{r}
 #| output: false
 
-twoPL2FactorModel <- mirt(
+twoPL2FactorModel <- mirt::mirt(
   data = mydataIRT,
   model = 2,
   itemtype = "2PL",
@@ -3108,13 +3120,16 @@ twoPL2FactorModel <- mirt(
 
 ```{r}
 summary(twoPL2FactorModel)
-coef(twoPL2FactorModel, simplify = TRUE)
+
+mirt::coef(
+  twoPL2FactorModel,
+  simplify = TRUE)
 ```
 
 ### Factor Scores {#sec-irt-twoPLmultidimensionalFactorScores}
 
 ```{r}
-twoPL2FactorModel_factorScores <- fscores(
+twoPL2FactorModel_factorScores <- mirt::fscores(
   twoPL2FactorModel,
   full.scores.SE = TRUE
 )
@@ -3167,13 +3182,13 @@ The estimate of marginal [reliability](#sec-irtReliability) is below:\index{reli
 ```{r}
 #| eval: false
 
-marginal_rxx(twoPL2FactorModel)
+mirt::marginal_rxx(twoPL2FactorModel)
 ```
 
 The estimate of empirical [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-empirical_rxx(twoPL2FactorModel_factorScores)
+mirt::empirical_rxx(twoPL2FactorModel_factorScores)
 ```
 
 ##### Test Standard Error of Measurement {#sec-irt-twoPLmultidimensionalSEM}
@@ -3249,7 +3264,7 @@ Item.4 | threshold4*t1
 Item.5 | threshold5*t1
 '
 
-twoPLModelMultidimensional_cfa_fit <- sem(
+twoPLModelMultidimensional_cfa_fit <- lavaan::sem(
   model = twoPLModelMultidimensional_cfa,
   data = mydataIRT,
   ordered = c("Item.1", "Item.2", "Item.3", "Item.4", "Item.5"),
@@ -3266,7 +3281,7 @@ summary(
   standardized = TRUE
 )
 
-fitMeasures(
+lavaan::fitMeasures(
   twoPLModelMultidimensional_cfa_fit,
   fit_measures = c(
     "chisq",
@@ -3284,13 +3299,13 @@ fitMeasures(
 
 residuals(twoPLModelMultidimensional_cfa_fit, type = "cor")
 
-modificationindices(twoPLModelMultidimensional_cfa_fit, sort = TRUE)
+lavaan::modificationindices(twoPLModelMultidimensional_cfa_fit, sort = TRUE)
 
-compRelSEM(twoPLModelMultidimensional_cfa_fit)
-AVE(twoPLModelMultidimensional_cfa_fit)
-maximalRelia(twoPLModelMultidimensional_cfa_fit)
+semTools::compRelSEM(twoPLModelMultidimensional_cfa_fit)
+semTools::AVE(twoPLModelMultidimensional_cfa_fit)
+semTools::maximalRelia(twoPLModelMultidimensional_cfa_fit)
 
-twoPLModelMultidimensional_cfa_factorScores <- lavPredict(
+twoPLModelMultidimensional_cfa_factorScores <- lavaan::lavPredict(
   twoPLModelMultidimensional_cfa_fit
 )
 ```
@@ -3300,7 +3315,7 @@ twoPLModelMultidimensional_cfa_factorScores <- lavPredict(
 #| fig-cap: "Item Factor Analysis Diagram of Two-Parameter Multidimensional Logistic Model."
 #| fig-alt: "Item Factor Analysis Diagram of Two-Parameter Multidimensional Logistic Model."
 
-semPaths(
+semPlot::semPaths(
   twoPLModelMultidimensional_cfa_fit,
   what = "std",
   layout = "tree2",
@@ -3318,7 +3333,7 @@ A three-parameter logistic (3PL) IRT model is a model fit to dichotomous data, w
 ```{r}
 #| output: false
 
-threePLModel <- mirt(
+threePLModel <- mirt::mirt(
   data = mydataIRT,
   model = 1,
   itemtype = "3PL",
@@ -3330,13 +3345,19 @@ threePLModel <- mirt(
 
 ```{r}
 summary(threePLModel)
-coef(threePLModel, simplify = TRUE, IRTpars = TRUE)
+
+mirt::coef(
+  threePLModel,
+  simplify = TRUE,
+  IRTpars = TRUE)
 ```
 
 ### Factor Scores {#sec-irt-threePLfactorScores}
 
 ```{r}
-threePLModel_factorScores <- fscores(threePLModel, full.scores.SE = TRUE)
+threePLModel_factorScores <- mirt::fscores(
+  threePLModel,
+  full.scores.SE = TRUE)
 ```
 
 ### Plots {#sec-irt-threePLplots}
@@ -3374,13 +3395,13 @@ plot(threePLModel, type = "info")
 The estimate of marginal [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-marginal_rxx(threePLModel)
+mirt::marginal_rxx(threePLModel)
 ```
 
 The estimate of empirical [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-empirical_rxx(threePLModel_factorScores)
+mirt::empirical_rxx(threePLModel_factorScores)
 ```
 
 A plot of test [reliability](#sec-irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in @fig-threePLreliability.\index{reliability}
@@ -3469,7 +3490,7 @@ A four-parameter logistic (4PL) IRT model is a model fit to dichotomous data, wh
 ```{r}
 #| output: false
 
-fourPLModel <- mirt(
+fourPLModel <- mirt::mirt(
   data = mydataIRT,
   model = 1,
   itemtype = "4PL",
@@ -3482,13 +3503,19 @@ fourPLModel <- mirt(
 
 ```{r}
 summary(fourPLModel)
-coef(fourPLModel, simplify = TRUE, IRTpars = TRUE)
+
+mirt::coef(
+  fourPLModel,
+  simplify = TRUE,
+  IRTpars = TRUE)
 ```
 
 ### Factor Scores {#sec-irt-fourPLfactorScores}
 
 ```{r}
-fourPLModel_factorScores <- fscores(fourPLModel, full.scores.SE = TRUE)
+fourPLModel_factorScores <- mirt::fscores(
+  fourPLModel,
+  full.scores.SE = TRUE)
 ```
 
 ### Plots {#sec-irt-fourPLplots}
@@ -3526,13 +3553,13 @@ plot(fourPLModel, type = "info")
 The estimate of marginal [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-marginal_rxx(fourPLModel)
+mirt::marginal_rxx(fourPLModel)
 ```
 
 The estimate of empirical [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-empirical_rxx(fourPLModel_factorScores)
+mirt::empirical_rxx(fourPLModel_factorScores)
 ```
 
 A plot of test [reliability](#sec-irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in @fig-fourPLreliability.\index{reliability}
@@ -3646,13 +3673,17 @@ save(
 
 ```{r}
 summary(gradedResponseModel)
-coef(gradedResponseModel, simplify = TRUE, IRTpars = TRUE)
+
+mirt::coef(
+  gradedResponseModel,
+  simplify = TRUE,
+  IRTpars = TRUE)
 ```
 
 ### Factor Scores {#sec-irt-gradedResponseModelFactorScores}
 
 ```{r}
-gradedResponseModel_factorScores <- fscores(
+gradedResponseModel_factorScores <- mirt::fscores(
   gradedResponseModel,
   full.scores.SE = TRUE
 )
@@ -3695,13 +3726,13 @@ plot(gradedResponseModel, type = "info")
 The estimate of marginal [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-marginal_rxx(gradedResponseModel)
+mirt::marginal_rxx(gradedResponseModel)
 ```
 
 The estimate of empirical [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-empirical_rxx(gradedResponseModel_factorScores)
+mirt::empirical_rxx(gradedResponseModel_factorScores)
 ```
 
 A plot of test [reliability](#sec-irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in @fig-gradedResponseModelReliability.\index{reliability}
@@ -3802,7 +3833,7 @@ The plot of item boundary characteristic curves was adapted from an example by A
 #| fig-cap: "Item Boundary Category Characteristic Curves From Graded Response Model."
 #| fig-alt: "Item Boundary Category Characteristic Curves From Graded Response Model."
 
-modelCoefficients <- coef(
+modelCoefficients <- mirt::coef(
   gradedResponseModel,
   IRTpars = TRUE,
   simplify = TRUE
@@ -3835,7 +3866,7 @@ lst <- lapply(
 for (i in 1:numberOfItems) {
   for (j in 1:numberDifficultyThresholds) {
     lst[[i]][, 1] <- theta
-    lst[[i]][, j + 1] <- fourPL(
+    lst[[i]][, j + 1] <- petersenlab::fourPL(
       a = modelCoefficients[i, 1],
       b = modelCoefficients[i, j + 1],
       theta = theta
@@ -3844,13 +3875,13 @@ for (i in 1:numberOfItems) {
 }
 
 names(lst) <- items
-dat <- bind_rows(lst, .id = "item")
-longer_data <- pivot_longer(
+dat <- dplyr::bind_rows(lst, .id = "item")
+longer_data <- tidyr::pivot_longer(
   dat,
   cols = all_of(difficultyThresholds)
 )
 
-ggplot(
+ggplot2::ggplot(
   longer_data,
   aes(theta, value, group = interaction(item, name), color = item)
 ) +
@@ -3880,7 +3911,7 @@ Future  | b31*t1 + b32*t2 + b33*t3
 Benefit | b41*t1 + b42*t2 + b43*t3
 '
 
-twoParameterGRM_cfa_fit <- sem(
+twoParameterGRM_cfa_fit <- lavaan::sem(
   model = twoParameterGRM_cfa,
   data = Science,
   ordered = c("Comfort", "Work", "Future", "Benefit"),
@@ -3897,7 +3928,7 @@ summary(
   standardized = TRUE
 )
 
-fitMeasures(
+lavaan::fitMeasures(
   twoParameterGRM_cfa_fit,
   fit_measures = c(
     "chisq",
@@ -3915,13 +3946,13 @@ fitMeasures(
 
 residuals(twoParameterGRM_cfa_fit, type = "cor")
 
-modificationindices(twoParameterGRM_cfa_fit, sort = TRUE)
+lavaan::modificationindices(twoParameterGRM_cfa_fit, sort = TRUE)
 
-compRelSEM(twoParameterGRM_cfa_fit)
-AVE(twoParameterGRM_cfa_fit)
-maximalRelia(twoParameterGRM_cfa_fit)
+semTools::compRelSEM(twoParameterGRM_cfa_fit)
+semTools::AVE(twoParameterGRM_cfa_fit)
+semTools::maximalRelia(twoParameterGRM_cfa_fit)
 
-twoParameterGRM_cfa_factorScores <- lavPredict(twoParameterGRM_cfa_fit)
+twoParameterGRM_cfa_factorScores <- lavaan::lavPredict(twoParameterGRM_cfa_fit)
 ```
 
 ```{r}
@@ -3929,7 +3960,7 @@ twoParameterGRM_cfa_factorScores <- lavPredict(twoParameterGRM_cfa_fit)
 #| fig-cap: "Item Factor Analysis Diagram of Two-Parameter Graded Response Model."
 #| fig-alt: "Item Factor Analysis Diagram of Two-Parameter Graded Response Model."
 
-semPaths(
+semPlot::semPaths(
   twoParameterGRM_cfa_fit,
   what = "std",
   layout = "tree2",
@@ -3950,7 +3981,7 @@ specific <- "S1 = 7,9,10,11,13,15,17,18,21,22,24,27,31
              S2 = 1,3,6,8,16,29,32
              S3 = 2,4,5,12,14,19,20,23,25,26,28,30"
 
-bifactorModel <- bfactor(
+bifactorModel <- mirt::bfactor(
   data = mydataSAT,
   model = specific,
   SE = TRUE
@@ -3961,7 +3992,10 @@ bifactorModel <- bfactor(
 
 ```{r}
 summary(bifactorModel)
-coef(bifactorModel, simplify = TRUE)
+
+mirt::coef(
+  bifactorModel,
+  simplify = TRUE)
 ```
 
 ### Bifactor Indices {#sec-irt-bifactorIndices}
@@ -3977,7 +4011,7 @@ BifactorIndicesCalculator::bifactorIndices(
 One can obtain factor scores (i.e., theta; and their associated standard errors) for each participant using the `fscores()` function.
 
 ```{r}
-bifactorModel_factorScores <- fscores(
+bifactorModel_factorScores <- mirt::fscores(
   bifactorModel,
   full.scores.SE = TRUE,
   QMC = TRUE
@@ -4023,13 +4057,13 @@ The estimate of marginal [reliability](#sec-irtReliability) is below:\index{reli
 ```{r}
 #| eval: false
 
-marginal_rxx(bifactorModel)
+mirt::marginal_rxx(bifactorModel)
 ```
 
 The estimate of empirical [reliability](#sec-irtReliability) is below:\index{reliability}
 
 ```{r}
-empirical_rxx(bifactorModel_factorScores)
+mirt::empirical_rxx(bifactorModel_factorScores)
 ```
 
 A plot of test [reliability](#sec-irtReliability) as a function of a person's level on the latent construct (theta; $\theta$) is in @fig-bifactorReliability.\index{reliability}
@@ -4171,7 +4205,7 @@ Item.31 | t1
 Item.31 | t1
 '
 
-bifactorModel_cfa_fit <- sem(
+bifactorModel_cfa_fit <- lavaan::sem(
   model = bifactorModel_cfa,
   data = mydataSAT,
   ordered = c(
@@ -4222,7 +4256,7 @@ summary(
   standardized = TRUE
 )
 
-fitMeasures(
+lavaan::fitMeasures(
   bifactorModel_cfa_fit,
   fit_measures = c(
     "chisq",
@@ -4240,20 +4274,20 @@ fitMeasures(
 
 residuals(bifactorModel_cfa_fit, type = "cor")
 
-modificationindices(bifactorModel_cfa_fit, sort = TRUE)
+lavaan::modificationindices(bifactorModel_cfa_fit, sort = TRUE)
 
-compRelSEM(bifactorModel_cfa_fit) # omega_total
-compRelSEM(bifactorModel_cfa_fit, true = "omegaH") # omega_hierarchical
-compRelSEM(bifactorModel_cfa_fit, return.total = -1, true = list(.TOTAL. = "G")) # proportion of variance in scale composite that is attributable to general factor
+semTools::compRelSEM(bifactorModel_cfa_fit) # omega_total
+semTools::compRelSEM(bifactorModel_cfa_fit, true = "omegaH") # omega_hierarchical
+semTools::compRelSEM(bifactorModel_cfa_fit, return.total = -1, true = list(.TOTAL. = "G")) # proportion of variance in scale composite that is attributable to general factor
 
-AVE(bifactorModel_cfa_fit)
-maximalRelia(bifactorModel_cfa_fit)
+semTools::AVE(bifactorModel_cfa_fit)
+semTools::maximalRelia(bifactorModel_cfa_fit)
 
 BifactorIndicesCalculator::bifactorIndices(
   bifactorModel_cfa_fit
 )
 
-bifactorModel_cfa_factorScores <- lavPredict(bifactorModel_cfa_fit)
+bifactorModel_cfa_factorScores <- lavaan::lavPredict(bifactorModel_cfa_fit)
 ```
 
 A path diagram of the bifactor item factor analysis is in @fig-bifactorIFA.\index{factor analysis!confirmatory}\index{item response theory!bifactor model}\index{factor analysis!bifactor}
@@ -4263,7 +4297,7 @@ A path diagram of the bifactor item factor analysis is in @fig-bifactorIFA.\inde
 #| fig-cap: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
 #| fig-alt: "Item Factor Analysis Diagram of One-Parameter Logistic Model."
 
-semPaths(
+semPlot::semPaths(
   bifactorModel_cfa_fit,
   what = "std",
   layout = "tree3",

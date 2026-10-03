@@ -196,7 +196,10 @@ library("petersenlab")
 ```
 
 ```{r}
-pAgivenB(pBgivenA = .95, pA = .003, pB = .01)
+petersenlab::pAgivenB(
+  pBgivenA = .95,
+  pA = .003,
+  pB = .01)
 ```
 
 Thus, assuming the probabilities in the example above, the [conditional probability](#sec-conditionalProbability) of having HIV if a person has a positive test is 28.5%.\index{Bayesian!Bayes' theorem}\index{probability!conditional}
@@ -283,7 +286,7 @@ pA <- function(pAgivenB, pB, pAgivenNotB) {
 ```
 
 ```{r}
-pA(
+petersenlab::pA(
   pAgivenB = .95,
   pB = .003,
   pAgivenNotB = .007171515
@@ -304,7 +307,10 @@ pBgivenNotA <- function(pBgivenA, pA, pB) {
 ```
 
 ```{r}
-pBgivenNotA(pBgivenA = .95, pA = .003, pB = .01)
+petersenlab::pBgivenNotA(
+  pBgivenA = .95,
+  pA = .003,
+  pB = .01)
 ```
 
 With this [conditional probability](#sec-conditionalProbability) ($P(R | \text{not } C)$), the updated [marginal probability](#sec-baseRate) of having HIV ($P(C_i)$), and the updated marginal probability of not having HIV ($P(\text{not } C_i)$), we can now calculate an updated estimate of the [marginal probability](#sec-baseRate) of getting a second positive test.\index{Bayesian!Bayes' theorem}\index{probability!conditional}\index{probability!marginal}\index{base rate}\index{false positive!rate}
@@ -332,16 +338,19 @@ pB <- function(pBgivenA, pA, pBgivenNotA) {
 ```
 
 ```{r}
-pB(pBgivenA = .95, pA = .285, pBgivenNotA = .007171515)
-
-pB(
+petersenlab::pB(
   pBgivenA = .95,
-  pA = pAgivenB(
+  pA = .285,
+  pBgivenNotA = .007171515)
+
+petersenlab::pB(
+  pBgivenA = .95,
+  pA = petersenlab::pAgivenB(
     pBgivenA = .95,
     pA = .003,
     pB = .01
   ),
-  pBgivenNotA = pBgivenNotA(
+  pBgivenNotA = petersenlab::pBgivenNotA(
     pBgivenA = .95,
     pA = .003,
     pB = .01
@@ -364,23 +373,26 @@ $$ {#eq-baseRateUpdated2}
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
 ```{r}
-pAgivenB(pBgivenA = .95, pA = .285, pB = .2758776)
-
-pAgivenB(
+petersenlab::pAgivenB(
   pBgivenA = .95,
-  pA = pAgivenB(
+  pA = .285,
+  pB = .2758776)
+
+petersenlab::pAgivenB(
+  pBgivenA = .95,
+  pA = petersenlab::pAgivenB(
     pBgivenA = .95,
     pA = .003,
     pB = .01
   ),
-  pB = pB(
+  pB = petersenlab::pB(
     pBgivenA = .95,
-    pA = pAgivenB(
+    pA = petersenlab::pAgivenB(
       pBgivenA = .95,
       pA = .003,
       pB = .01
     ),
-    pBgivenNotA = pBgivenNotA(
+    pBgivenNotA = petersenlab::pBgivenNotA(
       pBgivenA = .95,
       pA = .003,
       pB = .01
@@ -441,13 +453,13 @@ pAgivenBalternative <- function(pBgivenA, pA, pBgivenNotA) {
 ```
 
 ```{r}
-pAgivenBalternative(
+petersenlab::pAgivenBalternative(
   pBgivenA = .95,
   pA = .003,
   pBgivenNotA = .007171515
 )
 
-pAgivenBalternative(
+petersenlab::pAgivenBalternative(
   pBgivenA = .95,
   pA = .003,
   pBgivenNotA = pBgivenNotA(
@@ -461,11 +473,15 @@ pAgivenBalternative(
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
 ```{r}
-pAgivenB(pBgivenA = .95, pA = .003, pBgivenNotA = .007171515)
-pAgivenB(
+petersenlab::pAgivenB(
   pBgivenA = .95,
   pA = .003,
-  pBgivenNotA = pBgivenNotA(
+  pBgivenNotA = .007171515)
+
+petersenlab::pAgivenB(
+  pBgivenA = .95,
+  pA = .003,
+  pBgivenNotA = petersenlab::pBgivenNotA(
     pBgivenA = .95,
     pA = .003,
     pB = .01
@@ -491,32 +507,32 @@ $$ {#eq-baseRateUpdated4}
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `pAgivenB()` function that estimates the probability of one event, $A$, given another event, $B$.\index{petersenlab package}\index{Bayesian!Bayes' theorem}
 
 ```{r}
-pAgivenBalternative(
+petersenlab::pAgivenBalternative(
   pBgivenA = .95,
   pA = .285,
   pBgivenNotA = .007171515
 )
 
-pAgivenBalternative(
+petersenlab::pAgivenBalternative(
   pBgivenA = .95,
   pA = .285,
-  pBgivenNotA = pBgivenNotA(
+  pBgivenNotA = petersenlab::pBgivenNotA(
     pBgivenA = .95,
     pA = .003,
     pB = .01
   )
 )
 
-pAgivenB(
+petersenlab::pAgivenB(
   pBgivenA = .95,
   pA = .285,
   pBgivenNotA = .007171515
 )
 
-pAgivenB(
+petersenlab::pAgivenB(
   pBgivenA = .95,
   pA = .285,
-  pBgivenNotA = pBgivenNotA(
+  pBgivenNotA = petersenlab::pBgivenNotA(
     pBgivenA = .95,
     pA = .003,
     pB = .01
@@ -795,7 +811,7 @@ hist_inedible <- density(inedibleScores, from = 0, to = 150) %$%
 hist_inedible$type[hist_inedible$area == TRUE] <- "inedible_FN"
 hist_inedible$type[hist_inedible$area == FALSE] <- "inedible_TP"
 
-density_data <- bind_rows(hist_edible, hist_inedible)
+density_data <- dplyr::bind_rows(hist_edible, hist_inedible)
 
 density_data$type <- factor(
   density_data$type,
@@ -816,7 +832,12 @@ The extent of overlap of the distributions reflects the amount of [measurement e
 #| code-fold: true
 
 #No Cutoff
-ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
+ggplot2::ggplot(
+  data = edibleData,
+  aes(
+    x = score,
+    ymin = 0,
+    fill = type)) +
   geom_density(alpha = .5) +
   scale_fill_manual(
     name = "Berry Type",
@@ -843,7 +864,13 @@ Costs of [false positives](#sec-falsePositive) could include taking longer to fi
 #| code-fold: true
 
 #Standard Cutoff
-ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
+ggplot2::ggplot(
+  data = density_data,
+  aes(
+    x = x,
+    ymin = 0,
+    ymax = y,
+    fill = type)) +
   geom_ribbon(alpha = 1) +
   scale_fill_manual(
     name = "Berry Type",
@@ -891,14 +918,20 @@ hist_inedible <- density(inedibleScores, from = 0, to = 150) %$%
 hist_inedible$type[hist_inedible$area == TRUE] <- "inedible_FN"
 hist_inedible$type[hist_inedible$area == FALSE] <- "inedible_TP"
 
-density_data <- bind_rows(hist_edible, hist_inedible)
+density_data <- dplyr::bind_rows(hist_edible, hist_inedible)
 
 density_data$type <- factor(
   density_data$type,
   levels = c("edible_TN", "inedible_TP", "edible_FP", "inedible_FN")
 )
 
-ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
+ggplot2::ggplot(
+  data = density_data,
+  aes(
+    x = x,
+    ymin = 0,
+    ymax = y,
+    fill = type)) +
   geom_ribbon(alpha = 1) +
   scale_fill_manual(
     name = "Berry Type",
@@ -952,7 +985,13 @@ density_data$type <- factor(
   levels = c("edible_TN", "inedible_TP", "edible_FP", "inedible_FN")
 )
 
-ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
+ggplot2::ggplot(
+  data = density_data,
+  aes(
+    x = x,
+    ymin = 0,
+    ymax = y,
+    fill = type)) +
   geom_ribbon(alpha = 1) +
   scale_fill_manual(
     name = "Berry Type",
@@ -1029,7 +1068,10 @@ Then, we can draw lines or a curve to connect the points.\index{receiver operati
 
 library("pROC")
 
-plot(roc(aSAH$outcome, aSAH$s100b), legacy.axes = TRUE, print.auc = TRUE)
+plot(
+  pROC::roc(aSAH$outcome, aSAH$s100b),
+  legacy.axes = TRUE,
+  print.auc = TRUE)
 ```
 
 @fig-smoothROC depicts an ROC curve where a smoothed and fitted curve is drawn to connect the [hit](#sec-sensitivity) and [false alarm](#sec-falsePositiveRate) rates.\index{receiver operating characteristic curve}\index{sensitivity}\index{specificity}\index{cutoff}
@@ -1044,7 +1086,7 @@ plot(roc(aSAH$outcome, aSAH$s100b), legacy.axes = TRUE, print.auc = TRUE)
 #| code-fold: true
 
 plot(
-  roc(aSAH$outcome, aSAH$s100b, smooth = TRUE),
+  pROC::roc(aSAH$outcome, aSAH$s100b, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE
 )
@@ -1074,7 +1116,7 @@ That is, a measure can be useful to the extent that its ROC curve is above the d
 #| code-fold: true
 
 plot(
-  roc(aSAH$outcome, aSAH$s100b, smooth = TRUE),
+  pROC::roc(aSAH$outcome, aSAH$s100b, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE,
   auc.polygon = TRUE
@@ -1115,15 +1157,16 @@ auc95 <- simulateDataFromAUC(.95, 50000)
 auc99 <- simulateDataFromAUC(.99, 50000)
 
 plot(
-  roc(y ~ x, auc60, smooth = TRUE),
+  pROC::roc(y ~ x, auc60, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE,
   print.auc.x = .52,
   print.auc.y = .61,
   print.auc.pattern = "%.2f"
 )
+
 plot(
-  roc(y ~ x, auc70, smooth = TRUE),
+  pROC::roc(y ~ x, auc70, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE,
   print.auc.x = .6,
@@ -1131,8 +1174,9 @@ plot(
   print.auc.pattern = "%.2f",
   add = TRUE
 )
+
 plot(
-  roc(y ~ x, auc80, smooth = TRUE),
+  pROC::roc(y ~ x, auc80, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE,
   print.auc.x = .695,
@@ -1140,8 +1184,9 @@ plot(
   print.auc.pattern = "%.2f",
   add = TRUE
 )
+
 plot(
-  roc(y ~ x, auc90, smooth = TRUE),
+  pROC::roc(y ~ x, auc90, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE,
   print.auc.x = .805,
@@ -1149,8 +1194,9 @@ plot(
   print.auc.pattern = "%.2f",
   add = TRUE
 )
+
 plot(
-  roc(y ~ x, auc95, smooth = TRUE),
+  pROC::roc(y ~ x, auc95, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE,
   print.auc.x = .875,
@@ -1158,8 +1204,9 @@ plot(
   print.auc.pattern = "%.2f",
   add = TRUE
 )
+
 plot(
-  roc(y ~ x, auc99, smooth = TRUE),
+  pROC::roc(y ~ x, auc99, smooth = TRUE),
   legacy.axes = TRUE,
   print.auc = TRUE,
   print.auc.x = .94,
@@ -1267,7 +1314,7 @@ The examples depict ROC curves that demonstrate that the measure is moderately a
 The syntax used to generate an empirical ROC plot is below, and the plot is in @fig-empiricalROC.\index{receiver operating characteristic curve}
 
 ```{r}
-rocCurve <- roc(
+rocCurve <- pROC::roc(
   data = mydataSDT,
   response = disorder,
   predictor = testScore,
@@ -1295,14 +1342,14 @@ An empirical ROC plot with cutoffs overlaid is in @fig-empiricalROCcutoffs.
 #| fig-width: 8
 #| fig-height: 8
 
-pred <- prediction(
+pred <- ROCR::prediction(
   na.omit(mydataSDT[, c(
     "testScoreSimple",
     "disorder"
   )])$testScoreSimple,
   na.omit(mydataSDT[, c("testScoreSimple", "disorder")])$disorder
 )
-perf <- performance(pred, "tpr", "fpr")
+perf <- ROCR::performance(pred, "tpr", "fpr")
 plot(
   perf,
   print.cutoffs.at = 1:11,
@@ -1315,7 +1362,7 @@ abline(coef = c(0, 1))
 ### Smooth ROC Curve {#sec-smoothROC}
 
 ```{r}
-rocCurveSmooth <- roc(
+rocCurveSmooth <- pROC::roc(
   data = mydataSDT,
   response = disorder,
   predictor = testScore,
@@ -1339,7 +1386,7 @@ plot(rocCurveSmooth, legacy.axes = TRUE, print.auc = TRUE)
 The threshold at the Youden's J statistic is the threshold where the test has the maximum combination (i.e., sum) of [sensitivity](#sec-sensitivity) and [specificity](#sec-specificity): $\text{max}(\text{sensitivity} + \text{specificity} - 1)$\index{Youden's J statistic}\index{sensitivity}\index{specificity}
 
 ```{r}
-youdenJ <- coords(
+youdenJ <- pROC::coords(
   rocCurve,
   x = "best",
   best.method = "youden"
@@ -1358,7 +1405,7 @@ For this test, the Youden's J Statistic is at a threshold of $`r youdenJthreshol
 The point closest to the top-left part of the ROC plot with perfect [sensitivity](#sec-sensitivity) and [specificity](#sec-specificity): $\text{min}[(1 - \text{sensitivity})^2 + (1 - \text{specificity})^2]$\index{sensitivity}\index{specificity}
 
 ```{r}
-closestTopLeft <- coords(
+closestTopLeft <- pROC::coords(
   rocCurve,
   x = "best",
   best.method = "closest.topleft"
@@ -1383,14 +1430,14 @@ Aspects of accuracy at a particular cutoff are described in @sec-cutoffAccuracy.
 The [`petersenlab`](https://github.com/DevPsyLab/petersenlab) package [@R-petersenlab] contains the `accuracyOverall()` function that estimates the prediction accuracy across cutoffs.\index{petersenlab package}\index{cutoff}
 
 ```{r}
-accuracyOverall(
+petersenlab::accuracyOverall(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder
 ) |>
   t() |>
   round(2)
 
-accuracyOverall(
+petersenlab::accuracyOverall(
   predicted = mydataSDT$testScore,
   actual = mydataSDT$disorder,
   dropUndefined = TRUE
@@ -2071,7 +2118,7 @@ testing_predictions <- predict(
   newdata = testing
 )
 
-accuracyOverall(
+petersenlab::accuracyOverall(
   predicted = testing_predictions,
   actual = testing$disorder
 )$rsquared
@@ -2111,7 +2158,7 @@ cpaNoMissing <- na.omit(
   mydataSDT[, c("testScore", "continuousOutcome")]
 )
 
-cpa(
+uroc::cpa(
   response = cpaNoMissing$continuousOutcome,
   predictor = cpaNoMissing$testScore
 )
@@ -2131,7 +2178,7 @@ cor(
   method = "spearman"
 )
 
-orm(
+rms::orm(
   continuousOutcome ~ testScore,
   data = mydataSDT
 )$stats["rho"]
@@ -2144,13 +2191,13 @@ Larger values reflect greater accuracy.\index{Somers' $D_{xy}$ rank correlation}
 Somers' $D_{xy}$ was estimated in the `rms` package [@R-rms].\index{Somers' $D_{xy}$ rank correlation}
 
 ```{r}
-lrm(
+rms::lrm(
   continuousOutcome ~ testScore,
   data = mydataSDT
 )$stats["Dxy"]
 
 rms::validate(
-  lrm(
+  rms::lrm(
     continuousOutcome ~ testScore,
     data = mydataSDT,
     x = TRUE,
@@ -2174,7 +2221,7 @@ cor(
   method = "kendall"
 )
 
-lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Tau-a"]
+rms::lrm(continuousOutcome ~ testScore, data = mydataSDT)$stats["Tau-a"]
 ```
 
 #### $c$ Index {#sec-concordanceProbability}
@@ -2185,7 +2232,7 @@ Larger values reflect greater accuracy.\index{receiver operating characteristic 
 The Brown–Hollander–Korwar non-parametric test of association was estimated in the `rms` package [@R-rms].\index{receiver operating characteristic curve!$c$ index}
 
 ```{r}
-lrm(
+rms::lrm(
   continuousOutcome ~ testScore,
   data = mydataSDT
 )$stats["C"]
@@ -2362,7 +2409,7 @@ myDataNoMissing <- na.omit(mydataSDT)
 #| fig-width: 8
 #| fig-height: 8
 
-plotCalibration(
+PredictABEL::plotCalibration(
   data = na.omit(myDataNoMissing),
   cOutcome = colNumberOutcome,
   predRisk = myDataNoMissing$predictedProbability,
@@ -2382,7 +2429,7 @@ To re-calibrate the predicted probabilities, it would be necessary to increase t
 #| fig-width: 8
 #| fig-height: 8
 
-val.prob(mydataSDT$predictedProbability, mydataSDT$disorder)
+rms::val.prob(mydataSDT$predictedProbability, mydataSDT$disorder)
 ```
 
 This calibration plot was adapted from Darren Dahly's example, and is depicted in @fig-calibrationPlot3:\index{calibration!plot} <https://darrendahly.github.io/post/homr/> (archived at <https://perma.cc/6J3J-69G7>)
@@ -2390,7 +2437,7 @@ This calibration plot was adapted from Darren Dahly's example, and is depicted i
 ```{r}
 #| code-fold: true
 
-g1 <- mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) |>
+g1 <- dplyr::mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) |>
   # Bin prediction into 10ths
   group_by(bin) |>
   mutate(
@@ -2427,7 +2474,7 @@ g1 <- mutate(mydataSDT, bin = cut_number(predictedProbability, 10)) |>
   theme_minimal() +
   xlab("Predicted Probability")
 
-g2 <- ggplot(mydataSDT, aes(x = predictedProbability)) +
+g2 <- ggplot2::ggplot(mydataSDT, aes(x = predictedProbability)) +
   geom_histogram(fill = "black", bins = 200) +
   scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1)) +
   xlab("Histogram of Predicted Probability") +
@@ -2435,7 +2482,12 @@ g2 <- ggplot(mydataSDT, aes(x = predictedProbability)) +
   theme_minimal() +
   theme(panel.grid.minor = element_blank())
 
-g <- arrangeGrob(g1, g2, respect = TRUE, heights = c(1, 0.25), ncol = 1)
+g <- gridExtra::arrangeGrob(
+  g1,
+  g2,
+  respect = TRUE,
+  heights = c(1, 0.25),
+  ncol = 1)
 ```
 
 ```{r}
@@ -2454,7 +2506,7 @@ Brier scores were calculated using the `rms` package [@R-rms].\index{Brier score
 Smaller values reflect greater [calibration accuracy](#sec-calibration).\index{Brier scores}\index{calibration}
 
 ```{r}
-val.prob(
+rms::val.prob(
   mydataSDT$predictedProbability,
   mydataSDT$disorder,
   pl = FALSE
@@ -2464,7 +2516,7 @@ val.prob(
 ```{r}
 #| include: false
 
-brierValue <- val.prob(
+brierValue <- rms::val.prob(
   mydataSDT$predictedProbability,
   mydataSDT$disorder,
   pl = FALSE
@@ -2489,13 +2541,13 @@ $g = 2$
 
 gValue <- 2
 
-hoslem.test(
+ResourceSelection::hoslem.test(
   mydataSDT$disorder,
   mydataSDT$predictedProbability,
   g = gValue
 )
 
-plotCalibration(
+PredictABEL::plotCalibration(
   data = na.omit(myDataNoMissing),
   cOutcome = colNumberOutcome,
   predRisk = myDataNoMissing$predictedProbability,
@@ -2510,13 +2562,13 @@ $g = 4$
 
 gValue <- 4
 
-hoslem.test(
+ResourceSelection::hoslem.test(
   mydataSDT$disorder,
   mydataSDT$predictedProbability,
   g = gValue
 )
 
-plotCalibration(
+PredictABEL::plotCalibration(
   data = na.omit(myDataNoMissing),
   cOutcome = colNumberOutcome,
   predRisk = myDataNoMissing$predictedProbability,
@@ -2531,13 +2583,13 @@ $g = 6$
 
 gValue <- 6
 
-hoslem.test(
+ResourceSelection::hoslem.test(
   mydataSDT$disorder,
   mydataSDT$predictedProbability,
   g = gValue
 )
 
-plotCalibration(
+PredictABEL::plotCalibration(
   data = na.omit(myDataNoMissing),
   cOutcome = colNumberOutcome,
   predRisk = myDataNoMissing$predictedProbability,
@@ -2552,13 +2604,13 @@ $g = 8$
 
 gValue <- 8
 
-hoslem.test(
+ResourceSelection::hoslem.test(
   mydataSDT$disorder,
   mydataSDT$predictedProbability,
   g = gValue
 )
 
-plotCalibration(
+PredictABEL::plotCalibration(
   data = na.omit(myDataNoMissing),
   cOutcome = colNumberOutcome,
   predRisk = myDataNoMissing$predictedProbability,
@@ -2573,13 +2625,13 @@ $g = 10$
 
 gValue <- 10
 
-hoslem.test(
+ResourceSelection::hoslem.test(
   mydataSDT$disorder,
   mydataSDT$predictedProbability,
   g = gValue
 )
 
-plotCalibration(
+PredictABEL::plotCalibration(
   data = na.omit(myDataNoMissing),
   cOutcome = colNumberOutcome,
   predRisk = myDataNoMissing$predictedProbability,
@@ -2596,13 +2648,13 @@ A statistically significant Spiegelhalter's $z$ (*p* < .05) indicates a signific
 In this case, the predictions show statistically significant miscalibration.\index{Spiegelhalter's $z$}
 
 ```{r}
-val.prob(
+rms::val.prob(
   mydataSDT$predictedProbability,
   mydataSDT$disorder,
   pl = FALSE
 )["S:z"]
 
-val.prob(
+rms::val.prob(
   mydataSDT$predictedProbability,
   mydataSDT$disorder,
   pl = FALSE
@@ -2666,7 +2718,7 @@ calibrationModelPredictionInterval <- cbind(
   ))
 )
 
-ggplot(
+ggplot2::ggplot(
   mydataSDT,
   aes(
     x = testScore,
@@ -2723,7 +2775,7 @@ In this case, the 95% confidence interval of the observed value does not include
 #| code-fold: true
 
 #95 prediction interval based on LOESS model
-calibrationLoessModel <- loess.sd(
+calibrationLoessModel <- msir::loess.sd(
   x = mydataSDT$testScore,
   y = mydataSDT$continuousOutcome,
   nsigma = qnorm(.975),
@@ -2736,7 +2788,7 @@ calibrationLoessPredictionInterval <- data.frame(
   upper = calibrationLoessModel$upper
 )
 
-ggplot(
+ggplot2::ggplot(
   mydataSDT,
   aes(
     x = testScore,
