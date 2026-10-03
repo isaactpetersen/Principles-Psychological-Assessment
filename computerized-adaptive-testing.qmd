@@ -237,18 +237,20 @@ pars <- data.frame(a1 = a, d = d, g = 0.2)
 
 ### Fit IRT Model {#sec-fitIRTmodel-cat}
 
+We can generate a `mirt` model object from known IRT parameters using the `mirtCAT::generate.mirt_object()` function of the `mirtCAT` package [@Chalmers2016].
+
 ```{r}
 #| label: irtModel
 
-mod <- generate.mirt_object(pars, "3PL")
+mod <- mirtCAT::generate.mirt_object(pars, "3PL")
 ```
 
 ### Model Summary {#sec-modelOutput-cat}
 
 ```{r}
 summary(mod)
-coef(mod, simplify = TRUE, IRTpars = TRUE)
-modItemParameters <- coef(
+mirt::coef(mod, simplify = TRUE, IRTpars = TRUE)
+modItemParameters <- mirt::coef(
   mod,
   simplify = TRUE,
   IRTpars = TRUE
@@ -313,7 +315,7 @@ Item characteristic curves and information curves for these items are in Figures
 #| fig-cap: "Item Characteristic Curves and Information Curves: Item 30."
 #| fig-alt: "Item Characteristic Curves and Information Curves: Item 30."
 
-itemplot(object = mod, item = "Item.30", "infotrace")
+mirt::itemplot(object = mod, item = "Item.30", "infotrace")
 ```
 
 ```{r}
@@ -321,7 +323,7 @@ itemplot(object = mod, item = "Item.30", "infotrace")
 #| fig-cap: "Item Characteristic Curves and Information Curves: Item 70."
 #| fig-alt: "Item Characteristic Curves and Information Curves: Item 70."
 
-itemplot(object = mod, item = "Item.70", "infotrace")
+mirt::itemplot(object = mod, item = "Item.70", "infotrace")
 ```
 
 ```{r}
@@ -329,7 +331,7 @@ itemplot(object = mod, item = "Item.70", "infotrace")
 #| fig-cap: "Item Characteristic Curves and Information Curves: Item 86."
 #| fig-alt: "Item Characteristic Curves and Information Curves: Item 86."
 
-itemplot(object = mod, item = "Item.86", "infotrace")
+mirt::itemplot(object = mod, item = "Item.86", "infotrace")
 ```
 
 ```{r}
@@ -337,7 +339,7 @@ itemplot(object = mod, item = "Item.86", "infotrace")
 #| fig-cap: "Item Characteristic Curves and Information Curves: Item 16."
 #| fig-alt: "Item Characteristic Curves and Information Curves: Item 16."
 
-itemplot(object = mod, item = "Item.16", "infotrace")
+mirt::itemplot(object = mod, item = "Item.16", "infotrace")
 ```
 
 ```{r}
@@ -345,7 +347,7 @@ itemplot(object = mod, item = "Item.16", "infotrace")
 #| fig-cap: "Item Characteristic Curves and Information Curves: Item 53."
 #| fig-alt: "Item Characteristic Curves and Information Curves: Item 53."
 
-itemplot(object = mod, item = "Item.53", "infotrace")
+mirt::itemplot(object = mod, item = "Item.53", "infotrace")
 ```
 
 ### Create Math Items {#sec-createMathItems-cat}
@@ -387,12 +389,12 @@ You can lengthen the CAT by lowering the minimum [standard error of measurement]
 minimum_SEM <- .3
 ```
 
-Run the CAT and stop once the [standard error of measurement](#sec-standardErrorOfMeasurement) for the latent trait (theta; $\theta$) becomes $`r minimum_SEM`$ or lower.\index{adaptive testing!computerized}\index{item response theory!standard error of measurement}
+Run the CAT using the `mirtCAT::mirtCAT()` function of the `mirtCAT` package [@Chalmers2016] and stop once the [standard error of measurement](#sec-standardErrorOfMeasurement) for the latent trait (theta; $\theta$) becomes $`r minimum_SEM`$ or lower.\index{adaptive testing!computerized}\index{item response theory!standard error of measurement}
 
 ```{r}
 #| eval: false
 
-result <- mirtCAT(
+result <- mirtCAT::mirtCAT(
   df,
   mod,
   start_item = "MI",
@@ -469,7 +471,7 @@ load(file = "./data/gradedResponseModel.RData")
 
 ```{r}
 numItemsGRM <- nrow(
-  coef(
+  mirt::coef(
     gradedResponseModel,
     simplify = TRUE,
     IRTpars = TRUE
@@ -509,12 +511,12 @@ dfGRM <- data.frame(
 
 ### Run Computerized Adaptive Test {#sec-cat-runModel}
 
-Then you can create and run the computerized adaptive model:\index{adaptive testing!computerized}
+Then you can create and run the computerized adaptive model using the `mirtCAT::mirtCAT()` function of the `mirtCAT` package [@Chalmers2016]:\index{adaptive testing!computerized}
 
 ```{r}
 #| eval: false
 
-resultGRM <- mirtCAT(
+resultGRM <- mirtCAT::mirtCAT(
   dfGRM,
   gradedResponseModel,
   start_item = "MI",
