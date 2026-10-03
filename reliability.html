@@ -1027,31 +1027,39 @@ r_{xT} &amp;= \\
 <span id="cb1-4"><a href="#cb1-4" aria-label="4"></a>sampleSize <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-label="6"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-label="7"></a>rawMeasure <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">score =</span> <span class="fu">rnorm</span>(sampleSize), <span class="at">measure =</span> <span class="st">"rawMeasure"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-label="8"></a>addSystematicError <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-9"><a href="#cb1-9" aria-label="9"></a>  <span class="at">score =</span> rawMeasure<span class="sc">$</span>score <span class="sc">+</span> <span class="dv">1</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-label="10"></a>  <span class="at">measure =</span> <span class="st">"addSystematicError"</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-label="11"></a>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-label="12"></a>addRandomError <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-13"><a href="#cb1-13" aria-label="13"></a>  <span class="at">score =</span> rawMeasure<span class="sc">$</span>score <span class="sc">+</span> <span class="fu">rnorm</span>(sampleSize),</span>
-<span id="cb1-14"><a href="#cb1-14" aria-label="14"></a>  <span class="at">measure =</span> <span class="st">"addRandomError"</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-label="15"></a>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-label="16"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-label="17"></a>errorList <span class="ot">&lt;-</span> <span class="fu">list</span>(rawMeasure, addSystematicError, addRandomError)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-label="18"></a>errorData <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(errorList)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-label="19"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-label="20"></a><span class="fu">ggplot</span>(</span>
-<span id="cb1-21"><a href="#cb1-21" aria-label="21"></a>  errorData <span class="sc">|&gt;</span> <span class="fu">filter</span>(measure <span class="sc">!=</span> <span class="st">"addRandomError"</span>),</span>
-<span id="cb1-22"><a href="#cb1-22" aria-label="22"></a>  <span class="fu">aes</span>(<span class="at">x =</span> score, <span class="at">fill =</span> measure)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-label="23"></a>) <span class="sc">+</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-label="24"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-label="25"></a>  <span class="fu">scale_fill_viridis_d</span>(</span>
-<span id="cb1-26"><a href="#cb1-26" aria-label="26"></a>    <span class="at">name =</span> <span class="st">""</span>,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-label="27"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"rawMeasure"</span>, <span class="st">"addSystematicError"</span>),</span>
-<span id="cb1-28"><a href="#cb1-28" aria-label="28"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Raw Measure"</span>, <span class="st">"Measure with Systematic Error Added"</span>)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-label="29"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-label="30"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-label="31"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-7"><a href="#cb1-7" aria-label="7"></a>rawMeasure <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-label="8"></a>  <span class="at">score =</span> <span class="fu">rnorm</span>(sampleSize),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-label="9"></a>  <span class="at">measure =</span> <span class="st">"rawMeasure"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-label="10"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-label="11"></a>addSystematicError <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-label="12"></a>  <span class="at">score =</span> rawMeasure<span class="sc">$</span>score <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-label="13"></a>  <span class="at">measure =</span> <span class="st">"addSystematicError"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-label="14"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-label="15"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-label="16"></a>addRandomError <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-17"><a href="#cb1-17" aria-label="17"></a>  <span class="at">score =</span> rawMeasure<span class="sc">$</span>score <span class="sc">+</span> <span class="fu">rnorm</span>(sampleSize),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-label="18"></a>  <span class="at">measure =</span> <span class="st">"addRandomError"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-label="19"></a>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-label="20"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-label="21"></a>errorList <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-label="22"></a>  rawMeasure,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-label="23"></a>  addSystematicError,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-label="24"></a>  addRandomError)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-label="25"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-label="26"></a>errorData <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(errorList)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-label="27"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-label="28"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
+<span id="cb1-29"><a href="#cb1-29" aria-label="29"></a>  errorData <span class="sc">|&gt;</span> <span class="fu">filter</span>(measure <span class="sc">!=</span> <span class="st">"addRandomError"</span>),</span>
+<span id="cb1-30"><a href="#cb1-30" aria-label="30"></a>  <span class="fu">aes</span>(<span class="at">x =</span> score, <span class="at">fill =</span> measure)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-label="31"></a>) <span class="sc">+</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-label="32"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-label="33"></a>  <span class="fu">scale_fill_viridis_d</span>(</span>
+<span id="cb1-34"><a href="#cb1-34" aria-label="34"></a>    <span class="at">name =</span> <span class="st">""</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-label="35"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"rawMeasure"</span>, <span class="st">"addSystematicError"</span>),</span>
+<span id="cb1-36"><a href="#cb1-36" aria-label="36"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Raw Measure"</span>, <span class="st">"Measure with Systematic Error Added"</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-label="37"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-label="38"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-label="39"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-systematicError" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Systematic Error.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-systematicError-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1068,7 +1076,7 @@ Figure&nbsp;4.6: Systematic Error.
 <p>An example of <em>unsystematic (random) error</em> is depicted in <a href="#fig-unsystematicError" class="quarto-xref">Figure&nbsp;<span>4.7</span></a>. Random error occurs due to chance. For instance, a random error could arise from a participant being fatigued on a particular testing day or from a participant getting lucky in guessing the correct answer. Random error does not have consistent effects for a person or across the sample, and it may vary from one observation to another. Random error does not (systematically) affect the average, i.e., the group-level estimate—random error affects only the variability around the average (noise). However, random error makes measurements for an individual less accurate. A large number of observations of the same construct cancels out random error but does not cancel out systematic error.</p>
 <p>As depicted in <a href="#fig-unsystematicError" class="quarto-xref">Figure&nbsp;<span>4.7</span></a>, random error does not affect the mean of the scores, but it does increase the variability of the scores. In other words, the group-level mean is still accurate, but individuals’ scores are less precise.</p>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a><span class="fu">ggplot</span>(</span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-label="2"></a>  errorData <span class="sc">|&gt;</span> <span class="fu">filter</span>(measure <span class="sc">!=</span> <span class="st">"addSystematicError"</span>),</span>
 <span id="cb2-3"><a href="#cb2-3" aria-label="3"></a>  <span class="fu">aes</span>(<span class="at">x =</span> score, <span class="at">fill =</span> measure)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-label="4"></a>) <span class="sc">+</span></span>
@@ -1203,23 +1211,27 @@ Figure&nbsp;4.13: Four Different Ways of Conceptualizing Reliability.
 <span id="cb3-8"><a href="#cb3-8" aria-label="8"></a>standardErrorOfMeasurementData<span class="sc">$</span>sem <span class="ot">&lt;-</span> standardErrorOfMeasurementData<span class="sc">$</span>sd <span class="sc">*</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-label="9"></a>  <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> standardErrorOfMeasurementData<span class="sc">$</span>reliability)</span>
 <span id="cb3-10"><a href="#cb3-10" aria-label="10"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-label="11"></a><span class="fu">ggplot</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-label="11"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
 <span id="cb3-12"><a href="#cb3-12" aria-label="12"></a>  standardErrorOfMeasurementData,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-label="13"></a>  <span class="fu">aes</span>(reliability, sem, <span class="at">group =</span> <span class="fu">as.factor</span>(sd), <span class="at">color =</span> <span class="fu">as.factor</span>(sd))</span>
-<span id="cb3-14"><a href="#cb3-14" aria-label="14"></a>) <span class="sc">+</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-label="15"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-label="16"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-label="17"></a>  <span class="fu">xlab</span>(<span class="st">"Reliability"</span>) <span class="sc">+</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-label="18"></a>  <span class="fu">ylab</span>(<span class="st">"Standard Error of Measurement"</span>) <span class="sc">+</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-label="19"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">name =</span> <span class="st">"Standard Deviation of Scores"</span>) <span class="sc">+</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-label="20"></a>  <span class="fu">theme</span>(<span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-label="21"></a>  <span class="fu">theme</span>(</span>
-<span id="cb3-22"><a href="#cb3-22" aria-label="22"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(</span>
-<span id="cb3-23"><a href="#cb3-23" aria-label="23"></a>      <span class="at">color =</span> <span class="st">"black"</span>,</span>
-<span id="cb3-24"><a href="#cb3-24" aria-label="24"></a>      <span class="at">fill =</span> <span class="st">"white"</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-label="25"></a>      <span class="at">linetype =</span> <span class="st">"solid"</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-label="26"></a>    )</span>
-<span id="cb3-27"><a href="#cb3-27" aria-label="27"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-13"><a href="#cb3-13" aria-label="13"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-label="14"></a>    reliability,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-label="15"></a>    sem,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-label="16"></a>    <span class="at">group =</span> <span class="fu">as.factor</span>(sd),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-label="17"></a>    <span class="at">color =</span> <span class="fu">as.factor</span>(sd))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-label="18"></a>) <span class="sc">+</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-label="19"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-label="20"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-label="21"></a>  <span class="fu">xlab</span>(<span class="st">"Reliability"</span>) <span class="sc">+</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-label="22"></a>  <span class="fu">ylab</span>(<span class="st">"Standard Error of Measurement"</span>) <span class="sc">+</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-label="23"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">name =</span> <span class="st">"Standard Deviation of Scores"</span>) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-label="24"></a>  <span class="fu">theme</span>(<span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-label="25"></a>  <span class="fu">theme</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" aria-label="26"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(</span>
+<span id="cb3-27"><a href="#cb3-27" aria-label="27"></a>      <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-label="28"></a>      <span class="at">fill =</span> <span class="st">"white"</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-label="29"></a>      <span class="at">linetype =</span> <span class="st">"solid"</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-label="30"></a>    )</span>
+<span id="cb3-31"><a href="#cb3-31" aria-label="31"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-standardErrorOfMeasurementPlot" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Standard Error of Measurement as a Function of Reliability.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-standardErrorOfMeasurementPlot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1294,81 +1306,87 @@ Figure&nbsp;4.14: Standard Error of Measurement as a Function of Reliability.
 <span id="cb5-2"><a href="#cb5-2" aria-label="2"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-label="3"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-label="4"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a>rater1continuous <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>rater2continuous <span class="ot">&lt;-</span> rater1continuous <span class="sc">+</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>  <span class="fu">rnorm</span>(</span>
-<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>    <span class="at">n =</span> sampleSize,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-label="9"></a>    <span class="at">mean =</span> <span class="dv">0</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-label="10"></a>    <span class="at">sd =</span> <span class="dv">4</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-label="11"></a>  )</span>
-<span id="cb5-12"><a href="#cb5-12" aria-label="12"></a>rater3continuous <span class="ot">&lt;-</span> rater2continuous <span class="sc">+</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-label="13"></a>  <span class="fu">rnorm</span>(</span>
-<span id="cb5-14"><a href="#cb5-14" aria-label="14"></a>    <span class="at">n =</span> sampleSize,</span>
-<span id="cb5-15"><a href="#cb5-15" aria-label="15"></a>    <span class="at">mean =</span> <span class="dv">0</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" aria-label="16"></a>    <span class="at">sd =</span> <span class="dv">8</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-label="17"></a>  )</span>
-<span id="cb5-18"><a href="#cb5-18" aria-label="18"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-label="19"></a>rater1categorical <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
-<span id="cb5-20"><a href="#cb5-20" aria-label="20"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb5-21"><a href="#cb5-21" aria-label="21"></a>  <span class="at">size =</span> sampleSize,</span>
-<span id="cb5-22"><a href="#cb5-22" aria-label="22"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-label="23"></a>)</span>
-<span id="cb5-24"><a href="#cb5-24" aria-label="24"></a>rater2categorical <span class="ot">&lt;-</span> rater1categorical</span>
-<span id="cb5-25"><a href="#cb5-25" aria-label="25"></a>rater3categorical <span class="ot">&lt;-</span> rater1categorical</span>
-<span id="cb5-26"><a href="#cb5-26" aria-label="26"></a></span>
-<span id="cb5-27"><a href="#cb5-27" aria-label="27"></a>rater2categorical[</span>
-<span id="cb5-28"><a href="#cb5-28" aria-label="28"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater2categorical), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-29"><a href="#cb5-29" aria-label="29"></a>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-label="30"></a>rater3categorical[</span>
-<span id="cb5-31"><a href="#cb5-31" aria-label="31"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater3categorical), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-32"><a href="#cb5-32" aria-label="32"></a>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-label="33"></a></span>
-<span id="cb5-34"><a href="#cb5-34" aria-label="34"></a>rater1ordinal <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
-<span id="cb5-35"><a href="#cb5-35" aria-label="35"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb5-36"><a href="#cb5-36" aria-label="36"></a>  <span class="at">size =</span> sampleSize,</span>
-<span id="cb5-37"><a href="#cb5-37" aria-label="37"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-label="38"></a>)</span>
-<span id="cb5-39"><a href="#cb5-39" aria-label="39"></a>rater2ordinal <span class="ot">&lt;-</span> rater1ordinal</span>
-<span id="cb5-40"><a href="#cb5-40" aria-label="40"></a>rater3ordinal <span class="ot">&lt;-</span> rater1ordinal</span>
-<span id="cb5-41"><a href="#cb5-41" aria-label="41"></a></span>
-<span id="cb5-42"><a href="#cb5-42" aria-label="42"></a>rater2ordinal[</span>
-<span id="cb5-43"><a href="#cb5-43" aria-label="43"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-44"><a href="#cb5-44" aria-label="44"></a>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-label="45"></a>rater2ordinal[</span>
-<span id="cb5-46"><a href="#cb5-46" aria-label="46"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-47"><a href="#cb5-47" aria-label="47"></a>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a>rater1continuous <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>  <span class="at">n =</span> sampleSize,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>  <span class="at">mean =</span> <span class="dv">50</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>  <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-label="9"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-label="10"></a>rater2continuous <span class="ot">&lt;-</span> rater1continuous <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-label="11"></a>  <span class="fu">rnorm</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-label="12"></a>    <span class="at">n =</span> sampleSize,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-label="13"></a>    <span class="at">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-label="14"></a>    <span class="at">sd =</span> <span class="dv">4</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-label="15"></a>  )</span>
+<span id="cb5-16"><a href="#cb5-16" aria-label="16"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-label="17"></a>rater3continuous <span class="ot">&lt;-</span> rater2continuous <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-label="18"></a>  <span class="fu">rnorm</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-label="19"></a>    <span class="at">n =</span> sampleSize,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-label="20"></a>    <span class="at">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-label="21"></a>    <span class="at">sd =</span> <span class="dv">8</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-label="22"></a>  )</span>
+<span id="cb5-23"><a href="#cb5-23" aria-label="23"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-label="24"></a>rater1categorical <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb5-25"><a href="#cb5-25" aria-label="25"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-label="26"></a>  <span class="at">size =</span> sampleSize,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-label="27"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-label="28"></a>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-label="29"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-label="30"></a>rater2categorical <span class="ot">&lt;-</span> rater1categorical</span>
+<span id="cb5-31"><a href="#cb5-31" aria-label="31"></a>rater3categorical <span class="ot">&lt;-</span> rater1categorical</span>
+<span id="cb5-32"><a href="#cb5-32" aria-label="32"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-label="33"></a>rater2categorical[</span>
+<span id="cb5-34"><a href="#cb5-34" aria-label="34"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater2categorical),<span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-label="35"></a>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-label="36"></a>rater3categorical[</span>
+<span id="cb5-37"><a href="#cb5-37" aria-label="37"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater3categorical), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-38"><a href="#cb5-38" aria-label="38"></a>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-label="39"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-label="40"></a>rater1ordinal <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb5-41"><a href="#cb5-41" aria-label="41"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb5-42"><a href="#cb5-42" aria-label="42"></a>  <span class="at">size =</span> sampleSize,</span>
+<span id="cb5-43"><a href="#cb5-43" aria-label="43"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-label="44"></a>)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-label="45"></a>rater2ordinal <span class="ot">&lt;-</span> rater1ordinal</span>
+<span id="cb5-46"><a href="#cb5-46" aria-label="46"></a>rater3ordinal <span class="ot">&lt;-</span> rater1ordinal</span>
+<span id="cb5-47"><a href="#cb5-47" aria-label="47"></a></span>
 <span id="cb5-48"><a href="#cb5-48" aria-label="48"></a>rater2ordinal[</span>
 <span id="cb5-49"><a href="#cb5-49" aria-label="49"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-50"><a href="#cb5-50" aria-label="50"></a>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-label="51"></a></span>
-<span id="cb5-52"><a href="#cb5-52" aria-label="52"></a>rater3ordinal[</span>
-<span id="cb5-53"><a href="#cb5-53" aria-label="53"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-54"><a href="#cb5-54" aria-label="54"></a>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-label="55"></a>rater3ordinal[</span>
-<span id="cb5-56"><a href="#cb5-56" aria-label="56"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-57"><a href="#cb5-57" aria-label="57"></a>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-label="50"></a>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-label="51"></a>rater2ordinal[</span>
+<span id="cb5-52"><a href="#cb5-52" aria-label="52"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-label="53"></a>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-label="54"></a>rater2ordinal[</span>
+<span id="cb5-55"><a href="#cb5-55" aria-label="55"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-56"><a href="#cb5-56" aria-label="56"></a>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-label="57"></a></span>
 <span id="cb5-58"><a href="#cb5-58" aria-label="58"></a>rater3ordinal[</span>
 <span id="cb5-59"><a href="#cb5-59" aria-label="59"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-60"><a href="#cb5-60" aria-label="60"></a>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb5-61"><a href="#cb5-61" aria-label="61"></a></span>
-<span id="cb5-62"><a href="#cb5-62" aria-label="62"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb5-63"><a href="#cb5-63" aria-label="63"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb5-64"><a href="#cb5-64" aria-label="64"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb5-65"><a href="#cb5-65" aria-label="65"></a></span>
-<span id="cb5-66"><a href="#cb5-66" aria-label="66"></a>item1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb5-67"><a href="#cb5-67" aria-label="67"></a>item2 <span class="ot">&lt;-</span> item1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb5-68"><a href="#cb5-68" aria-label="68"></a>item3 <span class="ot">&lt;-</span> item2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
-<span id="cb5-69"><a href="#cb5-69" aria-label="69"></a>item4 <span class="ot">&lt;-</span> item3 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">12</span>)</span>
-<span id="cb5-70"><a href="#cb5-70" aria-label="70"></a></span>
-<span id="cb5-71"><a href="#cb5-71" aria-label="71"></a>Person <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">8</span>))</span>
-<span id="cb5-72"><a href="#cb5-72" aria-label="72"></a>Occasion <span class="ot">&lt;-</span> Rater <span class="ot">&lt;-</span></span>
-<span id="cb5-73"><a href="#cb5-73" aria-label="73"></a>  <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> <span class="dv">4</span>, <span class="at">times =</span> <span class="dv">6</span>))</span>
-<span id="cb5-74"><a href="#cb5-74" aria-label="74"></a>Item <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">times =</span> <span class="dv">12</span>))</span>
-<span id="cb5-75"><a href="#cb5-75" aria-label="75"></a>Score <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb5-76"><a href="#cb5-76" aria-label="76"></a>  <span class="dv">9</span>,<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">4</span>,<span class="dv">6</span>,</span>
-<span id="cb5-77"><a href="#cb5-77" aria-label="77"></a>  <span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">3</span>,<span class="dv">2</span>,</span>
-<span id="cb5-78"><a href="#cb5-78" aria-label="78"></a>  <span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">9</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">10</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">7</span>,</span>
-<span id="cb5-79"><a href="#cb5-79" aria-label="79"></a>  <span class="dv">8</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-60"><a href="#cb5-60" aria-label="60"></a>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-label="61"></a>rater3ordinal[</span>
+<span id="cb5-62"><a href="#cb5-62" aria-label="62"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-63"><a href="#cb5-63" aria-label="63"></a>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-label="64"></a>rater3ordinal[</span>
+<span id="cb5-65"><a href="#cb5-65" aria-label="65"></a>  <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(rater1ordinal), <span class="at">size =</span> <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-label="66"></a>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-label="67"></a></span>
+<span id="cb5-68"><a href="#cb5-68" aria-label="68"></a>time1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb5-69"><a href="#cb5-69" aria-label="69"></a>time2 <span class="ot">&lt;-</span> time1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb5-70"><a href="#cb5-70" aria-label="70"></a>time3 <span class="ot">&lt;-</span> time2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-label="71"></a></span>
+<span id="cb5-72"><a href="#cb5-72" aria-label="72"></a>item1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb5-73"><a href="#cb5-73" aria-label="73"></a>item2 <span class="ot">&lt;-</span> item1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb5-74"><a href="#cb5-74" aria-label="74"></a>item3 <span class="ot">&lt;-</span> item2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">8</span>)</span>
+<span id="cb5-75"><a href="#cb5-75" aria-label="75"></a>item4 <span class="ot">&lt;-</span> item3 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> sampleSize, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">12</span>)</span>
+<span id="cb5-76"><a href="#cb5-76" aria-label="76"></a></span>
+<span id="cb5-77"><a href="#cb5-77" aria-label="77"></a>Person <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">8</span>))</span>
+<span id="cb5-78"><a href="#cb5-78" aria-label="78"></a>Occasion <span class="ot">&lt;-</span> Rater <span class="ot">&lt;-</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-label="79"></a>  <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> <span class="dv">4</span>, <span class="at">times =</span> <span class="dv">6</span>))</span>
+<span id="cb5-80"><a href="#cb5-80" aria-label="80"></a>Item <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">times =</span> <span class="dv">12</span>))</span>
+<span id="cb5-81"><a href="#cb5-81" aria-label="81"></a>Score <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-82"><a href="#cb5-82" aria-label="82"></a>  <span class="dv">9</span>,<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">4</span>,<span class="dv">6</span>,</span>
+<span id="cb5-83"><a href="#cb5-83" aria-label="83"></a>  <span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">3</span>,<span class="dv">2</span>,</span>
+<span id="cb5-84"><a href="#cb5-84" aria-label="84"></a>  <span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">9</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">2</span>,<span class="dv">10</span>,<span class="dv">9</span>,<span class="dv">8</span>,<span class="dv">7</span>,</span>
+<span id="cb5-85"><a href="#cb5-85" aria-label="85"></a>  <span class="dv">8</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-addMissingData-reliability" class="level4" data-number="4.4.2.2"><h4 data-number="4.4.2.2" class="anchored" data-anchor-id="sec-addMissingData-reliability">
@@ -1420,7 +1438,11 @@ Figure&nbsp;4.14: Standard Error of Measurement as a Function of Reliability.
 <span id="cb7-18"><a href="#cb7-18" aria-label="18"></a>  item4</span>
 <span id="cb7-19"><a href="#cb7-19" aria-label="19"></a>)</span>
 <span id="cb7-20"><a href="#cb7-20" aria-label="20"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-label="21"></a>pio_cross_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Person, Item, Score, Occasion)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-21"><a href="#cb7-21" aria-label="21"></a>pio_cross_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-22"><a href="#cb7-22" aria-label="22"></a>  Person,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-label="23"></a>  Item,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-label="24"></a>  Score,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-label="25"></a>  Occasion)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section></section></section><section id="sec-typesOfReliability" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="sec-typesOfReliability">
@@ -1436,7 +1458,9 @@ Figure&nbsp;4.14: Standard Error of Measurement as a Function of Reliability.
 <p>The coefficient of stability is the most widely used index when reporting the test–retest reliability of a measure. It is estimated using a Pearson correlation of the scores at time 1 with the score at time 2. That is, the coefficient of stability assesses the stability of individual differences (i.e., rank-order stability). The Pearson correlation is called the coefficient of stability when the length of the retest interval (the delay between test and retest) is on the order of days or weeks. If the retest occurs almost at the same time as the original test (e.g., a 45-minute delay), the Pearson correlation is called the <em>coefficient of dependability</em> <span class="citation" data-cites="Revelle2019">(<a href="references.html#ref-Revelle2019" role="doc-biblioref">Revelle &amp; Condon, 2019</a>)</span>.</p>
 <p>We estimate the coefficient of stability below:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
@@ -1450,7 +1474,9 @@ sample estimates:
       cor 
 0.9195702 </code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="fu">cor</span>(mydata[, <span class="fu">c</span>(<span class="st">"time1"</span>, <span class="st">"time2"</span>, <span class="st">"time3"</span>)], <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="fu">cor</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(<span class="st">"time1"</span>, <span class="st">"time2"</span>, <span class="st">"time3"</span>)],</span>
+<span id="cb10-3"><a href="#cb10-3" aria-label="3"></a>  <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>          time1     time2     time3
 time1 1.0000000 0.9195702 0.7525558
@@ -1472,7 +1498,7 @@ time3 0.7525558 0.7822439 1.0000000</code></pre>
 <span id="cb12-10"><a href="#cb12-10" aria-label="10"></a>mydataNoMissing <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(mydata[, <span class="fu">c</span>(<span class="st">"time1"</span>, <span class="st">"time2"</span>)])</span>
 <span id="cb12-11"><a href="#cb12-11" aria-label="11"></a><span class="fu">lines</span>(<span class="fu">lowess</span>(mydataNoMissing<span class="sc">$</span>time1, mydataNoMissing<span class="sc">$</span>time2), <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
-<div id="fig-testRetestScatterplot" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Test–Retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit." data-fig-scap="Test–Retest Reliability Scatterplot.">
+<div id="fig-testRetestScatterplot" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-scap="Test–Retest Reliability Scatterplot." alt="Test–Retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-testRetestScatterplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <a href="reliability_files/figure-html/fig-testRetestScatterplot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;4.15: Test–Retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit."><img src="reliability_files/figure-html/fig-testRetestScatterplot-1.png" class="img-fluid figure-img" data-fig-scap="Test–Retest Reliability Scatterplot." alt="Test–Retest Reliability Scatterplot. The black line is the best-fitting linear line. The red line is a locally estimated scatterplot smoothing (LOESS) line, which uses nonparametric estimation of the best fit." width="672"></a>
 </div>
@@ -2365,7 +2391,7 @@ Figure&nbsp;4.21: Hypothetical Data Demonstrating Good Relative Reliability Desp
 <span id="cb16-94"><a href="#cb16-94" aria-label="94"></a></span>
 <span id="cb16-95"><a href="#cb16-95" aria-label="95"></a><span class="fu">mtext</span>(<span class="st">"time3"</span>, <span class="at">side =</span> <span class="dv">2</span>, <span class="at">outer =</span> <span class="cn">TRUE</span>, <span class="at">line =</span> <span class="fl">2.7</span>, <span class="at">adj =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
-<div id="fig-restrictedRange" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Example of Correlation With (Right Panel) and Without (Left Panel) Range Restriction. Filled black points represent the points in common across the two scatterplots." data-fig-scap="Example of Correlation With and Without Range Restriction.">
+<div id="fig-restrictedRange" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-scap="Example of Correlation With and Without Range Restriction." alt="Example of Correlation With (Right Panel) and Without (Left Panel) Range Restriction. Filled black points represent the points in common across the two scatterplots.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-restrictedRange-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <a href="reliability_files/figure-html/fig-restrictedRange-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-22" title="Figure&nbsp;4.22: Example of Correlation With (Right Panel) and Without (Left Panel) Range Restriction. Filled black points represent the points in common across the two scatterplots."><img src="reliability_files/figure-html/fig-restrictedRange-1.png" class="img-fluid figure-img" data-fig-scap="Example of Correlation With and Without Range Restriction." alt="Example of Correlation With (Right Panel) and Without (Left Panel) Range Restriction. Filled black points represent the points in common across the two scatterplots." width="960"></a>
 </div>
@@ -2398,7 +2424,9 @@ Figure&nbsp;4.22: Example of Correlation With (Right Panel) and Without (Left Pa
 <span class="header-section-number">4.5.1.2</span> Coefficient of Agreement</h4>
 <p>The intraclass correlation (ICC) can be used to evaluate the extent of absolute agreement of scores within a person across time. ICC ranges from 0–1, with higher scores indicating greater agreement of the scores across time within individuals (relative to the variability in scores across people). ICC reflects the proportion of variance in scores that is attributable to differences between people. That is, it reflects the extent to which scores are consistent across time within a person relative to the variability in scores across people. A higher ICC reflects greater between-person variability relative to within-person variability. ICC was estimated using the <code>psych</code> package <span class="citation" data-cites="R-psych">(<a href="references.html#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a>psych<span class="sc">::</span><span class="fu">ICC</span>(mydata[, <span class="fu">c</span>(<span class="st">"time1"</span>, <span class="st">"time2"</span>)], <span class="at">missing =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-label="1"></a>psych<span class="sc">::</span><span class="fu">ICC</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(<span class="st">"time1"</span>, <span class="st">"time2"</span>)],</span>
+<span id="cb17-3"><a href="#cb17-3" aria-label="3"></a>  <span class="at">missing =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>Call: psych::ICC(x = mydata[, c("time1", "time2")], missing = FALSE)
 
@@ -2470,7 +2498,7 @@ CR = 1.959964 \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 <pre><code>[1] 7.744468</code></pre>
 </div>
 </div>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>repeatability()</code> function that estimates the repeatability of a measure’s scores and generates a <a href="#sec-blandAltmanPlot">Bland-Altman plot</a> in <a href="#fig-repeatability" class="quarto-xref">Figure&nbsp;<span>4.23</span></a>. The coefficient of repeatability is labeled <code>cr</code> in the output.</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/repeatability.html">petersenlab::repeatability()</a></code> function that estimates the repeatability of a measure’s scores and generates a <a href="#sec-blandAltmanPlot">Bland-Altman plot</a> in <a href="#fig-repeatability" class="quarto-xref">Figure&nbsp;<span>4.23</span></a>. The coefficient of repeatability is labeled <code>cr</code> in the output.</p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-label="1"></a>repeatability <span class="ot">&lt;-</span> <span class="cf">function</span>(measure1, measure2) {</span>
 <span id="cb25-2"><a href="#cb25-2" aria-label="2"></a>  cr <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span> <span class="fu">sd</span>((measure1 <span class="sc">-</span> measure2), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
@@ -2503,7 +2531,7 @@ CR = 1.959964 \times \sqrt{\frac{\sum(d_1 - d_2)^2}{n}}
 <span id="cb25-29"><a href="#cb25-29" aria-label="29"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a><span class="fu">repeatability</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">repeatability</span>(</span>
 <span id="cb26-2"><a href="#cb26-2" aria-label="2"></a>  <span class="at">measure1 =</span> mydata<span class="sc">$</span>time1,</span>
 <span id="cb26-3"><a href="#cb26-3" aria-label="3"></a>  <span class="at">measure2 =</span> mydata<span class="sc">$</span>time2</span>
 <span id="cb26-4"><a href="#cb26-4" aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2551,15 +2579,16 @@ Figure&nbsp;4.24: Example of a Bland-Altman Plot. (Figure reprinted from <span c
 </div>
 <p>In a Bland-Altman plot, the x-axis represents the mean of a person’s score across the two time points, and the y-axis represents the within-subject differences across time points. The horizontal line at <span class="math inline">\(y = 0\)</span> is called the line of identity. Points would fall on the line of identity if people’s scores showed perfect consistency in their absolute level across time points (i.e., not relative level as in a cross-time correlation). Another line reflects the bias estimate (i.e., mean difference from the measure across the two points). The bias plus or minus the coefficient of repeatability is the upper or lower limit of agreement (LOA), respectively, as in Equations <a href="#eq-lowerLimitOfAgreement" class="quarto-xref">Equation&nbsp;<span>4.15</span></a> and <a href="#eq-upperLimitOfAgreement" class="quarto-xref">Equation&nbsp;<span>4.16</span></a>. The top dashed line reflects the upper LOA. The bottom dashed line reflects the lower LOA. The Bland-Altman plot was created using the <code>blandr</code> package <span class="citation" data-cites="R-blandr">(<a href="references.html#ref-R-blandr" role="doc-biblioref">Datta, 2018</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a>BAstats <span class="ot">&lt;-</span> <span class="fu">blandr.statistics</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a>BAstats <span class="ot">&lt;-</span> blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-label="2"></a>  mydata<span class="sc">$</span>time1, <span class="co">#method1</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2</span>
-<span id="cb27-4"><a href="#cb27-4" aria-label="4"></a>) <span class="co">#method2</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-label="5"></a>BAplotlimits <span class="ot">&lt;-</span> <span class="fu">blandr.plot.limits</span>(BAstats)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb27-3"><a href="#cb27-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2 <span class="co">#method2</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-label="4"></a>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-label="5"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-label="6"></a>BAplotlimits <span class="ot">&lt;-</span> blandr<span class="sc">::</span><span class="fu">blandr.plot.limits</span>(BAstats)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a><span class="fu">blandr.plot.rplot</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a>blandr<span class="sc">::</span><span class="fu">blandr.plot.rplot</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-label="2"></a>  BAstats,</span>
 <span id="cb28-3"><a href="#cb28-3" aria-label="3"></a>  <span class="at">plot.limits =</span> BAplotlimits,</span>
 <span id="cb28-4"><a href="#cb28-4" aria-label="4"></a>  <span class="at">annotate =</span> <span class="cn">TRUE</span>,</span>
@@ -2709,7 +2738,7 @@ LLoA:
 <span class="header-section-number">4.5.2.1</span> Continuous Data</h4>
 <p>Use intraclass correlation (ICC) for estimating inter-rater reliability of continuous (interval/ratio) data. ICC ranges from 0–1, with higher scores indicating greater agreement. Below, ICC was estimated using the <code>psych</code> package <span class="citation" data-cites="R-psych">(<a href="references.html#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-label="1"></a><span class="fu">ICC</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-label="1"></a>psych<span class="sc">::</span><span class="fu">ICC</span>(</span>
 <span id="cb41-2"><a href="#cb41-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(</span>
 <span id="cb41-3"><a href="#cb41-3" aria-label="3"></a>    <span class="st">"rater1continuous"</span>,</span>
 <span id="cb41-4"><a href="#cb41-4" aria-label="4"></a>    <span class="st">"rater2continuous"</span>,</span>
@@ -2718,8 +2747,8 @@ LLoA:
 <span id="cb41-7"><a href="#cb41-7" aria-label="7"></a>  <span class="at">missing =</span> <span class="cn">FALSE</span></span>
 <span id="cb41-8"><a href="#cb41-8" aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>Call: ICC(x = mydata[, c("rater1continuous", "rater2continuous", "rater3continuous")], 
-    missing = FALSE)
+<pre><code>Call: psych::ICC(x = mydata[, c("rater1continuous", "rater2continuous", 
+    "rater3continuous")], missing = FALSE)
 
 Intraclass correlation coefficients 
                          type  ICC  F df1 df2       p lower bound upper bound
@@ -2736,7 +2765,7 @@ See the help file for a discussion of the other 4 McGraw and Wong estimates,</co
 </div>
 <p>Below, ICC was estimated using the <code>irrNA</code> package:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-label="1"></a><span class="fu">iccNA</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-label="1"></a>irrNA<span class="sc">::</span><span class="fu">iccNA</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb43-2"><a href="#cb43-2" aria-label="2"></a>  <span class="st">"rater1continuous"</span>,</span>
 <span id="cb43-3"><a href="#cb43-3" aria-label="3"></a>  <span class="st">"rater2continuous"</span>,</span>
 <span id="cb43-4"><a href="#cb43-4" aria-label="4"></a>  <span class="st">"rater3continuous"</span></span>
@@ -2763,7 +2792,7 @@ $k_0
 </div>
 <p>Below, ICC was estimated using the <code>irrICC</code> package:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-label="1"></a><span class="fu">icc1a.fn</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-label="1"></a>irrICC<span class="sc">::</span><span class="fu">icc1a.fn</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb45-2"><a href="#cb45-2" aria-label="2"></a>  <span class="st">"subid"</span>,</span>
 <span id="cb45-3"><a href="#cb45-3" aria-label="3"></a>  <span class="st">"rater1continuous"</span>,</span>
 <span id="cb45-4"><a href="#cb45-4" aria-label="4"></a>  <span class="st">"rater2continuous"</span>,</span>
@@ -2776,7 +2805,7 @@ $k_0
   </script>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-label="1"></a><span class="fu">icc1b.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-label="1"></a>irrICC<span class="sc">::</span><span class="fu">icc1b.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
 <span id="cb46-2"><a href="#cb46-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(</span>
 <span id="cb46-3"><a href="#cb46-3" aria-label="3"></a>    <span class="st">"subid"</span>,</span>
 <span id="cb46-4"><a href="#cb46-4" aria-label="4"></a>    <span class="st">"rater1continuous"</span>,</span>
@@ -2792,7 +2821,7 @@ $k_0
   </script>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-label="1"></a><span class="fu">icc2.inter.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-label="1"></a>irrICC<span class="sc">::</span><span class="fu">icc2.inter.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
 <span id="cb47-2"><a href="#cb47-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(</span>
 <span id="cb47-3"><a href="#cb47-3" aria-label="3"></a>    <span class="st">"subid"</span>,</span>
 <span id="cb47-4"><a href="#cb47-4" aria-label="4"></a>    <span class="st">"rater1continuous"</span>,</span>
@@ -2808,7 +2837,7 @@ $k_0
   </script>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-label="1"></a><span class="fu">icc2.nointer.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-label="1"></a>irrICC<span class="sc">::</span><span class="fu">icc2.nointer.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
 <span id="cb48-2"><a href="#cb48-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(</span>
 <span id="cb48-3"><a href="#cb48-3" aria-label="3"></a>    <span class="st">"subid"</span>,</span>
 <span id="cb48-4"><a href="#cb48-4" aria-label="4"></a>    <span class="st">"rater1continuous"</span>,</span>
@@ -2824,7 +2853,7 @@ $k_0
   </script>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-label="1"></a><span class="fu">icc3.inter.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-label="1"></a>irrICC<span class="sc">::</span><span class="fu">icc3.inter.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
 <span id="cb49-2"><a href="#cb49-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(</span>
 <span id="cb49-3"><a href="#cb49-3" aria-label="3"></a>    <span class="st">"subid"</span>,</span>
 <span id="cb49-4"><a href="#cb49-4" aria-label="4"></a>    <span class="st">"rater1continuous"</span>,</span>
@@ -2840,7 +2869,7 @@ $k_0
   </script>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-label="1"></a><span class="fu">icc3.nointer.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-label="1"></a>irrICC<span class="sc">::</span><span class="fu">icc3.nointer.fn</span>(<span class="fu">dropRowsWithAllNA</span>(</span>
 <span id="cb50-2"><a href="#cb50-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(</span>
 <span id="cb50-3"><a href="#cb50-3" aria-label="3"></a>    <span class="st">"subid"</span>,</span>
 <span id="cb50-4"><a href="#cb50-4" aria-label="4"></a>    <span class="st">"rater1continuous"</span>,</span>
@@ -2868,7 +2897,7 @@ $k_0
 <p>For estimating the inter-rater reliability of categorical data, use Cohen’s kappa <span class="citation" data-cites="Bakeman2020">(<a href="references.html#ref-Bakeman2020" role="doc-biblioref">Bakeman &amp; Goodman, 2020</a>)</span>, Fleiss’s kappa, the S index <span class="citation" data-cites="Falotico2010">(<a href="references.html#ref-Falotico2010" role="doc-biblioref">Falotico &amp; Quatto, 2010</a>)</span>, or Gwet’s AC1 statistic <span class="citation" data-cites="Gwet2008 Gwet2021a Gwet2021b">(<a href="references.html#ref-Gwet2008" role="doc-biblioref">Gwet, 2008</a>; <a href="references.html#ref-Gwet2021a" role="doc-biblioref">Gwet, 2021a</a>, <a href="references.html#ref-Gwet2021b" role="doc-biblioref">2021b</a>)</span>. Cohen’s kappa accounts for chance agreement. For instance, if two coders were each to flip a coin 100 times and were to on agree on 50 of the flips (i.e., 50% agreement), that would not be particularly impressive. However, Cohen’s kappa only allows two raters. For more than two raters, Fleiss’s kappa, the S index, or Gwet’s AC1 statistic is recommended.</p>
 <p>Cohen’s kappa (and weighted kappa) were estimated using the <code>psych</code> package <span class="citation" data-cites="R-psych">(<a href="references.html#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>. Fleiss’s kappa and Gwet’s AC1 statistic were estimated using the <code>irrCAC</code> package. These estimates of inter-rater reliability range from −1 to +1, with −1 indicating perfect disagreement, 0 indicating chance agreement, and 1 indicating perfect agreement. Larger, more positive scores indicate greater agreement.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-label="1"></a><span class="fu">cohen.kappa</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-label="1"></a>psych<span class="sc">::</span><span class="fu">cohen.kappa</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb52-2"><a href="#cb52-2" aria-label="2"></a>  <span class="st">"rater1categorical"</span>,</span>
 <span id="cb52-3"><a href="#cb52-3" aria-label="3"></a>  <span class="st">"rater2categorical"</span>,</span>
 <span id="cb52-4"><a href="#cb52-4" aria-label="4"></a>  <span class="st">"rater3categorical"</span></span>
@@ -2885,7 +2914,7 @@ rater3categorical              0.90              0.76              1.00
 Average Cohen kappa for all raters  0.84
 Average weighted kappa for all raters  0.84</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-label="1"></a><span class="fu">fleiss.kappa.raw</span>(<span class="fu">na.omit</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-label="1"></a>irrCAC<span class="sc">::</span><span class="fu">fleiss.kappa.raw</span>(<span class="fu">na.omit</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb54-2"><a href="#cb54-2" aria-label="2"></a>  <span class="st">"rater1categorical"</span>,</span>
 <span id="cb54-3"><a href="#cb54-3" aria-label="3"></a>  <span class="st">"rater2categorical"</span>,</span>
 <span id="cb54-4"><a href="#cb54-4" aria-label="4"></a>  <span class="st">"rater3categorical"</span></span>
@@ -2909,7 +2938,7 @@ $obs
   rater1categorical rater2categorical rater3categorical
 1                97                97                97</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-label="1"></a><span class="fu">gwet.ac1.raw</span>(<span class="fu">na.omit</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-label="1"></a>irrCAC<span class="sc">::</span><span class="fu">gwet.ac1.raw</span>(<span class="fu">na.omit</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb56-2"><a href="#cb56-2" aria-label="2"></a>  <span class="st">"rater1categorical"</span>,</span>
 <span id="cb56-3"><a href="#cb56-3" aria-label="3"></a>  <span class="st">"rater2categorical"</span>,</span>
 <span id="cb56-4"><a href="#cb56-4" aria-label="4"></a>  <span class="st">"rater3categorical"</span></span>
@@ -2939,7 +2968,7 @@ $obs
 <p>For estimating the inter-rater reliability of ordinal data, use Cohen’s weighted kappa <span class="citation" data-cites="Cohen1968">(<a href="references.html#ref-Cohen1968" role="doc-biblioref">Cohen, 1968</a>)</span> or Kendall’s W. Weighted kappa does not treat all errors as equal; when dealing with ordinal data, weighted kappa weights errors according to the distance of the error. For instance, if Coder 1 rated as person as 0 (no diagnosis) and Coder 2 rated a person as 2 (diagnosis), this would be a larger difference than if Coder 1 rated a person as 1 (subthreshold) and Coder 2 rated a person as 2 (diagnosis). However, Cohen’s weighted kappa only allows two raters. For more than two raters, Kendall’s W is recommended.</p>
 <p>Cohen’s kappa and weighted kappa were estimated using the <code>psych</code> package <span class="citation" data-cites="R-psych">(<a href="references.html#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>. Kendall’s W was estimated using the <code>irrNA</code> package. The values range from −1 to +1, with −1 indicating perfect disagreement, 0 indicating chance agreement, and 1 indicating perfect agreement. Larger, more positive scores indicate greater agreement.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-label="1"></a><span class="fu">cohen.kappa</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-label="1"></a>psych<span class="sc">::</span><span class="fu">cohen.kappa</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb58-2"><a href="#cb58-2" aria-label="2"></a>  <span class="st">"rater1ordinal"</span>,</span>
 <span id="cb58-3"><a href="#cb58-3" aria-label="3"></a>  <span class="st">"rater2ordinal"</span>,</span>
 <span id="cb58-4"><a href="#cb58-4" aria-label="4"></a>  <span class="st">"rater3ordinal"</span></span>
@@ -2956,7 +2985,7 @@ rater3ordinal          0.75          0.50          1.00
 Average Cohen kappa for all raters  0.66
 Average weighted kappa for all raters  0.64</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-label="1"></a><span class="fu">kendallNA</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-label="1"></a>irrNA<span class="sc">::</span><span class="fu">kendallNA</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb60-2"><a href="#cb60-2" aria-label="2"></a>  <span class="st">"rater1ordinal"</span>,</span>
 <span id="cb60-3"><a href="#cb60-3" aria-label="3"></a>  <span class="st">"rater2ordinal"</span>,</span>
 <span id="cb60-4"><a href="#cb60-4" aria-label="4"></a>  <span class="st">"rater3ordinal"</span></span>
@@ -3129,7 +3158,7 @@ Figure&nbsp;4.26: Histogram of Inter-Item Correlations. The vertical black line 
 <span id="cb82-3"><a href="#cb82-3" aria-label="3"></a><span class="st"> latentFactor =~ item1 + item2 + item3 + item4</span></span>
 <span id="cb82-4"><a href="#cb82-4" aria-label="4"></a><span class="st">'</span></span>
 <span id="cb82-5"><a href="#cb82-5" aria-label="5"></a></span>
-<span id="cb82-6"><a href="#cb82-6" aria-label="6"></a>latentFactorModel_fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb82-6"><a href="#cb82-6" aria-label="6"></a>latentFactorModel_fit <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">cfa</span>(</span>
 <span id="cb82-7"><a href="#cb82-7" aria-label="7"></a>  latentFactorModel_syntax,</span>
 <span id="cb82-8"><a href="#cb82-8" aria-label="8"></a>  <span class="at">data =</span> mydata,</span>
 <span id="cb82-9"><a href="#cb82-9" aria-label="9"></a>  <span class="at">missing =</span> <span class="st">"ML"</span>,</span>
@@ -3254,7 +3283,7 @@ R-Square:
     item3             0.589
     item4             0.265</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-label="1"></a><span class="fu">AVE</span>(latentFactorModel_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-label="1"></a>semTools<span class="sc">::</span><span class="fu">AVE</span>(latentFactorModel_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>latentFactor 
        0.558 </code></pre>
@@ -3291,7 +3320,7 @@ attr(,"weight")
 <p>Another challenge to split-half reliability is that the reliability differs depending on which items go into which half.</p>
 <p>One option is to calculate the split-half reliability of odd and even trials, while correcting for test length, as is performed with the <code>item_split_half()</code> function of the <code>performance</code> package <span class="citation" data-cites="R-performance">(<a href="references.html#ref-R-performance" role="doc-biblioref">Lüdecke et al., 2021</a>)</span>:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-label="1"></a><span class="fu">item_split_half</span>(mydata[, <span class="fu">c</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-label="1"></a>performance<span class="sc">::</span><span class="fu">item_split_half</span>(mydata[, <span class="fu">c</span>(</span>
 <span id="cb88-2"><a href="#cb88-2" aria-label="2"></a>  <span class="st">"item1"</span>,</span>
 <span id="cb88-3"><a href="#cb88-3" aria-label="3"></a>  <span class="st">"item2"</span>,</span>
 <span id="cb88-4"><a href="#cb88-4" aria-label="4"></a>  <span class="st">"item3"</span>,</span>
@@ -3307,7 +3336,7 @@ $spearmanbrown
 </div>
 <p>Modern computational software allows for estimating the mean reliability estimate of all possible split-halves <span class="citation" data-cites="Revelle2019">(<a href="references.html#ref-Revelle2019" role="doc-biblioref">Revelle &amp; Condon, 2019</a>)</span>, while correcting for test length, as seen below. Split-half reliability was estimated using the <code>psych</code> package <span class="citation" data-cites="R-psych">(<a href="references.html#ref-R-psych" role="doc-biblioref">Revelle, 2022</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-label="1"></a><span class="fu">splitHalf</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-label="1"></a>psych<span class="sc">::</span><span class="fu">splitHalf</span>(</span>
 <span id="cb90-2"><a href="#cb90-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(</span>
 <span id="cb90-3"><a href="#cb90-3" aria-label="3"></a>    <span class="st">"item1"</span>,</span>
 <span id="cb90-4"><a href="#cb90-4" aria-label="4"></a>    <span class="st">"item2"</span>,</span>
@@ -3318,7 +3347,7 @@ $spearmanbrown
 <span id="cb90-9"><a href="#cb90-9" aria-label="9"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>Split half reliabilities  
-Call: splitHalf(r = mydata[, c("item1", "item2", "item3", "item4")], 
+Call: psych::splitHalf(r = mydata[, c("item1", "item2", "item3", "item4")], 
     brute = TRUE)
 
 Maximum split half reliability (lambda 4) =  0.93
@@ -3419,7 +3448,7 @@ item4 99  0.81  0.75  0.61   0.58   48 15.6</code></pre>
 <span class="header-section-number">4.5.5.7.1</span> Omega Total (<span class="math inline">\(\omega_t\)</span>)</h5>
 <p>Omega total (<span class="math inline">\(\omega_t\)</span>) (or simply omega) is the proportion of the total variance that is accounted for by the common factor <span class="citation" data-cites="Flora2020">(<a href="references.html#ref-Flora2020" role="doc-biblioref">Flora, 2020</a>)</span>. Omega total, like Cronbach’s alpha, assumes that the items are unidimensional. Omega total (<span class="math inline">\(\omega_t\)</span>) was calculated using the <code>MBESS</code> package <span class="citation" data-cites="R-MBESS">(<a href="references.html#ref-R-MBESS" role="doc-biblioref">Kelley, 2020</a>)</span>. This code quickly calculates a point estimate for omega total:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-label="1"></a><span class="fu">ci.reliability</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-label="1"></a>MBESS<span class="sc">::</span><span class="fu">ci.reliability</span>(</span>
 <span id="cb98-2"><a href="#cb98-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(<span class="st">"item1"</span>, <span class="st">"item2"</span>, <span class="st">"item3"</span>, <span class="st">"item4"</span>)],</span>
 <span id="cb98-3"><a href="#cb98-3" aria-label="3"></a>  <span class="at">type =</span> <span class="st">"omega"</span>,</span>
 <span id="cb98-4"><a href="#cb98-4" aria-label="4"></a>  <span class="at">interval.type =</span> <span class="st">"none"</span></span>
@@ -3436,7 +3465,7 @@ item4 99  0.81  0.75  0.61   0.58   48 15.6</code></pre>
 <p>The following code calculates a confidence interval from a bias-corrected bootstrap. For reproducibility, we set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed. <strong>Warning</strong>: This code takes a while to run based on <span class="math inline">\(1000\)</span> bootstrap replications. You can reduce the number of replications to be faster. However, the number of bootstrap replications must be larger than the number of rows in the data.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-label="1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb101-2"><a href="#cb101-2" aria-label="2"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb101-2"><a href="#cb101-2" aria-label="2"></a>MBESS<span class="sc">::</span><span class="fu">ci.reliability</span>(</span>
 <span id="cb101-3"><a href="#cb101-3" aria-label="3"></a>  mydata[, <span class="fu">c</span>(<span class="st">"item1"</span>, <span class="st">"item2"</span>, <span class="st">"item3"</span>, <span class="st">"item4"</span>)],</span>
 <span id="cb101-4"><a href="#cb101-4" aria-label="4"></a>  <span class="at">type =</span> <span class="st">"omega"</span>,</span>
 <span id="cb101-5"><a href="#cb101-5" aria-label="5"></a>  <span class="at">interval.type =</span> <span class="st">"bca"</span>,</span>
@@ -3470,7 +3499,7 @@ $interval.type
 <p>If the items are multidimensional and follow a bifactor structure, omega hierarchical (<span class="math inline">\(\omega_h\)</span>) is preferred over omega total. Omega hierarchical is the proportion of the total variance that is accounted for by the general factor in a set of multidimensional items <span class="citation" data-cites="Flora2020">(<a href="references.html#ref-Flora2020" role="doc-biblioref">Flora, 2020</a>)</span>. Use omega hierarchical for estimating internal consistency of continuous items that are multidimensional and that follow a bifactor structure. If the multidimensional items follow a higher-order structure, use omega higher-order <span class="citation" data-cites="Flora2020">(<span class="math inline">\(\omega_{ho}\)</span>; <a href="references.html#ref-Flora2020" role="doc-biblioref">Flora, 2020</a>)</span>.</p>
 <p>Omega hierarchical was calculated using the <code>MBESS</code> package <span class="citation" data-cites="R-MBESS">(<a href="references.html#ref-R-MBESS" role="doc-biblioref">Kelley, 2020</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-label="1"></a><span class="fu">ci.reliability</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-label="1"></a>MBESS<span class="sc">::</span><span class="fu">ci.reliability</span>(</span>
 <span id="cb103-2"><a href="#cb103-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(<span class="st">"item1"</span>, <span class="st">"item2"</span>, <span class="st">"item3"</span>, <span class="st">"item4"</span>)],</span>
 <span id="cb103-3"><a href="#cb103-3" aria-label="3"></a>  <span class="at">type =</span> <span class="st">"hierarchical"</span>,</span>
 <span id="cb103-4"><a href="#cb103-4" aria-label="4"></a>  <span class="at">interval.type =</span> <span class="st">"none"</span></span>
@@ -3482,7 +3511,7 @@ $interval.type
 <p>The following code calculates a confidence interval from a bias-corrected bootstrap. For reproducibility, we set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed. <strong>Warning</strong>: This code takes a while to run based on <span class="math inline">\(1000\)</span> bootstrap replications. You can reduce the number of replications to be faster. However, the number of bootstrap replications must be larger than the number of rows in the data.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-label="1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb105-2"><a href="#cb105-2" aria-label="2"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb105-2"><a href="#cb105-2" aria-label="2"></a>MBESS<span class="sc">::</span><span class="fu">ci.reliability</span>(</span>
 <span id="cb105-3"><a href="#cb105-3" aria-label="3"></a>  mydata[, <span class="fu">c</span>(<span class="st">"item1"</span>, <span class="st">"item2"</span>, <span class="st">"item3"</span>, <span class="st">"item4"</span>)],</span>
 <span id="cb105-4"><a href="#cb105-4" aria-label="4"></a>  <span class="at">type =</span> <span class="st">"hierarchical"</span>,</span>
 <span id="cb105-5"><a href="#cb105-5" aria-label="5"></a>  <span class="at">interval.type =</span> <span class="st">"bca"</span>,</span>
@@ -3516,7 +3545,7 @@ $interval.type
 <p>Use omega categorical (<span class="math inline">\(\omega_C\)</span>) for categorical items that are unidimensional. To handle categorical data, omega categorical is calculated using a polychoric correlation matrix instead of a Pearson correlation matrix. If the categorical items are multidimensional items and they follow a bifactor structure, use omega hierarchical categorical <span class="citation" data-cites="Flora2020">(<span class="math inline">\(\omega_{h\text{-cat}}\)</span>; <a href="references.html#ref-Flora2020" role="doc-biblioref">Flora, 2020</a>)</span>. If the categorical items are multidimensional and they follow a higher-order structure, use omega higher-order categorical <span class="citation" data-cites="Flora2020">(<span class="math inline">\(\omega_{ho\text{-cat}}\)</span>; <a href="references.html#ref-Flora2020" role="doc-biblioref">Flora, 2020</a>)</span>.</p>
 <p>Omega categorical was calculated using the <code>MBESS</code> package <span class="citation" data-cites="R-MBESS">(<a href="references.html#ref-R-MBESS" role="doc-biblioref">Kelley, 2020</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-label="1"></a><span class="fu">ci.reliability</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-label="1"></a>MBESS<span class="sc">::</span><span class="fu">ci.reliability</span>(</span>
 <span id="cb107-2"><a href="#cb107-2" aria-label="2"></a>  mydata[, <span class="fu">c</span>(<span class="st">"rater1categorical"</span>, <span class="st">"rater2categorical"</span>, <span class="st">"rater3categorical"</span>)],</span>
 <span id="cb107-3"><a href="#cb107-3" aria-label="3"></a>  <span class="at">type =</span> <span class="st">"categorical"</span>,</span>
 <span id="cb107-4"><a href="#cb107-4" aria-label="4"></a>  <span class="at">interval.type =</span> <span class="st">"none"</span></span>
@@ -3534,7 +3563,7 @@ $interval.type
 <p>The following code calculates a confidence interval from a bias-corrected bootstrap. For reproducibility, we set the seed below. Using the same seed will yield the same answer every time. There is nothing special about this particular seed. <strong>Warning</strong>: This code takes a while to run based on <span class="math inline">\(1000\)</span> bootstrap replications. You can reduce the number of replications to be faster. However, the number of bootstrap replications must be larger than the number of rows in the data.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-label="1"></a><span class="fu">set.seed</span>(<span class="dv">52242</span>)</span>
-<span id="cb110-2"><a href="#cb110-2" aria-label="2"></a><span class="fu">ci.reliability</span>(</span>
+<span id="cb110-2"><a href="#cb110-2" aria-label="2"></a>MBESS<span class="sc">::</span><span class="fu">ci.reliability</span>(</span>
 <span id="cb110-3"><a href="#cb110-3" aria-label="3"></a>  mydata[, <span class="fu">c</span>(<span class="st">"rater1categorical"</span>, <span class="st">"rater2categorical"</span>, <span class="st">"rater3categorical"</span>)],</span>
 <span id="cb110-4"><a href="#cb110-4" aria-label="4"></a>  <span class="at">type =</span> <span class="st">"categorical"</span>,</span>
 <span id="cb110-5"><a href="#cb110-5" aria-label="5"></a>  <span class="at">interval.type =</span> <span class="st">"bca"</span>,</span>
@@ -3575,7 +3604,7 @@ As we noted in @eq-reliabilityRatio, reliability is the ratio of true score vari
 </div>
 <p>Here is the reliability of an unweighted composite:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-label="1"></a><span class="fu">composite_rel_matrix</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-label="1"></a>psychmeta<span class="sc">::</span><span class="fu">composite_rel_matrix</span>(</span>
 <span id="cb112-2"><a href="#cb112-2" aria-label="2"></a>  <span class="at">rel_vec =</span> rxx,</span>
 <span id="cb112-3"><a href="#cb112-3" aria-label="3"></a>  <span class="at">r_mat =</span> rho,</span>
 <span id="cb112-4"><a href="#cb112-4" aria-label="4"></a>  <span class="at">sd_vec =</span> sigma</span>
@@ -3586,7 +3615,7 @@ As we noted in @eq-reliabilityRatio, reliability is the ratio of true score vari
 </div>
 <p>Here is the reliability of a weighted composite:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-label="1"></a><span class="fu">composite_rel_matrix</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-label="1"></a>psychmeta<span class="sc">::</span><span class="fu">composite_rel_matrix</span>(</span>
 <span id="cb114-2"><a href="#cb114-2" aria-label="2"></a>  <span class="at">rel_vec =</span> rxx,</span>
 <span id="cb114-3"><a href="#cb114-3" aria-label="3"></a>  <span class="at">r_mat =</span> rho,</span>
 <span id="cb114-4"><a href="#cb114-4" aria-label="4"></a>  <span class="at">sd_vec =</span> sigma,</span>
@@ -3603,7 +3632,7 @@ As we noted in @eq-reliabilityRatio, reliability is the ratio of true score vari
 <p><span id="eq-reliabilityOfDifferenceScore"><span class="math display">\[
 r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\sigma_{y}}{\sigma^2_x + \sigma^2_y - 2r_{xy} \sigma_{x}\sigma_{y}}
 \tag{4.20}\]</span></span></p>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>reliabilityOfDifferenceScore()</code> function to estimate the reliability of a difference score:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/reliabilityOfDifferenceScore.html">petersenlab::reliabilityOfDifferenceScore()</a></code> function to estimate the reliability of a difference score:</p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-label="1"></a>reliabilityOfDifferenceScore <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, reliabilityX, reliabilityY) {</span>
 <span id="cb116-2"><a href="#cb116-2" aria-label="2"></a>  rxy <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)<span class="sc">$</span>estimate)</span>
@@ -3621,7 +3650,7 @@ r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\
 </details>
 </div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-label="1"></a><span class="fu">reliabilityOfDifferenceScore</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">reliabilityOfDifferenceScore</span>(</span>
 <span id="cb117-2"><a href="#cb117-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>item1,</span>
 <span id="cb117-3"><a href="#cb117-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>item2,</span>
 <span id="cb117-4"><a href="#cb117-4" aria-label="4"></a>  <span class="at">reliabilityX =</span> .<span class="dv">95</span>,</span>
@@ -3668,7 +3697,7 @@ r_{x-y, x-y} = \frac{\sigma^2_x r_{xx} + \sigma^2_y r_{yy} - 2r_{xy} \sigma_{x}\
 <span id="cb119-32"><a href="#cb119-32" aria-label="32"></a>  <span class="at">reliabilityY =</span> newDataDifferenceScore<span class="sc">$</span>reliability</span>
 <span id="cb119-33"><a href="#cb119-33" aria-label="33"></a>)</span>
 <span id="cb119-34"><a href="#cb119-34" aria-label="34"></a></span>
-<span id="cb119-35"><a href="#cb119-35" aria-label="35"></a><span class="fu">ggplot</span>(</span>
+<span id="cb119-35"><a href="#cb119-35" aria-label="35"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
 <span id="cb119-36"><a href="#cb119-36" aria-label="36"></a>  newDataDifferenceScore,</span>
 <span id="cb119-37"><a href="#cb119-37" aria-label="37"></a>  <span class="fu">aes</span>(</span>
 <span id="cb119-38"><a href="#cb119-38" aria-label="38"></a>    reliability,</span>
@@ -3722,7 +3751,7 @@ Figure&nbsp;4.27: Reliability of Difference Score as a Function of Reliability o
 <span id="cb120-9"><a href="#cb120-9" aria-label="9"></a>  <span class="at">reliabilityY =</span> newDataDifferenceScore2<span class="sc">$</span>reliability</span>
 <span id="cb120-10"><a href="#cb120-10" aria-label="10"></a>)</span>
 <span id="cb120-11"><a href="#cb120-11" aria-label="11"></a></span>
-<span id="cb120-12"><a href="#cb120-12" aria-label="12"></a><span class="fu">ggplot</span>(</span>
+<span id="cb120-12"><a href="#cb120-12" aria-label="12"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
 <span id="cb120-13"><a href="#cb120-13" aria-label="13"></a>  newDataDifferenceScore2,</span>
 <span id="cb120-14"><a href="#cb120-14" aria-label="14"></a>  <span class="fu">aes</span>(</span>
 <span id="cb120-15"><a href="#cb120-15" aria-label="15"></a>    correlation,</span>
@@ -3776,7 +3805,7 @@ r_{x*y, x*y} = \frac{r_{xx} r_{yy} + r^2_{xy}}{1 + r^2_{xy}}
 <p><span id="eq-reliabilityOfProductTermUncorrelated"><span class="math display">\[
 r_{x*y, x*y} = r_{xx} r_{yy}
 \tag{4.22}\]</span></span></p>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>reliabilityOfProductTerm()</code> function to estimate the reliability of a product term:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/reliabilityOfProductTerm.html">petersenlab::reliabilityOfProductTerm()</a></code> function to estimate the reliability of a product term:</p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-label="1"></a>reliabilityOfProductTerm <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, reliabilityX, reliabilityY) {</span>
 <span id="cb121-2"><a href="#cb121-2" aria-label="2"></a>  rxy <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cor.test</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)<span class="sc">$</span>estimate)</span>
@@ -3788,7 +3817,7 @@ r_{x*y, x*y} = r_{xx} r_{yy}
 </details>
 </div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-label="1"></a><span class="fu">reliabilityOfProductTerm</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">reliabilityOfProductTerm</span>(</span>
 <span id="cb122-2"><a href="#cb122-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>item1,</span>
 <span id="cb122-3"><a href="#cb122-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>item4,</span>
 <span id="cb122-4"><a href="#cb122-4" aria-label="4"></a>  <span class="at">reliabilityX =</span> .<span class="dv">80</span>,</span>
@@ -3893,7 +3922,9 @@ r_{x*y, x*y} = r_{xx} r_{yy}
 <section id="sec-noError-stability" class="level4" data-number="4.8.1.1"><h4 data-number="4.8.1.1" class="anchored" data-anchor-id="sec-noError-stability">
 <span class="header-section-number">4.8.1.1</span> Coefficient of stability</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-label="1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-label="1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb131-2"><a href="#cb131-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb131-3"><a href="#cb131-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
@@ -3926,7 +3957,7 @@ sample estimates:
 </section><section id="sec-noError-bias" class="level4" data-number="4.8.1.3"><h4 data-number="4.8.1.3" class="anchored" data-anchor-id="sec-noError-bias">
 <span class="header-section-number">4.8.1.3</span> Bias</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-label="1"></a><span class="fu">blandr.statistics</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-label="1"></a>blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb135-2"><a href="#cb135-2" aria-label="2"></a>  mydata<span class="sc">$</span>time1,</span>
 <span id="cb135-3"><a href="#cb135-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2</span>
 <span id="cb135-4"><a href="#cb135-4" aria-label="4"></a>)<span class="sc">$</span>bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3986,7 +4017,9 @@ sample estimates:
 <section id="sec-withinPersonRandomError-stability" class="level4" data-number="4.8.2.1"><h4 data-number="4.8.2.1" class="anchored" data-anchor-id="sec-withinPersonRandomError-stability">
 <span class="header-section-number">4.8.2.1</span> Coefficient of stability</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-label="1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-label="1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb138-2"><a href="#cb138-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb138-3"><a href="#cb138-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
@@ -4006,7 +4039,7 @@ sample estimates:
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb140"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-label="1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span></span>
 <span id="cb140-2"><a href="#cb140-2" aria-label="2"></a>  <span class="fu">sd</span>(</span>
-<span id="cb140-3"><a href="#cb140-3" aria-label="3"></a>    <span class="fu">blandr.statistics</span>(</span>
+<span id="cb140-3"><a href="#cb140-3" aria-label="3"></a>    blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb140-4"><a href="#cb140-4" aria-label="4"></a>      mydata<span class="sc">$</span>time1,</span>
 <span id="cb140-5"><a href="#cb140-5" aria-label="5"></a>      mydata<span class="sc">$</span>time2</span>
 <span id="cb140-6"><a href="#cb140-6" aria-label="6"></a>    )<span class="sc">$</span>differences,</span>
@@ -4019,7 +4052,7 @@ sample estimates:
 </section><section id="sec-withinPersonRandomError-bias" class="level4" data-number="4.8.2.3"><h4 data-number="4.8.2.3" class="anchored" data-anchor-id="sec-withinPersonRandomError-bias">
 <span class="header-section-number">4.8.2.3</span> Bias</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb142"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-label="1"></a><span class="fu">blandr.statistics</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb142"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-label="1"></a>blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb142-2"><a href="#cb142-2" aria-label="2"></a>  mydata<span class="sc">$</span>time1,</span>
 <span id="cb142-3"><a href="#cb142-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2</span>
 <span id="cb142-4"><a href="#cb142-4" aria-label="4"></a>)<span class="sc">$</span>bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4085,7 +4118,9 @@ sample estimates:
 <section id="sec-withinPersonSystematicError-stability" class="level4" data-number="4.8.3.1"><h4 data-number="4.8.3.1" class="anchored" data-anchor-id="sec-withinPersonSystematicError-stability">
 <span class="header-section-number">4.8.3.1</span> Coefficient of stability</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-label="1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-label="1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb145-2"><a href="#cb145-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb145-3"><a href="#cb145-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
@@ -4105,7 +4140,7 @@ sample estimates:
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-label="1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span></span>
 <span id="cb147-2"><a href="#cb147-2" aria-label="2"></a>  <span class="fu">sd</span>(</span>
-<span id="cb147-3"><a href="#cb147-3" aria-label="3"></a>    <span class="fu">blandr.statistics</span>(</span>
+<span id="cb147-3"><a href="#cb147-3" aria-label="3"></a>    blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb147-4"><a href="#cb147-4" aria-label="4"></a>      mydata<span class="sc">$</span>time1,</span>
 <span id="cb147-5"><a href="#cb147-5" aria-label="5"></a>      mydata<span class="sc">$</span>time2</span>
 <span id="cb147-6"><a href="#cb147-6" aria-label="6"></a>    )<span class="sc">$</span>differences,</span>
@@ -4118,7 +4153,7 @@ sample estimates:
 </section><section id="sec-withinPersonSystematicError-bias" class="level4" data-number="4.8.3.3"><h4 data-number="4.8.3.3" class="anchored" data-anchor-id="sec-withinPersonSystematicError-bias">
 <span class="header-section-number">4.8.3.3</span> Bias</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-label="1"></a><span class="fu">blandr.statistics</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-label="1"></a>blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb149-2"><a href="#cb149-2" aria-label="2"></a>  mydata<span class="sc">$</span>time1,</span>
 <span id="cb149-3"><a href="#cb149-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2</span>
 <span id="cb149-4"><a href="#cb149-4" aria-label="4"></a>)<span class="sc">$</span>bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4178,7 +4213,9 @@ sample estimates:
 <section id="sec-betweenPersonRandomError-stability" class="level4" data-number="4.8.4.1"><h4 data-number="4.8.4.1" class="anchored" data-anchor-id="sec-betweenPersonRandomError-stability">
 <span class="header-section-number">4.8.4.1</span> Coefficient of stability</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb152"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-label="1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb152"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-label="1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb152-2"><a href="#cb152-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb152-3"><a href="#cb152-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
@@ -4198,7 +4235,7 @@ sample estimates:
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb154"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-label="1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span></span>
 <span id="cb154-2"><a href="#cb154-2" aria-label="2"></a>  <span class="fu">sd</span>(</span>
-<span id="cb154-3"><a href="#cb154-3" aria-label="3"></a>    <span class="fu">blandr.statistics</span>(</span>
+<span id="cb154-3"><a href="#cb154-3" aria-label="3"></a>    blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb154-4"><a href="#cb154-4" aria-label="4"></a>      mydata<span class="sc">$</span>time1,</span>
 <span id="cb154-5"><a href="#cb154-5" aria-label="5"></a>      mydata<span class="sc">$</span>time2</span>
 <span id="cb154-6"><a href="#cb154-6" aria-label="6"></a>    )<span class="sc">$</span>differences,</span>
@@ -4211,7 +4248,7 @@ sample estimates:
 </section><section id="sec-betweenPersonRandomError-bias" class="level4" data-number="4.8.4.3"><h4 data-number="4.8.4.3" class="anchored" data-anchor-id="sec-betweenPersonRandomError-bias">
 <span class="header-section-number">4.8.4.3</span> Bias</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb156"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-label="1"></a><span class="fu">blandr.statistics</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb156"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-label="1"></a>blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb156-2"><a href="#cb156-2" aria-label="2"></a>  mydata<span class="sc">$</span>time1,</span>
 <span id="cb156-3"><a href="#cb156-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2</span>
 <span id="cb156-4"><a href="#cb156-4" aria-label="4"></a>)<span class="sc">$</span>bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4289,7 +4326,7 @@ sample estimates:
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb161"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1" aria-label="1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span></span>
 <span id="cb161-2"><a href="#cb161-2" aria-label="2"></a>  <span class="fu">sd</span>(</span>
-<span id="cb161-3"><a href="#cb161-3" aria-label="3"></a>    <span class="fu">blandr.statistics</span>(</span>
+<span id="cb161-3"><a href="#cb161-3" aria-label="3"></a>    blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb161-4"><a href="#cb161-4" aria-label="4"></a>      mydata<span class="sc">$</span>time1,</span>
 <span id="cb161-5"><a href="#cb161-5" aria-label="5"></a>      mydata<span class="sc">$</span>time2</span>
 <span id="cb161-6"><a href="#cb161-6" aria-label="6"></a>    )<span class="sc">$</span>differences,</span>
@@ -4302,7 +4339,7 @@ sample estimates:
 </section><section id="sec-betweenPersonSystematicError-bias" class="level4" data-number="4.8.5.3"><h4 data-number="4.8.5.3" class="anchored" data-anchor-id="sec-betweenPersonSystematicError-bias">
 <span class="header-section-number">4.8.5.3</span> Bias</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-label="1"></a><span class="fu">blandr.statistics</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-label="1"></a>blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb163-2"><a href="#cb163-2" aria-label="2"></a>  mydata<span class="sc">$</span>time1,</span>
 <span id="cb163-3"><a href="#cb163-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2</span>
 <span id="cb163-4"><a href="#cb163-4" aria-label="4"></a>)<span class="sc">$</span>bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4361,7 +4398,9 @@ sample estimates:
 <section id="sec-constantVariance-stability" class="level4" data-number="4.8.6.1"><h4 data-number="4.8.6.1" class="anchored" data-anchor-id="sec-constantVariance-stability">
 <span class="header-section-number">4.8.6.1</span> Coefficient of stability</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb166"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-label="1"></a><span class="fu">cor.test</span>(<span class="at">x =</span> mydata<span class="sc">$</span>time1, <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb166"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-label="1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb166-2"><a href="#cb166-2" aria-label="2"></a>  <span class="at">x =</span> mydata<span class="sc">$</span>time1,</span>
+<span id="cb166-3"><a href="#cb166-3" aria-label="3"></a>  <span class="at">y =</span> mydata<span class="sc">$</span>time2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's product-moment correlation
@@ -4381,7 +4420,7 @@ sample estimates:
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb168"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb168-1"><a href="#cb168-1" aria-label="1"></a><span class="fu">qnorm</span>(.<span class="dv">975</span>) <span class="sc">*</span></span>
 <span id="cb168-2"><a href="#cb168-2" aria-label="2"></a>  <span class="fu">sd</span>(</span>
-<span id="cb168-3"><a href="#cb168-3" aria-label="3"></a>    <span class="fu">blandr.statistics</span>(</span>
+<span id="cb168-3"><a href="#cb168-3" aria-label="3"></a>    blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb168-4"><a href="#cb168-4" aria-label="4"></a>      mydata<span class="sc">$</span>time1,</span>
 <span id="cb168-5"><a href="#cb168-5" aria-label="5"></a>      mydata<span class="sc">$</span>time2</span>
 <span id="cb168-6"><a href="#cb168-6" aria-label="6"></a>    )<span class="sc">$</span>differences,</span>
@@ -4394,7 +4433,7 @@ sample estimates:
 </section><section id="sec-constantVariance-bias" class="level4" data-number="4.8.6.3"><h4 data-number="4.8.6.3" class="anchored" data-anchor-id="sec-constantVariance-bias">
 <span class="header-section-number">4.8.6.3</span> Bias</h4>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb170"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-label="1"></a><span class="fu">blandr.statistics</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb170"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-label="1"></a>blandr<span class="sc">::</span><span class="fu">blandr.statistics</span>(</span>
 <span id="cb170-2"><a href="#cb170-2" aria-label="2"></a>  mydata<span class="sc">$</span>time1,</span>
 <span id="cb170-3"><a href="#cb170-3" aria-label="3"></a>  mydata<span class="sc">$</span>time2</span>
 <span id="cb170-4"><a href="#cb170-4" aria-label="4"></a>)<span class="sc">$</span>bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4443,9 +4482,9 @@ sample estimates:
 <pre><code>[1] 0.63</code></pre>
 </div>
 </div>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>attenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion. When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/attenuationCorrelation.html">petersenlab::attenuationCorrelation()</a></code> function that estimates the observed association given the true association and the reliability of the predictor and criterion. When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb174"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-label="1"></a><span class="fu">attenuationCorrelation</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb174"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">attenuationCorrelation</span>(</span>
 <span id="cb174-2"><a href="#cb174-2" aria-label="2"></a>  <span class="at">trueAssociation =</span> <span class="fl">0.7</span>,</span>
 <span id="cb174-3"><a href="#cb174-3" aria-label="3"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
 <span id="cb174-4"><a href="#cb174-4" aria-label="4"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span></span>
@@ -4480,9 +4519,9 @@ sample estimates:
 <pre><code>[1] 0.8974584</code></pre>
 </div>
 </div>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>disattenuationCorrelation()</code> function that estimates the observed association given the true association and the reliability of the predictor and criterion. When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/disattenuationCorrelation.html">petersenlab::disattenuationCorrelation()</a></code> function that estimates the observed association given the true association and the reliability of the predictor and criterion. When dealing with test–retest reliability, the predictor and criterion are the same, so we use the same reliability estimate for each:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb178"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1" aria-label="1"></a><span class="fu">disattenuationCorrelation</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb178"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">disattenuationCorrelation</span>(</span>
 <span id="cb178-2"><a href="#cb178-2" aria-label="2"></a>  <span class="at">observedAssociation =</span> observedAssociation,</span>
 <span id="cb178-3"><a href="#cb178-3" aria-label="3"></a>  <span class="at">reliabilityOfPredictor =</span> <span class="fl">0.9</span>,</span>
 <span id="cb178-4"><a href="#cb178-4" aria-label="4"></a>  <span class="at">reliabilityOfCriterion =</span> <span class="fl">0.9</span></span>

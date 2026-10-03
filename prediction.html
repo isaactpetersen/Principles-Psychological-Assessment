@@ -1856,7 +1856,8 @@ Figure&nbsp;9.16: Receiver Operating Characteristic (ROC) Curves for Various Lev
 <span id="cb45-19"><a href="#cb45-19" aria-label="19"></a><span class="fu">library</span>(<span class="st">"here"</span>)</span>
 <span id="cb45-20"><a href="#cb45-20" aria-label="20"></a><span class="fu">library</span>(<span class="st">"tinytex"</span>)</span>
 <span id="cb45-21"><a href="#cb45-21" aria-label="21"></a><span class="fu">library</span>(<span class="st">"rmarkdown"</span>)</span>
-<span id="cb45-22"><a href="#cb45-22" aria-label="22"></a><span class="fu">library</span>(<span class="st">"knitr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb45-22"><a href="#cb45-22" aria-label="22"></a><span class="fu">library</span>(<span class="st">"knitr"</span>)</span>
+<span id="cb45-23"><a href="#cb45-23" aria-label="23"></a><span class="fu">library</span>(<span class="st">"kableExtra"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-prepareData-prediction" class="level3" data-number="9.2.2"><h3 data-number="9.2.2" class="anchored" data-anchor-id="sec-prepareData-prediction">
@@ -3284,7 +3285,7 @@ Figure&nbsp;9.28: Calibration Plot for Predictions of a Continuous Outcome, With
 <span class="header-section-number">9.5.2</span> Accuracy at a Given Cutoff</h3>
 <p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code>accuracyAtCutoff()</code> function that estimates the prediction accuracy at a given cutoff.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb161"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1" aria-label="1"></a><span class="fu">accuracyAtCutoff</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb161"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">accuracyAtCutoff</span>(</span>
 <span id="cb161-2"><a href="#cb161-2" aria-label="2"></a>  <span class="at">predicted =</span> mydataSDT<span class="sc">$</span>testScore,</span>
 <span id="cb161-3"><a href="#cb161-3" aria-label="3"></a>  <span class="at">actual =</span> mydataSDT<span class="sc">$</span>disorder,</span>
 <span id="cb161-4"><a href="#cb161-4" aria-label="4"></a>  <span class="at">cutoff =</span> cutoff</span>
@@ -3836,14 +3837,14 @@ Figure&nbsp;9.29: <a href="#sec-confusionMatrix">Confusion Matrix</a>.
 <span id="cb211-56"><a href="#cb211-56" aria-label="56"></a>  <span class="at">FN =</span> accuracyStats<span class="sc">$</span>FN</span>
 <span id="cb211-57"><a href="#cb211-57" aria-label="57"></a>)</span>
 <span id="cb211-58"><a href="#cb211-58" aria-label="58"></a></span>
-<span id="cb211-59"><a href="#cb211-59" aria-label="59"></a>sensitivitySpecificityData <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(</span>
+<span id="cb211-59"><a href="#cb211-59" aria-label="59"></a>sensitivitySpecificityData <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
 <span id="cb211-60"><a href="#cb211-60" aria-label="60"></a>  accuracyStats,</span>
 <span id="cb211-61"><a href="#cb211-61" aria-label="61"></a>  <span class="at">cols =</span> <span class="fu">all_of</span>(<span class="fu">c</span>(<span class="st">"sensitivity"</span>, <span class="st">"specificity"</span>))</span>
 <span id="cb211-62"><a href="#cb211-62" aria-label="62"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb212"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb212-1"><a href="#cb212-1" aria-label="1"></a><span class="fu">ggplot</span>(</span>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb212"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb212-1"><a href="#cb212-1" aria-label="1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
 <span id="cb212-2"><a href="#cb212-2" aria-label="2"></a>  sensitivitySpecificityData,</span>
 <span id="cb212-3"><a href="#cb212-3" aria-label="3"></a>  <span class="fu">aes</span>(</span>
 <span id="cb212-4"><a href="#cb212-4" aria-label="4"></a>    <span class="at">x =</span> cutoff,</span>
@@ -4029,7 +4030,7 @@ Figure&nbsp;9.30: Sensitivity and Specificity as a Function of the Cutoff.
 <span id="cb227-32"><a href="#cb227-32" aria-label="32"></a>  <span class="at">SP =</span> ppvNPVbaseRateData<span class="sc">$</span>SP</span>
 <span id="cb227-33"><a href="#cb227-33" aria-label="33"></a>)</span>
 <span id="cb227-34"><a href="#cb227-34" aria-label="34"></a></span>
-<span id="cb227-35"><a href="#cb227-35" aria-label="35"></a>ppvNPVbaseRateData_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(</span>
+<span id="cb227-35"><a href="#cb227-35" aria-label="35"></a>ppvNPVbaseRateData_long <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
 <span id="cb227-36"><a href="#cb227-36" aria-label="36"></a>  ppvNPVbaseRateData,</span>
 <span id="cb227-37"><a href="#cb227-37" aria-label="37"></a>  <span class="at">cols =</span> <span class="fu">all_of</span>(<span class="fu">c</span>(</span>
 <span id="cb227-38"><a href="#cb227-38" aria-label="38"></a>    <span class="st">"positivePredictiveValue"</span>,</span>
@@ -4039,16 +4040,21 @@ Figure&nbsp;9.30: Sensitivity and Specificity as a Function of the Cutoff.
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb228"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb228-1"><a href="#cb228-1" aria-label="1"></a><span class="fu">ggplot</span>(ppvNPVbaseRateData_long, <span class="fu">aes</span>(<span class="at">x =</span> BR, <span class="at">y =</span> value, <span class="at">color =</span> name)) <span class="sc">+</span></span>
-<span id="cb228-2"><a href="#cb228-2" aria-label="2"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb228-3"><a href="#cb228-3" aria-label="3"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"base rate"</span>) <span class="sc">+</span></span>
-<span id="cb228-4"><a href="#cb228-4" aria-label="4"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="st">"predictive value"</span>) <span class="sc">+</span></span>
-<span id="cb228-5"><a href="#cb228-5" aria-label="5"></a>  <span class="fu">scale_color_viridis_d</span>(</span>
-<span id="cb228-6"><a href="#cb228-6" aria-label="6"></a>    <span class="at">name =</span> <span class="st">""</span>,</span>
-<span id="cb228-7"><a href="#cb228-7" aria-label="7"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"negativePredictiveValue"</span>, <span class="st">"positivePredictiveValue"</span>),</span>
-<span id="cb228-8"><a href="#cb228-8" aria-label="8"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Negative Predictive Value"</span>, <span class="st">"Positive Predictive Value"</span>)</span>
-<span id="cb228-9"><a href="#cb228-9" aria-label="9"></a>  ) <span class="sc">+</span></span>
-<span id="cb228-10"><a href="#cb228-10" aria-label="10"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb228"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb228-1"><a href="#cb228-1" aria-label="1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
+<span id="cb228-2"><a href="#cb228-2" aria-label="2"></a>  ppvNPVbaseRateData_long,</span>
+<span id="cb228-3"><a href="#cb228-3" aria-label="3"></a>  <span class="fu">aes</span>(</span>
+<span id="cb228-4"><a href="#cb228-4" aria-label="4"></a>    <span class="at">x =</span> BR,</span>
+<span id="cb228-5"><a href="#cb228-5" aria-label="5"></a>    <span class="at">y =</span> value,</span>
+<span id="cb228-6"><a href="#cb228-6" aria-label="6"></a>    <span class="at">color =</span> name)) <span class="sc">+</span></span>
+<span id="cb228-7"><a href="#cb228-7" aria-label="7"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb228-8"><a href="#cb228-8" aria-label="8"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"base rate"</span>) <span class="sc">+</span></span>
+<span id="cb228-9"><a href="#cb228-9" aria-label="9"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="st">"predictive value"</span>) <span class="sc">+</span></span>
+<span id="cb228-10"><a href="#cb228-10" aria-label="10"></a>  <span class="fu">scale_color_viridis_d</span>(</span>
+<span id="cb228-11"><a href="#cb228-11" aria-label="11"></a>    <span class="at">name =</span> <span class="st">""</span>,</span>
+<span id="cb228-12"><a href="#cb228-12" aria-label="12"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"negativePredictiveValue"</span>, <span class="st">"positivePredictiveValue"</span>),</span>
+<span id="cb228-13"><a href="#cb228-13" aria-label="13"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Negative Predictive Value"</span>, <span class="st">"Positive Predictive Value"</span>)</span>
+<span id="cb228-14"><a href="#cb228-14" aria-label="14"></a>  ) <span class="sc">+</span></span>
+<span id="cb228-15"><a href="#cb228-15" aria-label="15"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-ppvNPVbaseRate" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Positive Predictive Value and Negative Predictive Value as a Function of the Base Rate.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ppvNPVbaseRate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -4086,19 +4092,24 @@ Figure&nbsp;9.31: Positive Predictive Value and Negative Predictive Value as a F
 </details>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb230"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb230-1"><a href="#cb230-1" aria-label="1"></a><span class="fu">ggplot</span>(ppvNPVcutoffData, <span class="fu">aes</span>(<span class="at">x =</span> cutoff, <span class="at">y =</span> value, <span class="at">color =</span> name)) <span class="sc">+</span></span>
-<span id="cb230-2"><a href="#cb230-2" aria-label="2"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb230-3"><a href="#cb230-3" aria-label="3"></a>  <span class="fu">scale_x_continuous</span>(</span>
-<span id="cb230-4"><a href="#cb230-4" aria-label="4"></a>    <span class="at">name =</span> <span class="st">"cutoff (liberal to conservative)"</span>,</span>
-<span id="cb230-5"><a href="#cb230-5" aria-label="5"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">2.09</span>)</span>
-<span id="cb230-6"><a href="#cb230-6" aria-label="6"></a>  ) <span class="sc">+</span></span>
-<span id="cb230-7"><a href="#cb230-7" aria-label="7"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="st">"predictive value"</span>) <span class="sc">+</span></span>
-<span id="cb230-8"><a href="#cb230-8" aria-label="8"></a>  <span class="fu">scale_color_viridis_d</span>(</span>
-<span id="cb230-9"><a href="#cb230-9" aria-label="9"></a>    <span class="at">name =</span> <span class="st">""</span>,</span>
-<span id="cb230-10"><a href="#cb230-10" aria-label="10"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"negativePredictiveValue"</span>, <span class="st">"positivePredictiveValue"</span>),</span>
-<span id="cb230-11"><a href="#cb230-11" aria-label="11"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Negative Predictive Value"</span>, <span class="st">"Positive Predictive Value"</span>)</span>
-<span id="cb230-12"><a href="#cb230-12" aria-label="12"></a>  ) <span class="sc">+</span></span>
-<span id="cb230-13"><a href="#cb230-13" aria-label="13"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb230"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb230-1"><a href="#cb230-1" aria-label="1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb230-2"><a href="#cb230-2" aria-label="2"></a>  ppvNPVcutoffData,</span>
+<span id="cb230-3"><a href="#cb230-3" aria-label="3"></a>  <span class="fu">aes</span>(</span>
+<span id="cb230-4"><a href="#cb230-4" aria-label="4"></a>    <span class="at">x =</span> cutoff,</span>
+<span id="cb230-5"><a href="#cb230-5" aria-label="5"></a>    <span class="at">y =</span> value,</span>
+<span id="cb230-6"><a href="#cb230-6" aria-label="6"></a>    <span class="at">color =</span> name)) <span class="sc">+</span></span>
+<span id="cb230-7"><a href="#cb230-7" aria-label="7"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb230-8"><a href="#cb230-8" aria-label="8"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb230-9"><a href="#cb230-9" aria-label="9"></a>    <span class="at">name =</span> <span class="st">"cutoff (liberal to conservative)"</span>,</span>
+<span id="cb230-10"><a href="#cb230-10" aria-label="10"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">2.09</span>)</span>
+<span id="cb230-11"><a href="#cb230-11" aria-label="11"></a>  ) <span class="sc">+</span></span>
+<span id="cb230-12"><a href="#cb230-12" aria-label="12"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="st">"predictive value"</span>) <span class="sc">+</span></span>
+<span id="cb230-13"><a href="#cb230-13" aria-label="13"></a>  <span class="fu">scale_color_viridis_d</span>(</span>
+<span id="cb230-14"><a href="#cb230-14" aria-label="14"></a>    <span class="at">name =</span> <span class="st">""</span>,</span>
+<span id="cb230-15"><a href="#cb230-15" aria-label="15"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"negativePredictiveValue"</span>, <span class="st">"positivePredictiveValue"</span>),</span>
+<span id="cb230-16"><a href="#cb230-16" aria-label="16"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Negative Predictive Value"</span>, <span class="st">"Positive Predictive Value"</span>)</span>
+<span id="cb230-17"><a href="#cb230-17" aria-label="17"></a>  ) <span class="sc">+</span></span>
+<span id="cb230-18"><a href="#cb230-18" aria-label="18"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output-display">
 <div id="fig-ppvNPVcutoff" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Positive Predictive Value and Negative Predictive Value as a Function of the Cutoff.">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ppvNPVcutoff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -4688,7 +4699,7 @@ Figure&nbsp;9.33: Probability Nomogram.
 </div>
 <p>The blue line indicates the <a href="#sec-posttestProbability">posterior probability</a> of the condition given a positive test. The pink line indicates the <a href="#sec-posttestProbability">posterior probability</a> of the condition given a negative test. One can also generate the probability nomogram from the <a href="#sec-pretestProbability">base rate</a> and the <a href="#sec-sensitivity">sensitivity</a> and <a href="#sec-specificity">specificity</a> of the test at a given cutoff:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb286"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb286-1"><a href="#cb286-1" aria-label="1"></a><span class="fu">nomogrammer</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb286"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb286-1"><a href="#cb286-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">nomogrammer</span>(</span>
 <span id="cb286-2"><a href="#cb286-2" aria-label="2"></a>  <span class="at">pretestProb =</span> <span class="fu">baseRate</span>(</span>
 <span id="cb286-3"><a href="#cb286-3" aria-label="3"></a>    <span class="at">TP =</span> TPvalue,</span>
 <span id="cb286-4"><a href="#cb286-4" aria-label="4"></a>    <span class="at">TN =</span> TNvalue,</span>
@@ -4702,7 +4713,7 @@ Figure&nbsp;9.33: Probability Nomogram.
 </div>
 <p>One can also generate the probability nomogram from the <a href="#sec-pretestProbability">base rate</a>, <a href="#sec-positiveLikelihoodRatio">positive likelihood ratio</a>, and <a href="#sec-negativeLikelihoodRatio">negative likelihood ratio</a> at a given cutoff:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb287"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb287-1"><a href="#cb287-1" aria-label="1"></a><span class="fu">nomogrammer</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb287"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb287-1"><a href="#cb287-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">nomogrammer</span>(</span>
 <span id="cb287-2"><a href="#cb287-2" aria-label="2"></a>  <span class="at">pretestProb =</span> <span class="fu">baseRate</span>(</span>
 <span id="cb287-3"><a href="#cb287-3" aria-label="3"></a>    <span class="at">TP =</span> TPvalue,</span>
 <span id="cb287-4"><a href="#cb287-4" aria-label="4"></a>    <span class="at">TN =</span> TNvalue,</span>
@@ -5320,7 +5331,7 @@ b =
 <span id="cb337-39"><a href="#cb337-39" aria-label="39"></a>  ))</span>
 <span id="cb337-40"><a href="#cb337-40" aria-label="40"></a>}</span>
 <span id="cb337-41"><a href="#cb337-41" aria-label="41"></a></span>
-<span id="cb337-42"><a href="#cb337-42" aria-label="42"></a>informationGainStats <span class="ot">&lt;-</span> <span class="fu">full_join</span>(</span>
+<span id="cb337-42"><a href="#cb337-42" aria-label="42"></a>informationGainStats <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">full_join</span>(</span>
 <span id="cb337-43"><a href="#cb337-43" aria-label="43"></a>  possibleCutoffsBaseRates,</span>
 <span id="cb337-44"><a href="#cb337-44" aria-label="44"></a>  informationGainStats,</span>
 <span id="cb337-45"><a href="#cb337-45" aria-label="45"></a>  <span class="at">by =</span> <span class="st">"cutoff"</span></span>
@@ -5346,7 +5357,7 @@ b =
 <span id="cb337-65"><a href="#cb337-65" aria-label="65"></a>)</span>
 <span id="cb337-66"><a href="#cb337-66" aria-label="66"></a>informationGainStats <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(informationGainStats)</span>
 <span id="cb337-67"><a href="#cb337-67" aria-label="67"></a></span>
-<span id="cb337-68"><a href="#cb337-68" aria-label="68"></a><span class="fu">ggplot</span>(</span>
+<span id="cb337-68"><a href="#cb337-68" aria-label="68"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
 <span id="cb337-69"><a href="#cb337-69" aria-label="69"></a>  <span class="at">data =</span> informationGainStats,</span>
 <span id="cb337-70"><a href="#cb337-70" aria-label="70"></a>  <span class="fu">aes</span>(</span>
 <span id="cb337-71"><a href="#cb337-71" aria-label="71"></a>    <span class="at">x =</span> cutoff,</span>
@@ -5660,9 +5671,9 @@ Figure&nbsp;9.34: Information Gain as a Function of the Base Rate (BR).
 </div>
 </section><section id="sec-allAccuracyStatistics" class="level3" data-number="9.7.3"><h3 data-number="9.7.3" class="anchored" data-anchor-id="sec-allAccuracyStatistics">
 <span class="header-section-number">9.7.3</span> All Accuracy Statistics</h3>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains an R function that estimates the prediction accuracy at every possible cutoff.</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/accuracyAtEachCutoff.html">petersenlab::accuracyAtEachCutoff()</a></code> R function that estimates the prediction accuracy at every possible cutoff.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb340"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb340-1"><a href="#cb340-1" aria-label="1"></a><span class="fu">accuracyAtEachCutoff</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb340"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb340-1"><a href="#cb340-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">accuracyAtEachCutoff</span>(</span>
 <span id="cb340-2"><a href="#cb340-2" aria-label="2"></a>  <span class="at">predicted =</span> mydataSDT<span class="sc">$</span>testScore,</span>
 <span id="cb340-3"><a href="#cb340-3" aria-label="3"></a>  <span class="at">actual =</span> mydataSDT<span class="sc">$</span>disorder,</span>
 <span id="cb340-4"><a href="#cb340-4" aria-label="4"></a>  <span class="at">UH =</span> utilityHits,</span>
@@ -5702,8 +5713,8 @@ Table&nbsp;9.1: Accuracy Statistics.
 <p>Threshold at maximum combination of <a href="#sec-sensitivity">sensitivity</a> and <a href="#sec-specificity">specificity</a>:</p>
 <p><span class="math inline">\(\text{max}(\text{sensitivity} + \text{specificity})\)</span></p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb342"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb342-1"><a href="#cb342-1" aria-label="1"></a>youdenIndex <span class="ot">&lt;-</span> <span class="fu">coords</span>(</span>
-<span id="cb342-2"><a href="#cb342-2" aria-label="2"></a>  <span class="fu">roc</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb342"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb342-1"><a href="#cb342-1" aria-label="1"></a>youdenIndex <span class="ot">&lt;-</span> pROC<span class="sc">::</span><span class="fu">coords</span>(</span>
+<span id="cb342-2"><a href="#cb342-2" aria-label="2"></a>  pROC<span class="sc">::</span><span class="fu">roc</span>(</span>
 <span id="cb342-3"><a href="#cb342-3" aria-label="3"></a>    <span class="at">data =</span> mydataSDT,</span>
 <span id="cb342-4"><a href="#cb342-4" aria-label="4"></a>    <span class="at">response =</span> disorder,</span>
 <span id="cb342-5"><a href="#cb342-5" aria-label="5"></a>    <span class="at">predictor =</span> testScore,</span>
@@ -5755,8 +5766,8 @@ Table&nbsp;9.1: Accuracy Statistics.
 <span class="header-section-number">9.7.5.1</span> Threshold</h4>
 <p>Threshold where the ROC plot is closest to the Top Left:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb346"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb346-1"><a href="#cb346-1" aria-label="1"></a>closestToTheTopLeft <span class="ot">&lt;-</span> <span class="fu">coords</span>(</span>
-<span id="cb346-2"><a href="#cb346-2" aria-label="2"></a>  <span class="fu">roc</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb346"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb346-1"><a href="#cb346-1" aria-label="1"></a>closestToTheTopLeft <span class="ot">&lt;-</span> pROC<span class="sc">::</span><span class="fu">coords</span>(</span>
+<span id="cb346-2"><a href="#cb346-2" aria-label="2"></a>  pROC<span class="sc">::</span><span class="fu">roc</span>(</span>
 <span id="cb346-3"><a href="#cb346-3" aria-label="3"></a>    <span class="at">data =</span> mydataSDT,</span>
 <span id="cb346-4"><a href="#cb346-4" aria-label="4"></a>    <span class="at">response =</span> disorder,</span>
 <span id="cb346-5"><a href="#cb346-5" aria-label="5"></a>    <span class="at">predictor =</span> testScore,</span>
@@ -5788,9 +5799,9 @@ Table&nbsp;9.1: Accuracy Statistics.
 </div>
 </section></section><section id="sec-allAccuracyStatistics-cutoff" class="level3" data-number="9.7.6"><h3 data-number="9.7.6" class="anchored" data-anchor-id="sec-allAccuracyStatistics-cutoff">
 <span class="header-section-number">9.7.6</span> Cutoff that optimizes each of the following criteria:</h3>
-<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains an R function that identifies the cutoff that optimizes each of various accuracy estimates.</p>
+<p>The <a href="https://github.com/DevPsyLab/petersenlab"><code>petersenlab</code></a> package <span class="citation" data-cites="R-petersenlab">(<a href="references.html#ref-R-petersenlab" role="doc-biblioref">Petersen, 2025</a>)</span> contains the <code><a href="https://devpsylab.github.io/petersenlab/reference/optimalCutoff.html">petersenlab::optimalCutoff()</a></code> R function that identifies the cutoff that optimizes each of various accuracy estimates.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb348"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb348-1"><a href="#cb348-1" aria-label="1"></a><span class="fu">optimalCutoff</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb348"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb348-1"><a href="#cb348-1" aria-label="1"></a>petersenlab<span class="sc">::</span><span class="fu">optimalCutoff</span>(</span>
 <span id="cb348-2"><a href="#cb348-2" aria-label="2"></a>  <span class="at">predicted =</span> mydataSDT<span class="sc">$</span>testScore,</span>
 <span id="cb348-3"><a href="#cb348-3" aria-label="3"></a>  <span class="at">actual =</span> mydataSDT<span class="sc">$</span>disorder,</span>
 <span id="cb348-4"><a href="#cb348-4" aria-label="4"></a>  <span class="at">UH =</span> utilityHits,</span>
@@ -6449,7 +6460,7 @@ Table&nbsp;9.4: Example Data of Predictors (x1 and x2) and Outcome (y) Used for 
 <span id="cb396-7"><a href="#cb396-7" aria-label="7"></a>  <span class="at">data =</span> mydataSDT</span>
 <span id="cb396-8"><a href="#cb396-8" aria-label="8"></a>)</span>
 <span id="cb396-9"><a href="#cb396-9" aria-label="9"></a></span>
-<span id="cb396-10"><a href="#cb396-10" aria-label="10"></a><span class="fu">vif</span>(collinearRegression_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb396-10"><a href="#cb396-10" aria-label="10"></a>car<span class="sc">::</span><span class="fu">vif</span>(collinearRegression_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>                       GVIF Df GVIF^(1/(2*Df))
 ndka               6.300087  1        2.509997
@@ -6852,18 +6863,18 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] knitr_1.52              rmarkdown_2.32          tinytex_0.61           
- [4] here_1.0.2              MOTE_1.2.2              caret_7.0-1            
- [7] lattice_0.22-9          ggrepel_0.9.8           car_3.1-5              
-[10] carData_3.0-6           msir_1.4                ggpubr_1.0.0           
-[13] gridExtra_2.3.1         uroc_0.1.0              PredictABEL_1.2-4      
-[16] ResourceSelection_0.3-6 rms_8.1-1               Hmisc_5.3-0            
-[19] ROCR_1.0-12             pROC_1.19.1             viridis_0.6.5          
-[22] viridisLite_0.4.3       magrittr_2.0.5          lubridate_1.9.5        
-[25] forcats_1.0.1           stringr_1.6.0           dplyr_1.2.1            
-[28] purrr_1.2.2             readr_2.2.0             tidyr_1.3.2            
-[31] tibble_3.3.1            ggplot2_4.0.3           tidyverse_2.0.0        
-[34] petersenlab_1.2.3      
+ [1] kableExtra_1.4.1        knitr_1.52              rmarkdown_2.32         
+ [4] tinytex_0.61            here_1.0.2              MOTE_1.2.2             
+ [7] caret_7.0-1             lattice_0.22-9          ggrepel_0.9.8          
+[10] car_3.1-5               carData_3.0-6           msir_1.4               
+[13] ggpubr_1.0.0            gridExtra_2.3.1         uroc_0.1.0             
+[16] PredictABEL_1.2-4       ResourceSelection_0.3-6 rms_8.1-1              
+[19] Hmisc_5.3-0             ROCR_1.0-12             pROC_1.19.1            
+[22] viridis_0.6.5           viridisLite_0.4.3       magrittr_2.0.5         
+[25] lubridate_1.9.5         forcats_1.0.1           stringr_1.6.0          
+[28] dplyr_1.2.1             purrr_1.2.2             readr_2.2.0            
+[31] tidyr_1.3.2             tibble_3.3.1            ggplot2_4.0.3          
+[34] tidyverse_2.0.0         petersenlab_1.2.3      
 
 loaded via a namespace (and not attached):
   [1] RColorBrewer_1.1-3   rstudioapi_0.19.0    jsonlite_2.0.0      
@@ -6876,34 +6887,35 @@ loaded via a namespace (and not attached):
  [22] iterators_1.0.14     pkgconfig_2.0.3      Matrix_1.7-5        
  [25] R6_2.6.1             fastmap_1.2.0        future_1.76.0       
  [28] rbibutils_2.4.1      PBSmodelling_2.70.2  digest_0.6.39       
- [31] colorspace_2.1-3     rprojroot_2.1.1      labeling_0.4.3      
- [34] timechange_0.4.0     mgcv_1.9-4           abind_1.4-8         
- [37] compiler_4.6.1       bit64_4.8.6          withr_3.0.3         
- [40] htmlTable_2.5.0      S7_0.2.2             backports_1.5.1     
- [43] DBI_1.3.0            psych_2.6.9          ggsignif_0.6.4      
- [46] animation_2.8        lava_1.9.3           MASS_7.3-65         
- [49] quantreg_6.1         ModelMetrics_1.2.2.2 tools_4.6.1         
- [52] pbivnorm_0.6.0       foreign_0.8-91       otel_0.2.0          
- [55] future.apply_1.20.2  nnet_7.3-20          glue_1.8.1          
- [58] quadprog_1.5-8       nlme_3.1-169         checkmate_2.3.4     
- [61] cluster_2.1.8.2      reshape2_1.4.5       generics_0.1.4      
- [64] recipes_1.4.0        gtable_0.3.6         tzdb_0.5.0          
- [67] class_7.3-23         data.table_1.18.6.1  hms_1.1.4           
- [70] foreach_1.5.2        pillar_1.11.1        vroom_1.7.1         
- [73] mitools_2.7          splines_4.6.1        bit_4.6.0           
- [76] survival_3.8-6       SparseM_1.84-2       tidyselect_1.2.1    
- [79] mix_1.0-13           reformulas_0.4.4     stats4_4.6.1        
- [82] xfun_0.61            hardhat_1.4.3        timeDate_4052.112   
- [85] stringi_1.8.9        yaml_2.3.12          boot_1.3-32         
- [88] evaluate_1.0.5       codetools_0.2-20     tcltk_4.6.1         
- [91] cli_3.6.6            rpart_4.1.27         xtable_1.8-8        
- [94] Rdpack_2.6.6         lavaan_0.7-2         Rcpp_1.1.2          
- [97] globals_0.19.1       XML_3.99-0.25        parallel_4.6.1      
-[100] MatrixModels_0.5-4   gower_1.0.2          mclust_6.1.3        
-[103] listenv_1.0.0        lme4_2.0-6           mvtnorm_1.4-2       
-[106] ipred_0.9-16         prodlim_2026.03.11   scales_1.4.0        
-[109] crayon_1.5.3         rlang_1.3.0          multcomp_1.4-32     
-[112] mnormt_2.1.2        </code></pre>
+ [31] colorspace_2.1-3     rprojroot_2.1.1      textshaping_1.0.5   
+ [34] labeling_0.4.3       timechange_0.4.0     mgcv_1.9-4          
+ [37] abind_1.4-8          compiler_4.6.1       bit64_4.8.6         
+ [40] withr_3.0.3          htmlTable_2.5.0      S7_0.2.2            
+ [43] backports_1.5.1      DBI_1.3.0            psych_2.6.9         
+ [46] ggsignif_0.6.4       animation_2.8        lava_1.9.3          
+ [49] MASS_7.3-65          quantreg_6.1         ModelMetrics_1.2.2.2
+ [52] tools_4.6.1          pbivnorm_0.6.0       foreign_0.8-91      
+ [55] otel_0.2.0           future.apply_1.20.2  nnet_7.3-20         
+ [58] glue_1.8.1           quadprog_1.5-8       nlme_3.1-169        
+ [61] checkmate_2.3.4      cluster_2.1.8.2      reshape2_1.4.5      
+ [64] generics_0.1.4       recipes_1.4.0        gtable_0.3.6        
+ [67] tzdb_0.5.0           class_7.3-23         data.table_1.18.6.1 
+ [70] hms_1.1.4            xml2_1.6.0           foreach_1.5.2       
+ [73] pillar_1.11.1        vroom_1.7.1          mitools_2.7         
+ [76] splines_4.6.1        bit_4.6.0            survival_3.8-6      
+ [79] SparseM_1.84-2       tidyselect_1.2.1     mix_1.0-13          
+ [82] reformulas_0.4.4     svglite_2.2.2        stats4_4.6.1        
+ [85] xfun_0.61            hardhat_1.4.3        timeDate_4052.112   
+ [88] stringi_1.8.9        yaml_2.3.12          boot_1.3-32         
+ [91] evaluate_1.0.5       codetools_0.2-20     tcltk_4.6.1         
+ [94] cli_3.6.6            rpart_4.1.27         systemfonts_1.3.2   
+ [97] xtable_1.8-8         Rdpack_2.6.6         lavaan_0.7-2        
+[100] Rcpp_1.1.2           globals_0.19.1       XML_3.99-0.25       
+[103] parallel_4.6.1       MatrixModels_0.5-4   gower_1.0.2         
+[106] mclust_6.1.3         listenv_1.0.0        lme4_2.0-6          
+[109] mvtnorm_1.4-2        ipred_0.9-16         prodlim_2026.03.11  
+[112] scales_1.4.0         crayon_1.5.3         rlang_1.3.0         
+[115] multcomp_1.4-32      mnormt_2.1.2        </code></pre>
 </div>
 </div>
 
