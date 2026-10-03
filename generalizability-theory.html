@@ -979,11 +979,12 @@ Table&nbsp;6.2: Example Data Structure for Generalizability Theory With the Foll
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="fu">library</span>(<span class="st">"petersenlab"</span>) <span class="co">#to install: install.packages("remotes"); remotes::install_github("DevPsyLab/petersenlab")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="fu">library</span>(<span class="st">"gtheory"</span>) <span class="co">#to install: install.packages("https://cran.r-project.org/src/contrib/Archive/gtheory/gtheory_0.1.2.tar.gz")</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="fu">library</span>(<span class="st">"MOTE"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-label="4"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">library</span>(<span class="st">"tinytex"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-label="6"></a><span class="fu">library</span>(<span class="st">"knitr"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-label="7"></a><span class="fu">library</span>(<span class="st">"rmarkdown"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="fu">library</span>(<span class="st">"lme4"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-label="4"></a><span class="fu">library</span>(<span class="st">"MOTE"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-label="5"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-label="6"></a><span class="fu">library</span>(<span class="st">"tinytex"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-label="7"></a><span class="fu">library</span>(<span class="st">"knitr"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-label="8"></a><span class="fu">library</span>(<span class="st">"rmarkdown"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section><section id="sec-prepareData-gTheory" class="level3" data-number="6.2.2"><h3 data-number="6.2.2" class="anchored" data-anchor-id="sec-prepareData-gTheory">
@@ -1070,7 +1071,7 @@ Person:Item:Occasion 14  12.08    0.86
 <span class="header-section-number">6.2.4.2</span> Mixed Model Framework</h4>
 <p>The mixed model framework for estimating generalizability is described by <span class="citation" data-cites="Jiang2018a">Jiang (<a href="references.html#ref-Jiang2018a" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a><span class="fu">summary</span>(<span class="fu">lmer</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-label="1"></a><span class="fu">summary</span>(lme4<span class="sc">::</span><span class="fu">lmer</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-label="2"></a>  Score <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> </span>
 <span id="cb8-3"><a href="#cb8-3" aria-label="3"></a>    (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item),</span>
 <span id="cb8-4"><a href="#cb8-4" aria-label="4"></a>  <span class="at">data =</span> pio_cross_dat)) <span class="co"># not enough observations to add three-way interaction: (1|Person:Item:Occasion)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1102,7 +1103,7 @@ Fixed effects:
             Estimate Std. Error t value
 (Intercept)    5.957      1.234   4.827</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a>PxIxO <span class="ot">&lt;-</span> <span class="fu">gstudy</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a>PxIxO <span class="ot">&lt;-</span> gtheory<span class="sc">::</span><span class="fu">gstudy</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-label="2"></a>  <span class="at">data =</span> pio_cross_dat,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-label="3"></a>  Score <span class="sc">~</span> (<span class="dv">1</span><span class="sc">|</span>Person) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Item) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Item) <span class="sc">+</span> </span>
 <span id="cb10-4"><a href="#cb10-4" aria-label="4"></a>    (<span class="dv">1</span><span class="sc">|</span>Person<span class="sc">:</span>Occasion) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Occasion<span class="sc">:</span>Item)) <span class="co"># not enough observations to add three-way interaction: (1|Person:Item:Occasion)</span></span>
@@ -1127,7 +1128,7 @@ attr(,"class")
 <span class="header-section-number">6.2.5</span> Decision (D) Study</h3>
 <p>The <a href="#sec-decisionStudy">decision (D) study</a> and <a href="#sec-generalizabilityStudy">generalizability (G) study</a>, from which the <a href="#sec-generalizabilityCoefficient">generalizability</a> and <a href="#sec-dependabilityCoefficient">dependability</a> coefficients can be estimated, were analyzed using the <code>gtheory</code> package <span class="citation" data-cites="R-gtheory">(<a href="references.html#ref-R-gtheory" role="doc-biblioref">Moore, 2016</a>)</span>.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>decisionStudy <span class="ot">&lt;-</span> <span class="fu">dstudy</span>(</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a>decisionStudy <span class="ot">&lt;-</span> gtheory<span class="sc">::</span><span class="fu">dstudy</span>(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-label="2"></a>  PxIxO,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-label="3"></a>  <span class="at">colname.objects =</span> <span class="st">"Person"</span>,</span>
 <span id="cb12-4"><a href="#cb12-4" aria-label="4"></a>  <span class="at">data =</span> pio_cross_dat,</span>
