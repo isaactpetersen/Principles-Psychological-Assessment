@@ -280,9 +280,12 @@ means4Measures
 
 The three most widely used approaches to identifying latent factors are:\index{structural equation modeling!model identification}\index{latent variable}
 
-1. [Marker variable](#sec-markerVariable-sem)\index{structural equation modeling!model identification}
-1. [Effects coding](#sec-effectsCoding-sem)\index{structural equation modeling!model identification}
-1. [Standardized latent factor](#sec-standardizedLatent-sem)\index{structural equation modeling!model identification}
+1. [Marker variable](#sec-markerVariable-sem) (constraining the factor loading of one indicator)\index{structural equation modeling!model identification}
+1. [Effects coding](#sec-effectsCoding-sem) (constraining the average of the factor loadings of all indicators)\index{structural equation modeling!model identification}
+1. [Standardized latent factor](#sec-standardizedLatent-sem) (constraining the variance of the latent factor)\index{structural equation modeling!model identification}
+
+These approaches yield the same model fit and same standardized solution.
+However, the scaling approach can have important implications for the tests of those parameters involving the latent factor and the statistical power.\index{statistical power}
 
 ##### Marker Variable Method {#sec-markerVariable-sem}
 
@@ -424,8 +427,8 @@ semPlot::semPaths(
 
 ##### Standardized Latent Factor Method {#sec-standardizedLatent-sem}
 
-In the standardized latent factor method, the latent factor is set to have a mean of 0 and a standard deviation of 1.\index{structural equation modeling!model identification}
-The standardized latent factor method is a useful approach if you are not interested in the means or variances of the latent factors and want to freely estimate the factor loadings.\index{structural equation modeling!model identification}
+In the standardized latent factor method, the latent factor is set to have a standard deviation of 1 (and sometimes, additionally, the mean of the latent factor is set to 0).\index{structural equation modeling!model identification}
+The standardized latent factor method is a useful approach if you are not interested in the variances (or means) of the latent factors and want to freely estimate the factor loadings.\index{structural equation modeling!model identification}
 Here are examples of using the standardized latent factor method for identification of a latent variable:\index{structural equation modeling!model identification}
 
 ```{r}
@@ -439,7 +442,7 @@ standardizedLatent_syntax <- '
  latentFactor =~ NA*y1 + y2 + y3 + y4
  
  #Latent mean
- latentFactor ~ 0
+ #latentFactor ~ 0 # optional
  
  #Latent variance
  latentFactor ~~ 1*latentFactor
@@ -450,7 +453,7 @@ standardizedLatent_fullSyntax <- '
  latentFactor =~ NA*y1 + y2 + y3 + y4
  
  #Latent mean
- latentFactor ~ 0
+ #latentFactor ~ 0 # optional
  
  #Latent variance
  latentFactor ~~ 1*latentFactor
