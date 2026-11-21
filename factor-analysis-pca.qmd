@@ -818,7 +818,7 @@ knitr::kable(
   psych::describe(HolzingerSwineford1939[, vars]),
   format = "latex",
   booktabs = TRUE
-) %>%
+) |>
   kableExtra::kable_styling(font_size = 7)
 ```
 
@@ -842,8 +842,8 @@ knitr::kable(
 #| label: tbl-descriptiveStats
 #| tbl-cap: "Descriptive Statistics."
 
-summaryTable <- HolzingerSwineford1939 %>%
-  dplyr::select(all_of(vars)) %>%
+summaryTable <- HolzingerSwineford1939 |>
+  dplyr::select(all_of(vars)) |>
   summarise(across(
     everything(),
     .fns = list(
@@ -857,21 +857,21 @@ summaryTable <- HolzingerSwineford1939 %>%
       kurtosis = ~ kurtosi(., na.rm = TRUE)
     ),
     .names = "{.col}.{.fn}"
-  )) %>%
+  )) |>
   pivot_longer(
     cols = everything(),
     names_to = c("variable", "index"),
     names_sep = "\\."
-  ) %>%
+  ) |>
   pivot_wider(
     names_from = index,
     values_from = value
   )
 
-summaryTableTransposed <- summaryTable[-1] %>%
-  t() %>%
-  as.data.frame() %>%
-  setNames(summaryTable$variable) %>%
+summaryTableTransposed <- summaryTable[-1] |>
+  t() |>
+  as.data.frame() |>
+  setNames(summaryTable$variable) |>
   round(digits = 2)
 
 summaryTableTransposed
@@ -935,7 +935,7 @@ corTable3 <- cor.table(
 #| tbl-cap: "Correlation Matrix with *r*, *n*, and *p*-values."
 #| echo: false
 
-corTable1 %>%
+corTable1 |>
   knitr::kable(
     booktabs = TRUE,
     linesep = c("", "", "\\addlinespace"),
@@ -948,7 +948,7 @@ corTable1 %>%
 #| tbl-cap: "Correlation Matrix with Asterisks for Significant Associations."
 #| echo: false
 
-corTable2 %>%
+corTable2 |>
   knitr::kable(
     booktabs = TRUE,
     linesep = "",
@@ -961,7 +961,7 @@ corTable2 %>%
 #| tbl-cap: "Correlation Matrix."
 #| echo: false
 
-corTable3 %>%
+corTable3 |>
   knitr::kable(
     booktabs = TRUE,
     linesep = ""
@@ -2289,75 +2289,75 @@ eigenData$Eigenvalue[which(
 )] <- sum(loadings1Factor$std.all^2)
 
 eigenData$Eigenvalue[which(eigenData$Factor == 2)] <-
-  loadings2Factor %>%
-  group_by(lhs) %>%
+  loadings2Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 3)] <-
-  loadings3Factor %>%
-  group_by(lhs) %>%
+  loadings3Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 4)] <-
-  loadings4Factor %>%
-  group_by(lhs) %>%
+  loadings4Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 5)] <-
-  loadings5Factor %>%
-  group_by(lhs) %>%
+  loadings5Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 6)] <-
-  loadings6Factor %>%
-  group_by(lhs) %>%
+  loadings6Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 7)] <-
-  loadings7Factor %>%
-  group_by(lhs) %>%
+  loadings7Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 8)] <-
-  loadings8Factor %>%
-  group_by(lhs) %>%
+  loadings8Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 eigenData$Eigenvalue[which(eigenData$Factor == 9)] <-
-  loadings9Factor %>%
-  group_by(lhs) %>%
+  loadings9Factor |>
+  group_by(lhs) |>
   summarise(
     Eigenvalue = sum(std.all^2),
     .groups = "drop"
-  ) %>%
+  ) |>
   summarise(min(Eigenvalue))
 
 plot(
@@ -4093,9 +4093,9 @@ The factor loadings are in @tbl-esemLoadings.
 esem_loadings <- lavaan::parameterEstimates(
   efa3factorObliqueLavaan_fit,
   standardized = TRUE
-) %>%
-  dplyr::filter(efa == "efa1") %>%
-  dplyr::select(lhs, rhs, est) %>%
+) |>
+  dplyr::filter(efa == "efa1") |>
+  dplyr::select(lhs, rhs, est) |>
   dplyr::rename(item = rhs, latent = lhs, loading = est)
 
 esem_loadings
